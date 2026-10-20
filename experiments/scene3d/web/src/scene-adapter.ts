@@ -1,12 +1,14 @@
 /** Real WebGL2 scene projection; domain identity, camera picking and resource ownership stay explicit. */
 import { AmbientLight, Box3, Box3Helper, BoxGeometry, Color, DirectionalLight, Group, LineBasicMaterial, LineSegments,
-  BufferGeometry, Mesh, PerspectiveCamera, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
+  BufferGeometry, Fog, Mesh, PerspectiveCamera, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
+import { setEyeView } from './camera.ts';
+import type { View } from './camera.ts';
+export type { View } from './camera.ts';
 import { DebugModels } from './debug-models.ts';
 import { edges, key } from './domain.ts';
 import type { Cell, Facing, Kind, Layout } from './domain.ts';
 
 export interface Pick { id: string; role: 'device' | 'ground' | 'occluder'; point: Cell; normal: Cell; candidate: Cell }
-export type View = 'Angle' | 'Front' | 'Side';
 
 /** Convert a visible world-space face hit into its adjacent logical cell, including negatives.
  * @param {Cell} point World-space point.
@@ -18,7 +20,7 @@ export function candidateCell(point: Cell, normal: Cell): Cell { return point.ma
 /** Read bounded geometry/renderer counters; memory counts are not GPU byte measurements. */
 export class SceneAdapter {
   scene = new Scene();
-  camera = new PerspectiveCamera(43, 1, .1, 100);
+  camera = new PerspectiveCamera(70, 1, .1, 100);
   raycaster = new Raycaster();
   renderer: WebGLRenderer;
   models = new DebugModels();
@@ -33,7 +35,9 @@ export class SceneAdapter {
   observer: ResizeObserver;
   frameHandle = 0;
   disposed = false;
-  view: View = 'Angle';
+  view: View = 'Front';
+  debugVisible = false;
+  grid: LineSegments;
   intervals: number[] = [];
   lastFrame = 0;
   sampleSink: ((time: number, delta: number) => void) | null = null;
@@ -48,12 +52,24 @@ export class SceneAdapter {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.domElement.setAttribute('aria-label', label);
     this.renderer.domElement.setAttribute('tabindex', '0');
-    host.append(this.renderer.domElement); this.scene.background = new Color(0x142337);
+    host.append(this.renderer.domElement); this.scene.background = new Color(0x9bc7de);
+    this.scene.fog = new Fog(0x9bc7de, 22, 48);
     this.scene.add(this.environment, this.deviceRoot, this.selected); this.selected.visible = false;
     this.scene.add(new AmbientLight(0xdbeaf7, 2));
     const light = new DirectionalLight(0xffedca, 3); light.position.set(-4,8,5); this.scene.add(light);
-    const floor = this.models.part(this.environment,new BoxGeometry(9,.2,7),this.models.material('floor',0x667879),[.5,-.1,.5]);
+    const floor = this.models.part(this.environment,new BoxGeometry(48,.6,48),this.models.material('floor',0x638447),[.5,-.3,-3]);
     floor.userData = { id: 'ground', role: 'ground' };
+    // Authored scenery uses original debug geometry, with no resource or world simulation.
+    for (const [x,z,height] of [[-7,-5,3],[-6,-10,4],[7,-6,4],[9,-12,5]]) {
+      const trunk=this.models.part(this.environment,new BoxGeometry(1,height,1),this.models.material('wood',0x69503a),[x,height/2,z]);
+      const crown=this.models.part(this.environment,new BoxGeometry(3,2,3),this.models.material('leaves',0x3b6744),[x,height+.5,z]);
+      for (const mesh of [trunk,crown]) mesh.userData={id:'scenery',role:'occluder'};
+    }
+    for (let x=-5;x<=5;x++) {
+      const height=2+(Math.abs(x)%3);
+      const rock=this.models.part(this.environment,new BoxGeometry(1,height,2),this.models.material('rock',0x7c8587),[x,height/2,-11]);
+      rock.userData={id:'scenery',role:'occluder'};
+    }
     const blocker = this.models.part(this.environment,new BoxGeometry(1,1.8,.45),this.models.material('barrier',0xb77770),[3.5,.9,1.5]);
     blocker.userData = { id: 'barrier', role: 'occluder' };
     for (const pos of [[-3.5,.06,-2.5],[4.5,.06,-2.5]]) {
@@ -63,7 +79,8 @@ export class SceneAdapter {
     const gridPoints: Vector3[] = [];
     for(let x=-4;x<=5;x++) gridPoints.push(new Vector3(x,.003,-3),new Vector3(x,.003,4));
     for(let z=-3;z<=4;z++) gridPoints.push(new Vector3(-4,.003,z),new Vector3(5,.003,z));
-    this.environment.add(new LineSegments(new BufferGeometry().setFromPoints(gridPoints),new LineBasicMaterial({color:0x9ca9a4})));
+    this.grid=new LineSegments(new BufferGeometry().setFromPoints(gridPoints),new LineBasicMaterial({color:0x9ca9a4}));
+    this.grid.visible=false; this.environment.add(this.grid);
     this.observer = new ResizeObserver(() => this.resize(host.clientWidth, host.clientHeight)); this.observer.observe(host);
     this.resize(host.clientWidth,host.clientHeight); this.animate(0);
   }
@@ -82,10 +99,15 @@ export class SceneAdapter {
    */
   setView(view: View): void {
     this.view = view;
-    const pos: Record<View, Cell> = { Angle: [10,10,13], Front: [.5,8,15], Side: [-13,10,10] };
-    this.camera.position.set(...pos[view]);
-    if (this.camera.aspect < 1) this.camera.position.multiplyScalar(1/Math.sqrt(this.camera.aspect));
-    this.camera.lookAt(.5,.8,.5); this.camera.updateProjectionMatrix(); this.camera.updateMatrixWorld(true);
+    setEyeView(this.camera,view);
+  }
+
+  /** Reveal diagnostic grid and adjacency overlays without changing pick targets.
+   * @param {boolean} visible Whether the developer panel is open.
+   */
+  setDebugVisible(visible: boolean): void {
+    this.debugVisible=visible; this.grid.visible=visible;
+    if(this.lines) this.lines.visible=visible;
   }
 
   /** Synchronize immutable logical instances without recreating unchanged geometry.
@@ -108,6 +130,7 @@ export class SceneAdapter {
     if (points.length) {
       this.lines = new LineSegments(new BufferGeometry().setFromPoints(points),new LineBasicMaterial({ color: 0xf8c96f, depthTest: true }));
       this.scene.add(this.lines);
+      this.lines.visible=this.debugVisible;
     }
     this.selected.visible = false; this.scene.updateMatrixWorld(true);
   }
@@ -190,7 +213,7 @@ export class SceneAdapter {
       userAgent: navigator.userAgent, hardwareConcurrency: navigator.hardwareConcurrency,
       viewport: [this.renderer.domElement.clientWidth,this.renderer.domElement.clientHeight],
       backingPixels: [this.renderer.domElement.width,this.renderer.domElement.height], dpr: window.devicePixelRatio, renderDpr: this.renderer.getPixelRatio(),
-      webgl2: gl instanceof WebGL2RenderingContext, camera: this.view,
+      webgl2: gl instanceof WebGL2RenderingContext, camera: this.view, eye: this.camera.position.toArray(), fov: this.camera.fov,
       instances: this.objects.size, calls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles,
       geometries: this.renderer.info.memory.geometries, textures: this.renderer.info.memory.textures,
       ownedGeometryCreated: this.models.created, ownedGeometryReleased: this.models.released };

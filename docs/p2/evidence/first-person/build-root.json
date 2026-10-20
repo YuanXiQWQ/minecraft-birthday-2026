@@ -1,0 +1,56 @@
+{
+  "build": "dist",
+  "homeJsBytes": 3759,
+  "originalAssets": false,
+  "internalRecords": false,
+  "files": [
+    {
+      "file": ".vite/manifest.json",
+      "bytes": 619,
+      "gzipBytes": 218,
+      "sha256": "c6feb509b023c70d9a3b4fb2aed89cd783a2be7cb3d19337ea03c6e9e655f3ae"
+    },
+    {
+      "file": "assets/game-NQxBpLOr.js",
+      "bytes": 557761,
+      "gzipBytes": 140390,
+      "sha256": "9f98a084aed452c7b13ed187241362d5afaa363ce5732a1b00b77d43a4846f1e"
+    },
+    {
+      "file": "assets/home-CyEUOADU.js",
+      "bytes": 435,
+      "gzipBytes": 245,
+      "sha256": "1a05cb9c1b20347032872bf6d6047762957a0d6aae0f957472972b35384921dc"
+    },
+    {
+      "file": "assets/style-BJt8j0Pd.css",
+      "bytes": 3165,
+      "gzipBytes": 1269,
+      "sha256": "017cb0cf7421b8b36cff285c076ed1a4ba60557f7d84526758202fa584369ef5"
+    },
+    {
+      "file": "assets/style-D1HcAeLI.js",
+      "bytes": 3324,
+      "gzipBytes": 1648,
+      "sha256": "4cf3e2722cc4321ee4539b3f43ce61ba1d8408570598bf4be5d7c65e974e4a08"
+    },
+    {
+      "file": "game/index.html",
+      "bytes": 440,
+      "gzipBytes": 295,
+      "sha256": "04e5d1677faf43a94440206a567329eeba76e5a0de1903ffb8eee99236a8e2f4"
+    },
+    {
+      "file": "index.html",
+      "bytes": 447,
+      "gzipBytes": 297,
+      "sha256": "5609eb4a154f1a3e02f9fa13784205798122ef69a8acf23b01b553ae3481263e"
+    },
+    {
+      "file": "THIRD_PARTY_LICENSES.md",
+      "bytes": 1187,
+      "gzipBytes": 723,
+      "sha256": "7f0c5b094ce65b526b0adf5c4e4ce3592736412a247c035cd96cf23ffe059cee"
+    }
+  ]
+}

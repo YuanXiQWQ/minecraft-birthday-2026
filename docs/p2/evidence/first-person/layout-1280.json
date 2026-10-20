@@ -1,0 +1,26 @@
+{
+  "app": {
+    "bottom": 720,
+    "height": 720,
+    "left": 0,
+    "right": 1280,
+    "top": 0,
+    "width": 1280,
+    "x": 0,
+    "y": 0
+  },
+  "canvas": {
+    "bottom": 720,
+    "height": 720,
+    "left": 0,
+    "right": 1280,
+    "top": 0,
+    "width": 1280,
+    "x": 0,
+    "y": 0
+  },
+  "debugHidden": true,
+  "height": 720,
+  "scrollWidth": 1280,
+  "width": 1280
+}

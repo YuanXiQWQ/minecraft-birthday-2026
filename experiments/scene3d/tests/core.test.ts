@@ -1,7 +1,8 @@
 /** Domain, conversion and owned-geometry regressions using independent debug fixtures, not vanilla assets. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Box3, Vector3 } from 'three';
+import { Box3, PerspectiveCamera, Vector3 } from 'three';
+import { EYE_STATIONS, setEyeView } from '../web/src/camera.ts';
 import { change, edges, fixture, place, restore } from '../web/src/domain.ts';
 import { compileModel, resolveModel, resolveTexture, resourceId } from '../web/src/model-format.ts';
 import { candidateCell } from '../web/src/scene-adapter.ts';
@@ -11,6 +12,17 @@ import type { ModelSource } from '../web/src/model-format.ts';
 
 /** A deliberately small original test prism, unrelated to any Minecraft source model. */
 const prism: ModelSource={textures:{surface:'debug:plain'},elements:[{from:[0,0,0],to:[8,16,4],faces:{north:{texture:'#surface'},east:{texture:'#surface'},up:{texture:'#surface'}}}]};
+
+test('C01 resize preserves eye position and central composition across desktop and portrait',()=>{
+  const camera=new PerspectiveCamera(70,1,.1,100);
+  for(const aspect of [1440/900,1280/720,360/740]) for(const view of ['Front','Left','Right'] as const) {
+    camera.aspect=aspect; setEyeView(camera,view);
+    assert.deepEqual(camera.position.toArray(),[...EYE_STATIONS[view]]);
+    const focus=new Vector3(.5,1.35,.5).project(camera);
+    assert.ok(Math.abs(focus.x)<1e-10 && Math.abs(focus.y)<1e-10);
+    assert.ok(Math.abs(camera.getWorldDirection(new Vector3()).y)<.1);
+  }
+});
 
 test('D01 authored bounds, occupied and protected cells reject without mutation',()=>{
   const state=fixture(), before=JSON.stringify(state);

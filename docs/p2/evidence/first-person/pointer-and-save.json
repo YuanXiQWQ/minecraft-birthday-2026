@@ -1,0 +1,1277 @@
+[
+  {
+    "test": "off-center workbench click + modal backdrop/probe isolation",
+    "passed": true,
+    "observed": {
+      "mode": "inspect",
+      "facing": "north",
+      "selected": "w1",
+      "panelOpen": false,
+      "busy": false,
+      "actions": 0,
+      "pointerEvents": 1,
+      "lastPick": {
+        "id": "w1",
+        "role": "device",
+        "point": [
+          -1.346306539991998,
+          0.5902309943360489,
+          0.969999998807908
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "candidate": [
+          -2,
+          0,
+          1
+        ]
+      },
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 7,
+        "calls": 56,
+        "triangles": 644,
+        "geometries": 58,
+        "textures": 1,
+        "ownedGeometryCreated": 251,
+        "ownedGeometryReleased": 196
+      }
+    }
+  },
+  {
+    "test": "physical pointer ground placement east",
+    "passed": true,
+    "observed": {
+      "mode": "place",
+      "facing": "east",
+      "selected": "w8",
+      "panelOpen": false,
+      "busy": false,
+      "actions": 1,
+      "pointerEvents": 2,
+      "lastPick": {
+        "id": "ground",
+        "role": "ground",
+        "point": [
+          2.5101916634695254,
+          1.1920929854358775e-8,
+          2.480525259357022
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "candidate": [
+          2,
+          0,
+          2
+        ]
+      },
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        },
+        {
+          "id": "w8",
+          "kind": "furnace",
+          "cell": [
+            2,
+            0,
+            2
+          ],
+          "facing": "east"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 8,
+        "calls": 59,
+        "triangles": 680,
+        "geometries": 60,
+        "textures": 1,
+        "ownedGeometryCreated": 257,
+        "ownedGeometryReleased": 199
+      }
+    }
+  },
+  {
+    "test": "rotate placed instance",
+    "passed": true,
+    "observed": {
+      "mode": "place",
+      "facing": "east",
+      "selected": "w8",
+      "panelOpen": false,
+      "busy": false,
+      "actions": 2,
+      "pointerEvents": 2,
+      "lastPick": {
+        "id": "ground",
+        "role": "ground",
+        "point": [
+          2.5101916634695254,
+          1.1920929854358775e-8,
+          2.480525259357022
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "candidate": [
+          2,
+          0,
+          2
+        ]
+      },
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        },
+        {
+          "id": "w8",
+          "kind": "furnace",
+          "cell": [
+            2,
+            0,
+            2
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 8,
+        "calls": 61,
+        "triangles": 680,
+        "geometries": 57,
+        "textures": 1,
+        "ownedGeometryCreated": 260,
+        "ownedGeometryReleased": 202
+      }
+    }
+  },
+  {
+    "test": "remove placed instance through real pointer ray",
+    "passed": true,
+    "observed": {
+      "mode": "remove",
+      "facing": "east",
+      "selected": null,
+      "panelOpen": false,
+      "busy": false,
+      "actions": 3,
+      "pointerEvents": 3,
+      "lastPick": {
+        "id": "w8",
+        "role": "device",
+        "point": [
+          2.2414680388748747,
+          0.5799192045459015,
+          3.001500000074506
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "candidate": [
+          2,
+          0,
+          3
+        ]
+      },
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 7,
+        "calls": 55,
+        "triangles": 644,
+        "geometries": 57,
+        "textures": 1,
+        "ownedGeometryCreated": 260,
+        "ownedGeometryReleased": 205
+      }
+    }
+  },
+  {
+    "test": "depth-tested three-dimensional placement preview without commit (read before panel toggle clears preview)",
+    "passed": true,
+    "observed": {
+      "mode": "place",
+      "facing": "east",
+      "selected": null,
+      "panelOpen": false,
+      "busy": false,
+      "actions": 3,
+      "pointerEvents": 4,
+      "lastPick": {
+        "id": "ground",
+        "role": "ground",
+        "point": [
+          2.5101916634695254,
+          1.1920929854358775e-8,
+          2.480525259357022
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "candidate": [
+          2,
+          0,
+          2
+        ]
+      },
+      "candidate": [
+        2,
+        0,
+        2
+      ],
+      "debugOpen": false,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 7,
+        "calls": 55,
+        "triangles": 644,
+        "geometries": 58,
+        "textures": 1,
+        "ownedGeometryCreated": 266,
+        "ownedGeometryReleased": 208
+      }
+    }
+  },
+  {
+    "test": "physical pointer noninteractive occluder rejects placement",
+    "passed": true,
+    "observed": {
+      "mode": "place",
+      "facing": "east",
+      "selected": null,
+      "panelOpen": false,
+      "busy": false,
+      "actions": 3,
+      "pointerEvents": 4,
+      "lastPick": {
+        "id": "barrier",
+        "role": "occluder",
+        "point": [
+          3.3361792086275406,
+          1.0315658697603407,
+          1.7249999940395355
+        ],
+        "normal": [
+          0,
+          0,
+          1
+        ],
+        "candidate": [
+          3,
+          1,
+          1
+        ]
+      },
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 7,
+        "calls": 55,
+        "triangles": 644,
+        "geometries": 58,
+        "textures": 1,
+        "ownedGeometryCreated": 263,
+        "ownedGeometryReleased": 208
+      }
+    }
+  },
+  {
+    "test": "physical pointer outside legal build zone rejects placement",
+    "passed": true,
+    "observed": {
+      "mode": "place",
+      "facing": "east",
+      "selected": null,
+      "panelOpen": false,
+      "busy": false,
+      "actions": 3,
+      "pointerEvents": 4,
+      "lastPick": {
+        "id": "ground",
+        "role": "ground",
+        "point": [
+          -4.317031327948321,
+          1.192092874413575e-8,
+          2.015726445038882
+        ],
+        "normal": [
+          0,
+          1,
+          0
+        ],
+        "candidate": [
+          -5,
+          0,
+          2
+        ]
+      },
+      "candidate": [
+        -5,
+        0,
+        2
+      ],
+      "debugOpen": false,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 7,
+        "calls": 59,
+        "triangles": 692,
+        "geometries": 58,
+        "textures": 1,
+        "ownedGeometryCreated": 269,
+        "ownedGeometryReleased": 211
+      }
+    }
+  },
+  {
+    "test": "reload and explicit load preserve IDs cells direction and instance count",
+    "passed": true,
+    "observed": {
+      "mode": "inspect",
+      "facing": "north",
+      "selected": null,
+      "panelOpen": false,
+      "busy": false,
+      "actions": 1,
+      "pointerEvents": 0,
+      "lastPick": null,
+      "candidate": null,
+      "debugOpen": true,
+      "instances": [
+        {
+          "id": "w1",
+          "kind": "crafting_table",
+          "cell": [
+            -2,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w2",
+          "kind": "furnace",
+          "cell": [
+            0,
+            1,
+            0
+          ],
+          "facing": "north"
+        },
+        {
+          "id": "w3",
+          "kind": "hopper",
+          "cell": [
+            0,
+            2,
+            0
+          ],
+          "facing": "down"
+        },
+        {
+          "id": "w4",
+          "kind": "hopper",
+          "cell": [
+            -1,
+            1,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w5",
+          "kind": "hopper",
+          "cell": [
+            0,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w6",
+          "kind": "hopper",
+          "cell": [
+            1,
+            0,
+            0
+          ],
+          "facing": "east"
+        },
+        {
+          "id": "w7",
+          "kind": "blast_furnace",
+          "cell": [
+            2,
+            0,
+            -1
+          ],
+          "facing": "south"
+        },
+        {
+          "id": "w8",
+          "kind": "furnace",
+          "cell": [
+            2,
+            0,
+            2
+          ],
+          "facing": "south"
+        }
+      ],
+      "environment": {
+        "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "hardwareConcurrency": 20,
+        "viewport": [
+          1440,
+          900
+        ],
+        "backingPixels": [
+          1800,
+          1125
+        ],
+        "dpr": 1.25,
+        "renderDpr": 1.25,
+        "webgl2": true,
+        "camera": "Front",
+        "eye": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "fov": 70,
+        "instances": 8,
+        "calls": 57,
+        "triangles": 644,
+        "geometries": 56,
+        "textures": 1,
+        "ownedGeometryCreated": 58,
+        "ownedGeometryReleased": 0
+      }
+    }
+  },
+  {
+    "test": "renderer restart releases every owned geometry and retains layout",
+    "passed": true,
+    "observed": {
+      "state": {
+        "mode": "inspect",
+        "facing": "north",
+        "selected": null,
+        "panelOpen": false,
+        "busy": false,
+        "actions": 1,
+        "pointerEvents": 0,
+        "lastPick": null,
+        "candidate": null,
+        "debugOpen": true,
+        "instances": [
+          {
+            "id": "w1",
+            "kind": "crafting_table",
+            "cell": [
+              -2,
+              0,
+              0
+            ],
+            "facing": "east"
+          },
+          {
+            "id": "w2",
+            "kind": "furnace",
+            "cell": [
+              0,
+              1,
+              0
+            ],
+            "facing": "north"
+          },
+          {
+            "id": "w3",
+            "kind": "hopper",
+            "cell": [
+              0,
+              2,
+              0
+            ],
+            "facing": "down"
+          },
+          {
+            "id": "w4",
+            "kind": "hopper",
+            "cell": [
+              -1,
+              1,
+              0
+            ],
+            "facing": "east"
+          },
+          {
+            "id": "w5",
+            "kind": "hopper",
+            "cell": [
+              0,
+              0,
+              0
+            ],
+            "facing": "east"
+          },
+          {
+            "id": "w6",
+            "kind": "hopper",
+            "cell": [
+              1,
+              0,
+              0
+            ],
+            "facing": "east"
+          },
+          {
+            "id": "w7",
+            "kind": "blast_furnace",
+            "cell": [
+              2,
+              0,
+              -1
+            ],
+            "facing": "south"
+          },
+          {
+            "id": "w8",
+            "kind": "furnace",
+            "cell": [
+              2,
+              0,
+              2
+            ],
+            "facing": "south"
+          }
+        ],
+        "environment": {
+          "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+          "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+          "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+          "vendor": "Google Inc. (NVIDIA)",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+          "hardwareConcurrency": 20,
+          "viewport": [
+            1440,
+            900
+          ],
+          "backingPixels": [
+            1800,
+            1125
+          ],
+          "dpr": 1.25,
+          "renderDpr": 1.25,
+          "webgl2": true,
+          "camera": "Front",
+          "eye": [
+            0.5,
+            1.62,
+            6.5
+          ],
+          "fov": 70,
+          "instances": 8,
+          "calls": 60,
+          "triangles": 680,
+          "geometries": 60,
+          "textures": 1,
+          "ownedGeometryCreated": 58,
+          "ownedGeometryReleased": 0
+        }
+      },
+      "restarts": [
+        {
+          "disposed": true,
+          "created": 58,
+          "released": 58,
+          "sharedMaterials": 0,
+          "retainedDeviceMappings": 0,
+          "canvasConnected": false
+        }
+      ]
+    }
+  }
+]

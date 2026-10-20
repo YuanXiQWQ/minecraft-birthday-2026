@@ -1,0 +1,69 @@
+{
+  "capturedAt": "2026-10-20T18:29:13.188Z",
+  "layout1440": {
+    "app": {
+      "bottom": 900,
+      "height": 900,
+      "left": 0,
+      "right": 1440,
+      "top": 0,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "canvas": {
+      "bottom": 900,
+      "height": 900,
+      "left": 0,
+      "right": 1440,
+      "top": 0,
+      "width": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "debugHidden": true,
+    "height": 900,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  "layout1280": {
+    "app": {
+      "bottom": 720,
+      "height": 720,
+      "left": 0,
+      "right": 1280,
+      "top": 0,
+      "width": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "canvas": {
+      "bottom": 720,
+      "height": 720,
+      "left": 0,
+      "right": 1280,
+      "top": 0,
+      "width": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "debugHidden": true,
+    "height": 720,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  "tests": [
+    {
+      "name": "canvas fills desktop viewport at both sizes without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1280 off-center workbench mouse opens screen GUI",
+      "passed": true
+    },
+    {
+      "name": "diagnostic left eye station keeps height and layout",
+      "passed": true
+    }
+  ]
+}

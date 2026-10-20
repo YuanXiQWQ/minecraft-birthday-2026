@@ -12,6 +12,7 @@ import type { Layout } from './domain.ts';
  */
 export function browserChecks(adapter: SceneAdapter, original: Layout, panelProbe: () => boolean): object {
   const results: { name: string; passed: boolean; detail: string }[] = [];
+  const originalView=adapter.view;
   /** Record one independently named assertion without hiding subsequent failures.
    * @param {string} name Test identifier.
    * @param {Function} assertion Executable assertion.
@@ -42,7 +43,7 @@ export function browserChecks(adapter: SceneAdapter, original: Layout, panelProb
     adapter.camera.position.set(.5,6,1.5); adapter.camera.lookAt(.5,.5,1.5); adapter.camera.updateMatrixWorld(true);
     check('B07 top face hit selects cell above', () => JSON.stringify(adapter.pick(center[0],center[1])?.candidate) === '[0,1,1]');
     adapter.models.release(probe);
-    let layout = fixture(); adapter.sync(layout); adapter.setView('Angle');
+    let layout = fixture(); adapter.sync(layout); adapter.setView('Front');
     check('B08 top input / side fuel / bottom output adjacency', () => {
       const links = edges(layout); return links.length === 4 && links.some(e => e.from==='w3' && e.to==='w2' && e.port==='input')
         && links.some(e => e.from==='w4' && e.to==='w2' && e.port==='fuel') && links.some(e => e.from==='w2' && e.to==='w5' && e.port==='output');
@@ -62,9 +63,33 @@ export function browserChecks(adapter: SceneAdapter, original: Layout, panelProb
     }
     check('B12 twelve geometry churn cycles return to GPU geometry baseline', () => adapter.diagnostics().geometries === baseline);
     check('B13 modal blocks even directly dispatched canvas pointer events', panelProbe);
+    check('B14 every observation station stays at eye height',()=>{
+      return (['Front','Left','Right'] as const).every(view=>{
+        adapter.setView(view); return adapter.camera.position.y===1.62;
+      });
+    });
+    adapter.setView('Front');
+    check('B15 default main furnace composes centrally',()=>{
+      const p=adapter.project([.5,1.5,.5]);
+      return Math.abs(p.x/canvas.clientWidth-.5)<.01 && Math.abs(p.y/canvas.clientHeight-.5)<.1;
+    });
+    check('B16 off-center mouse ray reaches the workbench',()=>{
+      const p=adapter.project([-1.5,.5,.5]);
+      return Math.abs(p.x-canvas.clientWidth/2)>20 && adapter.pick(p.x,p.y)?.id==='w1';
+    });
+    check('B17 each fixture device has a visible surface from an eye station',()=>{
+      return fixture().instances.every(instance=>(['Front','Left','Right'] as const).some(view=>{
+        adapter.setView(view);
+        // Sample interior face points, including the open hopper rim instead of its empty center.
+        return [.12,.5,.88].some(x=>[.15,.5,.9].some(y=>[.12,.5,.88].some(z=>{
+          const p=adapter.project([instance.cell[0]+x,instance.cell[1]+y,instance.cell[2]+z]);
+          return p.x>0&&p.x<canvas.clientWidth&&p.y>0&&p.y<canvas.clientHeight&&adapter.pick(p.x,p.y)?.id===instance.id;
+        })));
+      }));
+    });
   } finally {
     if (probe.parent) adapter.models.release(probe);
-    adapter.showPreview(null,'furnace','north',false); adapter.sync(original); adapter.setView('Angle'); adapter.renderOnce();
+    adapter.showPreview(null,'furnace','north',false); adapter.sync(original); adapter.setView(originalView); adapter.renderOnce();
   }
   return { capturedAt: new Date().toISOString(), scope: 'real browser engine checks; trusted physical pointer smoke recorded separately',
     passed: results.filter(r=>r.passed).length, failed: results.filter(r=>!r.passed).length, results, environment: adapter.diagnostics() };

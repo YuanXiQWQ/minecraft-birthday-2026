@@ -12,7 +12,8 @@ import './style.css';
 const STORAGE_KEY = 'minecraft-birthday:p2-scene3d:layout-v1';
 /** Debug controller state is ephemeral except an explicitly saved logical layout. */
 let layout: Layout = fixture(), selected: string | null = null, mode = 'inspect', facing: Facing = 'north',
-  lastPick: Pick | null = null, candidate: Cell | null = null, panelOpen = false, busy = false, actions = 0, pointerEvents = 0;
+  lastPick: Pick | null = null, candidate: Cell | null = null, panelOpen = false, busy = false, actions = 0, pointerEvents = 0,
+  worldPointer: number | null = null;
 /** Browser evidence is deliberately exposed in the diagnostic DOM for inspection/export. */
 const evidence: { checks?: object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
 
@@ -46,16 +47,17 @@ function commit(next: Layout): void { layout=next; actions++; adapter.sync(layou
 
 /** Update visible state and projected test targets from the actual camera/canvas. */
 function updateDiagnostics(): void {
-  stateBox.textContent=JSON.stringify({ mode, facing, selected, panelOpen, busy, actions, pointerEvents, lastPick, candidate,
+  stateBox.textContent=JSON.stringify({ mode, facing, selected, panelOpen, busy, actions, pointerEvents, lastPick, candidate, debugOpen: !developer.hidden,
     instances: layout.instances, environment: adapter.diagnostics() },null,2);
   links.textContent=JSON.stringify(edges(layout),null,2);
   targets.textContent=JSON.stringify({ ground_2_0_2: adapter.project([2.5,.005,2.5]), furnace_w2: adapter.project([.5,1.5,.5]),
     table_w1: adapter.project([-1.5,.5,.5]), note: 'canvas-local CSS coordinates; these are diagnostics, not click hotspots' },null,2);
   direction.textContent=facing;
+  modeHint.textContent=`${T[mode as 'inspect'|'place'|'remove']} · ${type.value} · ${facing}`;
 }
 
 /** Cancel transient placement without changing saved instances. */
-function clearPreview(): void { candidate=null; adapter.showPreview(null,type.value as Kind,facing,false); }
+function clearPreview(): void { candidate=null; worldPointer=null; adapter.showPreview(null,type.value as Kind,facing,false); }
 
 /** Select the next valid diagnostic orientation.
  * @param {Kind} kind Device kind.
@@ -89,6 +91,7 @@ function hover(event: PointerEvent): void {
  */
 function openPanel(id: string | null): void {
   panelOpen=Boolean(id); overlay.hidden=!panelOpen; clearPreview();
+  developer.inert=panelOpen; header.inert=panelOpen;
   const instance=layout.instances.find(e=>e.id===id);
   panelTitle.textContent=instance ? `${T.panel} · ${instance.id} / ${instance.kind}` : T.panel;
   updateDiagnostics();
@@ -98,7 +101,8 @@ function openPanel(id: string | null): void {
  * @param {PointerEvent} event Canvas pointer-up.
  */
 function act(event: PointerEvent): void {
-  if (panelOpen||busy||event.button!==0) return;
+  if (panelOpen||busy||event.button!==0||worldPointer!==event.pointerId) return;
+  worldPointer=null;
   pointerEvents++; lastPick=fromPointer(event);
   if (!lastPick) { fail(new Error('no-target')); return; }
   try {
@@ -120,7 +124,7 @@ function act(event: PointerEvent): void {
 function panelProbe(): boolean {
   const before=JSON.stringify(layout), count=pointerEvents, oldMode=mode; mode='place'; openPanel('w2');
   const r=adapter.renderer.domElement.getBoundingClientRect(), p=adapter.project([2.5,.005,2.5]);
-  adapter.renderer.domElement.dispatchEvent(new PointerEvent('pointerup',{ clientX:r.left+p.x,clientY:r.top+p.y,button:0,bubbles:true }));
+  for(const name of ['pointerdown','pointerup']) adapter.renderer.domElement.dispatchEvent(new PointerEvent(name,{ clientX:r.left+p.x,clientY:r.top+p.y,button:0,pointerId:99,bubbles:true }));
   openPanel(null); mode=oldMode;
   return JSON.stringify(layout)===before && pointerEvents===count;
 }
@@ -130,17 +134,20 @@ function bindCanvas(): void {
   const canvas=adapter.renderer.domElement;
   adapter.onResize=updateDiagnostics;
   canvas.addEventListener('pointermove',hover); canvas.addEventListener('pointerup',act);
+  canvas.addEventListener('pointerdown',event=>{ if(!panelOpen&&!busy&&event.button===0)worldPointer=event.pointerId; });
+  canvas.addEventListener('pointercancel',()=>{ worldPointer=null; });
   canvas.addEventListener('pointerleave',() => { if (!busy) clearPreview(); });
   canvas.addEventListener('contextmenu',event=>event.preventDefault());
 }
 
-/** Replace the renderer explicitly and preserve only logical state for lifecycle observation. */
+/** Replace the renderer while preserving logical state and the diagnostic eye station. */
 function restart(): void {
   if (busy||panelOpen) return;
-  const old=adapter; old.dispose();
+  clearPreview(); const old=adapter; old.dispose();
   evidence.rendererRestarts.push({ disposed: old.disposed, created: old.models.created, released: old.models.released,
     sharedMaterials: old.models.materials.size, retainedDeviceMappings: old.objects.size, canvasConnected: old.renderer.domElement.isConnected });
-  adapter=new SceneAdapter(viewport,T.canvas); adapter.sync(layout); bindCanvas(); adapter.renderOnce(); updateDiagnostics(); showEvidence();
+  adapter=new SceneAdapter(viewport,T.canvas); adapter.setView(old.view); adapter.setDebugVisible(!developer.hidden);
+  adapter.sync(layout); adapter.select(selected); bindCanvas(); adapter.renderOnce(); updateDiagnostics(); showEvidence();
 }
 
 /** Generate a bounded stress fixture without adding world simulation or product dimensions. */
@@ -160,6 +167,14 @@ async function collectMetrics(): Promise<void> {
 
 /** Diagnostic DOM nodes do not become part of any game save. */
 const app=document.getElementById('app')!, header=el('header'), toolbar=el('section','','toolbar'), tools=el('div','','tools');
+const developer=el('aside','','developer'), footer=el('footer'), modeHint=el('span','','mode-hint');
+developer.id='developer-panel'; developer.hidden=true; developer.setAttribute('aria-label',T.developerTitle);
+const toggleDeveloper=button(T.developer,()=>{
+  if(panelOpen)return; developer.hidden=!developer.hidden; adapter.setDebugVisible(!developer.hidden);
+  toggleDeveloper.textContent=developer.hidden?T.developer:T.hideDeveloper;
+  toggleDeveloper.setAttribute('aria-expanded',String(!developer.hidden)); clearPreview(); updateDiagnostics();
+});
+toggleDeveloper.setAttribute('aria-expanded','false'); toggleDeveloper.setAttribute('aria-controls',developer.id);
 const status=el('output',T.ready,'status'), viewport=el('div','','viewport'), overlay=el('div','','modal-mask');
 const panel=el('section','','modal'), panelTitle=el('h2',T.panel), slots=el('div','','slots');
 const type=el('select') as HTMLSelectElement, direction=el('span',facing,'badge'), camera=el('select') as HTMLSelectElement;
@@ -167,9 +182,10 @@ const stateBox=el('pre'), links=el('pre'), results=el('pre'), targets=el('pre');
 stateBox.id='state'; links.id='links'; results.id='evidence'; targets.id='targets'; status.id='status';
 status.setAttribute('aria-live','polite'); type.setAttribute('aria-label',T.device); camera.setAttribute('aria-label',T.view);
 for(const kind of KINDS) { const option=el('option',kind) as HTMLOptionElement; option.value=kind; type.append(option); } type.value='furnace';
-for(const view of ['Angle','Front','Side']) { const option=el('option',view) as HTMLOptionElement; option.value=view; camera.append(option); }
-header.append(el('p',T.subtitle,'eyebrow'),el('h1',T.title),el('p',T.warning,'warning'));
+for(const view of ['Front','Left','Right'] as View[]) { const option=el('option',T.views[view]) as HTMLOptionElement; option.value=view; camera.append(option); }
+header.append(el('h1',T.title));
 const back=el('a',T.back) as HTMLAnchorElement; back.href='../'; header.append(back);
+header.append(toggleDeveloper);
 for(const [label,value] of [[T.inspect,'inspect'],[T.place,'place'],[T.remove,'remove']]) {
   const b=button(label,()=>setMode(value)); b.dataset.mode=value; if(value==='inspect') b.className='active'; tools.append(b);
 }
@@ -178,7 +194,8 @@ overlay.hidden=true; overlay.id='device-panel'; overlay.setAttribute('role','dia
 for(const label of [T.input,T.fuel,T.output]) slots.append(el('div',`${label}\n${T.empty}`,'slot'));
 panel.append(panelTitle,el('p',T.panelNote),slots,button(T.probe,()=>{ status.textContent=T.panelNote; }),button(T.close,()=>openPanel(null)));
 overlay.append(panel); for(const name of ['pointerdown','pointerup','click','wheel']) overlay.addEventListener(name,event=>event.stopPropagation());
-viewport.append(overlay); app.append(header,toolbar,status,viewport,el('p',T.help,'help'));
+viewport.append(overlay); footer.append(modeHint,status,el('p',T.warning,'warning'));
+app.append(viewport,header,footer);
 let adapter: SceneAdapter;
 try { adapter=new SceneAdapter(viewport,T.canvas); }
 catch(error) { status.textContent=T.unsupported; evidence.errors.push(String(error)); throw error; }
@@ -186,6 +203,7 @@ adapter.sync(layout); bindCanvas(); adapter.renderOnce();
 type.addEventListener('change',()=>{ facing=type.value==='hopper'?'down':'north'; clearPreview(); updateDiagnostics(); });
 camera.addEventListener('change',()=>{ if(panelOpen||busy)return; clearPreview(); adapter.setView(camera.value as View); updateDiagnostics(); });
 document.addEventListener('keydown',event=>{ if(event.key==='Escape' && panelOpen) openPanel(null); });
+window.addEventListener('blur',()=>{ worldPointer=null; });
 const actionsBar=el('div','','toolbar');
 actionsBar.append(button(T.rotateSelected,()=>{ if(panelOpen||busy||!selected)return; try { const e=layout.instances.find(v=>v.id===selected)!; commit(change(layout,e.id,nextFacing(e.kind,e.facing))); } catch(error){fail(error);} }),
   button(T.reset,()=>{ if(panelOpen||busy)return; selected=null; clearPreview(); commit(fixture()); }),button(T.dense,denseFixture),
@@ -197,5 +215,6 @@ const diagnostics=el('div','','diagnostics');
 for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets],[T.results,results]] as [string,HTMLElement][]) {
   const section=el('section','','card'); section.append(el('h2',label),body); diagnostics.append(section);
 }
-app.append(actionsBar,diagnostics); updateDiagnostics(); showEvidence();
+developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),toolbar,actionsBar,diagnostics);
+app.append(developer); updateDiagnostics(); showEvidence();
 window.addEventListener('pagehide',()=>adapter.dispose());

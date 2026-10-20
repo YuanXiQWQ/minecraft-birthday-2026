@@ -22,12 +22,14 @@ npm run preview
 
 ## 浏览器复现
 
+默认画布填充页面主视区，从场景内部眼高观察，主要内容居中，无准星。点击 `Developer tools` 展开下列实验工具，可再次收起；网格/邻接线随开发面板显示。Front/Left/Right 是眼高诊断观察站，不能作为正式视线手势决定；本原型没有 Pointer Lock、WASD、飞行或拖动转视线。材质与环境树木/石块均为明确标识的调试几何，不能计作原版模型通过。桌面实测见[第一人称修正报告](../../docs/p2/first-person-review.md)。
+
 1. `Inspect` 点击真实设备打开屏幕二维占位面板，点击面板按钮时检查状态的 `pointerEvents` / `actions` 不变；关闭或 Escape 返回场景。
 2. `Place`，选择设备，移动指针显示带深度测试的三维预览；左键确认。`Rotate preview` 调整候选方向；`Rotate selected` 调整已选实例。普通设备四方向，漏斗另有 down。
 3. `Remove` 点击真实设备拆除。改变相机预设验证遮挡和深度，不允许穿过红色障碍物选后面的设备。金色保护块和越界位置不可建造。
 4. 初始七实例显示上方供料、侧面燃料、下方抽出及漏斗容器邻接。旋转、拆除后检查 `Derived ports`；这些线段是诊断标记，不传输物品，也不参加拾取。
 5. `Save layout` / `Load layout` 使用独立 localStorage 键 `minecraft-birthday:p2-scene3d:layout-v1`，保存 ID、类型、坐标、方向，不保存 GPU 对象、预览或正式游戏进度。刷新不会自动加载，需点击 Load。
-6. `Run browser checks` 运行 13 项真实 WebGL2 断言；最后一项直接分发合成 PointerEvent 验证模态门禁，不能冒充真实指针。物理点击证据另记。
+6. `Run browser checks` 运行 17 项真实 WebGL2 断言；B13直接分发合成 PointerEvent 验证模态门禁，不能冒充真实指针。B14–B17验证眼高、中央构图、偏心射线与各实例可见面；物理点击证据另记。B07单独使用顶面探针相机，不是可选择的产品视角。
 7. `Measure 3 × 10 s` 固定当前布局，三次各 2 秒预热 + 10 秒采样，在可见页面保持前台，查看原始 RAF 帧间隔、分位数、draw calls 等。`Load dense fixture` 后再测；此初测不替代正式 30 秒预热 / 60 秒采样及目标设备联合负载验收。
 8. `Restart renderer` 释放旧 renderer、几何、材质、观察器和 canvas，用同一逻辑布局创建新实例；检查释放记录，再点击新场景确认仍可操作。
 

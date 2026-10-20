@@ -1,23 +1,23 @@
-/* Technical preview styling. The scene itself is real GPU geometry, never CSS perspective. */
-:root { color-scheme: dark; font-family: 'Segoe UI',system-ui,sans-serif; color:#e8edf3; background:#101b2b; }
-* { box-sizing:border-box; } body { margin:0; } #app { max-width:1440px; padding:24px; margin:auto; }
-header { margin-bottom:20px; } h1 { font-size:clamp(26px,4vw,46px); letter-spacing:-1.2px; margin:8px 0 12px; font-weight:650; }
-.eyebrow { font-size:11px; color:#9fc9bd; letter-spacing:2px; font-weight:700; } .warning { font-size:12px; color:#e4be87; line-height:1.6; }
-a { color:#a6dac8; } button,select { font:inherit; font-size:13px; padding:10px 14px; border:1px solid #405268; border-radius:6px; background:#1c2c40; color:inherit; cursor:pointer; }
-button:hover { background:#2a4155; } button:focus-visible,a:focus-visible,select:focus-visible { outline:3px solid #f1c180; outline-offset:2px; }
+/* Screen overlays frame a real WebGL scene; no CSS scene projection is used. */
+:root { color-scheme:dark; font-family:'Segoe UI',system-ui,sans-serif; color:#e8edf3; background:#101b2b; }
+* { box-sizing:border-box; } body { margin:0; } #app { position:relative; height:100dvh; min-height:480px; overflow:hidden; }
+.viewport { position:absolute; inset:0; } canvas { display:block; width:100%; height:100%; touch-action:none; }
+header { position:absolute; top:18px; left:24px; right:24px; display:flex; align-items:center; gap:20px; padding:12px 16px; border-radius:8px; background:#142635da; z-index:2; }
+h1 { margin:0; font-size:20px; font-weight:600; } header a { margin-left:auto; font-size:12px; }
+a { color:#bfe5d9; } button,select { font:inherit; font-size:13px; padding:9px 12px; border:1px solid #53697a; border-radius:5px; background:#23394c; color:inherit; cursor:pointer; }
+button:hover { background:#365469; } button:focus-visible,a:focus-visible,select:focus-visible { outline:3px solid #f1c180; outline-offset:2px; }
 button.active,.primary { background:#a6dac8; color:#122e2c; border-color:#a6dac8; } .primary { display:inline-block; padding:16px 22px; border-radius:8px; text-decoration:none; }
-.toolbar,.tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:12px 0; } .tools { margin:0 12px 0 0; }
-.badge { border-radius:20px; font-size:11px; border:1px solid #60716e; padding:6px 12px; color:#b1ddcb; }
-.status { display:block; min-height:35px; font-size:12px; padding:8px 0; color:#addccb; }
-.viewport { position:relative; height:clamp(440px,64vh,720px); width:100%; border:1px solid #44546a; border-radius:12px; overflow:hidden; background:#142337; }
-canvas { display:block; width:100%; height:100%; touch-action:none; }
-.help { font-size:12px; color:#a6b5c4; max-width:960px; line-height:1.7; }
-.modal-mask { position:absolute; z-index:2; inset:0; display:grid; place-items:center; background:#091322a8; padding:18px; }
-[hidden] { display:none!important; } .modal { width:min(450px,100%); min-width:0; padding:24px; background:#20354a; border:1px solid #8eafbb; border-radius:12px; box-shadow:0 20px 70px #0008; }
-.modal p { color:#bfd0dc; font-size:13px; line-height:1.6; } .slots { display:flex; gap:10px; margin:20px 0; } .slot { flex:1; min-width:0; height:68px; padding:12px 6px; white-space:pre-line; background:#132334; border:1px solid #6b8290; font-size:12px; }
-.modal button { margin:4px; } h2 { font-size:14px; font-weight:600; }
-.diagnostics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:24px; }
-.card { min-width:0; background:#162538; border:1px solid #304257; padding:18px; border-radius:9px; }
-pre { margin:0; font-size:11px; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; max-height:340px; overflow:auto; color:#adbdc9; }
+footer { position:absolute; bottom:14px; left:24px; right:24px; pointer-events:none; z-index:1; color:#fff; text-shadow:0 1px 3px #000; }
+.mode-hint,.status { display:block; width:fit-content; font-size:12px; padding:4px 8px; background:#142635c9; border-radius:3px; }
+.warning { margin:6px 0 0; font-size:11px; color:#fff0d2; background:#142635c9; padding:5px 8px; width:fit-content; max-width:100%; }
+.developer { position:absolute; z-index:3; right:24px; top:90px; bottom:105px; width:370px; max-width:calc(100% - 48px); overflow:auto; padding:18px; background:#122334f5; border:1px solid #607787; border-radius:8px; }
+.toolbar,.tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:12px 0; } .tools { margin:0; } .badge { padding:6px; font-size:12px; color:#b1ddcb; }
+.help { font-size:12px; color:#bacbd7; line-height:1.6; } h2 { font-size:14px; font-weight:600; }
+.diagnostics { display:grid; gap:12px; margin-top:18px; } .card { min-width:0; background:#162b3b; padding:12px; border-radius:5px; }
+pre { margin:0; font-size:11px; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; max-height:300px; overflow:auto; color:#bed0dc; }
+.modal-mask { position:absolute; z-index:5; inset:0; display:grid; place-items:center; background:#091322a8; padding:18px; }
+.viewport:has(.modal-mask:not([hidden])) { z-index:5; }
+[hidden] { display:none!important; } .modal { width:min(450px,100%); padding:24px; background:#20354a; border:1px solid #8eafbb; border-radius:12px; box-shadow:0 20px 70px #0008; }
+.modal p { color:#bfd0dc; font-size:13px; line-height:1.6; } .slots { display:flex; gap:10px; margin:20px 0; } .slot { flex:1; min-width:0; height:68px; padding:12px 6px; white-space:pre-line; background:#132334; border:1px solid #6b8290; font-size:12px; } .modal button { margin:4px; }
 #home { max-width:800px; margin:16vh auto; padding:36px; } #home h1 { font-size:clamp(42px,6vw,78px); line-height:1.05; margin:22px 0 40px; } #home>p:last-child { font-size:12px; color:#93a9bc; margin-top:24px; }
-@media(max-width:650px) { #app { padding:16px; } .diagnostics { grid-template-columns:1fr; } .toolbar button,select { padding:9px 10px; } header { margin-bottom:12px; } }
+@media(max-width:650px) { header { left:12px; right:12px; gap:10px; } header a { display:none; } header button { margin-left:auto; } h1 { font-size:16px; } footer { left:12px; right:12px; } .developer { right:12px; max-width:calc(100% - 24px); } }
