@@ -1,0 +1,45 @@
+{
+  "commands": [
+    "npm run check",
+    "MC_LOCAL_SAMPLES=<external GUI cohort> npm test",
+    "npm test without MC_LOCAL_SAMPLES",
+    "npm run build",
+    "npm run build:subpath",
+    "npm run test:built"
+  ],
+  "logs": [
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/unit-tests.txt",
+      "sha256": "d076f2d1ec11bab68c0eb15b1cadc9173c69a04fb7c7b25aa1df22ae5c1d2e48",
+      "counts": {
+        "tests": 34,
+        "pass": 34,
+        "fail": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/unit-no-originals.txt",
+      "sha256": "10a64162ccd25e8e3f15ff6ee302dcd0015e71de834115c76cf3f96dd3fd3d95",
+      "counts": {
+        "tests": 34,
+        "pass": 32,
+        "fail": 0,
+        "skipped": 2
+      }
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/built-tests.txt",
+      "sha256": "80c9220a8629bed5422f9079a4e2656fb26cc8804b3dcb47854d4a12ef3c9abb",
+      "counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "dependenciesChanged": false,
+  "javaClientRun": false,
+  "deployed": false
+}

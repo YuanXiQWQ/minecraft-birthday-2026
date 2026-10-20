@@ -15,9 +15,10 @@
 - [分阶段开发路线](docs/development-roadmap.md)：阶段依赖、验收、测试、风险及完成条件。
 - [技术决策与核实记录](docs/decisions-and-research.md)：建议状态、待确认项及一手资料来源。
 - [真正 3D 场景与 P2 验证计划](docs/3d-scene-plan.md)：最新用户决定、渲染建议、交互/模型边界、性能验证与历史方案替代关系。
-- 方案 B 与四场景真正 3D 已由用户正式确定；P2 第一轮真实 3D 基础切片已获独立授权，交付后等待审查；不自动授权完整 P2 或后续阶段。
+- 方案 B、真正 3D、第一人称/中央构图/无准星已由用户确定；P2 前两轮已获独立审查，第三轮 GUI/图标/输入切片交付待审；不自动授权完整 P2 或后续阶段。
 - [P2 第一轮报告](docs/p2/report.md)：隔离 TypeScript/Vite/Three.js 原型、原版模型离线探针、真实浏览器交互/性能及未验证门槛；运行见 `experiments/scene3d/README.md`。
 - [P2 第一人称修正验收](docs/p2/first-person-review.md)：场景内部眼高视角、居中构图、无准星、默认隐藏调试面板及桌面浏览器回归证据。
+- [P2 第三轮GUI与输入](docs/p2/gui-input-review.md)：原版容器/精灵/ASCII、平面与模型图标、三维实例绑定、真实输入与候选语义边界；本机资产不进入Git或静态构建，完整P2及P3/P5/P6未自动授权。
 - [P2 第二轮原版模型与材质](docs/p2/vanilla-model-review.md)：五类原版方块的本机浏览器验证、外部资源缓存、二值alpha/动画、分发限制与复现步骤；不授权P3/P7。
 - [P1 验收与证据入口](docs/p1/report.md)：原版构件/数据、资产、GUI 矩阵、放置增量与未解决门槛；报告完成不自动放行 P2。
 - [P1 放置补充实验](docs/p1/placement-experiment.md)：保留原文的历史规则验证；其中 B 待批、固定槽位/2D 建议均不能覆盖最新决定。`docs/p1/`、原始会话与 `experiments/placement/` 保持历史记录原样。

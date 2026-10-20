@@ -1,0 +1,56 @@
+{
+  "build": "dist-subpath",
+  "homeJsBytes": 4291,
+  "originalAssets": false,
+  "internalRecords": false,
+  "files": [
+    {
+      "file": ".vite/manifest.json",
+      "bytes": 619,
+      "gzipBytes": 221,
+      "sha256": "e902f17213af3cee89281d31b589556df59131a58626c1e601948bec7c176ab9"
+    },
+    {
+      "file": "assets/game-DF3eHAG9.js",
+      "bytes": 599604,
+      "gzipBytes": 153572,
+      "sha256": "bb2ecb7694cb7b296cafcd11bbe4fcd08a5479891570094c36dade6f627c7748"
+    },
+    {
+      "file": "assets/home-4uyK17Tq.js",
+      "bytes": 435,
+      "gzipBytes": 244,
+      "sha256": "fef9b82717cb5629ca1b6d09561190013d43c42a23a9604c2e206c8e0d7b5084"
+    },
+    {
+      "file": "assets/style--0DwFSWp.css",
+      "bytes": 3687,
+      "gzipBytes": 1409,
+      "sha256": "93a9911867433db3a6081e7980677f9e78f4919ce031c9b9471d864f3c48302a"
+    },
+    {
+      "file": "assets/style-CNoTzqay.js",
+      "bytes": 3856,
+      "gzipBytes": 1891,
+      "sha256": "b0a3285110b4c1db78597908acf54fee98a5a1b4448e197f55ea98afebcc705d"
+    },
+    {
+      "file": "game/index.html",
+      "bytes": 512,
+      "gzipBytes": 314,
+      "sha256": "ab0d979977df73e6d958891c945483ae2650586325fc37ece95ee251d0a7bb06"
+    },
+    {
+      "file": "index.html",
+      "bytes": 519,
+      "gzipBytes": 314,
+      "sha256": "dc1d3e21263e0d3be228725c0be3e835f434639da885ec02a65726a9c777ba9f"
+    },
+    {
+      "file": "THIRD_PARTY_LICENSES.md",
+      "bytes": 1187,
+      "gzipBytes": 723,
+      "sha256": "7f0c5b094ce65b526b0adf5c4e4ce3592736412a247c035cd96cf23ffe059cee"
+    }
+  ]
+}

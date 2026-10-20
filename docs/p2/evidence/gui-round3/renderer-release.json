@@ -1,0 +1,16 @@
+[
+  {
+    "disposed": true,
+    "created": 284,
+    "released": 284,
+    "sharedMaterials": 0,
+    "retainedDeviceMappings": 0,
+    "canvasConnected": false,
+    "vanilla": {
+      "created": 200,
+      "released": 200,
+      "textures": 0,
+      "materials": 0
+    }
+  }
+]

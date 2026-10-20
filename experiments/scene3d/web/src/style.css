@@ -15,9 +15,15 @@ footer { position:absolute; bottom:14px; left:24px; right:24px; pointer-events:n
 .help { font-size:12px; color:#bacbd7; line-height:1.6; } h2 { font-size:14px; font-weight:600; }
 .diagnostics { display:grid; gap:12px; margin-top:18px; } .card { min-width:0; background:#162b3b; padding:12px; border-radius:5px; }
 pre { margin:0; font-size:11px; line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; max-height:300px; overflow:auto; color:#bed0dc; }
-.modal-mask { position:absolute; z-index:5; inset:0; display:grid; place-items:center; background:#091322a8; padding:18px; }
+.modal-mask { position:absolute; z-index:5; inset:0; display:grid; place-items:center; background:#0008; padding:0; }
 .viewport:has(.modal-mask:not([hidden])) { z-index:5; }
 [hidden] { display:none!important; } .modal { width:min(450px,100%); padding:24px; background:#20354a; border:1px solid #8eafbb; border-radius:12px; box-shadow:0 20px 70px #0008; }
 .modal p { color:#bfd0dc; font-size:13px; line-height:1.6; } .slots { display:flex; gap:10px; margin:20px 0; } .slot { flex:1; min-width:0; height:68px; padding:12px 6px; white-space:pre-line; background:#132334; border:1px solid #6b8290; font-size:12px; } .modal button { margin:4px; }
 #home { max-width:800px; margin:16vh auto; padding:36px; } #home h1 { font-size:clamp(42px,6vw,78px); line-height:1.05; margin:22px 0 40px; } #home>p:last-child { font-size:12px; color:#93a9bc; margin-top:24px; }
+/* The original GUI raster is a screen layer; research controls are explicitly separate HTML. */
+#gui-canvas { position:absolute; inset:0; width:100%; height:100%; image-rendering:pixelated; touch-action:none; outline:none; }
+.gui-controls { position:absolute; bottom:12px; left:12px; right:12px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px; padding:8px; background:#122334f2; border:1px solid #607787; }
+.gui-controls span { width:100%; text-align:center; font-size:12px; }
+.gui-controls input { font:12px system-ui; width:230px; padding:8px; }
+.gui-unavailable { position:absolute; max-width:600px; padding:24px; background:#172a3d; }
 @media(max-width:650px) { header { left:12px; right:12px; gap:10px; } header a { display:none; } header button { margin-left:auto; } h1 { font-size:16px; } footer { left:12px; right:12px; } .developer { right:12px; max-width:calc(100% - 24px); } }

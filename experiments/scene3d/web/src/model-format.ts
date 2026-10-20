@@ -5,7 +5,7 @@ import type { Cell } from './domain.ts';
 export type Face = 'up' | 'down' | 'north' | 'south' | 'east' | 'west';
 export interface ModelFace { texture: string; uv?: [number, number, number, number]; rotation?: number; cullface?: Face; tintindex?: number }
 export interface ModelElement { from: Cell; to: Cell; faces: Partial<Record<Face, ModelFace>>; rotation?: unknown }
-export interface ModelSource { parent?: string; textures?: Record<string, string>; elements?: ModelElement[] }
+export interface ModelSource { parent?: string; textures?: Record<string, string>; elements?: ModelElement[]; display?:Record<string,{rotation?:Cell;translation?:Cell;scale?:Cell}> }
 export interface Variant { model: string; x?: number; y?: number; uvlock?: boolean; weight?: number }
 export interface CompiledModel { positions: number[]; normals: number[]; uvs: number[]; indices: number[];
   faces: { direction: Face; texture: string; cullface?: Face; tintindex?: number }[]; textures: string[] }
@@ -20,7 +20,7 @@ export function resourceId(id: string): string {
   return full;
 }
 
-/** Resolve a bounded parent chain, preserving child texture overrides and element replacement.
+/** Resolve a bounded parent chain, preserving child texture/display overrides and element replacement.
  * @param {string} id Root model.
  * @param {Function} load Read-only model loader.
  * @param {string[]} chain Ancestors for cycle rejection.
@@ -31,7 +31,7 @@ export function resolveModel(id: string, load: (id: string) => ModelSource, chai
   if (chain.includes(id) || chain.length >= 32) throw new Error('model-parent-cycle');
   const own = load(id);
   const parent = own.parent ? resolveModel(own.parent, load, [...chain, id]) : {};
-  return { ...parent, ...own, textures: { ...parent.textures, ...own.textures }, elements: own.elements ?? parent.elements };
+  return { ...parent, ...own, textures: { ...parent.textures, ...own.textures }, display:{...parent.display,...own.display}, elements: own.elements ?? parent.elements };
 }
 
 /** Resolve texture-variable indirection with explicit cycle and missing-reference errors.

@@ -1,0 +1,24 @@
+{
+  "scale2": {
+    "x": 272,
+    "y": 94,
+    "width": 176,
+    "height": 166,
+    "physicalScale": 2,
+    "dpr": 1.0000000149011612,
+    "logicalWidth": 720,
+    "logicalHeight": 450,
+    "usableCssHeight": 771.6000366210938
+  },
+  "scale3": {
+    "x": 152,
+    "y": 30,
+    "width": 176,
+    "height": 166,
+    "physicalScale": 3,
+    "dpr": 1.0000000149011612,
+    "logicalWidth": 480,
+    "logicalHeight": 300,
+    "usableCssHeight": 771.6000366210938
+  }
+}

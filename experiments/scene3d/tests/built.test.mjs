@@ -22,7 +22,7 @@ for(const [folder,prefix] of [['dist','/'],['dist-subpath','/minecraft-birthday-
       for(const chunk of Object.values(manifest)) { assert.equal((await fetch(origin+prefix+chunk.file)).status,200); }
       const license=await fetch(origin+prefix+'THIRD_PARTY_LICENSES.md'); assert.equal(license.status,200);
       assert.ok((await license.text()).includes('three.js authors'));
-      for(const path of ['AGENTS.md','docs/project-proposal.md','client.jar','experiments/placement/ui.mjs','package.json','src/scene-adapter.ts','__local_samples__/manifest.json','__local_samples__/assets/minecraft/textures/block/stone.png']) {
+      for(const path of ['AGENTS.md','docs/project-proposal.md','client.jar','experiments/placement/ui.mjs','package.json','src/scene-adapter.ts','__local_samples__/manifest.json','__local_samples__/assets/minecraft/textures/block/stone.png','__local_samples__/assets/minecraft/textures/gui/container/inventory.png','__local_samples__/assets/minecraft/textures/font/ascii.png','__local_samples__/assets/minecraft/items/egg.json']) {
         assert.equal((await fetch(origin+prefix+path)).status,404,`private path ${path}`);
       }
     } finally { server.httpServer.closeAllConnections(); await new Promise((resolve,reject)=>server.httpServer.close(error=>error?reject(error):resolve())); }

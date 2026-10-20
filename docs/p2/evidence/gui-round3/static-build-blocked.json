@@ -1,0 +1,21 @@
+{
+  "measurements": [],
+  "rendererRestarts": [],
+  "errors": [],
+  "guiLoad": {
+    "status": "BLOCKED",
+    "reason": "Error: local-vanilla-samples-unavailable"
+  },
+  "guiChecks": {
+    "raster": {
+      "status": "BLOCKED",
+      "passed": 0,
+      "reason": "Vanilla GUI unavailable. Load the external GUI cohort; no visual pass claimed."
+    },
+    "invalidated": true,
+    "rebound": true,
+    "worldWheelBlocked": true,
+    "pointerGate": true,
+    "scope": "synthetic integration; physical input records are separate"
+  }
+}

@@ -81,3 +81,22 @@ npm run probe:models -- '<同一分析目录>'
 生成目录 node_modules / dist / dist-subpath 仅在本地 `.git/info/exclude` 排除，没有修改根 `.gitignore`。构建白名单及双入口 HTTP 测试拒绝开发资料、原始构件和 P1 实验输出；部署时仍必须只选择审核后的静态产物目录。
 
 Vite 的许可输出在两个产物中生成 `THIRD_PARTY_LICENSES.md`，包含 bundled Three.js 的 MIT 文本；这与尚未落实的 Minecraft 资产使用依据无关。游戏 chunk 的 >500 KB 构建提示如实保留，不通过提高阈值掩盖。
+## P2 第三轮：本机原版 GUI 与输入样本
+
+本节为当前局部能力；前文关于“仅三个空白槽、无字体/临时组”的描述仅保留为首轮简化记录，已由[第三轮报告](../../docs/p2/gui-input-review.md)中的局部证据补充，不能理解为完整GUI已完成。
+
+已有26.3客户端与项目依赖时，在本目录执行（不需要重新安装）：
+
+```powershell
+./tools/extract-gui-samples.ps1 -Jar '<已有26.3 client.jar绝对路径>' -Output '<仓库外新缓存绝对路径>'
+$env:MC_LOCAL_SAMPLES='<上述仓库外缓存>'
+npm run check
+npm test
+npm run dev
+```
+
+开发预览 `http://127.0.0.1:4178/game/`：Developer tools→Load local vanilla GUI；另选 Load local vanilla samples 可显示原版工作站。收起工具，鼠标射线点击工作台/炉/高炉或按 E；屏幕GUI显示原版容器图、ASCII位图字形、egg平面图标及运行时原版furnace模型图标。Esc/E关闭。底部HTML控件明确是实验工具，文本框不是原版搜索框。
+
+Run GUI foundation checks检验实际资源尺寸/槽patch/字宽/图标alpha/九宫格/物理像素缩放/边界及绑定门禁；`#gui-evidence` 提供只读事件/槽位/资源摘要。原生左右/中键、左拖、Shift、双击和数字键可试。Replay synthetic right drag是**不可信DOM事件回放**，不是实体右拖通过。关闭/重新打开重建夹具；有限组及实验Shift路由不是批准后的D04–D07业务，没有配方、燃烧、装备/结果领取或配方书。
+
+外部样本与原版资源截图不得放入Git。现有本机缓存和截图目录、缺口及测试证据见报告。普通 `build/preview` 故意没有原版样本，显示BLOCKED；不能使用调试几何/占位界面冒称原版GUI通过。根与子路径构建检查命令保持不变。

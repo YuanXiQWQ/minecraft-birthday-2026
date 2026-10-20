@@ -1,0 +1,490 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "method": "verified local JAR extraction; existing JDK javap static inspection; no Java client execution",
+  "cache": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020",
+  "manifestSha256": "b5020359512129d7baacba897c0fdb06db11fb4454ee5947eea2d41b275c0eba",
+  "entries": [
+    {
+      "entry": "assets/minecraft/blockstates/stone.json",
+      "sha256": "34476f2bb98e7abec029c07c3cbfd8ba3a0141c0df3f02ff255018dbec625bbc",
+      "size": 324
+    },
+    {
+      "entry": "assets/minecraft/blockstates/furnace.json",
+      "sha256": "aedb43571027a5dea15ba9cbfc05f0327af3048de70b72c3cd67c851839bb284",
+      "size": 760
+    },
+    {
+      "entry": "assets/minecraft/blockstates/hopper.json",
+      "sha256": "de8ce32f8543898110d2cf166231058d1a5100c8c2d4a09c6c5a203101ad0d1a",
+      "size": 431
+    },
+    {
+      "entry": "assets/minecraft/blockstates/crafting_table.json",
+      "sha256": "bd75337fe8f663e3c88e5f2490a7217d60925ff7f0001f98656b037441ecdb98",
+      "size": 87
+    },
+    {
+      "entry": "assets/minecraft/blockstates/blast_furnace.json",
+      "sha256": "265ec5f30fa65bdaff6867bbad8de73e0a1b21ea12a33da5b771f889e4ac7dcc",
+      "size": 808
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone.json",
+      "sha256": "c0734082e7f1e2f44809737b2fbe1136fc7304bde7232e45fbe921884a4a327e",
+      "size": 98
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_mirrored.json",
+      "sha256": "f6127c3048b1812b664209825271553c71c2b2dae9d6a19933702b6fdbe34370",
+      "size": 107
+    },
+    {
+      "entry": "assets/minecraft/models/block/furnace.json",
+      "sha256": "f1005df7892e96ab8bc3bc513bba9e0aa1930ff901423ea726e3bad1f49614c9",
+      "size": 196
+    },
+    {
+      "entry": "assets/minecraft/models/block/furnace_on.json",
+      "sha256": "c6cc3c51295082082a41c17fef84742207d2d8a5913b72260bb1dcda27063f72",
+      "size": 199
+    },
+    {
+      "entry": "assets/minecraft/models/block/hopper.json",
+      "sha256": "cffac4487f9d2186895ce39c8f2351e47ff1daa0b1d05ca2e4351f80cf31b1cc",
+      "size": 3046
+    },
+    {
+      "entry": "assets/minecraft/models/block/hopper_side.json",
+      "sha256": "ecbf1628f1768a1c0669a4f8eb5f56a379aab40ef719c863d203eebdf88b33da",
+      "size": 3046
+    },
+    {
+      "entry": "assets/minecraft/models/block/crafting_table.json",
+      "sha256": "98e1ff48fd72ed2a820ae4237e6d5193e0cd5ab6abd2338493c7bbbff130dea1",
+      "size": 412
+    },
+    {
+      "entry": "assets/minecraft/models/block/blast_furnace.json",
+      "sha256": "9ad81be0a1639b2b1acb4459dc0e9d6f399c093a7d83f96485f95ed7db685cdd",
+      "size": 214
+    },
+    {
+      "entry": "assets/minecraft/models/block/blast_furnace_on.json",
+      "sha256": "ac8f3a35104a8fcee5794959dc30826d780e3ffd9b80835506e9b758f1107395",
+      "size": 217
+    },
+    {
+      "entry": "assets/minecraft/models/block/cube_all.json",
+      "sha256": "be3205d629ffb9e03834c3d1d083f8a2c62e9f9ae80820755129408634e9144a",
+      "size": 227
+    },
+    {
+      "entry": "assets/minecraft/models/block/cube_mirrored_all.json",
+      "sha256": "eb0682e3126d537e8a15af343bc40e32339baa63f4f541143ed969e25e9231e0",
+      "size": 236
+    },
+    {
+      "entry": "assets/minecraft/models/block/orientable.json",
+      "sha256": "f3da11f14343fd2cb38fe196dc775d1f4c21284b0dfcf09314659da8f4b6fc79",
+      "size": 99
+    },
+    {
+      "entry": "assets/minecraft/models/block/cube.json",
+      "sha256": "3e4aacd02e816aeba38f83076596e18ded4cf49c01e17c62d1fce79850ffb84e",
+      "size": 584
+    },
+    {
+      "entry": "assets/minecraft/models/block/cube_mirrored.json",
+      "sha256": "e0a7b21709196c8641177e68a0a5e2a25d1de8f82e7ece75120dd38ed5d7a0fa",
+      "size": 687
+    },
+    {
+      "entry": "assets/minecraft/models/block/orientable_with_bottom.json",
+      "sha256": "8da2928f84a31c6986dc31a916b8be736e5b0afdce7b3fbe651ec42771dd7255",
+      "size": 427
+    },
+    {
+      "entry": "assets/minecraft/models/block/block.json",
+      "sha256": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+      "size": 1136
+    },
+    {
+      "entry": "assets/minecraft/textures/block/stone.png",
+      "sha256": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f",
+      "size": 151
+    },
+    {
+      "entry": "assets/minecraft/textures/block/furnace_front.png",
+      "sha256": "aae808f71f1bddf4a25592f7dd3d7f6e9b3adaa739502170766424f4eb6bf9c5",
+      "size": 224
+    },
+    {
+      "entry": "assets/minecraft/textures/block/furnace_side.png",
+      "sha256": "cada9065da8d26b3a7324a203edb42f2564975519e8504d520e10d530822bb5b",
+      "size": 228
+    },
+    {
+      "entry": "assets/minecraft/textures/block/furnace_top.png",
+      "sha256": "59e26149cde8b86ea1d165c1a4ba5c44531a4b7be134b30c93120bba1cefb162",
+      "size": 208
+    },
+    {
+      "entry": "assets/minecraft/textures/block/furnace_front_on.png",
+      "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9",
+      "size": 269
+    },
+    {
+      "entry": "assets/minecraft/textures/block/hopper_outside.png",
+      "sha256": "83ccaffd41564465b45997c5f171a3af354d6951e4c4472fe1d1d953c4f57685",
+      "size": 177
+    },
+    {
+      "entry": "assets/minecraft/textures/block/hopper_top.png",
+      "sha256": "b6bb8d17e0fe5fc1ddcf8a9f4584d3844015629062876243850a079d506a243a",
+      "size": 155
+    },
+    {
+      "entry": "assets/minecraft/textures/block/hopper_inside.png",
+      "sha256": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb",
+      "size": 154
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_planks.png",
+      "sha256": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3",
+      "size": 195
+    },
+    {
+      "entry": "assets/minecraft/textures/block/crafting_table_side.png",
+      "sha256": "e9755fc6da763909b285342eae12c5f7d1cc8462fab695bb157504ea207cda8c",
+      "size": 260
+    },
+    {
+      "entry": "assets/minecraft/textures/block/crafting_table_front.png",
+      "sha256": "1659c76a33039640e8bd5584af8db04bf626486432a389bcaf1567e1a45c6464",
+      "size": 265
+    },
+    {
+      "entry": "assets/minecraft/textures/block/crafting_table_top.png",
+      "sha256": "251e8aa014e30d040261022895853db3204bba241b9b44c11762628550986f2d",
+      "size": 203
+    },
+    {
+      "entry": "assets/minecraft/textures/block/blast_furnace_front.png",
+      "sha256": "df580828cf9079059e167dc13b51713d8029cdcf0f0b20374367c71a805d7f62",
+      "size": 248
+    },
+    {
+      "entry": "assets/minecraft/textures/block/blast_furnace_side.png",
+      "sha256": "2254b141bca1943258f66bca2ce34d4c7fb5f777d27cb2d5d8d9a4f0ad6f3ab7",
+      "size": 238
+    },
+    {
+      "entry": "assets/minecraft/textures/block/blast_furnace_top.png",
+      "sha256": "003c4e4c615a20a7f0ba48baf0e9cf3bae55b6a2a387d34e0cff9958aa2420c0",
+      "size": 187
+    },
+    {
+      "entry": "assets/minecraft/textures/block/blast_furnace_front_on.png",
+      "sha256": "5363eaaf29c6cfed922c05fd4df9eaa7ef52b2d78ca56affda9ebf45ba33215d",
+      "size": 283
+    },
+    {
+      "entry": "assets/minecraft/textures/block/blast_furnace_front_on.png.mcmeta",
+      "sha256": "a1d4171d971c3a7b3202d9aa67062f643f579443a71cc92efe38f1acd8990f03",
+      "size": 70
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/inventory.png",
+      "sha256": "c2f850076ad7ebd7a1b27d017fe5f66ac388f54de374de988cb79f86b1d59a65",
+      "size": 454
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/crafting_table.png",
+      "sha256": "baf65a599d8bb380b1b03efa1862c20fd29e936b43110d7438b9fe00086075b0",
+      "size": 404
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/furnace.png",
+      "sha256": "d700c1af4175a204e9e403c31dea2afdee575dac2bb23493f208b9f0bf3b2dc8",
+      "size": 452
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/blast_furnace.png",
+      "sha256": "d700c1af4175a204e9e403c31dea2afdee575dac2bb23493f208b9f0bf3b2dc8",
+      "size": 452
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/hopper.png",
+      "sha256": "5f98e011ffbd3a1ecd00501a08f36bb3a6af3a3ed34eba2156b0361aca4cd43f",
+      "size": 325
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/tooltip/background.png",
+      "sha256": "b3b7fdcec719bd1ad2dfc655d79d61aff57aaed7065874e1e8235b32039434a4",
+      "size": 126
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/tooltip/background.png.mcmeta",
+      "sha256": "ad6e922929ebfddbbdf43c477239e47f9c73f410020d1cf168e356b69ae1ff16",
+      "size": 165
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/tooltip/frame.png",
+      "sha256": "8cd60f7b1dc3f43335a8c97ee50d24f937e958ea9ba36634aae492eccd871ad5",
+      "size": 542
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/tooltip/frame.png.mcmeta",
+      "sha256": "c2ed08b41d6411dcaeba24352837b13fad8158a4889b9f79a95aa1e48a09854c",
+      "size": 201
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button.png",
+      "sha256": "0a2e159360200a39e0c7e9c0db0e6aa034ba4e1f8d99698c004084b5ba6e94cb",
+      "size": 1699
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button.png.mcmeta",
+      "sha256": "c8f6fe62c01c357a814223d4ab6a368e5122c195fa2671e585fa24988557a505",
+      "size": 164
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button_disabled.png",
+      "sha256": "19866c723b986b57300a5248f6255ceb0e464faf673f73fdcf4158da1195c250",
+      "size": 1142
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button_disabled.png.mcmeta",
+      "sha256": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
+      "size": 164
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button_highlighted.png",
+      "sha256": "1fcd15ad8971b1e846f848b2211d631f51b9b6533d99ca392a5799af7e9854f9",
+      "size": 1703
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/button_highlighted.png.mcmeta",
+      "sha256": "c8f6fe62c01c357a814223d4ab6a368e5122c195fa2671e585fa24988557a505",
+      "size": 164
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/slot.png",
+      "sha256": "11d26999221149d67619689e11fef2367b47ca2e8ac7c7fe9817846268da7f80",
+      "size": 83
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/slot_highlight_back.png",
+      "sha256": "6e844a8cf0ae479e3c3846b6e9a004ac805e937bf9889b4f605bba270b3b47f7",
+      "size": 82
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/slot_highlight_back.png.mcmeta",
+      "sha256": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220",
+      "size": 163
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/slot_highlight_front.png",
+      "sha256": "7612266799b7c7bdec2a9ef562fd1c0ec7ae28c048d3e0f7ed5e08a2cc2ced26",
+      "size": 82
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/slot_highlight_front.png.mcmeta",
+      "sha256": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220",
+      "size": 163
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/furnace/burn_progress.png",
+      "sha256": "e26aac6002403fdd838b6a0c829808a991d32ba2c4d3603f2c4e2f7ee5a4d969",
+      "size": 119
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/furnace/lit_progress.png",
+      "sha256": "36a83a892fe65c55296ac01f63374425ecd42aaba3670b61767c88795a5732e3",
+      "size": 170
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/blast_furnace/burn_progress.png",
+      "sha256": "e26aac6002403fdd838b6a0c829808a991d32ba2c4d3603f2c4e2f7ee5a4d969",
+      "size": 119
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/blast_furnace/lit_progress.png",
+      "sha256": "36a83a892fe65c55296ac01f63374425ecd42aaba3670b61767c88795a5732e3",
+      "size": 170
+    },
+    {
+      "entry": "assets/minecraft/font/default.json",
+      "sha256": "32942032bb9cc9a482088dcbd617a9ce339fb9b722e9696c6cac13bac5949832",
+      "size": 398
+    },
+    {
+      "entry": "assets/minecraft/font/include/default.json",
+      "sha256": "e17f8a4289db15bf662df3ab623ad4dd9bda9d2b2e3e9e9e743234ff186bd0c4",
+      "size": 19118
+    },
+    {
+      "entry": "assets/minecraft/font/include/space.json",
+      "sha256": "f87f46eca8c1731f0452ca539035ebdfbc52be3024fc74a910721832496d1ee1",
+      "size": 170
+    },
+    {
+      "entry": "assets/minecraft/textures/font/ascii.png",
+      "sha256": "e8646f1ed1f4bfd597d262cca3d8fac88ceaaa62807bbd5e607b2e3fe41c928a",
+      "size": 810
+    },
+    {
+      "entry": "assets/minecraft/items/egg.json",
+      "sha256": "b1f3bd1f1d34d1c6945c5745a793f87725e19b9adefc1324ceff4cd77b0c361b",
+      "size": 85
+    },
+    {
+      "entry": "assets/minecraft/items/furnace.json",
+      "sha256": "04626b7df4ed61ca6f1962bef6852fc2735ddc7ad81b721929442a83b494fe1d",
+      "size": 90
+    },
+    {
+      "entry": "assets/minecraft/models/item/egg.json",
+      "sha256": "9303a32f362d17f3518b00d72518ab266e13ce4ee15b50383c2d0a30dfefee5e",
+      "size": 98
+    },
+    {
+      "entry": "assets/minecraft/models/item/generated.json",
+      "sha256": "63190611202e75ad7b812bc9a4b31bd53f3e186895d7b53e5e280b0d1e30a67a",
+      "size": 813
+    },
+    {
+      "entry": "assets/minecraft/textures/item/egg.png",
+      "sha256": "3bfccf5fcfe66933d591e944f6b08456c8083f5c3898b924da52bfebc41e6322",
+      "size": 167
+    }
+  ],
+  "guiEntries": [
+    "assets/minecraft/font/default.json",
+    "assets/minecraft/font/include/default.json",
+    "assets/minecraft/font/include/space.json",
+    "assets/minecraft/items/egg.json",
+    "assets/minecraft/items/furnace.json",
+    "assets/minecraft/models/item/egg.json",
+    "assets/minecraft/models/item/generated.json",
+    "assets/minecraft/textures/font/ascii.png",
+    "assets/minecraft/textures/gui/container/blast_furnace.png",
+    "assets/minecraft/textures/gui/container/crafting_table.png",
+    "assets/minecraft/textures/gui/container/furnace.png",
+    "assets/minecraft/textures/gui/container/hopper.png",
+    "assets/minecraft/textures/gui/container/inventory.png",
+    "assets/minecraft/textures/gui/sprites/container/blast_furnace/burn_progress.png",
+    "assets/minecraft/textures/gui/sprites/container/blast_furnace/lit_progress.png",
+    "assets/minecraft/textures/gui/sprites/container/furnace/burn_progress.png",
+    "assets/minecraft/textures/gui/sprites/container/furnace/lit_progress.png",
+    "assets/minecraft/textures/gui/sprites/container/slot_highlight_back.png",
+    "assets/minecraft/textures/gui/sprites/container/slot_highlight_back.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/container/slot_highlight_front.png",
+    "assets/minecraft/textures/gui/sprites/container/slot_highlight_front.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/container/slot.png",
+    "assets/minecraft/textures/gui/sprites/tooltip/background.png",
+    "assets/minecraft/textures/gui/sprites/tooltip/background.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/tooltip/frame.png",
+    "assets/minecraft/textures/gui/sprites/tooltip/frame.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/widget/button_disabled.png",
+    "assets/minecraft/textures/gui/sprites/widget/button_disabled.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/widget/button_highlighted.png",
+    "assets/minecraft/textures/gui/sprites/widget/button_highlighted.png.mcmeta",
+    "assets/minecraft/textures/gui/sprites/widget/button.png",
+    "assets/minecraft/textures/gui/sprites/widget/button.png.mcmeta",
+    "assets/minecraft/textures/item/egg.png"
+  ],
+  "loading": {
+    "requests": 49,
+    "bodyBytes": 41988,
+    "elapsedMs": 101.59999999403954
+  },
+  "staticInspection": [
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/InventoryMenu.javap.txt",
+      "sha256": "f4997be04e2de115e10bc871eeb1ce4c82b17370dbe8b58f04214a2d7b30161c"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/CraftingMenu.javap.txt",
+      "sha256": "004bd9dfbb57b56f5e7a641b4252d8f502f28225e6780db1fe504736d6cb5bce"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/AbstractFurnaceMenu.javap.txt",
+      "sha256": "04e173ea6fa54d984d6bcc095ad4a428ed603318292567e56040f02287b94c0e"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/InventoryScreen.javap.txt",
+      "sha256": "d748ee36a06c69fc0fc92a7572a19abbf5c7b11f6d1e9a0437c57cc6161b7b2e"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/CraftingScreen.javap.txt",
+      "sha256": "e387089119cab2bb8f96a52fe0b3668d8c28c88cb4144f2a350e0ba639086018"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/AbstractFurnaceScreen.javap.txt",
+      "sha256": "b4e07242d3a5fad1a9a503efa01103dcb3826185030b8e485267c9398e80065b"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/TooltipRenderUtil.javap.txt",
+      "sha256": "2ef8a54b18ff8d5f5dff3b14215bd1f2a03f730997aa856a03676737b59e3024"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/BitmapProvider$Definition.javap.txt",
+      "sha256": "3d7e987549349a22441003ec6ad9f1afbf47121c609dcb9defd785749873efd1"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/BitmapProvider$Glyph.javap.txt",
+      "sha256": "ddcbb3a540e4a1fa0fbbeaa0abadb0ad65e1642f31af785eda9d6f8286bc9f2e"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/blast-furnace-1280.jpg",
+      "bytes": 58119,
+      "sha256": "ec5515983af8a641f9867829c223e00fe4fac59152b729774d01f9064a40829d"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/blocked-static-1280.jpg",
+      "bytes": 40092,
+      "sha256": "d7f8d7029aa9390729fcd20d96dfdcf253f11f23776ea0de26a4e4eafc0cfb92"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/crafting-1440.jpg",
+      "bytes": 63909,
+      "sha256": "ecfa1420b1a45a76be440df08db41fd9d68c9669cde97c1bfb5da3db5d24a1d8"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/dpr125-scale2.jpg",
+      "bytes": 33700,
+      "sha256": "ef79ab208bdfff1e2b2890bc3a901c0d21d62c97c9f936ee1eec22336dd28978"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/dpr125-scale3.jpg",
+      "bytes": 34089,
+      "sha256": "1f7a6c8712602f4b4e0d3290159551e809adff9a667f8a5c0c627f7a0276e777"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/furnace-1440.jpg",
+      "bytes": 62785,
+      "sha256": "99bee1a0e4754dc366805a36346e3e96473e3763beaf8f1da094539055850a6a"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/inventory-scale2-1440.jpg",
+      "bytes": 54505,
+      "sha256": "144caeb0aa51b9dcd94b59e4bde2d6ffc2ce15e7306e5760c1eed194b0ba9044"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/inventory-tooltip-1280.jpg",
+      "bytes": 59685,
+      "sha256": "e04000ae92231b61b2a1ee606120765c0f55846303cf99c0137f20615f1e8a3e"
+    },
+    {
+      "path": "C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-gui-20261020/browser-evidence/inventory-tooltip-1440.jpg",
+      "bytes": 63561,
+      "sha256": "90b2325d0efcbe4bb0555223a37f6e5ef23ca0aa479aa5e24a537d466642b92f"
+    }
+  ],
+  "rights": "local verification only; distribution unresolved; no pixels/font grids/models embedded in this record"
+}

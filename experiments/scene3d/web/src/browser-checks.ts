@@ -12,6 +12,7 @@ import type { Layout } from './domain.ts';
  */
 export function browserChecks(adapter: SceneAdapter, original: Layout, panelProbe: () => boolean): object {
   const results: { name: string; passed: boolean; detail: string }[] = [];
+  const visibleTargets:{id:string;view:string;x:number;y:number}[]=[];
   const originalView=adapter.view;
   /** Record one independently named assertion without hiding subsequent failures.
    * @param {string} name Test identifier.
@@ -83,7 +84,8 @@ export function browserChecks(adapter: SceneAdapter, original: Layout, panelProb
         // Sample interior face points, including the open hopper rim instead of its empty center.
         return [.12,.5,.88].some(x=>[.15,.5,.9].some(y=>[.12,.5,.88].some(z=>{
           const p=adapter.project([instance.cell[0]+x,instance.cell[1]+y,instance.cell[2]+z]);
-          return p.x>0&&p.x<canvas.clientWidth&&p.y>0&&p.y<canvas.clientHeight&&adapter.pick(p.x,p.y)?.id===instance.id;
+          const visible=p.x>0&&p.x<canvas.clientWidth&&p.y>0&&p.y<canvas.clientHeight&&adapter.pick(p.x,p.y)?.id===instance.id;
+          if(visible)visibleTargets.push({id:instance.id,view,x:p.x,y:p.y});return visible;
         })));
       }));
     });
@@ -92,5 +94,5 @@ export function browserChecks(adapter: SceneAdapter, original: Layout, panelProb
     adapter.showPreview(null,'furnace','north',false); adapter.sync(original); adapter.setView(originalView); adapter.renderOnce();
   }
   return { capturedAt: new Date().toISOString(), scope: 'real browser engine checks; trusted physical pointer smoke recorded separately',
-    passed: results.filter(r=>r.passed).length, failed: results.filter(r=>!r.passed).length, results, environment: adapter.diagnostics() };
+    passed: results.filter(r=>r.passed).length, failed: results.filter(r=>!r.passed).length, results, visibleTargets, environment: adapter.diagnostics() };
 }

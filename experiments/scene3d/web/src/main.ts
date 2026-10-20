@@ -7,6 +7,9 @@ import { browserChecks } from './browser-checks.ts';
 import { loadVanillaPack } from './vanilla-pack.ts';
 import type { VanillaPack } from './vanilla-pack.ts';
 import { vanillaBrowserChecks } from './vanilla-checks.ts';
+import { loadGuiPack } from './gui-pack.ts';
+import { GuiView } from './gui-view.ts';
+import { GUI_TEXT as G } from './gui-labels.ts';
 import { measure } from './metrics.ts';
 import { TEXT as T } from './labels.ts';
 import './style.css';
@@ -18,7 +21,11 @@ let layout: Layout = fixture(), selected: string | null = null, mode = 'inspect'
   lastPick: Pick | null = null, candidate: Cell | null = null, panelOpen = false, busy = false, actions = 0, pointerEvents = 0,
   worldPointer: number | null = null;
 /** Browser evidence is deliberately exposed in the diagnostic DOM for inspection/export. */
-const evidence: { checks?: object; vanillaChecks?:object; resourceLoad?:object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
+const evidence: { checks?: object; vanillaChecks?:object; guiChecks?:object; resourceLoad?:object; guiLoad?:object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
+/** Modal key releases remain consumed even if their key-down closed the screen. */
+const modalKeys=new Set<string>();
+/** No world wheel behavior is added; this counter verifies modal event ownership. */
+let worldWheels=0;
 /** External samples are ephemeral and never serialized with the logical layout. */
 let localPack:VanillaPack|null=null;
 
@@ -45,18 +52,18 @@ function fail(error: unknown): void { const code = error instanceof Error ? erro
 /** Publish the experiment evidence without accessing or leaking Minecraft source files. */
 function showEvidence(): void { results.textContent=JSON.stringify(evidence,null,2); }
 
-/** Apply a layout transaction and refresh the adapter only after validation succeeds.
+/** Apply a validated layout, invalidate removed GUI bindings and refresh the rendering adapter.
  * @param {Layout} next Validated new layout.
  */
-function commit(next: Layout): void { layout=next; actions++; adapter.sync(layout); adapter.select(selected); status.textContent=T.success; updateDiagnostics(); }
+function commit(next: Layout): void { layout=next; actions++; if(gui.activeId&&gui.activeId!=='player'&&!layout.instances.some(e=>e.id===gui.activeId))openPanel(null); adapter.sync(layout); adapter.select(selected); status.textContent=T.success; updateDiagnostics(); }
 
 /** Update visible state and projected test targets from the actual camera/canvas. */
 function updateDiagnostics(): void {
-  stateBox.textContent=JSON.stringify({ mode, facing, selected, panelOpen, busy, actions, pointerEvents, lastPick, candidate, debugOpen: !developer.hidden,
+  stateBox.textContent=JSON.stringify({ mode, facing, selected, panelOpen, activeGuiId:gui.activeId,worldWheels,busy, actions, pointerEvents, lastPick, candidate, debugOpen: !developer.hidden,
     instances: layout.instances, environment: adapter.diagnostics() },null,2);
   links.textContent=JSON.stringify(edges(layout),null,2);
   targets.textContent=JSON.stringify({ ground_2_0_2: adapter.project([2.5,.005,2.5]), furnace_w2: adapter.project([.5,1.5,.5]),
-    table_w1: adapter.project([-1.5,.5,.5]), note: 'canvas-local CSS coordinates; these are diagnostics, not click hotspots' },null,2);
+    table_w1: adapter.project([-1.5,.5,.5]), devices:layout.instances.map(e=>({id:e.id,kind:e.kind,point:adapter.project([e.cell[0]+.5,e.cell[1]+.5,e.cell[2]+.5]),upperPoint:adapter.project([e.cell[0]+.88,e.cell[1]+.9,e.cell[2]+.88])})), note: 'canvas-local CSS coordinates; these are diagnostics, not click hotspots' },null,2);
   direction.textContent=facing;
   modeHint.textContent=`${T[mode as 'inspect'|'place'|'remove']} · ${type.value} · ${facing}`;
 }
@@ -92,13 +99,14 @@ function hover(event: PointerEvent): void {
 }
 
 /** Open or close a screen-space GUI and cancel pending world gestures.
- * @param {string|null} id Device ID or null to close.
+ * @param {string|null} id Live device ID, player sentinel or null to close.
  */
 function openPanel(id: string | null): void {
+  const instance=layout.instances.find(e=>e.id===id);
+  if(id&&id!=='player'&&!instance)return;
   panelOpen=Boolean(id); overlay.hidden=!panelOpen; clearPreview();
   developer.inert=panelOpen; header.inert=panelOpen;
-  const instance=layout.instances.find(e=>e.id===id);
-  panelTitle.textContent=instance ? `${T.panel} · ${instance.id} / ${instance.kind}` : T.panel;
+  if(id)gui.show(instance?.kind??'inventory',id);else gui.close();
   updateDiagnostics();
 }
 
@@ -127,7 +135,7 @@ function act(event: PointerEvent): void {
  * @return {boolean} Whether logical state and pointer counters were preserved.
  */
 function panelProbe(): boolean {
-  const before=JSON.stringify(layout), count=pointerEvents, oldMode=mode; mode='place'; openPanel('w2');
+  const before=JSON.stringify(layout), count=pointerEvents, oldMode=mode; mode='place'; openPanel(layout.instances[0]?.id??'player');
   const r=adapter.renderer.domElement.getBoundingClientRect(), p=adapter.project([2.5,.005,2.5]);
   for(const name of ['pointerdown','pointerup']) adapter.renderer.domElement.dispatchEvent(new PointerEvent(name,{ clientX:r.left+p.x,clientY:r.top+p.y,button:0,pointerId:99,bubbles:true }));
   openPanel(null); mode=oldMode;
@@ -143,6 +151,7 @@ function bindCanvas(): void {
   canvas.addEventListener('pointercancel',()=>{ worldPointer=null; });
   canvas.addEventListener('pointerleave',() => { if (!busy) clearPreview(); });
   canvas.addEventListener('contextmenu',event=>event.preventDefault());
+  canvas.addEventListener('wheel',()=>{if(!panelOpen&&!busy){worldWheels++;updateDiagnostics();}});
 }
 
 /** Replace the renderer while preserving logical state and the diagnostic eye station. */
@@ -169,6 +178,30 @@ async function activateVanilla():Promise<void> {
     evidence.resourceLoad={status:'loaded',...localPack.loading};status.textContent=T.success;
   } catch(error){evidence.resourceLoad={...localPack?.loading,status:'blocked',reason:String(error)};status.textContent=T.blocked;}
   finally{busy=false;updateDiagnostics();showEvidence();}
+}
+
+/** Load an independently audited GUI cohort without changing the camera, layout or renderer mode.
+ * @return {Promise<void>} Local-only resource attempt with explicit unavailable evidence.
+ */
+async function activateGui():Promise<void> {
+  if(busy||panelOpen)return;busy=true;clearPreview();
+  try{localPack??=await loadVanillaPack();const next=await loadGuiPack(localPack);gui.pack?.dispose();gui.pack=next;evidence.guiLoad={status:'loaded',...next.loading};status.textContent=T.success;}
+  catch(error){evidence.guiLoad={status:'BLOCKED',reason:String(error)};status.textContent=G.unavailable;}
+  finally{busy=false;updateDiagnostics();showEvidence();}
+}
+
+/** Verify screen ownership and stale-instance invalidation without persisting any finite GUI groups. */
+function guiFoundationChecks():void {
+  if(busy||panelOpen)return;const original=layout,oldSelected=selected;
+  try {
+    commit(fixture());openPanel('w2');const raster=gui.verify(),r=adapter.renderer.domElement.getBoundingClientRect(),before=worldWheels;
+    adapter.renderer.domElement.dispatchEvent(new WheelEvent('wheel',{bubbles:true,clientX:r.left+100,clientY:r.top+100}));
+    commit(change(layout,'w2',null));const invalidated=!panelOpen&&gui.activeId===null;
+    const recreated=place(layout,'furnace',[0,1,0],'north'),freshId=recreated.instances.at(-1)!.id;commit(recreated);openPanel(freshId);
+    const rebound=gui.activeId===freshId&&freshId!=='w2';openPanel(null);
+    evidence.guiChecks={raster,invalidated,rebound,worldWheelBlocked:before===worldWheels,pointerGate:panelProbe(),scope:'synthetic integration; physical input records are separate'};
+  } catch(error){evidence.guiChecks={status:'FAIL',reason:String(error)};}
+  finally{openPanel(null);selected=oldSelected;commit(original);showEvidence();}
 }
 
 /** Generate a bounded stress fixture without adding world simulation or product dimensions. */
@@ -199,7 +232,7 @@ const toggleDeveloper=button(T.developer,()=>{
 });
 toggleDeveloper.setAttribute('aria-expanded','false'); toggleDeveloper.setAttribute('aria-controls',developer.id);
 const status=el('output',T.ready,'status'), viewport=el('div','','viewport'), overlay=el('div','','modal-mask');
-const panel=el('section','','modal'), panelTitle=el('h2',T.panel), slots=el('div','','slots');
+const gui=new GuiView(overlay,()=>openPanel(null),()=>{if(typeof adapter!=='undefined')updateDiagnostics();});
 const type=el('select') as HTMLSelectElement, direction=el('span',facing,'badge'), camera=el('select') as HTMLSelectElement;
 const stateBox=el('pre'), links=el('pre'), results=el('pre'), targets=el('pre');
 stateBox.id='state'; links.id='links'; results.id='evidence'; targets.id='targets'; status.id='status';
@@ -214,9 +247,7 @@ for(const [label,value] of [[T.inspect,'inspect'],[T.place,'place'],[T.remove,'r
 }
 toolbar.append(tools,type,direction,button(T.rotatePreview,()=>{ if(panelOpen||busy)return; facing=nextFacing(type.value as Kind,facing); clearPreview(); updateDiagnostics(); }),camera);
 overlay.hidden=true; overlay.id='device-panel'; overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true'); overlay.setAttribute('aria-label',T.panel);
-for(const label of [T.input,T.fuel,T.output]) slots.append(el('div',`${label}\n${T.empty}`,'slot'));
-panel.append(panelTitle,el('p',T.panelNote),slots,button(T.probe,()=>{ status.textContent=T.panelNote; }),button(T.close,()=>openPanel(null)));
-overlay.append(panel); for(const name of ['pointerdown','pointerup','click','wheel']) overlay.addEventListener(name,event=>event.stopPropagation());
+for(const name of ['pointerdown','pointermove','pointerup','click','dblclick','wheel','contextmenu']) overlay.addEventListener(name,event=>event.stopPropagation());
 viewport.append(overlay); footer.append(modeHint,status,warning);
 app.append(viewport,header,footer);
 let adapter: SceneAdapter;
@@ -226,10 +257,16 @@ adapter.sync(layout); bindCanvas(); adapter.renderOnce();
 type.addEventListener('change',()=>{ facing=type.value==='hopper'?'down':'north'; clearPreview(); updateDiagnostics(); });
 camera.addEventListener('change',()=>{ if(panelOpen||busy)return; clearPreview(); adapter.setView(camera.value as View); updateDiagnostics(); });
 sampleSelect.addEventListener('change',()=>{if(panelOpen||busy||!adapter.vanilla)return;clearPreview();adapter.showSample(sampleSelect.value||null);adapter.renderOnce();status.textContent=sampleSelect.value?`${T.sample}: ${sampleSelect.value}`:T.noSample;updateDiagnostics();});
-document.addEventListener('keydown',event=>{ if(event.key==='Escape' && panelOpen) openPanel(null); });
+for(const name of ['keydown','keyup'] as const)document.addEventListener(name,event=>{
+  if(name==='keyup'&&modalKeys.has(event.code)){modalKeys.delete(event.code);if(panelOpen)gui.key(event);else gui.record(event,null);event.stopPropagation();event.preventDefault();return;}
+  if(panelOpen){if(name==='keydown')modalKeys.add(event.code);gui.key(event);return;}
+  const editable=event.target instanceof HTMLInputElement||event.target instanceof HTMLSelectElement;
+  if(name==='keydown'&&event.code==='KeyE'&&!event.repeat&&!editable&&!busy){event.preventDefault();modalKeys.add(event.code);openPanel('player');}
+},{capture:true});
 window.addEventListener('blur',()=>{ worldPointer=null; });
 const actionsBar=el('div','','toolbar');
 const assetTools=el('div','','toolbar');
+assetTools.append(button(G.load,()=>{void activateGui();}),button(G.inventory,()=>{if(!busy&&!panelOpen)openPanel('player');}),button(G.checks,guiFoundationChecks));
 assetTools.append(button(T.localVanilla,()=>{void activateVanilla();}),button(T.debugMode,()=>{
   if(panelOpen||busy)return;clearPreview();adapter.setVanilla(null);adapter.sync(layout);warning.textContent=T.warning;sampleSelect.value='';updateDiagnostics();
 }),sampleSelect,button(T.toggleLit,()=>{if(panelOpen||busy)return;clearPreview();adapter.lit=!adapter.lit;adapter.sync(layout);updateDiagnostics();}),
@@ -246,4 +283,4 @@ for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets
 }
 developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),assetTools,toolbar,actionsBar,diagnostics);
 app.append(developer); updateDiagnostics(); showEvidence();
-window.addEventListener('pagehide',()=>adapter.dispose());
+window.addEventListener('pagehide',()=>{adapter.dispose();gui.pack?.dispose();});
