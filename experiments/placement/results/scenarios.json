@@ -1,0 +1,685 @@
+{
+  "experiment": "P1 placement supplement; candidate semantics only",
+  "node": "v25.2.1",
+  "pipelines": [
+    {
+      "mode": "A",
+      "cooker": "furnace",
+      "ticks": 200,
+      "instances": 2,
+      "edges": [],
+      "acquiredBeforeManualTake": false,
+      "metrics": {
+        "transferChecks": 0,
+        "machineSteps": 200
+      },
+      "snapshot": {
+        "schema": 1,
+        "mode": "A",
+        "fixture": "normal",
+        "tick": 200,
+        "nextId": 3,
+        "unlocked": [
+          "crafting_table",
+          "furnace",
+          "blast_furnace",
+          "hopper",
+          "raw_iron",
+          "coal",
+          "stick",
+          "oak_log",
+          "bucket",
+          "water_bucket",
+          "wooden_pickaxe",
+          "stone_pickaxe",
+          "iron_chestplate",
+          "cobblestone",
+          "stone",
+          "wheat_seeds",
+          "iron_ingot"
+        ],
+        "entities": {
+          "w1": {
+            "id": "w1",
+            "type": "crafting_table",
+            "pos": [
+              0,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w2": {
+            "id": "w2",
+            "type": "furnace",
+            "pos": [
+              3,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              {
+                "item": "raw_iron",
+                "count": 1
+              },
+              {
+                "item": "stick",
+                "count": 1
+              },
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 1,
+              "fingerprint": "raw_iron"
+            }
+          }
+        },
+        "resources": {
+          "iron-a": true,
+          "iron-b": true,
+          "tree": true,
+          "coal": true,
+          "stone": true
+        },
+        "cursor": null,
+        "metrics": {
+          "transferChecks": 0,
+          "machineSteps": 200
+        },
+        "events": []
+      }
+    },
+    {
+      "mode": "A",
+      "cooker": "blast_furnace",
+      "ticks": 100,
+      "instances": 2,
+      "edges": [],
+      "acquiredBeforeManualTake": false,
+      "metrics": {
+        "transferChecks": 0,
+        "machineSteps": 100
+      },
+      "snapshot": {
+        "schema": 1,
+        "mode": "A",
+        "fixture": "normal",
+        "tick": 100,
+        "nextId": 3,
+        "unlocked": [
+          "crafting_table",
+          "furnace",
+          "blast_furnace",
+          "hopper",
+          "raw_iron",
+          "coal",
+          "stick",
+          "oak_log",
+          "bucket",
+          "water_bucket",
+          "wooden_pickaxe",
+          "stone_pickaxe",
+          "iron_chestplate",
+          "cobblestone",
+          "stone",
+          "wheat_seeds",
+          "iron_ingot"
+        ],
+        "entities": {
+          "w1": {
+            "id": "w1",
+            "type": "crafting_table",
+            "pos": [
+              0,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w2": {
+            "id": "w2",
+            "type": "blast_furnace",
+            "pos": [
+              3,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              {
+                "item": "raw_iron",
+                "count": 1
+              },
+              {
+                "item": "stick",
+                "count": 1
+              },
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 1,
+              "fingerprint": "raw_iron"
+            }
+          }
+        },
+        "resources": {
+          "iron-a": true,
+          "iron-b": true,
+          "tree": true,
+          "coal": true,
+          "stone": true
+        },
+        "cursor": null,
+        "metrics": {
+          "transferChecks": 0,
+          "machineSteps": 100
+        },
+        "events": []
+      }
+    },
+    {
+      "mode": "B",
+      "cooker": "furnace",
+      "ticks": 209,
+      "instances": 6,
+      "edges": [
+        {
+          "kind": "push",
+          "from": "w3",
+          "to": "w2",
+          "face": "up"
+        },
+        {
+          "kind": "push",
+          "from": "w4",
+          "to": "w2",
+          "face": "west"
+        },
+        {
+          "kind": "push",
+          "from": "w5",
+          "to": "w6",
+          "face": "west"
+        },
+        {
+          "kind": "pull",
+          "from": "w2",
+          "to": "w5",
+          "face": "down"
+        }
+      ],
+      "acquiredBeforeManualTake": true,
+      "metrics": {
+        "transferChecks": 7,
+        "machineSteps": 209
+      },
+      "snapshot": {
+        "schema": 1,
+        "mode": "B",
+        "fixture": "normal",
+        "tick": 209,
+        "nextId": 7,
+        "unlocked": [
+          "crafting_table",
+          "furnace",
+          "blast_furnace",
+          "hopper",
+          "raw_iron",
+          "coal",
+          "stick",
+          "oak_log",
+          "bucket",
+          "water_bucket",
+          "wooden_pickaxe",
+          "stone_pickaxe",
+          "iron_chestplate",
+          "cobblestone",
+          "stone",
+          "wheat_seeds",
+          "iron_ingot"
+        ],
+        "entities": {
+          "w1": {
+            "id": "w1",
+            "type": "crafting_table",
+            "pos": [
+              0,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w2": {
+            "id": "w2",
+            "type": "furnace",
+            "pos": [
+              3,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              {
+                "item": "raw_iron",
+                "count": 3
+              },
+              {
+                "item": "stick",
+                "count": 2
+              },
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 8,
+              "burn": 93,
+              "fingerprint": "raw_iron"
+            }
+          },
+          "w3": {
+            "id": "w3",
+            "type": "hopper",
+            "pos": [
+              3,
+              3,
+              0
+            ],
+            "facing": "down",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w4": {
+            "id": "w4",
+            "type": "hopper",
+            "pos": [
+              2,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w5": {
+            "id": "w5",
+            "type": "hopper",
+            "pos": [
+              3,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 8,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w6": {
+            "id": "w6",
+            "type": "hopper",
+            "pos": [
+              4,
+              1,
+              0
+            ],
+            "facing": "north",
+            "slots": [
+              {
+                "item": "iron_ingot",
+                "count": 1
+              },
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 8,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          }
+        },
+        "resources": {
+          "iron-a": true,
+          "iron-b": true,
+          "tree": true,
+          "coal": true,
+          "stone": true
+        },
+        "cursor": null,
+        "metrics": {
+          "transferChecks": 7,
+          "machineSteps": 209
+        },
+        "events": []
+      }
+    },
+    {
+      "mode": "B",
+      "cooker": "blast_furnace",
+      "ticks": 109,
+      "instances": 6,
+      "edges": [
+        {
+          "kind": "push",
+          "from": "w3",
+          "to": "w2",
+          "face": "up"
+        },
+        {
+          "kind": "push",
+          "from": "w4",
+          "to": "w2",
+          "face": "west"
+        },
+        {
+          "kind": "push",
+          "from": "w5",
+          "to": "w6",
+          "face": "west"
+        },
+        {
+          "kind": "pull",
+          "from": "w2",
+          "to": "w5",
+          "face": "down"
+        }
+      ],
+      "acquiredBeforeManualTake": true,
+      "metrics": {
+        "transferChecks": 7,
+        "machineSteps": 109
+      },
+      "snapshot": {
+        "schema": 1,
+        "mode": "B",
+        "fixture": "normal",
+        "tick": 109,
+        "nextId": 7,
+        "unlocked": [
+          "crafting_table",
+          "furnace",
+          "blast_furnace",
+          "hopper",
+          "raw_iron",
+          "coal",
+          "stick",
+          "oak_log",
+          "bucket",
+          "water_bucket",
+          "wooden_pickaxe",
+          "stone_pickaxe",
+          "iron_chestplate",
+          "cobblestone",
+          "stone",
+          "wheat_seeds",
+          "iron_ingot"
+        ],
+        "entities": {
+          "w1": {
+            "id": "w1",
+            "type": "crafting_table",
+            "pos": [
+              0,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w2": {
+            "id": "w2",
+            "type": "blast_furnace",
+            "pos": [
+              3,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              {
+                "item": "raw_iron",
+                "count": 3
+              },
+              {
+                "item": "stick",
+                "count": 2
+              },
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 8,
+              "burn": 43,
+              "fingerprint": "raw_iron"
+            }
+          },
+          "w3": {
+            "id": "w3",
+            "type": "hopper",
+            "pos": [
+              3,
+              3,
+              0
+            ],
+            "facing": "down",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w4": {
+            "id": "w4",
+            "type": "hopper",
+            "pos": [
+              2,
+              2,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 0,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w5": {
+            "id": "w5",
+            "type": "hopper",
+            "pos": [
+              3,
+              1,
+              0
+            ],
+            "facing": "east",
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 8,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          },
+          "w6": {
+            "id": "w6",
+            "type": "hopper",
+            "pos": [
+              4,
+              1,
+              0
+            ],
+            "facing": "north",
+            "slots": [
+              {
+                "item": "iron_ingot",
+                "count": 1
+              },
+              null,
+              null,
+              null,
+              null
+            ],
+            "cooldown": 8,
+            "machine": {
+              "progress": 0,
+              "burn": 0,
+              "fingerprint": null
+            }
+          }
+        },
+        "resources": {
+          "iron-a": true,
+          "iron-b": true,
+          "tree": true,
+          "coal": true,
+          "stone": true
+        },
+        "cursor": null,
+        "metrics": {
+          "transferChecks": 7,
+          "machineSteps": 109
+        },
+        "events": []
+      }
+    }
+  ],
+  "cycle": {
+    "ticks": 1000,
+    "instances": 4,
+    "finiteBefore": 17,
+    "finiteAfter": 17,
+    "metrics": {
+      "transferChecks": 494,
+      "machineSteps": 0
+    },
+    "boundedEventCount": 80
+  }
+}

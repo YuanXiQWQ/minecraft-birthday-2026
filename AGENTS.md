@@ -16,6 +16,7 @@
 - [技术决策与核实记录](docs/decisions-and-research.md)：建议状态、待确认项及一手资料来源。
 - 总体架构与九阶段路线已初审通过；P1 核实已获授权，具体适配决定与 P2 实现仍须审查和明确授权。
 - [P1 验收与证据入口](docs/p1/report.md)：原版构件/数据、资产、GUI 矩阵、放置增量与未解决门槛；报告完成不自动放行 P2。
+- [P1 放置补充实验](docs/p1/placement-experiment.md)：独立授权的 A/B 可运行验证、测试与最新推荐；代码隔离于 `experiments/placement/`，候选语义仅限实验，P2 仍未授权。
 
 ## 使用这些资料
 

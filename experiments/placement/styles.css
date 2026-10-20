@@ -1,0 +1,22 @@
+/* Diagnostic layout and deliberately non-Minecraft placeholder colors. */
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #192b36; background: #edf2f5; }
+body { margin: 0; } main { max-width: 1400px; margin: auto; padding: 20px; }
+h1 { margin: 0 0 12px; } h2 { font-size: 16px; margin: 12px 0; }
+.warning { background: #fff0c0; border: 2px solid #a47c15; padding: 12px; font-weight: 600; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+button, select, input { font: inherit; padding: 7px; border: 1px solid #84929d; border-radius: 4px; background: white; color: inherit; }
+button { cursor: pointer; } button:hover { outline: 2px solid #2b68a1; } button:focus-visible { outline: 3px solid #184b8d; }
+input[type=number] { width: 65px; } label { display: inline-flex; align-items: center; gap: 6px; }
+.layout { display: grid; grid-template-columns: minmax(450px, 1.2fr) minmax(320px, 1fr); gap: 18px; }
+.panel { min-width: 0; padding: 14px; border: 1px solid #b3c2cd; background: #fff; border-radius: 6px; }
+.grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.cell { min-width: 0; min-height: 65px; font-size: 11px; white-space: pre-line; overflow-wrap: anywhere; background: #f4f7f9; }
+.cell.device { background: #d1e5fa; } .cell.hopper { background: #ccebdc; } .cell.resource { background: #e5dbca; }
+.cell.guide { border: 2px dashed #7866a5; } .cell.protected { background: #fae4ed; }
+.cell.selected { outline: 3px solid #184b8d; } .slots { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.slots button { min-height: 65px; min-width: 90px; white-space: pre-line; font-size: 12px; }
+#status { display: block; padding: 10px; background: #daeade; white-space: pre-wrap; }
+#status[data-kind=error] { background: #ffe0dd; } .muted { color: #536672; font-size: 13px; overflow-wrap: anywhere; }
+pre { overflow: auto; font-size: 12px; max-height: 250px; white-space: pre-wrap; background: #f3f6f8; padding: 8px; }
+.source { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 6px 0; font-size: 12px; }
+@media(max-width: 850px) { .layout { grid-template-columns: 1fr; } main { padding: 10px; } .cell { min-height: 60px; } }

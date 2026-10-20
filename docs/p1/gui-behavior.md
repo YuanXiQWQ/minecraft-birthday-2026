@@ -2,6 +2,8 @@
 
 日期：2026-10-20。本文提供原版基线、静态证据及候选状态转换，**没有批准临时容器计数、批量策略、结果解锁时机或配方书发现方案**。等级见 [数据核实](vanilla-data.md#1-证据等级)。全部真实客户端操作与浏览器测试为 U，未虚构通过结果。
 
+后续状态说明：用户另行授权的[放置补充实验](placement-experiment.md)采用推荐候选完成有限组、路由、炉引用及自动取得样本，并做了诊断页面浏览器冒烟。它未实现本矩阵完整GUI或Java客户端操作，本矩阵原版对照及未覆盖输入仍为U，候选正式批准状态不变。
+
 ## 1. 基线与证据定位
 
 - **S1**：AbstractContainerMenu.clicked/doClick、getQuickCraftPlaceCount 等，包含 PICKUP、QUICK_MOVE、SWAP、CLONE、THROW、QUICK_CRAFT、PICKUP_ALL 分支。当前版本枚举名为 ContainerInput，不套用旧教程类名。
