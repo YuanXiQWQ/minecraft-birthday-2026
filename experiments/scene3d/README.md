@@ -35,7 +35,27 @@ npm run preview
 
 ## 原版模型的隔离分析
 
-**浏览器完全使用自行编写的平色调试几何，没有原版模型/贴图/字体/声音。它们不是正式替代资产。**
+第二轮的本机原版预览（当前机器已有外部样本）：
+
+```powershell
+$env:MC_LOCAL_SAMPLES = 'C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-materials-20261020'
+npm run dev
+```
+
+访问 `http://127.0.0.1:4178/game/`，展开 Developer tools → Load local vanilla samples。Original state gallery枚举26个精确状态；选择空项恢复常规布局。Toggle lit sample state只改变实验炉材质，不执行加工。Use debug geometry显式切回占位模型。原版与调试分别跑Run browser checks/Measure，Run vanilla browser checks验证真实模型/纹理/GPU结果；未加载时明确blocked，不用调试成功代替原版结果。
+
+资源接口仅在显式配置的Vite dev服务器存在，监听127.0.0.1、同源且仅允许哈希清单内文件；preview/普通build不带资源。不要把外部缓存或原版截图拷入web/public/Git。另一台机器先用下述脚本在**仓库外**提取自己提供的同版JAR：
+
+```powershell
+pwsh -File tools/extract-model-samples.ps1 -Jar '<外部26.3 client.jar>' -Output '<仓库外绝对目录>' -IncludeTextures
+$env:MC_LOCAL_SAMPLES = '<同一仓库外目录>'
+npm test
+npm run dev
+```
+
+不带IncludeTextures继续只导出离线JSON并校验PNG哈希；带开关才导出本机PNG和动画元数据。五类共26个状态/16纹理，元素旋转、UV-lock、multipart与半透明等仍明确拒绝。完整证据、限制和本机截图路径见[第二轮报告](../../docs/p2/vanilla-model-review.md)。
+
+**默认/无本机资源的浏览器仍使用自行编写的调试几何，不能计作原版通过。** 显式原版模式仅从仓库外本机缓存加载几何与纹理，环境与二维GUI仍有占位图形。没有原版字体/声音或正式替代资产。
 
 已有同版原始 client.jar 时，用 PowerShell 7 在仓库外提取少量分析样本：
 
@@ -44,9 +64,9 @@ pwsh -File tools/extract-model-samples.ps1 -Jar '<外部 client.jar 绝对路径
 npm run probe:models -- '<同一分析目录>'
 ```
 
-脚本要求 client SHA-1 为 `e877b6a07acd633fb3bb475002175cec036e7b87`，拒绝输出到仓库内，只提取 stone/furnace/hopper blockstates、模型与父依赖；PNG 只读取计算哈希，不导出。CPU 几何探针解析父继承、贴图变量、面/UV 和状态朝向，用 Three.js BufferGeometry / Raycaster 验证尺寸、炉前面与漏斗开口。输出仅路径/哈希/统计/断言结果，不输出原始 JSON、像素或转换顶点。
+脚本要求 client SHA-1 为 `e877b6a07acd633fb3bb475002175cec036e7b87`，拒绝输出到仓库内，提取上述五类blockstates、模型与父依赖；默认PNG只计算哈希，IncludeTextures显式开启外部PNG/动画元数据提取。CPU探针检查继承、纹理变量、面/UV、朝向、炉前面和漏斗开口；其输出仅路径/哈希/统计/断言，不输出原始JSON、像素或转换顶点。
 
-`model-format.ts` 没有浏览器入口引用，也没有原版资源静态拷贝。元素旋转、UV-lock、multipart 显式不支持；未做真实贴图视觉对照、AO/动画/透明适配或实体模型。没有启动 Java 客户端，没有获得资产分发依据。
+`model-format.ts`由浏览器原版适配器使用，但没有原版资源静态拷贝。元素旋转、UV-lock、multipart和半透明显式不支持；已验证样本二值alpha、UV/状态材质与高炉插值动画。完整Java视觉对照、AO/光照和实体模型尚缺；没有启动Java客户端或取得资产分发依据。首次离线17状态的历史结果保留，最新五类26状态结果另列。
 
 ## 简化边界
 

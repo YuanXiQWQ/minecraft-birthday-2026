@@ -79,6 +79,7 @@ function defaultUV(e: ModelElement, face: Face): number[] {
  */
 export function compileModel(model: ModelSource, variant: Variant = { model: 'debug:fixture' }): CompiledModel {
   if (!model.elements || model.elements.length > 512 || variant.uvlock) throw new Error('unsupported-model-or-uvlock');
+  if(![0,90,180,270].includes(variant.x??0)||![0,90,180,270].includes(variant.y??0))throw new Error('unsupported-blockstate-rotation');
   const result: CompiledModel = { positions: [], normals: [], uvs: [], indices: [], faces: [], textures: [] };
   const rotate = new Matrix4().makeRotationY(-(variant.y ?? 0) * Math.PI / 180)
     .multiply(new Matrix4().makeRotationX(-(variant.x ?? 0) * Math.PI / 180));

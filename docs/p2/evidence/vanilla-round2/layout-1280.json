@@ -1,0 +1,40 @@
+{
+  "layout": {
+    "canvas": {
+      "bottom": 720,
+      "height": 720,
+      "left": 0,
+      "right": 1280,
+      "top": 0,
+      "width": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "debugHidden": true,
+    "height": 720,
+    "modalHidden": true,
+    "width": 1280
+  },
+  "pointer": {
+    "selected": "w1",
+    "lastPick": {
+      "id": "w1",
+      "role": "device",
+      "point": [
+        -1.4999999999999996,
+        0.5018844875411603,
+        0.495567208547289
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "candidate": [
+        -1,
+        0,
+        0
+      ]
+    }
+  }
+}

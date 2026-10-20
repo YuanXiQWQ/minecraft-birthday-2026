@@ -52,7 +52,7 @@ export function browserChecks(adapter: SceneAdapter, original: Layout, panelProb
     check('B09 rotation invalidates live edge', () => !edges(layout).some(e => e.from==='w4'));
     layout = place(layout,'furnace',[2,0,2],'east'); adapter.sync(layout); const id = `w${layout.nextId-1}`;
     check('B10 model front matches east-facing logical state', () => {
-      const p = adapter.objects.get(id)!.getObjectByName('front')!.getWorldPosition(new Vector3()); return p.x > 3 && Math.abs(p.z-2.5)<.01;
+      const p = adapter.objects.get(id)!.getObjectByName('front')!.getWorldPosition(new Vector3()); return p.x >= 3-.00001 && Math.abs(p.z-2.5)<.01;
     });
     layout = change(layout,id,null); adapter.sync(layout);
     check('B11 removed instance has no render or graph reference', () => !adapter.objects.has(id) && !edges(layout).some(e => e.to===id || e.from===id));

@@ -32,15 +32,15 @@ function geometry(model: CompiledModel): BufferGeometry {
 
 /** Only counts, source hashes and assertion outcomes are emitted; never converted vertex arrays. */
 const samples: object[]=[];
-for (const name of ['stone','furnace','hopper']) {
+for (const name of ['stone','furnace','hopper','crafting_table','blast_furnace']) {
   const state=JSON.parse(readFileSync(resolve(directory,`assets/minecraft/blockstates/${name}.json`),'utf8'));
   for (const [variantKey, raw] of Object.entries(state.variants)) for (const variant of (Array.isArray(raw)?raw:[raw]) as Variant[]) {
     const inherited=resolveModel(variant.model,load), compiled=compileModel(inherited,variant), g=geometry(compiled);
     assert.ok(compiled.positions.every(Number.isFinite)); assert.ok(compiled.uvs.every(v=>v>=0&&v<=1));
     assert.ok(compiled.textures.every(id=>manifest.textures.some((t:{id:string})=>t.id===id)));
-    if (name==='stone'||name==='furnace') { assert.equal(compiled.faces.length,6); assert.equal(compiled.indices.length,36); }
-    if (name==='furnace') {
-      const index=compiled.faces.findIndex(f=>f.texture.includes('furnace_front'));
+    if (name!=='hopper') { assert.equal(compiled.faces.length,6); assert.equal(compiled.indices.length,36); }
+    if (name==='furnace'||name==='blast_furnace') {
+      const index=compiled.faces.findIndex(f=>f.texture.includes('_front'));
       assert.ok(index>=0);
       const actual=compiled.normals.slice(index*12,index*12+3).map(v=>Math.round(v)||0);
       const facing=variantKey.match(/facing=(north|east|south|west)/)![1];

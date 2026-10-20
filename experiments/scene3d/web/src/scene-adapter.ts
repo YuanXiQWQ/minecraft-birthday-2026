@@ -3,12 +3,16 @@ import { AmbientLight, Box3, Box3Helper, BoxGeometry, Color, DirectionalLight, G
   BufferGeometry, Fog, Mesh, PerspectiveCamera, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three';
 import { setEyeView } from './camera.ts';
 import type { View } from './camera.ts';
+import { VanillaModels } from './vanilla-models.ts';
+import type { VanillaPack } from './vanilla-pack.ts';
 export type { View } from './camera.ts';
 import { DebugModels } from './debug-models.ts';
 import { edges, key } from './domain.ts';
 import type { Cell, Facing, Kind, Layout } from './domain.ts';
 
 export interface Pick { id: string; role: 'device' | 'ground' | 'occluder'; point: Cell; normal: Cell; candidate: Cell }
+/** A render-only stone probe stays outside the legal build cells to prevent hidden occupancy conflicts. */
+export const STONE_SAMPLE_CELL:Cell=[-5,0,-2];
 
 /** Convert a visible world-space face hit into its adjacent logical cell, including negatives.
  * @param {Cell} point World-space point.
@@ -24,6 +28,11 @@ export class SceneAdapter {
   raycaster = new Raycaster();
   renderer: WebGLRenderer;
   models = new DebugModels();
+  vanilla:VanillaModels|null=null;
+  lit=false;
+  stoneRoot=new Group();
+  sampleRoot=new Group();
+  sampleId:string|null=null;
   objects = new Map<string, Group>();
   signatures = new Map<string, string>();
   environment = new Group();
@@ -55,6 +64,7 @@ export class SceneAdapter {
     host.append(this.renderer.domElement); this.scene.background = new Color(0x9bc7de);
     this.scene.fog = new Fog(0x9bc7de, 22, 48);
     this.scene.add(this.environment, this.deviceRoot, this.selected); this.selected.visible = false;
+    this.environment.add(this.stoneRoot,this.sampleRoot);
     this.scene.add(new AmbientLight(0xdbeaf7, 2));
     const light = new DirectionalLight(0xffedca, 3); light.position.set(-4,8,5); this.scene.add(light);
     const floor = this.models.part(this.environment,new BoxGeometry(48,.6,48),this.models.material('floor',0x638447),[.5,-.3,-3]);
@@ -81,6 +91,7 @@ export class SceneAdapter {
     for(let z=-3;z<=4;z++) gridPoints.push(new Vector3(-4,.003,z),new Vector3(5,.003,z));
     this.grid=new LineSegments(new BufferGeometry().setFromPoints(gridPoints),new LineBasicMaterial({color:0x9ca9a4}));
     this.grid.visible=false; this.environment.add(this.grid);
+    this.updateStone();
     this.observer = new ResizeObserver(() => this.resize(host.clientWidth, host.clientHeight)); this.observer.observe(host);
     this.resize(host.clientWidth,host.clientHeight); this.animate(0);
   }
@@ -110,6 +121,37 @@ export class SceneAdapter {
     if(this.lines) this.lines.visible=visible;
   }
 
+  /** Change model factories without mutating logical layout or the accepted first-person camera.
+   * @param {VanillaPack|null} pack Verified external samples or explicit diagnostic fallback.
+   */
+  setVanilla(pack:VanillaPack|null):void {
+    const next=pack?new VanillaModels(pack):null;
+    this.showPreview(null,'furnace','north',false);
+    for(const object of this.objects.values())this.models.release(object);
+    this.objects.clear();this.signatures.clear();
+    this.models.release(this.stoneRoot);this.models.release(this.sampleRoot);
+    this.stoneRoot=new Group();this.sampleRoot=new Group();this.sampleId=null;this.environment.add(this.stoneRoot,this.sampleRoot);
+    this.vanilla?.dispose();this.vanilla=next;this.updateStone();
+  }
+
+  /** Keep one unit stone sample separate from the deliberately schematic environment. */
+  updateStone():void {
+    if(this.vanilla){const stone=this.vanilla.sample(this.vanilla.pack.samples.find(s=>s.block==='stone')!);this.stoneRoot.add(stone);}
+    else this.models.part(this.stoneRoot,new BoxGeometry(1,1,1),this.models.material('stone-sample',0x7c8587),[.5,.5,.5]);
+    this.stoneRoot.position.set(...STONE_SAMPLE_CELL);this.stoneRoot.traverse(o=>{o.userData={...o.userData,id:'stone-sample',role:'occluder'};});
+  }
+
+  /** Display one exact blockstate in the existing view without adding a domain instance.
+   * @param {string|null} id Explicit original variant choice or null to hide the gallery sample.
+   */
+  showSample(id:string|null):void {
+    this.models.release(this.sampleRoot);this.sampleRoot=new Group();this.environment.add(this.sampleRoot);this.sampleId=id;
+    if(id){const sample=this.vanilla?.pack.samples.find(s=>s.id===id);if(!sample)throw new Error('missing-original-state');
+      this.sampleRoot.add(this.vanilla!.sample(sample));this.sampleRoot.position.set(-2,0,2);
+      this.sampleRoot.traverse(o=>{o.userData={...o.userData,id:'gallery-sample',role:'occluder'};});}
+    this.scene.updateMatrixWorld(true);
+  }
+
   /** Synchronize immutable logical instances without recreating unchanged geometry.
    * @param {Layout} layout Logical state only.
    */
@@ -117,11 +159,11 @@ export class SceneAdapter {
     const live = new Set(layout.instances.map(e => e.id));
     for (const [id,object] of this.objects) if (!live.has(id)) { this.models.release(object); this.objects.delete(id); this.signatures.delete(id); }
     for (const e of layout.instances) {
-      const signature = `${e.kind}:${key(e.cell)}:${e.facing}`;
+      const signature = `${e.kind}:${key(e.cell)}:${e.facing}:${this.lit}`;
       if (this.signatures.get(e.id) === signature) continue;
       const old = this.objects.get(e.id); if (old) this.models.release(old);
-      const model = this.models.device(e.kind,e.facing); model.position.set(...e.cell);
-      model.traverse(o => { o.userData = { id: e.id, role: 'device' }; });
+      const model = this.vanilla?this.vanilla.device(e.kind,e.facing,this.lit):this.models.device(e.kind,e.facing); model.position.set(...e.cell);
+      model.traverse(o => { o.userData = { ...o.userData,id: e.id, role: 'device' }; });
       this.deviceRoot.add(model); this.objects.set(e.id,model); this.signatures.set(e.id,signature);
     }
     if (this.lines) { this.lines.geometry.dispose(); (this.lines.material as LineBasicMaterial).dispose(); this.lines.removeFromParent(); this.lines = null; }
@@ -146,7 +188,7 @@ export class SceneAdapter {
     this.raycaster.setFromCamera(new Vector2(x/canvas.clientWidth*2-1,1-y/canvas.clientHeight*2),this.camera);
     const targets: Mesh[] = [];
     for (const root of [this.environment,this.deviceRoot]) root.traverse(o => { if (o instanceof Mesh) targets.push(o); });
-    const hit = this.raycaster.intersectObjects(targets,false)[0]; if (!hit || !hit.face) return null;
+    const hit = this.raycaster.intersectObjects(targets,false).find(hit=>!this.vanilla||this.vanilla.accepts(hit)); if (!hit || !hit.face) return null;
     const normal = hit.face.normal.clone().transformDirection(hit.object.matrixWorld);
     const values = normal.toArray(), axis = values.map(Math.abs).indexOf(Math.max(...values.map(Math.abs)));
     const n: Cell = [0,0,0]; n[axis] = Math.sign(values[axis]);
@@ -176,7 +218,7 @@ export class SceneAdapter {
     const signature = `${kind}:${facing}:${valid}`;
     if (signature !== this.previewSignature || !this.preview) {
       if (this.preview) this.models.release(this.preview);
-      this.preview = this.models.device(kind,facing,valid ? 0x69e7b6 : 0xff6d78); this.scene.add(this.preview); this.previewSignature = signature;
+      this.preview = this.vanilla?this.vanilla.device(kind,facing,this.lit,valid?0x69e7b6:0xff6d78):this.models.device(kind,facing,valid ? 0x69e7b6 : 0xff6d78); this.scene.add(this.preview); this.previewSignature = signature;
     }
     this.preview.position.set(...cell);
   }
@@ -199,8 +241,10 @@ export class SceneAdapter {
     this.renderOnce(); this.frameHandle = requestAnimationFrame(t => this.animate(t));
   }
 
-  /** Submit one scene frame; also used after deterministic test mutations. */
-  renderOnce(): void { this.renderer.render(this.scene,this.camera); }
+  /** Submit a frame with an optional deterministic texture-animation time for browser assertions.
+   * @param {number} animationTime Texture clock in milliseconds, defaulting to the live renderer clock.
+   */
+  renderOnce(animationTime=performance.now()): void { this.vanilla?.animate(animationTime);this.renderer.render(this.scene,this.camera); }
 
   /** Return actual browser/WebGL environment and current renderer counters.
    * @return {object} Diagnostic environment, not a performance certification.
@@ -216,7 +260,9 @@ export class SceneAdapter {
       webgl2: gl instanceof WebGL2RenderingContext, camera: this.view, eye: this.camera.position.toArray(), fov: this.camera.fov,
       instances: this.objects.size, calls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles,
       geometries: this.renderer.info.memory.geometries, textures: this.renderer.info.memory.textures,
-      ownedGeometryCreated: this.models.created, ownedGeometryReleased: this.models.released };
+      ownedGeometryCreated: this.models.created, ownedGeometryReleased: this.models.released,
+      assetMode:this.vanilla?'local-vanilla-samples':'debug-geometry',litSample:this.lit,gallerySample:this.sampleId,
+      vanilla:this.vanilla?.diagnostics()??null };
   }
 
   /** Stop animation/observation and release model, helper, line, material and renderer resources. */
@@ -229,6 +275,6 @@ export class SceneAdapter {
     this.environment.traverse(o => { if (o instanceof LineSegments) { o.geometry.dispose(); (o.material as LineBasicMaterial).dispose(); } });
     this.selected.geometry.dispose(); (this.selected.material as LineBasicMaterial).dispose();
     if (this.lines) { this.lines.geometry.dispose(); (this.lines.material as LineBasicMaterial).dispose(); }
-    this.models.dispose(); this.renderer.dispose(); this.renderer.forceContextLoss(); this.renderer.domElement.remove();
+    this.models.dispose();this.vanilla?.dispose(); this.renderer.dispose(); this.renderer.forceContextLoss(); this.renderer.domElement.remove();
   }
 }

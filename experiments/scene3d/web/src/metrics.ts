@@ -34,7 +34,7 @@ export async function measure(adapter: SceneAdapter, progress: (run: number) => 
     });
     runs.push({ frames, summary: summarize(frames) });
   }
-  return { capturedAt: new Date().toISOString(), workload: 'debug geometry only; no vanilla textures, particles or audio',
+  return { capturedAt: new Date().toISOString(), workload: adapter.vanilla?'local vanilla devices and stone; schematic environment; no particles/audio':'debug geometry only; no vanilla textures, particles or audio',
     protocol: '3 repetitions, 2s warm-up + 10s sample; preliminary, not full P2 budget',
     environment: adapter.diagnostics(), runs };
 }

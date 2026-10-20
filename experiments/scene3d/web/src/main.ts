@@ -4,6 +4,9 @@ import { change, edges, fixture, KINDS, place, placementError, restore } from '.
 import type { Cell, Facing, Kind, Layout } from './domain.ts';
 import type { Pick, View } from './scene-adapter.ts';
 import { browserChecks } from './browser-checks.ts';
+import { loadVanillaPack } from './vanilla-pack.ts';
+import type { VanillaPack } from './vanilla-pack.ts';
+import { vanillaBrowserChecks } from './vanilla-checks.ts';
 import { measure } from './metrics.ts';
 import { TEXT as T } from './labels.ts';
 import './style.css';
@@ -15,7 +18,9 @@ let layout: Layout = fixture(), selected: string | null = null, mode = 'inspect'
   lastPick: Pick | null = null, candidate: Cell | null = null, panelOpen = false, busy = false, actions = 0, pointerEvents = 0,
   worldPointer: number | null = null;
 /** Browser evidence is deliberately exposed in the diagnostic DOM for inspection/export. */
-const evidence: { checks?: object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
+const evidence: { checks?: object; vanillaChecks?:object; resourceLoad?:object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
+/** External samples are ephemeral and never serialized with the logical layout. */
+let localPack:VanillaPack|null=null;
 
 /** Build DOM safely without evaluating labels or state as markup.
  * @param {string} tag HTML tag.
@@ -143,11 +148,27 @@ function bindCanvas(): void {
 /** Replace the renderer while preserving logical state and the diagnostic eye station. */
 function restart(): void {
   if (busy||panelOpen) return;
-  clearPreview(); const old=adapter; old.dispose();
+  clearPreview(); const old=adapter, vanilla=old.vanilla; old.dispose();
   evidence.rendererRestarts.push({ disposed: old.disposed, created: old.models.created, released: old.models.released,
-    sharedMaterials: old.models.materials.size, retainedDeviceMappings: old.objects.size, canvasConnected: old.renderer.domElement.isConnected });
+    sharedMaterials: old.models.materials.size, retainedDeviceMappings: old.objects.size, canvasConnected: old.renderer.domElement.isConnected,
+    vanilla:vanilla?{created:vanilla.created,released:vanilla.released,textures:vanilla.textures.size,materials:vanilla.materials.size}:null });
   adapter=new SceneAdapter(viewport,T.canvas); adapter.setView(old.view); adapter.setDebugVisible(!developer.hidden);
+  if(vanilla&&localPack)adapter.setVanilla(localPack);adapter.lit=old.lit;sampleSelect.value='';
   adapter.sync(layout); adapter.select(selected); bindCanvas(); adapter.renderOnce(); updateDiagnostics(); showEvidence();
+}
+
+/** Activate verified local originals explicitly; failure preserves the current mode and records a block.
+ * @return {Promise<void>} Completion of the local-only loading attempt.
+ */
+async function activateVanilla():Promise<void> {
+  if(busy||panelOpen)return;busy=true;clearPreview();status.textContent=T.loading;
+  try {
+    localPack??=await loadVanillaPack();adapter.setVanilla(localPack);adapter.sync(layout);adapter.renderOnce();
+    warning.textContent=T.vanillaWarning;sampleSelect.replaceChildren();const empty=el('option',T.noSample) as HTMLOptionElement;empty.value='';sampleSelect.append(empty);
+    for(const sample of localPack.samples){const option=el('option',sample.id) as HTMLOptionElement;option.value=sample.id;sampleSelect.append(option);}
+    evidence.resourceLoad={status:'loaded',...localPack.loading};status.textContent=T.success;
+  } catch(error){evidence.resourceLoad={...localPack?.loading,status:'blocked',reason:String(error)};status.textContent=T.blocked;}
+  finally{busy=false;updateDiagnostics();showEvidence();}
 }
 
 /** Generate a bounded stress fixture without adding world simulation or product dimensions. */
@@ -168,6 +189,8 @@ async function collectMetrics(): Promise<void> {
 /** Diagnostic DOM nodes do not become part of any game save. */
 const app=document.getElementById('app')!, header=el('header'), toolbar=el('section','','toolbar'), tools=el('div','','tools');
 const developer=el('aside','','developer'), footer=el('footer'), modeHint=el('span','','mode-hint');
+const warning=el('p',T.warning,'warning'), sampleSelect=el('select') as HTMLSelectElement;
+sampleSelect.setAttribute('aria-label',T.sample);
 developer.id='developer-panel'; developer.hidden=true; developer.setAttribute('aria-label',T.developerTitle);
 const toggleDeveloper=button(T.developer,()=>{
   if(panelOpen)return; developer.hidden=!developer.hidden; adapter.setDebugVisible(!developer.hidden);
@@ -194,7 +217,7 @@ overlay.hidden=true; overlay.id='device-panel'; overlay.setAttribute('role','dia
 for(const label of [T.input,T.fuel,T.output]) slots.append(el('div',`${label}\n${T.empty}`,'slot'));
 panel.append(panelTitle,el('p',T.panelNote),slots,button(T.probe,()=>{ status.textContent=T.panelNote; }),button(T.close,()=>openPanel(null)));
 overlay.append(panel); for(const name of ['pointerdown','pointerup','click','wheel']) overlay.addEventListener(name,event=>event.stopPropagation());
-viewport.append(overlay); footer.append(modeHint,status,el('p',T.warning,'warning'));
+viewport.append(overlay); footer.append(modeHint,status,warning);
 app.append(viewport,header,footer);
 let adapter: SceneAdapter;
 try { adapter=new SceneAdapter(viewport,T.canvas); }
@@ -202,9 +225,15 @@ catch(error) { status.textContent=T.unsupported; evidence.errors.push(String(err
 adapter.sync(layout); bindCanvas(); adapter.renderOnce();
 type.addEventListener('change',()=>{ facing=type.value==='hopper'?'down':'north'; clearPreview(); updateDiagnostics(); });
 camera.addEventListener('change',()=>{ if(panelOpen||busy)return; clearPreview(); adapter.setView(camera.value as View); updateDiagnostics(); });
+sampleSelect.addEventListener('change',()=>{if(panelOpen||busy||!adapter.vanilla)return;clearPreview();adapter.showSample(sampleSelect.value||null);adapter.renderOnce();status.textContent=sampleSelect.value?`${T.sample}: ${sampleSelect.value}`:T.noSample;updateDiagnostics();});
 document.addEventListener('keydown',event=>{ if(event.key==='Escape' && panelOpen) openPanel(null); });
 window.addEventListener('blur',()=>{ worldPointer=null; });
 const actionsBar=el('div','','toolbar');
+const assetTools=el('div','','toolbar');
+assetTools.append(button(T.localVanilla,()=>{void activateVanilla();}),button(T.debugMode,()=>{
+  if(panelOpen||busy)return;clearPreview();adapter.setVanilla(null);adapter.sync(layout);warning.textContent=T.warning;sampleSelect.value='';updateDiagnostics();
+}),sampleSelect,button(T.toggleLit,()=>{if(panelOpen||busy)return;clearPreview();adapter.lit=!adapter.lit;adapter.sync(layout);updateDiagnostics();}),
+button(T.vanillaChecks,()=>{if(panelOpen||busy)return;clearPreview();adapter.showSample(null);evidence.vanillaChecks=vanillaBrowserChecks(adapter,layout);updateDiagnostics();showEvidence();}));
 actionsBar.append(button(T.rotateSelected,()=>{ if(panelOpen||busy||!selected)return; try { const e=layout.instances.find(v=>v.id===selected)!; commit(change(layout,e.id,nextFacing(e.kind,e.facing))); } catch(error){fail(error);} }),
   button(T.reset,()=>{ if(panelOpen||busy)return; selected=null; clearPreview(); commit(fixture()); }),button(T.dense,denseFixture),
   button(T.save,()=>{ if(panelOpen||busy)return; try { localStorage.setItem(STORAGE_KEY,JSON.stringify(layout)); status.textContent=T.saved; } catch(error){fail(error);} }),
@@ -215,6 +244,6 @@ const diagnostics=el('div','','diagnostics');
 for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets],[T.results,results]] as [string,HTMLElement][]) {
   const section=el('section','','card'); section.append(el('h2',label),body); diagnostics.append(section);
 }
-developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),toolbar,actionsBar,diagnostics);
+developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),assetTools,toolbar,actionsBar,diagnostics);
 app.append(developer); updateDiagnostics(); showEvidence();
 window.addEventListener('pagehide',()=>adapter.dispose());

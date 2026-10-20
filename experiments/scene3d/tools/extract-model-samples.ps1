@@ -1,5 +1,5 @@
-# Read-only official JAR sampling into an explicitly external analysis directory; no website assets are produced.
-param([Parameter(Mandatory = $true)][string]$Jar, [Parameter(Mandatory = $true)][string]$Output)
+# Official JAR sampling into an external directory; optional PNGs serve loopback verification, never build inputs.
+param([Parameter(Mandatory = $true)][string]$Jar, [Parameter(Mandatory = $true)][string]$Output, [switch]$IncludeTextures)
 $ErrorActionPreference = 'Stop'
 if (-not [IO.Path]::IsPathFullyQualified($Output)) { throw 'Output must be absolute' }
 $analysisRoot = [IO.Path]::GetFullPath($Output)
@@ -10,7 +10,7 @@ if ($clientSha1 -ne 'e877b6a07acd633fb3bb475002175cec036e7b87') { throw 'JAR is 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $archive = [IO.Compression.ZipFile]::OpenRead($Jar)
 $queue = [Collections.Generic.Queue[string]]::new()
-foreach ($sample in @('stone','furnace','hopper')) { $queue.Enqueue('assets/minecraft/blockstates/' + $sample + '.json') }
+foreach ($sample in @('stone','furnace','hopper','crafting_table','blast_furnace')) { $queue.Enqueue('assets/minecraft/blockstates/' + $sample + '.json') }
 $seen = [Collections.Generic.HashSet[string]]::new()
 $entries = [Collections.Generic.List[object]]::new()
 $textures = [Collections.Generic.HashSet[string]]::new()
@@ -39,8 +39,23 @@ try {
     if (-not $entry) { throw ('Missing texture: ' + $texture) }
     $stream = $entry.Open(); $memory = [IO.MemoryStream]::new()
     try { $stream.CopyTo($memory); $bytes = $memory.ToArray() } finally { $stream.Dispose(); $memory.Dispose() }
-    @{ id = 'minecraft:' + $texture; size = $bytes.Length; sha256 = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant() }
+    $texturePath = 'assets/minecraft/textures/' + $texture + '.png'
+    $textureHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+    if ($IncludeTextures) {
+      $destination = Join-Path $analysisRoot $texturePath
+      [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($destination)) | Out-Null
+      [IO.File]::WriteAllBytes($destination, $bytes)
+      $entries.Add(@{ entry = $texturePath; size = $bytes.Length; sha256 = $textureHash })
+      $animation = $archive.GetEntry($texturePath + '.mcmeta')
+      if ($animation) {
+        $stream = $animation.Open(); $memory = [IO.MemoryStream]::new()
+        try { $stream.CopyTo($memory); $metadata = $memory.ToArray() } finally { $stream.Dispose(); $memory.Dispose() }
+        [IO.File]::WriteAllBytes($destination + '.mcmeta', $metadata)
+        $entries.Add(@{ entry = $texturePath + '.mcmeta'; size = $metadata.Length; sha256 = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($metadata)).ToLowerInvariant() })
+      }
+    }
+    @{ id = 'minecraft:' + $texture; entry = $texturePath; size = $bytes.Length; sha256 = $textureHash }
   }
-  @{ version = '26.3'; clientSha1 = $clientSha1; entries = $entries.ToArray(); textures = @($textureEvidence); textureBytesExported = $false } | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $analysisRoot 'manifest.json') -Encoding utf8
-  Write-Output ('External sample JSON files: ' + $entries.Count + '; texture dependencies checked without export: ' + $textures.Count)
+  @{ version = '26.3'; clientSha1 = $clientSha1; entries = $entries.ToArray(); textures = @($textureEvidence); textureBytesExported = [bool]$IncludeTextures } | ConvertTo-Json -Depth 7 | Set-Content -LiteralPath (Join-Path $analysisRoot 'manifest.json') -Encoding utf8
+  Write-Output ('External sample entries: ' + $entries.Count + '; texture dependencies: ' + $textures.Count + '; PNG export: ' + [bool]$IncludeTextures)
 } finally { $archive.Dispose() }

@@ -1,5 +1,6 @@
 /** Original diagnostic geometry and flat colors; deliberately not Minecraft asset substitutes. */
 import { BoxGeometry, BufferGeometry, CylinderGeometry, Group, Mesh, MeshStandardMaterial, DoubleSide } from 'three';
+import type { Material } from 'three';
 import type { Facing, Kind } from './domain.ts';
 
 /** Diagnostic palette is generated locally; no image/texture files are loaded. */
@@ -25,11 +26,11 @@ export class DebugModels {
   /** Attach one owned geometry and register its disposal counter.
    * @param {Group} root Parent group.
    * @param {BufferGeometry} geometry Owned geometry.
-   * @param {MeshStandardMaterial} material Shared material.
+   * @param {Material} material Shared diagnostic or sample-probe material.
    * @param {number[]} position Local translation.
    * @return {Mesh} Attached mesh.
    */
-  part(root: Group, geometry: BufferGeometry, material: MeshStandardMaterial, position: number[]): Mesh {
+  part(root: Group, geometry: BufferGeometry, material: Material, position: number[]): Mesh {
     const mesh = new Mesh(geometry, material); mesh.position.set(position[0],position[1],position[2]);
     this.created++; geometry.addEventListener('dispose', () => { this.released++; }); root.add(mesh); return mesh;
   }

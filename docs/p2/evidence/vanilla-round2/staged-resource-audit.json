@@ -1,0 +1,10 @@
+{
+  "capturedAt": "2026-10-20T19:19:09.726Z",
+  "method": "SHA-256 comparison of exact staged Git blobs against external original entries; new binary/inline-raster rejection; history/camera/domain scope guards",
+  "checkedFiles": 43,
+  "originalEntries": 38,
+  "originalResourceMatches": 0,
+  "newBinaryOrInlineImages": 0,
+  "preservedBaselineChanged": false,
+  "scope": "staged files before adding this audit record; no original bytes or screenshots exported"
+}
