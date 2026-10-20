@@ -1,0 +1,70 @@
+# P1：原版资源来源、技术可用性与分发核对
+
+日期：2026-10-20。证据等级沿用 [数据核实 §1](vanilla-data.md#1-证据等级)。本轮只在仓库外读取资源，无资源进入应用或提交；没有浏览器渲染、音频播放或原版客户端验证。
+
+## 1. 来源层次
+
+client.jar 的 assets/minecraft 提供 GUI、模型、纹理、粒子、字体定义和英文文本等；资产索引 34 有 **5,147** 个逻辑对象，供外部资源定位，不是“全部资源都在 client.jar”的假设（D）。
+
+外部对象根据索引中的 SHA-1 定位至 resources.download.minecraft.net；实际下载后核对哈希及大小。该官方存储地址用于开发期取得证据，不设计成正式网页热链服务，不将可下载性当成分发许可。
+
+JAR 的 META-INF/LICENSE 指向 Minecraft EULA / Microsoft Services Agreement，不是 MIT 等开源素材包。单独包含第三方许可的资源要独立核对，不能拿某字体的许可覆盖所有图形/声音。
+
+## 2. 分类核对表
+
+| 类别 | 实际来源/样本 | 已核实的技术事实 D | 尚未验证 U | 分发状态与处理 |
+| --- | --- | --- | --- | --- |
+| GUI | client/assets/minecraft/textures/gui/container 与 sprites/widget 等 | inventory/crafting_table/furnace/blast_furnace/hopper 样本都是 256×256 PNG；button 为 200×20；熔炉/高炉样本图哈希相同 | GUI 实际内容区域/9-slice 元数据全量、缩放清晰度、Tooltip/Toast 布局、浏览器解码显示 | 原版文件，未发现对独立网页重分发的明确单项许可；引入前需确定适用依据，不能以贴图相同推断行为相同 |
+| 字体 | client/font/default、include/default、include/space；index/font/include/unifont.json 与 unifont.zip | 默认包含 reference/bitmap/space/unihex 多种来源；空格 advance=4；ASCII 是位图字形；外部字体包有自己的 LICENSE | 字形边界/advance 计算、阴影、fallback 优先级、完整字符覆盖、DOM/Canvas 实现 | ASCII 等原版图与第三方 UniFont 分开。UniFont 有可核对许可文本，具体转换/分发附带文件与署名仍需落实；不等于可自由发布原版字体总集 |
+| 物品图标 | client/items、models/item、textures/item | bucket/cake 的 item 定义指向模型；cake 当前模型是 generated + item/cake layer0；bucket 样本 16×16 | 所有可达图标的模型闭包、色调/特殊渲染、预渲染一致性 | 原版图标/模型的分发依据未收敛。自己按模型渲染也不能自动消除底层贴图条件 |
+| 方块材质 | client/textures/block、models/block、blockstates | oak_log 纹理样本 16×16 PNG；模型/状态与纹理应分层解析 | 四场景构图、动态遮挡、动画材质、照明和等比例投影 | 原版纹理直接提取与自己搭建场景的截图是不同使用方式；后者也需按指南确定适用范围，不自动准许提取全部纹理 |
+| 粒子 | client/particles/firework、flash 与 textures/particle | firework 引用 spark_7…spark_0 八帧，spark_0 8×8；flash 32×32 | 烟花形状、速度分布/寿命/拖尾/闪烁、Canvas 性能、视觉原版一致性 | 原版精灵分发依据未定；用原版图配任意放射动画不算完成原版效果 |
+| 音效 | index 的 minecraft/sounds.json 及 sounds/*.ogg | sounds 定义与 blast1.ogg 实际下载校验；音频样本 OggS 头；事件映射存在 | Vorbis 解码、浏览器支持、实际音高/音量、近远切换与时序、试听 | 原版音效独立网页播放/随包分发依据未定；非商用和仓库私有不构成证明 |
+| 音乐 | sounds 定义的 music.menu 等条目与 index | 事件列出 stream、weight、volume 等参数，证明不是单一路径 | 未下载/解码音乐，曲目未选，来源权利与具体许可未查齐 | 须按具体曲目/权利人核实；不从游戏收录推断拥有在网站发布的权利；不擅自选曲或换自造音乐 |
+
+技术等级是“格式与路径可读取”，不是“已在浏览器交付原版效果”。源图全量扫描、完整依赖闭包留待 P4；GUI/音画原型是 P2 的获准后工作。
+
+## 3. 字体的特别发现
+
+JAR 内 include/unifont.json 是空 providers，而索引对应对象（3,993 字节，SHA-1 `402ded0eebd448033ef415e861a17513075f80e7`）给出 unihex 引用；所以只解析 JAR 会漏掉 fallback。实际资源装载层的覆盖优先级仍需按客户端/pack 规则验证，不把空占位当作无 fallback。
+
+已取得索引的 unifont.zip（1,559,654 字节，SHA-1 `ccd5ac4767ce0a9c71d1dd62f2dc25449789b5dd`）。包内有 LICENSE.txt 和 unifont_all_no_pua-17.0.01.hex。许可文本区分程序源文件与编译字体，列出 OFL 1.1 及 GPL 字体嵌入例外条款（D）。这是独立许可线索，不代表本网站现在选择该字体，也不代表所有转换/子集操作都已核查；发行时必须落实对应许可文本、版权信息、修改/命名与再分发条件。
+
+初始英文主要使用的原版 ASCII 位图仍须独立处理，不能借 UniFont 字体许可“授权”其字形。无混淆 JAR 同样没有改变资源使用条件。
+
+## 4. 声音关键样本
+
+已校验 sounds.json：635,867 字节，SHA-1 `7975165ad4a3c0cb3c05078b914eac0f2c3b5f5f`（D）。下表仅记录包内映射，运行时参数仍需调用处证据及客户端核对。
+
+| 原版事件 | 定义中的资源 | 数据参数/限制 |
+| --- | --- | --- |
+| ui.toast.in | ui/toast/in | volume 0.4 |
+| ui.toast.challenge_complete | ui/toast/challenge_complete | volume 0.6；不把所有进度提示都当挑战音乐 |
+| entity.experience_orb.pickup | random/orb | 字幕键存在；音高不能凭感觉固定 |
+| entity.player.levelup | random/levelup | 与经验球是两个事件，不引入经验等级系统 |
+| entity.firework_rocket.launch | fireworks/launch1 | 发射声 |
+| entity.firework_rocket.blast / blast_far | fireworks/blast1 / blast_far1 | 远近变体，不把“far”当新烟花形状 |
+| entity.firework_rocket.large_blast | fireworks/largeblast1 | 大型爆炸声 |
+| entity.firework_rocket.twinkle | fireworks/twinkle1 | 闪烁声；相关远声在完整核对时处理 |
+
+实际下载 blast1.ogg：11,824 字节，索引 SHA-1 与实际均为 `71d9ad77da5febc1b2b7bd5916ca730c2b9ab6a8`；只验证 OggS 头与字节一致，未试听或运行解码器。其余声音本轮确认定义/索引，未宣称逐一下载验证。
+
+## 5. 分发依据核对与候选路径
+
+本轮阅读 [Minecraft EULA](https://www.minecraft.net/en-us/eula) 和 [Usage Guidelines](https://www.minecraft.net/en-us/usage-guidelines)。政策要求避免官方关联误认，并对内容分发有约束；音频需要相应权利。指南中的“商业使用”口径也不能简单等同是否收钱。**本轮未找到足以直接批准本项目整套原版资源在独立网页重分发的完整依据。**这是“证据未收敛”，不是替权利方作最终违法/合法判定。
+
+| 候选 | 收益 | 条件/代价 | 建议状态 |
+| --- | --- | --- | --- |
+| 针对最终清单确定指南具体允许范围，必要时取得权利方明确许可 | 最贴合原版目标，部署简单 | 需要资源类别/使用方式/站点访问范围的具体证明；不能只由用户批准代替权利依据 | A：优先收敛；本轮未联系任何外部人员 |
+| 场景采用自己在原版搭建内容的截图/录制素材 | 可能适合背景构图，避免分发完整世界文件 | 仍需确认实际使用条款；不能单独解决图标、GUI、粒子和声音需求 | A：作为场景工艺候选，不算统一解法 |
+| 对确有独立许可的第三方字体单独合规分发 | 有可审查许可文本 | 与原版 ASCII 外观不完全等价，许可文件/转换规则需落实 | A：仅针对相关字形，不能替代所有原版字体要求 |
+| 让用户自行提供本地游戏资源 | 可能避免站点存放原版文件 | 改变生日网页门槛、仍有具体使用问题，增加导入系统 | 不作为默认方案，未经需求批准不开发 |
+| 换成自制图/声音 | 工程上可避免某些资源取得问题 | 与已确定的原版资源要求冲突 | 不采用，不擅自降级 |
+
+后续若需要联系权利方，须由用户明确授权发送；本轮只记录材料与问题，不发邮件或消息。站点非官方声明、命名/署名安排可作为后续具体清单的一部分，不能用一行声明替代内容许可。
+
+## 6. P2 进入条件
+
+原版资源存在且可读取已具备证据；合法分发路径和实际视觉/音频性能尚未验证。涉及原版资源的 P2 画面、音频和庆典原型，进入前需确定允许使用的资源与验证环境。若只批准不分发资源的隔离技术实验，应明确其边界；它不能被记作正式原版视觉/音频验收已通过。
+
+没有安装浏览器音频工具、图标渲染器、字体转换器或客户端。后续如需此类工具，先列安装/运行范围、原因及输出位置供授权，不把它们作为已存在的项目依赖。
