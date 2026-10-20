@@ -1,0 +1,22 @@
+/** Independent English copy for this technical experiment; not final birthday product wording. */
+export const TEXT = {
+  homeTitle: 'A small world. A birthday to make.', homeNote: 'P2 technical preview · the birthday experience is still being built.',
+  enter: 'Open the 3D technical preview', homeWarning: 'This independent page loads no Three.js or game scene.',
+  title: 'A place to build', subtitle: 'P2 / REAL-TIME 3D FOUNDATION',
+  warning: 'DEBUG GEOMETRY ONLY · No Minecraft models or textures in this browser build. Candidate interactions are experimental.',
+  back: 'Back to preview home', inspect: 'Inspect', place: 'Place', remove: 'Remove', device: 'Device',
+  rotatePreview: 'Rotate preview', rotateSelected: 'Rotate selected', reset: 'Restore fixture', save: 'Save layout', restore: 'Load layout',
+  checks: 'Run browser checks', measure: 'Measure 3 × 10 seconds', dense: 'Load dense fixture', restart: 'Restart renderer',
+  view: 'Camera', help: 'Inspect: click a device. Place: point at a visible face or the ground, then click. Remove: click a device. Gold cells are protected. Cameras use bounded presets; there is no player movement.',
+  noSelection: 'Select a device in the scene.', panel: 'Debug device panel', panelNote: 'Screen-space 2D GUI sample. This is not the original Minecraft GUI or a working recipe screen.',
+  close: 'Close panel', probe: 'Panel interaction probe', input: 'Input', fuel: 'Fuel', output: 'Output', empty: 'empty',
+  state: 'Live placement diagnostics', links: 'Derived hopper connections', results: 'Browser evidence', targets: 'Visible pointer-test targets',
+  canvas: 'Real 3D debug scene', measuring: 'Measuring {run}/3 · 2s warm-up + 10s sample',
+  complete: 'Evidence recorded below', failed: 'Operation failed; see diagnostic evidence', unsupported: 'A WebGL2 renderer could not be created. This prototype has no 2D scene fallback.',
+  selected: 'Selected', hover: 'Surface', candidate: 'Candidate', ready: 'Ready · choose a tool and point into the scene.',
+  success: 'Command committed', saved: 'Experiment layout saved', restored: 'Experiment layout restored',
+  errors: { 'outside-zone': 'Outside the debug build zone', 'protected-cell': 'Protected debug cell', occupied: 'Cell already occupied',
+    'invalid-coordinate': 'Invalid coordinate', 'invalid-device-or-facing': 'Invalid device or direction', 'missing-instance': 'The instance no longer exists',
+    'invalid-save': 'Invalid experiment layout', 'occluded': 'This surface is a noninteractive occluder', 'no-target': 'No visible target',
+    'no-save': 'No experiment layout has been saved', 'measurement-already-running': 'Measurement is already running' } as Record<string,string>,
+};

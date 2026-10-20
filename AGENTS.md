@@ -15,9 +15,10 @@
 - [分阶段开发路线](docs/development-roadmap.md)：阶段依赖、验收、测试、风险及完成条件。
 - [技术决策与核实记录](docs/decisions-and-research.md)：建议状态、待确认项及一手资料来源。
 - [真正 3D 场景与 P2 验证计划](docs/3d-scene-plan.md)：最新用户决定、渲染建议、交互/模型边界、性能验证与历史方案替代关系。
-- 方案 B 与四场景真正 3D 已由用户正式确定；P1 规则实验已完成，其他具体适配及 P2 实现仍须审查和明确授权。
+- 方案 B 与四场景真正 3D 已由用户正式确定；P2 第一轮真实 3D 基础切片已获独立授权，交付后等待审查；不自动授权完整 P2 或后续阶段。
+- [P2 第一轮报告](docs/p2/report.md)：隔离 TypeScript/Vite/Three.js 原型、原版模型离线探针、真实浏览器交互/性能及未验证门槛；运行见 `experiments/scene3d/README.md`。
 - [P1 验收与证据入口](docs/p1/report.md)：原版构件/数据、资产、GUI 矩阵、放置增量与未解决门槛；报告完成不自动放行 P2。
-- [P1 放置补充实验](docs/p1/placement-experiment.md)：保留原文的历史规则验证；其中 B 待批、固定槽位/2D 建议均不能覆盖最新决定。`docs/p1/`、原始会话与 `experiments/placement/` 保持历史记录原样，P2 仍未授权。
+- [P1 放置补充实验](docs/p1/placement-experiment.md)：保留原文的历史规则验证；其中 B 待批、固定槽位/2D 建议均不能覆盖最新决定。`docs/p1/`、原始会话与 `experiments/placement/` 保持历史记录原样。
 
 ## 使用这些资料
 

@@ -1,0 +1,32 @@
+
+> minecraft-birthday-p2-scene3d@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ D01 authored bounds, occupied and protected cells reject without mutation (2.3705ms)
+✔ D02 placement allocates independent stable instances (0.526ms)
+✔ D03 hopper has five possible outlet directions, no upward or downward furnace (0.4743ms)
+✔ D04 furnace ports and hopper collector use independent coordinate adjacency (1.0444ms)
+✔ D05 rotation and removal cannot retain stale graph edges (0.4398ms)
+✔ D06 restore retains IDs, positions, orientation and derived edges (0.5702ms)
+✔ D07 rejects corrupted schema (0.1908ms)
+✔ D07 rejects corrupted overlap (0.2982ms)
+✔ D07 rejects corrupted direction (0.2328ms)
+✔ D07 rejects corrupted ID (0.2398ms)
+✔ D07 rejects corrupted next ID (0.3131ms)
+✔ D07 rejects corrupted kind (0.1953ms)
+✔ P01 face selection respects negative cell coordinates and epsilon (0.1637ms)
+✔ M01 inherited textures override parents without appending replaced elements (1.2319ms)
+✔ M02 model-parent, texture-variable cycles and missing references fail explicitly (0.4571ms)
+✔ M03 rotated north face has east normal in Y-up render coordinates (0.3455ms)
+✔ M04 UV-lock and element rotations are rejected, not silently approximated (0.1666ms)
+✔ M05 original debug hopper is hollow and its outlet rotates toward east (4.1627ms)
+✔ R01 repeated model creation/release balances owned geometry and shared materials (6.1938ms)
+✔ T01 frame summary uses actual intervals and rejects empty or invalid samples (0.3067ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 336.6816

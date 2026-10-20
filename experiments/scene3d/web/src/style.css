@@ -1,0 +1,23 @@
+/* Technical preview styling. The scene itself is real GPU geometry, never CSS perspective. */
+:root { color-scheme: dark; font-family: 'Segoe UI',system-ui,sans-serif; color:#e8edf3; background:#101b2b; }
+* { box-sizing:border-box; } body { margin:0; } #app { max-width:1440px; padding:24px; margin:auto; }
+header { margin-bottom:20px; } h1 { font-size:clamp(26px,4vw,46px); letter-spacing:-1.2px; margin:8px 0 12px; font-weight:650; }
+.eyebrow { font-size:11px; color:#9fc9bd; letter-spacing:2px; font-weight:700; } .warning { font-size:12px; color:#e4be87; line-height:1.6; }
+a { color:#a6dac8; } button,select { font:inherit; font-size:13px; padding:10px 14px; border:1px solid #405268; border-radius:6px; background:#1c2c40; color:inherit; cursor:pointer; }
+button:hover { background:#2a4155; } button:focus-visible,a:focus-visible,select:focus-visible { outline:3px solid #f1c180; outline-offset:2px; }
+button.active,.primary { background:#a6dac8; color:#122e2c; border-color:#a6dac8; } .primary { display:inline-block; padding:16px 22px; border-radius:8px; text-decoration:none; }
+.toolbar,.tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin:12px 0; } .tools { margin:0 12px 0 0; }
+.badge { border-radius:20px; font-size:11px; border:1px solid #60716e; padding:6px 12px; color:#b1ddcb; }
+.status { display:block; min-height:35px; font-size:12px; padding:8px 0; color:#addccb; }
+.viewport { position:relative; height:clamp(440px,64vh,720px); width:100%; border:1px solid #44546a; border-radius:12px; overflow:hidden; background:#142337; }
+canvas { display:block; width:100%; height:100%; touch-action:none; }
+.help { font-size:12px; color:#a6b5c4; max-width:960px; line-height:1.7; }
+.modal-mask { position:absolute; z-index:2; inset:0; display:grid; place-items:center; background:#091322a8; padding:18px; }
+[hidden] { display:none!important; } .modal { width:min(450px,100%); min-width:0; padding:24px; background:#20354a; border:1px solid #8eafbb; border-radius:12px; box-shadow:0 20px 70px #0008; }
+.modal p { color:#bfd0dc; font-size:13px; line-height:1.6; } .slots { display:flex; gap:10px; margin:20px 0; } .slot { flex:1; min-width:0; height:68px; padding:12px 6px; white-space:pre-line; background:#132334; border:1px solid #6b8290; font-size:12px; }
+.modal button { margin:4px; } h2 { font-size:14px; font-weight:600; }
+.diagnostics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:24px; }
+.card { min-width:0; background:#162538; border:1px solid #304257; padding:18px; border-radius:9px; }
+pre { margin:0; font-size:11px; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; max-height:340px; overflow:auto; color:#adbdc9; }
+#home { max-width:800px; margin:16vh auto; padding:36px; } #home h1 { font-size:clamp(42px,6vw,78px); line-height:1.05; margin:22px 0 40px; } #home>p:last-child { font-size:12px; color:#93a9bc; margin-top:24px; }
+@media(max-width:650px) { #app { padding:16px; } .diagnostics { grid-template-columns:1fr; } .toolbar button,select { padding:9px 10px; } header { margin-bottom:12px; } }

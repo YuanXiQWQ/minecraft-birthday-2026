@@ -1,0 +1,105 @@
+{
+  "measurements": [],
+  "rendererRestarts": [],
+  "errors": [],
+  "checks": {
+    "capturedAt": "2026-10-20T17:44:45.928Z",
+    "scope": "real browser engine checks; trusted physical pointer smoke recorded separately",
+    "passed": 13,
+    "failed": 0,
+    "results": [
+      {
+        "name": "B01 actual WebGL2 draw",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B02 perspective projection",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B03 nearest noninteractive wall occludes rear device",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B04 visible block face is +Z",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B05 removal exposes rear geometry",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B06 real 3D preview never becomes a pick target",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B07 top face hit selects cell above",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B08 top input / side fuel / bottom output adjacency",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B09 rotation invalidates live edge",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B10 model front matches east-facing logical state",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B11 removed instance has no render or graph reference",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B12 twelve geometry churn cycles return to GPU geometry baseline",
+        "passed": true,
+        "detail": "passed"
+      },
+      {
+        "name": "B13 modal blocks even directly dispatched canvas pointer events",
+        "passed": true,
+        "detail": "passed"
+      }
+    ],
+    "environment": {
+      "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "vendor": "Google Inc. (NVIDIA)",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "hardwareConcurrency": 20,
+      "viewport": [
+        310,
+        610
+      ],
+      "backingPixels": [
+        387,
+        762
+      ],
+      "dpr": 1.25,
+      "renderDpr": 1.25,
+      "webgl2": true,
+      "camera": "Angle",
+      "instances": 7,
+      "calls": 38,
+      "triangles": 416,
+      "geometries": 38,
+      "textures": 1,
+      "ownedGeometryCreated": 232,
+      "ownedGeometryReleased": 196
+    }
+  }
+}
