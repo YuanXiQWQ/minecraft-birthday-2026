@@ -5,7 +5,7 @@
 - 信封：format1，contentVersion=p5-layout-1，vanillaVersion26.3；同一SAVE_KEY/LOCK_NAME、generation和revision协议。
 - player.version1/data：selected0–8、hotbar固定9组、equipment精确head/chest/legs/feet/offhand、presets固定9个null或9组数组。每个非空组是{id,count,components?}，必须已永久解锁且符合原版上限/装备组件。原版数量/槽位规则来自`app/web/src/data/inventory-rules.json`，由工具从已校验P4规则投影，测试逐项比较113条。
 - components只接纳已处理的damage、custom_data JSON；未知容量/装备等覆盖拒绝。JSON身份忽略键序，原版默认damage0归一，非同组件不得合并；不模拟耐久磨损。
-- cursor与个人2×2的crafting[4]不写入稳定布局；仅作为可校验的页内临时载体。个人输入已实现，不含结果；设备内容仍为空保留位，未来非空内容需要明确版本迁移，不能塞进Reserved.data。
+- cursor与个人2×2的crafting[4]不写入稳定布局；仅作为可校验的页内临时载体。个人输入已实现，并有不进入任何载体/存档的只读匹配预览；结果领取未实现；设备内容仍为空保留位，未来非空内容需要明确版本迁移，不能塞进Reserved.data。
 - 稳定槽变更必须发送`inventory`命令：intent、cursor、expectedLayout及可选crafting[4]；光标和个人输入是本页载体，结果从成功事务返回，不广播给他页。expect不是全存档快照，必须在独占锁内与最新稳定布局比对。个人格与九格之间的取放仍在同一命令中执行；纯个人操作不写存档，个人操作也必须通过最新解锁/代次验证。不是用revision冒充原子锁。
 - 一次完整拖动是一个命令，移动时只收集唯一合法目标，不改组；释放时计算分配。合法性在提交时再检查。source复制、creative中拖/预设加载和drop是显式非守恒操作；普通取放/转移/交换按身份守恒。
 - UI乐观显示本页有序命令，但只把最后成功的cursor/crafting作为已提交运行态。锁内拒绝/写失败会撤掉未提交投影；后续队列失效。generation变化及卸载也使队列失效；无pagehide快照回写。预设总览只引用已有presets[9]，不是新有限槽，信息纸不可取得，任何复制重新验证解锁/原版上限/组件。

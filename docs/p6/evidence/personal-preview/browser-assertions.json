@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "scope": "Assertions over actual browser DOM, trusted event records and fixture save envelopes",
+  "checks": [
+    "locked output preview without permanent acquisition or save writes",
+    "readonly result input routes",
+    "native shears mirror and no-match transition",
+    "repeated plank recipe and removal",
+    "close/reset clear preview",
+    "dev/root/Pages readonly slot loads"
+  ],
+  "unverified": [
+    "physical right/middle drag",
+    "cross-engine",
+    "Java client visual/behavior comparison"
+  ]
+}

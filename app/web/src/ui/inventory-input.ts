@@ -44,7 +44,7 @@ eligible(slot:Slot|null):SlotRef|null{const ref=slotRef(slot),u=this.ui,c=u.valu
 /** Stage a press; counts change only when a matching release commits the gesture.
  * @param {PointerEvent} e Browser pointer press.
  */
-down(e:PointerEvent):void{if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info')return;e.preventDefault();this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
+down(e:PointerEvent):void{if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info'||s.kind==='preview')return;e.preventDefault();this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
 /** Track unique eligible cells and cancel when leaving the interface bounds.
  * @param {PointerEvent} e Browser pointer move.
  */

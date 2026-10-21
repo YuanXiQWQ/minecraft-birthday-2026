@@ -1,0 +1,35 @@
+[
+  {
+    "url": "http://127.0.0.1:4185/game/",
+    "ui": {
+      "icons": "113",
+      "inputs": 4,
+      "preview": "{\"status\":\"empty\",\"result\":null}",
+      "resultDisabled": "true",
+      "resultLabel": "No matching recipe"
+    },
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:4186/minecraft-birthday-2026/game/",
+    "ui": {
+      "icons": "113",
+      "inputs": 4,
+      "preview": "{\"status\":\"empty\",\"result\":null}",
+      "resultDisabled": "true",
+      "resultLabel": "No matching recipe"
+    },
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:4183/game/",
+    "ui": {
+      "icons": "113",
+      "inputs": 4,
+      "preview": "{\"status\":\"empty\",\"result\":null}",
+      "resultDisabled": "true",
+      "resultLabel": "No matching recipe"
+    },
+    "errors": []
+  }
+]

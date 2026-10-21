@@ -1,5 +1,9 @@
 # 总体技术架构
 
+## 个人2×2预览增量
+
+只读预览接入情况见[独立报告](p6/personal-preview.md)。`ui/crafting-preview`复用P4 findCrafting，GameInventory按四格缓存结果，仅供原版图标/数量/Tooltip显示；preview无SlotRef，不能领取/复制/解锁/发现。关闭和重置清空投影，无存档变更；D05/D06/D08和工作站业务不由此批准。
+
 ## P5 第二部分接口
 
 P5有限收尾见[最终报告](p5/final-report.md)与[覆盖矩阵](p5/final-coverage.md)，补齐外侧点击、预设总览及个人四输入；不授权P6。输入与稳定布局前序见[P5第二部分](p5/part2-report.md)、[D07补充交付](p5/d07-review.md)及[事务合同](p5/storage-input-contract.md)；原报告保留当时状态。D04/D07已获用户明确批准，D05/D06/D08仍待审。
