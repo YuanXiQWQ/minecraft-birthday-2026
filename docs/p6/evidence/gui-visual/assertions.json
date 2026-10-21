@@ -1,0 +1,313 @@
+{
+  "pass": true,
+  "mask": [
+    {
+      "file": "locked-personal-final",
+      "samples": [
+        {
+          "id": "stick",
+          "locked": true,
+          "transparent": 219
+        },
+        {
+          "id": "wooden_pickaxe",
+          "locked": true,
+          "transparent": 188
+        },
+        {
+          "id": "egg",
+          "locked": true,
+          "transparent": 166
+        },
+        {
+          "id": "milk_bucket",
+          "locked": true,
+          "transparent": 110
+        },
+        {
+          "id": "oak_log",
+          "locked": true,
+          "transparent": 84
+        }
+      ]
+    },
+    {
+      "file": "locked-equipment-final",
+      "samples": [
+        {
+          "id": "stick",
+          "locked": true,
+          "transparent": 219
+        },
+        {
+          "id": "wooden_pickaxe",
+          "locked": true,
+          "transparent": 188
+        },
+        {
+          "id": "egg",
+          "locked": true,
+          "transparent": 166
+        },
+        {
+          "id": "milk_bucket",
+          "locked": true,
+          "transparent": 110
+        },
+        {
+          "id": "oak_log",
+          "locked": true,
+          "transparent": 83
+        }
+      ]
+    },
+    {
+      "file": "locked-catalogue-final",
+      "samples": [
+        {
+          "id": "stick",
+          "locked": true,
+          "transparent": 219
+        },
+        {
+          "id": "wooden_pickaxe",
+          "locked": true,
+          "transparent": 188
+        },
+        {
+          "id": "egg",
+          "locked": true,
+          "transparent": 166
+        },
+        {
+          "id": "milk_bucket",
+          "locked": true,
+          "transparent": 110
+        },
+        {
+          "id": "oak_log",
+          "locked": true,
+          "transparent": 83
+        }
+      ]
+    },
+    {
+      "file": "unlocked-all-final",
+      "samples": [
+        {
+          "id": "stick",
+          "locked": false,
+          "transparent": 219
+        },
+        {
+          "id": "wooden_pickaxe",
+          "locked": false,
+          "transparent": 188
+        },
+        {
+          "id": "egg",
+          "locked": false,
+          "transparent": 166
+        },
+        {
+          "id": "milk_bucket",
+          "locked": false,
+          "transparent": 110
+        },
+        {
+          "id": "oak_log",
+          "locked": false,
+          "transparent": 84
+        }
+      ]
+    }
+  ],
+  "held": {
+    "rendered": 113,
+    "handContexts": 226,
+    "failures": []
+  },
+  "race": {
+    "waitingRefused": true,
+    "completedCursor": {
+      "id": "minecraft:oak_planks",
+      "count": 4
+    },
+    "followupSavedSlot": {
+      "id": "minecraft:oak_planks",
+      "count": 4
+    },
+    "closedNoResurrection": true
+  },
+  "workbenchNoPlayer": true,
+  "crossTabUnequip": true,
+  "resetCleared": true,
+  "mouseFeedback": {
+    "left": {
+      "body": -0.1315661549691497,
+      "head": -0.1315661549691497,
+      "pitch": -0.22923212414606897,
+      "tilt": 0.22923212414606897
+    },
+    "right": {
+      "body": 0.1583354655308257,
+      "head": 0.1583354655308257,
+      "pitch": 0.1315661549691497,
+      "tilt": -0.1315661549691497
+    },
+    "unchangedLayoutAndWorldLook": true
+  },
+  "repeatOpenClose": {
+    "ownedPreviews": 1,
+    "closedDisplay": "none"
+  },
+  "viewports": [
+    {
+      "file": "armored-desktop-1440",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1440,
+        "height": 900,
+        "dpr": 1.0000000149011612
+      },
+      "player": {
+        "skin": "minecraft:entity/player/wide/steve",
+        "window": {
+          "x": 26,
+          "y": 8,
+          "width": 49,
+          "height": 70,
+          "scale": 30
+        },
+        "framebuffer": [
+          147,
+          210
+        ],
+        "look": {
+          "body": -0.2874403447649508,
+          "head": -0.2874403447649508,
+          "pitch": -0.2597771535636546,
+          "tilt": 0.2597771535636546
+        },
+        "layout": "[{\"head\":{\"id\":\"minecraft:iron_helmet\",\"count\":1},\"chest\":{\"id\":\"minecraft:iron_chestplate\",\"count\":1},\"legs\":{\"id\":\"minecraft:iron_leggings\",\"count\":1},\"feet\":{\"id\":\"minecraft:iron_boots\",\"count\":1},\"offhand\":{\"id\":\"minecraft:shield\",\"count\":1}},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1}]",
+        "parts": [
+          "head",
+          "body",
+          "rightArm",
+          "leftArm",
+          "rightLeg",
+          "leftLeg"
+        ],
+        "outerLayers": 6,
+        "hands": 2,
+        "armorParts": 9,
+        "renders": 4,
+        "geometries": 24,
+        "textures": 5,
+        "calls": 212
+      }
+    },
+    {
+      "file": "equipment-narrow-800",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 800,
+        "height": 600,
+        "dpr": 1.0000000149011612
+      },
+      "player": {
+        "skin": "minecraft:entity/player/wide/steve",
+        "window": {
+          "x": 73,
+          "y": 6,
+          "width": 32,
+          "height": 43,
+          "scale": 20
+        },
+        "framebuffer": [
+          64,
+          86
+        ],
+        "look": {
+          "body": 0.46868508294016403,
+          "head": 0.46868508294016403,
+          "pitch": -0.30309466675037017,
+          "tilt": 0.30309466675037017
+        },
+        "layout": "[{\"head\":null,\"chest\":{\"id\":\"minecraft:iron_chestplate\",\"count\":1},\"legs\":{\"id\":\"minecraft:iron_leggings\",\"count\":1},\"feet\":{\"id\":\"minecraft:iron_boots\",\"count\":1},\"offhand\":{\"id\":\"minecraft:shield\",\"count\":1}},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1}]",
+        "parts": [
+          "head",
+          "body",
+          "rightArm",
+          "leftArm",
+          "rightLeg",
+          "leftLeg"
+        ],
+        "outerLayers": 6,
+        "hands": 2,
+        "armorParts": 8,
+        "renders": 220,
+        "geometries": 23,
+        "textures": 5,
+        "calls": 206
+      }
+    },
+    {
+      "file": "native-dpr",
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "player": {
+        "skin": "minecraft:entity/player/wide/steve",
+        "window": {
+          "x": 26,
+          "y": 8,
+          "width": 49,
+          "height": 70,
+          "scale": 30
+        },
+        "framebuffer": [
+          183,
+          262
+        ],
+        "look": {
+          "body": -0.26134476002871754,
+          "head": -0.26134476002871754,
+          "pitch": -0.2597771535636546,
+          "tilt": 0.2597771535636546
+        },
+        "layout": "[{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},null]",
+        "parts": [
+          "head",
+          "body",
+          "rightArm",
+          "leftArm",
+          "rightLeg",
+          "leftLeg"
+        ],
+        "outerLayers": 6,
+        "hands": 0,
+        "armorParts": 0,
+        "renders": 6,
+        "geometries": 12,
+        "textures": 1,
+        "calls": 72
+      }
+    }
+  ],
+  "buildAudits": [
+    {
+      "folder": "app/dist",
+      "checked": 5,
+      "noVerificationFixture": true
+    },
+    {
+      "folder": "app/dist-pages",
+      "checked": 5,
+      "noVerificationFixture": true
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "profile": "steve-wide-reachable-iron-held-v1",
+  "exporterSha256": "19001e4e4616b169957762ed7cf24edbf378a0d3bbbcf06c82356d6856d4f5da",
+  "dependencies": 382,
+  "sourceClasses": {
+    "net/minecraft/client/gui/screens/inventory/InventoryScreen.class": "4ee77bb0b79ed8bdd7705b398aee0379c99f36785b577f5b27795c63b9643966",
+    "net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen.class": "fd1473e4ee77fbc246043e8130bef5ada7ef26932ec33014f4216053275efeef",
+    "net/minecraft/client/model/player/PlayerModel.class": "2b079f3f2f1ec200bfd080b5eac968c057f67b955374ec5c567a8765fed83981",
+    "net/minecraft/client/model/HumanoidModel.class": "d86498297d0837e473898a1d0c801b9c0b50182058982e8e257fd0d45bf896db",
+    "net/minecraft/client/renderer/entity/layers/ItemInHandLayer.class": "313dca7407a757a377db4e2c9ebaf7c340df37c0b042f351fe6b3821aefa7c60",
+    "net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer.class": "fc5759b0b16ba697c8c2361f452bdb699d5789aec7c4d2441e7891c26ee48747",
+    "net/minecraft/client/model/geom/ModelPart$Cube.class": "adb22ad0e425883db38a50e27cbadfd478cd95e5e47785f90288a626c2085a99",
+    "net/minecraft/client/resources/model/cuboid/ItemModelGenerator.class": "a55d3aa19b2e5fd97e6e94dddd8ea9c1ad42eeb4e6f41e4bccd3227a13503bd6",
+    "net/minecraft/client/resources/model/cuboid/ItemTransform.class": "5753c00a8eab6d9ca2f284e2ba59aab1fecfe1e0d4ae89c2694ea81ab41273ae",
+    "net/minecraft/client/renderer/special/ShieldSpecialRenderer.class": "bde70d066a58664144b62075aac15140e2712817a27192e5304863189f80c388",
+    "net/minecraft/client/renderer/special/ChestSpecialRenderer.class": "1b2a80ae4f612eb555b7d09b0a8b97bd6169ea82384d08580d4468c1ac5b0115",
+    "net/minecraft/client/model/geom/LayerDefinitions.class": "696d567fd6c6a65342703d88ad59eb6389742e13a91a1c21ad5142fc244b5680",
+    "net/minecraft/client/renderer/entity/player/AvatarRenderer.class": "f1d785b3c8fa7a016a0c8c2fc01192153312b3e1f9d7a94b3b080ab717ba56c8"
+  },
+  "newOriginalEntries": [
+    {
+      "entry": "assets/minecraft/equipment/iron.json",
+      "size": 573,
+      "sha256": "5cfe7fde94c594374838416af22d06600d6c195d1eb94411b4690a74f456fd01"
+    },
+    {
+      "entry": "assets/minecraft/models/item/iron_spear_in_hand.json",
+      "size": 117,
+      "sha256": "b6ad3eaece88a4cc9ae6da9bef294ebfac41a734ec255669ada0dd616a2625a2"
+    },
+    {
+      "entry": "assets/minecraft/models/item/spear_in_hand.json",
+      "size": 656,
+      "sha256": "8cdd1011e3a8c936094dc3e32e92060ec07f1592e4c0b5083230e07984858f87"
+    },
+    {
+      "entry": "assets/minecraft/models/item/stone_spear_in_hand.json",
+      "size": 118,
+      "sha256": "4d876ec21342029d2adb3e163b5c50d9d1fcaadd0e4b7314a33f3f8617cac6d4"
+    },
+    {
+      "entry": "assets/minecraft/models/item/wooden_spear_in_hand.json",
+      "size": 119,
+      "sha256": "e0e8faefe5b17b91e5187f9eba246a489bce4d4a2b33f287f2ea1d73998355d4"
+    },
+    {
+      "entry": "assets/minecraft/textures/entity/equipment/humanoid/iron.png",
+      "size": 424,
+      "sha256": "4ab8a988d646e8a22a78fe71d0bc293579c65a663e3c1755cac698acbbdc2a66"
+    },
+    {
+      "entry": "assets/minecraft/textures/entity/equipment/humanoid_leggings/iron.png",
+      "size": 243,
+      "sha256": "bc36923b5c049b2730840b8529df127d6877891897a8c11db42a62c882f3d42e"
+    },
+    {
+      "entry": "assets/minecraft/textures/entity/player/wide/steve.png",
+      "size": 848,
+      "sha256": "06628f9cef88520da742ab280a01677ce17c99717f964ed89ed791673121094c"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/iron_spear_in_hand.png",
+      "size": 230,
+      "sha256": "2d9d274689c59dd241c5768587439714ca59af80793a74c408c618748004d365"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/stone_spear_in_hand.png",
+      "size": 223,
+      "sha256": "1934f2b64dead8dd501c55362e332e22ecac62d4123702fe3b6bf40919405634"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/wooden_spear_in_hand.png",
+      "size": 215,
+      "sha256": "1107787fd87f8af61345432df03584f3d01b9c62836a948e37bddfc62a462456"
+    }
+  ],
+  "ordinaryResourceFiles": 490,
+  "verified": true
+}

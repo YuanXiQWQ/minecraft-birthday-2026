@@ -1,0 +1,199 @@
+
+> minecraft-birthday-2026@0.1.0 test
+> node --experimental-transform-types --test tests/*.test.ts
+
+(node:50628) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D05 left/right target semantics grant a complete batch, preserve inputs and reject partial capacity or different components (16.6455ms)
+✔ D05 Shift is bounded by nine-slot capacity and complete batches, including uneven free capacity and native unstackables (6.6226ms)
+✔ D05 numeric/F targets do not swap existing different items, and invalid result operations cannot clone or discard outputs (3.6648ms)
+✔ D05 malformed or locked ingredient stacks, unknown component variants and invalid dimensions never grant results (1.6123ms)
+✔ D05 actual log-plank-stick-workbench-pick chain unlocks only after receipt without relying on discovery (16.6748ms)
+✔ D05 cake A returns exactly three buckets to the infinite directory with no hidden inventory or birthday completion (7.2473ms)
+✔ D05 native pristine repair results normalize only the matching default max_damage component (0.9137ms)
+✔ workbench nine inputs reuse SlotPolicy, unique drag, Shift and numeric swap, and are excluded from player layout (1.9492ms)
+✔ D05 save failure and stale layout rejection leave product locked, input/target bytes untouched and emit no events (39.2787ms)
+✔ workbench contents persist on refresh, remain isolated by instance, reject stale/removed/wrong-scene contexts and reset safely (32.0514ms)
+✔ P5 migration preserves durable layout/settings/cake and upgrades empty workbench reservation without overwriting original bytes (8.0564ms)
+✔ D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products (14.7337ms)
+✔ D07 closing while an accepted result transaction resolves cannot restore the cursor or personal ingredients (2.3944ms)
+✔ successful SaveSession acquisition returns the actual committed cursor receipt for both first unlock and repeated known results (8.9037ms)
+✔ queued old-generation crafting cannot award a result after a reset acquires the same lock first (14.5649ms)
+✔ two real workbench commands with the same observed grid reject the stale writer independently of player layout revision (10.5218ms)
+✔ a result projection is never a general mutable slot, regardless of ordinary slot input operation (2.7337ms)
+✔ P6 carrier region admits only floor workbenches and excludes the birthday table without authoring final four-scene limits (0.3378ms)
+(node:39968) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ personal preview matches one log in each 2x2 offset, shows native output count and does not scale by input quantity (8.4195ms)
+✔ personal preview respects native horizontal mirror and repeated ingredients (2.8329ms)
+✔ personal preview switches recipes, clears no-match inputs and never fits a three-wide recipe into 2x2 (1.9645ms)
+✔ personal preview does not mutate input, consume material or expose remainder transactions; unsupported rules are explicit (3.2297ms)
+✔ menu projection remains separate from slot references; a screen without an acquisition port stays read-only (6.8737ms)
+✔ D07 close and reset clear the actual menu preview without changing stable carriers (2.1615ms)
+✔ previewing a still-locked product never writes a save, emits acquisition events or discovers a recipe (26.6625ms)
+(node:42824) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (33.5827ms)
+✔ normal receipt and post-receipt placement: {} (13.7859ms)
+✔ normal receipt and post-receipt placement: {"known":true} (12.3433ms)
+✔ normal receipt and post-receipt placement: {"merge":5} (8.9643ms)
+✔ normal receipt and post-receipt placement: {"bench":true} (14.239ms)
+✔ normal receipt and post-receipt placement: {"bench":true,"known":true} (13.198ms)
+✔ waiting receipt rejects empty carrier operation through the unified command entry (4.8341ms)
+✔ waiting receipt rejects occupied carrier operation through the unified command entry (6.8719ms)
+✔ waiting receipt rejects directory carrier operation through the unified command entry (4.017ms)
+✔ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (8.9115ms)
+✔ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (8.4907ms)
+✔ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (8.5562ms)
+✔ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (7.1003ms)
+✔ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (6.0018ms)
+✔ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (5.8384ms)
+✔ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (10.6025ms)
+✔ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (10.9496ms)
+✔ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (11.6589ms)
+✔ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (13.0077ms)
+✔ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (8.2037ms)
+✔ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (15.5379ms)
+✔ workbench receipt also rejects empty-slot and directory operations while its real instance input persists (8.8812ms)
+✔ closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor (10.0652ms)
+✔ identity-checked cleanup cannot release ownership established by a different receipt (2.9681ms)
+(node:27324) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ unlock is immutable, monotonic and idempotent; side items follow first acquisition (7.4003ms)
+✔ completion is a single table fact; requires unlocked cake, home context and the canonical table (3.5488ms)
+✔ placement accepts only explicit authored policy; stable instances remain separate from view and natural state (3.9674ms)
+✔ unsupported IDs, contract payloads, malformed coordinates and extra durable fields are never discarded silently (0.9063ms)
+✔ progress reset retains approved settings and clears all progress without changing other snapshots (0.9929ms)
+(node:47260) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ silhouette preserves transparent holes and every fractional alpha without mutating original/composite frame pixels (3.1045ms)
+✔ wide Steve has six native cuboids, separate outer layers, original UVs and intact head/feet extents (4.3939ms)
+✔ armor slot visibility, deformation and atlas height remain separate from skin and hand models (0.7467ms)
+✔ mouse feedback uses same-version bounded atan and independent body/head tracking, with no animation clock (0.5215ms)
+✔ Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile (1479.4375ms)
+(node:41128) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G03–G06 odd halves, partial merge, right one, component swap and capacity preserve finite counts (6.5096ms)
+✔ G07 left drag distributes floor and retains odd remainders, deduplicates and excludes armor/wrong identity/full cells (1.6193ms)
+✔ G07 partial capacities do not silently redistribute or lose the unallocated remainder (0.3618ms)
+✔ G08 right drag allocates at most one per unique eligible cell and never refills its source (0.4979ms)
+✔ G10–G11 middle cloning requires empty cursor; middle drag fills native maxima and does not consume carried group (0.5135ms)
+✔ G12 collects only matching finite groups to max; output permission forbids inserting or exchanging (0.9927ms)
+✔ G13–G14 bounded Shift source/move snapshots preserve counts and autoequip by component (2.654ms)
+✔ G15–G16 numeric/F swaps respect both directions, offhand max and armor restrictions (0.8849ms)
+✔ G17–G18 Q/CtrlQ delete finite units only; C/X presets copy bounded unlocked native groups (1.8604ms)
+✔ G19–G20 equipment auto-use swaps occupied compatible armor, never tool suffix guesses or durability (1.1422ms)
+✔ G30 staged gestures cancel atomically on boundary, blur/escape/cancel, reject mismatched release and deduplicate cells (0.9828ms)
+✔ all 113 locked identities fail source/clone/drag/preset/old-state paths and components are explicitly bounded (45.8257ms)
+✔ stable carrier rules exactly project current P4 original maximum/equipment/damage data for all 113 items (3.2401ms)
+✔ finite operations conserve every identity across 1500 seeded mixed pick/drag/quick/collect/swap actions (106.4018ms)
+✔ native zero damage is the default identity; unsupported capacity/equippable component overrides cannot bypass policy (0.5701ms)
+✔ malformed command modes/buttons never fall through into another supported inventory operation (0.9073ms)
+✔ stable layout refresh and presets persist, cursor is absent; progress reset retains settings and clears layout (36.5959ms)
+✔ same-layout concurrent pickup commits once; changed layout conflicts safely rather than duplicating into two cursors (9.2573ms)
+✔ unrelated settings/unlock transactions merge with carrier intents; reset fences an already queued old layout write (9.4574ms)
+✔ P3 checksummed save migrates reserved player only, retains progress/settings/cake and old bytes until a valid change (4.0161ms)
+✔ carrier write failure cannot publish a successful pickup or overwrite previous bytes; extra persisted cursor is rejected (8.352ms)
+(node:44564) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P5 directory keeps every mainline index and appends side items by first acquisition, without sorting or unlocking (6.195ms)
+✔ P5 every source command rejects all locked registered identities, including numeric, middle, left and right paths (21.5813ms)
+✔ P5 catalogue is an inexhaustible source; repeated identical references and native stack caps never create permanent quantities (2.9907ms)
+✔ P5 bounded basic pickup halves odd groups, places one, merges to maximum and swaps distinct actual carriers (2.039ms)
+✔ P5 original equipment identity rejects a tool in armor, allows a legal chestplate and uses the native offhand stack maximum (1.153ms)
+✔ P5 nine selections wrap wheel boundaries and preserve browser/text focus shortcuts (0.6532ms)
+✔ P5 malformed or locked temporary carriers and maximum-count violations cannot bypass the command gate (0.614ms)
+✔ P5 temporary commands preserve P3 envelope shape, permanent monotonicity and deferred recipe/discovery contracts (15.0038ms)
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (1269.6633ms)
+✔ P5 selects native spear GUI, default armor, date-dependent chest, grass tint and composite branches explicitly (747.0439ms)
+✔ P5 special cuboid geometry uses native dimensions, atlas UVs and face topology rather than a generic cube icon (0.6469ms)
+✔ P5 tooltip logical size preserves the original 12px outer margin and never violates 10px nine-slice borders (0.1697ms)
+(node:46044) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ look emits a right click only below threshold and a drag only after crossing it (1.766ms)
+✔ look clamps angles and ignores unrelated pointers, with cancellation on GUI/blur independent of saved state (1.5292ms)
+(node:10400) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G17 outside uses the full protected menu plus border guard and Tooltip; native left/all and right/one preserve stable facts (5.7461ms)
+✔ G17 drag escape, border origin, middle, chord, canceled close and mismatched release never produce outside discard (0.475ms)
+✔ G18 saved-toolbar cells copy exact saved groups/components without mutating the existing nine presets (3.085ms)
+✔ personal four inputs reuse native split/merge/drag/numeric/Shift permissions without producing any result (3.094ms)
+✔ personal inputs honor native single/16 caps, locked groups, component identity and D07 epoch isolation (0.9515ms)
+✔ personal input transactions use fresh locked layout and never persist cells; reset fences old menu groups (29.3885ms)
+✔ all 113 locked identities are rejected in saved-toolbar copies and personal-grid entry paths (19.6388ms)
+(node:49100) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ codec detects tampering, future formats, invalid content and exact structural errors (19.9865ms)
+✔ documented development-v0 migrates in memory; failed migration never rewrites original bytes (11.2171ms)
+✔ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (9.9195ms)
+✔ concurrent sessions merge semantic commands against fresh facts under the shared lock (7.3134ms)
+✔ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (14.2549ms)
+✔ confirmation notices same-epoch changes and requires a new explicit reset (4.743ms)
+✔ queued commands are fenced across suspend/resume even when the reset epoch has not changed (3.2321ms)
+✔ corrupt, future and missing storage capability preserve exact bytes and block writes/reset (1.2202ms)
+✔ unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap (0.5172ms)
+✔ write denial leaves both durable and presented facts unchanged, with an explicit retry path (6.0632ms)
+✔ rejected domain input does not poison a valid session or replace its saved bytes (6.6846ms)
+(node:34480) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D07 close clears cursor only, preserves stable layout and permanent facts, including when saving is read-only (6.0277ms)
+✔ D07 delayed pickup cannot resurrect a cursor after close, while its submitted stable-slot transaction completes (2.1038ms)
+✔ D07 reopening permits a fresh cursor without accepting the older close-boundary result (1.185ms)
+✔ D07 close/re-entry boundaries reject older results and accept fresh isolated cursor snapshots (0.3363ms)
+✔ D07 delayed personal input result is discarded on close while a fresh reopened input can commit (1.6723ms)
+✔ D07 reset initializes usable personal inputs immediately while an older menu result is still pending (1.9088ms)
+(node:9704) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (1061.7707ms)
+✔ missing language keys fall back to English; missing English and missing interpolation fail visibly in tests (0.6754ms)
+✔ every statically declared page key exists in external English and all English glyphs fit the ASCII profile (2.0976ms)
+✔ long text wraps at words and within long tokens without deleting copy or exceeding the measured line width (0.3413ms)
+✔ presentation keeps native slab thickness and exact cake contact, with a materially larger authored environment (747.7723ms)
+(node:36216) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P4 census parses 1763 nonbrewing recipes/21 types plus all 279 original brewing records; hashes and golden inputs match (13.0477ms)
+✔ P4 shaped offsets/mirror and strict empty slots work in 2x2 and 3x3 without converting pattern/key case (1.7981ms)
+✔ P4 shapeless matching respects repeated slots, tags and overlapping alternatives rather than greedy assignment (0.6475ms)
+✔ P4 cake accepts every native egg alternative and yields three independent bucket remainders (0.8673ms)
+✔ P4 correct tool uses actual incorrect-drop tags; fast gold never substitutes for stone on iron ore (1.1076ms)
+✔ P4 native stack, armor, damage, remainder and fuel identities come from registration evidence (0.8267ms)
+✔ P4 cooking matches station capabilities, stone chain and iron recovery without treating slot acceptance as processing (1.4235ms)
+✔ P4 reachable native repair supports pristine tools and damaged variants, but rejects unsupported component-bearing input (1.3942ms)
+✔ P4 recursive tags preserve nested alternatives, optional absent references and reject cycles (0.5452ms)
+✔ P4 fixed point provides causal proofs for every item, includes side products and excludes unavailable capabilities without inventing sources (2.3296ms)
+✔ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (13.7242ms)
+✔ P4 all twelve candidate source profiles reproduce causal closure and actually match their 112 recipes and cake chain (437.4634ms)
+✔ P4 component equality uses verified defaults and order-independent values; unsupported defaults and nonvanilla grid shapes are explicit (15.6979ms)
+✔ P4 runtime registry selects crafting facts without a GUI or any save mutation (2.9498ms)
+✔ P4 runtime source and cooking context use committed native predicates rather than station-name fuel guesses (4.4583ms)
+ℹ tests 138
+ℹ suites 0
+ℹ pass 137
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3466.2871
+
+✖ failing tests:
+
+test at tests\inventory.test.ts:19:1
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (1269.6633ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  490 !== 478
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory.test.ts:19:407)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 490,
+    expected: 478,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

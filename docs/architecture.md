@@ -1,5 +1,7 @@
 # 总体技术架构
 
+当前GUI显示合同：`ui/icon-mask`从最终合成图标RGBA生成独立黑色alpha轮廓，按不可变帧对象缓存；所有目录页面共用，不处理槽底/数量/Tooltip，也不修改原版图标。`ui/player-model`保存同版本实体几何/UV与观察公式，`player-items`处理原版第三人称双手模型，`player-preview`用每个GameInventory一份独立Three渲染器，在原版人物窗口内显示Steve、外层皮肤和已提交装备/持物。预览canvas无输入面，独立framebuffer，不改变世界viewport/scissor；GUI关闭/无人物页面隐藏，不建额外RAF，卸载释放。渲染读取permanent.player布局，不能把未提交乐观装备当成稳定事实。人物背景保留，空人物区域不属于合格最终GUI。见[本次交付](p6/gui-visual-review.md)。领取票据门禁与D07不改。
+
 P6合成增量：D05完整合同及A目录返还已由用户明确批准。结果专用领域命令重新匹配配方，在P3锁内原子提交目标载体与首次取得；2×2页内输入与实例工作台grid9持久内容分离，信封p6-crafting-1兼容迁移P3/P5。详见[合同](p6/d05-proposal.md)和[交付](p6/crafting-review.md)。炉/漏斗业务、D06/D08仍后续，既有3D/方案B不改。
 
 ## 个人2×2预览增量（历史基础，领取升级见顶部P6交付）
@@ -14,7 +16,7 @@ P5有限收尾见[最终报告](p5/final-report.md)与[覆盖矩阵](p5/final-co
 
 `player.version1`保存selected/hotbar/equipment/presets，contentVersion=`p5-layout-1`。SaveSession在真实Web Lock内重读并比较载体前置值，运行语义命令，再一次保存；同槽争抢拒绝一方，不能仅凭revision或旧UI快照写回。UI失败撤销未提交投影，重置generation清理旧引用；旧P3空player校验后迁移，其他事实保留。D07已批准光标关闭/刷新清空、失焦/PointerCancel保留已提交光标；PersonalCursor独立epoch隔离关闭前异步返回，pagehide清理并阻断旧队列。稳定槽不随关闭清除。个人2×2输入现已接入：crafting[4]与光标同epoch、同锁返回而不序列化；结果与设备内容按已批D07合同留P6/P7。预设总览只投影现有presets[9]，OutsideClick区分GUI外侧点击与被取消的槽位拖动。
 
-`catalogue-manifest`继续审计113默认模型/字体/GUI资源；副手HUD及两张creative滚动精灵随普通构建，合计478资源/清单；inventory.png复用原资源并加入GUI加载依赖。离屏GPU图标生成后释放，CPU图像缓存与唯一可取消动画帧选择计时器归GameInventory所有。饰纹/复杂组件视觉、实体右/中拖及Java客户端对照不宣称完成。主页故事/正面空桌/蛋糕和宽屏3D不变。
+`catalogue-manifest`审计113默认图标/字体/GUI，`player-manifest`补充Steve、当前可达铁盔甲及双手上下文依赖；普通构建共490资源/清单（4清单、486原始资源）。图标GPU生成器在生成后释放；人物渲染器在GUI生命周期内复用，缓存有界并在卸载释放。饰纹/复杂组件视觉、实体右/中拖及Java客户端逐像素对照不宣称完成。主页故事/正面空桌/蛋糕和宽屏3D不变。
 
 ## P4 已落地接口
 

@@ -38,6 +38,10 @@ action('Fixture: unlock cake ingredients',async()=>{await session.refresh();for(
 
 /** Verification-only coordination never holds the application's persistence lock. */
 const receiptChannel=new BroadcastChannel('minecraft-birthday-2026:verify:craft-receipt');
+/** Exercise real stable-layout transactions on the isolated origin; no renderer state is injected. */
+action('Fixture: equip Steve sample',async()=>{session.rules=await loadRules();for(const [slot,id]of [['head','iron_helmet'],['chest','iron_chestplate'],['legs','iron_leggings'],['feet','iron_boots']]){const r=await session.editInventory({type:'source',item:'minecraft:'+id,mode:'left'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'equipment',slot:slot as 'head'|'chest'|'legs'|'feet',button:0},r.cursor,session.view.envelope!.state.progress.player.data);}for(const [index,id]of [[0,'wooden_pickaxe'],[1,'oak_log']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'source',item:'minecraft:shield',mode:'offhand'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'select',index:0},null,session.view.envelope!.state.progress.player.data);return session.view;});
+action('Run held model dependency checks',async()=>{receiptChannel.postMessage('held');return{sent:'held'};});
+action('Run GUI alpha pixel checks',async()=>{receiptChannel.postMessage('visual');return{sent:'visual'};});
 action('Arm next crafting receipt delay',async()=>{receiptChannel.postMessage('arm');return{sent:'arm'};});
 action('Release crafting receipt',async()=>{receiptChannel.postMessage('release');return{sent:'release'};});
 window.addEventListener('pagehide',()=>receiptChannel.close());
