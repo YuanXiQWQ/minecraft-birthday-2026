@@ -1,2 +1,4 @@
 # Versioned source bytes must survive checkout unchanged for their audited hashes.
 resources/minecraft/26.3/** -text
+data/minecraft/26.3/** -text
+app/web/src/data/registry.json -text

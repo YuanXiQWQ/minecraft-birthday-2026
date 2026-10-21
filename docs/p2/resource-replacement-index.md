@@ -6,6 +6,8 @@
 
 ## 当前可复用资源
 
+- P4补充：原114个模型/GUI/字体/粒子/音频资源文件与清单未改。新增规则数据源在`data/minecraft/26.3/`，正式构建另发`rules/minecraft/26.3/rules.json`及小型`manifest.json`，根路径/Pages子路径相同base机制。完整catalog/coverage/研究文档/客户端JAR不发布。113逻辑ID不表示113图标已制作；P5/P7按实际使用继续补齐原版依赖。数据来源与哈希见[P4清单](../../data/minecraft/26.3/manifest.json)。
+
 - P3补充（当前）：正式`app/`同时读取原manifest和[presentation-manifest](../../resources/minecraft/26.3/presentation-manifest.json)，新增17原始文件（cake7模型+blockstate+4纹理+oak slab/post/plank5模型）。含两清单共114文件，普通dev/build默认加载；P2原95项manifest和历史证据不改写。原版来源SHA1和逐文件SHA256可复核。浏览器验收未切cake与组合桌面，切片变体只验证离线转换，不扩大原版模型支持能力。
 - 正式入口与运行步骤见[app说明](../../app/README.md)，P2实验仍使用原96文件cohort；以下原95项统计属于P2资源范围，不表示P3只有这些文件。无强制替换计划，发布权利独立待审。
 - 仓库源目录：`resources/minecraft/26.3/`，已实现功能无需开发者再次提取客户端。

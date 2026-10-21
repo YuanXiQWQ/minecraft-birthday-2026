@@ -1,0 +1,157 @@
+{
+  "origin": "http://127.0.0.1:4184",
+  "mode": "verification",
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.25
+  },
+  "nativeLocks": true,
+  "snapshot": {
+    "status": "ready",
+    "envelope": {
+      "format": 1,
+      "contentVersion": "p3-foundation-1",
+      "vanillaVersion": "26.3",
+      "generation": "0b7233ab-0994-472b-81aa-752af20e9a0f",
+      "revision": 3,
+      "state": {
+        "progress": {
+          "unlocked": [
+            "minecraft:cake"
+          ],
+          "scene": "home",
+          "scenes": {
+            "plains": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "cave": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "farm": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "home": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            }
+          },
+          "player": {
+            "version": 0,
+            "data": null
+          },
+          "recipeBook": {
+            "version": 0,
+            "data": null
+          },
+          "cakePlacement": {
+            "scene": "home",
+            "table": "birthday-table"
+          }
+        },
+        "settings": {
+          "locale": "en",
+          "volume": 1,
+          "muted": true
+        }
+      },
+      "checksum": "11dcfa3aefcf6e2f7b47cb30b2427bce9bb5a881a9d6410778b9e2bcac92416c"
+    },
+    "migrated": false,
+    "writable": true
+  },
+  "records": [
+    {
+      "label": "Fixture: reset progress",
+      "phase": "start",
+      "start": 1792584593621
+    },
+    {
+      "label": "Fixture: reset progress",
+      "phase": "done",
+      "start": 1792584593621,
+      "end": 1792584593633
+    },
+    {
+      "label": "Fixture: place cake",
+      "phase": "start",
+      "start": 1792584593903
+    },
+    {
+      "label": "Fixture: place cake",
+      "phase": "done",
+      "start": 1792584593903,
+      "end": 1792584593917,
+      "result": {
+        "status": "ready",
+        "envelope": {
+          "format": 1,
+          "contentVersion": "p3-foundation-1",
+          "vanillaVersion": "26.3",
+          "generation": "0b7233ab-0994-472b-81aa-752af20e9a0f",
+          "revision": 3,
+          "state": {
+            "progress": {
+              "unlocked": [
+                "minecraft:cake"
+              ],
+              "scene": "home",
+              "scenes": {
+                "plains": {
+                  "layoutVersion": 1,
+                  "stations": [],
+                  "crops": []
+                },
+                "cave": {
+                  "layoutVersion": 1,
+                  "stations": [],
+                  "crops": []
+                },
+                "farm": {
+                  "layoutVersion": 1,
+                  "stations": [],
+                  "crops": []
+                },
+                "home": {
+                  "layoutVersion": 1,
+                  "stations": [],
+                  "crops": []
+                }
+              },
+              "player": {
+                "version": 0,
+                "data": null
+              },
+              "recipeBook": {
+                "version": 0,
+                "data": null
+              },
+              "cakePlacement": {
+                "scene": "home",
+                "table": "birthday-table"
+              }
+            },
+            "settings": {
+              "locale": "en",
+              "volume": 1,
+              "muted": true
+            }
+          },
+          "checksum": "11dcfa3aefcf6e2f7b47cb30b2427bce9bb5a881a9d6410778b9e2bcac92416c"
+        },
+        "migrated": false,
+        "writable": true
+      }
+    }
+  ]
+}

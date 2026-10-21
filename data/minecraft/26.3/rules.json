@@ -1,0 +1,4747 @@
+{
+  "sourceBlocks": {
+    "minecraft:stone": {
+      "requiresCorrectTool": true,
+      "source": "net.minecraft.world.level.block.Blocks#STONE"
+    },
+    "minecraft:coal_ore": {
+      "requiresCorrectTool": true,
+      "source": "net.minecraft.world.level.block.Blocks#COAL_ORE"
+    },
+    "minecraft:iron_ore": {
+      "requiresCorrectTool": true,
+      "source": "net.minecraft.world.level.block.Blocks#IRON_ORE"
+    }
+  },
+  "interactions": {
+    "milk": {
+      "input": "minecraft:bucket",
+      "output": "minecraft:milk_bucket",
+      "requiresAdult": true,
+      "source": "net.minecraft.world.entity.animal.cow.AbstractCow#mobInteract (adult cow)"
+    }
+  },
+  "loot": {
+    "data/minecraft/loot_table/blocks/acacia_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:acacia_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/acacia_log"
+    },
+    "data/minecraft/loot_table/blocks/birch_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:birch_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/birch_log"
+    },
+    "data/minecraft/loot_table/blocks/cherry_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:cherry_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/cherry_log"
+    },
+    "data/minecraft/loot_table/blocks/coal_ore.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "entries": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "condition": "minecraft:tool/can_silk_touch",
+                  "name": "minecraft:coal_ore"
+                },
+                {
+                  "type": "minecraft:item",
+                  "modifier": [
+                    {
+                      "type": "minecraft:apply_bonus",
+                      "enchantment": "minecraft:fortune",
+                      "formula": "minecraft:ore_drops"
+                    },
+                    {
+                      "type": "minecraft:explosion_decay"
+                    }
+                  ],
+                  "name": "minecraft:coal"
+                }
+              ]
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/coal_ore"
+    },
+    "data/minecraft/loot_table/blocks/dark_oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:dark_oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/dark_oak_log"
+    },
+    "data/minecraft/loot_table/blocks/iron_ore.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "entries": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "condition": "minecraft:tool/can_silk_touch",
+                  "name": "minecraft:iron_ore"
+                },
+                {
+                  "type": "minecraft:item",
+                  "modifier": [
+                    {
+                      "type": "minecraft:apply_bonus",
+                      "enchantment": "minecraft:fortune",
+                      "formula": "minecraft:ore_drops"
+                    },
+                    {
+                      "type": "minecraft:explosion_decay"
+                    }
+                  ],
+                  "name": "minecraft:raw_iron"
+                }
+              ]
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/iron_ore"
+    },
+    "data/minecraft/loot_table/blocks/jungle_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:jungle_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/jungle_log"
+    },
+    "data/minecraft/loot_table/blocks/mangrove_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:mangrove_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/mangrove_log"
+    },
+    "data/minecraft/loot_table/blocks/oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/oak_log"
+    },
+    "data/minecraft/loot_table/blocks/pale_oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:pale_oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/pale_oak_log"
+    },
+    "data/minecraft/loot_table/blocks/poplar_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:poplar_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/poplar_log"
+    },
+    "data/minecraft/loot_table/blocks/short_grass.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "entries": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "condition": "minecraft:tool/can_shear",
+                  "name": "minecraft:short_grass"
+                },
+                {
+                  "type": "minecraft:item",
+                  "condition": {
+                    "type": "minecraft:random_chance",
+                    "chance": 0.125
+                  },
+                  "modifier": [
+                    {
+                      "type": "minecraft:apply_bonus",
+                      "enchantment": "minecraft:fortune",
+                      "formula": "minecraft:uniform_bonus_count",
+                      "parameters": {
+                        "bonusMultiplier": 2
+                      }
+                    },
+                    {
+                      "type": "minecraft:explosion_decay"
+                    }
+                  ],
+                  "name": "minecraft:wheat_seeds"
+                }
+              ]
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/short_grass"
+    },
+    "data/minecraft/loot_table/blocks/spruce_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:spruce_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/spruce_log"
+    },
+    "data/minecraft/loot_table/blocks/stone.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "entries": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "condition": "minecraft:tool/can_silk_touch",
+                  "name": "minecraft:stone"
+                },
+                {
+                  "type": "minecraft:item",
+                  "condition": {
+                    "type": "minecraft:survives_explosion"
+                  },
+                  "name": "minecraft:cobblestone"
+                }
+              ]
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stone"
+    },
+    "data/minecraft/loot_table/blocks/stripped_acacia_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_acacia_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_acacia_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_birch_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_birch_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_birch_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_cherry_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_cherry_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_cherry_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_dark_oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_dark_oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_dark_oak_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_jungle_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_jungle_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_jungle_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_mangrove_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_mangrove_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_mangrove_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_oak_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_pale_oak_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_pale_oak_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_pale_oak_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_poplar_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_poplar_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_poplar_log"
+    },
+    "data/minecraft/loot_table/blocks/stripped_spruce_log.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:stripped_spruce_log"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/stripped_spruce_log"
+    },
+    "data/minecraft/loot_table/blocks/sugar_cane.json": {
+      "type": "minecraft:block",
+      "pools": [
+        {
+          "condition": {
+            "type": "minecraft:survives_explosion"
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "name": "minecraft:sugar_cane"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/sugar_cane"
+    },
+    "data/minecraft/loot_table/blocks/wheat.json": {
+      "type": "minecraft:block",
+      "modifier": {
+        "type": "minecraft:explosion_decay"
+      },
+      "pools": [
+        {
+          "entries": [
+            {
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "condition": {
+                    "type": "minecraft:match_block",
+                    "blocks": "minecraft:wheat",
+                    "state": {
+                      "age": "7"
+                    }
+                  },
+                  "name": "minecraft:wheat"
+                },
+                {
+                  "type": "minecraft:item",
+                  "name": "minecraft:wheat_seeds"
+                }
+              ]
+            }
+          ],
+          "rolls": 1
+        },
+        {
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "minecraft:wheat",
+            "state": {
+              "age": "7"
+            }
+          },
+          "entries": [
+            {
+              "type": "minecraft:item",
+              "modifier": {
+                "type": "minecraft:apply_bonus",
+                "enchantment": "minecraft:fortune",
+                "formula": "minecraft:binomial_with_bonus_count",
+                "parameters": {
+                  "extra": 3,
+                  "probability": 0.5714286
+                }
+              },
+              "name": "minecraft:wheat_seeds"
+            }
+          ],
+          "rolls": 1
+        }
+      ],
+      "random_sequence": "minecraft:blocks/wheat"
+    },
+    "data/minecraft/predicate/block/fast_cooking.json": {
+      "type": "minecraft:match_block",
+      "blocks": [
+        "minecraft:smoker",
+        "minecraft:blast_furnace"
+      ]
+    },
+    "data/minecraft/predicate/tool/can_shear.json": {
+      "type": "minecraft:match_tool",
+      "predicate": {
+        "items": "minecraft:shears"
+      }
+    },
+    "data/minecraft/predicate/tool/can_silk_touch.json": {
+      "type": "minecraft:match_tool",
+      "predicate": {
+        "predicates": {
+          "minecraft:enchantments": [
+            {
+              "enchantments": "minecraft:silk_touch",
+              "levels": {
+                "min": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "recipes": [
+    {
+      "id": "minecraft:anvil",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "I": "minecraft:iron_block",
+        "i": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "III",
+        " i ",
+        "iii"
+      ],
+      "result": {
+        "id": "minecraft:anvil"
+      }
+    },
+    {
+      "id": "minecraft:armor_stand",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "/": "minecraft:stick",
+        "_": "minecraft:smooth_stone_slab"
+      },
+      "pattern": [
+        "///",
+        " / ",
+        "/_/"
+      ],
+      "result": {
+        "id": "minecraft:armor_stand"
+      }
+    },
+    {
+      "id": "minecraft:barrel",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "P": "#minecraft:planks",
+        "S": "#minecraft:wooden_slabs"
+      },
+      "pattern": [
+        "PSP",
+        "P P",
+        "PSP"
+      ],
+      "result": {
+        "id": "minecraft:barrel"
+      }
+    },
+    {
+      "id": "minecraft:blast_furnace",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:smooth_stone",
+        "I": "minecraft:iron_ingot",
+        "X": "minecraft:furnace"
+      },
+      "pattern": [
+        "III",
+        "IXI",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:blast_furnace"
+      }
+    },
+    {
+      "id": "minecraft:bowl",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks"
+      },
+      "pattern": [
+        "# #",
+        " # "
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:bowl"
+      }
+    },
+    {
+      "id": "minecraft:bread",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:wheat"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:bread"
+      }
+    },
+    {
+      "id": "minecraft:bucket",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "# #",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:bucket"
+      }
+    },
+    {
+      "id": "minecraft:cake",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "A": "minecraft:milk_bucket",
+        "B": "minecraft:sugar",
+        "C": "minecraft:wheat",
+        "E": "#minecraft:eggs"
+      },
+      "pattern": [
+        "AAA",
+        "BEB",
+        "CCC"
+      ],
+      "result": {
+        "id": "minecraft:cake"
+      }
+    },
+    {
+      "id": "minecraft:campfire",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "C": "#minecraft:coals",
+        "L": "#minecraft:logs",
+        "S": "minecraft:stick"
+      },
+      "pattern": [
+        " S ",
+        "SCS",
+        "LLL"
+      ],
+      "result": {
+        "id": "minecraft:campfire"
+      }
+    },
+    {
+      "id": "minecraft:cartography_table",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks",
+        "@": "minecraft:paper"
+      },
+      "pattern": [
+        "@@",
+        "##",
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:cartography_table"
+      }
+    },
+    {
+      "id": "minecraft:cauldron",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "# #",
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:cauldron"
+      }
+    },
+    {
+      "id": "minecraft:charcoal",
+      "type": "minecraft:smelting",
+      "cookingtime": 200,
+      "experience": 0.15,
+      "ingredient": "#minecraft:logs_that_burn",
+      "result": {
+        "id": "minecraft:charcoal"
+      }
+    },
+    {
+      "id": "minecraft:chest_minecart",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:chest",
+        "minecraft:minecart"
+      ],
+      "result": {
+        "id": "minecraft:chest_minecart"
+      }
+    },
+    {
+      "id": "minecraft:chest",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks"
+      },
+      "pattern": [
+        "###",
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:chest"
+      }
+    },
+    {
+      "id": "minecraft:chiseled_bookshelf",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "#minecraft:planks",
+        "X": "#minecraft:wooden_slabs"
+      },
+      "pattern": [
+        "###",
+        "XXX",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:chiseled_bookshelf"
+      }
+    },
+    {
+      "id": "minecraft:chiseled_stone_bricks",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone_brick_slab"
+      },
+      "pattern": [
+        "#",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:chiseled_stone_bricks"
+      }
+    },
+    {
+      "id": "minecraft:coal_block",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:coal"
+      },
+      "pattern": [
+        "###",
+        "###",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:coal_block"
+      }
+    },
+    {
+      "id": "minecraft:coal",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:coal_block"
+      ],
+      "result": {
+        "count": 9,
+        "id": "minecraft:coal"
+      }
+    },
+    {
+      "id": "minecraft:cobblestone_slab",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:cobblestone"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:cobblestone_slab"
+      }
+    },
+    {
+      "id": "minecraft:cobblestone_stairs",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:cobblestone"
+      },
+      "pattern": [
+        "#  ",
+        "## ",
+        "###"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:cobblestone_stairs"
+      }
+    },
+    {
+      "id": "minecraft:cobblestone_wall",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:cobblestone"
+      },
+      "pattern": [
+        "###",
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:cobblestone_wall"
+      }
+    },
+    {
+      "id": "minecraft:composter",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:wooden_slabs"
+      },
+      "pattern": [
+        "# #",
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:composter"
+      }
+    },
+    {
+      "id": "minecraft:cracked_stone_bricks",
+      "type": "minecraft:smelting",
+      "category": "blocks",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": "minecraft:stone_bricks",
+      "result": {
+        "id": "minecraft:cracked_stone_bricks"
+      }
+    },
+    {
+      "id": "minecraft:crafting_table",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks"
+      },
+      "pattern": [
+        "##",
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:crafting_table"
+      },
+      "show_notification": false
+    },
+    {
+      "id": "minecraft:furnace_minecart",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:furnace",
+        "minecraft:minecart"
+      ],
+      "result": {
+        "id": "minecraft:furnace_minecart"
+      }
+    },
+    {
+      "id": "minecraft:furnace",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:stone_crafting_materials"
+      },
+      "pattern": [
+        "###",
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:furnace"
+      }
+    },
+    {
+      "id": "minecraft:grindstone",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks",
+        "-": "minecraft:stone_slab",
+        "I": "minecraft:stick"
+      },
+      "pattern": [
+        "I-I",
+        "# #"
+      ],
+      "result": {
+        "id": "minecraft:grindstone"
+      }
+    },
+    {
+      "id": "minecraft:hay_block",
+      "type": "minecraft:crafting_shapeless",
+      "category": "building",
+      "ingredients": [
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat",
+        "minecraft:wheat"
+      ],
+      "result": {
+        "id": "minecraft:hay_block"
+      }
+    },
+    {
+      "id": "minecraft:heavy_weighted_pressure_plate",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:heavy_weighted_pressure_plate"
+      }
+    },
+    {
+      "id": "minecraft:hopper_minecart",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:hopper",
+        "minecraft:minecart"
+      ],
+      "result": {
+        "id": "minecraft:hopper_minecart"
+      }
+    },
+    {
+      "id": "minecraft:hopper",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "C": "minecraft:chest",
+        "I": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "I I",
+        "ICI",
+        " I "
+      ],
+      "result": {
+        "id": "minecraft:hopper"
+      }
+    },
+    {
+      "id": "minecraft:iron_axe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        "X#",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:iron_axe"
+      }
+    },
+    {
+      "id": "minecraft:iron_bars",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "###",
+        "###"
+      ],
+      "result": {
+        "count": 16,
+        "id": "minecraft:iron_bars"
+      }
+    },
+    {
+      "id": "minecraft:iron_block",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "###",
+        "###",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:iron_block"
+      }
+    },
+    {
+      "id": "minecraft:iron_boots",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "X": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "X X",
+        "X X"
+      ],
+      "result": {
+        "id": "minecraft:iron_boots"
+      }
+    },
+    {
+      "id": "minecraft:iron_chain",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "I": "minecraft:iron_ingot",
+        "N": "minecraft:iron_nugget"
+      },
+      "pattern": [
+        "N",
+        "I",
+        "N"
+      ],
+      "result": {
+        "id": "minecraft:iron_chain"
+      }
+    },
+    {
+      "id": "minecraft:iron_chestplate",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "X": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "X X",
+        "XXX",
+        "XXX"
+      ],
+      "result": {
+        "id": "minecraft:iron_chestplate"
+      }
+    },
+    {
+      "id": "minecraft:iron_door",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "##",
+        "##",
+        "##"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:iron_door"
+      }
+    },
+    {
+      "id": "minecraft:iron_helmet",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "X": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "XXX",
+        "X X"
+      ],
+      "result": {
+        "id": "minecraft:iron_helmet"
+      }
+    },
+    {
+      "id": "minecraft:iron_hoe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        " #",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:iron_hoe"
+      }
+    },
+    {
+      "id": "minecraft:iron_ingot_from_blasting_raw_iron",
+      "type": "minecraft:blasting",
+      "cookingtime": 200,
+      "experience": 0.7,
+      "group": "iron_ingot",
+      "ingredient": "minecraft:raw_iron",
+      "result": {
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "id": "minecraft:iron_ingot_from_iron_block",
+      "type": "minecraft:crafting_shapeless",
+      "group": "iron_ingot",
+      "ingredients": [
+        "minecraft:iron_block"
+      ],
+      "result": {
+        "count": 9,
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "id": "minecraft:iron_ingot_from_nuggets",
+      "type": "minecraft:crafting_shaped",
+      "group": "iron_ingot",
+      "key": {
+        "#": "minecraft:iron_nugget"
+      },
+      "pattern": [
+        "###",
+        "###",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "id": "minecraft:iron_ingot_from_smelting_raw_iron",
+      "type": "minecraft:smelting",
+      "cookingtime": 200,
+      "experience": 0.7,
+      "group": "iron_ingot",
+      "ingredient": "minecraft:raw_iron",
+      "result": {
+        "id": "minecraft:iron_ingot"
+      }
+    },
+    {
+      "id": "minecraft:iron_leggings",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "X": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "XXX",
+        "X X",
+        "X X"
+      ],
+      "result": {
+        "id": "minecraft:iron_leggings"
+      }
+    },
+    {
+      "id": "minecraft:iron_nugget_from_blasting",
+      "type": "minecraft:blasting",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": [
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_shovel",
+        "minecraft:iron_axe",
+        "minecraft:iron_hoe",
+        "minecraft:iron_sword",
+        "minecraft:iron_spear",
+        "minecraft:iron_helmet",
+        "minecraft:iron_chestplate",
+        "minecraft:iron_leggings",
+        "minecraft:iron_boots",
+        "minecraft:iron_horse_armor",
+        "minecraft:iron_nautilus_armor",
+        "minecraft:chainmail_helmet",
+        "minecraft:chainmail_chestplate",
+        "minecraft:chainmail_leggings",
+        "minecraft:chainmail_boots"
+      ],
+      "result": {
+        "id": "minecraft:iron_nugget"
+      }
+    },
+    {
+      "id": "minecraft:iron_nugget_from_smelting",
+      "type": "minecraft:smelting",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": [
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_shovel",
+        "minecraft:iron_axe",
+        "minecraft:iron_hoe",
+        "minecraft:iron_sword",
+        "minecraft:iron_spear",
+        "minecraft:iron_helmet",
+        "minecraft:iron_chestplate",
+        "minecraft:iron_leggings",
+        "minecraft:iron_boots",
+        "minecraft:iron_horse_armor",
+        "minecraft:chainmail_helmet",
+        "minecraft:chainmail_chestplate",
+        "minecraft:chainmail_leggings",
+        "minecraft:chainmail_boots",
+        "minecraft:iron_nautilus_armor"
+      ],
+      "result": {
+        "id": "minecraft:iron_nugget"
+      }
+    },
+    {
+      "id": "minecraft:iron_nugget",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:iron_ingot"
+      ],
+      "result": {
+        "count": 9,
+        "id": "minecraft:iron_nugget"
+      }
+    },
+    {
+      "id": "minecraft:iron_pickaxe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "XXX",
+        " # ",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:iron_pickaxe"
+      }
+    },
+    {
+      "id": "minecraft:iron_shovel",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "#",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:iron_shovel"
+      }
+    },
+    {
+      "id": "minecraft:iron_spear",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "  X",
+        " # ",
+        "#  "
+      ],
+      "result": {
+        "id": "minecraft:iron_spear"
+      }
+    },
+    {
+      "id": "minecraft:iron_sword",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "X",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:iron_sword"
+      }
+    },
+    {
+      "id": "minecraft:iron_trapdoor",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "##",
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:iron_trapdoor"
+      }
+    },
+    {
+      "id": "minecraft:ladder",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:stick"
+      },
+      "pattern": [
+        "# #",
+        "###",
+        "# #"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:ladder"
+      }
+    },
+    {
+      "id": "minecraft:lantern",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:torch",
+        "X": "minecraft:iron_nugget"
+      },
+      "pattern": [
+        "XXX",
+        "X#X",
+        "XXX"
+      ],
+      "result": {
+        "id": "minecraft:lantern"
+      }
+    },
+    {
+      "id": "minecraft:lever",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "minecraft:cobblestone",
+        "X": "minecraft:stick"
+      },
+      "pattern": [
+        "X",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:lever"
+      }
+    },
+    {
+      "id": "minecraft:lodestone",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot",
+        "S": "minecraft:chiseled_stone_bricks"
+      },
+      "pattern": [
+        "SSS",
+        "S#S",
+        "SSS"
+      ],
+      "result": {
+        "id": "minecraft:lodestone"
+      }
+    },
+    {
+      "id": "minecraft:minecart",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:minecart"
+      }
+    },
+    {
+      "id": "minecraft:name_tag",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:paper",
+        "X": "#minecraft:metal_nuggets"
+      },
+      "pattern": [
+        " X",
+        "# "
+      ],
+      "result": {
+        "id": "minecraft:name_tag"
+      }
+    },
+    {
+      "id": "minecraft:oak_boat",
+      "type": "minecraft:crafting_shaped",
+      "group": "boat",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "# #",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:oak_boat"
+      }
+    },
+    {
+      "id": "minecraft:oak_button",
+      "type": "minecraft:crafting_shapeless",
+      "category": "redstone",
+      "group": "wooden_button",
+      "ingredients": [
+        "minecraft:oak_planks"
+      ],
+      "result": {
+        "id": "minecraft:oak_button"
+      }
+    },
+    {
+      "id": "minecraft:oak_chest_boat",
+      "type": "minecraft:crafting_shapeless",
+      "group": "chest_boat",
+      "ingredients": [
+        "minecraft:chest",
+        "minecraft:oak_boat"
+      ],
+      "result": {
+        "id": "minecraft:oak_chest_boat"
+      }
+    },
+    {
+      "id": "minecraft:oak_door",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "group": "wooden_door",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "##",
+        "##",
+        "##"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:oak_door"
+      }
+    },
+    {
+      "id": "minecraft:oak_fence_gate",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "group": "wooden_fence_gate",
+      "key": {
+        "#": "minecraft:stick",
+        "W": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "#W#",
+        "#W#"
+      ],
+      "result": {
+        "id": "minecraft:oak_fence_gate"
+      }
+    },
+    {
+      "id": "minecraft:oak_fence",
+      "type": "minecraft:crafting_shaped",
+      "group": "wooden_fence",
+      "key": {
+        "#": "minecraft:stick",
+        "W": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "W#W",
+        "W#W"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:oak_fence"
+      }
+    },
+    {
+      "id": "minecraft:oak_planks",
+      "type": "minecraft:crafting_shapeless",
+      "category": "building",
+      "group": "planks",
+      "ingredients": [
+        "#minecraft:oak_logs"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:oak_planks"
+      }
+    },
+    {
+      "id": "minecraft:oak_pressure_plate",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "group": "wooden_pressure_plate",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:oak_pressure_plate"
+      }
+    },
+    {
+      "id": "minecraft:oak_sign",
+      "type": "minecraft:crafting_shaped",
+      "group": "wooden_sign",
+      "key": {
+        "#": "minecraft:oak_planks",
+        "X": "minecraft:stick"
+      },
+      "pattern": [
+        "###",
+        "###",
+        " X "
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:oak_sign"
+      }
+    },
+    {
+      "id": "minecraft:oak_slab",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "group": "wooden_slab",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:oak_slab"
+      }
+    },
+    {
+      "id": "minecraft:oak_stairs",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "group": "wooden_stairs",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "#  ",
+        "## ",
+        "###"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:oak_stairs"
+      }
+    },
+    {
+      "id": "minecraft:oak_trapdoor",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "group": "wooden_trapdoor",
+      "key": {
+        "#": "minecraft:oak_planks"
+      },
+      "pattern": [
+        "###",
+        "###"
+      ],
+      "result": {
+        "count": 2,
+        "id": "minecraft:oak_trapdoor"
+      }
+    },
+    {
+      "id": "minecraft:oak_wood",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "group": "bark",
+      "key": {
+        "#": "minecraft:oak_log"
+      },
+      "pattern": [
+        "##",
+        "##"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:oak_wood"
+      }
+    },
+    {
+      "id": "minecraft:paper",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:sugar_cane"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 3,
+        "id": "minecraft:paper"
+      }
+    },
+    {
+      "id": "minecraft:rail",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "X X",
+        "X#X",
+        "X X"
+      ],
+      "result": {
+        "count": 16,
+        "id": "minecraft:rail"
+      }
+    },
+    {
+      "id": "minecraft:raw_iron_block",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:raw_iron"
+      },
+      "pattern": [
+        "###",
+        "###",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:raw_iron_block"
+      }
+    },
+    {
+      "id": "minecraft:raw_iron",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:raw_iron_block"
+      ],
+      "result": {
+        "count": 9,
+        "id": "minecraft:raw_iron"
+      }
+    },
+    {
+      "id": "minecraft:repair_item",
+      "type": "minecraft:crafting_special_repairitem"
+    },
+    {
+      "id": "minecraft:shears",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        " #",
+        "# "
+      ],
+      "result": {
+        "id": "minecraft:shears"
+      }
+    },
+    {
+      "id": "minecraft:shield",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "W": "#minecraft:wooden_tool_materials",
+        "o": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "WoW",
+        "WWW",
+        " W "
+      ],
+      "result": {
+        "id": "minecraft:shield"
+      }
+    },
+    {
+      "id": "minecraft:smithing_table",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:planks",
+        "@": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "@@",
+        "##",
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:smithing_table"
+      }
+    },
+    {
+      "id": "minecraft:smoker",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "#minecraft:logs",
+        "X": "minecraft:furnace"
+      },
+      "pattern": [
+        " # ",
+        "#X#",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:smoker"
+      }
+    },
+    {
+      "id": "minecraft:smooth_stone_slab",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:smooth_stone"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:smooth_stone_slab"
+      }
+    },
+    {
+      "id": "minecraft:smooth_stone",
+      "type": "minecraft:smelting",
+      "category": "blocks",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": "minecraft:stone",
+      "result": {
+        "id": "minecraft:smooth_stone"
+      }
+    },
+    {
+      "id": "minecraft:stick",
+      "type": "minecraft:crafting_shaped",
+      "group": "sticks",
+      "key": {
+        "#": "#minecraft:planks"
+      },
+      "pattern": [
+        "#",
+        "#"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:stick"
+      }
+    },
+    {
+      "id": "minecraft:stone_axe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        "X#",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:stone_axe"
+      }
+    },
+    {
+      "id": "minecraft:stone_brick_slab",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone_bricks"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:stone_brick_slab"
+      }
+    },
+    {
+      "id": "minecraft:stone_brick_stairs",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone_bricks"
+      },
+      "pattern": [
+        "#  ",
+        "## ",
+        "###"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:stone_brick_stairs"
+      }
+    },
+    {
+      "id": "minecraft:stone_brick_wall",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:stone_bricks"
+      },
+      "pattern": [
+        "###",
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:stone_brick_wall"
+      }
+    },
+    {
+      "id": "minecraft:stone_bricks",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone"
+      },
+      "pattern": [
+        "##",
+        "##"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:stone_bricks"
+      }
+    },
+    {
+      "id": "minecraft:stone_button",
+      "type": "minecraft:crafting_shapeless",
+      "category": "redstone",
+      "ingredients": [
+        "minecraft:stone"
+      ],
+      "result": {
+        "id": "minecraft:stone_button"
+      }
+    },
+    {
+      "id": "minecraft:stone_hoe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        " #",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:stone_hoe"
+      }
+    },
+    {
+      "id": "minecraft:stone_pickaxe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "XXX",
+        " # ",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:stone_pickaxe"
+      }
+    },
+    {
+      "id": "minecraft:stone_pressure_plate",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "minecraft:stone"
+      },
+      "pattern": [
+        "##"
+      ],
+      "result": {
+        "id": "minecraft:stone_pressure_plate"
+      }
+    },
+    {
+      "id": "minecraft:stone_shovel",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "#",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:stone_shovel"
+      }
+    },
+    {
+      "id": "minecraft:stone_slab",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone"
+      },
+      "pattern": [
+        "###"
+      ],
+      "result": {
+        "count": 6,
+        "id": "minecraft:stone_slab"
+      }
+    },
+    {
+      "id": "minecraft:stone_spear",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "  X",
+        " # ",
+        "#  "
+      ],
+      "result": {
+        "id": "minecraft:stone_spear"
+      }
+    },
+    {
+      "id": "minecraft:stone_stairs",
+      "type": "minecraft:crafting_shaped",
+      "category": "building",
+      "key": {
+        "#": "minecraft:stone"
+      },
+      "pattern": [
+        "#  ",
+        "## ",
+        "###"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:stone_stairs"
+      }
+    },
+    {
+      "id": "minecraft:stone_sword",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:stone_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "X",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:stone_sword"
+      }
+    },
+    {
+      "id": "minecraft:stone",
+      "type": "minecraft:smelting",
+      "category": "blocks",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": "minecraft:cobblestone",
+      "result": {
+        "id": "minecraft:stone"
+      }
+    },
+    {
+      "id": "minecraft:stonecutter",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:stone",
+        "I": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        " I ",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:stonecutter"
+      }
+    },
+    {
+      "id": "minecraft:straw_bed",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "X": "minecraft:hay_block"
+      },
+      "pattern": [
+        "XXX"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:straw_bed"
+      }
+    },
+    {
+      "id": "minecraft:sugar_from_sugar_cane",
+      "type": "minecraft:crafting_shapeless",
+      "group": "sugar",
+      "ingredients": [
+        "minecraft:sugar_cane"
+      ],
+      "result": {
+        "id": "minecraft:sugar"
+      }
+    },
+    {
+      "id": "minecraft:torch",
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:stick",
+        "X": [
+          "minecraft:coal",
+          "minecraft:charcoal"
+        ]
+      },
+      "pattern": [
+        "X",
+        "#"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:torch"
+      }
+    },
+    {
+      "id": "minecraft:trapped_chest",
+      "type": "minecraft:crafting_shapeless",
+      "category": "redstone",
+      "ingredients": [
+        "minecraft:chest",
+        "minecraft:tripwire_hook"
+      ],
+      "result": {
+        "id": "minecraft:trapped_chest"
+      }
+    },
+    {
+      "id": "minecraft:tripwire_hook",
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "#": "#minecraft:planks",
+        "I": "minecraft:iron_ingot",
+        "S": "minecraft:stick"
+      },
+      "pattern": [
+        "I",
+        "S",
+        "#"
+      ],
+      "result": {
+        "count": 2,
+        "id": "minecraft:tripwire_hook"
+      }
+    },
+    {
+      "id": "minecraft:wheat",
+      "type": "minecraft:crafting_shapeless",
+      "ingredients": [
+        "minecraft:hay_block"
+      ],
+      "result": {
+        "count": 9,
+        "id": "minecraft:wheat"
+      }
+    },
+    {
+      "id": "minecraft:wooden_axe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        "X#",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:wooden_axe"
+      }
+    },
+    {
+      "id": "minecraft:wooden_hoe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "XX",
+        " #",
+        " #"
+      ],
+      "result": {
+        "id": "minecraft:wooden_hoe"
+      }
+    },
+    {
+      "id": "minecraft:wooden_pickaxe",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "XXX",
+        " # ",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:wooden_pickaxe"
+      }
+    },
+    {
+      "id": "minecraft:wooden_shovel",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "#",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:wooden_shovel"
+      }
+    },
+    {
+      "id": "minecraft:wooden_spear",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "  X",
+        " # ",
+        "#  "
+      ],
+      "result": {
+        "id": "minecraft:wooden_spear"
+      }
+    },
+    {
+      "id": "minecraft:wooden_sword",
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "X",
+        "X",
+        "#"
+      ],
+      "result": {
+        "id": "minecraft:wooden_sword"
+      }
+    }
+  ],
+  "items": {
+    "minecraft:anvil": {
+      "id": "minecraft:anvil",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#ANVIL"
+    },
+    "minecraft:armor_stand": {
+      "id": "minecraft:armor_stand",
+      "maxStack": 16,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#ARMOR_STAND"
+    },
+    "minecraft:barrel": {
+      "id": "minecraft:barrel",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#BARREL",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:blast_furnace": {
+      "id": "minecraft:blast_furnace",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#BLAST_FURNACE"
+    },
+    "minecraft:bowl": {
+      "id": "minecraft:bowl",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#BOWL",
+      "fuel": "minecraft:cooking/time_wood_items_extra_small"
+    },
+    "minecraft:bread": {
+      "id": "minecraft:bread",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:consumable",
+        "minecraft:food",
+        "minecraft:max_stack_size",
+        "minecraft:villager_food"
+      ],
+      "evidence": "net.minecraft.world.item.Items#BREAD"
+    },
+    "minecraft:bucket": {
+      "id": "minecraft:bucket",
+      "maxStack": 16,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#BUCKET"
+    },
+    "minecraft:cake": {
+      "id": "minecraft:cake",
+      "maxStack": 1,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CAKE"
+    },
+    "minecraft:campfire": {
+      "id": "minecraft:campfire",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CAMPFIRE"
+    },
+    "minecraft:cartography_table": {
+      "id": "minecraft:cartography_table",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CARTOGRAPHY_TABLE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:cauldron": {
+      "id": "minecraft:cauldron",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CAULDRON"
+    },
+    "minecraft:charcoal": {
+      "id": "minecraft:charcoal",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CHARCOAL",
+      "fuel": "minecraft:cooking/time_coal"
+    },
+    "minecraft:chest": {
+      "id": "minecraft:chest",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CHEST",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:chest_minecart": {
+      "id": "minecraft:chest_minecart",
+      "maxStack": 1,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CHEST_MINECART"
+    },
+    "minecraft:chiseled_bookshelf": {
+      "id": "minecraft:chiseled_bookshelf",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CHISELED_BOOKSHELF",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:chiseled_stone_bricks": {
+      "id": "minecraft:chiseled_stone_bricks",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CHISELED_STONE_BRICKS"
+    },
+    "minecraft:coal": {
+      "id": "minecraft:coal",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COAL",
+      "fuel": "minecraft:cooking/time_coal"
+    },
+    "minecraft:coal_block": {
+      "id": "minecraft:coal_block",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COAL_BLOCK",
+      "fuel": "minecraft:cooking/time_coal_block"
+    },
+    "minecraft:cobblestone": {
+      "id": "minecraft:cobblestone",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COBBLESTONE"
+    },
+    "minecraft:cobblestone_slab": {
+      "id": "minecraft:cobblestone_slab",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COBBLESTONE_SLAB"
+    },
+    "minecraft:cobblestone_stairs": {
+      "id": "minecraft:cobblestone_stairs",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COBBLESTONE_STAIRS"
+    },
+    "minecraft:cobblestone_wall": {
+      "id": "minecraft:cobblestone_wall",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COBBLESTONE_WALL"
+    },
+    "minecraft:composter": {
+      "id": "minecraft:composter",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#COMPOSTER",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:cracked_stone_bricks": {
+      "id": "minecraft:cracked_stone_bricks",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CRACKED_STONE_BRICKS"
+    },
+    "minecraft:crafting_table": {
+      "id": "minecraft:crafting_table",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#CRAFTING_TABLE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:egg": {
+      "id": "minecraft:egg",
+      "maxStack": 16,
+      "components": [
+        "minecraft:chicken/variant",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#EGG"
+    },
+    "minecraft:furnace": {
+      "id": "minecraft:furnace",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#FURNACE"
+    },
+    "minecraft:furnace_minecart": {
+      "id": "minecraft:furnace_minecart",
+      "maxStack": 1,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#FURNACE_MINECART"
+    },
+    "minecraft:grindstone": {
+      "id": "minecraft:grindstone",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#GRINDSTONE"
+    },
+    "minecraft:hay_block": {
+      "id": "minecraft:hay_block",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#HAY_BLOCK"
+    },
+    "minecraft:heavy_weighted_pressure_plate": {
+      "id": "minecraft:heavy_weighted_pressure_plate",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#HEAVY_WEIGHTED_PRESSURE_PLATE"
+    },
+    "minecraft:hopper": {
+      "id": "minecraft:hopper",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#HOPPER"
+    },
+    "minecraft:hopper_minecart": {
+      "id": "minecraft:hopper_minecart",
+      "maxStack": 1,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#HOPPER_MINECART"
+    },
+    "minecraft:iron_axe": {
+      "id": "minecraft:iron_axe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_AXE",
+      "maxDamage": 250,
+      "tool": {
+        "role": "axe",
+        "incorrect": "minecraft:incorrect_for_iron_tool",
+        "speed": 6
+      }
+    },
+    "minecraft:iron_bars": {
+      "id": "minecraft:iron_bars",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_BARS"
+    },
+    "minecraft:iron_block": {
+      "id": "minecraft:iron_block",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_BLOCK"
+    },
+    "minecraft:iron_boots": {
+      "id": "minecraft:iron_boots",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:enchantable",
+        "minecraft:equippable",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:repairable"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_BOOTS",
+      "maxDamage": 195,
+      "equipment": "feet"
+    },
+    "minecraft:iron_chain": {
+      "id": "minecraft:iron_chain",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_CHAIN"
+    },
+    "minecraft:iron_chestplate": {
+      "id": "minecraft:iron_chestplate",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:enchantable",
+        "minecraft:equippable",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:repairable"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_CHESTPLATE",
+      "maxDamage": 240,
+      "equipment": "chest"
+    },
+    "minecraft:iron_door": {
+      "id": "minecraft:iron_door",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_DOOR"
+    },
+    "minecraft:iron_helmet": {
+      "id": "minecraft:iron_helmet",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:enchantable",
+        "minecraft:equippable",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:repairable"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_HELMET",
+      "maxDamage": 165,
+      "equipment": "head"
+    },
+    "minecraft:iron_hoe": {
+      "id": "minecraft:iron_hoe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_HOE",
+      "maxDamage": 250,
+      "tool": {
+        "role": "hoe",
+        "incorrect": "minecraft:incorrect_for_iron_tool",
+        "speed": 6
+      }
+    },
+    "minecraft:iron_ingot": {
+      "id": "minecraft:iron_ingot",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size",
+        "minecraft:provides_trim_material"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_INGOT"
+    },
+    "minecraft:iron_leggings": {
+      "id": "minecraft:iron_leggings",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:enchantable",
+        "minecraft:equippable",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:repairable"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_LEGGINGS",
+      "maxDamage": 225,
+      "equipment": "legs"
+    },
+    "minecraft:iron_nugget": {
+      "id": "minecraft:iron_nugget",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_NUGGET"
+    },
+    "minecraft:iron_pickaxe": {
+      "id": "minecraft:iron_pickaxe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_PICKAXE",
+      "maxDamage": 250,
+      "tool": {
+        "role": "pickaxe",
+        "incorrect": "minecraft:incorrect_for_iron_tool",
+        "speed": 6
+      }
+    },
+    "minecraft:iron_shovel": {
+      "id": "minecraft:iron_shovel",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_SHOVEL",
+      "maxDamage": 250,
+      "tool": {
+        "role": "shovel",
+        "incorrect": "minecraft:incorrect_for_iron_tool",
+        "speed": 6
+      }
+    },
+    "minecraft:iron_spear": {
+      "id": "minecraft:iron_spear",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attack_animation",
+        "minecraft:attack_range",
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:damage_type",
+        "minecraft:enchantable",
+        "minecraft:kinetic_weapon",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:minimum_attack_charge",
+        "minecraft:piercing_weapon",
+        "minecraft:repairable",
+        "minecraft:use_effects",
+        "minecraft:weapon"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_SPEAR",
+      "maxDamage": 250
+    },
+    "minecraft:iron_sword": {
+      "id": "minecraft:iron_sword",
+      "maxStack": 1,
+      "components": [
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_SWORD",
+      "maxDamage": 250,
+      "tool": {
+        "role": "sword",
+        "incorrect": "minecraft:incorrect_for_iron_tool",
+        "speed": 6
+      }
+    },
+    "minecraft:iron_trapdoor": {
+      "id": "minecraft:iron_trapdoor",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#IRON_TRAPDOOR"
+    },
+    "minecraft:ladder": {
+      "id": "minecraft:ladder",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#LADDER",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:lantern": {
+      "id": "minecraft:lantern",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#LANTERN"
+    },
+    "minecraft:lever": {
+      "id": "minecraft:lever",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#LEVER"
+    },
+    "minecraft:lodestone": {
+      "id": "minecraft:lodestone",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#LODESTONE"
+    },
+    "minecraft:milk_bucket": {
+      "id": "minecraft:milk_bucket",
+      "maxStack": 1,
+      "components": [
+        "minecraft:consumable",
+        "minecraft:max_stack_size",
+        "minecraft:use_remainder"
+      ],
+      "evidence": "net.minecraft.world.item.Items#MILK_BUCKET",
+      "remainder": "minecraft:bucket"
+    },
+    "minecraft:minecart": {
+      "id": "minecraft:minecart",
+      "maxStack": 1,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#MINECART"
+    },
+    "minecraft:name_tag": {
+      "id": "minecraft:name_tag",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#NAME_TAG"
+    },
+    "minecraft:oak_boat": {
+      "id": "minecraft:oak_boat",
+      "maxStack": 1,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_BOAT",
+      "fuel": "minecraft:cooking/time_boats"
+    },
+    "minecraft:oak_button": {
+      "id": "minecraft:oak_button",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_BUTTON",
+      "fuel": "minecraft:cooking/time_wood_items_extra_small"
+    },
+    "minecraft:oak_chest_boat": {
+      "id": "minecraft:oak_chest_boat",
+      "maxStack": 1,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_CHEST_BOAT",
+      "fuel": "minecraft:cooking/time_boats"
+    },
+    "minecraft:oak_door": {
+      "id": "minecraft:oak_door",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_DOOR",
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:oak_fence": {
+      "id": "minecraft:oak_fence",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_FENCE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_fence_gate": {
+      "id": "minecraft:oak_fence_gate",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_FENCE_GATE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_log": {
+      "id": "minecraft:oak_log",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_LOG",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_planks": {
+      "id": "minecraft:oak_planks",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_PLANKS",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_pressure_plate": {
+      "id": "minecraft:oak_pressure_plate",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_PRESSURE_PLATE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_sign": {
+      "id": "minecraft:oak_sign",
+      "maxStack": 16,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size",
+        "minecraft:sign_text_back",
+        "minecraft:sign_text_front"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_SIGN",
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:oak_slab": {
+      "id": "minecraft:oak_slab",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_SLAB",
+      "fuel": "minecraft:cooking/time_wood_slabs"
+    },
+    "minecraft:oak_stairs": {
+      "id": "minecraft:oak_stairs",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_STAIRS",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_trapdoor": {
+      "id": "minecraft:oak_trapdoor",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_TRAPDOOR",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:oak_wood": {
+      "id": "minecraft:oak_wood",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#OAK_WOOD",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:paper": {
+      "id": "minecraft:paper",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#PAPER"
+    },
+    "minecraft:rail": {
+      "id": "minecraft:rail",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#RAIL"
+    },
+    "minecraft:raw_iron": {
+      "id": "minecraft:raw_iron",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#RAW_IRON"
+    },
+    "minecraft:raw_iron_block": {
+      "id": "minecraft:raw_iron_block",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#RAW_IRON_BLOCK"
+    },
+    "minecraft:shears": {
+      "id": "minecraft:shears",
+      "maxStack": 1,
+      "components": [
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SHEARS",
+      "maxDamage": 238
+    },
+    "minecraft:shield": {
+      "id": "minecraft:shield",
+      "maxStack": 1,
+      "components": [
+        "minecraft:banner_patterns",
+        "minecraft:blocks_attacks",
+        "minecraft:break_sound",
+        "minecraft:damage",
+        "minecraft:equippable",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:repairable"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SHIELD",
+      "maxDamage": 336
+    },
+    "minecraft:short_grass": {
+      "id": "minecraft:short_grass",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SHORT_GRASS"
+    },
+    "minecraft:smithing_table": {
+      "id": "minecraft:smithing_table",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SMITHING_TABLE",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:smoker": {
+      "id": "minecraft:smoker",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SMOKER"
+    },
+    "minecraft:smooth_stone": {
+      "id": "minecraft:smooth_stone",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SMOOTH_STONE"
+    },
+    "minecraft:smooth_stone_slab": {
+      "id": "minecraft:smooth_stone_slab",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SMOOTH_STONE_SLAB"
+    },
+    "minecraft:stick": {
+      "id": "minecraft:stick",
+      "maxStack": 64,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STICK",
+      "fuel": "minecraft:cooking/time_dry_plants"
+    },
+    "minecraft:stone": {
+      "id": "minecraft:stone",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE"
+    },
+    "minecraft:stone_axe": {
+      "id": "minecraft:stone_axe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_AXE",
+      "maxDamage": 131,
+      "tool": {
+        "role": "axe",
+        "incorrect": "minecraft:incorrect_for_stone_tool",
+        "speed": 4
+      }
+    },
+    "minecraft:stone_brick_slab": {
+      "id": "minecraft:stone_brick_slab",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_BRICK_SLAB"
+    },
+    "minecraft:stone_brick_stairs": {
+      "id": "minecraft:stone_brick_stairs",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_BRICK_STAIRS"
+    },
+    "minecraft:stone_brick_wall": {
+      "id": "minecraft:stone_brick_wall",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_BRICK_WALL"
+    },
+    "minecraft:stone_bricks": {
+      "id": "minecraft:stone_bricks",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_BRICKS"
+    },
+    "minecraft:stone_button": {
+      "id": "minecraft:stone_button",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_BUTTON"
+    },
+    "minecraft:stone_hoe": {
+      "id": "minecraft:stone_hoe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_HOE",
+      "maxDamage": 131,
+      "tool": {
+        "role": "hoe",
+        "incorrect": "minecraft:incorrect_for_stone_tool",
+        "speed": 4
+      }
+    },
+    "minecraft:stone_pickaxe": {
+      "id": "minecraft:stone_pickaxe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_PICKAXE",
+      "maxDamage": 131,
+      "tool": {
+        "role": "pickaxe",
+        "incorrect": "minecraft:incorrect_for_stone_tool",
+        "speed": 4
+      }
+    },
+    "minecraft:stone_pressure_plate": {
+      "id": "minecraft:stone_pressure_plate",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_PRESSURE_PLATE"
+    },
+    "minecraft:stone_shovel": {
+      "id": "minecraft:stone_shovel",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_SHOVEL",
+      "maxDamage": 131,
+      "tool": {
+        "role": "shovel",
+        "incorrect": "minecraft:incorrect_for_stone_tool",
+        "speed": 4
+      }
+    },
+    "minecraft:stone_slab": {
+      "id": "minecraft:stone_slab",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_SLAB"
+    },
+    "minecraft:stone_spear": {
+      "id": "minecraft:stone_spear",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attack_animation",
+        "minecraft:attack_range",
+        "minecraft:attribute_modifiers",
+        "minecraft:damage",
+        "minecraft:damage_type",
+        "minecraft:enchantable",
+        "minecraft:kinetic_weapon",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:minimum_attack_charge",
+        "minecraft:piercing_weapon",
+        "minecraft:repairable",
+        "minecraft:use_effects",
+        "minecraft:weapon"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_SPEAR",
+      "maxDamage": 131
+    },
+    "minecraft:stone_stairs": {
+      "id": "minecraft:stone_stairs",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_STAIRS"
+    },
+    "minecraft:stone_sword": {
+      "id": "minecraft:stone_sword",
+      "maxStack": 1,
+      "components": [
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONE_SWORD",
+      "maxDamage": 131,
+      "tool": {
+        "role": "sword",
+        "incorrect": "minecraft:incorrect_for_stone_tool",
+        "speed": 4
+      }
+    },
+    "minecraft:stonecutter": {
+      "id": "minecraft:stonecutter",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STONECUTTER"
+    },
+    "minecraft:straw_bed": {
+      "id": "minecraft:straw_bed",
+      "maxStack": 16,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#STRAW_BED"
+    },
+    "minecraft:sugar": {
+      "id": "minecraft:sugar",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SUGAR"
+    },
+    "minecraft:sugar_cane": {
+      "id": "minecraft:sugar_cane",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#SUGAR_CANE"
+    },
+    "minecraft:torch": {
+      "id": "minecraft:torch",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#TORCH"
+    },
+    "minecraft:trapped_chest": {
+      "id": "minecraft:trapped_chest",
+      "maxStack": 64,
+      "components": [
+        "minecraft:container",
+        "minecraft:cooking_fuel",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#TRAPPED_CHEST",
+      "fuel": "minecraft:cooking/time_wood_blocks"
+    },
+    "minecraft:tripwire_hook": {
+      "id": "minecraft:tripwire_hook",
+      "maxStack": 64,
+      "components": [
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#TRIPWIRE_HOOK"
+    },
+    "minecraft:wheat": {
+      "id": "minecraft:wheat",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WHEAT"
+    },
+    "minecraft:wheat_seeds": {
+      "id": "minecraft:wheat_seeds",
+      "maxStack": 64,
+      "components": [
+        "minecraft:compostable",
+        "minecraft:max_stack_size"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WHEAT_SEEDS"
+    },
+    "minecraft:wooden_axe": {
+      "id": "minecraft:wooden_axe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_AXE",
+      "maxDamage": 59,
+      "tool": {
+        "role": "axe",
+        "incorrect": "minecraft:incorrect_for_wooden_tool",
+        "speed": 2
+      },
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:wooden_hoe": {
+      "id": "minecraft:wooden_hoe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_HOE",
+      "maxDamage": 59,
+      "tool": {
+        "role": "hoe",
+        "incorrect": "minecraft:incorrect_for_wooden_tool",
+        "speed": 2
+      },
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:wooden_pickaxe": {
+      "id": "minecraft:wooden_pickaxe",
+      "maxStack": 1,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_PICKAXE",
+      "maxDamage": 59,
+      "tool": {
+        "role": "pickaxe",
+        "incorrect": "minecraft:incorrect_for_wooden_tool",
+        "speed": 2
+      },
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:wooden_shovel": {
+      "id": "minecraft:wooden_shovel",
+      "maxStack": 1,
+      "components": [
+        "minecraft:block_transformer",
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_SHOVEL",
+      "maxDamage": 59,
+      "tool": {
+        "role": "shovel",
+        "incorrect": "minecraft:incorrect_for_wooden_tool",
+        "speed": 2
+      },
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:wooden_spear": {
+      "id": "minecraft:wooden_spear",
+      "maxStack": 1,
+      "components": [
+        "minecraft:attack_animation",
+        "minecraft:attack_range",
+        "minecraft:attribute_modifiers",
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:damage_type",
+        "minecraft:enchantable",
+        "minecraft:kinetic_weapon",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:minimum_attack_charge",
+        "minecraft:piercing_weapon",
+        "minecraft:repairable",
+        "minecraft:use_effects",
+        "minecraft:weapon"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_SPEAR",
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    },
+    "minecraft:wooden_sword": {
+      "id": "minecraft:wooden_sword",
+      "maxStack": 1,
+      "components": [
+        "minecraft:cooking_fuel",
+        "minecraft:damage",
+        "minecraft:max_damage",
+        "minecraft:max_stack_size",
+        "minecraft:tool"
+      ],
+      "evidence": "net.minecraft.world.item.Items#WOODEN_SWORD",
+      "maxDamage": 59,
+      "tool": {
+        "role": "sword",
+        "incorrect": "minecraft:incorrect_for_wooden_tool",
+        "speed": 2
+      },
+      "fuel": "minecraft:cooking/time_wood_items_large"
+    }
+  },
+  "itemTags": {
+    "minecraft:coals": [
+      "minecraft:charcoal",
+      "minecraft:coal"
+    ],
+    "minecraft:eggs": [
+      "minecraft:blue_egg",
+      "minecraft:brown_egg",
+      "minecraft:egg"
+    ],
+    "minecraft:iron_tool_materials": [
+      "minecraft:iron_ingot"
+    ],
+    "minecraft:logs": [
+      "minecraft:acacia_log",
+      "minecraft:acacia_wood",
+      "minecraft:birch_log",
+      "minecraft:birch_wood",
+      "minecraft:cherry_log",
+      "minecraft:cherry_wood",
+      "minecraft:crimson_hyphae",
+      "minecraft:crimson_stem",
+      "minecraft:dark_oak_log",
+      "minecraft:dark_oak_wood",
+      "minecraft:jungle_log",
+      "minecraft:jungle_wood",
+      "minecraft:mangrove_log",
+      "minecraft:mangrove_wood",
+      "minecraft:oak_log",
+      "minecraft:oak_wood",
+      "minecraft:pale_oak_log",
+      "minecraft:pale_oak_wood",
+      "minecraft:poplar_log",
+      "minecraft:poplar_wood",
+      "minecraft:spruce_log",
+      "minecraft:spruce_wood",
+      "minecraft:stripped_acacia_log",
+      "minecraft:stripped_acacia_wood",
+      "minecraft:stripped_birch_log",
+      "minecraft:stripped_birch_wood",
+      "minecraft:stripped_cherry_log",
+      "minecraft:stripped_cherry_wood",
+      "minecraft:stripped_crimson_hyphae",
+      "minecraft:stripped_crimson_stem",
+      "minecraft:stripped_dark_oak_log",
+      "minecraft:stripped_dark_oak_wood",
+      "minecraft:stripped_jungle_log",
+      "minecraft:stripped_jungle_wood",
+      "minecraft:stripped_mangrove_log",
+      "minecraft:stripped_mangrove_wood",
+      "minecraft:stripped_oak_log",
+      "minecraft:stripped_oak_wood",
+      "minecraft:stripped_pale_oak_log",
+      "minecraft:stripped_pale_oak_wood",
+      "minecraft:stripped_poplar_log",
+      "minecraft:stripped_poplar_wood",
+      "minecraft:stripped_spruce_log",
+      "minecraft:stripped_spruce_wood",
+      "minecraft:stripped_warped_hyphae",
+      "minecraft:stripped_warped_stem",
+      "minecraft:warped_hyphae",
+      "minecraft:warped_stem"
+    ],
+    "minecraft:logs_that_burn": [
+      "minecraft:acacia_log",
+      "minecraft:acacia_wood",
+      "minecraft:birch_log",
+      "minecraft:birch_wood",
+      "minecraft:cherry_log",
+      "minecraft:cherry_wood",
+      "minecraft:dark_oak_log",
+      "minecraft:dark_oak_wood",
+      "minecraft:jungle_log",
+      "minecraft:jungle_wood",
+      "minecraft:mangrove_log",
+      "minecraft:mangrove_wood",
+      "minecraft:oak_log",
+      "minecraft:oak_wood",
+      "minecraft:pale_oak_log",
+      "minecraft:pale_oak_wood",
+      "minecraft:poplar_log",
+      "minecraft:poplar_wood",
+      "minecraft:spruce_log",
+      "minecraft:spruce_wood",
+      "minecraft:stripped_acacia_log",
+      "minecraft:stripped_acacia_wood",
+      "minecraft:stripped_birch_log",
+      "minecraft:stripped_birch_wood",
+      "minecraft:stripped_cherry_log",
+      "minecraft:stripped_cherry_wood",
+      "minecraft:stripped_dark_oak_log",
+      "minecraft:stripped_dark_oak_wood",
+      "minecraft:stripped_jungle_log",
+      "minecraft:stripped_jungle_wood",
+      "minecraft:stripped_mangrove_log",
+      "minecraft:stripped_mangrove_wood",
+      "minecraft:stripped_oak_log",
+      "minecraft:stripped_oak_wood",
+      "minecraft:stripped_pale_oak_log",
+      "minecraft:stripped_pale_oak_wood",
+      "minecraft:stripped_poplar_log",
+      "minecraft:stripped_poplar_wood",
+      "minecraft:stripped_spruce_log",
+      "minecraft:stripped_spruce_wood"
+    ],
+    "minecraft:metal_nuggets": [
+      "minecraft:copper_nugget",
+      "minecraft:gold_nugget",
+      "minecraft:iron_nugget"
+    ],
+    "minecraft:oak_logs": [
+      "minecraft:oak_log",
+      "minecraft:oak_wood",
+      "minecraft:stripped_oak_log",
+      "minecraft:stripped_oak_wood"
+    ],
+    "minecraft:planks": [
+      "minecraft:acacia_planks",
+      "minecraft:bamboo_planks",
+      "minecraft:birch_planks",
+      "minecraft:cherry_planks",
+      "minecraft:crimson_planks",
+      "minecraft:dark_oak_planks",
+      "minecraft:jungle_planks",
+      "minecraft:mangrove_planks",
+      "minecraft:oak_planks",
+      "minecraft:pale_oak_planks",
+      "minecraft:poplar_planks",
+      "minecraft:spruce_planks",
+      "minecraft:warped_planks"
+    ],
+    "minecraft:stone_crafting_materials": [
+      "minecraft:blackstone",
+      "minecraft:cobbled_deepslate",
+      "minecraft:cobblestone"
+    ],
+    "minecraft:stone_tool_materials": [
+      "minecraft:blackstone",
+      "minecraft:cobbled_deepslate",
+      "minecraft:cobblestone"
+    ],
+    "minecraft:wooden_slabs": [
+      "minecraft:acacia_slab",
+      "minecraft:bamboo_slab",
+      "minecraft:birch_slab",
+      "minecraft:cherry_slab",
+      "minecraft:crimson_slab",
+      "minecraft:dark_oak_slab",
+      "minecraft:jungle_slab",
+      "minecraft:mangrove_slab",
+      "minecraft:oak_slab",
+      "minecraft:pale_oak_slab",
+      "minecraft:poplar_slab",
+      "minecraft:spruce_slab",
+      "minecraft:warped_slab"
+    ],
+    "minecraft:wooden_tool_materials": [
+      "minecraft:acacia_planks",
+      "minecraft:bamboo_planks",
+      "minecraft:birch_planks",
+      "minecraft:cherry_planks",
+      "minecraft:crimson_planks",
+      "minecraft:dark_oak_planks",
+      "minecraft:jungle_planks",
+      "minecraft:mangrove_planks",
+      "minecraft:oak_planks",
+      "minecraft:pale_oak_planks",
+      "minecraft:poplar_planks",
+      "minecraft:spruce_planks",
+      "minecraft:warped_planks"
+    ]
+  },
+  "blockTags": {
+    "minecraft:incorrect_for_iron_tool": [
+      "minecraft:ancient_debris",
+      "minecraft:crying_obsidian",
+      "minecraft:netherite_block",
+      "minecraft:obsidian",
+      "minecraft:respawn_anchor"
+    ],
+    "minecraft:incorrect_for_stone_tool": [
+      "minecraft:ancient_debris",
+      "minecraft:crying_obsidian",
+      "minecraft:deepslate_diamond_ore",
+      "minecraft:deepslate_emerald_ore",
+      "minecraft:deepslate_gold_ore",
+      "minecraft:deepslate_redstone_ore",
+      "minecraft:diamond_block",
+      "minecraft:diamond_ore",
+      "minecraft:emerald_block",
+      "minecraft:emerald_ore",
+      "minecraft:gold_block",
+      "minecraft:gold_ore",
+      "minecraft:netherite_block",
+      "minecraft:obsidian",
+      "minecraft:raw_gold_block",
+      "minecraft:redstone_ore",
+      "minecraft:respawn_anchor"
+    ],
+    "minecraft:incorrect_for_wooden_tool": [
+      "minecraft:ancient_debris",
+      "minecraft:chiseled_copper",
+      "minecraft:copper_block",
+      "minecraft:copper_bulb",
+      "minecraft:copper_chest",
+      "minecraft:copper_grate",
+      "minecraft:copper_ore",
+      "minecraft:copper_trapdoor",
+      "minecraft:crafter",
+      "minecraft:crying_obsidian",
+      "minecraft:cut_copper",
+      "minecraft:cut_copper_slab",
+      "minecraft:cut_copper_stairs",
+      "minecraft:deepslate_copper_ore",
+      "minecraft:deepslate_diamond_ore",
+      "minecraft:deepslate_emerald_ore",
+      "minecraft:deepslate_gold_ore",
+      "minecraft:deepslate_iron_ore",
+      "minecraft:deepslate_lapis_ore",
+      "minecraft:deepslate_redstone_ore",
+      "minecraft:diamond_block",
+      "minecraft:diamond_ore",
+      "minecraft:emerald_block",
+      "minecraft:emerald_ore",
+      "minecraft:exposed_chiseled_copper",
+      "minecraft:exposed_copper",
+      "minecraft:exposed_copper_bulb",
+      "minecraft:exposed_copper_chest",
+      "minecraft:exposed_copper_grate",
+      "minecraft:exposed_copper_trapdoor",
+      "minecraft:exposed_cut_copper",
+      "minecraft:exposed_cut_copper_slab",
+      "minecraft:exposed_cut_copper_stairs",
+      "minecraft:exposed_lightning_rod",
+      "minecraft:gold_block",
+      "minecraft:gold_ore",
+      "minecraft:iron_block",
+      "minecraft:iron_ore",
+      "minecraft:lapis_block",
+      "minecraft:lapis_ore",
+      "minecraft:lightning_rod",
+      "minecraft:netherite_block",
+      "minecraft:obsidian",
+      "minecraft:oxidized_chiseled_copper",
+      "minecraft:oxidized_copper",
+      "minecraft:oxidized_copper_bulb",
+      "minecraft:oxidized_copper_chest",
+      "minecraft:oxidized_copper_grate",
+      "minecraft:oxidized_copper_trapdoor",
+      "minecraft:oxidized_cut_copper",
+      "minecraft:oxidized_cut_copper_slab",
+      "minecraft:oxidized_cut_copper_stairs",
+      "minecraft:oxidized_lightning_rod",
+      "minecraft:raw_copper_block",
+      "minecraft:raw_gold_block",
+      "minecraft:raw_iron_block",
+      "minecraft:redstone_ore",
+      "minecraft:respawn_anchor",
+      "minecraft:waxed_chiseled_copper",
+      "minecraft:waxed_copper_block",
+      "minecraft:waxed_copper_bulb",
+      "minecraft:waxed_copper_chest",
+      "minecraft:waxed_copper_grate",
+      "minecraft:waxed_copper_trapdoor",
+      "minecraft:waxed_cut_copper",
+      "minecraft:waxed_cut_copper_slab",
+      "minecraft:waxed_cut_copper_stairs",
+      "minecraft:waxed_exposed_chiseled_copper",
+      "minecraft:waxed_exposed_copper",
+      "minecraft:waxed_exposed_copper_bulb",
+      "minecraft:waxed_exposed_copper_chest",
+      "minecraft:waxed_exposed_copper_grate",
+      "minecraft:waxed_exposed_copper_trapdoor",
+      "minecraft:waxed_exposed_cut_copper",
+      "minecraft:waxed_exposed_cut_copper_slab",
+      "minecraft:waxed_exposed_cut_copper_stairs",
+      "minecraft:waxed_exposed_lightning_rod",
+      "minecraft:waxed_lightning_rod",
+      "minecraft:waxed_oxidized_chiseled_copper",
+      "minecraft:waxed_oxidized_copper",
+      "minecraft:waxed_oxidized_copper_bulb",
+      "minecraft:waxed_oxidized_copper_chest",
+      "minecraft:waxed_oxidized_copper_grate",
+      "minecraft:waxed_oxidized_copper_trapdoor",
+      "minecraft:waxed_oxidized_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper_slab",
+      "minecraft:waxed_oxidized_cut_copper_stairs",
+      "minecraft:waxed_oxidized_lightning_rod",
+      "minecraft:waxed_weathered_chiseled_copper",
+      "minecraft:waxed_weathered_copper",
+      "minecraft:waxed_weathered_copper_bulb",
+      "minecraft:waxed_weathered_copper_chest",
+      "minecraft:waxed_weathered_copper_grate",
+      "minecraft:waxed_weathered_copper_trapdoor",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_weathered_cut_copper_slab",
+      "minecraft:waxed_weathered_cut_copper_stairs",
+      "minecraft:waxed_weathered_lightning_rod",
+      "minecraft:weathered_chiseled_copper",
+      "minecraft:weathered_copper",
+      "minecraft:weathered_copper_bulb",
+      "minecraft:weathered_copper_chest",
+      "minecraft:weathered_copper_grate",
+      "minecraft:weathered_copper_trapdoor",
+      "minecraft:weathered_cut_copper",
+      "minecraft:weathered_cut_copper_slab",
+      "minecraft:weathered_cut_copper_stairs",
+      "minecraft:weathered_lightning_rod"
+    ],
+    "minecraft:mineable/pickaxe": [
+      "minecraft:activator_rail",
+      "minecraft:amethyst_block",
+      "minecraft:amethyst_cluster",
+      "minecraft:ancient_debris",
+      "minecraft:andesite",
+      "minecraft:andesite_slab",
+      "minecraft:andesite_stairs",
+      "minecraft:andesite_wall",
+      "minecraft:anvil",
+      "minecraft:basalt",
+      "minecraft:bell",
+      "minecraft:black_concrete",
+      "minecraft:black_concrete_slab",
+      "minecraft:black_concrete_stairs",
+      "minecraft:black_glazed_terracotta",
+      "minecraft:black_shulker_box",
+      "minecraft:black_terracotta",
+      "minecraft:blackstone",
+      "minecraft:blackstone_slab",
+      "minecraft:blackstone_stairs",
+      "minecraft:blackstone_wall",
+      "minecraft:blast_furnace",
+      "minecraft:blue_concrete",
+      "minecraft:blue_concrete_slab",
+      "minecraft:blue_concrete_stairs",
+      "minecraft:blue_glazed_terracotta",
+      "minecraft:blue_ice",
+      "minecraft:blue_shulker_box",
+      "minecraft:blue_terracotta",
+      "minecraft:bone_block",
+      "minecraft:brain_coral_block",
+      "minecraft:brewing_stand",
+      "minecraft:brick_slab",
+      "minecraft:brick_stairs",
+      "minecraft:brick_wall",
+      "minecraft:bricks",
+      "minecraft:brown_concrete",
+      "minecraft:brown_concrete_slab",
+      "minecraft:brown_concrete_stairs",
+      "minecraft:brown_glazed_terracotta",
+      "minecraft:brown_shulker_box",
+      "minecraft:brown_terracotta",
+      "minecraft:bubble_coral_block",
+      "minecraft:budding_amethyst",
+      "minecraft:calcite",
+      "minecraft:cauldron",
+      "minecraft:chipped_anvil",
+      "minecraft:chiseled_cinnabar",
+      "minecraft:chiseled_copper",
+      "minecraft:chiseled_deepslate",
+      "minecraft:chiseled_nether_bricks",
+      "minecraft:chiseled_polished_blackstone",
+      "minecraft:chiseled_quartz_block",
+      "minecraft:chiseled_red_sandstone",
+      "minecraft:chiseled_resin_bricks",
+      "minecraft:chiseled_sandstone",
+      "minecraft:chiseled_stone_bricks",
+      "minecraft:chiseled_sulfur",
+      "minecraft:chiseled_tuff",
+      "minecraft:chiseled_tuff_bricks",
+      "minecraft:cinnabar",
+      "minecraft:cinnabar_brick_slab",
+      "minecraft:cinnabar_brick_stairs",
+      "minecraft:cinnabar_brick_wall",
+      "minecraft:cinnabar_bricks",
+      "minecraft:cinnabar_slab",
+      "minecraft:cinnabar_stairs",
+      "minecraft:cinnabar_wall",
+      "minecraft:coal_block",
+      "minecraft:coal_ore",
+      "minecraft:cobbled_deepslate",
+      "minecraft:cobbled_deepslate_slab",
+      "minecraft:cobbled_deepslate_stairs",
+      "minecraft:cobbled_deepslate_wall",
+      "minecraft:cobblestone",
+      "minecraft:cobblestone_slab",
+      "minecraft:cobblestone_stairs",
+      "minecraft:cobblestone_wall",
+      "minecraft:conduit",
+      "minecraft:copper_bars",
+      "minecraft:copper_block",
+      "minecraft:copper_bulb",
+      "minecraft:copper_chain",
+      "minecraft:copper_chest",
+      "minecraft:copper_door",
+      "minecraft:copper_golem_statue",
+      "minecraft:copper_grate",
+      "minecraft:copper_lantern",
+      "minecraft:copper_ore",
+      "minecraft:copper_trapdoor",
+      "minecraft:cracked_deepslate_bricks",
+      "minecraft:cracked_deepslate_tiles",
+      "minecraft:cracked_nether_bricks",
+      "minecraft:cracked_polished_blackstone_bricks",
+      "minecraft:cracked_stone_bricks",
+      "minecraft:crafter",
+      "minecraft:crimson_nylium",
+      "minecraft:crying_obsidian",
+      "minecraft:cut_copper",
+      "minecraft:cut_copper_slab",
+      "minecraft:cut_copper_stairs",
+      "minecraft:cut_red_sandstone",
+      "minecraft:cut_red_sandstone_slab",
+      "minecraft:cut_sandstone",
+      "minecraft:cut_sandstone_slab",
+      "minecraft:cyan_concrete",
+      "minecraft:cyan_concrete_slab",
+      "minecraft:cyan_concrete_stairs",
+      "minecraft:cyan_glazed_terracotta",
+      "minecraft:cyan_shulker_box",
+      "minecraft:cyan_terracotta",
+      "minecraft:damaged_anvil",
+      "minecraft:dark_prismarine",
+      "minecraft:dark_prismarine_slab",
+      "minecraft:dark_prismarine_stairs",
+      "minecraft:dead_brain_coral",
+      "minecraft:dead_brain_coral_block",
+      "minecraft:dead_brain_coral_fan",
+      "minecraft:dead_brain_coral_wall_fan",
+      "minecraft:dead_bubble_coral",
+      "minecraft:dead_bubble_coral_block",
+      "minecraft:dead_bubble_coral_fan",
+      "minecraft:dead_bubble_coral_wall_fan",
+      "minecraft:dead_fire_coral",
+      "minecraft:dead_fire_coral_block",
+      "minecraft:dead_fire_coral_fan",
+      "minecraft:dead_fire_coral_wall_fan",
+      "minecraft:dead_horn_coral",
+      "minecraft:dead_horn_coral_block",
+      "minecraft:dead_horn_coral_fan",
+      "minecraft:dead_horn_coral_wall_fan",
+      "minecraft:dead_tube_coral",
+      "minecraft:dead_tube_coral_block",
+      "minecraft:dead_tube_coral_fan",
+      "minecraft:dead_tube_coral_wall_fan",
+      "minecraft:deepslate",
+      "minecraft:deepslate_brick_slab",
+      "minecraft:deepslate_brick_stairs",
+      "minecraft:deepslate_brick_wall",
+      "minecraft:deepslate_bricks",
+      "minecraft:deepslate_coal_ore",
+      "minecraft:deepslate_copper_ore",
+      "minecraft:deepslate_diamond_ore",
+      "minecraft:deepslate_emerald_ore",
+      "minecraft:deepslate_gold_ore",
+      "minecraft:deepslate_iron_ore",
+      "minecraft:deepslate_lapis_ore",
+      "minecraft:deepslate_redstone_ore",
+      "minecraft:deepslate_tile_slab",
+      "minecraft:deepslate_tile_stairs",
+      "minecraft:deepslate_tile_wall",
+      "minecraft:deepslate_tiles",
+      "minecraft:detector_rail",
+      "minecraft:diamond_block",
+      "minecraft:diamond_ore",
+      "minecraft:diorite",
+      "minecraft:diorite_slab",
+      "minecraft:diorite_stairs",
+      "minecraft:diorite_wall",
+      "minecraft:dispenser",
+      "minecraft:dripstone_block",
+      "minecraft:dropper",
+      "minecraft:emerald_block",
+      "minecraft:emerald_ore",
+      "minecraft:enchanting_table",
+      "minecraft:end_stone",
+      "minecraft:end_stone_brick_slab",
+      "minecraft:end_stone_brick_stairs",
+      "minecraft:end_stone_brick_wall",
+      "minecraft:end_stone_bricks",
+      "minecraft:ender_chest",
+      "minecraft:exposed_chiseled_copper",
+      "minecraft:exposed_copper",
+      "minecraft:exposed_copper_bars",
+      "minecraft:exposed_copper_bulb",
+      "minecraft:exposed_copper_chain",
+      "minecraft:exposed_copper_chest",
+      "minecraft:exposed_copper_door",
+      "minecraft:exposed_copper_golem_statue",
+      "minecraft:exposed_copper_grate",
+      "minecraft:exposed_copper_lantern",
+      "minecraft:exposed_copper_trapdoor",
+      "minecraft:exposed_cut_copper",
+      "minecraft:exposed_cut_copper_slab",
+      "minecraft:exposed_cut_copper_stairs",
+      "minecraft:exposed_lightning_rod",
+      "minecraft:fire_coral_block",
+      "minecraft:furnace",
+      "minecraft:gilded_blackstone",
+      "minecraft:gold_block",
+      "minecraft:gold_ore",
+      "minecraft:granite",
+      "minecraft:granite_slab",
+      "minecraft:granite_stairs",
+      "minecraft:granite_wall",
+      "minecraft:gray_concrete",
+      "minecraft:gray_concrete_slab",
+      "minecraft:gray_concrete_stairs",
+      "minecraft:gray_glazed_terracotta",
+      "minecraft:gray_shulker_box",
+      "minecraft:gray_terracotta",
+      "minecraft:green_concrete",
+      "minecraft:green_concrete_slab",
+      "minecraft:green_concrete_stairs",
+      "minecraft:green_glazed_terracotta",
+      "minecraft:green_shulker_box",
+      "minecraft:green_terracotta",
+      "minecraft:grindstone",
+      "minecraft:heavy_core",
+      "minecraft:heavy_weighted_pressure_plate",
+      "minecraft:hopper",
+      "minecraft:horn_coral_block",
+      "minecraft:ice",
+      "minecraft:infested_chiseled_stone_bricks",
+      "minecraft:infested_cobblestone",
+      "minecraft:infested_cracked_stone_bricks",
+      "minecraft:infested_deepslate",
+      "minecraft:infested_mossy_stone_bricks",
+      "minecraft:infested_stone",
+      "minecraft:infested_stone_bricks",
+      "minecraft:iron_bars",
+      "minecraft:iron_block",
+      "minecraft:iron_chain",
+      "minecraft:iron_door",
+      "minecraft:iron_ore",
+      "minecraft:iron_trapdoor",
+      "minecraft:lantern",
+      "minecraft:lapis_block",
+      "minecraft:lapis_ore",
+      "minecraft:large_amethyst_bud",
+      "minecraft:lava_cauldron",
+      "minecraft:light_blue_concrete",
+      "minecraft:light_blue_concrete_slab",
+      "minecraft:light_blue_concrete_stairs",
+      "minecraft:light_blue_glazed_terracotta",
+      "minecraft:light_blue_shulker_box",
+      "minecraft:light_blue_terracotta",
+      "minecraft:light_gray_concrete",
+      "minecraft:light_gray_concrete_slab",
+      "minecraft:light_gray_concrete_stairs",
+      "minecraft:light_gray_glazed_terracotta",
+      "minecraft:light_gray_shulker_box",
+      "minecraft:light_gray_terracotta",
+      "minecraft:light_weighted_pressure_plate",
+      "minecraft:lightning_rod",
+      "minecraft:lime_concrete",
+      "minecraft:lime_concrete_slab",
+      "minecraft:lime_concrete_stairs",
+      "minecraft:lime_glazed_terracotta",
+      "minecraft:lime_shulker_box",
+      "minecraft:lime_terracotta",
+      "minecraft:lodestone",
+      "minecraft:magenta_concrete",
+      "minecraft:magenta_concrete_slab",
+      "minecraft:magenta_concrete_stairs",
+      "minecraft:magenta_glazed_terracotta",
+      "minecraft:magenta_shulker_box",
+      "minecraft:magenta_terracotta",
+      "minecraft:magma_block",
+      "minecraft:medium_amethyst_bud",
+      "minecraft:mossy_cobblestone",
+      "minecraft:mossy_cobblestone_slab",
+      "minecraft:mossy_cobblestone_stairs",
+      "minecraft:mossy_cobblestone_wall",
+      "minecraft:mossy_stone_brick_slab",
+      "minecraft:mossy_stone_brick_stairs",
+      "minecraft:mossy_stone_brick_wall",
+      "minecraft:mossy_stone_bricks",
+      "minecraft:mud_brick_slab",
+      "minecraft:mud_brick_stairs",
+      "minecraft:mud_brick_wall",
+      "minecraft:mud_bricks",
+      "minecraft:nether_brick_fence",
+      "minecraft:nether_brick_slab",
+      "minecraft:nether_brick_stairs",
+      "minecraft:nether_brick_wall",
+      "minecraft:nether_bricks",
+      "minecraft:nether_gold_ore",
+      "minecraft:nether_quartz_ore",
+      "minecraft:netherite_block",
+      "minecraft:netherrack",
+      "minecraft:observer",
+      "minecraft:obsidian",
+      "minecraft:orange_concrete",
+      "minecraft:orange_concrete_slab",
+      "minecraft:orange_concrete_stairs",
+      "minecraft:orange_glazed_terracotta",
+      "minecraft:orange_shulker_box",
+      "minecraft:orange_terracotta",
+      "minecraft:oxidized_chiseled_copper",
+      "minecraft:oxidized_copper",
+      "minecraft:oxidized_copper_bars",
+      "minecraft:oxidized_copper_bulb",
+      "minecraft:oxidized_copper_chain",
+      "minecraft:oxidized_copper_chest",
+      "minecraft:oxidized_copper_door",
+      "minecraft:oxidized_copper_golem_statue",
+      "minecraft:oxidized_copper_grate",
+      "minecraft:oxidized_copper_lantern",
+      "minecraft:oxidized_copper_trapdoor",
+      "minecraft:oxidized_cut_copper",
+      "minecraft:oxidized_cut_copper_slab",
+      "minecraft:oxidized_cut_copper_stairs",
+      "minecraft:oxidized_lightning_rod",
+      "minecraft:packed_ice",
+      "minecraft:packed_mud",
+      "minecraft:petrified_oak_slab",
+      "minecraft:pink_concrete",
+      "minecraft:pink_concrete_slab",
+      "minecraft:pink_concrete_stairs",
+      "minecraft:pink_glazed_terracotta",
+      "minecraft:pink_shulker_box",
+      "minecraft:pink_terracotta",
+      "minecraft:piston",
+      "minecraft:piston_head",
+      "minecraft:pointed_dripstone",
+      "minecraft:polished_andesite",
+      "minecraft:polished_andesite_slab",
+      "minecraft:polished_andesite_stairs",
+      "minecraft:polished_basalt",
+      "minecraft:polished_blackstone",
+      "minecraft:polished_blackstone_brick_slab",
+      "minecraft:polished_blackstone_brick_stairs",
+      "minecraft:polished_blackstone_brick_wall",
+      "minecraft:polished_blackstone_bricks",
+      "minecraft:polished_blackstone_button",
+      "minecraft:polished_blackstone_pressure_plate",
+      "minecraft:polished_blackstone_slab",
+      "minecraft:polished_blackstone_stairs",
+      "minecraft:polished_blackstone_wall",
+      "minecraft:polished_cinnabar",
+      "minecraft:polished_cinnabar_slab",
+      "minecraft:polished_cinnabar_stairs",
+      "minecraft:polished_cinnabar_wall",
+      "minecraft:polished_deepslate",
+      "minecraft:polished_deepslate_slab",
+      "minecraft:polished_deepslate_stairs",
+      "minecraft:polished_deepslate_wall",
+      "minecraft:polished_diorite",
+      "minecraft:polished_diorite_slab",
+      "minecraft:polished_diorite_stairs",
+      "minecraft:polished_granite",
+      "minecraft:polished_granite_slab",
+      "minecraft:polished_granite_stairs",
+      "minecraft:polished_sulfur",
+      "minecraft:polished_sulfur_slab",
+      "minecraft:polished_sulfur_stairs",
+      "minecraft:polished_sulfur_wall",
+      "minecraft:polished_tuff",
+      "minecraft:polished_tuff_slab",
+      "minecraft:polished_tuff_stairs",
+      "minecraft:polished_tuff_wall",
+      "minecraft:potent_sulfur",
+      "minecraft:powder_snow_cauldron",
+      "minecraft:powered_rail",
+      "minecraft:prismarine",
+      "minecraft:prismarine_brick_slab",
+      "minecraft:prismarine_brick_stairs",
+      "minecraft:prismarine_bricks",
+      "minecraft:prismarine_slab",
+      "minecraft:prismarine_stairs",
+      "minecraft:prismarine_wall",
+      "minecraft:purple_concrete",
+      "minecraft:purple_concrete_slab",
+      "minecraft:purple_concrete_stairs",
+      "minecraft:purple_glazed_terracotta",
+      "minecraft:purple_shulker_box",
+      "minecraft:purple_terracotta",
+      "minecraft:purpur_block",
+      "minecraft:purpur_pillar",
+      "minecraft:purpur_slab",
+      "minecraft:purpur_stairs",
+      "minecraft:quartz_block",
+      "minecraft:quartz_bricks",
+      "minecraft:quartz_pillar",
+      "minecraft:quartz_slab",
+      "minecraft:quartz_stairs",
+      "minecraft:rail",
+      "minecraft:raw_copper_block",
+      "minecraft:raw_gold_block",
+      "minecraft:raw_iron_block",
+      "minecraft:red_concrete",
+      "minecraft:red_concrete_slab",
+      "minecraft:red_concrete_stairs",
+      "minecraft:red_glazed_terracotta",
+      "minecraft:red_nether_brick_slab",
+      "minecraft:red_nether_brick_stairs",
+      "minecraft:red_nether_brick_wall",
+      "minecraft:red_nether_bricks",
+      "minecraft:red_sandstone",
+      "minecraft:red_sandstone_slab",
+      "minecraft:red_sandstone_stairs",
+      "minecraft:red_sandstone_wall",
+      "minecraft:red_shulker_box",
+      "minecraft:red_terracotta",
+      "minecraft:redstone_block",
+      "minecraft:redstone_ore",
+      "minecraft:resin_brick_slab",
+      "minecraft:resin_brick_stairs",
+      "minecraft:resin_brick_wall",
+      "minecraft:resin_bricks",
+      "minecraft:respawn_anchor",
+      "minecraft:sandstone",
+      "minecraft:sandstone_slab",
+      "minecraft:sandstone_stairs",
+      "minecraft:sandstone_wall",
+      "minecraft:shulker_box",
+      "minecraft:small_amethyst_bud",
+      "minecraft:smoker",
+      "minecraft:smooth_basalt",
+      "minecraft:smooth_quartz",
+      "minecraft:smooth_quartz_slab",
+      "minecraft:smooth_quartz_stairs",
+      "minecraft:smooth_red_sandstone",
+      "minecraft:smooth_red_sandstone_slab",
+      "minecraft:smooth_red_sandstone_stairs",
+      "minecraft:smooth_sandstone",
+      "minecraft:smooth_sandstone_slab",
+      "minecraft:smooth_sandstone_stairs",
+      "minecraft:smooth_stone",
+      "minecraft:smooth_stone_slab",
+      "minecraft:soul_lantern",
+      "minecraft:spawner",
+      "minecraft:sticky_piston",
+      "minecraft:stone",
+      "minecraft:stone_brick_slab",
+      "minecraft:stone_brick_stairs",
+      "minecraft:stone_brick_wall",
+      "minecraft:stone_bricks",
+      "minecraft:stone_button",
+      "minecraft:stone_pressure_plate",
+      "minecraft:stone_slab",
+      "minecraft:stone_stairs",
+      "minecraft:stonecutter",
+      "minecraft:sulfur",
+      "minecraft:sulfur_brick_slab",
+      "minecraft:sulfur_brick_stairs",
+      "minecraft:sulfur_brick_wall",
+      "minecraft:sulfur_bricks",
+      "minecraft:sulfur_slab",
+      "minecraft:sulfur_spike",
+      "minecraft:sulfur_stairs",
+      "minecraft:sulfur_wall",
+      "minecraft:terracotta",
+      "minecraft:tube_coral_block",
+      "minecraft:tuff",
+      "minecraft:tuff_brick_slab",
+      "minecraft:tuff_brick_stairs",
+      "minecraft:tuff_brick_wall",
+      "minecraft:tuff_bricks",
+      "minecraft:tuff_slab",
+      "minecraft:tuff_stairs",
+      "minecraft:tuff_wall",
+      "minecraft:warped_nylium",
+      "minecraft:water_cauldron",
+      "minecraft:waxed_chiseled_copper",
+      "minecraft:waxed_copper_bars",
+      "minecraft:waxed_copper_block",
+      "minecraft:waxed_copper_bulb",
+      "minecraft:waxed_copper_chain",
+      "minecraft:waxed_copper_chest",
+      "minecraft:waxed_copper_door",
+      "minecraft:waxed_copper_golem_statue",
+      "minecraft:waxed_copper_grate",
+      "minecraft:waxed_copper_lantern",
+      "minecraft:waxed_copper_trapdoor",
+      "minecraft:waxed_cut_copper",
+      "minecraft:waxed_cut_copper_slab",
+      "minecraft:waxed_cut_copper_stairs",
+      "minecraft:waxed_exposed_chiseled_copper",
+      "minecraft:waxed_exposed_copper",
+      "minecraft:waxed_exposed_copper_bars",
+      "minecraft:waxed_exposed_copper_bulb",
+      "minecraft:waxed_exposed_copper_chain",
+      "minecraft:waxed_exposed_copper_chest",
+      "minecraft:waxed_exposed_copper_door",
+      "minecraft:waxed_exposed_copper_golem_statue",
+      "minecraft:waxed_exposed_copper_grate",
+      "minecraft:waxed_exposed_copper_lantern",
+      "minecraft:waxed_exposed_copper_trapdoor",
+      "minecraft:waxed_exposed_cut_copper",
+      "minecraft:waxed_exposed_cut_copper_slab",
+      "minecraft:waxed_exposed_cut_copper_stairs",
+      "minecraft:waxed_exposed_lightning_rod",
+      "minecraft:waxed_lightning_rod",
+      "minecraft:waxed_oxidized_chiseled_copper",
+      "minecraft:waxed_oxidized_copper",
+      "minecraft:waxed_oxidized_copper_bars",
+      "minecraft:waxed_oxidized_copper_bulb",
+      "minecraft:waxed_oxidized_copper_chain",
+      "minecraft:waxed_oxidized_copper_chest",
+      "minecraft:waxed_oxidized_copper_door",
+      "minecraft:waxed_oxidized_copper_golem_statue",
+      "minecraft:waxed_oxidized_copper_grate",
+      "minecraft:waxed_oxidized_copper_lantern",
+      "minecraft:waxed_oxidized_copper_trapdoor",
+      "minecraft:waxed_oxidized_cut_copper",
+      "minecraft:waxed_oxidized_cut_copper_slab",
+      "minecraft:waxed_oxidized_cut_copper_stairs",
+      "minecraft:waxed_oxidized_lightning_rod",
+      "minecraft:waxed_weathered_chiseled_copper",
+      "minecraft:waxed_weathered_copper",
+      "minecraft:waxed_weathered_copper_bars",
+      "minecraft:waxed_weathered_copper_bulb",
+      "minecraft:waxed_weathered_copper_chain",
+      "minecraft:waxed_weathered_copper_chest",
+      "minecraft:waxed_weathered_copper_door",
+      "minecraft:waxed_weathered_copper_golem_statue",
+      "minecraft:waxed_weathered_copper_grate",
+      "minecraft:waxed_weathered_copper_lantern",
+      "minecraft:waxed_weathered_copper_trapdoor",
+      "minecraft:waxed_weathered_cut_copper",
+      "minecraft:waxed_weathered_cut_copper_slab",
+      "minecraft:waxed_weathered_cut_copper_stairs",
+      "minecraft:waxed_weathered_lightning_rod",
+      "minecraft:weathered_chiseled_copper",
+      "minecraft:weathered_copper",
+      "minecraft:weathered_copper_bars",
+      "minecraft:weathered_copper_bulb",
+      "minecraft:weathered_copper_chain",
+      "minecraft:weathered_copper_chest",
+      "minecraft:weathered_copper_door",
+      "minecraft:weathered_copper_golem_statue",
+      "minecraft:weathered_copper_grate",
+      "minecraft:weathered_copper_lantern",
+      "minecraft:weathered_copper_trapdoor",
+      "minecraft:weathered_cut_copper",
+      "minecraft:weathered_cut_copper_slab",
+      "minecraft:weathered_cut_copper_stairs",
+      "minecraft:weathered_lightning_rod",
+      "minecraft:white_concrete",
+      "minecraft:white_concrete_slab",
+      "minecraft:white_concrete_stairs",
+      "minecraft:white_glazed_terracotta",
+      "minecraft:white_shulker_box",
+      "minecraft:white_terracotta",
+      "minecraft:yellow_concrete",
+      "minecraft:yellow_concrete_slab",
+      "minecraft:yellow_concrete_stairs",
+      "minecraft:yellow_glazed_terracotta",
+      "minecraft:yellow_shulker_box",
+      "minecraft:yellow_terracotta"
+    ]
+  },
+  "intProviders": {
+    "minecraft:brewing/uses_default": 20,
+    "minecraft:compostable/always_add_one": 1,
+    "minecraft:compostable/low_medium": {
+      "type": "minecraft:number_dispatcher",
+      "cases": [
+        {
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "minecraft:composter",
+            "state": {
+              "level": "0"
+            }
+          },
+          "value": 1
+        }
+      ],
+      "default": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 1,
+            "weight": 50
+          },
+          {
+            "data": 0,
+            "weight": 50
+          }
+        ]
+      }
+    },
+    "minecraft:compostable/low": {
+      "type": "minecraft:number_dispatcher",
+      "cases": [
+        {
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "minecraft:composter",
+            "state": {
+              "level": "0"
+            }
+          },
+          "value": 1
+        }
+      ],
+      "default": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 1,
+            "weight": 30
+          },
+          {
+            "data": 0,
+            "weight": 70
+          }
+        ]
+      }
+    },
+    "minecraft:compostable/medium_high": {
+      "type": "minecraft:number_dispatcher",
+      "cases": [
+        {
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "minecraft:composter",
+            "state": {
+              "level": "0"
+            }
+          },
+          "value": 1
+        }
+      ],
+      "default": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 1,
+            "weight": 85
+          },
+          {
+            "data": 0,
+            "weight": 15
+          }
+        ]
+      }
+    },
+    "minecraft:compostable/medium": {
+      "type": "minecraft:number_dispatcher",
+      "cases": [
+        {
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "minecraft:composter",
+            "state": {
+              "level": "0"
+            }
+          },
+          "value": 1
+        }
+      ],
+      "default": {
+        "type": "minecraft:weighted_list",
+        "distribution": [
+          {
+            "data": 1,
+            "weight": 65
+          },
+          {
+            "data": 0,
+            "weight": 35
+          }
+        ]
+      }
+    },
+    "minecraft:cooking/fast_burn_time_reduction_factor": 2,
+    "minecraft:cooking/normal_burn_time_reduction_factor": 1,
+    "minecraft:cooking/time_bamboo": {
+      "type": "minecraft:div",
+      "left": 50,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_blaze_rod": {
+      "type": "minecraft:div",
+      "left": 2400,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_boats": {
+      "type": "minecraft:div",
+      "left": 1200,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_coal_block": {
+      "type": "minecraft:div",
+      "left": 16000,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_coal": {
+      "type": "minecraft:div",
+      "left": 1600,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_dried_kelp_block": {
+      "type": "minecraft:div",
+      "left": 4001,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_dry_plants": {
+      "type": "minecraft:div",
+      "left": 100,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_hanging_signs": {
+      "type": "minecraft:div",
+      "left": 800,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_lava_bucket": {
+      "type": "minecraft:div",
+      "left": 20000,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_roots": {
+      "type": "minecraft:div",
+      "left": 300,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wood_blocks": {
+      "type": "minecraft:div",
+      "left": 300,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wood_items_extra_small": {
+      "type": "minecraft:div",
+      "left": 100,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wood_items_large": {
+      "type": "minecraft:div",
+      "left": 200,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wood_items_small": {
+      "type": "minecraft:div",
+      "left": 300,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wood_slabs": {
+      "type": "minecraft:div",
+      "left": 150,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wool_carpets": {
+      "type": "minecraft:div",
+      "left": 67,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wool_slabs": {
+      "type": "minecraft:div",
+      "left": 50,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    },
+    "minecraft:cooking/time_wool": {
+      "type": "minecraft:div",
+      "left": 100,
+      "right": {
+        "type": "minecraft:conditional",
+        "condition": "minecraft:block/fast_cooking",
+        "on_false": "minecraft:cooking/normal_burn_time_reduction_factor",
+        "on_true": "minecraft:cooking/fast_burn_time_reduction_factor"
+      }
+    }
+  },
+  "floatProviders": {
+    "minecraft:brewing/speed_default": 1,
+    "minecraft:cooking/fast_speed_multiplier": 2,
+    "minecraft:cooking/normal_speed_multiplier": 1,
+    "minecraft:cooking/speed_default": {
+      "type": "minecraft:conditional",
+      "condition": "minecraft:block/fast_cooking",
+      "on_false": "minecraft:cooking/normal_speed_multiplier",
+      "on_true": "minecraft:cooking/fast_speed_multiplier"
+    }
+  }
+}

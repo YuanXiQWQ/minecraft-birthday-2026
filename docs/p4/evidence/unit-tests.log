@@ -1,0 +1,50 @@
+
+> minecraft-birthday-2026@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ unlock is immutable, monotonic and idempotent; side items follow first acquisition (5.8914ms)
+✔ completion is a single table fact; requires unlocked cake, home context and the canonical table (3.68ms)
+✔ placement accepts only explicit authored policy; stable instances remain separate from view and natural state (3.108ms)
+✔ unsupported IDs, contract payloads, malformed coordinates and extra durable fields are never discarded silently (0.8835ms)
+✔ progress reset retains approved settings and clears all progress without changing other snapshots (1.0791ms)
+✔ look emits a right click only below threshold and a drag only after crossing it (1.3313ms)
+✔ look clamps angles and ignores unrelated pointers, with cancellation on GUI/blur independent of saved state (1.9618ms)
+✔ codec detects tampering, future formats, invalid content and exact structural errors (15.7964ms)
+✔ documented development-v0 migrates in memory; failed migration never rewrites original bytes (7.407ms)
+✔ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (6.8169ms)
+✔ concurrent sessions merge semantic commands against fresh facts under the shared lock (6.0112ms)
+✔ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (10.8018ms)
+✔ confirmation notices same-epoch changes and requires a new explicit reset (4.6725ms)
+✔ queued commands are fenced across suspend/resume even when the reset epoch has not changed (2.55ms)
+✔ corrupt, future and missing storage capability preserve exact bytes and block writes/reset (0.8297ms)
+✔ unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap (0.4056ms)
+✔ write denial leaves both durable and presented facts unchanged, with an explicit retry path (4.3603ms)
+✔ rejected domain input does not poison a valid session or replace its saved bytes (2.8627ms)
+✔ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (355.8808ms)
+✔ missing language keys fall back to English; missing English and missing interpolation fail visibly in tests (1.4314ms)
+✔ every statically declared page key exists in external English and all English glyphs fit the ASCII profile (2.7265ms)
+✔ long text wraps at words and within long tokens without deleting copy or exceeding the measured line width (0.4977ms)
+✔ presentation keeps native slab thickness and exact cake contact, with a materially larger authored environment (339.2591ms)
+✔ P4 census parses 1763 nonbrewing recipes/21 types plus all 279 original brewing records; hashes and golden inputs match (14.8669ms)
+✔ P4 shaped offsets/mirror and strict empty slots work in 2x2 and 3x3 without converting pattern/key case (1.5645ms)
+✔ P4 shapeless matching respects repeated slots, tags and overlapping alternatives rather than greedy assignment (0.7064ms)
+✔ P4 cake accepts every native egg alternative and yields three independent bucket remainders (1.1877ms)
+✔ P4 correct tool uses actual incorrect-drop tags; fast gold never substitutes for stone on iron ore (1.0124ms)
+✔ P4 native stack, armor, damage, remainder and fuel identities come from registration evidence (0.5321ms)
+✔ P4 cooking matches station capabilities, stone chain and iron recovery without treating slot acceptance as processing (1.7978ms)
+✔ P4 reachable native repair supports pristine tools and damaged variants, but rejects unsupported component-bearing input (1.8284ms)
+✔ P4 recursive tags preserve nested alternatives, optional absent references and reject cycles (0.7034ms)
+✔ P4 fixed point provides causal proofs for every item, includes side products and excludes unavailable capabilities without inventing sources (3.6328ms)
+✔ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (17.0277ms)
+✔ P4 all twelve candidate source profiles reproduce causal closure and actually match their 112 recipes and cake chain (575.8545ms)
+✔ P4 component equality uses verified defaults and order-independent values; unsupported defaults and nonvanilla grid shapes are explicit (15.7348ms)
+✔ P4 runtime registry selects crafting facts without a GUI or any save mutation (3.8472ms)
+✔ P4 runtime source and cooking context use committed native predicates rather than station-name fuel guesses (4.0214ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1443.8339

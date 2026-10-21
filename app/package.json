@@ -12,7 +12,9 @@
     "preview": "vite preview --host 127.0.0.1",
     "preview:pages": "vite preview --host 127.0.0.1 --port 4186 --outDir ../dist-pages --base /minecraft-birthday-2026/",
     "dev:verify": "vite --mode verification --host 127.0.0.1 --port 4184",
-    "test:built": "node --test tests/built.test.mjs"
+    "test:built": "node --test tests/built.test.mjs",
+    "data:export": "node tools/export-vanilla.ts",
+    "data:verify": "node tools/verify-vanilla.ts"
   },
   "dependencies": {
     "three": "0.186.1"

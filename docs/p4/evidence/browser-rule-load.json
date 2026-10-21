@@ -1,0 +1,157 @@
+{
+  "origin": "http://127.0.0.1:4184",
+  "mode": "verification",
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.25
+  },
+  "nativeLocks": true,
+  "snapshot": {
+    "envelope": {
+      "format": 1,
+      "contentVersion": "p3-foundation-1",
+      "vanillaVersion": "26.3",
+      "generation": "0b7233ab-0994-472b-81aa-752af20e9a0f",
+      "revision": 3,
+      "state": {
+        "progress": {
+          "unlocked": [
+            "minecraft:cake"
+          ],
+          "scene": "home",
+          "scenes": {
+            "plains": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "cave": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "farm": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "home": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            }
+          },
+          "player": {
+            "version": 0,
+            "data": null
+          },
+          "recipeBook": {
+            "version": 0,
+            "data": null
+          },
+          "cakePlacement": {
+            "scene": "home",
+            "table": "birthday-table"
+          }
+        },
+        "settings": {
+          "locale": "en",
+          "volume": 1,
+          "muted": true
+        }
+      },
+      "checksum": "11dcfa3aefcf6e2f7b47cb30b2427bce9bb5a881a9d6410778b9e2bcac92416c"
+    },
+    "migrated": false,
+    "status": "ready",
+    "writable": true
+  },
+  "records": [
+    {
+      "label": "Read P4 rule data",
+      "phase": "start",
+      "start": 1792586748443
+    },
+    {
+      "label": "Read P4 rule data",
+      "phase": "done",
+      "start": 1792586748443,
+      "end": 1792586748463,
+      "result": {
+        "items": 113,
+        "recipes": 112,
+        "ironDrop": [
+          {
+            "id": "minecraft:raw_iron",
+            "chance": 1,
+            "source": "data/minecraft/loot_table/blocks/iron_ore.json",
+            "modifiers": [
+              {
+                "type": "minecraft:apply_bonus",
+                "enchantment": "minecraft:fortune",
+                "formula": "minecraft:ore_drops"
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ]
+          }
+        ],
+        "milkRule": {
+          "input": "minecraft:bucket",
+          "output": "minecraft:milk_bucket",
+          "requiresAdult": true,
+          "source": "net.minecraft.world.entity.animal.cow.AbstractCow#mobInteract (adult cow)"
+        },
+        "stickFuel": {
+          "burnTicks": 100,
+          "speed": 1,
+          "cookTicks": 200
+        },
+        "cake": {
+          "recipe": "minecraft:cake",
+          "result": {
+            "id": "minecraft:cake",
+            "count": 1
+          },
+          "remainders": [
+            {
+              "id": "minecraft:bucket",
+              "count": 1
+            },
+            {
+              "id": "minecraft:bucket",
+              "count": 1
+            },
+            {
+              "id": "minecraft:bucket",
+              "count": 1
+            },
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "used": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ]
+        },
+        "saveUnchanged": true
+      }
+    }
+  ]
+}

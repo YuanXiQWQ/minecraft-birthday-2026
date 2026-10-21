@@ -1,0 +1,769 @@
+{
+  "checked": 112,
+  "chain": [
+    {
+      "item": "minecraft:oak_log",
+      "kind": "source",
+      "requires": [],
+      "source": "plains/tree",
+      "details": {
+        "id": "minecraft:oak_log",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/oak_log.json",
+        "modifiers": [],
+        "candidateSpecies": true,
+        "stripping": false,
+        "leaves": false
+      },
+      "round": 0,
+      "execution": {
+        "id": "minecraft:oak_log",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/oak_log.json",
+        "modifiers": [],
+        "candidateSpecies": true,
+        "stripping": false,
+        "leaves": false
+      }
+    },
+    {
+      "item": "minecraft:oak_planks",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:oak_log"
+      ],
+      "recipe": "minecraft:oak_planks",
+      "details": {
+        "count": 4,
+        "station": "personal-2x2"
+      },
+      "round": 1,
+      "execution": {
+        "width": 2,
+        "grid": [
+          {
+            "id": "minecraft:oak_log",
+            "count": 1
+          },
+          null,
+          null,
+          null
+        ],
+        "recipe": "minecraft:oak_planks",
+        "result": {
+          "id": "minecraft:oak_planks",
+          "count": 4
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0
+        ]
+      }
+    },
+    {
+      "item": "minecraft:stick",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:oak_planks"
+      ],
+      "recipe": "minecraft:stick",
+      "details": {
+        "count": 4,
+        "station": "personal-2x2"
+      },
+      "round": 2,
+      "execution": {
+        "width": 2,
+        "grid": [
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          null
+        ],
+        "recipe": "minecraft:stick",
+        "result": {
+          "id": "minecraft:stick",
+          "count": 4
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          2
+        ]
+      }
+    },
+    {
+      "item": "minecraft:crafting_table",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:oak_planks"
+      ],
+      "recipe": "minecraft:crafting_table",
+      "details": {
+        "count": 1,
+        "station": "personal-2x2"
+      },
+      "round": 2,
+      "execution": {
+        "width": 2,
+        "grid": [
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          }
+        ],
+        "recipe": "minecraft:crafting_table",
+        "result": {
+          "id": "minecraft:crafting_table",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "item": "minecraft:wooden_pickaxe",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:oak_planks",
+        "minecraft:stick",
+        "minecraft:crafting_table"
+      ],
+      "recipe": "minecraft:wooden_pickaxe",
+      "details": {
+        "count": 1,
+        "station": "minecraft:crafting_table"
+      },
+      "round": 3,
+      "execution": {
+        "width": 3,
+        "grid": [
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          {
+            "id": "minecraft:oak_planks",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:stick",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "id": "minecraft:stick",
+            "count": 1
+          },
+          null
+        ],
+        "recipe": "minecraft:wooden_pickaxe",
+        "result": {
+          "id": "minecraft:wooden_pickaxe",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          1,
+          2,
+          4,
+          7
+        ]
+      }
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "kind": "harvest",
+      "requires": [
+        "minecraft:wooden_pickaxe"
+      ],
+      "source": "cave/stone",
+      "details": {
+        "id": "minecraft:cobblestone",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/stone.json",
+        "modifiers": [],
+        "correctTool": true,
+        "silkTouch": false
+      },
+      "round": 4,
+      "execution": {
+        "id": "minecraft:cobblestone",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/stone.json",
+        "modifiers": [],
+        "correctTool": true,
+        "silkTouch": false
+      }
+    },
+    {
+      "item": "minecraft:stone_pickaxe",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:cobblestone",
+        "minecraft:stick",
+        "minecraft:crafting_table"
+      ],
+      "recipe": "minecraft:stone_pickaxe",
+      "details": {
+        "count": 1,
+        "station": "minecraft:crafting_table"
+      },
+      "round": 5,
+      "execution": {
+        "width": 3,
+        "grid": [
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:stick",
+            "count": 1
+          },
+          null,
+          null,
+          {
+            "id": "minecraft:stick",
+            "count": 1
+          },
+          null
+        ],
+        "recipe": "minecraft:stone_pickaxe",
+        "result": {
+          "id": "minecraft:stone_pickaxe",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          1,
+          2,
+          4,
+          7
+        ]
+      }
+    },
+    {
+      "item": "minecraft:raw_iron",
+      "kind": "harvest",
+      "requires": [
+        "minecraft:stone_pickaxe"
+      ],
+      "source": "cave/iron_ore",
+      "details": {
+        "id": "minecraft:raw_iron",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/iron_ore.json",
+        "modifiers": [
+          {
+            "type": "minecraft:apply_bonus",
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:ore_drops"
+          },
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "correctTool": true,
+        "silkTouch": false
+      },
+      "round": 6,
+      "execution": {
+        "id": "minecraft:raw_iron",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/iron_ore.json",
+        "modifiers": [
+          {
+            "type": "minecraft:apply_bonus",
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:ore_drops"
+          },
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "correctTool": true,
+        "silkTouch": false
+      }
+    },
+    {
+      "item": "minecraft:furnace",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:cobblestone",
+        "minecraft:crafting_table"
+      ],
+      "recipe": "minecraft:furnace",
+      "details": {
+        "count": 1,
+        "station": "minecraft:crafting_table"
+      },
+      "round": 5,
+      "execution": {
+        "width": 3,
+        "grid": [
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          },
+          {
+            "id": "minecraft:cobblestone",
+            "count": 1
+          }
+        ],
+        "recipe": "minecraft:furnace",
+        "result": {
+          "id": "minecraft:furnace",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "item": "minecraft:iron_ingot",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:raw_iron",
+        "minecraft:furnace",
+        "minecraft:oak_log"
+      ],
+      "recipe": "minecraft:iron_ingot_from_smelting_raw_iron",
+      "details": {
+        "count": 1,
+        "station": "minecraft:furnace"
+      },
+      "round": 7,
+      "execution": {
+        "input": "minecraft:raw_iron",
+        "result": {
+          "id": "minecraft:iron_ingot"
+        },
+        "station": "minecraft:smelting"
+      }
+    },
+    {
+      "item": "minecraft:bucket",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:iron_ingot",
+        "minecraft:crafting_table"
+      ],
+      "recipe": "minecraft:bucket",
+      "details": {
+        "count": 1,
+        "station": "minecraft:crafting_table"
+      },
+      "round": 8,
+      "execution": {
+        "width": 3,
+        "grid": [
+          {
+            "id": "minecraft:iron_ingot",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:iron_ingot",
+            "count": 1
+          },
+          null,
+          {
+            "id": "minecraft:iron_ingot",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null
+        ],
+        "recipe": "minecraft:bucket",
+        "result": {
+          "id": "minecraft:bucket",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          2,
+          4
+        ]
+      }
+    },
+    {
+      "item": "minecraft:milk_bucket",
+      "kind": "interaction",
+      "requires": [
+        "minecraft:bucket"
+      ],
+      "source": "net.minecraft.world.entity.animal.cow.AbstractCow#mobInteract (adult cow)",
+      "round": 9
+    },
+    {
+      "item": "minecraft:sugar_cane",
+      "kind": "source",
+      "requires": [],
+      "source": "sugar-cane; scene position undecided",
+      "details": {
+        "id": "minecraft:sugar_cane",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/sugar_cane.json",
+        "modifiers": []
+      },
+      "round": 0,
+      "execution": {
+        "id": "minecraft:sugar_cane",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/sugar_cane.json",
+        "modifiers": []
+      }
+    },
+    {
+      "item": "minecraft:sugar",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:sugar_cane"
+      ],
+      "recipe": "minecraft:sugar_from_sugar_cane",
+      "details": {
+        "count": 1,
+        "station": "personal-2x2"
+      },
+      "round": 1,
+      "execution": {
+        "width": 2,
+        "grid": [
+          {
+            "id": "minecraft:sugar_cane",
+            "count": 1
+          },
+          null,
+          null,
+          null
+        ],
+        "recipe": "minecraft:sugar_from_sugar_cane",
+        "result": {
+          "id": "minecraft:sugar",
+          "count": 1
+        },
+        "remainders": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0
+        ]
+      }
+    },
+    {
+      "item": "minecraft:egg",
+      "kind": "source",
+      "requires": [],
+      "source": "farm/fixed-egg; candidate variant",
+      "round": 0
+    },
+    {
+      "item": "minecraft:wheat_seeds",
+      "kind": "source",
+      "requires": [],
+      "source": "plains/short_grass",
+      "details": {
+        "id": "minecraft:wheat_seeds",
+        "chance": 0.125,
+        "source": "data/minecraft/loot_table/blocks/short_grass.json",
+        "modifiers": [
+          {
+            "type": "minecraft:apply_bonus",
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            }
+          },
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "guaranteed": false
+      },
+      "round": 0,
+      "execution": {
+        "id": "minecraft:wheat_seeds",
+        "chance": 0.125,
+        "source": "data/minecraft/loot_table/blocks/short_grass.json",
+        "modifiers": [
+          {
+            "type": "minecraft:apply_bonus",
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            }
+          },
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "guaranteed": false
+      }
+    },
+    {
+      "item": "minecraft:wheat",
+      "kind": "source",
+      "requires": [
+        "minecraft:wheat_seeds"
+      ],
+      "source": "farm/pretilled-wheat",
+      "details": {
+        "id": "minecraft:wheat",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/wheat.json",
+        "modifiers": [
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "age": 7,
+        "timing": "not-selected"
+      },
+      "round": 1,
+      "execution": {
+        "id": "minecraft:wheat",
+        "chance": 1,
+        "source": "data/minecraft/loot_table/blocks/wheat.json",
+        "modifiers": [
+          {
+            "type": "minecraft:explosion_decay"
+          }
+        ],
+        "age": 7,
+        "timing": "not-selected"
+      }
+    },
+    {
+      "item": "minecraft:cake",
+      "kind": "recipe",
+      "requires": [
+        "minecraft:milk_bucket",
+        "minecraft:sugar",
+        "minecraft:egg",
+        "minecraft:wheat",
+        "minecraft:crafting_table"
+      ],
+      "recipe": "minecraft:cake",
+      "details": {
+        "count": 1,
+        "station": "minecraft:crafting_table"
+      },
+      "round": 10,
+      "execution": {
+        "width": 3,
+        "grid": [
+          {
+            "id": "minecraft:milk_bucket",
+            "count": 1
+          },
+          {
+            "id": "minecraft:milk_bucket",
+            "count": 1
+          },
+          {
+            "id": "minecraft:milk_bucket",
+            "count": 1
+          },
+          {
+            "id": "minecraft:sugar",
+            "count": 1
+          },
+          {
+            "id": "minecraft:egg",
+            "count": 1
+          },
+          {
+            "id": "minecraft:sugar",
+            "count": 1
+          },
+          {
+            "id": "minecraft:wheat",
+            "count": 1
+          },
+          {
+            "id": "minecraft:wheat",
+            "count": 1
+          },
+          {
+            "id": "minecraft:wheat",
+            "count": 1
+          }
+        ],
+        "recipe": "minecraft:cake",
+        "result": {
+          "id": "minecraft:cake",
+          "count": 1
+        },
+        "remainders": [
+          {
+            "id": "minecraft:bucket",
+            "count": 1
+          },
+          {
+            "id": "minecraft:bucket",
+            "count": 1
+          },
+          {
+            "id": "minecraft:bucket",
+            "count": 1
+          },
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "used": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      }
+    }
+  ]
+}

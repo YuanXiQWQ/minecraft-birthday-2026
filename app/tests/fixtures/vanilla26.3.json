@@ -1,0 +1,243 @@
+{
+  "cake": {
+    "source": "data/minecraft/recipe/cake.json",
+    "sha256": "08a5bdafc093b79c3be85949e4d198e9fb5a28c592f10127d550efbe8884b119",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "A": "minecraft:milk_bucket",
+        "B": "minecraft:sugar",
+        "C": "minecraft:wheat",
+        "E": "#minecraft:eggs"
+      },
+      "pattern": [
+        "AAA",
+        "BEB",
+        "CCC"
+      ],
+      "result": {
+        "id": "minecraft:cake"
+      }
+    }
+  },
+  "wooden_pickaxe": {
+    "source": "data/minecraft/recipe/wooden_pickaxe.json",
+    "sha256": "908744d9608734a9ae7730a918d715d122c21070b4023b8818ac10d80a74063e",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:wooden_tool_materials"
+      },
+      "pattern": [
+        "XXX",
+        " # ",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:wooden_pickaxe"
+      }
+    }
+  },
+  "stick": {
+    "source": "data/minecraft/recipe/stick.json",
+    "sha256": "b334d8dcab58ccb48e1bd208265b946a6b10282fb04bf29779ff48d9de9fa0d6",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "group": "sticks",
+      "key": {
+        "#": "#minecraft:planks"
+      },
+      "pattern": [
+        "#",
+        "#"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:stick"
+      }
+    }
+  },
+  "oak_planks": {
+    "source": "data/minecraft/recipe/oak_planks.json",
+    "sha256": "ac2a91a3f5aba762256b1d9a2041ff8dc511b99b1da092be1be51c6f11eea586",
+    "recipe": {
+      "type": "minecraft:crafting_shapeless",
+      "category": "building",
+      "group": "planks",
+      "ingredients": [
+        "#minecraft:oak_logs"
+      ],
+      "result": {
+        "count": 4,
+        "id": "minecraft:oak_planks"
+      }
+    }
+  },
+  "bucket": {
+    "source": "data/minecraft/recipe/bucket.json",
+    "sha256": "5056879e56736706b65c4dc4aa050f63d1c8ab58956b73c2490038300dd83f0e",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "# #",
+        " # "
+      ],
+      "result": {
+        "id": "minecraft:bucket"
+      }
+    }
+  },
+  "blast_furnace": {
+    "source": "data/minecraft/recipe/blast_furnace.json",
+    "sha256": "4984128834a1a7db8efa508caabcef6c855a401cb7cba43accf0e6c46e8e5ef0",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "key": {
+        "#": "minecraft:smooth_stone",
+        "I": "minecraft:iron_ingot",
+        "X": "minecraft:furnace"
+      },
+      "pattern": [
+        "III",
+        "IXI",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:blast_furnace"
+      }
+    }
+  },
+  "hopper": {
+    "source": "data/minecraft/recipe/hopper.json",
+    "sha256": "b58dc302d3ecf3e4b7944e30746801c00ccb6b27016ab4eda7027e8d613491ce",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "category": "redstone",
+      "key": {
+        "C": "minecraft:chest",
+        "I": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "I I",
+        "ICI",
+        " I "
+      ],
+      "result": {
+        "id": "minecraft:hopper"
+      }
+    }
+  },
+  "iron_nugget_from_smelting": {
+    "source": "data/minecraft/recipe/iron_nugget_from_smelting.json",
+    "sha256": "08b6e5ffd7dbe05b3dcf630d56d9adbfda9d9da5ef0281180cf92709ee72fe18",
+    "recipe": {
+      "type": "minecraft:smelting",
+      "cookingtime": 200,
+      "experience": 0.1,
+      "ingredient": [
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_shovel",
+        "minecraft:iron_axe",
+        "minecraft:iron_hoe",
+        "minecraft:iron_sword",
+        "minecraft:iron_spear",
+        "minecraft:iron_helmet",
+        "minecraft:iron_chestplate",
+        "minecraft:iron_leggings",
+        "minecraft:iron_boots",
+        "minecraft:iron_horse_armor",
+        "minecraft:chainmail_helmet",
+        "minecraft:chainmail_chestplate",
+        "minecraft:chainmail_leggings",
+        "minecraft:chainmail_boots",
+        "minecraft:iron_nautilus_armor"
+      ],
+      "result": {
+        "id": "minecraft:iron_nugget"
+      }
+    }
+  },
+  "iron_ingot_from_nuggets": {
+    "source": "data/minecraft/recipe/iron_ingot_from_nuggets.json",
+    "sha256": "7392d96200f407e18a5e21d417b183318edb0f2e1bbc3f0b29d61df6ba6b7c32",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "group": "iron_ingot",
+      "key": {
+        "#": "minecraft:iron_nugget"
+      },
+      "pattern": [
+        "###",
+        "###",
+        "###"
+      ],
+      "result": {
+        "id": "minecraft:iron_ingot"
+      }
+    }
+  },
+  "iron_spear": {
+    "source": "data/minecraft/recipe/iron_spear.json",
+    "sha256": "a372b1f6508caa090b8bb1d7b3578865bf7c998904048f3e71a39102e7a6aef4",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:stick",
+        "X": "#minecraft:iron_tool_materials"
+      },
+      "pattern": [
+        "  X",
+        " # ",
+        "#  "
+      ],
+      "result": {
+        "id": "minecraft:iron_spear"
+      }
+    }
+  },
+  "shield": {
+    "source": "data/minecraft/recipe/shield.json",
+    "sha256": "a44e7aa402f35cdbe91bdba4552943a9cd8ed1bd94b4cf63129d071a3e700d79",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "W": "#minecraft:wooden_tool_materials",
+        "o": "minecraft:iron_ingot"
+      },
+      "pattern": [
+        "WoW",
+        "WWW",
+        " W "
+      ],
+      "result": {
+        "id": "minecraft:shield"
+      }
+    }
+  },
+  "name_tag": {
+    "source": "data/minecraft/recipe/name_tag.json",
+    "sha256": "722a53ef74fa9a0afaf427ae776519952c57f6aae88e0eca8ebc9f188823e8da",
+    "recipe": {
+      "type": "minecraft:crafting_shaped",
+      "category": "equipment",
+      "key": {
+        "#": "minecraft:paper",
+        "X": "#minecraft:metal_nuggets"
+      },
+      "pattern": [
+        " X",
+        "# "
+      ],
+      "result": {
+        "id": "minecraft:name_tag"
+      }
+    }
+  }
+}

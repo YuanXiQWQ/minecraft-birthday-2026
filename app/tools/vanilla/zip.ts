@@ -1,0 +1,7 @@
+/** Bounded read-only ZIP extraction uses Node's existing deflate implementation and verifies the locked input hash. */
+import {inflateRawSync} from 'node:zlib';import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';
+/** Read the ordinary non-ZIP64 official client archive without executing any Minecraft classes.
+ * @param {string} path Locked client path.
+ * @return {Map<string,Buffer>} Uncompressed entry bytes.
+ */
+export function readClient(path:string):Map<string,Buffer>{const b=readFileSync(path);if(createHash('sha1').update(b).digest('hex')!=='e877b6a07acd633fb3bb475002175cec036e7b87')throw new Error('wrong-client-hash');let end=b.length-22;while(end>=b.length-65557&&b.readUInt32LE(end)!==0x06054b50)end--;if(end<0)throw new Error('zip-directory');const files=new Map<string,Buffer>();let p=b.readUInt32LE(end+16);for(let i=0;i<b.readUInt16LE(end+10);i++){if(b.readUInt32LE(p)!==0x02014b50)throw new Error('zip-entry');const method=b.readUInt16LE(p+10),size=b.readUInt32LE(p+24),packed=b.readUInt32LE(p+20),n=b.readUInt16LE(p+28),extra=b.readUInt16LE(p+30),comment=b.readUInt16LE(p+32),local=b.readUInt32LE(p+42),name=b.subarray(p+46,p+46+n).toString();if(!name.endsWith('/')){const start=local+30+b.readUInt16LE(local+26)+b.readUInt16LE(local+28),raw=b.subarray(start,start+packed),data=method===8?inflateRawSync(raw):method===0?raw:null;if(!data||data.length!==size||files.has(name))throw new Error('unsupported-zip');files.set(name,data);}p+=46+n+extra+comment;}return files;}

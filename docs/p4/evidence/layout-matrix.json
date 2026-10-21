@@ -1,0 +1,674 @@
+[
+  {
+    "name": "home-empty",
+    "requested": [
+      1920,
+      1080
+    ],
+    "url": "http://127.0.0.1:4183/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1032,
+        "height": 944,
+        "left": 0,
+        "right": 1920,
+        "top": 88,
+        "width": 1920,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 343.6000061035156,
+      "height": 235.6000061035156,
+      "left": 460,
+      "right": 1460,
+      "top": 108,
+      "width": 1000,
+      "x": 460,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 320.8000183105469,
+      "height": 48,
+      "left": 765,
+      "right": 1155,
+      "top": 272.8000183105469,
+      "width": 390,
+      "x": 765,
+      "y": 272.8000183105469
+    },
+    "page": [
+      1920,
+      1080
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "name": "home-cake",
+    "requested": [
+      1920,
+      1080
+    ],
+    "url": "http://127.0.0.1:4184/",
+    "canvas": {
+      "data": {
+        "cake": "true",
+        "drawCalls": "78",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1032,
+        "height": 944,
+        "left": 0,
+        "right": 1920,
+        "top": 88,
+        "width": 1920,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 343.6000061035156,
+      "height": 235.6000061035156,
+      "left": 460,
+      "right": 1460,
+      "top": 108,
+      "width": 1000,
+      "x": 460,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 320.8000183105469,
+      "height": 48,
+      "left": 765,
+      "right": 1155,
+      "top": 272.8000183105469,
+      "width": 390,
+      "x": 765,
+      "y": 272.8000183105469
+    },
+    "page": [
+      1920,
+      1080
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "name": "game",
+    "requested": [
+      1920,
+      1080
+    ],
+    "url": "http://127.0.0.1:4183/game/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1032,
+        "height": 944,
+        "left": 0,
+        "right": 1920,
+        "top": 88,
+        "width": 1920,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 346,
+      "height": 238,
+      "left": 24,
+      "right": 544,
+      "top": 108,
+      "width": 520,
+      "x": 24,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 324,
+      "height": 48,
+      "left": 89,
+      "right": 479,
+      "top": 276,
+      "width": 390,
+      "x": 89,
+      "y": 276
+    },
+    "page": [
+      1920,
+      1080
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "name": "home-empty",
+    "requested": [
+      1440,
+      900
+    ],
+    "url": "http://127.0.0.1:4183/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 852,
+        "height": 764,
+        "left": 0,
+        "right": 1440,
+        "top": 88,
+        "width": 1440,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 343.6000061035156,
+      "height": 235.6000061035156,
+      "left": 220,
+      "right": 1220,
+      "top": 108,
+      "width": 1000,
+      "x": 220,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 320.8000183105469,
+      "height": 48,
+      "left": 525,
+      "right": 915,
+      "top": 272.8000183105469,
+      "width": 390,
+      "x": 525,
+      "y": 272.8000183105469
+    },
+    "page": [
+      1440,
+      900
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1440,
+      900
+    ]
+  },
+  {
+    "name": "home-cake",
+    "requested": [
+      1440,
+      900
+    ],
+    "url": "http://127.0.0.1:4184/",
+    "canvas": {
+      "data": {
+        "cake": "true",
+        "drawCalls": "78",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 852,
+        "height": 764,
+        "left": 0,
+        "right": 1440,
+        "top": 88,
+        "width": 1440,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 343.6000061035156,
+      "height": 235.6000061035156,
+      "left": 220,
+      "right": 1220,
+      "top": 108,
+      "width": 1000,
+      "x": 220,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 320.8000183105469,
+      "height": 48,
+      "left": 525,
+      "right": 915,
+      "top": 272.8000183105469,
+      "width": 390,
+      "x": 525,
+      "y": 272.8000183105469
+    },
+    "page": [
+      1440,
+      900
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1440,
+      900
+    ]
+  },
+  {
+    "name": "game",
+    "requested": [
+      1440,
+      900
+    ],
+    "url": "http://127.0.0.1:4183/game/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 852,
+        "height": 764,
+        "left": 0,
+        "right": 1440,
+        "top": 88,
+        "width": 1440,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 346,
+      "height": 238,
+      "left": 24,
+      "right": 544,
+      "top": 108,
+      "width": 520,
+      "x": 24,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 324,
+      "height": 48,
+      "left": 89,
+      "right": 479,
+      "top": 276,
+      "width": 390,
+      "x": 89,
+      "y": 276
+    },
+    "page": [
+      1440,
+      900
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1440,
+      900
+    ]
+  },
+  {
+    "name": "home-empty",
+    "requested": [
+      1280,
+      720
+    ],
+    "url": "http://127.0.0.1:4183/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 672,
+        "height": 584,
+        "left": 0,
+        "right": 1280,
+        "top": 88,
+        "width": 1280,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 307.6000061035156,
+      "height": 207.6000061035156,
+      "left": 140,
+      "right": 1140,
+      "top": 100,
+      "width": 1000,
+      "x": 140,
+      "y": 100
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 292.8000030517578,
+      "height": 48,
+      "left": 445,
+      "right": 835,
+      "top": 244.8000030517578,
+      "width": 390,
+      "x": 445,
+      "y": 244.8000030517578
+    },
+    "page": [
+      1280,
+      720
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "name": "home-cake",
+    "requested": [
+      1280,
+      720
+    ],
+    "url": "http://127.0.0.1:4184/",
+    "canvas": {
+      "data": {
+        "cake": "true",
+        "drawCalls": "78",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 672,
+        "height": 584,
+        "left": 0,
+        "right": 1280,
+        "top": 88,
+        "width": 1280,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 307.6000061035156,
+      "height": 207.6000061035156,
+      "left": 140,
+      "right": 1140,
+      "top": 100,
+      "width": 1000,
+      "x": 140,
+      "y": 100
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 292.8000030517578,
+      "height": 48,
+      "left": 445,
+      "right": 835,
+      "top": 244.8000030517578,
+      "width": 390,
+      "x": 445,
+      "y": 244.8000030517578
+    },
+    "page": [
+      1280,
+      720
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "name": "game",
+    "requested": [
+      1280,
+      720
+    ],
+    "url": "http://127.0.0.1:4183/game/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 672,
+        "height": 584,
+        "left": 0,
+        "right": 1280,
+        "top": 88,
+        "width": 1280,
+        "x": 0,
+        "y": 88
+      }
+    },
+    "copy": {
+      "bottom": 346,
+      "height": 238,
+      "left": 24,
+      "right": 544,
+      "top": 108,
+      "width": 520,
+      "x": 24,
+      "y": 108
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 324,
+      "height": 48,
+      "left": 89,
+      "right": 479,
+      "top": 276,
+      "width": 390,
+      "x": 89,
+      "y": 276
+    },
+    "page": [
+      1280,
+      720
+    ],
+    "resources": "26.3",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  {
+    "name": "home-empty",
+    "requested": [
+      390,
+      844
+    ],
+    "url": "http://127.0.0.1:4183/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1000,
+        "height": 920,
+        "left": 0,
+        "right": 375.2000122070313,
+        "top": 80,
+        "width": 375.2000122070313,
+        "x": 0,
+        "y": 80
+      }
+    },
+    "copy": {
+      "bottom": 473.6000061035156,
+      "height": 379.6000061035156,
+      "left": 12,
+      "right": 363.2000122070313,
+      "top": 94,
+      "width": 351.20001220703125,
+      "x": 12,
+      "y": 94
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 454.8000183105469,
+      "height": 48,
+      "left": 30.80000114440918,
+      "right": 344.4000072479248,
+      "top": 406.8000183105469,
+      "width": 313.6000061035156,
+      "x": 30.80000114440918,
+      "y": 406.8000183105469
+    },
+    "page": [
+      375,
+      1072
+    ],
+    "resources": "26.3",
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  {
+    "name": "home-cake",
+    "requested": [
+      390,
+      844
+    ],
+    "url": "http://127.0.0.1:4184/",
+    "canvas": {
+      "data": {
+        "cake": "true",
+        "drawCalls": "78",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1000,
+        "height": 920,
+        "left": 0,
+        "right": 375.2000122070313,
+        "top": 80,
+        "width": 375.2000122070313,
+        "x": 0,
+        "y": 80
+      }
+    },
+    "copy": {
+      "bottom": 473.6000061035156,
+      "height": 379.6000061035156,
+      "left": 12,
+      "right": 363.2000122070313,
+      "top": 94,
+      "width": 351.20001220703125,
+      "x": 12,
+      "y": 94
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 454.8000183105469,
+      "height": 48,
+      "left": 30.80000114440918,
+      "right": 344.4000072479248,
+      "top": 406.8000183105469,
+      "width": 313.6000061035156,
+      "x": 30.80000114440918,
+      "y": 406.8000183105469
+    },
+    "page": [
+      375,
+      1072
+    ],
+    "resources": "26.3",
+    "viewport": [
+      390,
+      844
+    ]
+  },
+  {
+    "name": "game",
+    "requested": [
+      390,
+      844
+    ],
+    "url": "http://127.0.0.1:4183/game/",
+    "canvas": {
+      "data": {
+        "cake": "false",
+        "drawCalls": "72",
+        "engine": "three.js r186",
+        "resourceVersion": "26.3"
+      },
+      "rect": {
+        "bottom": 1000,
+        "height": 920,
+        "left": 0,
+        "right": 375.2000122070313,
+        "top": 80,
+        "width": 375.2000122070313,
+        "x": 0,
+        "y": 80
+      }
+    },
+    "copy": {
+      "bottom": 348,
+      "height": 254,
+      "left": 12,
+      "right": 363.2000122070313,
+      "top": 94,
+      "width": 351.20001220703125,
+      "x": 12,
+      "y": 94
+    },
+    "dpr": 1.0000000149011612,
+    "invite": {
+      "bottom": 330,
+      "height": 48,
+      "left": 30,
+      "right": 345.20001220703125,
+      "top": 282,
+      "width": 315.20001220703125,
+      "x": 30,
+      "y": 282
+    },
+    "page": [
+      375,
+      1072
+    ],
+    "resources": "26.3",
+    "viewport": [
+      390,
+      844
+    ]
+  }
+]

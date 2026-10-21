@@ -1,11 +1,12 @@
 /** Pure commands, identity validation and projections; deferred inventory and processing contracts stay empty. */
 import type {Command,DomainEvent,PlacementPolicy,Progress,RuntimeState,SceneId,Settings,State} from './types.ts';
+import reachable from '../data/registry.json' with {type:'json'};
 /** Scene identities do not imply their P7 authored content is implemented. */
 export const SCENES:SceneId[]=['plains','cave','farm','home'];
 /** Presentation ordering follows the proposed main path without constraining acquisition order or recipe reachability. */
 export const MAINLINE=['oak_log','oak_planks','stick','crafting_table','wooden_pickaxe','cobblestone','stone_pickaxe','furnace','raw_iron','iron_ingot','bucket','milk_bucket','wheat_seeds','wheat','sugar_cane','sugar','egg','cake'].map(id=>'minecraft:'+id);
-/** Identity subset for P3 validation; P4 will supply the reachable registry rather than treating this as a recipe allowlist. */
-export const KNOWN_ITEMS=new Set([...MAINLINE,...['coal','charcoal','iron_nugget','blast_furnace','hopper','chest','stone','smooth_stone'].map(id=>'minecraft:'+id)]);
+/** Generated P4 fixed-point identities expand validation without changing unlock, discovery or temporary-stack semantics. */
+export const KNOWN_ITEMS=new Set(reachable);
 /** Deferred data is intentionally unpopulated until its product contract is approved. */
 const RESERVED={version:0,data:null} as const;
 

@@ -1,0 +1,13 @@
+{
+  "version": "26.3",
+  "exporter": "p4-export-1",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "registrySha256": "23216119ceeddbf6cdf9ee367b4d9b241ff820be0e1a9509ceb1e0fe3eb070e1",
+  "files": [
+    {
+      "file": "rules.json",
+      "bytes": 130598,
+      "sha256": "fe85315b78a5b57531023026f03941043cfb31e6274cae6ddfb1b7d159e0ef90"
+    }
+  ]
+}
