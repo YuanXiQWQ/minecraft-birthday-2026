@@ -73,7 +73,7 @@ export function validateState(value:unknown):asserts value is State{
 export function transition(state:State,command:Command,policy?:PlacementPolicy): {state:State;events:DomainEvent[];inventory?:InventoryState}{
   validateState(state);const next=structuredClone(state),p=next.progress,events:DomainEvent[]=[];let inventory:InventoryState|undefined;
   switch(command.type){
-    case 'inventory':ensure(identity(command.expected)===identity(p.player.data),'inventory-conflict');inventory=reduceInventory({...p.player.data,cursor:command.cursor},command.intent,p.unlocked,nativeInventory);p.player={version:1,data:layout(inventory)};break;
+    case 'inventory':ensure(identity(command.expected)===identity(p.player.data),'inventory-conflict');inventory=reduceInventory({...p.player.data,cursor:command.cursor,...(command.crafting?{crafting:command.crafting}:{})},command.intent,p.unlocked,nativeInventory);p.player={version:1,data:layout(inventory)};break;
     case 'unlock':item(command.item);if(!p.unlocked.includes(command.item)){p.unlocked.push(command.item);events.push({type:'item-unlocked',item:command.item});}break;
     case 'select-scene':ensure(SCENES.includes(command.scene));p.scene=command.scene;break;
     case 'put-station':ensure(SCENES.includes(command.scene));station(command.station);ensure(policy?.allows(command.scene,command.station),'placement-policy-pending');ensure(p.unlocked.includes('minecraft:'+command.station.kind),'locked-item');{const list=p.scenes[command.scene].stations,index=list.findIndex(s=>s.id===command.station.id);if(index<0)list.push(structuredClone(command.station));else list[index]=structuredClone(command.station);}break;

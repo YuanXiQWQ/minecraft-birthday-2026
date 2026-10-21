@@ -2,13 +2,13 @@
 
 ## P5 第二部分接口
 
-当前输入与稳定布局见[P5第二部分](p5/part2-report.md)、[D07补充交付](p5/d07-review.md)及[事务合同](p5/storage-input-contract.md)；原报告保留当时状态。D04/D07已获用户明确批准，D05/D06/D08仍待审。
+P5有限收尾见[最终报告](p5/final-report.md)与[覆盖矩阵](p5/final-coverage.md)，补齐外侧点击、预设总览及个人四输入；不授权P6。输入与稳定布局前序见[P5第二部分](p5/part2-report.md)、[D07补充交付](p5/d07-review.md)及[事务合同](p5/storage-input-contract.md)；原报告保留当时状态。D04/D07已获用户明确批准，D05/D06/D08仍待审。
 
 `domain/slots`负责SlotPolicy/组件身份/有限取放分配，`domain/inventory`负责无限源、九格/装备/副手、F/Q/C/X及有限批量命令；没有第二套有限普通背包。`inventory-input`与`slot-gesture`负责GUI事件所有权与未提交手势；GameInventory只呈现原版像素UI和有序临时投影，世界Look独立，GUI开关/失焦取消世界手势。
 
-`player.version1`保存selected/hotbar/equipment/presets，contentVersion=`p5-layout-1`。SaveSession在真实Web Lock内重读并比较载体前置值，运行语义命令，再一次保存；同槽争抢拒绝一方，不能仅凭revision或旧UI快照写回。UI失败撤销未提交投影，重置generation清理旧引用；旧P3空player校验后迁移，其他事实保留。D07已批准光标关闭/刷新清空、失焦/PointerCancel保留已提交光标；PersonalCursor独立epoch隔离关闭前异步返回，pagehide清理并阻断旧队列。稳定槽不随关闭清除。个人2×2与设备内容按已批D07合同留待P6/P7接入，不因本次结构而宣称已实现。
+`player.version1`保存selected/hotbar/equipment/presets，contentVersion=`p5-layout-1`。SaveSession在真实Web Lock内重读并比较载体前置值，运行语义命令，再一次保存；同槽争抢拒绝一方，不能仅凭revision或旧UI快照写回。UI失败撤销未提交投影，重置generation清理旧引用；旧P3空player校验后迁移，其他事实保留。D07已批准光标关闭/刷新清空、失焦/PointerCancel保留已提交光标；PersonalCursor独立epoch隔离关闭前异步返回，pagehide清理并阻断旧队列。稳定槽不随关闭清除。个人2×2输入现已接入：crafting[4]与光标同epoch、同锁返回而不序列化；结果与设备内容按已批D07合同留P6/P7。预设总览只投影现有presets[9]，OutsideClick区分GUI外侧点击与被取消的槽位拖动。
 
-`catalogue-manifest`继续审计113默认模型/字体/GUI资源；增加原版副手HUD两精灵，合计476资源/清单。离屏GPU图标生成后释放，CPU图像缓存与唯一可取消动画帧选择计时器归GameInventory所有。饰纹/复杂组件视觉、实体右/中拖及Java客户端对照不宣称完成。主页故事/正面空桌/蛋糕和宽屏3D不变。
+`catalogue-manifest`继续审计113默认模型/字体/GUI资源；副手HUD及两张creative滚动精灵随普通构建，合计478资源/清单；inventory.png复用原资源并加入GUI加载依赖。离屏GPU图标生成后释放，CPU图像缓存与唯一可取消动画帧选择计时器归GameInventory所有。饰纹/复杂组件视觉、实体右/中拖及Java客户端对照不宣称完成。主页故事/正面空桌/蛋糕和宽屏3D不变。
 
 ## P4 已落地接口
 
@@ -203,7 +203,7 @@ D04已批准光标、合成格、容器的有界临时计数兼容层；D07退�
 - 提议鼠标/容器处计数只限制本次摆放或移动，材料可随时从目录复制；不能变成实际资源门槛。
 - 剩余物（如奶桶对应空桶）解析自原版规则。由于输入不消耗，不能用剩余物覆盖仍存在的奶桶；已经解锁的剩余物可由目录取出。可达的全新剩余物需纳入产物与解锁规则，具体展示在行为合同中明确。
 - 输出满时停止继续填充，等待领取；不无限累计不可见数量，不因重复产出刷无限 Toast/经验声。燃料/输入可移除，处理器按同版本语义停止或保留计时，经过适配的部分列入测试。
-- 用户已批准D07：关闭个人菜单或重新进入页面清光标和个人2×2临时填充，不返还/掉落；失焦/PointerCancel只取消未提交拖动、保留当前光标。设备输入/燃料/输出及漏斗组按实例保留，拆除清实例内部组、不撤销解锁、不隐式取得未领产物。完整合同见[P5](p5/storage-input-contract.md)；当前2×2/设备业务尚未实施，D05输出及D08计时仍另审。
+- 用户已批准D07：关闭个人菜单或重新进入页面清光标和个人2×2临时填充，不返还/掉落；失焦/PointerCancel只取消未提交拖动、保留当前光标。设备输入/燃料/输出及漏斗组按实例保留，拆除清实例内部组、不撤销解锁、不隐式取得未领产物。完整合同见[P5](p5/storage-input-contract.md)；当前2×2仅实施输入与关闭，结果/设备业务尚未实施，D05输出及D08计时仍另审。
 
 ## 6. 配方、配方书与可达性
 

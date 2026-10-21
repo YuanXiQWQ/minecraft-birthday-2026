@@ -76,5 +76,10 @@
   "inventory.gear.feet": "Feet slot: {item}",
   "inventory.gear.offhand": "Offhand slot: {item}",
   "inventory.conflict": "The slots changed in another page. The action was canceled; try again with the current layout.",
-  "inventory.shortcuts": "C + 1-9: save toolbar. X + 1-9: load toolbar. Q: clear one temporary item; Ctrl + Q: clear the stack."
+  "inventory.shortcuts": "C + 1-9: save toolbar. X + 1-9: load toolbar. Q: clear one temporary item; Ctrl + Q: clear the stack.",
+  "inventory.presets": "Saved toolbars",
+  "inventory.crafting": "Crafting",
+  "inventory.craftingNote": "Crafting is not available yet. Personal inputs are cleared when you close this screen.",
+  "inventory.presetInfo": "Save toolbar {number} with C + {number}; load it with X + {number}.",
+  "inventory.presetScroll": "Scroll saved toolbars"
 }

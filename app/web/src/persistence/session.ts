@@ -53,9 +53,10 @@ export class SaveSession {
    * @param {InventoryCommand} intent Bounded slot operation.
    * @param {Stack|null} cursor Page-owned carried stack.
    * @param {PlayerLayout} expected Layout observed before the operation.
-   * @return {Promise<InventoryState>} Committed layout and resulting page-local cursor.
+   * @param {(Stack|null)[]} crafting Optional page-owned personal input grid, never serialized.
+   * @return {Promise<InventoryState>} Committed layout and resulting page-local carriers.
    */
-  async editInventory(intent:InventoryCommand,cursor:Stack|null,expected:PlayerLayout):Promise<InventoryState>{const result=await this.transact({type:'inventory',intent,cursor,expected});return result.inventory!;}
+  async editInventory(intent:InventoryCommand,cursor:Stack|null,expected:PlayerLayout,crafting?:(Stack|null)[]):Promise<InventoryState>{const result=await this.transact({type:'inventory',intent,cursor,expected,crafting});return result.inventory!;}
   /** Execute semantic work against freshly locked facts and preserve failed-write presentation.
    * @param {Command} command Domain intent with optional carrier precondition.
    * @return {Promise<{events:DomainEvent[],inventory?:InventoryState}>} Committed events and optional ephemeral carrier result.

@@ -1,0 +1,58 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "method": "Existing JDK25 javap -c -p; client classes were read only, never executed",
+  "entries": [
+    {
+      "entry": "net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen.class",
+      "bytes": 39215,
+      "sha256": "fd1473e4ee77fbc246043e8130bef5ada7ef26932ec33014f4216053275efeef"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen.class",
+      "bytes": 24202,
+      "sha256": "8e4a7dec2347cd0490c13449c69413e8454840c0957021079587da301ecdab0b"
+    },
+    {
+      "entry": "net/minecraft/world/inventory/InventoryMenu.class",
+      "bytes": 8883,
+      "sha256": "02e89607f947e0987373dd8f665e3b68fc96f24187e5ff75f3f02f3c519f1931"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/inventory.png",
+      "bytes": 454,
+      "sha256": "c2f850076ad7ebd7a1b27d017fe5f66ac388f54de374de988cb79f86b1d59a65"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/scroller.png",
+      "bytes": 87,
+      "sha256": "bbd2e9c7a41c5b2c9b95933c2115a12a46657ad114495632e13daaa9b25a13e6"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/scroller_disabled.png",
+      "bytes": 87,
+      "sha256": "75924aba42ca1b957893359e29b28b97b664189639ea920d6dbf96c568966f07"
+    }
+  ],
+  "observations": [
+    {
+      "class": "CreativeModeInventoryScreen",
+      "method": "hasClickedOutside",
+      "offsets": "0-79",
+      "fact": "Half-open container bounds; selected tab excluded from outside clicks."
+    },
+    {
+      "class": "CreativeModeInventoryScreen",
+      "method": "slotClicked",
+      "offsets": "1171-1316",
+      "fact": "Carried group and outside condition required; button0 drops whole carried group then clears; button1 splits one."
+    },
+    {
+      "class": "CreativeModeInventoryScreen",
+      "method": "selectTab",
+      "offsets": "36-256",
+      "fact": "HOTBAR loads nine saved rows, with informational paper for empty rows; the item picker scrolls five visible rows."
+    }
+  ],
+  "status": "Static evidence only; no Java client GUI session"
+}

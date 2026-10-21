@@ -6,6 +6,8 @@
 
 ## 当前可复用资源
 
+- P5有限收尾：补充原版creative_inventory/scroller及scroller_disabled两张精灵；原有inventory.png加入GUI加载依赖。catalogue资源段363条、401依赖，总计478文件/清单，普通Git/build默认可用。来源与哈希见catalogue-manifest，范围见[P5最终报告](../p5/final-report.md)；下列计数均保留阶段历史。
+
 - P5第二部分：新增原版hotbar_offhand_left/right两张29×24精灵，catalogue资源段361项、398依赖，总计476文件（含3清单）正常Git/build；来源与导出器哈希已更新，113默认图标管线不变。详见[本次报告](../p5/part2-report.md)。下列各阶段数量保留为历史范围。
 
 - P5第一部分：新增`catalogue-manifest.json`和359原始依赖，正常构建共474资源/清单文件；覆盖113默认目录图标、creative背景、九格/选框、装备空槽/Tooltip等，原P2/P3清单不改。特殊箱子/盾牌class几何和UV、草色图、组合/选择分支有独立证据；未支持饰纹/装饰等组件或完整Java着色对照。详见[P5报告](../p5/report.md)；原版素材仍为基准，无强制替换计划。

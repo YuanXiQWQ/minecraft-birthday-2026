@@ -1,0 +1,303 @@
+{
+  "origin": "http://127.0.0.1:4184",
+  "mode": "verification",
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.25
+  },
+  "nativeLocks": true,
+  "snapshot": {
+    "envelope": {
+      "format": 1,
+      "contentVersion": "p5-layout-1",
+      "vanillaVersion": "26.3",
+      "generation": "8834aad2-f0a2-492d-888f-22f8d90ca732",
+      "revision": 128,
+      "state": {
+        "progress": {
+          "unlocked": [
+            "minecraft:anvil",
+            "minecraft:armor_stand",
+            "minecraft:barrel",
+            "minecraft:blast_furnace",
+            "minecraft:bowl",
+            "minecraft:bread",
+            "minecraft:bucket",
+            "minecraft:cake",
+            "minecraft:campfire",
+            "minecraft:cartography_table",
+            "minecraft:cauldron",
+            "minecraft:charcoal",
+            "minecraft:chest",
+            "minecraft:chest_minecart",
+            "minecraft:chiseled_bookshelf",
+            "minecraft:chiseled_stone_bricks",
+            "minecraft:coal",
+            "minecraft:coal_block",
+            "minecraft:cobblestone",
+            "minecraft:cobblestone_slab",
+            "minecraft:cobblestone_stairs",
+            "minecraft:cobblestone_wall",
+            "minecraft:composter",
+            "minecraft:cracked_stone_bricks",
+            "minecraft:crafting_table",
+            "minecraft:egg",
+            "minecraft:furnace",
+            "minecraft:furnace_minecart",
+            "minecraft:grindstone",
+            "minecraft:hay_block",
+            "minecraft:heavy_weighted_pressure_plate",
+            "minecraft:hopper",
+            "minecraft:hopper_minecart",
+            "minecraft:iron_axe",
+            "minecraft:iron_bars",
+            "minecraft:iron_block",
+            "minecraft:iron_boots",
+            "minecraft:iron_chain",
+            "minecraft:iron_chestplate",
+            "minecraft:iron_door",
+            "minecraft:iron_helmet",
+            "minecraft:iron_hoe",
+            "minecraft:iron_ingot",
+            "minecraft:iron_leggings",
+            "minecraft:iron_nugget",
+            "minecraft:iron_pickaxe",
+            "minecraft:iron_shovel",
+            "minecraft:iron_spear",
+            "minecraft:iron_sword",
+            "minecraft:iron_trapdoor",
+            "minecraft:ladder",
+            "minecraft:lantern",
+            "minecraft:lever",
+            "minecraft:lodestone",
+            "minecraft:milk_bucket",
+            "minecraft:minecart",
+            "minecraft:name_tag",
+            "minecraft:oak_boat",
+            "minecraft:oak_button",
+            "minecraft:oak_chest_boat",
+            "minecraft:oak_door",
+            "minecraft:oak_fence",
+            "minecraft:oak_fence_gate",
+            "minecraft:oak_log",
+            "minecraft:oak_planks",
+            "minecraft:oak_pressure_plate",
+            "minecraft:oak_sign",
+            "minecraft:oak_slab",
+            "minecraft:oak_stairs",
+            "minecraft:oak_trapdoor",
+            "minecraft:oak_wood",
+            "minecraft:paper",
+            "minecraft:rail",
+            "minecraft:raw_iron",
+            "minecraft:raw_iron_block",
+            "minecraft:shears",
+            "minecraft:shield",
+            "minecraft:short_grass",
+            "minecraft:smithing_table",
+            "minecraft:smoker",
+            "minecraft:smooth_stone",
+            "minecraft:smooth_stone_slab",
+            "minecraft:stick",
+            "minecraft:stone",
+            "minecraft:stone_axe",
+            "minecraft:stone_brick_slab",
+            "minecraft:stone_brick_stairs",
+            "minecraft:stone_brick_wall",
+            "minecraft:stone_bricks",
+            "minecraft:stone_button",
+            "minecraft:stone_hoe",
+            "minecraft:stone_pickaxe",
+            "minecraft:stone_pressure_plate",
+            "minecraft:stone_shovel",
+            "minecraft:stone_slab",
+            "minecraft:stone_spear",
+            "minecraft:stone_stairs",
+            "minecraft:stone_sword",
+            "minecraft:stonecutter",
+            "minecraft:straw_bed",
+            "minecraft:sugar",
+            "minecraft:sugar_cane",
+            "minecraft:torch",
+            "minecraft:trapped_chest",
+            "minecraft:tripwire_hook",
+            "minecraft:wheat",
+            "minecraft:wheat_seeds",
+            "minecraft:wooden_axe",
+            "minecraft:wooden_hoe",
+            "minecraft:wooden_pickaxe",
+            "minecraft:wooden_shovel",
+            "minecraft:wooden_spear",
+            "minecraft:wooden_sword"
+          ],
+          "scene": "plains",
+          "scenes": {
+            "plains": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "cave": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "farm": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "home": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            }
+          },
+          "player": {
+            "version": 1,
+            "data": {
+              "selected": 0,
+              "hotbar": [
+                {
+                  "id": "minecraft:iron_helmet",
+                  "count": 1
+                },
+                {
+                  "id": "minecraft:iron_helmet",
+                  "count": 1
+                },
+                {
+                  "id": "minecraft:oak_planks",
+                  "count": 64
+                },
+                null,
+                null,
+                null,
+                null,
+                {
+                  "id": "minecraft:oak_planks",
+                  "count": 64
+                },
+                null
+              ],
+              "equipment": {
+                "head": {
+                  "id": "minecraft:iron_helmet",
+                  "count": 1
+                },
+                "chest": null,
+                "legs": null,
+                "feet": null,
+                "offhand": {
+                  "id": "minecraft:oak_planks",
+                  "count": 64
+                }
+              },
+              "presets": [
+                [
+                  {
+                    "id": "minecraft:iron_helmet",
+                    "count": 1
+                  },
+                  {
+                    "id": "minecraft:iron_helmet",
+                    "count": 1
+                  },
+                  {
+                    "id": "minecraft:oak_planks",
+                    "count": 64
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  null
+                ],
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [
+                  {
+                    "id": "minecraft:iron_helmet",
+                    "count": 1
+                  },
+                  {
+                    "id": "minecraft:iron_helmet",
+                    "count": 1
+                  },
+                  {
+                    "id": "minecraft:oak_planks",
+                    "count": 64
+                  },
+                  null,
+                  null,
+                  null,
+                  null,
+                  null,
+                  {
+                    "id": "minecraft:oak_planks",
+                    "count": 10
+                  }
+                ]
+              ]
+            }
+          },
+          "recipeBook": {
+            "version": 0,
+            "data": null
+          },
+          "cakePlacement": null
+        },
+        "settings": {
+          "locale": "en",
+          "volume": 1,
+          "muted": true
+        }
+      },
+      "checksum": "6636349de0d0c38adf8b06a0786ff78ce20b60fea6d7f8e469f45e3c8871e433"
+    },
+    "migrated": false,
+    "status": "ready",
+    "writable": true
+  },
+  "records": [
+    {
+      "label": "Run concurrent inventory pickup",
+      "phase": "start",
+      "start": 1792598146068
+    },
+    {
+      "label": "Run concurrent inventory pickup",
+      "phase": "done",
+      "start": 1792598146068,
+      "end": 1792598146095,
+      "result": {
+        "scope": "two cooperating sessions using real native Web Locks; a separate open game tab observes storage events",
+        "results": [
+          {
+            "status": "fulfilled",
+            "cursor": {
+              "id": "minecraft:oak_planks",
+              "count": 64
+            }
+          },
+          {
+            "status": "rejected",
+            "reason": "Error: inventory-conflict"
+          }
+        ],
+        "savedSlot": null,
+        "passed": true
+      }
+    }
+  ]
+}

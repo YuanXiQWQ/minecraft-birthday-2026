@@ -13,6 +13,6 @@ export interface Player {version:1;data:PlayerLayout}
 export interface Progress {unlocked:string[];scene:SceneId;scenes:Record<SceneId,SceneState>;player:Player;recipeBook:Reserved;cakePlacement:null|{scene:'home';table:'birthday-table'}}
 export interface State {progress:Progress;settings:Settings}
 export interface RuntimeState {celebration:'idle'|'playing'|'paused';screen:'scene'|'settings'|'inventory';natural:Partial<Record<SceneId,{visit:number;removed:string[]}>>}
-export type Command={type:'unlock';item:string}|{type:'select-scene';scene:SceneId}|{type:'put-station';scene:SceneId;station:Station}|{type:'remove-station';scene:SceneId;id:string}|{type:'settings';patch:Partial<Settings>}|{type:'record-cake-placement';scene:'home';table:'birthday-table'}|{type:'inventory';intent:InventoryCommand;cursor:Stack|null;expected:PlayerLayout};
+export type Command={type:'unlock';item:string}|{type:'select-scene';scene:SceneId}|{type:'put-station';scene:SceneId;station:Station}|{type:'remove-station';scene:SceneId;id:string}|{type:'settings';patch:Partial<Settings>}|{type:'record-cake-placement';scene:'home';table:'birthday-table'}|{type:'inventory';intent:InventoryCommand;cursor:Stack|null;crafting?:(Stack|null)[];expected:PlayerLayout};
 export interface DomainEvent {type:'item-unlocked'|'cake-placed';item?:string}
 export interface PlacementPolicy {allows:(scene:SceneId,station:Station)=>boolean}

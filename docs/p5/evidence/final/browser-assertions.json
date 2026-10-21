@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "scope": "Assertions over saved DOM and trusted event evidence, not synthetic inputs or manual acceptance",
+  "checks": [
+    "outside left/right and border/drag exclusion",
+    "E/Esc/Done clean four inputs and cursor",
+    "refresh clears personal inputs",
+    "preset exact-count and numeric-copy paths",
+    "native Web Locks pickup/reset fences",
+    "native delayed-close result isolation",
+    "dev/root/Pages input and scrollbar-keyboard load"
+  ],
+  "notClaimed": [
+    "physical right/middle drag",
+    "mid-drag Esc",
+    "real OS window blur",
+    "cross-engine or Java client acceptance"
+  ]
+}
