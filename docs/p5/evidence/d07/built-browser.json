@@ -1,0 +1,34 @@
+[
+  {
+    "base": "/",
+    "dom": {
+      "cursor": "null",
+      "icons": "113",
+      "locked": 18,
+      "modal": true,
+      "nativeCanvas": true,
+      "slots": 27,
+      "title": "Jerry's farm - Vincent's birthday"
+    },
+    "afterEscape": {
+      "cursor": "null",
+      "modal": false
+    }
+  },
+  {
+    "base": "/minecraft-birthday-2026/",
+    "dom": {
+      "cursor": "null",
+      "icons": "113",
+      "locked": 18,
+      "modal": true,
+      "nativeCanvas": true,
+      "slots": 27,
+      "title": "Jerry's farm - Vincent's birthday"
+    },
+    "afterEscape": {
+      "cursor": "null",
+      "modal": false
+    }
+  }
+]
