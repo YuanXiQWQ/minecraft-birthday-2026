@@ -4,7 +4,7 @@ import type {GameInventory,Slot} from './inventory.ts';import type {SlotRef} fro
  * @param {Slot|null} slot GUI cell.
  * @return {SlotRef|null} Finite identity or null.
  */
-export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
+export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */
 export class InventoryInput {
 gesture=new SlotGesture();outside=new OutsideClick();keys=new Set<string>();abort=new AbortController();start:Slot|null=null;quickMatch:Stack|null=null;
@@ -23,8 +23,8 @@ editing(target:EventTarget|null):boolean{return target instanceof HTMLElement&&!
 key(e:KeyboardEvent):void{const u=this.ui;if(u.blocked()||this.editing(e.target)||e.altKey||e.metaKey)return;if(e.ctrlKey&&e.code!=='KeyQ')return;if(!e.ctrlKey&&(e.code==='KeyC'||e.code==='KeyX')){this.keys.add(e.code);return;}const n=/^Digit[1-9]$/.test(e.code)?Number(e.code.at(-1))-1:null;
 if(n!==null&&(this.keys.has('KeyC')||this.keys.has('KeyX'))){e.preventDefault();if(!e.repeat)u.command({type:'preset',index:n,mode:this.keys.has('KeyC')?'save':'load'});return;}
 const intent=inventoryKey(e.code,false,e.ctrlKey);if(intent==='inventory'){e.preventDefault();if(!e.repeat){this.cancel();u.modal.open?u.close():u.open();}return;}if(intent==='escape'&&u.modal.open){e.preventDefault();e.stopPropagation();this.cancel();u.close();return;}
-if(n!==null&&!e.ctrlKey){e.preventDefault();if(u.modal.open){if(e.repeat)return;this.cancelGesture();const s=u.hover,ref=slotRef(s);if(s?.kind==='source')u.copySource(s,'number',n);else if(ref)u.command({type:'swap',slot:ref,target:`hotbar:${n}`});}else u.command({type:'select',index:n});return;}
-if(e.code==='KeyF'&&!e.ctrlKey){e.preventDefault();if(e.repeat)return;this.cancelGesture();const s=u.hover,ref=slotRef(s);if(u.modal.open&&s?.kind==='source')u.copySource(s,'offhand');else if(!u.modal.open||ref)u.command({type:'swap',slot:ref??`hotbar:${u.value.selected}`,target:'equipment:offhand'});return;}
+if(n!==null&&!e.ctrlKey){e.preventDefault();if(u.modal.open){if(e.repeat)return;this.cancelGesture();const s=u.hover,ref=slotRef(s);if(s?.kind==='preview')u.takeResult({mode:'hotbar',index:n});else if(s?.kind==='source')u.copySource(s,'number',n);else if(ref)u.command({type:'swap',slot:ref,target:`hotbar:${n}`});}else u.command({type:'select',index:n});return;}
+if(e.code==='KeyF'&&!e.ctrlKey){e.preventDefault();if(e.repeat)return;this.cancelGesture();const s=u.hover,ref=slotRef(s);if(u.modal.open&&s?.kind==='preview')u.takeResult({mode:'offhand'});else if(u.modal.open&&s?.kind==='source')u.copySource(s,'offhand');else if(!u.modal.open||ref)u.command({type:'swap',slot:ref??`hotbar:${u.value.selected}`,target:'equipment:offhand'});return;}
 if(e.code==='KeyQ'){e.preventDefault();if(e.repeat)return;this.cancelGesture();if(!u.modal.open)u.command({type:'drop',all:e.ctrlKey});else{const ref=slotRef(u.hover);if(ref)u.command({type:'drop',slot:ref,all:e.ctrlKey});}return;}}
 /** Route wheel only to the active GUI or world hotbar, preserving text and browser zoom gestures.
  * @param {WheelEvent} e Wheel event.
@@ -44,7 +44,7 @@ eligible(slot:Slot|null):SlotRef|null{const ref=slotRef(slot),u=this.ui,c=u.valu
 /** Stage a press; counts change only when a matching release commits the gesture.
  * @param {PointerEvent} e Browser pointer press.
  */
-down(e:PointerEvent):void{if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info'||s.kind==='preview')return;e.preventDefault();this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
+down(e:PointerEvent):void{if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info')return;e.preventDefault();this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='preview'?'result':s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
 /** Track unique eligible cells and cancel when leaving the interface bounds.
  * @param {PointerEvent} e Browser pointer move.
  */
@@ -52,7 +52,7 @@ move(e:PointerEvent):void{const a=this.gesture.active;if(a&&e.buttons!==(a.butto
 /** Commit distribution, collection or a click without allowing a subsequent contextmenu/click to repeat it.
  * @param {PointerEvent} e Browser release.
  */
-up(e:PointerEvent):void{const u=this.ui,g=this.gesture.end(e.pointerId,e.button,e.timeStamp),s=this.start;this.start=null;u.modal.dataset.drag='false';if(!g||!s)return;e.preventDefault();if(g.drag){if(u.value.cursor&&!g.shift)u.command({type:'drag',slots:g.slots,mode:g.button===0?'left':g.button===1?'middle':'right'});return;}const ref=slotRef(s);if(g.shift&&ref&&g.button===0){u.command(g.double?{type:'quick-all',slot:ref,match:this.quickMatch??undefined}:{type:'quick',slot:ref});return;}if(g.double&&g.button===0&&ref&&u.value.cursor){u.command({type:'collect',slot:ref});return;}u.activate(s,g.button,g.shift);}
+up(e:PointerEvent):void{const u=this.ui,g=this.gesture.end(e.pointerId,e.button,e.timeStamp),s=this.start;this.start=null;u.modal.dataset.drag='false';if(!g||!s)return;e.preventDefault();if(g.drag){if(s.kind==='preview')return;if(u.value.cursor&&!g.shift)u.command({type:'drag',slots:g.slots,mode:g.button===0?'left':g.button===1?'middle':'right'});return;}const ref=slotRef(s);if(g.shift&&ref&&g.button===0){u.command(g.double?{type:'quick-all',slot:ref,match:this.quickMatch??undefined}:{type:'quick',slot:ref});return;}if(g.double&&g.button===0&&ref&&u.value.cursor){u.command({type:'collect',slot:ref});return;}u.activate(s,g.button,g.shift);}
 /** Exclude controls, the full GUI border and any visible tooltip from backdrop discard.
  * @param {number} x Client X.
  * @param {number} y Client Y.

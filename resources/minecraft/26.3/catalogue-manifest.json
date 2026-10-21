@@ -5,7 +5,7 @@
     "ui/icon-model.ts": "dea57565631ed6199db7f94583d0d344b019b4cfbcc7abc0144f031436b744ae",
     "render/model-format.ts": "4b5cfadcb0fa2d485e7e3feab94227251653f60fa14d69da264188c0540c0563"
   },
-  "exporterSha256": "30ede3e16b04f6c633d72657899fbf3bae2db4269ebd484fc5a314d20b7c2024",
+  "exporterSha256": "69aa69118a5ef07df5c6f860560f1e6ae3617a85f2f9fcb39ecae271223f6e36",
   "namesSha256": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
   "inputs": {
@@ -389,6 +389,7 @@
     "assets/minecraft/models/item/wooden_sword.json": "9bca685b99ee79235476db4ea15e6db04c8f0b096e2f379734e346034979a2b3",
     "assets/minecraft/textures/item/wooden_sword.png": "8165dd48d392632563bfea87b2707371d2804031f1dcafcdee3a88a42a476cfc",
     "assets/minecraft/textures/gui/container/inventory.png": "c2f850076ad7ebd7a1b27d017fe5f66ac388f54de374de988cb79f86b1d59a65",
+    "assets/minecraft/textures/gui/container/crafting_table.png": "baf65a599d8bb380b1b03efa1862c20fd29e936b43110d7438b9fe00086075b0",
     "assets/minecraft/textures/gui/sprites/container/creative_inventory/scroller.png": "bbd2e9c7a41c5b2c9b95933c2115a12a46657ad114495632e13daaa9b25a13e6",
     "assets/minecraft/textures/gui/sprites/container/creative_inventory/scroller_disabled.png": "75924aba42ca1b957893359e29b28b97b664189639ea920d6dbf96c568966f07",
     "assets/minecraft/textures/gui/container/creative_inventory/tab_inventory.png": "d13882a53027bdd954ab2237b5171fbc9a9e34e657a5159cc3bb33d68e9f3832",

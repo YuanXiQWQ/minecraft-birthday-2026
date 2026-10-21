@@ -1,0 +1,1508 @@
+{
+  "source": {
+    "environment": {
+      "dpr": 1.25,
+      "height": 720,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "width": 1280
+    },
+    "hud": {
+      "contents": "[{\"id\":\"minecraft:oak_planks\",\"count\":4},{\"id\":\"minecraft:oak_planks\",\"count\":62},{\"id\":\"minecraft:stick\",\"count\":4},{\"id\":\"minecraft:oak_planks\",\"count\":60},{\"id\":\"minecraft:crafting_table\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":61},{\"id\":\"minecraft:stick\",\"count\":62},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1}]",
+      "offhand": "null",
+      "selected": "4"
+    },
+    "look": null,
+    "modal": {
+      "drag": "false",
+      "open": false,
+      "preview": "{\"status\":\"empty\",\"result\":null}"
+    },
+    "records": [
+      {
+        "code": "ShiftLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": true,
+        "slot": {},
+        "target": "",
+        "time": 104067.29999998212,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "button": 2,
+        "buttons": 2,
+        "ctrl": false,
+        "prevented": true,
+        "shift": true,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 105112.09999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 866,
+        "y": 450
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": true,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 105112.40000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 866,
+        "y": 450
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": true,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 105112.40000000596,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 866,
+        "y": 450
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": true,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 105112.5,
+        "trusted": true,
+        "type": "contextmenu",
+        "x": 866,
+        "y": 450
+      },
+      {
+        "code": "ShiftLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "",
+        "time": 105112.59999999404,
+        "trusted": true,
+        "type": "keyup"
+      }
+    ],
+    "selection": "Crafting table removed."
+  },
+  "observer": {
+    "environment": {
+      "dpr": 1.0000000149011612,
+      "height": 900,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "width": 1440
+    },
+    "hud": {
+      "contents": "[{\"id\":\"minecraft:oak_planks\",\"count\":4},{\"id\":\"minecraft:oak_planks\",\"count\":62},{\"id\":\"minecraft:stick\",\"count\":4},{\"id\":\"minecraft:oak_planks\",\"count\":60},{\"id\":\"minecraft:crafting_table\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":61},{\"id\":\"minecraft:stick\",\"count\":62},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1}]",
+      "offhand": "null",
+      "selected": "4"
+    },
+    "look": null,
+    "modal": {
+      "crafting": "[null,null,null,null]",
+      "cursor": "null",
+      "drag": "false",
+      "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+      "open": false,
+      "preview": "{\"status\":\"empty\",\"result\":null}",
+      "sideOffset": "0",
+      "stationId": "",
+      "tab": "crafting",
+      "workbench": "null"
+    },
+    "records": [
+      {
+        "button": 2,
+        "buttons": 2,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 35800.79999998212,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 1000,
+        "y": 560
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 35800.90000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 1000,
+        "y": 560
+      },
+      {
+        "prevented": false,
+        "slot": {},
+        "target": "pixel-text mc-button",
+        "time": 35801.09999999404,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "cake": "false",
+          "drawCalls": "72",
+          "engine": "three.js r186",
+          "resourceVersion": "26.3"
+        },
+        "target": "",
+        "time": 35801.09999999404,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 1000,
+        "y": 560
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "crafting": "[null,null,null,null]",
+          "cursor": "null",
+          "drag": "false",
+          "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+          "preview": "{\"status\":\"empty\",\"result\":null}",
+          "sideOffset": "0",
+          "stationId": "",
+          "tab": "crafting",
+          "workbench": "null"
+        },
+        "target": "inventory-dialog",
+        "time": 35801.19999998808,
+        "trusted": true,
+        "type": "contextmenu",
+        "x": 1000,
+        "y": 560
+      },
+      {
+        "prevented": false,
+        "slot": {},
+        "target": "pixel-text mc-button",
+        "time": 45092.40000000596,
+        "trusted": true,
+        "type": "blur"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45092.59999999404,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45311.29999998212,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45311.59999999404,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45311.79999998212,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.09999999404,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.19999998808,
+        "trusted": true,
+        "type": "blur"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.29999998212,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.59999999404,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.59999999404,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.79999998212,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45312.90000000596,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45313.09999999404,
+        "trusted": true,
+        "type": "blur"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45313.19999998808,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45313.40000000596,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45317.90000000596,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.09999999404,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.19999998808,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.29999998212,
+        "trusted": true,
+        "type": "blur"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.40000000596,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.5,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.59999999404,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.59999999404,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.69999998808,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.79999998212,
+        "trusted": true,
+        "type": "blur"
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.79999998212,
+        "trusted": true,
+        "type": "focus"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45318.90000000596,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45319,
+        "trusted": true,
+        "type": "keydown"
+      },
+      {
+        "code": "KeyQ",
+        "ctrl": true,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45319.09999999404,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "code": "ControlLeft",
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 45319.09999999404,
+        "trusted": true,
+        "type": "keyup"
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:milk_bucket",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 52608.5,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 52608.90000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 52609.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "0",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 53492.5,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 570,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 53492.90000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 570,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 53493.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 570,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:milk_bucket",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 54485.40000000596,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 54486,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 54486.5,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "1",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 55496.09999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 624,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 55496.59999999404,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 624,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 55497,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 624,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:milk_bucket",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 56507.69999998808,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 56508.09999999404,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 56508.19999998808,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 612,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "2",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 57495.29999998212,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 678,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 57495.5,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 678,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 57495.59999999404,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 678,
+        "y": 304
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:sugar",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 66657.69999998808,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 66658,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 66658.09999999404,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "3",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 67658.69999998808,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 570,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 67659.09999999404,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 570,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 67659.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 570,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:sugar",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 68666.40000000596,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 68666.79999998212,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 68667,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 828,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "5",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 69666.09999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 678,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 69666.40000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 678,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 69666.59999999404,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 678,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:egg",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 70679.5,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 882,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 70680.09999999404,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 882,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 70680.5,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 882,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "4",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 71670.40000000596,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 624,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 71670.90000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 624,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 71671.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 624,
+        "y": 358
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:wheat",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 75844.59999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 75845,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 75845.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "6",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 76842.09999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 570,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 76842.5,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 570,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 76842.90000000596,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 570,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:wheat",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 77850.19999998808,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 77850.59999999404,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 77850.79999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 78848.59999999404,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 624,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 78849,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 624,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 78849.29999998212,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 624,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "item": "minecraft:wheat",
+          "kind": "source"
+        },
+        "target": "inventory-slot",
+        "time": 79847.5,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 79848,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 79848.40000000596,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 720,
+        "y": 559
+      },
+      {
+        "button": 0,
+        "buttons": 1,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "index": "8",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 80842.90000000596,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 678,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 80843.40000000596,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 678,
+        "y": 412
+      },
+      {
+        "button": 0,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 80843.90000000596,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 678,
+        "y": 412
+      },
+      {
+        "button": 2,
+        "buttons": 2,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "kind": "preview"
+        },
+        "target": "inventory-slot",
+        "time": 85749,
+        "trusted": true,
+        "type": "pointerdown",
+        "x": 852,
+        "y": 358
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 85804.69999998808,
+        "trusted": true,
+        "type": "pointerup",
+        "x": 852,
+        "y": 358
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": false,
+        "shift": false,
+        "slot": {},
+        "target": "inventory-panel",
+        "time": 85805.09999999404,
+        "trusted": true,
+        "type": "lostpointercapture",
+        "x": 852,
+        "y": 358
+      },
+      {
+        "button": 2,
+        "buttons": 0,
+        "ctrl": false,
+        "prevented": true,
+        "shift": false,
+        "slot": {
+          "kind": "preview"
+        },
+        "target": "inventory-slot",
+        "time": 85805.40000000596,
+        "trusted": true,
+        "type": "contextmenu",
+        "x": 852,
+        "y": 358
+      },
+      {
+        "prevented": false,
+        "slot": {
+          "index": "7",
+          "kind": "workbench"
+        },
+        "target": "inventory-slot",
+        "time": 85825.90000000596,
+        "trusted": true,
+        "type": "blur"
+      }
+    ],
+    "selection": ""
+  }
+}

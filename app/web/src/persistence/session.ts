@@ -1,7 +1,7 @@
 /** Cooperative cross-page transactions use a real exclusive lock, reset epochs and lifecycle fencing. */
 import {freeze,initialState,resetState,transition} from '../domain/state.ts';
-import type {Command,DomainEvent,PlacementPolicy} from '../domain/types.ts';
-import type {InventoryState,InventoryCommand,PlayerLayout} from '../domain/inventory.ts';import type {Stack} from '../rules/types.ts';
+import type {Command,DomainEvent,PlacementPolicy,WorkbenchContext} from '../domain/types.ts';
+import type {InventoryState,InventoryCommand,PlayerLayout} from '../domain/inventory.ts';import type {CraftReceipt,CraftTake} from '../domain/crafting.ts';import type {Rules,Stack} from '../rules/types.ts';
 import {decode,seal,token} from './codec.ts';
 import type {Envelope} from './codec.ts';
 /** This project namespace is shared by both base paths and never overlaps P2 or other Pages repositories. */
@@ -15,7 +15,7 @@ export interface Snapshot {status:string;envelope:Envelope|null;migrated:boolean
 export class CommandRejected extends Error {}
 /** Own immutable durable snapshots; no renderer, notification replay or natural-resource state is serialized. */
 export class SaveSession {
-  storage:StoragePort;locks:LockPort|null;policy?:PlacementPolicy;view:Snapshot=freeze({status:'loading',envelope:null,migrated:false,writable:false});
+  rules?:Rules;storage:StoragePort;locks:LockPort|null;policy?:PlacementPolicy;view:Snapshot=freeze({status:'loading',envelope:null,migrated:false,writable:false});
   listeners=new Set<(snapshot:Snapshot)=>void>();eventListeners=new Set<(events:DomainEvent[])=>void>();serial=0;suspended=false;disposed=false;
   /** Bind injected persistence/coordinator ports for deterministic failures and real browser transactions.
    * @param {StoragePort} storage Single project storage key adapter.
@@ -54,17 +54,27 @@ export class SaveSession {
    * @param {Stack|null} cursor Page-owned carried stack.
    * @param {PlayerLayout} expected Layout observed before the operation.
    * @param {(Stack|null)[]} crafting Optional page-owned personal input grid, never serialized.
+   * @param {WorkbenchContext} workbench Observed instance contents, verified under the lock.
    * @return {Promise<InventoryState>} Committed layout and resulting page-local carriers.
    */
-  async editInventory(intent:InventoryCommand,cursor:Stack|null,expected:PlayerLayout,crafting?:(Stack|null)[]):Promise<InventoryState>{const result=await this.transact({type:'inventory',intent,cursor,expected,crafting});return result.inventory!;}
+  async editInventory(intent:InventoryCommand,cursor:Stack|null,expected:PlayerLayout,crafting?:(Stack|null)[],workbench?:WorkbenchContext):Promise<InventoryState>{const result=await this.transact({type:'inventory',intent,cursor,expected,crafting,workbench});return result.inventory!;}
+  /** Acquire complete native recipe batches and publish only successfully saved acquisition facts.
+   * @param {CraftTake} take Result operation.
+   * @param {Stack|null} cursor Page-owned carried group.
+   * @param {(Stack|null)[]} crafting Personal inputs, independent of durable workbench inputs.
+   * @param {PlayerLayout} expected Observed stable layout.
+   * @param {WorkbenchContext} workbench Optional observed real instance.
+   * @return {Promise<CraftReceipt>} Successfully committed acquisition receipt.
+   */
+  async takeCraft(take:CraftTake,cursor:Stack|null,crafting:(Stack|null)[],expected:PlayerLayout,workbench?:WorkbenchContext):Promise<CraftReceipt>{const result=await this.transact({type:'craft-take',take,cursor,crafting,expected,workbench});return result.receipt!;}
   /** Execute semantic work against freshly locked facts and preserve failed-write presentation.
    * @param {Command} command Domain intent with optional carrier precondition.
-   * @return {Promise<{events:DomainEvent[],inventory?:InventoryState}>} Committed events and optional ephemeral carrier result.
+   * @return {Promise<{events:DomainEvent[],inventory?:InventoryState,receipt?:CraftReceipt}>} Committed events and optional ephemeral carrier result.
    */
-  async transact(command:Command):Promise<{events:DomainEvent[];inventory?:InventoryState}>{
+  async transact(command:Command):Promise<{events:DomainEvent[];inventory?:InventoryState;receipt?:CraftReceipt}>{
     const epoch=this.view.envelope?.generation,serial=this.serial;if(!this.locks||!this.view.writable||!epoch||this.disposed||this.suspended)throw new Error('save-read-only');
-    try{return await this.locks.exclusive(async()=>{const raw=this.storage.getItem(SAVE_KEY);if(!raw)throw new Error('stale-session');const decoded=await decode(raw),current=decoded.envelope;if(current.generation!==epoch)throw new Error('stale-session');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');let result;try{result=transition(current.state,command,this.policy);}catch(error){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});throw new CommandRejected(error instanceof Error?error.message:'invalid-command');}if(JSON.stringify(result.state)===JSON.stringify(current.state)){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});return {events:result.events,inventory:result.inventory};}
-      const next=await seal(result.state,epoch,current.revision+1);if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');try{this.storage.setItem(SAVE_KEY,JSON.stringify(next));}catch{throw new Error('write-failed');}this.publish({status:'ready',envelope:next,migrated:false,writable:true});for(const listener of this.eventListeners)listener(result.events);return {events:result.events,inventory:result.inventory};});}
+    try{return await this.locks.exclusive(async()=>{const raw=this.storage.getItem(SAVE_KEY);if(!raw)throw new Error('stale-session');const decoded=await decode(raw),current=decoded.envelope;if(current.generation!==epoch)throw new Error('stale-session');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');let result;try{result=transition(current.state,command,this.policy,this.rules);}catch(error){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});throw new CommandRejected(error instanceof Error?error.message:'invalid-command');}if(JSON.stringify(result.state)===JSON.stringify(current.state)){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});return {events:result.events,inventory:result.inventory,receipt:result.receipt};}
+      const next=await seal(result.state,epoch,current.revision+1);if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');try{this.storage.setItem(SAVE_KEY,JSON.stringify(next));}catch{throw new Error('write-failed');}this.publish({status:'ready',envelope:next,migrated:false,writable:true});for(const listener of this.eventListeners)listener(result.events);return {events:result.events,inventory:result.inventory,receipt:result.receipt};});}
     catch(error){if(!(error instanceof CommandRejected))this.fail(error);throw error;}
   }
   /** Reset valid progress under the same lock, requiring the exact confirmed value and retaining settings.

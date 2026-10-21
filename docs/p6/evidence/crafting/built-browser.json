@@ -1,0 +1,92 @@
+[
+  {
+    "url": "http://127.0.0.1:4183/game/",
+    "state": {
+      "canvas": {
+        "height": 166,
+        "width": 176
+      },
+      "dpr": 1.25,
+      "height": 720,
+      "home": "/",
+      "icons": "113",
+      "modal": {
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "personalInputs": 4,
+      "preview": 1,
+      "ready": "true",
+      "resources": "26.3",
+      "width": 1280
+    },
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:4186/minecraft-birthday-2026/game/",
+    "state": {
+      "canvas": {
+        "height": 166,
+        "width": 176
+      },
+      "dpr": 1.0000000149011612,
+      "height": 900,
+      "home": "/minecraft-birthday-2026/",
+      "icons": "113",
+      "modal": {
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "personalInputs": 4,
+      "preview": 1,
+      "ready": "true",
+      "resources": "26.3",
+      "width": 1440
+    },
+    "errors": []
+  },
+  {
+    "url": "http://127.0.0.1:4185/game/",
+    "state": {
+      "canvas": {
+        "height": 166,
+        "width": 176
+      },
+      "dpr": 1.25,
+      "height": 720,
+      "home": "/",
+      "icons": "113",
+      "modal": {
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "personalInputs": 4,
+      "preview": 1,
+      "ready": "true",
+      "resources": "26.3",
+      "width": 1280
+    },
+    "errors": []
+  }
+]

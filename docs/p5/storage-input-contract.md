@@ -1,5 +1,7 @@
 # P5 稳定布局与输入事务合同
 
+P6版本扩展：用户已批准D05及A；当前信封升级p6-crafting-1，player字段保持本P5合同，工作台新增version1/data.grid[9]实例内容。P3/P5校验后迁移，其他设备仍为空保留位；详见[当前存档与领取合同](../p6/storage-crafting-contract.md)。本页P5原内容及旧阶段范围按当时事实阅读，不覆盖本次扩展。
+
 本合同扩展[P3](../p3/storage-contract.md)的稳定载体；D07完整方案已由用户明确回复“接受该D07完整方案”，c05387f已审查。个人四输入及预设总览的当前范围见[P5最终交付](final-report.md)，原[D07交付](d07-review.md)保留历史实现范围。
 
 - 信封：format1，contentVersion=p5-layout-1，vanillaVersion26.3；同一SAVE_KEY/LOCK_NAME、generation和revision协议。

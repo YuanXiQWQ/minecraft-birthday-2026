@@ -2,7 +2,7 @@
 import {ensure,freeze,validateState} from '../domain/state.ts';
 import type {State} from '../domain/types.ts';
 import {emptyInventory,layout} from '../domain/inventory.ts';
-export interface Envelope {format:1;contentVersion:'p5-layout-1';vanillaVersion:'26.3';generation:string;revision:number;state:State;checksum:string}
+export interface Envelope {format:1;contentVersion:'p6-crafting-1';vanillaVersion:'26.3';generation:string;revision:number;state:State;checksum:string}
 export interface Decoded {envelope:Envelope;migrated:boolean}
 /** Canonical encoding includes every own field in a stable order; arrays keep semantic acquisition order.
  * @param {unknown} value Plain JSON value.
@@ -25,8 +25,8 @@ export async function checksum(value:unknown):Promise<string>{return Array.from(
  * @param {number} revision Revision within this epoch.
  * @return {Promise<Envelope>} Valid checksummed value.
  */
-export async function seal(state:State,generation:string,revision:number):Promise<Envelope>{validateState(state);ensure(/^[a-zA-Z0-9_-]{1,80}$/.test(generation)&&Number.isSafeInteger(revision)&&revision>=0);const body={format:1 as const,contentVersion:'p5-layout-1' as const,vanillaVersion:'26.3' as const,generation,revision,state:structuredClone(state)};return freeze({...body,checksum:await checksum(body)});}
-/** Decode checksummed versions; reserved P3 player data migrates to an empty stable layout without rewriting storage.
+export async function seal(state:State,generation:string,revision:number):Promise<Envelope>{validateState(state);ensure(/^[a-zA-Z0-9_-]{1,80}$/.test(generation)&&Number.isSafeInteger(revision)&&revision>=0);const body={format:1 as const,contentVersion:'p6-crafting-1' as const,vanillaVersion:'26.3' as const,generation,revision,state:structuredClone(state)};return freeze({...body,checksum:await checksum(body)});}
+/** Decode checksummed versions; P3 player reservations and P5 empty workbenches migrate without rewriting storage.
  * @param {string} raw Stored original bytes.
  * @return {Promise<Decoded>} Valid snapshot and explicit migration status.
  */
@@ -35,9 +35,9 @@ export async function decode(raw:string):Promise<Decoded>{
   ensure(value&&typeof value==='object'&&!Array.isArray(value),'corrupt-save');ensure(Number.isInteger(value.format),'corrupt-save');ensure(value.format<=1,'future-save');ensure(value.format>=0,'unsupported-save');
   ensure(Object.keys(value).sort().join('|')==='checksum|contentVersion|format|generation|revision|state|vanillaVersion','unsupported-save');
   const {checksum:stored,...body}=value;ensure(typeof stored==='string'&&stored===await checksum(body),'checksum-mismatch');
-  ensure(value.vanillaVersion==='26.3'&&(value.format===0?value.contentVersion==='p3-development-0':['p3-foundation-1','p5-layout-1'].includes(value.contentVersion)),'unsupported-content');
-  const migrated=value.contentVersion!=='p5-layout-1';
-  try{if(migrated){ensure(identityReserved(value.state?.progress?.player),'pending-contract-version');value.state.progress.player={version:1,data:layout(emptyInventory())};}validateState(value.state);const envelope=await seal(value.state,value.generation,value.revision);return {envelope,migrated};}catch(error){throw new Error(migrated?'migration-failed':error instanceof Error?error.message:'invalid-save');}
+  ensure(value.vanillaVersion==='26.3'&&(value.format===0?value.contentVersion==='p3-development-0':['p3-foundation-1','p5-layout-1','p6-crafting-1'].includes(value.contentVersion)),'unsupported-content');
+  const migrated=value.contentVersion!=='p6-crafting-1',oldPlayer=value.contentVersion!=='p5-layout-1'&&value.contentVersion!=='p6-crafting-1';
+  try{if(oldPlayer){ensure(identityReserved(value.state?.progress?.player),'pending-contract-version');value.state.progress.player={version:1,data:layout(emptyInventory())};}if(migrated){validateState(value.state);for(const scene of Object.values(value.state.progress.scenes) as State['progress']['scenes'][keyof State['progress']['scenes']][])for(const station of scene.stations){ensure(identityReserved(station.contents),'pending-contract-version');if(station.kind==='crafting_table')station.contents={version:1,data:{grid:Array(9).fill(null)}};}}validateState(value.state);const envelope=await seal(value.state,value.generation,value.revision);return {envelope,migrated};}catch(error){throw new Error(migrated?'migration-failed':error instanceof Error?error.message:'invalid-save');}
 }
 /** Recognize only the unpopulated P3 player contract; arbitrary old payloads cannot be silently dropped.
  * @param {unknown} value Old player payload.
