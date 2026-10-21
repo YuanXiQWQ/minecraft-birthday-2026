@@ -59,5 +59,20 @@
   "a11y.game": "Farm entrance",
   "a11y.save": "Save status",
   "a11y.emptyTable": "Empty wooden birthday table",
-  "a11y.cakeTable": "Birthday cake on the wooden table"
+  "a11y.cakeTable": "Birthday cake on the wooden table",
+  "inventory.title": "Creative item catalogue",
+  "inventory.catalogue": "Items",
+  "inventory.equipment": "Equipment",
+  "inventory.hotbar": "Nine-slot hotbar",
+  "inventory.slot": "Slot {number}: {item}",
+  "inventory.empty": "Empty",
+  "inventory.locked": "Not unlocked yet",
+  "inventory.unlimited": "Unlimited items",
+  "inventory.temporary": "Unlocked items are unlimited. Temporary slots stay while this page is open; saving their layout is not available yet.",
+  "inventory.open": "Items (E)",
+  "inventory.gear.head": "Head slot: {item}",
+  "inventory.gear.chest": "Chest slot: {item}",
+  "inventory.gear.legs": "Legs slot: {item}",
+  "inventory.gear.feet": "Feet slot: {item}",
+  "inventory.gear.offhand": "Offhand slot: {item}"
 }

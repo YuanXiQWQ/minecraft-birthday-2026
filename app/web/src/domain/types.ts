@@ -10,7 +10,7 @@ export interface SceneState {layoutVersion:1;stations:Station[];crops:Crop[]}
 export interface Settings {locale:string;volume:number;muted:boolean}
 export interface Progress {unlocked:string[];scene:SceneId;scenes:Record<SceneId,SceneState>;player:Reserved;recipeBook:Reserved;cakePlacement:null|{scene:'home';table:'birthday-table'}}
 export interface State {progress:Progress;settings:Settings}
-export interface RuntimeState {celebration:'idle'|'playing'|'paused';screen:'scene'|'settings';natural:Partial<Record<SceneId,{visit:number;removed:string[]}>>}
+export interface RuntimeState {celebration:'idle'|'playing'|'paused';screen:'scene'|'settings'|'inventory';natural:Partial<Record<SceneId,{visit:number;removed:string[]}>>}
 export type Command={type:'unlock';item:string}|{type:'select-scene';scene:SceneId}|{type:'put-station';scene:SceneId;station:Station}|{type:'remove-station';scene:SceneId;id:string}|{type:'settings';patch:Partial<Settings>}|{type:'record-cake-placement';scene:'home';table:'birthday-table'};
 export interface DomainEvent {type:'item-unlocked'|'cake-placed';item?:string}
 export interface PlacementPolicy {allows:(scene:SceneId,station:Station)=>boolean}

@@ -1,0 +1,38 @@
+[
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts:512:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts:441:10)",
+    "timestamp": "2026-10-21T13:27:23.646Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  },
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts:512:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts:441:10)\n    at to.focusNode (<anonymous>:18:6698)\n    at RM (<anonymous>:228:772)\n    at async <anonymous>:228:18",
+    "timestamp": "2026-10-21T13:27:36.877Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  },
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts:512:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts:441:10)",
+    "timestamp": "2026-10-21T13:27:36.943Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  },
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts:512:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts:441:10)",
+    "timestamp": "2026-10-21T13:27:37.577Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  },
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts?t=1792589370391:523:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts?t=1792589370391:452:10)",
+    "timestamp": "2026-10-21T13:30:10.298Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  },
+  {
+    "level": "error",
+    "message": "Error: gui-slice-target-too-small\n    at drawSprite (http://127.0.0.1:4184/src/ui/vanilla.ts:134:36)\n    at GameInventory.showTooltip (http://127.0.0.1:4184/src/ui/inventory.ts?t=1792589370391:523:4)\n    at HTMLButtonElement.<anonymous> (http://127.0.0.1:4184/src/ui/inventory.ts?t=1792589370391:452:10)\n    at to.focusNode (<anonymous>:18:6698)\n    at RM (<anonymous>:228:772)\n    at async <anonymous>:228:18",
+    "timestamp": "2026-10-21T13:30:48.499Z",
+    "url": "http://127.0.0.1:4184/src/ui/vanilla.ts"
+  }
+]

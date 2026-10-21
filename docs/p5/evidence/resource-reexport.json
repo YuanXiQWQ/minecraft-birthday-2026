@@ -1,0 +1,21 @@
+{
+  "officialClientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "javaClientLaunched": false,
+  "summary": {
+    "items": 113,
+    "newOriginalFiles": 359,
+    "originalDependencies": 396
+  },
+  "records": [
+    {
+      "file": "resources/minecraft/26.3/catalogue-manifest.json",
+      "sha256": "85c99a0e6250ffe1e6ad0ef928e9671de43ec69465d55a8bd623e055dc989588",
+      "identical": true
+    },
+    {
+      "file": "app/web/src/i18n/items.en.json",
+      "sha256": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",
+      "identical": true
+    }
+  ]
+}

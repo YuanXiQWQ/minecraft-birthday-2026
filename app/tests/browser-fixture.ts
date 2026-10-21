@@ -1,5 +1,6 @@
 /** P3_TEST_ONLY: explicit command fixtures and real browser coordination, excluded from every normal build. */
 import {browserSession} from '../web/src/persistence/browser.ts';import {SAVE_KEY,LOCK_NAME,SaveSession} from '../web/src/persistence/session.ts';import {token} from '../web/src/persistence/codec.ts';
+import registered from '../web/src/data/registry.json' with {type:'json'};
 import {potentialDrops} from '../web/src/rules/harvest.ts';import {cooking} from '../web/src/rules/process.ts';import {loadRules} from '../web/src/rules/load.ts';import {matchCrafting} from '../web/src/rules/matcher.ts';
 if(import.meta.env.MODE!=='verification')throw new Error('verification-only');
 /** Test origin owns no real user's ordinary-server save. */
@@ -17,6 +18,7 @@ function publish(record?:object):void{if(record)records.push(record);output.text
 function action(label:string,action:()=>Promise<unknown>):void{const b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{const start=Date.now();publish({label,phase:'start',start});void action().then(result=>publish({label,phase:'done',start,end:Date.now(),result})).catch(error=>publish({label,phase:'rejected',start,end:Date.now(),reason:String(error)}));});controls.append(b);}
 session.subscribe(()=>publish());await session.refresh();
 action('Read current save',()=>session.refresh());
+action('Fixture: unlock catalogue',async()=>{for(const item of registered)await session.dispatch({type:'unlock',item});return session.view;});
 action('Read P4 rule data',async()=>{const before=localStorage.getItem(SAVE_KEY),rules=await loadRules(),recipe=rules.recipes.find(r=>r.id==='minecraft:cake')!,grid=['milk_bucket','milk_bucket','milk_bucket','sugar','egg','sugar','wheat','wheat','wheat'].map(id=>({id:'minecraft:'+id,count:1}));return{items:Object.keys(rules.items).length,recipes:rules.recipes.length,ironDrop:potentialDrops('minecraft:iron_ore',{id:'minecraft:stone_pickaxe',count:1},rules),milkRule:rules.interactions.milk,stickFuel:cooking('minecraft:stick','furnace',200,rules),cake:matchCrafting(recipe,grid,3,3,rules),saveUnchanged:before===localStorage.getItem(SAVE_KEY)};});
 action('Fixture: unlock log',()=>session.dispatch({type:'unlock',item:'minecraft:oak_log'}));
 action('Fixture: unlock charcoal',()=>session.dispatch({type:'unlock',item:'minecraft:charcoal'}));

@@ -2,3 +2,4 @@
 resources/minecraft/26.3/** -text
 data/minecraft/26.3/** -text
 app/web/src/data/registry.json -text
+app/web/src/i18n/items.en.json -text

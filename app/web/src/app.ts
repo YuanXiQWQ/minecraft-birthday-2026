@@ -2,6 +2,7 @@
 import birthday from './birthday.json' with {type:'json'};import {translate,loadLocale,ENGLISH} from './i18n/index.ts';import type {Dictionary} from './i18n/index.ts';
 import {browserSession} from './persistence/browser.ts';import {token} from './persistence/codec.ts';import type {Snapshot} from './persistence/session.ts';import {hasCake,initialRuntime} from './domain/state.ts';
 import {loadResources} from './render/resources.ts';import {SceneView} from './render/scene.ts';import {PixelUI} from './ui/pixels.ts';import './style.css';
+import {GameInventory} from './ui/inventory.ts';import {loadCatalogueArt} from './ui/icons.ts';import {loadRules} from './rules/load.ts';
 
 /** Mount one formal entry; language overrides are ordinary localization inputs, not gameplay or completion hooks.
  * @param {'home'|'game'} page Independent entry identity.
@@ -10,7 +11,7 @@ import {loadResources} from './render/resources.ts';import {SceneView} from './r
  */
 export async function mount(page:'home'|'game',locale:Dictionary={}):Promise<void>{
   const root=document.getElementById('app')!,base=import.meta.env.BASE_URL;let dictionary=locale,pixels:PixelUI|null=null,scene:SceneView|null=null,disposed=false,confirmation:string|null=null,lastScene='',localeGeneration=0;
-  const runtime=initialRuntime(),connection=browserSession(),session=connection.session,bindings=new Map<HTMLElement,{key:string;values:Record<string,string|number>}>();let runtimeGeneration:string|null=null;
+  const runtime=initialRuntime(),connection=browserSession(),session=connection.session,bindings=new Map<HTMLElement,{key:string;values:Record<string,string|number>}>();let runtimeGeneration:string|null=null,inventory:GameInventory|null=null;
   const t=(key:string,values:Record<string,string|number>={})=>translate(key,{...birthday,...values},dictionary);
   /** Build a semantic localized element, retaining its key for future language changes.
    * @param {string} tag Semantic HTML tag.
@@ -48,7 +49,7 @@ export async function mount(page:'home'|'game',locale:Dictionary={}):Promise<voi
   const close=button('common.close',()=>dialog.close()),retry=button('common.retry',()=>{void session.refresh();});retry.id='retry-save';
   dialog.append(dialogTitle,languageLabel,language,volumeLabel,volume,mute,muteLabel,warning,reset,confirmSection,close);root.append(dialog,retry);
   const settings=button('common.settings',()=>{runtime.screen='settings';scene?.setInputEnabled(false);confirmation=null;confirmSection.hidden=true;dialog.showModal();close.focus();});header.append(settings);
-  dialog.addEventListener('close',()=>{runtime.screen='scene';scene?.setInputEnabled(true);confirmation=null;confirmSection.hidden=true;settings.focus();});
+  dialog.addEventListener('close',()=>{runtime.screen=inventory?.modal.open?'inventory':'scene';scene?.setInputEnabled(!inventory?.modal.open);confirmation=null;confirmSection.hidden=true;settings.focus();});
   for(const type of ['pointerdown','pointerup','pointermove','click','wheel','contextmenu'])dialog.addEventListener(type,event=>{if(type==='contextmenu')event.preventDefault();event.stopPropagation();});
   /** Persist a preference through the same durable command layer as future gameplay facts.
    * @param {Partial<import('./domain/types.ts').Settings>} patch Requested preference values.
@@ -59,16 +60,17 @@ export async function mount(page:'home'|'game',locale:Dictionary={}):Promise<voi
    * @param {Snapshot} value Latest coordinated facts.
    */
   function reflect(value:Snapshot):void{
+    if(inventory)inventory.writable=value.writable;
     if(value.envelope&&runtimeGeneration!==value.envelope.generation){runtimeGeneration=value.envelope.generation;runtime.natural={};runtime.celebration='idle';}
     root.dataset.saveStatus=value.status;root.dataset.hasCake=String(!!value.envelope&&hasCake(value.envelope.state));root.dataset.generation=value.envelope?.generation??'';root.dataset.revision=String(value.envelope?.revision??'');
-    if(value.envelope){const s=value.envelope.state,placed=hasCake(s);scene?.setCake(placed);setText(caption,placed?'home.complete':'home.empty');if(page==='home')setText(link,placed?'home.return':'home.invite');volume.value=String(s.settings.volume);mute.checked=s.settings.muted;language.value='en';setText(volumeLabel,'settings.volume',{percent:Math.round(s.settings.volume*100)});const signature=JSON.stringify(s.progress.scenes[s.progress.scene]);if(page==='game'&&scene&&signature!==lastScene){scene.sync(s.progress.scenes[s.progress.scene]);lastScene=signature;}
+    if(value.envelope){const s=value.envelope.state,placed=hasCake(s);inventory?.sync(s,value.writable,value.envelope.generation);scene?.setCake(placed);setText(caption,placed?'home.complete':'home.empty');if(page==='home')setText(link,placed?'home.return':'home.invite');volume.value=String(s.settings.volume);mute.checked=s.settings.muted;language.value='en';setText(volumeLabel,'settings.volume',{percent:Math.round(s.settings.volume*100)});const signature=JSON.stringify(s.progress.scenes[s.progress.scene]);if(page==='game'&&scene&&signature!==lastScene){scene.sync(s.progress.scenes[s.progress.scene]);lastScene=signature;}
       const generation=++localeGeneration;void loadLocale(s.settings.locale).then(next=>{if(disposed||generation!==localeGeneration)return;dictionary={...next,...locale};for(const [element,binding]of bindings)setText(element,binding.key,binding.values);document.title=t(page==='home'?'html.homeTitle':'html.gameTitle');document.documentElement.lang=s.settings.locale==='en'?'en':Object.keys(next).length?s.settings.locale:'en';});
     }else if(value.status!=='loading')setText(caption,'status.unknown');
     language.disabled=volume.disabled=mute.disabled=reset.disabled=!value.writable;retry.hidden=value.status==='ready';setText(saveStatus,value.status==='ready'?(value.migrated?'status.migrated':'status.ready'):value.status==='loading'?'common.loading':Object.hasOwn(ENGLISH,'error.'+value.status)?'error.'+value.status:'error.generic');
   }
   const unsubscribe=session.subscribe(reflect);await session.refresh();
-  try{const resources=await loadResources();if(disposed)return;pixels=new PixelUI(resources);for(const [element,binding]of bindings){element.replaceChildren();setText(element,binding.key,binding.values);}for(const b of root.querySelectorAll<HTMLButtonElement|HTMLAnchorElement>('button,a.invite'))pixels.button(b);scene=new SceneView(host,resources,t(page==='home'?'home.tableLabel':'game.sceneLabel'),page==='game');scene.setInputEnabled(!dialog.open);scene.onPick=hit=>{if(hit.id==='birthday-table')setText(selection,'table.selected');};scene.onUse=scene.onPick;scene.onGraphics=ready=>setText(selection,ready?'error.contextRestored':'error.contextLost');reflect(session.view);root.dataset.resources='26.3';}
+  try{const resources=await loadResources();if(disposed)return;pixels=new PixelUI(resources);for(const [element,binding]of bindings){element.replaceChildren();setText(element,binding.key,binding.values);}for(const b of root.querySelectorAll<HTMLButtonElement|HTMLAnchorElement>('button,a.invite'))pixels.button(b);scene=new SceneView(host,resources,t(page==='home'?'home.tableLabel':'game.sceneLabel'),page==='game');scene.setInputEnabled(!dialog.open);scene.onPick=hit=>{if(hit.id==='birthday-table')setText(selection,'table.selected');};scene.onUse=scene.onPick;scene.onGraphics=ready=>setText(selection,ready?'error.contextRestored':'error.contextLost');reflect(session.view);root.dataset.resources='26.3';if(page==='game'){const [art,rules]=await Promise.all([loadCatalogueArt(),loadRules()]);if(disposed){art.dispose();return;}inventory=new GameInventory(root,pixels,art,rules,t,open=>{runtime.screen=open?'inventory':dialog.open?'settings':'scene';scene?.setInputEnabled(!open&&!dialog.open);},()=>dialog.open);const value=session.view;if(value.envelope)inventory.sync(value.envelope.state,value.writable,value.envelope.generation);header.append(button('inventory.open',()=>inventory?.open()));root.dataset.inventoryReady='true';}}
   catch(error){setText(caption,error instanceof Error&&error.message==='webgl-unavailable'?'error.webgl':'error.resource');root.dataset.resources='failed';}
   const show=(event:PageTransitionEvent)=>{root.dataset.pageshowPersisted=String(event.persisted);scene?.requestRender();};window.addEventListener('pageshow',show);
-  window.addEventListener('pagehide',event=>{if(event.persisted)return;disposed=true;unsubscribe();connection.dispose();scene?.dispose();pixels?.dispose();window.removeEventListener('pageshow',show);},{once:false});
+  window.addEventListener('pagehide',event=>{if(event.persisted)return;disposed=true;unsubscribe();connection.dispose();inventory?.dispose();scene?.dispose();pixels?.dispose();window.removeEventListener('pageshow',show);},{once:false});
 }

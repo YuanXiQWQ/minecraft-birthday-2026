@@ -1,0 +1,98 @@
+{
+  "environment": "Windows Chromium 155 / real browser pointer clicks, key presses and wheel; no Java client or physical right-drag run",
+  "steps": [
+    {
+      "step": "locked-left",
+      "data": {
+        "cursor": "null",
+        "hotbar": "[null,null,null,null,null,null,null,null,null]",
+        "revision": "2"
+      }
+    },
+    {
+      "step": "locked-right-middle-digit-via-enabled-focus",
+      "data": {
+        "cursor": "null",
+        "hotbar": "[null,null,null,null,null,null,null,null,null]",
+        "revision": "2"
+      }
+    },
+    {
+      "step": "scene-number-9",
+      "selected": "8"
+    },
+    {
+      "step": "E-open",
+      "open": ""
+    },
+    {
+      "step": "one-source-to-H1-and-max-numeric-H2",
+      "data": {
+        "cursor": "null",
+        "hotbar": "[{\"id\":\"minecraft:oak_planks\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":64},null,null,null,null,null,null,null]",
+        "revision": "115"
+      }
+    },
+    {
+      "step": "real-right-halves-64",
+      "cursor": "{\"id\":\"minecraft:oak_planks\",\"count\":32}",
+      "hotbar": "[{\"id\":\"minecraft:oak_planks\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":32},null,null,null,null,null,null,null]"
+    },
+    {
+      "step": "GUI-scene-right-click-isolation",
+      "selection": "",
+      "guiOpen": ""
+    },
+    {
+      "step": "real-directory-wheel",
+      "offset": "1",
+      "mainline": [
+        "minecraft:oak_log",
+        "minecraft:oak_planks",
+        "minecraft:stick",
+        "minecraft:crafting_table",
+        "minecraft:wooden_pickaxe",
+        "minecraft:cobblestone",
+        "minecraft:stone_pickaxe",
+        "minecraft:furnace",
+        "minecraft:raw_iron",
+        "minecraft:iron_ingot",
+        "minecraft:bucket",
+        "minecraft:milk_bucket",
+        "minecraft:wheat_seeds",
+        "minecraft:wheat",
+        "minecraft:sugar_cane",
+        "minecraft:sugar",
+        "minecraft:egg",
+        "minecraft:cake"
+      ]
+    },
+    {
+      "step": "real-equip-chestplate",
+      "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}"
+    },
+    {
+      "step": "real-scene-wheel",
+      "selected": "1"
+    },
+    {
+      "step": "settings-text-focus-keys",
+      "inventoryOpen": null,
+      "selected": "1",
+      "settingsOpen": ""
+    },
+    {
+      "step": "equipment-retest-initial-cursor",
+      "cursor": "{\"id\":\"minecraft:iron_chestplate\",\"count\":1}"
+    },
+    {
+      "step": "real-equip-chestplate-retest",
+      "equipment": "{\"head\":null,\"chest\":{\"id\":\"minecraft:iron_chestplate\",\"count\":1},\"legs\":null,\"feet\":null,\"offhand\":null}",
+      "cursor": "null"
+    },
+    {
+      "step": "native-tooltip-border-and-toplayer-retest",
+      "text": "Milk Bucket"
+    }
+  ]
+}

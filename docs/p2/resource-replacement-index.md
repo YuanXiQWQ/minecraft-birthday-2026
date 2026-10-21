@@ -6,6 +6,8 @@
 
 ## 当前可复用资源
 
+- P5第一部分：新增`catalogue-manifest.json`和359原始依赖，正常构建共474资源/清单文件；覆盖113默认目录图标、creative背景、九格/选框、装备空槽/Tooltip等，原P2/P3清单不改。特殊箱子/盾牌class几何和UV、草色图、组合/选择分支有独立证据；未支持饰纹/装饰等组件或完整Java着色对照。详见[P5报告](../p5/report.md)；原版素材仍为基准，无强制替换计划。
+
 - P4补充：原114个模型/GUI/字体/粒子/音频资源文件与清单未改。新增规则数据源在`data/minecraft/26.3/`，正式构建另发`rules/minecraft/26.3/rules.json`及小型`manifest.json`，根路径/Pages子路径相同base机制。完整catalog/coverage/研究文档/客户端JAR不发布。113逻辑ID不表示113图标已制作；P5/P7按实际使用继续补齐原版依赖。数据来源与哈希见[P4清单](../../data/minecraft/26.3/manifest.json)。
 
 - P3补充（当前）：正式`app/`同时读取原manifest和[presentation-manifest](../../resources/minecraft/26.3/presentation-manifest.json)，新增17原始文件（cake7模型+blockstate+4纹理+oak slab/post/plank5模型）。含两清单共114文件，普通dev/build默认加载；P2原95项manifest和历史证据不改写。原版来源SHA1和逐文件SHA256可复核。浏览器验收未切cake与组合桌面，切片变体只验证离线转换，不扩大原版模型支持能力。
