@@ -1,0 +1,31 @@
+(node:9460) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (19.7835ms)
+✔ normal receipt and post-receipt placement: {} (6.3196ms)
+✔ normal receipt and post-receipt placement: {"known":true} (5.3746ms)
+✔ normal receipt and post-receipt placement: {"merge":5} (8.6118ms)
+✔ normal receipt and post-receipt placement: {"bench":true} (7.8801ms)
+✔ normal receipt and post-receipt placement: {"bench":true,"known":true} (7.5428ms)
+✔ waiting receipt rejects empty carrier operation through the unified command entry (4.0569ms)
+✔ waiting receipt rejects occupied carrier operation through the unified command entry (3.4171ms)
+✔ waiting receipt rejects directory carrier operation through the unified command entry (2.9293ms)
+✔ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (4.2256ms)
+✔ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (3.2641ms)
+✔ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (4.5356ms)
+✔ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (4.4715ms)
+✔ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (3.2482ms)
+✔ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (4.5416ms)
+✔ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (6.6277ms)
+✔ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (6.5149ms)
+✔ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (8.2632ms)
+✔ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (9.2068ms)
+✔ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (4.4115ms)
+✔ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (4.9581ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 597.6936

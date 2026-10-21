@@ -1,0 +1,46 @@
+(node:19320) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (42.001ms)
+✔ normal receipt and post-receipt placement: {} (11.0862ms)
+✔ normal receipt and post-receipt placement: {"known":true} (11.1062ms)
+✔ normal receipt and post-receipt placement: {"merge":5} (12.6494ms)
+✔ normal receipt and post-receipt placement: {"bench":true} (16.1384ms)
+✔ normal receipt and post-receipt placement: {"bench":true,"known":true} (13.2445ms)
+✔ waiting receipt rejects empty carrier operation through the unified command entry (6.5233ms)
+✖ waiting receipt rejects occupied carrier operation through the unified command entry (4.8705ms)
+✔ waiting receipt rejects directory carrier operation through the unified command entry (11.9179ms)
+✔ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (7.8636ms)
+✔ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (5.9349ms)
+✔ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (10.5528ms)
+✔ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (5.01ms)
+✔ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (5.8174ms)
+✔ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (6.9234ms)
+✔ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (10.5162ms)
+✔ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (8.2279ms)
+✔ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (12.5821ms)
+✔ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (13.571ms)
+✖ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (5.5091ms)
+✔ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (13.0041ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 19
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 944.2707
+
+✖ failing tests:
+
+test at app\tests\crafting-queue.test.ts:51:54
+✖ waiting receipt rejects occupied carrier operation through the unified command entry (4.8705ms)
+  Error: inventory-conflict
+      at <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:76:533)
+
+test at app\tests\crafting-queue.test.ts:69:1
+✖ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (5.5091ms)
+  TypeError: this.tooltip.remove is not a function
+      at GameInventory.dispose (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\ui\inventory.ts:130:233)
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-queue.test.ts:69:236)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

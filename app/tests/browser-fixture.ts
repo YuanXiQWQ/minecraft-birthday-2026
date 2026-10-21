@@ -35,3 +35,9 @@ window.addEventListener('pagehide',()=>connection.dispose());
 
 /** Unlock only cake ingredients on the isolated verification origin; cake still requires the formal result transaction. */
 action('Fixture: unlock cake ingredients',async()=>{await session.refresh();for(const item of ['milk_bucket','bucket','sugar','egg','wheat'])await session.dispatch({type:'unlock',item:'minecraft:'+item});return session.view.envelope!.state.progress.unlocked;});
+
+/** Verification-only coordination never holds the application's persistence lock. */
+const receiptChannel=new BroadcastChannel('minecraft-birthday-2026:verify:craft-receipt');
+action('Arm next crafting receipt delay',async()=>{receiptChannel.postMessage('arm');return{sent:'arm'};});
+action('Release crafting receipt',async()=>{receiptChannel.postMessage('release');return{sent:'release'};});
+window.addEventListener('pagehide',()=>receiptChannel.close());

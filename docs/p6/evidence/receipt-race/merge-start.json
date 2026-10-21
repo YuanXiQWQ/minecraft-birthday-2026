@@ -1,0 +1,523 @@
+{
+  "environment": {
+    "dpr": 1.25,
+    "height": 720,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "width": 1280
+  },
+  "hud": {
+    "contents": "[{\"id\":\"minecraft:oak_planks\",\"count\":4},{\"id\":\"minecraft:oak_log\",\"count\":64},null,null,null,null,null,null,null]",
+    "offhand": "null",
+    "selected": "0"
+  },
+  "look": null,
+  "modal": {
+    "acquiring": "false",
+    "crafting": "[{\"id\":\"minecraft:oak_log\",\"count\":1},null,null,null]",
+    "cursor": "{\"id\":\"minecraft:oak_planks\",\"count\":4}",
+    "drag": "false",
+    "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+    "open": true,
+    "preview": "{\"status\":\"matched\",\"recipe\":\"minecraft:oak_planks\",\"result\":{\"id\":\"minecraft:oak_planks\",\"count\":4}}",
+    "sideOffset": "0",
+    "stationId": "",
+    "tab": "crafting",
+    "workbench": "null"
+  },
+  "receiptDelay": {
+    "phase": "armed"
+  },
+  "records": [
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190179.79999998212,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 1158,
+      "y": 44
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190180.09999999404,
+      "trusted": true,
+      "type": "focus"
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190212.79999998212,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 1158,
+      "y": 44
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190213.19999998808,
+      "trusted": true,
+      "type": "blur"
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190213.40000000596,
+      "trusted": true,
+      "type": "focus"
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190584.79999998212,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 388,
+      "y": 157
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190585.19999998808,
+      "trusted": true,
+      "type": "blur"
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190585.59999999404,
+      "trusted": true,
+      "type": "focus"
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 190604.19999998808,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 388,
+      "y": 157
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "item": "minecraft:oak_log",
+        "kind": "source"
+      },
+      "target": "inventory-slot",
+      "time": 196073.59999999404,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 424,
+      "y": 415
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 196083.40000000596,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 424,
+      "y": 415
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 196083.90000000596,
+      "trusted": true,
+      "type": "lostpointercapture",
+      "x": 424,
+      "y": 415
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "index": "0",
+        "kind": "crafting"
+      },
+      "target": "inventory-slot",
+      "time": 196344.29999998212,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 694,
+      "y": 217
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 196352.09999999404,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 694,
+      "y": 217
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 196352.29999998212,
+      "trusted": true,
+      "type": "lostpointercapture",
+      "x": 694,
+      "y": 217
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "kind": "preview"
+      },
+      "target": "inventory-slot",
+      "time": 201589.59999999404,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 201595.59999999404,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 201596.09999999404,
+      "trusted": true,
+      "type": "lostpointercapture",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "index": "0",
+        "kind": "hotbar"
+      },
+      "target": "inventory-slot",
+      "time": 209182.69999998808,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 424,
+      "y": 589
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "index": "0",
+        "kind": "hotbar"
+      },
+      "target": "inventory-slot",
+      "time": 209183.19999998808,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 424,
+      "y": 589
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "index": "0",
+        "kind": "hotbar"
+      },
+      "target": "inventory-slot",
+      "time": 266925.59999999404,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 424,
+      "y": 589
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 266937,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 424,
+      "y": 589
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 266937.5,
+      "trusted": true,
+      "type": "lostpointercapture",
+      "x": 424,
+      "y": 589
+    },
+    {
+      "button": 0,
+      "buttons": 1,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "kind": "preview"
+      },
+      "target": "inventory-slot",
+      "time": 272098.09999999404,
+      "trusted": true,
+      "type": "pointerdown",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 272103.90000000596,
+      "trusted": true,
+      "type": "pointerup",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "button": 0,
+      "buttons": 0,
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {},
+      "target": "inventory-panel",
+      "time": 272104.40000000596,
+      "trusted": true,
+      "type": "lostpointercapture",
+      "x": 862,
+      "y": 247
+    },
+    {
+      "prevented": false,
+      "slot": {},
+      "target": "pixel-text mc-button",
+      "time": 276459.09999999404,
+      "trusted": true,
+      "type": "blur"
+    },
+    {
+      "prevented": false,
+      "slot": {
+        "item": "minecraft:oak_log",
+        "kind": "source"
+      },
+      "target": "inventory-slot",
+      "time": 276459.59999999404,
+      "trusted": true,
+      "type": "focus"
+    },
+    {
+      "code": "Digit2",
+      "ctrl": false,
+      "prevented": true,
+      "shift": false,
+      "slot": {
+        "item": "minecraft:oak_log",
+        "kind": "source"
+      },
+      "target": "inventory-slot",
+      "time": 276481.40000000596,
+      "trusted": true,
+      "type": "keydown"
+    },
+    {
+      "code": "Digit2",
+      "ctrl": false,
+      "prevented": false,
+      "shift": false,
+      "slot": {
+        "item": "minecraft:oak_log",
+        "kind": "source"
+      },
+      "target": "inventory-slot",
+      "time": 276493.7999999821,
+      "trusted": true,
+      "type": "keyup"
+    }
+  ],
+  "saved": {
+    "checksum": "3c7de0ccc1c6ff15ca76045cf36000eb5cf4e994654aac9e0d84349aa470b873",
+    "contentVersion": "p6-crafting-1",
+    "format": 1,
+    "generation": "23c15775-b103-41fb-86ee-28216b63b7e3",
+    "revision": 4,
+    "state": {
+      "progress": {
+        "cakePlacement": null,
+        "player": {
+          "data": {
+            "equipment": {
+              "chest": null,
+              "feet": null,
+              "head": null,
+              "legs": null,
+              "offhand": null
+            },
+            "hotbar": [
+              {
+                "count": 4,
+                "id": "minecraft:oak_planks"
+              },
+              {
+                "count": 64,
+                "id": "minecraft:oak_log"
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "presets": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "selected": 0
+          },
+          "version": 1
+        },
+        "recipeBook": {
+          "data": null,
+          "version": 0
+        },
+        "scene": "plains",
+        "scenes": {
+          "cave": {
+            "crops": [],
+            "layoutVersion": 1,
+            "stations": []
+          },
+          "farm": {
+            "crops": [],
+            "layoutVersion": 1,
+            "stations": []
+          },
+          "home": {
+            "crops": [],
+            "layoutVersion": 1,
+            "stations": []
+          },
+          "plains": {
+            "crops": [],
+            "layoutVersion": 1,
+            "stations": []
+          }
+        },
+        "unlocked": [
+          "minecraft:oak_log",
+          "minecraft:oak_planks"
+        ]
+      },
+      "settings": {
+        "locale": "en",
+        "muted": true,
+        "volume": 1
+      }
+    },
+    "vanillaVersion": "26.3"
+  },
+  "selection": ""
+}
