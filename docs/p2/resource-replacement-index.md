@@ -6,11 +6,13 @@
 
 ## 当前可复用资源
 
+- P5第二部分：新增原版hotbar_offhand_left/right两张29×24精灵，catalogue资源段361项、398依赖，总计476文件（含3清单）正常Git/build；来源与导出器哈希已更新，113默认图标管线不变。详见[本次报告](../p5/part2-report.md)。下列各阶段数量保留为历史范围。
+
 - P5第一部分：新增`catalogue-manifest.json`和359原始依赖，正常构建共474资源/清单文件；覆盖113默认目录图标、creative背景、九格/选框、装备空槽/Tooltip等，原P2/P3清单不改。特殊箱子/盾牌class几何和UV、草色图、组合/选择分支有独立证据；未支持饰纹/装饰等组件或完整Java着色对照。详见[P5报告](../p5/report.md)；原版素材仍为基准，无强制替换计划。
 
 - P4补充：原114个模型/GUI/字体/粒子/音频资源文件与清单未改。新增规则数据源在`data/minecraft/26.3/`，正式构建另发`rules/minecraft/26.3/rules.json`及小型`manifest.json`，根路径/Pages子路径相同base机制。完整catalog/coverage/研究文档/客户端JAR不发布。113逻辑ID不表示113图标已制作；P5/P7按实际使用继续补齐原版依赖。数据来源与哈希见[P4清单](../../data/minecraft/26.3/manifest.json)。
 
-- P3补充（当前）：正式`app/`同时读取原manifest和[presentation-manifest](../../resources/minecraft/26.3/presentation-manifest.json)，新增17原始文件（cake7模型+blockstate+4纹理+oak slab/post/plank5模型）。含两清单共114文件，普通dev/build默认加载；P2原95项manifest和历史证据不改写。原版来源SHA1和逐文件SHA256可复核。浏览器验收未切cake与组合桌面，切片变体只验证离线转换，不扩大原版模型支持能力。
+- P3补充（阶段记录）：正式`app/`同时读取原manifest和[presentation-manifest](../../resources/minecraft/26.3/presentation-manifest.json)，新增17原始文件（cake7模型+blockstate+4纹理+oak slab/post/plank5模型）。含两清单共114文件，普通dev/build默认加载；P2原95项manifest和历史证据不改写。原版来源SHA1和逐文件SHA256可复核。浏览器验收未切cake与组合桌面，切片变体只验证离线转换，不扩大原版模型支持能力。
 - 正式入口与运行步骤见[app说明](../../app/README.md)，P2实验仍使用原96文件cohort；以下原95项统计属于P2资源范围，不表示P3只有这些文件。无强制替换计划，发布权利独立待审。
 - 仓库源目录：`resources/minecraft/26.3/`，已实现功能无需开发者再次提取客户端。
 - [完整机器清单](../../resources/minecraft/26.3/manifest.json)：95个资源，348,101字节；另有manifest本身。31 JSON、44 PNG、8 mcmeta、12 Ogg。
@@ -24,7 +26,7 @@
 | 方块纹理 | `textures/block/`，16张原版纹理及高炉动画元数据 | 最近邻/sRGB、镂空、lit状态/插值；未完成全Java光照/AO | 同上 |
 | GUI | `textures/gui/container/`、`sprites/`及对应mcmeta | 个人/工作台/炉/高炉/漏斗局部界面、槽、按钮、Tooltip；无完整业务 | 同上 |
 | 字体 | `font/`及`textures/font/ascii.png` | 当前位图ASCII提供者与字宽；原始字体定义保持来源，其他提供者不加载，不冒称全Unicode覆盖 | 同上 |
-| 图标 | `items/egg.json`、`items/furnace.json`、相关item模型/PNG及共享block模型 | egg二维图标，furnace按原版display.gui运行时生成3D图标；其他图标未实现 | 同上 |
+| 图标 | `items/egg.json`、`items/furnace.json`、相关item模型/PNG及共享block模型 | P5已支持113默认目录图标：generated、原版elements/display.gui、原草色调、箱子/盾牌特殊几何及草床组合；未知饰纹/装饰/复杂组件与完整Java光照仍未宣称支持 | 同上 |
 | 粒子 | `particles/firework.json`、`flash.json`及9张精灵 | 五形状世界坐标轨迹、8帧火花和Flash、Trail/Twinkle；非完整Java shader/碰撞 | 同上 |
 | 声音 | `sounds.json`所列12事件及12个Ogg | 烟花7事件、Toast3事件、经验拾取/升级；WebAudio真实解码/调度，人工试听待验 | 未指定替换；手绘贴图不能替换音频 |
 

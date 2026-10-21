@@ -1,0 +1,21 @@
+{
+  "files": [
+    {
+      "file": "resources/minecraft/26.3/catalogue-manifest.json",
+      "before": "779bcafdd6704ee5f9bb2d6d6324b2482b0d96d96ce63aa7a5161b8ec2de0ab4",
+      "after": "779bcafdd6704ee5f9bb2d6d6324b2482b0d96d96ce63aa7a5161b8ec2de0ab4",
+      "same": true
+    },
+    {
+      "file": "app/web/src/i18n/items.en.json",
+      "before": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",
+      "after": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",
+      "same": true
+    }
+  ],
+  "exporter": {
+    "items": 113,
+    "newOriginalFiles": 361,
+    "originalDependencies": 398
+  }
+}

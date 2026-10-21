@@ -1,6 +1,7 @@
-/** Pure commands, identity validation and projections; deferred inventory and processing contracts stay empty. */
+/** Pure commands, identity validation and projections; versioned player carriers remain separate from deferred processing contracts. */
 import type {Command,DomainEvent,PlacementPolicy,Progress,RuntimeState,SceneId,Settings,State} from './types.ts';
 import reachable from '../data/registry.json' with {type:'json'};
+import nativeInventory from '../data/inventory-rules.json' with {type:'json'};import {emptyInventory,layout,reduceInventory,validateCarriers} from './inventory.ts';import type {InventoryState} from './inventory.ts';import {identity} from './slots.ts';
 /** Scene identities do not imply their P7 authored content is implemented. */
 export const SCENES:SceneId[]=['plains','cave','farm','home'];
 /** Presentation ordering follows the proposed main path without constraining acquisition order or recipe reachability. */
@@ -13,7 +14,7 @@ const RESERVED={version:0,data:null} as const;
 /** Create independent empty progress, with no natural-resource visits or offline timestamps.
  * @return {Progress} Initial persistent facts.
  */
-export function initialProgress():Progress{return {unlocked:[],scene:'plains',scenes:Object.fromEntries(SCENES.map(id=>[id,{layoutVersion:1,stations:[],crops:[]}])) as unknown as Progress['scenes'],player:{...RESERVED},recipeBook:{...RESERVED},cakePlacement:null};}
+export function initialProgress():Progress{return {unlocked:[],scene:'plains',scenes:Object.fromEntries(SCENES.map(id=>[id,{layoutVersion:1,stations:[],crops:[]}])) as unknown as Progress['scenes'],player:{version:1,data:layout(emptyInventory())},recipeBook:{...RESERVED},cakePlacement:null};}
 /** Create the initial documented settings and empty progress.
  * @return {State} Independent state value.
  */
@@ -59,7 +60,7 @@ function station(value:unknown):void{fields(value,['id','kind','cell','facing','
 export function validateState(value:unknown):asserts value is State{
   fields(value,['progress','settings']);const p=value.progress,s=value.settings;fields(p,['unlocked','scene','scenes','player','recipeBook','cakePlacement']);fields(s,['locale','volume','muted']);
   ensure(typeof s.locale==='string'&&/^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$/.test(s.locale));ensure(typeof s.volume==='number'&&Number.isFinite(s.volume)&&s.volume>=0&&s.volume<=1);ensure(typeof s.muted==='boolean');
-  ensure(Array.isArray(p.unlocked)&&p.unlocked.length<=5000&&new Set(p.unlocked).size===p.unlocked.length);p.unlocked.forEach(item);ensure(SCENES.includes(p.scene));fields(p.scenes,SCENES);reserved(p.player);reserved(p.recipeBook);
+  ensure(Array.isArray(p.unlocked)&&p.unlocked.length<=5000&&new Set(p.unlocked).size===p.unlocked.length);p.unlocked.forEach(item);ensure(SCENES.includes(p.scene));fields(p.scenes,SCENES);fields(p.player,['version','data']);ensure(p.player.version===1,'pending-contract-version');fields(p.player.data,['selected','hotbar','equipment','presets']);validateCarriers({...p.player.data,cursor:null} as InventoryState,p.unlocked,nativeInventory);reserved(p.recipeBook);
   const ids=new Set<string>();for(const id of SCENES){const scene=p.scenes[id];fields(scene,['layoutVersion','stations','crops']);ensure(scene.layoutVersion===1&&Array.isArray(scene.stations)&&scene.stations.length<=512&&Array.isArray(scene.crops)&&scene.crops.length<=512);const occupied=new Set<string>();for(const v of scene.stations){station(v);ensure(!ids.has(v.id)&&!occupied.has(v.cell.join(',')));ids.add(v.id);occupied.add(v.cell.join(','));}for(const c of scene.crops){fields(c,['id','item','cell','growth']);ensure(typeof c.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(c.id)&&!ids.has(c.id));ids.add(c.id);item(c.item);cell(c.cell);reserved(c.growth);ensure(!occupied.has(c.cell.join(',')));occupied.add(c.cell.join(','));}}
   if(p.cakePlacement!==null){fields(p.cakePlacement,['scene','table']);ensure(p.cakePlacement.scene==='home'&&p.cakePlacement.table==='birthday-table'&&p.unlocked.includes('minecraft:cake'));}
 }
@@ -67,11 +68,12 @@ export function validateState(value:unknown):asserts value is State{
  * @param {State} state Valid immutable snapshot.
  * @param {Command} command Requested operation.
  * @param {PlacementPolicy} policy Authored region policy, required before station changes can be admitted.
- * @return {{state:State,events:DomainEvent[]}} Valid new snapshot and transient events.
+ * @return {{state:State,events:DomainEvent[],inventory?:InventoryState}} Valid new snapshot, transient events and optional transaction-local carriers.
  */
-export function transition(state:State,command:Command,policy?:PlacementPolicy):{state:State;events:DomainEvent[]}{
-  validateState(state);const next=structuredClone(state),p=next.progress,events:DomainEvent[]=[];
+export function transition(state:State,command:Command,policy?:PlacementPolicy): {state:State;events:DomainEvent[];inventory?:InventoryState}{
+  validateState(state);const next=structuredClone(state),p=next.progress,events:DomainEvent[]=[];let inventory:InventoryState|undefined;
   switch(command.type){
+    case 'inventory':ensure(identity(command.expected)===identity(p.player.data),'inventory-conflict');inventory=reduceInventory({...p.player.data,cursor:command.cursor},command.intent,p.unlocked,nativeInventory);p.player={version:1,data:layout(inventory)};break;
     case 'unlock':item(command.item);if(!p.unlocked.includes(command.item)){p.unlocked.push(command.item);events.push({type:'item-unlocked',item:command.item});}break;
     case 'select-scene':ensure(SCENES.includes(command.scene));p.scene=command.scene;break;
     case 'put-station':ensure(SCENES.includes(command.scene));station(command.station);ensure(policy?.allows(command.scene,command.station),'placement-policy-pending');ensure(p.unlocked.includes('minecraft:'+command.station.kind),'locked-item');{const list=p.scenes[command.scene].stations,index=list.findIndex(s=>s.id===command.station.id);if(index<0)list.push(structuredClone(command.station));else list[index]=structuredClone(command.station);}break;
@@ -80,7 +82,7 @@ export function transition(state:State,command:Command,policy?:PlacementPolicy):
     case 'record-cake-placement':ensure(command.scene==='home'&&command.table==='birthday-table'&&p.scene==='home'&&p.unlocked.includes('minecraft:cake'),'invalid-cake-placement');if(!p.cakePlacement){p.cakePlacement={scene:'home',table:'birthday-table'};events.push({type:'cake-placed'});}break;
     default:throw new Error('unknown-command');
   }
-  validateState(next);return {state:freeze(next),events};
+  validateState(next);return {state:freeze(next),events,inventory};
 }
 /** Reset only progress, retaining the user's language, volume and mute choice.
  * @param {Settings} settings Previously validated preferences.

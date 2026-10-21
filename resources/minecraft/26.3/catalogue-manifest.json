@@ -5,7 +5,7 @@
     "ui/icon-model.ts": "dea57565631ed6199db7f94583d0d344b019b4cfbcc7abc0144f031436b744ae",
     "render/model-format.ts": "4b5cfadcb0fa2d485e7e3feab94227251653f60fa14d69da264188c0540c0563"
   },
-  "exporterSha256": "cce20d762aa27f32decec7e07c9044c02c98b91aff1310cb94c0d7014e51b184",
+  "exporterSha256": "fc200d2183755873f1a60ccf81492668e3cbebed3a887340f15c79b7f6e9600c",
   "namesSha256": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
   "inputs": {
@@ -401,6 +401,8 @@
     "assets/minecraft/textures/gui/sprites/container/slot/leggings.png": "cbc02665ca5b98da6102390d44581675b811d0f8861277a632d898616ae61823",
     "assets/minecraft/textures/gui/sprites/container/slot/shield.png": "28ce8e78588484af09201ceb0999193391511a6a039bf5f650084e7219138c7b",
     "assets/minecraft/textures/gui/sprites/hud/hotbar.png": "57aad603aafc75cea079d8db04b3029c1b1b5501eb0799971ccaf858876f52a7",
+    "assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png": "bf977c5d4123fa1b8353d1f8977c5aa68fe085e9c4e6a3bd173ec288d3254eb6",
+    "assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png": "8c72431a342a1768ac86eea8ff6462ff6cd8561655d8f84d348bd9bd104dbe52",
     "assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png": "8c1e1cd977cce0c3a2aaf04036af4904426dafd1a6f4db9665b0d8be1468e80a",
     "assets/minecraft/textures/gui/sprites/tooltip/background.png": "b3b7fdcec719bd1ad2dfc655d79d61aff57aaed7065874e1e8235b32039434a4",
     "assets/minecraft/textures/gui/sprites/tooltip/background.png.mcmeta": "ad6e922929ebfddbbdf43c477239e47f9c73f410020d1cf168e356b69ae1ff16",
@@ -1931,6 +1933,16 @@
       "entry": "assets/minecraft/textures/gui/sprites/hud/hotbar.png",
       "size": 1872,
       "sha256": "57aad603aafc75cea079d8db04b3029c1b1b5501eb0799971ccaf858876f52a7"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png",
+      "size": 850,
+      "sha256": "bf977c5d4123fa1b8353d1f8977c5aa68fe085e9c4e6a3bd173ec288d3254eb6"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png",
+      "size": 917,
+      "sha256": "8c72431a342a1768ac86eea8ff6462ff6cd8561655d8f84d348bd9bd104dbe52"
     },
     {
       "entry": "assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png",
