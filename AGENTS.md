@@ -1,8 +1,10 @@
 # 项目记忆入口
 
-- [P2 收尾与技术交接](docs/p2/handoff-review.md)：默认原版资源、连续性能/稳定性与P3复用边界；建议审查授权后进入P3，完整人工/跨环境验收未全部通过，不自动开工。
+- [P3 正式应用交付](docs/p3/report.md)：`app/` 双入口、真实3D桌面/蛋糕、命令状态、版本存档、本地化与测试；[存档契约](docs/p3/storage-contract.md)、[浏览器证据](docs/p3/browser-results.md)。P2 已由用户正式结束，当前 P3 交付待审，不自动进入 P4。
+- D09 用户已决定：仅重置进度，保留语言和音量（静音归音频设置）；D04–D08剩余语义及D09恢复策略、D24视线手势仍待审，不用实验规则补齐。
+- [P2 收尾与技术交接](docs/p2/handoff-review.md)：保留原始交接记录；`48d92c2` 已审查，用户正式结束P2并授权P3；人工/跨环境项留在原清单按集成阶段补测。
 - [P2 人工验收清单](docs/p2/manual-checklist.md)：12声音试听、真实后台/最小化、实体拖动取消及Java对照，均待用户实际操作与反馈。
-- [P2 第四轮烟花与音频](docs/p2/celebration-review.md)：五种原版轨迹、Trail/Twinkle、原版精灵、WebAudio时间线、联合性能与未验证视听项；四轮原型已审查，完整P2未验收。
+- [P2 第四轮烟花与音频](docs/p2/celebration-review.md)：五种原版轨迹、Trail/Twinkle、原版精灵、WebAudio时间线、联合性能与未验证视听项；历史报告保留，阶段以最新P3授权为准。
 - [原版资源使用索引](docs/p2/resource-replacement-index.md)：版本化原版素材正常纳入Git与普通构建并默认加载；无外部缓存/localhost限制，无强制手绘替换，公开发布权利另审。
 
 本项目是送给 Vincent 的 Minecraft 主题交互生日网页，由 Jerry 的农场故事串起采集、合成蛋糕和生日庆典，目标部署环境为 GitHub Pages。
@@ -20,10 +22,10 @@
 - [分阶段开发路线](docs/development-roadmap.md)：阶段依赖、验收、测试、风险及完成条件。
 - [技术决策与核实记录](docs/decisions-and-research.md)：建议状态、待确认项及一手资料来源。
 - [真正 3D 场景与 P2 验证计划](docs/3d-scene-plan.md)：最新用户决定、渲染建议、交互/模型边界、性能验证与历史方案替代关系。
-- 方案 B、真正 3D、第一人称/中央构图/无准星已由用户确定；P2 四轮技术原型已获独立审查；当前仅作P2收尾验证与交接，完整P2未验收；不自动授权完整 P2 或后续阶段。
+- 方案 B、真正 3D、第一人称/中央构图/无准星已由用户确定；P2已结束，P3按明确授权建立正式基础；P4及以后仍需另行授权。
 - [P2 第一轮报告](docs/p2/report.md)：隔离 TypeScript/Vite/Three.js 原型、原版模型离线探针、真实浏览器交互/性能及未验证门槛；运行见 `experiments/scene3d/README.md`。
 - [P2 第一人称修正验收](docs/p2/first-person-review.md)：场景内部眼高视角、居中构图、无准星、默认隐藏调试面板及桌面浏览器回归证据。
-- [P2 第三轮GUI与输入](docs/p2/gui-input-review.md)：原版容器/精灵/ASCII、平面与模型图标、三维实例绑定、真实输入与候选语义边界；第三轮隔离仅为历史事实，当前正常加载仓库原版资源，完整P2及P3/P5/P6未自动授权。
+- [P2 第三轮GUI与输入](docs/p2/gui-input-review.md)：原版容器/精灵/ASCII、两类图标、实例绑定、输入与候选语义边界；隔离为历史事实，当前正常加载仓库资源，正式P5/P6未授权。
 - [P2 第二轮原版模型与材质](docs/p2/vanilla-model-review.md)：五类原版方块与二值alpha/动画的历史证据；当时外部缓存和构建限制已被后续用户决定取代，当前见资源使用索引。
 - [P1 验收与证据入口](docs/p1/report.md)：原版构件/数据、资产、GUI 矩阵、放置增量与未解决门槛；报告完成不自动放行 P2。
 - [P1 放置补充实验](docs/p1/placement-experiment.md)：保留原文的历史规则验证；其中 B 待批、固定槽位/2D 建议均不能覆盖最新决定。`docs/p1/`、原始会话与 `experiments/placement/` 保持历史记录原样。

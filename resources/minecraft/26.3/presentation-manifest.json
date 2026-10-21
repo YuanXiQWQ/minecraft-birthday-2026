@@ -1,0 +1,103 @@
+{
+  "version": "26.3",
+  "profile": "home-presentation-v1",
+  "source": "Official Java 26.3 client; exact original bytes",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "limits": [
+    "Only bites=0 is displayed; no cake-eating interaction",
+    "Table is an authored assembly of original slab/post geometry, not a vanilla table block"
+  ],
+  "entries": [
+    {
+      "entry": "assets/minecraft/blockstates/cake.json",
+      "sha256": "0d12d5836a687b5bea25f452807a1d5bc6a6e1d03df1b3c8c24291b58e90d919",
+      "size": 498
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_slab.json",
+      "sha256": "fe614903df2f4b54c3545beaebc34441b2f2631501fbd6a11573e3eb464838af",
+      "size": 185
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_fence_post.json",
+      "sha256": "65b93d1705e9d287a5fe153729c6a111645300b9a5e80776e1babe824f87d8dc",
+      "size": 109
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_planks.json",
+      "sha256": "79b1146adb4eff1b405c0a18384e3290fa171edc1347f64fef50df3df4df939d",
+      "size": 103
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake.json",
+      "sha256": "58d8c1cb2450f8a0c3d218dcdb68c64a24321e01a11da6e670e34f8892221698",
+      "size": 625
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice1.json",
+      "sha256": "cfb0a40cb2e3d9cc1af4a1b2e17dc6008610028c34248e264593b0bc6acd1ef6",
+      "size": 665
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice2.json",
+      "sha256": "84993f7cdb3acc72c2a2d15f9f904f39c1d51740f1ee0a0f836d5b0337ba4c70",
+      "size": 665
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice3.json",
+      "sha256": "42febcd3b719d3518de9d4bbb289e4bf2c48fae7aba307e627cdaf5d67b92a53",
+      "size": 665
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice4.json",
+      "sha256": "0d2f1c718d3b55a8dcfb8dadba23b3aecc6d5f32307984ceb382bf371d51c361",
+      "size": 665
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice5.json",
+      "sha256": "75e5a6d0ad9b60f0d7f852728f9d03e5e9f1475370268d15a37ff4209042c25e",
+      "size": 666
+    },
+    {
+      "entry": "assets/minecraft/models/block/cake_slice6.json",
+      "sha256": "3fe39e6f1b8d603e96fbbc750e1d716b96c8120a771ef1ca935a69cc5004d0e2",
+      "size": 666
+    },
+    {
+      "entry": "assets/minecraft/models/block/slab.json",
+      "sha256": "bd869ebe3ba380d46349e5c6e988b9b1ccf1ab25212ab1de66e2fdcc067edc1d",
+      "size": 761
+    },
+    {
+      "entry": "assets/minecraft/models/block/fence_post.json",
+      "sha256": "f445d1cf4f8d81dffc8cddc6e237031d6e064e80a916b396e3d16aab73e7fe6b",
+      "size": 731
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cake_side.png",
+      "sha256": "33010b11cde4d784153cbc0c1092d4a68857f80a4ca5bb01783f888f5aba5ea2",
+      "size": 179
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cake_bottom.png",
+      "sha256": "39fdb08fa21fa2583498ff3ebfe310d4c7fd1e4313b78429ed885c4bf77d47cc",
+      "size": 176
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cake_top.png",
+      "sha256": "2d2866b25e4b3b32d9f36cd703a8a0f0e3a5d9559789db4a14fd3e7365e519ee",
+      "size": 203
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cake_inner.png",
+      "sha256": "7d72db3cd690ae4525f22e95ec255c3e85e55279ba3d1c6a3377576e6e85f9d1",
+      "size": 189
+    }
+  ],
+  "models": {
+    "leg": "minecraft:block/oak_fence_post",
+    "cake": "minecraft:block/cake",
+    "floor": "minecraft:block/oak_planks",
+    "tabletop": "minecraft:block/oak_slab"
+  }
+}

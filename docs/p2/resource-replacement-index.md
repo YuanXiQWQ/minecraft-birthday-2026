@@ -6,10 +6,12 @@
 
 ## 当前可复用资源
 
+- P3补充（当前）：正式`app/`同时读取原manifest和[presentation-manifest](../../resources/minecraft/26.3/presentation-manifest.json)，新增17原始文件（cake7模型+blockstate+4纹理+oak slab/post/plank5模型）。含两清单共114文件，普通dev/build默认加载；P2原95项manifest和历史证据不改写。原版来源SHA1和逐文件SHA256可复核。浏览器验收未切cake与组合桌面，切片变体只验证离线转换，不扩大原版模型支持能力。
+- 正式入口与运行步骤见[app说明](../../app/README.md)，P2实验仍使用原96文件cohort；以下原95项统计属于P2资源范围，不表示P3只有这些文件。无强制替换计划，发布权利独立待审。
 - 仓库源目录：`resources/minecraft/26.3/`，已实现功能无需开发者再次提取客户端。
 - [完整机器清单](../../resources/minecraft/26.3/manifest.json)：95个资源，348,101字节；另有manifest本身。31 JSON、44 PNG、8 mcmeta、12 Ogg。
 - 普通dev/build/preview通过Vite base解析 `minecraft/26.3/`；根部署为 `/minecraft/26.3/`，仓库子路径为 `/minecraft-birthday-2026/minecraft/26.3/`。
-- Vite仅打包清单96个文件，不复制完整JAR、其他客户端资源、开发资料、个人路径或临时输出。哈希检查确保内容正确，不限制资源进入Git/构建。
+- P2 Vite打包原清单96个文件，P3正式Vite打包两个清单114文件；不复制完整JAR、无关客户端资源、开发资料、个人路径或临时输出。哈希校验确保内容正确，不限制Git/构建。
 - `.gitattributes`对该版本资源设置`-text`，避免Windows的autocrlf在克隆检出时改写JSON/mcmeta/manifest字节而破坏原版哈希；不改变`.gitignore`。
 
 | 类别 | 当前原版内容/使用管线 | 已验证范围及缺口 | 当前替换状态 |

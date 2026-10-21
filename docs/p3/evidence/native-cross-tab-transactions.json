@@ -1,0 +1,170 @@
+{
+  "a": {
+    "origin": "http://127.0.0.1:4184",
+    "mode": "verification",
+    "nativeLocks": true,
+    "snapshot": {
+      "envelope": {
+        "format": 1,
+        "contentVersion": "p3-foundation-1",
+        "vanillaVersion": "26.3",
+        "generation": "39ba1a97-66cc-4307-94f6-ac7048e26af0",
+        "revision": 2,
+        "state": {
+          "progress": {
+            "unlocked": [
+              "minecraft:oak_log",
+              "minecraft:charcoal"
+            ],
+            "scene": "plains",
+            "scenes": {
+              "plains": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "cave": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "farm": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "home": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              }
+            },
+            "player": {
+              "version": 0,
+              "data": null
+            },
+            "recipeBook": {
+              "version": 0,
+              "data": null
+            },
+            "cakePlacement": null
+          },
+          "settings": {
+            "locale": "en",
+            "volume": 0.2,
+            "muted": false
+          }
+        },
+        "checksum": "18f240a1a819681ab8e38a9aefac43f52c6bbc9a9bb6a3b30be32ff789265490"
+      },
+      "migrated": false,
+      "status": "ready",
+      "writable": true
+    },
+    "records": [
+      {
+        "label": "Slow transaction: unlock log",
+        "phase": "start",
+        "start": 1792578819354
+      },
+      {
+        "phase": "real-lock-held",
+        "at": 1792578819360
+      },
+      {
+        "label": "Slow transaction: unlock log",
+        "phase": "done",
+        "start": 1792578819354,
+        "end": 1792578820895,
+        "result": [
+          {
+            "type": "item-unlocked",
+            "item": "minecraft:oak_log"
+          }
+        ]
+      }
+    ]
+  },
+  "b": {
+    "origin": "http://127.0.0.1:4184",
+    "mode": "verification",
+    "nativeLocks": true,
+    "snapshot": {
+      "envelope": {
+        "format": 1,
+        "contentVersion": "p3-foundation-1",
+        "vanillaVersion": "26.3",
+        "generation": "39ba1a97-66cc-4307-94f6-ac7048e26af0",
+        "revision": 2,
+        "state": {
+          "progress": {
+            "unlocked": [
+              "minecraft:oak_log",
+              "minecraft:charcoal"
+            ],
+            "scene": "plains",
+            "scenes": {
+              "plains": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "cave": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "farm": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              },
+              "home": {
+                "layoutVersion": 1,
+                "stations": [],
+                "crops": []
+              }
+            },
+            "player": {
+              "version": 0,
+              "data": null
+            },
+            "recipeBook": {
+              "version": 0,
+              "data": null
+            },
+            "cakePlacement": null
+          },
+          "settings": {
+            "locale": "en",
+            "volume": 0.2,
+            "muted": false
+          }
+        },
+        "checksum": "18f240a1a819681ab8e38a9aefac43f52c6bbc9a9bb6a3b30be32ff789265490"
+      },
+      "migrated": false,
+      "status": "ready",
+      "writable": true
+    },
+    "records": [
+      {
+        "label": "Fixture: unlock charcoal",
+        "phase": "start",
+        "start": 1792578819634
+      },
+      {
+        "label": "Fixture: unlock charcoal",
+        "phase": "done",
+        "start": 1792578819634,
+        "end": 1792578820886,
+        "result": [
+          {
+            "type": "item-unlocked",
+            "item": "minecraft:charcoal"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,41 @@
+
+> minecraft-birthday-2026@0.1.0 check
+> tsc --noEmit
+
+npm notice
+npm notice New minor version of npm available! 11.6.2 -> 11.21.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.1
+npm notice To update run: npm install -g npm@11.21.1
+npm notice
+
+> minecraft-birthday-2026@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ unlock is immutable, monotonic and idempotent; side items follow first acquisition (3.1421ms)
+✔ completion is a single table fact; requires unlocked cake, home context and the canonical table (2.4714ms)
+✔ placement accepts only explicit authored policy; stable instances remain separate from view and natural state (2.2367ms)
+✔ unsupported IDs, contract payloads, malformed coordinates and extra durable fields are never discarded silently (0.6286ms)
+✔ progress reset retains approved settings and clears all progress without changing other snapshots (0.7786ms)
+✔ codec detects tampering, future formats, invalid content and exact structural errors (13.8723ms)
+✔ documented development-v0 migrates in memory; failed migration never rewrites original bytes (4.295ms)
+✔ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (4.6034ms)
+✔ concurrent sessions merge semantic commands against fresh facts under the shared lock (4.4114ms)
+✔ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (5.7905ms)
+✔ confirmation notices same-epoch changes and requires a new explicit reset (2.4091ms)
+✔ queued commands are fenced across suspend/resume even when the reset epoch has not changed (1.8136ms)
+✔ corrupt, future and missing storage capability preserve exact bytes and block writes/reset (0.9711ms)
+✔ unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap (0.5582ms)
+✔ write denial leaves both durable and presented facts unchanged, with an explicit retry path (4.3131ms)
+✔ rejected domain input does not poison a valid session or replace its saved bytes (1.7917ms)
+✔ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (170.7392ms)
+✔ missing language keys fall back to English; missing English and missing interpolation fail visibly in tests (0.7622ms)
+✔ every statically declared page key exists in external English and all English glyphs fit the ASCII profile (1.5522ms)
+✔ long text wraps at words and within long tokens without deleting copy or exceeding the measured line width (0.3143ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 710.8847
