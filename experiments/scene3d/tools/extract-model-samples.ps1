@@ -1,10 +1,8 @@
-# Official JAR sampling into an external directory; optional PNGs serve loopback verification, never build inputs.
+# Extract a bounded verified Java 26.3 cohort; repository resources can be imported into ordinary builds.
 param([Parameter(Mandatory = $true)][string]$Jar, [Parameter(Mandatory = $true)][string]$Output, [switch]$IncludeTextures)
 $ErrorActionPreference = 'Stop'
 if (-not [IO.Path]::IsPathFullyQualified($Output)) { throw 'Output must be absolute' }
 $analysisRoot = [IO.Path]::GetFullPath($Output)
-$repositoryRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../../..'))
-if ($analysisRoot.Equals($repositoryRoot, [StringComparison]::OrdinalIgnoreCase) -or $analysisRoot.StartsWith($repositoryRoot + [IO.Path]::DirectorySeparatorChar, [StringComparison]::OrdinalIgnoreCase)) { throw 'Original model samples must remain outside the repository' }
 $clientSha1 = (Get-FileHash -LiteralPath $Jar -Algorithm SHA1).Hash.ToLowerInvariant()
 if ($clientSha1 -ne 'e877b6a07acd633fb3bb475002175cec036e7b87') { throw 'JAR is not the P1-verified Java 26.3 client' }
 Add-Type -AssemblyName System.IO.Compression.FileSystem

@@ -1,11 +1,12 @@
-/** External-only original particle and sound acquisition; images and compressed audio remain runtime resources. */
+/** Versioned original particle and sound acquisition; images and compressed audio remain runtime resources. */
+import { VANILLA_RESOURCE_BASE } from './resource-url.ts';
 export interface SoundDefinition {sounds:(string|{name:string;volume?:number;pitch?:number;weight?:number})[]}
 export interface CelebrationPack {images:Map<string,HTMLCanvasElement>;frames:string[];sounds:Map<string,ArrayBuffer>;events:Record<string,SoundDefinition>;loading:object}
 /** Verify the complete explicit cohort before decoding any visual or audio sample.
  * @return {Promise<CelebrationPack>} Actual original resources or an explicit blocking error.
  */
 export async function loadCelebrationPack():Promise<CelebrationPack>{
-  const start=performance.now(),base='/__local_samples__/',response=await fetch(base+'manifest.json',{cache:'no-store'});
+  const start=performance.now(),base=VANILLA_RESOURCE_BASE,response=await fetch(base+'manifest.json',{cache:'no-store'});
   if(!response.ok)throw new Error('celebration-resources-BLOCKED');
   const manifest=await response.json() as {version:string;clientSha1:string;celebration?:{entries:string[];events:Record<string,SoundDefinition>};entries:{entry:string;size:number;sha256:string}[]};
   if(manifest.version!=='26.3'||manifest.clientSha1!=='e877b6a07acd633fb3bb475002175cec036e7b87'||!manifest.celebration)throw new Error('celebration-cohort-BLOCKED');

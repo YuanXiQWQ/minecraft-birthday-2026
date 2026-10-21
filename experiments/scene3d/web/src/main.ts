@@ -13,6 +13,7 @@ import { GUI_TEXT as G } from './gui-labels.ts';
 import { CelebrationController } from './celebration-controller.ts';
 import { measure } from './metrics.ts';
 import { TEXT as T } from './labels.ts';
+import {resourceFailureChecks} from './resource-checks.ts';
 import './style.css';
 
 /** This experiment's save never reads or writes the future product namespace. */
@@ -22,12 +23,12 @@ let layout: Layout = fixture(), selected: string | null = null, mode = 'inspect'
   lastPick: Pick | null = null, candidate: Cell | null = null, panelOpen = false, busy = false, actions = 0, pointerEvents = 0,
   worldPointer: number | null = null;
 /** Browser evidence is deliberately exposed in the diagnostic DOM for inspection/export. */
-const evidence: { checks?: object; vanillaChecks?:object; guiChecks?:object; resourceLoad?:object; guiLoad?:object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
+const evidence: { checks?: object; vanillaChecks?:object; guiChecks?:object; contextLoss?:object; resourceFailures?:object; resourceLoad?:object; guiLoad?:object; measurements: object[]; rendererRestarts: object[]; errors: string[] } = { measurements: [], rendererRestarts: [], errors: [] };
 /** Modal key releases remain consumed even if their key-down closed the screen. */
 const modalKeys=new Set<string>();
 /** No world wheel behavior is added; this counter verifies modal event ownership. */
 let worldWheels=0;
-/** External samples are ephemeral and never serialized with the logical layout. */
+/** Loaded original resources are shared independently of serialized logical layout. */
 let localPack:VanillaPack|null=null;
 /** Celebration research owns no product trigger and shares the existing scene frame loop. */
 let celebration:CelebrationController;
@@ -149,6 +150,7 @@ function panelProbe(): boolean {
 function bindCanvas(): void {
   const canvas=adapter.renderer.domElement;
   adapter.onResize=updateDiagnostics;
+  adapter.onContextChange=lost=>{if(lost){openPanel(null);clearPreview();busy=true;status.textContent=T.contextLost;}else{busy=false;status.textContent=T.contextRestored;updateDiagnostics();}};
   canvas.addEventListener('pointermove',hover); canvas.addEventListener('pointerup',act);
   canvas.addEventListener('pointerdown',event=>{ if(!panelOpen&&!busy&&event.button===0)worldPointer=event.pointerId; });
   canvas.addEventListener('pointercancel',()=>{ worldPointer=null; });
@@ -168,15 +170,16 @@ function restart(): void {
   if(vanilla&&localPack)adapter.setVanilla(localPack);adapter.lit=old.lit;sampleSelect.value='';
   adapter.sync(layout); adapter.select(selected); bindCanvas(); adapter.renderOnce(); updateDiagnostics(); showEvidence();
   celebration=new CelebrationController(adapter,developer);
+  void celebration.load();
 }
 
-/** Activate verified local originals explicitly; failure preserves the current mode and records a block.
- * @return {Promise<void>} Completion of the local-only loading attempt.
+/** Activate repository originals; failure is reported rather than accepting diagnostic geometry as original.
+ * @return {Promise<void>} Completion of the ordinary resource loading attempt.
  */
 async function activateVanilla():Promise<void> {
   if(busy||panelOpen)return;busy=true;clearPreview();status.textContent=T.loading;
   try {
-    localPack??=await loadVanillaPack();adapter.setVanilla(localPack);adapter.sync(layout);adapter.renderOnce();
+    localPack??=await loadVanillaPack();adapter.setVanilla(localPack);adapter.sync(layout);adapter.deviceRoot.visible=true;adapter.stoneRoot.visible=true;adapter.renderOnce();
     warning.textContent=T.vanillaWarning;sampleSelect.replaceChildren();const empty=el('option',T.noSample) as HTMLOptionElement;empty.value='';sampleSelect.append(empty);
     for(const sample of localPack.samples){const option=el('option',sample.id) as HTMLOptionElement;option.value=sample.id;sampleSelect.append(option);}
     evidence.resourceLoad={status:'loaded',...localPack.loading};status.textContent=T.success;
@@ -185,11 +188,11 @@ async function activateVanilla():Promise<void> {
 }
 
 /** Load an independently audited GUI cohort without changing the camera, layout or renderer mode.
- * @return {Promise<void>} Local-only resource attempt with explicit unavailable evidence.
+ * @return {Promise<void>} Resource attempt with explicit unavailable evidence.
  */
 async function activateGui():Promise<void> {
   if(busy||panelOpen)return;busy=true;clearPreview();
-  try{localPack??=await loadVanillaPack();const next=await loadGuiPack(localPack);gui.pack?.dispose();gui.pack=next;evidence.guiLoad={status:'loaded',...next.loading};status.textContent=T.success;}
+  try{localPack??=await loadVanillaPack();const next=await loadGuiPack(localPack);gui.pack?.dispose();gui.pack=next;gui.publish();evidence.guiLoad={status:'loaded',...next.loading};status.textContent=T.success;}
   catch(error){evidence.guiLoad={status:'BLOCKED',reason:String(error)};status.textContent=G.unavailable;}
   finally{busy=false;updateDiagnostics();showEvidence();}
 }
@@ -221,6 +224,25 @@ async function collectMetrics(): Promise<void> {
   try { const sample=await measure(adapter,run=>{ status.textContent=T.measuring.replace('{run}',String(run)); }); evidence.measurements.push(sample); status.textContent=T.complete; }
   catch(error) { fail(error); }
   finally { busy=false; updateDiagnostics(); showEvidence(); }
+}
+
+/** Profile the existing seeded celebration with original GUI and devices throughout every measured run.
+ * @return {Promise<void>} Bounded continuous warm-up and measurement sequence.
+ */
+async function profileJoint():Promise<void>{
+  if(busy||panelOpen)return;clearPreview();developer.hidden=true;adapter.setDebugVisible(false);toggleDeveloper.textContent=T.developer;toggleDeveloper.setAttribute('aria-expanded','false');openPanel('player');busy=true;
+  try{await celebration.measureContinuous(2,10);}catch(error){fail(error);}finally{busy=false;openPanel(null);updateDiagnostics();}
+}
+
+/** Test native graphics loss with a live combined effect and GUI, preserving the same renderer and logical layout.
+ * @return {Promise<void>} Auditable native event and modal cancellation evidence.
+ */
+async function probeContext():Promise<void>{
+  if(busy||panelOpen)return;const before=JSON.stringify(layout),renderer=adapter,number=evidence.rendererRestarts.length;
+  await celebration.play('combined');openPanel('w2');busy=true;
+  try{await new Promise(resolve=>setTimeout(resolve,1800));const result=await adapter.contextLossProbe();evidence.contextLoss={result,sameAdapter:renderer===adapter,unchangedLayout:before===JSON.stringify(layout),rendererRebuilds:evidence.rendererRestarts.length-number,guiClosed:!panelOpen,effect:celebration.snapshot(),environment:adapter.diagnostics()};}
+  catch(error){evidence.contextLoss={status:'FAIL',reason:String(error)};}
+  finally{busy=false;updateDiagnostics();showEvidence();}
 }
 
 /** Diagnostic DOM nodes do not become part of any game save. */
@@ -257,7 +279,7 @@ app.append(viewport,header,footer);
 let adapter: SceneAdapter;
 try { adapter=new SceneAdapter(viewport,T.canvas); }
 catch(error) { status.textContent=T.unsupported; evidence.errors.push(String(error)); throw error; }
-adapter.sync(layout); bindCanvas(); adapter.renderOnce();
+adapter.sync(layout);adapter.deviceRoot.visible=false;adapter.stoneRoot.visible=false;bindCanvas(); adapter.renderOnce();
 type.addEventListener('change',()=>{ facing=type.value==='hopper'?'down':'north'; clearPreview(); updateDiagnostics(); });
 camera.addEventListener('change',()=>{ if(panelOpen||busy)return; clearPreview(); adapter.setView(camera.value as View); updateDiagnostics(); });
 sampleSelect.addEventListener('change',()=>{if(panelOpen||busy||!adapter.vanilla)return;clearPreview();adapter.showSample(sampleSelect.value||null);adapter.renderOnce();status.textContent=sampleSelect.value?`${T.sample}: ${sampleSelect.value}`:T.noSample;updateDiagnostics();});
@@ -272,7 +294,7 @@ const actionsBar=el('div','','toolbar');
 const assetTools=el('div','','toolbar');
 assetTools.append(button(G.load,()=>{void activateGui();}),button(G.inventory,()=>{if(!busy&&!panelOpen)openPanel('player');}),button(G.checks,guiFoundationChecks));
 assetTools.append(button(T.localVanilla,()=>{void activateVanilla();}),button(T.debugMode,()=>{
-  if(panelOpen||busy)return;clearPreview();adapter.setVanilla(null);adapter.sync(layout);warning.textContent=T.warning;sampleSelect.value='';updateDiagnostics();
+  if(panelOpen||busy)return;clearPreview();adapter.setVanilla(null);adapter.sync(layout);adapter.deviceRoot.visible=true;adapter.stoneRoot.visible=true;warning.textContent=T.warning;sampleSelect.value='';updateDiagnostics();
 }),sampleSelect,button(T.toggleLit,()=>{if(panelOpen||busy)return;clearPreview();adapter.lit=!adapter.lit;adapter.sync(layout);updateDiagnostics();}),
 button(T.vanillaChecks,()=>{if(panelOpen||busy)return;clearPreview();adapter.showSample(null);evidence.vanillaChecks=vanillaBrowserChecks(adapter,layout);updateDiagnostics();showEvidence();}));
 actionsBar.append(button(T.rotateSelected,()=>{ if(panelOpen||busy||!selected)return; try { const e=layout.instances.find(v=>v.id===selected)!; commit(change(layout,e.id,nextFacing(e.kind,e.facing))); } catch(error){fail(error);} }),
@@ -280,7 +302,7 @@ actionsBar.append(button(T.rotateSelected,()=>{ if(panelOpen||busy||!selected)re
   button(T.save,()=>{ if(panelOpen||busy)return; try { localStorage.setItem(STORAGE_KEY,JSON.stringify(layout)); status.textContent=T.saved; } catch(error){fail(error);} }),
   button(T.restore,()=>{ if(panelOpen||busy)return; try { const raw=localStorage.getItem(STORAGE_KEY); if(!raw)throw new Error('no-save'); selected=null; clearPreview(); commit(restore(raw)); status.textContent=T.restored; } catch(error){fail(error);} }),
   button(T.checks,()=>{ if(panelOpen||busy)return; clearPreview(); evidence.checks=browserChecks(adapter,layout,panelProbe); updateDiagnostics(); showEvidence(); status.textContent=T.complete; }),
-  button(T.measure,()=>{ void collectMetrics(); }),button(T.restart,restart));
+  button(T.measure,()=>{ void collectMetrics(); }),button(T.profileJoint,()=>{void profileJoint();}),button(T.contextProbe,()=>{void probeContext();}),button(T.resourceFailures,()=>{if(busy||panelOpen)return;busy=true;void resourceFailureChecks().then(result=>{evidence.resourceFailures=result;}).catch(fail).finally(()=>{busy=false;showEvidence();updateDiagnostics();});}),button(T.restart,restart));
 const diagnostics=el('div','','diagnostics');
 for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets],[T.results,results]] as [string,HTMLElement][]) {
   const section=el('section','','card'); section.append(el('h2',label),body); diagnostics.append(section);
@@ -288,4 +310,9 @@ for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets
 developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),assetTools,toolbar,actionsBar,diagnostics);
 app.append(developer); updateDiagnostics(); showEvidence();
 celebration=new CelebrationController(adapter,developer);
+/** Initialize all implemented original features without requiring developer controls or a private cache.
+ * @return {Promise<void>} Original model, GUI and celebration resource readiness.
+ */
+async function initializeOriginals():Promise<void>{await activateVanilla();await activateGui();await celebration.load();updateDiagnostics();showEvidence();}
+void initializeOriginals();
 window.addEventListener('pagehide',()=>{adapter.dispose();gui.pack?.dispose();});

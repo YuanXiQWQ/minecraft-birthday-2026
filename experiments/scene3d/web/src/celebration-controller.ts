@@ -14,27 +14,31 @@ export class CelebrationController implements SceneEffect {
   adapter:SceneAdapter;audio=new CelebrationAudio();pack:CelebrationPack|null=null;batch:FireworkBatch|null=null;simulation:FireworkSimulation|null=null;
   root=document.createElement('section');status=document.createElement('output');diagnostic=document.createElement('pre');exportBox=document.createElement('pre');
   seed=document.createElement('input');trail=document.createElement('input');twinkle=document.createElement('input');far=document.createElement('input');sound=document.createElement('select');
+  batchMode=document.createElement('select');
   runs:object[]=[];lastRun:object|null=null;errors:string[]=[];visibility:object[]=[];checks:object|null=null;policy:object|null=null;
   active=false;paused=false;hold=false;disposed=false;generation=0;anchor=0;lastWall=0;delta=0;elapsed=0;audioOffset=0;runName='';runSeed=0;
-  frames:{t:number;frameMs:number;particles:number;visible:number;calls:number;triangles:number;geometries:number;textures:number}[]=[];
+  frames:{t:number;frameMs:number;particles:number;visible:number;calls:number;triangles:number;geometries:number;textures:number;cpu:object;previousWork:number;rafLag:number;gpuMs:number|null}[]=[];
+  schedulingMs=0;series:{warmups:number;count:number;runs:object[];resolve:(value:object)=>void}|null=null;
+  seriesOutput=document.createElement('pre');
   timeline:object[]=[];seenBursts=0;lastPublish=0;visibilityHandler:(event:Event)=>void;iframes=new Set<HTMLIFrameElement>();policyCleanups=new Set<()=>void>();
   /** Attach diagnostics and one owned scene callback without adding another RAF or changing camera controls.
    * @param {SceneAdapter} adapter Existing first-person scene.
    * @param {HTMLElement} host Existing hidden developer panel.
    */
   constructor(adapter:SceneAdapter,host:HTMLElement){
-    this.adapter=adapter;adapter.effect=this;this.root.className='card';const title=document.createElement('h2');title.textContent=F.title;const note=document.createElement('p');note.className='help';note.textContent=F.note;this.root.append(title,note);this.status.textContent=F.blocked;
+    this.adapter=adapter;adapter.effect=this;this.root.className='card';const title=document.createElement('h2');title.textContent=F.title;const note=document.createElement('p');note.className='help';note.textContent=F.note;this.root.append(title,note);this.status.textContent=this.audio.unavailable?F.audioUnavailable:F.blocked;
     this.diagnostic.id='celebration-evidence';this.exportBox.id='celebration-record';this.exportBox.hidden=true;this.seed.type='number';this.seed.value='2632026';this.seed.setAttribute('aria-label',F.seed);
     const controls=document.createElement('div');controls.className='toolbar';controls.append(this.makeButton(F.load,()=>{void this.load();}),this.makeButton(F.enable,()=>{void this.audio.enable().then(ok=>{this.status.textContent=ok?F.ready:F.activation;this.publish();});}),this.seed);
+    this.batchMode.setAttribute('aria-label',F.batchMode);for(const [value,label]of [['pooled',F.pooled],['reference',F.reference]]){const option=document.createElement('option');option.value=value;option.textContent=label;this.batchMode.append(option);}this.batchMode.addEventListener('change',()=>{if(this.active){this.batchMode.value=this.batch?.mode??'pooled';return;}if(this.batch)this.batch.mode=this.batchMode.value as 'reference'|'pooled';});controls.append(this.batchMode);
     for(const [input,label,checked]of [[this.trail,F.trail,true],[this.twinkle,F.twinkle,true],[this.far,F.far,false]] as const){input.type='checkbox';input.checked=checked;input.setAttribute('aria-label',label);const l=document.createElement('label');l.append(input,document.createTextNode(label));controls.append(l);}
     for(const shape of SHAPES)controls.append(this.makeButton(F.names[shape],()=>{void this.play(shape);}));
     controls.append(this.makeButton(F.combo,()=>{void this.play('combined');}),this.makeButton(F.cancel,()=>this.cancel('developer')),this.makeButton(F.pause,()=>{void this.pause('manual');}),this.makeButton(F.resume,()=>{void this.resume();}),this.makeButton(F.freeze,()=>{this.hold=!this.hold;this.publish();}));
     const mute=document.createElement('input');mute.type='checkbox';mute.setAttribute('aria-label',F.mute);const muteLabel=document.createElement('label');muteLabel.append(mute,document.createTextNode(F.mute));
     const volume=document.createElement('input');volume.type='range';volume.min='0';volume.max='1';volume.step='.05';volume.value='.2';volume.setAttribute('aria-label',F.volume);
     for(const input of [mute,volume])input.addEventListener('input',()=>{this.audio.gain(Number(volume.value),mute.checked);this.publish();});
-    this.sound.setAttribute('aria-label',F.sound);controls.append(muteLabel,volume,this.sound,this.makeButton(F.playSound,()=>{void this.soundProbe();}),this.makeButton(F.failure,()=>{void this.audio.decodeFailureProbe().then(()=>this.publish());}),this.makeButton(F.autoplay,()=>this.autoplayProbe()),this.makeButton(F.checks,()=>this.verify()),this.makeButton(F.export,()=>{this.exportBox.hidden=false;this.exportBox.textContent=JSON.stringify(this.lastRun??this.snapshot(),null,2);this.status.textContent=F.exported;}));
-    this.root.append(controls,this.status,this.diagnostic,this.exportBox);host.append(this.root);
-    this.visibilityHandler=(event:Event)=>{this.visibility.push({state:document.visibilityState,trusted:event.isTrusted,audioTime:this.audio.context.currentTime,simTime:this.elapsed});if(document.hidden&&(this.active||this.audio.sources.size>0))void this.pause('visibility');this.publish();};document.addEventListener('visibilitychange',this.visibilityHandler);this.publish();
+    this.sound.setAttribute('aria-label',F.sound);controls.append(muteLabel,volume,this.sound,this.makeButton(F.playSound,()=>{void this.soundProbe();}),this.makeButton(F.failure,()=>{void this.audio.decodeFailureProbe().then(()=>this.publish());}),this.makeButton(F.autoplay,()=>this.autoplayProbe()),this.makeButton(F.checks,()=>this.verify()),this.makeButton(F.export,()=>{this.exportBox.hidden=true;this.exportBox.textContent=JSON.stringify(this.lastRun??this.snapshot(),null,2);this.status.textContent=F.exported;}));
+    this.seriesOutput.id='joint-profile-summary';this.root.append(controls,this.status,this.diagnostic,this.exportBox,this.seriesOutput);host.append(this.root);
+    this.visibilityHandler=(event:Event)=>{this.visibility.push({state:document.visibilityState,trusted:event.isTrusted,audioTime:this.audio.time,simTime:this.elapsed});if(document.hidden&&(this.active||this.audio.sources.size>0))void this.pause('visibility');this.publish();};document.addEventListener('visibilitychange',this.visibilityHandler);this.publish();
   }
   /** Construct one localized developer button.
    * @param {string} label Externalized label.
@@ -46,8 +50,8 @@ export class CelebrationController implements SceneEffect {
    * @return {Promise<void>} Sample loading attempt.
    */
   async load():Promise<void>{
-    this.cancel('reload');const generation=++this.generation;try{const pack=await loadCelebrationPack();if(this.disposed||generation!==this.generation)return;await this.audio.load(pack);if(this.disposed||generation!==this.generation)return;this.batch?.dispose();this.pack=pack;this.batch=new FireworkBatch(this.adapter,pack);this.sound.replaceChildren();for(const id of Object.keys(pack.events)){const o=document.createElement('option');o.value=o.textContent=id;this.sound.append(o);}this.status.textContent=F.ready;}
-    catch(error){this.errors.push(String(error));this.status.textContent=F.blocked;}this.publish();
+    this.cancel('reload');const generation=++this.generation;try{const pack=await loadCelebrationPack();if(this.disposed||generation!==this.generation)return;this.batch?.dispose();this.pack=pack;this.batch=new FireworkBatch(this.adapter,pack);await this.audio.load(pack);if(this.disposed||generation!==this.generation)return;this.batch.mode=this.batchMode.value as 'reference'|'pooled';this.sound.replaceChildren();for(const id of Object.keys(pack.events)){const o=document.createElement('option');o.value=o.textContent=id;this.sound.append(o);}this.status.textContent=F.ready;}
+    catch(error){this.errors.push(String(error));this.status.textContent=this.audio.unavailable?F.audioUnavailable:F.blocked;}this.publish();
   }
   /** Create an author-selected finite air fixture; launch lead-in is an engineering timeline, not a rocket entity model.
    * @param {Shape|'combined'} shape Requested sample.
@@ -59,14 +63,14 @@ export class CelebrationController implements SceneEffect {
    * @return {Promise<void>} Activation and scheduling completion.
    */
   async play(shape:Shape|'combined'):Promise<void>{
-    this.cancel('replace');const generation=++this.generation;if(!this.pack||!this.batch||!this.audio.ready){this.status.textContent=F.blocked;return;}
+    this.cancel('replace');const generation=++this.generation;if(!this.pack||!this.batch||!this.audio.ready){this.status.textContent=this.audio.unavailable?F.audioUnavailable:F.blocked;return;}
     if(!await this.audio.enable()||this.disposed||generation!==this.generation){this.status.textContent=F.activation;return;}
-    const plan=this.plan(shape);this.runSeed=Number(this.seed.value)>>>0;this.simulation=new FireworkSimulation(plan,this.runSeed);this.batch.begin();this.frames=[];this.timeline=[];this.seenBursts=0;this.elapsed=0;this.runName=shape;this.active=true;this.paused=false;this.hold=false;this.audioOffset=this.audio.records.length;this.audio.peak=0;this.anchor=this.audio.context.currentTime+.15;
-    this.updateListener();const rng=new SeedRandom(this.runSeed^0x263),eye=this.adapter.camera.position;
+    const plan=this.plan(shape);this.runSeed=Number(this.seed.value)>>>0;this.simulation=new FireworkSimulation(plan,this.runSeed);this.batch.begin();this.frames=[];this.timeline=[];this.seenBursts=0;this.elapsed=0;this.runName=shape;this.active=true;this.paused=false;this.hold=false;this.audioOffset=this.audio.records.length;this.audio.peak=0;this.anchor=this.audio.time+.15;
+    const schedulingStart=performance.now();this.updateListener();const rng=new SeedRandom(this.runSeed^0x263),eye=this.adapter.camera.position;
     for(const e of plan){this.schedule({event:'entity.firework_rocket.launch',tick:e.tick-24,volume:3,pitch:1,position:[e.position[0],.5,e.position[2]],distanceDelay:false},0,rng.next());
       const distance=eye.distanceTo(new Vector3(...e.position)),blast=fireworkSound(e.shape==='large_ball',false,distance,rng.next());this.schedule({event:blast.event,tick:e.tick,volume:blast.volume,pitch:blast.pitch,position:e.position,distanceDelay:true},blast.delay,rng.next());
       if(e.twinkle){const twinkle=fireworkSound(false,true,distance,rng.next());this.schedule({event:twinkle.event,tick:e.tick+starterLifetime(1,true),volume:twinkle.volume,pitch:twinkle.pitch,position:e.position,distanceDelay:true},twinkle.delay,rng.next());}
-    }this.status.textContent=F.playing;this.publish();
+    }this.schedulingMs=performance.now()-schedulingStart;this.status.textContent=F.playing;this.publish();
   }
   /** Record a shared visual/audio time coordinate before scheduling the original event.
    * @param {Cue} cue Source parameters.
@@ -78,9 +82,9 @@ export class CelebrationController implements SceneEffect {
    * @return {Promise<void>} Explicit sound activation attempt.
    */
   async soundProbe():Promise<void>{
-    if(!this.pack||!this.audio.ready){this.status.textContent=F.blocked;return;}if(!await this.audio.enable()){this.status.textContent=F.activation;return;}
+    if(!this.pack||!this.audio.ready){this.status.textContent=this.audio.unavailable?F.audioUnavailable:F.blocked;return;}if(!await this.audio.enable()){this.status.textContent=F.activation;return;}
     const id=this.sound.value,rng=new SeedRandom(Number(this.seed.value)),cue:Cue={event:id,tick:0,volume:id.includes('launch')?3:id.includes('firework')?20:id.includes('experience_orb')?.1:id.includes('levelup')?.75:1,pitch:id.includes('experience_orb')?(rng.next()-rng.next())*.35+.9:id.includes('twinkle')?.9+rng.next()*.15:id.includes('blast')?.95+rng.next()*.1:1,position:this.adapter.camera.position.toArray() as Vec,distanceDelay:false};
-    this.updateListener();this.audio.peak=0;this.audio.schedule(cue,this.audio.context.currentTime+.05,rng.next());this.publish();
+    this.updateListener();this.audio.peak=0;this.audio.schedule(cue,this.audio.time+.05,rng.next());this.publish();
   }
   /** Align spatial sound with the existing eye station before scheduling and while any source remains active. */
   updateListener():void{const camera=this.adapter.camera;this.audio.listener(camera.position.toArray() as Vec,camera.getWorldDirection(new Vector3()).toArray() as Vec,new Vector3(0,1,0).applyQuaternion(camera.quaternion).toArray() as Vec);}
@@ -90,34 +94,36 @@ export class CelebrationController implements SceneEffect {
    */
   frame(time:number,delta:number):void{
     this.lastWall=time;this.delta=delta;
+    const phases=this.adapter.profile.phases,audioStart=performance.now();
     if(this.active||this.audio.sources.size)this.updateListener();
-    if(this.audio.sources.size)this.audio.sample();if(!this.active||!this.simulation||!this.batch||this.paused)return;
-    this.elapsed=Math.max(0,this.audio.context.currentTime-this.anchor);
-    if(!this.hold){this.simulation.advance(this.elapsed);this.batch.update(this.simulation.particles,this.elapsed*20%1);}
-    this.audio.sample();for(const burst of this.simulation.bursts.slice(this.seenBursts))this.timeline.push({kind:'visual-burst',...burst,targetAudio:this.anchor+burst.tick/20,observedAudio:this.audio.context.currentTime,observedWall:time});this.seenBursts=this.simulation.bursts.length;
+    if(this.audio.sources.size)this.audio.sample();phases.audioFrame=performance.now()-audioStart;if(!this.active||!this.simulation||!this.batch||this.paused)return;
+    this.elapsed=Math.max(0,this.audio.time-this.anchor);
+    if(!this.hold){const start=performance.now();this.simulation.advance(this.elapsed);phases.simulation=performance.now()-start;this.batch.update(this.simulation.particles,this.elapsed*20%1);}
+    this.audio.sample();for(const burst of this.simulation.bursts.slice(this.seenBursts))this.timeline.push({kind:'visual-burst',...burst,targetAudio:this.anchor+burst.tick/20,observedAudio:this.audio.time,observedWall:time});this.seenBursts=this.simulation.bursts.length;
     if(this.simulation.done()){this.batch.clear();if(this.audio.sources.size===0)this.finish('ended');}
   }
   /** Sample real submitted draw counters, keeping raw frames out of the frequently updated diagnostic DOM. */
   afterFrame():void{
-    if(this.active&&!this.paused&&!this.hold){const r=this.adapter.renderer.info;this.frames.push({t:this.elapsed,frameMs:this.delta,particles:this.simulation?.particles.length??0,visible:this.batch?.visible??0,calls:r.render.calls,triangles:r.render.triangles,geometries:r.memory.geometries,textures:r.memory.textures});if(this.frames.length>6000)throw new Error('frame-evidence-capacity');}
+    if(this.active&&!this.paused&&!this.hold){const r=this.adapter.renderer.info,p=this.adapter.profile;this.frames.push({t:this.elapsed,frameMs:this.delta,particles:this.simulation?.particles.length??0,visible:this.batch?.visible??0,calls:r.render.calls,triangles:r.render.triangles,geometries:r.memory.geometries,textures:r.memory.textures,cpu:p.phases,previousWork:p.previousWork,rafLag:p.rafLag,gpuMs:p.gpuMs});if(this.frames.length>6000)throw new Error('frame-evidence-capacity');}
     if(this.lastWall-this.lastPublish>250){this.lastPublish=this.lastWall;this.publish();}
   }
   /** Suspend both clocks for an explicit experiment pause or a real visibility transition.
    * @param {string} reason Background/manual cause.
    * @return {Promise<void>} Audio suspension completion.
    */
-  async pause(reason:string):Promise<void>{this.paused=true;this.timeline.push({kind:'pause',reason,simTime:this.elapsed,audioTime:this.audio.context.currentTime});await this.audio.pause();this.status.textContent=F.paused;this.publish();}
+  async pause(reason:string):Promise<void>{this.paused=true;this.timeline.push({kind:'pause',reason,simTime:this.elapsed,audioTime:this.audio.time});await this.audio.pause();this.status.textContent=F.paused;this.publish();}
   /** Resume the same clock and sample offsets through an explicit user gesture.
    * @return {Promise<void>} Resume attempt.
    */
-  async resume():Promise<void>{if(await this.audio.enable()){this.paused=false;this.timeline.push({kind:'resume',simTime:this.elapsed,audioTime:this.audio.context.currentTime});this.status.textContent=F.playing;}this.publish();}
+  async resume():Promise<void>{if(await this.audio.enable()){this.paused=false;this.timeline.push({kind:'resume',simTime:this.elapsed,audioTime:this.audio.time});this.status.textContent=F.playing;}this.publish();}
   /** Finalize immutable run evidence and release every per-play particle object.
    * @param {string} reason Normal ending or cancellation label.
    */
   finish(reason:string):void{
     if(!this.active)return;this.active=false;this.batch?.clear();const values=this.frames.map(f=>f.frameMs).filter(v=>v>0).sort((a,b)=>a-b);
     const summary={shape:this.runName,seed:this.runSeed,reason,elapsed:this.elapsed,spawned:this.simulation?.spawned,children:this.simulation?.children,peakParticles:this.simulation?.peak,frames:values.length,p50:values[Math.floor(values.length*.5)],p95:values[Math.floor(values.length*.95)],max:values.at(-1),peakCalls:Math.max(0,...this.frames.map(f=>f.calls)),signalPeak:this.audio.peak,activeSources:this.audio.sources.size,batchCreated:this.batch?.created,batchReleased:this.batch?.released};
-    this.lastRun={summary,environment:this.adapter.diagnostics(),plan:this.simulation?.plan,bursts:this.simulation?.bursts,frames:this.frames,timeline:this.timeline,audio:this.audio.records.slice(this.audioOffset),heard:'UNVERIFIED: hardware listening requires a person',limitations:['free-air only; no voxel collision','seeded distributions, not Java RNG/float bit parity','normal-alpha Three pipeline, no Java visual comparison']};this.simulation=null;this.runs.push(summary);this.runs=this.runs.slice(-15);this.status.textContent=reason==='ended'?F.finished:F.cancelled;this.publish();
+    this.lastRun={summary,batchMode:this.batch?.mode,schedulingMs:this.schedulingMs,environment:this.adapter.diagnostics(),plan:this.simulation?.plan,bursts:this.simulation?.bursts,frames:this.frames,timeline:this.timeline,audio:this.audio.records.slice(this.audioOffset),longTasks:[...this.adapter.profile.longTasks],heard:'UNVERIFIED: hardware listening requires a person',limitations:['free-air only; no voxel collision','seeded distributions, not Java RNG/float bit parity','normal-alpha Three pipeline, no Java visual comparison']};this.simulation=null;this.runs.push(summary);this.runs=this.runs.slice(-15);this.status.textContent=reason==='ended'?F.finished:F.cancelled;this.publish();
+    if(this.series){const s=this.series;s.runs.push(this.lastRun!);this.seriesOutput.textContent=JSON.stringify({state:'running',completed:s.runs.length,total:s.warmups+s.count});if(reason!=='ended'||s.runs.length>=s.warmups+s.count){this.series=null;const result={state:reason==='ended'?'completed':'cancelled',warmups:s.warmups,measured:s.count,runs:s.runs.length,gpuTimer:!!this.adapter.profile.extension,longTaskApi:!!this.adapter.profile.observer};this.seriesOutput.textContent=JSON.stringify(result);s.resolve(result);}else queueMicrotask(()=>{void this.play('combined');});}
   }
   /** Cancel pending activation, queued sounds and finite particles without changing any scene/game state.
    * @param {string} reason Cancellation source.
@@ -131,7 +137,8 @@ export class CelebrationController implements SceneEffect {
       for(let i=0;i<110;i++)sim.step();rows.push({shape,trail,twinkle,initial,children:sim.children,ended:sim.done(),pass:initial>0&&sim.done()&&(trail?sim.children>0:sim.children===0)});
     }for(let i=0;i<6;i++){this.batch.begin();this.batch.update([],0);this.batch.clear();}
     const depth=celebrationDepthProbe(this.adapter,this.batch) as {passed:boolean};
-    this.checks={depth,status:rows.every((r:any)=>r.pass)&&depth.passed?'PASS':'FAIL',passed:rows.filter((r:any)=>r.pass).length,rows,batchBalanced:this.batch.created===this.batch.released,singleSceneLoop:true,source:'actual browser simulation/batch; perceptual parity unverified'};this.publish();
+    const mode=this.batch.mode;let equivalent=0;try{for(const shape of SHAPES)for(const age of [0,25,55]){const sim=new FireworkSimulation(this.plan(shape).map(e=>({...e,tick:0})),263);for(let i=0;i<=age;i++)sim.step();this.batch.mode='reference';this.batch.begin();this.batch.update(sim.particles,.37);const count=this.batch.mesh!.geometry.drawRange.count,expected=['position','uv','color'].map(name=>{const a=this.batch!.mesh!.geometry.getAttribute(name);return Array.from(a.array.slice(0,count*a.itemSize));});this.batch.clear();this.batch.mode='pooled';this.batch.begin();this.batch.update(sim.particles,.37);const same=this.batch.mesh!.geometry.drawRange.count===count&&['position','uv','color'].every((name,index)=>{const a=this.batch!.mesh!.geometry.getAttribute(name);return expected[index].every((v,i)=>v===a.array[i]);});if(same)equivalent++;this.batch.clear();}}finally{this.batch.mode=mode;}
+    this.checks={depth,geometryEquivalentCases:equivalent,status:rows.every((r:any)=>r.pass)&&depth.passed&&equivalent===15?'PASS':'FAIL',passed:rows.filter((r:any)=>r.pass).length,rows,batchBalanced:this.batch.created===this.batch.released,singleSceneLoop:true,source:'actual browser simulation/batch; perceptual parity unverified'};this.publish();
   }
   /** Probe a browser-denied autoplay policy in an isolated opaque-origin iframe using a silent buffer.
    * No generated sound is used as a replacement for an original event.
@@ -147,9 +154,19 @@ export class CelebrationController implements SceneEffect {
   /** Return a compact auditable live state, never raw textures, buffers or full frame arrays.
    * @return {object} Metadata for browser assertions and manual review.
    */
-  snapshot():object{return {resourceStatus:this.pack?'original-local':'BLOCKED',active:this.active,paused:this.paused,hold:this.hold,elapsed:this.elapsed,particles:this.simulation?.particles.length??0,visible:this.batch?.visible??0,batch:{created:this.batch?.created,released:this.batch?.released,attached:!!this.batch?.mesh},audio:{state:this.audio.context.state,initial:this.audio.initial,decoded:this.audio.buffers.size,activeSources:this.audio.sources.size,nodeChains:this.audio.chains.size,volume:this.audio.volume,muted:this.audio.muted,gain:this.audio.master.gain.value,peak:this.audio.peak,records:this.audio.records.slice(-25)},runs:this.runs,checks:this.checks,policy:this.policy,visibility:this.visibility,loading:this.pack?.loading,errors:this.errors,heard:'UNVERIFIED',clock:'AudioContext; fixed simulation 20Hz',frameLoop:'existing scene adapter only'};}
+  snapshot():object{return {resourceStatus:this.pack?'vanilla-26.3':'BLOCKED',active:this.active,paused:this.paused,hold:this.hold,elapsed:this.elapsed,particles:this.simulation?.particles.length??0,visible:this.batch?.visible??0,batch:{created:this.batch?.created,released:this.batch?.released,attached:!!this.batch?.mesh},audio:{state:this.audio.state,unavailable:this.audio.unavailable,initial:this.audio.initial,decoded:this.audio.buffers.size,activeSources:this.audio.sources.size,nodeChains:this.audio.chains.size,volume:this.audio.volume,muted:this.audio.muted,gain:this.audio.effectiveGain,peak:this.audio.peak,records:this.audio.records.slice(-25)},runs:this.runs,checks:this.checks,policy:this.policy,visibility:this.visibility,loading:this.pack?.loading,errors:this.errors,heard:'UNVERIFIED',clock:'AudioContext; fixed simulation 20Hz',frameLoop:'existing scene adapter only'};}
   /** Publish only compact bounded diagnostics while animation continues. */
-  publish():void {if(this.disposed)return;this.diagnostic.textContent=JSON.stringify(this.snapshot(),null,2);}
+  publish():void {if(this.disposed)return;const p=this.adapter.profile.phases,start=performance.now(),text=JSON.stringify(this.snapshot(),null,2);p.serialize+=performance.now()-start;const domStart=performance.now();this.diagnostic.textContent=text;p.dom+=performance.now()-domStart;}
+  /** Run repeated identical five-shape fixtures, retaining each run independently for reproducible analysis.
+   * @param {number} warmups Complete warm-up cycles excluded from measured statistics.
+   * @param {number} count Complete measured cycles.
+   * @return {Promise<object>} Completion state; human hearing remains unverified.
+   */
+  measureContinuous(warmups=2,count=10):Promise<object>{
+    if(!this.pack||!this.batch||!this.audio.ready){const result={state:'unavailable',reason:this.audio.unavailable??'original resources or audio decode unavailable'};this.seriesOutput.textContent=JSON.stringify(result);return Promise.resolve(result);}
+    this.cancel('continuous-start');for(const e of this.root.querySelectorAll('[data-profile-run]'))e.remove();
+    return new Promise(resolve=>{const runs:object[]=[];this.series={warmups,count,runs,resolve:result=>{runs.forEach((r,i)=>{const pre=document.createElement('pre');pre.id=`profile-run-${i}`;pre.dataset.profileRun='true';pre.hidden=true;pre.textContent=JSON.stringify(r);this.root.append(pre);});resolve(result);}};void this.play('combined').then(()=>{if(!this.active&&this.series){const series=this.series;this.series=null;const result={state:'unavailable',reason:'audio activation denied or cancelled'};this.seriesOutput.textContent=JSON.stringify(result);series.resolve(result);}});});
+  }
   /** Remove the owned scene hook/listeners, cancel sound and release atlas/geometry/context resources. */
   dispose():void {if(this.disposed)return;this.cancel('scene-dispose');this.disposed=true;document.removeEventListener('visibilitychange',this.visibilityHandler);for(const cleanup of [...this.policyCleanups])cleanup();this.batch?.dispose();this.audio.dispose();if(this.adapter.effect===this)this.adapter.effect=null;this.root.remove();}
 }

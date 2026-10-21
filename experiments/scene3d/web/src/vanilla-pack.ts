@@ -1,4 +1,5 @@
-/** Local-only, hash-verified model/texture loading; no source assets are embedded in this module. */
+/** Hash-verified repository model and texture loading through the configured static base. */
+import { VANILLA_RESOURCE_BASE } from './resource-url.ts';
 import { compileModel, resolveModel } from './model-format.ts';
 import type { CompiledModel, ModelSource, Variant } from './model-format.ts';
 
@@ -10,7 +11,7 @@ export interface VanillaPack { samples:Sample[]; images:Map<string,Pixels>; load
 interface Entry {entry:string;size:number;sha256:string}
 
 /** Expand every variant explicitly; multipart and unsupported geometry fail instead of approximating.
- * @param {Map<string,object>} documents Parsed externally supplied JSON documents.
+ * @param {Map<string,object>} documents Parsed original JSON documents.
  * @return {Sample[]} Compiled states retaining their exact source rotations.
  */
 export function compileSamples(documents:Map<string,object>):Sample[] {
@@ -29,19 +30,20 @@ export function compileSamples(documents:Map<string,object>):Sample[] {
   return samples;
 }
 
-/** Fetch, verify, decode and inventory the externally configured local samples atomically.
+/** Fetch, verify, decode and inventory the versioned repository resources atomically.
+ * @param {typeof fetch} fetcher Resource transport; fault tests inject failures without modifying repository assets.
  * @return {Promise<VanillaPack>} Complete local pack; missing resources reject without a debug success fallback.
  */
-export async function loadVanillaPack():Promise<VanillaPack> {
-  const start=performance.now(), base='/__local_samples__/';
-  const response=await fetch(base+'manifest.json',{cache:'no-store'});
-  if(!response.ok)throw new Error('local-vanilla-samples-unavailable');
+export async function loadVanillaPack(fetcher:typeof fetch=fetch):Promise<VanillaPack> {
+  const start=performance.now(), base=VANILLA_RESOURCE_BASE;
+  const response=await fetcher(base+'manifest.json',{cache:'no-store'});
+  if(!response.ok)throw new Error('vanilla-manifest-request-failed');
   const manifest=await response.json() as {version:string;clientSha1:string;textureBytesExported:boolean;entries:Entry[];textures:{id:string;entry:string}[];gui?:{entries:string[]};celebration?:{entries:string[]}};
   if(manifest.version!=='26.3'||manifest.clientSha1!=='e877b6a07acd633fb3bb475002175cec036e7b87'||!manifest.textureBytesExported)throw new Error('wrong-or-incomplete-sample-manifest');
   const bodies=new Map<string,ArrayBuffer>(), requests:{path:string;bytes:number;ms:number;sha256:string}[]=[];
   await Promise.all(manifest.entries.filter(entry=>!manifest.gui?.entries.includes(entry.entry)&&!manifest.celebration?.entries.includes(entry.entry)).map(async entry=>{
     if(!/^assets\/minecraft\/(blockstates|models|textures)\/[a-z0-9_/-]+\.(json|png|png\.mcmeta)$/.test(entry.entry)||entry.entry.includes('..'))throw new Error('invalid-sample-entry');
-    const tick=performance.now(), resource=await fetch(base+entry.entry,{cache:'no-store'});
+    const tick=performance.now(), resource=await fetcher(base+entry.entry,{cache:'no-store'});
     if(!resource.ok)throw new Error('sample-request-failed');const bytes=await resource.arrayBuffer();
     const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
     if(bytes.byteLength!==entry.size||hash!==entry.sha256)throw new Error('sample-hash-mismatch');
@@ -60,7 +62,7 @@ export async function loadVanillaPack():Promise<VanillaPack> {
       animation:metadata?.animation,sha256:manifest.entries.find(e=>e.entry===item.entry)!.sha256});
   }
   for(const sample of samples)for(const id of sample.compiled.textures)if(!images.has(id))throw new Error('missing-texture');
-  return {samples,images,loading:{version:manifest.version,clientSha1:manifest.clientSha1,source:'external loopback cache; no distribution permission inferred',
+  return {samples,images,loading:{version:manifest.version,clientSha1:manifest.clientSha1,source:'Versioned repository Java 26.3 assets',
     elapsedMs:performance.now()-start,bytes:requests.reduce((n,r)=>n+r.bytes,0),requests,modelStates:samples.length,textures:images.size,
     imageInfo:[...images].map(([id,image])=>({id,width:image.width,height:image.height,alphaZero:image.rgba.filter((v,i)=>i%4===3&&v===0).length,alphaPartial:image.rgba.filter((v,i)=>i%4===3&&v>0&&v<255).length}))}};
 }

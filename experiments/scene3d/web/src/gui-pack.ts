@@ -1,4 +1,5 @@
-/** Hash-verified external GUI samples and runtime-only font/icon conversion. */
+/** Hash-verified repository GUI resources and runtime-only font/icon conversion. */
+import { VANILLA_RESOURCE_BASE } from './resource-url.ts';
 import { Group, OrthographicCamera, Scene, WebGLRenderer } from 'three';
 import { resolveModel, resourceId } from './model-format.ts';
 import type { ModelSource } from './model-format.ts';
@@ -13,7 +14,7 @@ export interface Scaling {type:string;width?:number;height?:number;border?:numbe
  * @return {Promise<GuiPack>} Browser-memory GUI resources; absence is a hard block, never a debug substitute.
  */
 export async function loadGuiPack(models:VanillaPack):Promise<GuiPack>{
-  const start=performance.now(), base='/__local_samples__/', response=await fetch(base+'manifest.json',{cache:'no-store'});
+  const start=performance.now(), base=VANILLA_RESOURCE_BASE, response=await fetch(base+'manifest.json',{cache:'no-store'});
   if(!response.ok)throw new Error('local-gui-unavailable');
   const manifest=await response.json() as {version:string;clientSha1:string;gui?:{entries:string[]};entries:{entry:string;size:number;sha256:string}[]};
   if(manifest.version!=='26.3'||manifest.clientSha1!=='e877b6a07acd633fb3bb475002175cec036e7b87'||!manifest.gui)throw new Error('local-gui-unavailable');

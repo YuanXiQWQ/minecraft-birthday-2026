@@ -1,0 +1,875 @@
+{
+  "protocol": {
+    "state": "completed",
+    "warmups": 2,
+    "measured": 10,
+    "runs": 12,
+    "gpuTimer": true,
+    "longTaskApi": true
+  },
+  "warmupSeconds": 12.410022675736968,
+  "measuredSeconds": 62.05011337868477,
+  "environment": {
+    "backend": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "shadingLanguage": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 3080 Ti Laptop GPU (0x00002420) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (NVIDIA)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "hardwareConcurrency": 20,
+    "viewport": [
+      1440,
+      900
+    ],
+    "backingPixels": [
+      1800,
+      1125
+    ],
+    "dpr": 1.0000000149011612,
+    "renderDpr": 1.25,
+    "webgl2": true,
+    "camera": "Front",
+    "eye": [
+      0.5,
+      1.62,
+      6.5
+    ],
+    "fov": 70,
+    "instances": 7,
+    "calls": 176,
+    "triangles": 580,
+    "geometries": 33,
+    "textures": 16,
+    "ownedGeometryCreated": 56,
+    "ownedGeometryReleased": 33,
+    "assetMode": "vanilla-26.3",
+    "litSample": false,
+    "gallerySample": null,
+    "vanilla": {
+      "mode": "vanilla-26.3",
+      "states": 26,
+      "ownedCreated": 8,
+      "ownedReleased": 0,
+      "materials": 16,
+      "textures": [
+        {
+          "id": "minecraft:block/stone",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f"
+        },
+        {
+          "id": "minecraft:block/furnace_front",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "aae808f71f1bddf4a25592f7dd3d7f6e9b3adaa739502170766424f4eb6bf9c5"
+        },
+        {
+          "id": "minecraft:block/furnace_side",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "cada9065da8d26b3a7324a203edb42f2564975519e8504d520e10d530822bb5b"
+        },
+        {
+          "id": "minecraft:block/furnace_top",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "59e26149cde8b86ea1d165c1a4ba5c44531a4b7be134b30c93120bba1cefb162"
+        },
+        {
+          "id": "minecraft:block/furnace_front_on",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9"
+        },
+        {
+          "id": "minecraft:block/hopper_outside",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "83ccaffd41564465b45997c5f171a3af354d6951e4c4472fe1d1d953c4f57685"
+        },
+        {
+          "id": "minecraft:block/hopper_top",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 100,
+          "sha256": "b6bb8d17e0fe5fc1ddcf8a9f4584d3844015629062876243850a079d506a243a"
+        },
+        {
+          "id": "minecraft:block/hopper_inside",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb"
+        },
+        {
+          "id": "minecraft:block/oak_planks",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3"
+        },
+        {
+          "id": "minecraft:block/crafting_table_side",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "e9755fc6da763909b285342eae12c5f7d1cc8462fab695bb157504ea207cda8c"
+        },
+        {
+          "id": "minecraft:block/crafting_table_front",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "1659c76a33039640e8bd5584af8db04bf626486432a389bcaf1567e1a45c6464"
+        },
+        {
+          "id": "minecraft:block/crafting_table_top",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "251e8aa014e30d040261022895853db3204bba241b9b44c11762628550986f2d"
+        },
+        {
+          "id": "minecraft:block/blast_furnace_front",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "df580828cf9079059e167dc13b51713d8029cdcf0f0b20374367c71a805d7f62"
+        },
+        {
+          "id": "minecraft:block/blast_furnace_side",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "2254b141bca1943258f66bca2ce34d4c7fb5f777d27cb2d5d8d9a4f0ad6f3ab7"
+        },
+        {
+          "id": "minecraft:block/blast_furnace_top",
+          "width": 16,
+          "height": 16,
+          "frames": 1,
+          "interpolate": false,
+          "alphaPixels": 0,
+          "sha256": "003c4e4c615a20a7f0ba48baf0e9cf3bae55b6a2a387d34e0cff9958aa2420c0"
+        },
+        {
+          "id": "minecraft:block/blast_furnace_front_on",
+          "width": 16,
+          "height": 32,
+          "frames": 2,
+          "interpolate": true,
+          "alphaPixels": 0,
+          "sha256": "5363eaaf29c6cfed922c05fd4df9eaa7ef52b2d78ca56affda9ebf45ba33215d"
+        }
+      ],
+      "loading": {
+        "version": "26.3",
+        "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+        "source": "Versioned repository Java 26.3 assets",
+        "elapsedMs": 102.5,
+        "bytes": 16856,
+        "requests": [
+          {
+            "path": "assets/minecraft/blockstates/stone.json",
+            "bytes": 324,
+            "ms": 61.79999999701977,
+            "sha256": "34476f2bb98e7abec029c07c3cbfd8ba3a0141c0df3f02ff255018dbec625bbc"
+          },
+          {
+            "path": "assets/minecraft/blockstates/furnace.json",
+            "bytes": 760,
+            "ms": 61.79999999701977,
+            "sha256": "aedb43571027a5dea15ba9cbfc05f0327af3048de70b72c3cd67c851839bb284"
+          },
+          {
+            "path": "assets/minecraft/blockstates/hopper.json",
+            "bytes": 431,
+            "ms": 61.599999994039536,
+            "sha256": "de8ce32f8543898110d2cf166231058d1a5100c8c2d4a09c6c5a203101ad0d1a"
+          },
+          {
+            "path": "assets/minecraft/blockstates/crafting_table.json",
+            "bytes": 87,
+            "ms": 61.70000000298023,
+            "sha256": "bd75337fe8f663e3c88e5f2490a7217d60925ff7f0001f98656b037441ecdb98"
+          },
+          {
+            "path": "assets/minecraft/blockstates/blast_furnace.json",
+            "bytes": 808,
+            "ms": 61.70000000298023,
+            "sha256": "265ec5f30fa65bdaff6867bbad8de73e0a1b21ea12a33da5b771f889e4ac7dcc"
+          },
+          {
+            "path": "assets/minecraft/models/block/stone.json",
+            "bytes": 98,
+            "ms": 61.900000005960464,
+            "sha256": "c0734082e7f1e2f44809737b2fbe1136fc7304bde7232e45fbe921884a4a327e"
+          },
+          {
+            "path": "assets/minecraft/models/block/stone_mirrored.json",
+            "bytes": 107,
+            "ms": 61.900000005960464,
+            "sha256": "f6127c3048b1812b664209825271553c71c2b2dae9d6a19933702b6fdbe34370"
+          },
+          {
+            "path": "assets/minecraft/models/block/furnace.json",
+            "bytes": 196,
+            "ms": 61.900000005960464,
+            "sha256": "f1005df7892e96ab8bc3bc513bba9e0aa1930ff901423ea726e3bad1f49614c9"
+          },
+          {
+            "path": "assets/minecraft/models/block/furnace_on.json",
+            "bytes": 199,
+            "ms": 62,
+            "sha256": "c6cc3c51295082082a41c17fef84742207d2d8a5913b72260bb1dcda27063f72"
+          },
+          {
+            "path": "assets/minecraft/models/block/hopper.json",
+            "bytes": 3046,
+            "ms": 61.8999999910593,
+            "sha256": "cffac4487f9d2186895ce39c8f2351e47ff1daa0b1d05ca2e4351f80cf31b1cc"
+          },
+          {
+            "path": "assets/minecraft/models/block/hopper_side.json",
+            "bytes": 3046,
+            "ms": 61.8999999910593,
+            "sha256": "ecbf1628f1768a1c0669a4f8eb5f56a379aab40ef719c863d203eebdf88b33da"
+          },
+          {
+            "path": "assets/minecraft/models/block/crafting_table.json",
+            "bytes": 412,
+            "ms": 61.8999999910593,
+            "sha256": "98e1ff48fd72ed2a820ae4237e6d5193e0cd5ab6abd2338493c7bbbff130dea1"
+          },
+          {
+            "path": "assets/minecraft/models/block/blast_furnace.json",
+            "bytes": 214,
+            "ms": 61.79999999701977,
+            "sha256": "9ad81be0a1639b2b1acb4459dc0e9d6f399c093a7d83f96485f95ed7db685cdd"
+          },
+          {
+            "path": "assets/minecraft/models/block/blast_furnace_on.json",
+            "bytes": 217,
+            "ms": 61.79999999701977,
+            "sha256": "ac8f3a35104a8fcee5794959dc30826d780e3ffd9b80835506e9b758f1107395"
+          },
+          {
+            "path": "assets/minecraft/models/block/cube_all.json",
+            "bytes": 227,
+            "ms": 61.900000005960464,
+            "sha256": "be3205d629ffb9e03834c3d1d083f8a2c62e9f9ae80820755129408634e9144a"
+          },
+          {
+            "path": "assets/minecraft/models/block/cube_mirrored_all.json",
+            "bytes": 236,
+            "ms": 61.900000005960464,
+            "sha256": "eb0682e3126d537e8a15af343bc40e32339baa63f4f541143ed969e25e9231e0"
+          },
+          {
+            "path": "assets/minecraft/models/block/orientable.json",
+            "bytes": 99,
+            "ms": 61.79999999701977,
+            "sha256": "f3da11f14343fd2cb38fe196dc775d1f4c21284b0dfcf09314659da8f4b6fc79"
+          },
+          {
+            "path": "assets/minecraft/models/block/cube.json",
+            "bytes": 584,
+            "ms": 61.79999999701977,
+            "sha256": "3e4aacd02e816aeba38f83076596e18ded4cf49c01e17c62d1fce79850ffb84e"
+          },
+          {
+            "path": "assets/minecraft/models/block/cube_mirrored.json",
+            "bytes": 687,
+            "ms": 61.79999999701977,
+            "sha256": "e0a7b21709196c8641177e68a0a5e2a25d1de8f82e7ece75120dd38ed5d7a0fa"
+          },
+          {
+            "path": "assets/minecraft/models/block/orientable_with_bottom.json",
+            "bytes": 427,
+            "ms": 61.79999999701977,
+            "sha256": "8da2928f84a31c6986dc31a916b8be736e5b0afdce7b3fbe651ec42771dd7255"
+          },
+          {
+            "path": "assets/minecraft/models/block/block.json",
+            "bytes": 1136,
+            "ms": 61.79999999701977,
+            "sha256": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09"
+          },
+          {
+            "path": "assets/minecraft/textures/block/stone.png",
+            "bytes": 151,
+            "ms": 61.6000000089407,
+            "sha256": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f"
+          },
+          {
+            "path": "assets/minecraft/textures/block/furnace_front.png",
+            "bytes": 224,
+            "ms": 61.5,
+            "sha256": "aae808f71f1bddf4a25592f7dd3d7f6e9b3adaa739502170766424f4eb6bf9c5"
+          },
+          {
+            "path": "assets/minecraft/textures/block/furnace_side.png",
+            "bytes": 228,
+            "ms": 61.599999994039536,
+            "sha256": "cada9065da8d26b3a7324a203edb42f2564975519e8504d520e10d530822bb5b"
+          },
+          {
+            "path": "assets/minecraft/textures/block/furnace_top.png",
+            "bytes": 208,
+            "ms": 61.5,
+            "sha256": "59e26149cde8b86ea1d165c1a4ba5c44531a4b7be134b30c93120bba1cefb162"
+          },
+          {
+            "path": "assets/minecraft/textures/block/furnace_front_on.png",
+            "bytes": 269,
+            "ms": 61.3999999910593,
+            "sha256": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9"
+          },
+          {
+            "path": "assets/minecraft/textures/block/hopper_outside.png",
+            "bytes": 177,
+            "ms": 61.5,
+            "sha256": "83ccaffd41564465b45997c5f171a3af354d6951e4c4472fe1d1d953c4f57685"
+          },
+          {
+            "path": "assets/minecraft/textures/block/hopper_top.png",
+            "bytes": 155,
+            "ms": 61.5,
+            "sha256": "b6bb8d17e0fe5fc1ddcf8a9f4584d3844015629062876243850a079d506a243a"
+          },
+          {
+            "path": "assets/minecraft/textures/block/hopper_inside.png",
+            "bytes": 154,
+            "ms": 61.400000005960464,
+            "sha256": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb"
+          },
+          {
+            "path": "assets/minecraft/textures/block/oak_planks.png",
+            "bytes": 195,
+            "ms": 61.400000005960464,
+            "sha256": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3"
+          },
+          {
+            "path": "assets/minecraft/textures/block/crafting_table_side.png",
+            "bytes": 260,
+            "ms": 61.30000001192093,
+            "sha256": "e9755fc6da763909b285342eae12c5f7d1cc8462fab695bb157504ea207cda8c"
+          },
+          {
+            "path": "assets/minecraft/textures/block/crafting_table_front.png",
+            "bytes": 265,
+            "ms": 61.30000001192093,
+            "sha256": "1659c76a33039640e8bd5584af8db04bf626486432a389bcaf1567e1a45c6464"
+          },
+          {
+            "path": "assets/minecraft/textures/block/crafting_table_top.png",
+            "bytes": 203,
+            "ms": 61.20000000298023,
+            "sha256": "251e8aa014e30d040261022895853db3204bba241b9b44c11762628550986f2d"
+          },
+          {
+            "path": "assets/minecraft/textures/block/blast_furnace_front.png",
+            "bytes": 248,
+            "ms": 61.29999999701977,
+            "sha256": "df580828cf9079059e167dc13b51713d8029cdcf0f0b20374367c71a805d7f62"
+          },
+          {
+            "path": "assets/minecraft/textures/block/blast_furnace_side.png",
+            "bytes": 238,
+            "ms": 61.20000000298023,
+            "sha256": "2254b141bca1943258f66bca2ce34d4c7fb5f777d27cb2d5d8d9a4f0ad6f3ab7"
+          },
+          {
+            "path": "assets/minecraft/textures/block/blast_furnace_top.png",
+            "bytes": 187,
+            "ms": 61.29999999701977,
+            "sha256": "003c4e4c615a20a7f0ba48baf0e9cf3bae55b6a2a387d34e0cff9958aa2420c0"
+          },
+          {
+            "path": "assets/minecraft/textures/block/blast_furnace_front_on.png",
+            "bytes": 283,
+            "ms": 61.400000005960464,
+            "sha256": "5363eaaf29c6cfed922c05fd4df9eaa7ef52b2d78ca56affda9ebf45ba33215d"
+          },
+          {
+            "path": "assets/minecraft/textures/block/blast_furnace_front_on.png.mcmeta",
+            "bytes": 70,
+            "ms": 61.20000000298023,
+            "sha256": "a1d4171d971c3a7b3202d9aa67062f643f579443a71cc92efe38f1acd8990f03"
+          }
+        ],
+        "modelStates": 26,
+        "textures": 16,
+        "imageInfo": [
+          {
+            "id": "minecraft:block/stone",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/furnace_front",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/furnace_side",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/furnace_top",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/furnace_front_on",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/hopper_outside",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/hopper_top",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 100,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/hopper_inside",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/oak_planks",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/crafting_table_side",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/crafting_table_front",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/crafting_table_top",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/blast_furnace_front",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/blast_furnace_side",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/blast_furnace_top",
+            "width": 16,
+            "height": 16,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          },
+          {
+            "id": "minecraft:block/blast_furnace_front_on",
+            "width": 16,
+            "height": 32,
+            "alphaZero": 0,
+            "alphaPartial": 0
+          }
+        ]
+      }
+    }
+  },
+  "frameIntervals": {
+    "n": 14090,
+    "mean": 4.507281760113554,
+    "p50": 4.19999999999709,
+    "p95": 8.30000000000291,
+    "p99": 8.5,
+    "max": 25.10000000000582,
+    "over16_7": 4,
+    "over33_3": 0,
+    "over50": 0
+  },
+  "phases": {
+    "simulation": {
+      "n": 14090,
+      "mean": 0.040958126316559575,
+      "p50": 0,
+      "p95": 0.10000000894069672,
+      "p99": 1.1000000089406967,
+      "max": 5.600000008940697,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "filter": {
+      "n": 14090,
+      "mean": 0.4500638750933687,
+      "p50": 0.20000000298023224,
+      "p95": 1.5,
+      "p99": 2.2000000029802322,
+      "max": 9.099999994039536,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "sort": {
+      "n": 14090,
+      "mean": 0.4201419446572418,
+      "p50": 0.20000000298023224,
+      "p95": 1.4000000059604645,
+      "p99": 2,
+      "max": 6.200000002980232,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "vertices": {
+      "n": 14090,
+      "mean": 0.6005110007088772,
+      "p50": 0.29999999701976776,
+      "p95": 2.1000000089406967,
+      "p99": 3.2000000029802322,
+      "max": 8.699999988079071,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "audioFrame": {
+      "n": 14090,
+      "mean": 0.04916962391100004,
+      "p50": 0,
+      "p95": 0.10000000894069672,
+      "p99": 0.20000000298023224,
+      "max": 5.5999999940395355,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "audioSchedule": {
+      "n": 14090,
+      "mean": 0,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "submit": {
+      "n": 14090,
+      "mean": 0.8334705464388564,
+      "p50": 0.7000000029802322,
+      "p95": 1.300000011920929,
+      "p99": 1.699999988079071,
+      "max": 7.799999997019768,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "dom": {
+      "n": 14090,
+      "mean": 0.0009368346452797618,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0,
+      "max": 0.20000000298023224,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    },
+    "serialize": {
+      "n": 14090,
+      "mean": 0.001639460594075381,
+      "p50": 0,
+      "p95": 0,
+      "p99": 0.09999999403953552,
+      "max": 0.30000001192092896,
+      "over16_7": 0,
+      "over33_3": 0,
+      "over50": 0
+    }
+  },
+  "scheduling": {
+    "n": 10,
+    "mean": 0.9799999997019768,
+    "p50": 0.7999999970197678,
+    "p95": 1.3999999910593033,
+    "p99": 1.3999999910593033,
+    "max": 1.7000000029802322,
+    "over16_7": 0,
+    "over33_3": 0,
+    "over50": 0
+  },
+  "gpu": {
+    "n": 470,
+    "mean": 1.4920159319148942,
+    "p50": 1.3056,
+    "p95": 3.173376,
+    "p99": 3.608576,
+    "max": 4.120576,
+    "over16_7": 0,
+    "over33_3": 0,
+    "over50": 0
+  },
+  "peakParticles": 8649,
+  "peakVisible": 4549,
+  "peakCalls": 176,
+  "runs": [
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.200657596371883,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1328,
+      "p50": 4.19999999999709,
+      "p95": 8.400000000001455,
+      "max": 20.900000000001455,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 3,
+      "batchReleased": 3
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.209365079365078,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1443,
+      "p50": 4.19999999999709,
+      "p95": 8.19999999999709,
+      "max": 12.599999999998545,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 4,
+      "batchReleased": 4
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.20065759637189,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1439,
+      "p50": 4.19999999999709,
+      "p95": 8.299999999995634,
+      "max": 16.799999999995634,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 5,
+      "batchReleased": 5
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.209365079365071,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1288,
+      "p50": 4.19999999999709,
+      "p95": 8.400000000008731,
+      "max": 25.10000000000582,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 6,
+      "batchReleased": 6
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.200657596371869,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1410,
+      "p50": 4.19999999999709,
+      "p95": 8.30000000000291,
+      "max": 16.69999999999709,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 7,
+      "batchReleased": 7
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.209365079365085,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1396,
+      "p50": 4.19999999999709,
+      "p95": 8.30000000000291,
+      "max": 12.39999999999418,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 8,
+      "batchReleased": 8
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.200657596371869,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1442,
+      "p50": 4.19999999999709,
+      "p95": 8.19999999999709,
+      "max": 16.60000000000582,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 9,
+      "batchReleased": 9
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.209365079365071,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1477,
+      "p50": 4.19999999999709,
+      "p95": 4.30000000000291,
+      "max": 12.60000000000582,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 10,
+      "batchReleased": 10
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.200657596371883,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1429,
+      "p50": 4.19999999999709,
+      "p95": 8.30000000000291,
+      "max": 16.69999999999709,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 11,
+      "batchReleased": 11
+    },
+    {
+      "shape": "combined",
+      "seed": 2632026,
+      "reason": "ended",
+      "elapsed": 6.209365079365071,
+      "spawned": 12912,
+      "children": 11972,
+      "peakParticles": 8649,
+      "frames": 1438,
+      "p50": 4.19999999999709,
+      "p95": 8.299999999988358,
+      "max": 8.5,
+      "peakCalls": 176,
+      "signalPeak": 0.18423992395401,
+      "activeSources": 0,
+      "batchCreated": 12,
+      "batchReleased": 12
+    }
+  ],
+  "longFrames": [],
+  "attribution": "Measured application phase durations and preceding callback work are evidence; browser/automation/GC causes remain unproven without their own trace"
+}

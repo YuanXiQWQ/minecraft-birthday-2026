@@ -4,6 +4,7 @@ import { resolve, relative } from 'node:path';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
+import {readVanillaResources,RESOURCE_PREFIX} from './vanilla-resources.ts';
 
 /** This auditor only accepts the two known experiment output directories. */
 const name=process.argv[2]??'dist';
@@ -33,11 +34,15 @@ const gameFile=manifest['game/index.html'].file;
 assert.ok(![...visited].some(id=>manifest[id].file===gameFile));
 const homeBytes=[...visited].reduce((n,id)=>n+statSync(resolve(root,manifest[id].file)).size,0);
 assert.ok(homeBytes<25000,'home unexpectedly imports heavy game code');
+/** Exact source bytes are allowed assets; complete clients and development records are not. */
+const originals=readVanillaResources();
 const files=walk(root).map(path=>{
   const file=relative(root,path).replaceAll('\\','/'), body=readFileSync(path);
+  if(file.startsWith(RESOURCE_PREFIX)){const source=originals.get(file.slice(RESOURCE_PREFIX.length));assert.ok(source,`unlisted runtime resource ${file}`);assert.deepEqual(body,Buffer.from(source));return {file,bytes:body.length,sha256:createHash('sha256').update(body).digest('hex')};}
   assert.ok(file==='index.html'||file==='game/index.html'||file==='.vite/manifest.json'||file==='THIRD_PARTY_LICENSES.md'||/^assets\/[a-zA-Z0-9_.-]+\.(js|css)$/.test(file),`unexpected build artifact ${file}`);
   const text=body.toString('utf8');
-  for(const forbidden of ['AGENTS.md','docs/context/','client.jar','server.jar','experiments/placement/','minecraft:block/','furnace_front','hopper_outside'])assert.ok(!text.includes(forbidden),`forbidden content ${forbidden} in ${file}`);
+  for(const forbidden of ['AGENTS.md','docs/context/','client.jar','server.jar','experiments/placement/','MC_LOCAL_SAMPLES','AppData/Local/Temp','F:/JerryCode/'])assert.ok(!text.includes(forbidden),`forbidden content ${forbidden} in ${file}`);
   return {file,bytes:body.length,gzipBytes:gzipSync(body).length,sha256:createHash('sha256').update(body).digest('hex')};
 });
-process.stdout.write(JSON.stringify({build:name,homeJsBytes:homeBytes,originalAssets:false,internalRecords:false,files},null,2)+'\n');
+assert.equal(files.filter(f=>f.file.startsWith(RESOURCE_PREFIX)).length,originals.size);
+process.stdout.write(JSON.stringify({build:name,homeJsBytes:homeBytes,originalAssets:true,originalFiles:originals.size,internalRecords:false,files},null,2)+'\n');

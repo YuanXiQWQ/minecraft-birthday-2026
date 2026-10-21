@@ -99,7 +99,7 @@ export class GuiView {
   publish():void {
     this.records=this.records.slice(-160);
     const f=this.frame,r=this.canvas.getBoundingClientRect(),factor=f.physicalScale/f.dpr;
-    this.report.textContent=JSON.stringify({status:this.pack?'local-originals':'BLOCKED:no-local-originals',kind:this.kind,activeId:this.activeId,open:this.open,candidateOnly:true,
+    this.report.textContent=JSON.stringify({status:this.pack?'vanilla-26.3':'BLOCKED:no-vanilla-26.3',kind:this.kind,activeId:this.activeId,open:this.open,candidateOnly:true,
       frame:f,css:{width:r.width,height:r.height},slots:this.state.slots.map(s=>({...s,cx:r.left+(f.x+s.x+8)*factor,cy:r.top+(f.y+s.y+8)*factor})),
       groups:this.state.groups,cursor:this.state.cursor,unlocked:this.state.unlocked,gesture:this.gesture,hover:this.hover,textFocused:document.activeElement===this.input,
       records:this.records,checks:this.checks,loading:this.pack?.loading},null,2);this.onChange();

@@ -8,12 +8,19 @@ import type { VanillaPack } from './vanilla-pack.ts';
 export type { View } from './camera.ts';
 import { DebugModels } from './debug-models.ts';
 import { edges, key } from './domain.ts';
+import {FrameProfile} from './frame-profile.ts';
 import type { Cell, Facing, Kind, Layout } from './domain.ts';
 
 export interface Pick { id: string; role: 'device' | 'ground' | 'occluder'; point: Cell; normal: Cell; candidate: Cell }
-export interface SceneEffect {frame:(time:number,delta:number)=>void;afterFrame:()=>void;dispose:()=>void}
+export interface SceneEffect {frame:(time:number,delta:number)=>void;afterFrame:()=>void;dispose:()=>void;pause?:(reason:string)=>Promise<void>}
 /** A render-only stone probe stays outside the legal build cells to prevent hidden occupancy conflicts. */
 export const STONE_SAMPLE_CELL:Cell=[-5,0,-2];
+
+/** Require an actual WebGL2 context; an unavailable backend never substitutes a two-dimensional scene.
+ * @param {HTMLCanvasElement} canvas Native render surface, or an explicit failure-test injection.
+ * @return {WebGL2RenderingContext} Actual browser context.
+ */
+export function requireWebGL2(canvas:HTMLCanvasElement):WebGL2RenderingContext{const gl=canvas.getContext('webgl2',{antialias:true,powerPreference:'high-performance'});if(!gl)throw new Error('WebGL2 unavailable: real 3D rendering is required');return gl;}
 
 /** Convert a visible world-space face hit into its adjacent logical cell, including negatives.
  * @param {Cell} point World-space point.
@@ -24,6 +31,8 @@ export function candidateCell(point: Cell, normal: Cell): Cell { return point.ma
 
 /** Read bounded geometry/renderer counters; memory counts are not GPU byte measurements. */
 export class SceneAdapter {
+  /** Count owned live adapters, independently of browser-internal rendering work. */
+  static live=0;
   scene = new Scene();
   camera = new PerspectiveCamera(70, 1, .1, 100);
   raycaster = new Raycaster();
@@ -53,13 +62,20 @@ export class SceneAdapter {
   sampleSink: ((time: number, delta: number) => void) | null = null;
   onResize: (() => void) | null = null;
   effect:SceneEffect|null=null;
+  profile:FrameProfile;
+  queuedRaf=0;contextLost=false;contextEvents:object[]=[];onContextChange:((lost:boolean)=>void)|null=null;contextProbeCleanup:(()=>void)|null=null;
+  lostHandler:(event:Event)=>void;restoredHandler:(event:Event)=>void;
 
   /** Allocate one perspective WebGL2 renderer and start the real frame loop.
    * @param {HTMLElement} host Canvas host.
    * @param {string} label Localized canvas label.
    */
   constructor(host: HTMLElement, label: string) {
-    this.renderer = new WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    const canvas=document.createElement('canvas');this.renderer = new WebGLRenderer({canvas,context:requireWebGL2(canvas),antialias:true,powerPreference:'high-performance'});
+    this.profile=new FrameProfile(this.renderer.getContext() as WebGL2RenderingContext);
+    this.lostHandler=(event:Event)=>{event.preventDefault();if(this.disposed)return;this.contextLost=true;this.contextEvents.push({type:'lost',trusted:event.isTrusted,time:performance.now(),nativeLost:this.renderer.getContext().isContextLost()});this.profile.lost();void this.effect?.pause?.('webgl-context-lost');this.onContextChange?.(true);};
+    this.restoredHandler=(event:Event)=>{if(this.disposed)return;this.contextLost=false;this.profile.restored();this.contextEvents.push({type:'restored',trusted:event.isTrusted,time:performance.now(),nativeLost:this.renderer.getContext().isContextLost()});this.onContextChange?.(false);};
+    canvas.addEventListener('webglcontextlost',this.lostHandler);canvas.addEventListener('webglcontextrestored',this.restoredHandler);SceneAdapter.live++;
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.domElement.setAttribute('aria-label', label);
     this.renderer.domElement.setAttribute('tabindex', '0');
@@ -124,7 +140,7 @@ export class SceneAdapter {
   }
 
   /** Change model factories without mutating logical layout or the accepted first-person camera.
-   * @param {VanillaPack|null} pack Verified external samples or explicit diagnostic fallback.
+   * @param {VanillaPack|null} pack Verified versioned resources or explicit diagnostic fallback.
    */
   setVanilla(pack:VanillaPack|null):void {
     const next=pack?new VanillaModels(pack):null;
@@ -238,15 +254,34 @@ export class SceneAdapter {
    */
   animate(time: number): void {
     if (this.disposed) return;
+    if(this.contextLost){this.queueFrame();return;}
+    this.profile.begin(time);
     const delta = this.lastFrame ? time-this.lastFrame : 0; this.lastFrame = time;
     if (delta > 0) { this.intervals.push(delta); if (this.intervals.length > 600) this.intervals.shift(); this.sampleSink?.(time,delta); }
-    this.effect?.frame(time,delta);this.renderOnce();this.effect?.afterFrame(); this.frameHandle = requestAnimationFrame(t => this.animate(t));
+    this.effect?.frame(time,delta);this.renderOnce();this.effect?.afterFrame();this.profile.previousWork=performance.now()-this.profile.frameStart;this.queueFrame();
+  }
+
+  /** Maintain exactly one owned animation callback, including while graphics are temporarily lost. */
+  queueFrame():void{if(this.disposed)return;if(this.queuedRaf!==0)throw new Error('duplicate-owned-RAF');this.queuedRaf=1;this.frameHandle=requestAnimationFrame(time=>{this.queuedRaf=0;this.animate(time);});}
+
+  /** Exercise the native context-loss extension and actual restoration events on the same canvas.
+   * @return {Promise<object>} Explicit unavailable/failure or real event evidence, never a renderer rebuild.
+   */
+  contextLossProbe():Promise<object>{
+    const gl=this.renderer.getContext(),extension=gl.getExtension('WEBGL_lose_context'),canvas=this.renderer.domElement;
+    if(!extension)return Promise.resolve({status:'UNAVAILABLE',reason:'WEBGL_lose_context extension unavailable'});
+    if(this.contextProbeCleanup)return Promise.resolve({status:'FAIL',reason:'context probe already active'});
+    return new Promise(resolve=>{let timeout:ReturnType<typeof setTimeout>,restoreTimer:ReturnType<typeof setTimeout>;const start=this.contextEvents.length;
+      const cleanup=()=>{clearTimeout(timeout);clearTimeout(restoreTimer);canvas.removeEventListener('webglcontextrestored',restored);this.contextProbeCleanup=null;};
+      const restored=()=>{this.renderOnce();const error=gl.getError(),events=this.contextEvents.slice(start);cleanup();resolve({status:error===gl.NO_ERROR&&events.length===2?'PASS':'FAIL',events,sameCanvas:canvas===this.renderer.domElement,disposed:this.disposed,nativeLost:gl.isContextLost(),glError:error,queuedRaf:this.queuedRaf,liveAdapters:SceneAdapter.live});};
+      this.contextProbeCleanup=()=>{cleanup();resolve({status:'CANCELLED',reason:'adapter disposed'});};canvas.addEventListener('webglcontextrestored',restored);timeout=setTimeout(()=>{cleanup();resolve({status:'FAIL',reason:'native restore timeout',events:this.contextEvents.slice(start)});},5000);extension.loseContext();restoreTimer=setTimeout(()=>extension.restoreContext(),750);
+    });
   }
 
   /** Submit a frame with an optional deterministic texture-animation time for browser assertions.
    * @param {number} animationTime Texture clock in milliseconds, defaulting to the live renderer clock.
    */
-  renderOnce(animationTime=performance.now()): void { this.vanilla?.animate(animationTime);this.renderer.render(this.scene,this.camera); }
+  renderOnce(animationTime=performance.now()): void {this.vanilla?.animate(animationTime);const start=performance.now();this.profile.beforeSubmit();this.renderer.render(this.scene,this.camera);this.profile.afterSubmit();this.profile.phases.submit=performance.now()-start;}
 
   /** Return actual browser/WebGL environment and current renderer counters.
    * @return {object} Diagnostic environment, not a performance certification.
@@ -263,15 +298,18 @@ export class SceneAdapter {
       instances: this.objects.size, calls: this.renderer.info.render.calls, triangles: this.renderer.info.render.triangles,
       geometries: this.renderer.info.memory.geometries, textures: this.renderer.info.memory.textures,
       ownedGeometryCreated: this.models.created, ownedGeometryReleased: this.models.released,
-      assetMode:this.vanilla?'local-vanilla-samples':'debug-geometry',litSample:this.lit,gallerySample:this.sampleId,
+      assetMode:this.vanilla?'vanilla-26.3':'debug-geometry',litSample:this.lit,gallerySample:this.sampleId,
+      lifecycle:{liveAdapters:SceneAdapter.live,queuedRaf:this.queuedRaf,contextLost:this.contextLost,contextEvents:this.contextEvents,ownedContextListeners:this.disposed?0:2},
       vanilla:this.vanilla?.diagnostics()??null };
   }
 
   /** Stop animation/observation and release effects, audio, model, helper, line, material and renderer resources. */
   dispose(): void {
     if (this.disposed) return; this.disposed = true;
+    SceneAdapter.live--;this.contextProbeCleanup?.();this.renderer.domElement.removeEventListener('webglcontextlost',this.lostHandler);this.renderer.domElement.removeEventListener('webglcontextrestored',this.restoredHandler);this.onContextChange=null;
     this.effect?.dispose();this.effect=null;
-    cancelAnimationFrame(this.frameHandle); this.observer.disconnect(); this.sampleSink = null; this.onResize = null;
+    this.profile.dispose();
+    cancelAnimationFrame(this.frameHandle);this.queuedRaf=0; this.observer.disconnect(); this.sampleSink = null; this.onResize = null;
     this.showPreview(null,'furnace','north',false);
     for (const o of this.objects.values()) this.models.release(o); this.objects.clear(); this.signatures.clear();
     this.models.release(this.environment);

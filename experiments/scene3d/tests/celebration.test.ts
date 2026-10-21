@@ -2,7 +2,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {FireworkSimulation,SHAPES,spriteFrame,visibleSpark,fireworkSound,starterLifetime}from'../web/src/firework-simulation.ts';
 import type{Explosion,Shape}from'../web/src/firework-simulation.ts';
-import{readLocalSamples}from'../tools/local-resources.ts';
+import{readVanillaResources}from'../tools/vanilla-resources.ts';
 /** Build a repeatable rule fixture without importing production progress or any original asset bytes.
  * @param {Shape} shape Original explosion type.
  * @param {boolean} trail Trail toggle.
@@ -33,8 +33,8 @@ test('F06 near/far boundary, blast/twinkle pitch ranges and integer-tick sound d
   assert.equal(fireworkSound(false,false,15.999,0).event,'entity.firework_rocket.blast');assert.equal(fireworkSound(false,false,16,0).event,'entity.firework_rocket.blast_far');assert.equal(fireworkSound(true,false,16,0).event,'entity.firework_rocket.large_blast_far');assert.equal(fireworkSound(false,true,16,0).event,'entity.firework_rocket.twinkle_far');
   assert.equal(fireworkSound(false,false,10,0).delay,0);assert.equal(fireworkSound(false,false,16,0).delay,.4);assert.equal(fireworkSound(false,true,32,.5).pitch,.975);assert.equal(fireworkSound(false,false,32,0).volume,20);
 });
-test('F07 original particle/audio cohort is explicitly blocked when absent',{skip:!process.env.MC_LOCAL_SAMPLES?'BLOCKED: no configured original celebration resources':false},ctx=>{
-  const files=readLocalSamples(process.env.MC_LOCAL_SAMPLES!),m=JSON.parse(new TextDecoder().decode(files.get('manifest.json')));if(!m.celebration){ctx.skip('BLOCKED: configured resources have no celebration cohort');return;}
+test('F07 committed original particle/audio cohort has all required dependencies',()=>{
+  const files=readVanillaResources(),m=JSON.parse(new TextDecoder().decode(files.get('manifest.json')));assert.ok(m.celebration);
   assert.equal(m.celebration.entries.length,24);assert.equal(Object.keys(m.celebration.events).length,12);const frames=JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/particles/firework.json'))).textures;assert.deepEqual(frames,Array.from({length:8},(_,i)=>`minecraft:spark_${7-i}`));
 });
 

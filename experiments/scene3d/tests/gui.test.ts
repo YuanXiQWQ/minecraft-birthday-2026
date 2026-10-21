@@ -1,7 +1,7 @@
 /** Input candidates, live-resource dimensions and inherited GUI transforms have independent regression checks. */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readLocalSamples } from '../tools/local-resources.ts';
+import { readVanillaResources } from '../tools/vanilla-resources.ts';
 import { SlotExperiment, guiSlots } from '../web/src/gui-state.ts';
 import { resolveModel } from '../web/src/model-format.ts';
 import type { ModelSource } from '../web/src/model-format.ts';
@@ -32,9 +32,9 @@ test('Q14 child display contexts merge without dropping the inherited GUI transf
   const m=resolveModel('debug:child',(id):ModelSource=>id==='debug:child'?{parent:'debug:parent',display:{ground:{scale:[1,1,1]}}}:{display:{gui:{rotation:[30,225,0]}}});
   assert.deepEqual(m.display?.gui.rotation,[30,225,0]);assert.ok(m.display?.ground);
 });
-test('Q15 optional GUI cohort hashes, image dimensions and distinct item source routes',{skip:!process.env.MC_LOCAL_SAMPLES?'BLOCKED: no external original GUI cohort; no vanilla pass':false},context=>{
-  const files=readLocalSamples(process.env.MC_LOCAL_SAMPLES!),manifest=JSON.parse(new TextDecoder().decode(files.get('manifest.json')));
-  if(!manifest.gui){context.skip('BLOCKED: configured external cohort has models only, no original GUI sample');return;}
+test('Q15 committed GUI cohort hashes, image dimensions and distinct item source routes',()=>{
+  const files=readVanillaResources(),manifest=JSON.parse(new TextDecoder().decode(files.get('manifest.json')));
+  assert.ok(manifest.gui);
   assert.equal(manifest.gui.entries.length,33);for(const path of manifest.gui.entries)assert.ok(files.has(path));
   const inventory=Buffer.from(files.get('assets/minecraft/textures/gui/container/inventory.png')!);assert.equal(inventory.readUInt32BE(16),256);assert.equal(inventory.readUInt32BE(20),256);
   const flat=JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/items/egg.json'))),block=JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/items/furnace.json')));

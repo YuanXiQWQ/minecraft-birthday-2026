@@ -135,7 +135,7 @@ export class VanillaModels {
   /** Report counts and source hashes without exporting texture pixels or model vertices.
    * @return {object} Local sample inventory and resource ownership counters.
    */
-  diagnostics() {return {mode:'local-vanilla-samples',states:this.pack.samples.length,ownedCreated:this.created,ownedReleased:this.released,
+  diagnostics() {return {mode:'vanilla-26.3',states:this.pack.samples.length,ownedCreated:this.created,ownedReleased:this.released,
     materials:this.materials.size,textures:[...this.textures].map(([id,r])=>({id,width:r.source.width,height:r.source.height,frames:r.frames.length,interpolate:r.source.animation?.interpolate??false,
       alphaPixels:r.source.rgba.filter((v,i)=>i%4===3&&v<255).length,sha256:r.source.sha256})),loading:this.pack.loading};}
 

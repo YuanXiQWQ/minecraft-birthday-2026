@@ -1,43 +1,37 @@
-# 原版资源与最终替换位置索引
+# 原版资源清单、来源与使用索引
 
-本文件按 P2 第四轮用户决定建立，覆盖此前隔离资源及新增粒子/音效/截图。用户允许这些资源及可逆转换暂时进入 Git/普通静态构建，最终由用户校对并替换为其准备的手绘素材；**当前项目发布路径按该替换方案解决，不再沿用旧报告的“分发方案未定”作为 P2 阻断**。这里记录实际存放和使用情况，不把可下载或本机显示当作新的权利方授权文本。
+当前要求：以Minecraft Java Edition 26.3原版模型、纹理、GUI、字体、物品图标、粒子和声音为基准，正常提交Git并进入普通构建，默认使用。**不要求外部缓存、localhost、特殊加载按钮或最终全部手绘替换。** 用户今后提供自定义资源时，仅替换其明确指定的内容；目前没有声称任何替代素材已经制作或完成替换。
 
-本次实际选择：原始资源继续保留在仓库外；新增浏览器 JPEG 证据获准进入 `docs/`；普通构建仍无原版样本。允许进入与已经进入必须分开。后续若复制资产进静态包，必须补充本索引的实际目标路径。`AGENTS.md`/docs/构件本身不进入网站。
+开发授权与公开发布的权利审查分开：用户同意开发期使用不是权利方许可声明；未来公开发布需另核对适用条款，不能把该事项改成开发期原版素材禁令。本次不部署。
 
-## 1. 当前文件位置
+## 当前可复用资源
 
-下面缓存均以 `C:/Users/YuanXi/AppData/Local/Temp/` 为根前缀。不是部署依赖，不要求最终玩家导入客户端。
+- 仓库源目录：`resources/minecraft/26.3/`，已实现功能无需开发者再次提取客户端。
+- [完整机器清单](../../resources/minecraft/26.3/manifest.json)：95个资源，348,101字节；另有manifest本身。31 JSON、44 PNG、8 mcmeta、12 Ogg。
+- 普通dev/build/preview通过Vite base解析 `minecraft/26.3/`；根部署为 `/minecraft/26.3/`，仓库子路径为 `/minecraft-birthday-2026/minecraft/26.3/`。
+- Vite仅打包清单96个文件，不复制完整JAR、其他客户端资源、开发资料、个人路径或临时输出。哈希检查确保内容正确，不限制资源进入Git/构建。
+- `.gitattributes`对该版本资源设置`-text`，避免Windows的autocrlf在克隆检出时改写JSON/mcmeta/manifest字节而破坏原版哈希；不改变`.gitignore`。
 
-| 位置 | 实际内容 | Git / 普通构建 | 最终校对动作 |
+| 类别 | 当前原版内容/使用管线 | 已验证范围及缺口 | 当前替换状态 |
 | --- | --- | --- | --- |
-| `minecraft-birthday-2026-p1-20261020/` | 原始 client.jar、官方版本元数据、资产索引34与sounds.json及P1分析文件 | 否 / 否 | 仅原始核实输入，禁止当整包产品资源复制；构件哈希见本轮报告 |
-| `minecraft-birthday-2026-p2-models-20261020/` | 首轮离线模型JSON/父依赖及PNG哈希 | 否 / 否 | 历史原始探针，保留；正式资源转换不以此历史17状态为全部能力 |
-| `minecraft-birthday-2026-p2-materials-20261020/` | 第二轮38个模型/材质白名单，原版16PNG/动画元数据；`browser-evidence/`39张历史截图 | 否 / 否 | 模型/贴图与截图都需作为原版来源识别；明细见[第二轮加载索引](evidence/vanilla-round2/resource-loading.json)及[截图索引](evidence/vanilla-round2/local-screenshot-index.json) |
-| `minecraft-birthday-2026-p2-gui-20261020/` | 第三轮71条：上述38条＋33条GUI/font/items；`browser-evidence/`历史截图、javap | 否 / 否 | 原版容器/精灵/ASCII/egg PNG、furnace模型图标输入均在替换范围；明细见[第三轮资源证据](evidence/gui-round3/resource-evidence.json) |
-| `minecraft-birthday-2026-p2-fireworks-20261020/` | 当前联合缓存95条：原71条＋24条庆典；18份成功的静态javap检查输出 | 否 / 否 | 当前完整条目逐路径/大小/SHA-256/声音官方SHA-1与来源见[resource-index.json](evidence/celebration-round4/resource-index.json)；javap不作为网站资源 |
-| `docs/p2/evidence/celebration-round4/*.jpg` | 本轮10张含原版模型、GUI或粒子的实际浏览器截图；其中attempt-stale-star作废不用于Creeper通过 | **是** / 否 | 这些不是手绘替代图或Java客户端截图。最终交付可按用户决定保留开发证据、替换或移出；本次哈希逐项在机器清单screenshots中 |
-| `experiments/scene3d/dist/`、`dist-subpath/` | 当前构建只有HTML/JS/CSS/许可/manifest，不含上述PNG/Ogg/模型数据/截图 | 本地生成 / 若日后选择该构建才是产物 | 根/子路径HTTP及白名单审计均通过；本轮不部署。当前缺样本是BLOCKED，不冒充原版通过 |
+| 模型/方块状态 | `assets/minecraft/blockstates/`、`models/block/`，父继承、纹理变量、UV、直角状态朝向 | stone/furnace/hopper/crafting_table/blast_furnace，26变体；元素旋转、UV-lock、multipart等未支持 | 未指定替换，保持原版 |
+| 方块纹理 | `textures/block/`，16张原版纹理及高炉动画元数据 | 最近邻/sRGB、镂空、lit状态/插值；未完成全Java光照/AO | 同上 |
+| GUI | `textures/gui/container/`、`sprites/`及对应mcmeta | 个人/工作台/炉/高炉/漏斗局部界面、槽、按钮、Tooltip；无完整业务 | 同上 |
+| 字体 | `font/`及`textures/font/ascii.png` | 当前位图ASCII提供者与字宽；原始字体定义保持来源，其他提供者不加载，不冒称全Unicode覆盖 | 同上 |
+| 图标 | `items/egg.json`、`items/furnace.json`、相关item模型/PNG及共享block模型 | egg二维图标，furnace按原版display.gui运行时生成3D图标；其他图标未实现 | 同上 |
+| 粒子 | `particles/firework.json`、`flash.json`及9张精灵 | 五形状世界坐标轨迹、8帧火花和Flash、Trail/Twinkle；非完整Java shader/碰撞 | 同上 |
+| 声音 | `sounds.json`所列12事件及12个Ogg | 烟花7事件、Toast3事件、经验拾取/升级；WebAudio真实解码/调度，人工试听待验 | 未指定替换；手绘贴图不能替换音频 |
 
-## 2. 当前联合缓存的分类替换职责
+## 来源与校验
 
-所有路径均相对于当前 `externalRoot`，不要遗漏旧缓存的重复副本。
+官方26.3 client SHA-1：`e877b6a07acd633fb3bb475002175cec036e7b87`。官方资产索引34 SHA-1：`0c8f43b28f837869c1e54a6aeb22c396a1548946`。每个资源路径/长度/SHA-256在manifest中；声音另记官方对象SHA-1与URL。
 
-| 路径类别 | 实际消费者 | 替换/校对重点 |
-| --- | --- | --- |
-| `assets/minecraft/blockstates/*.json`、`models/block/*.json` | vanilla-pack/model-format/vanilla-models | 五类26状态、父继承/UV/方向；如替换模型，应核对碰撞拾取、朝向和非立方体开口，不只换图片 |
-| `textures/block/*.png`、高炉 `.png.mcmeta` | 三维工作站和方块物品图标 | 16张纹理、16px采样、镂空alpha、lit帧与动画元数据；原版furnace图标会继承同一资源 |
-| `textures/gui/**` | gui-pack/gui-view | 容器背景、槽/按钮/Tooltip相关精灵及拉伸元数据；替代后重新跑尺寸、九宫格和像素测试 |
-| `font/**`、`textures/font/**` | ASCII位图字体加载、宽度扫描 | 不只替换字图，还应核对字符映射、advance/行高、独立字体许可；当前不是全Unicode字体方案 |
-| `items/**`、`models/item/**`、`textures/item/**` | egg平面图标、furnace三维图标 | 两类路径不能统一当独立PNG；继承display.gui、透明边界及数量文本定位保持可核对 |
-| `particles/firework.json`、`particles/flash.json` | celebration-pack帧定义 | 火花反向帧序与Flash单帧，替换后保持规则或明确审查新约定 |
-| `textures/particle/spark_0.png`…`spark_7.png`、`flash.png` | firework-batch runtime atlas | 8×8火花与32×32Flash；不要把几何轨迹改成五张轮廓图。颜色和透明度由模拟叠乘 |
-| `sounds.json`、`sounds/fireworks/*.ogg`、`sounds/ui/toast/*.ogg`、`sounds/random/orb.ogg`、`levelup.ogg` | celebration-audio | 12事件/12样本；最终声音来源也须校对，不能认为“替换手绘贴图”自动替换音频。需要更换时登记替代样本与事件映射、时长/音量/音高 |
+`assets/minecraft/sounds.json`只选取已实现的12个事件，定义、权重、音量和Ogg不变；manifest的derived字段明确记录从官方原定义筛选，源SHA与派生文件SHA分开，不把派生内容冒充原文件哈希。其他原始文件逐字节保留，包括模型父链、状态、纹理及动画元数据。只声明当前ASCII/font与五类模型适配能力，不拉入所有无关提供者或全客户端。
 
-庆典新增24条共 **934,320字节**，含2粒子JSON、9PNG、sounds.json和12Ogg。95条完整清单是实际文件索引；未把整份客户端或整套声音下载进来。已有manifest的原版JSON/音频定义只在外部缓存，机器索引保留路径、哈希与本轮12事件元数据供审查。
+一次性导入工具为 `experiments/scene3d/tools/import-vanilla-resources.mjs`，可将已校验提取目录导入仓库；它是维护工具，**不是克隆后运行的前置步骤**。普通运行只需在 `experiments/scene3d/` 安装锁定依赖并执行npm脚本。旧MC_LOCAL_SAMPLES中间件已移除。
 
-## 3. 运行时转换与证据
+## 历史资料
 
-- `vanilla-models` 的 BufferGeometry/纹理、GUI glyph/icon Canvas、`firework-batch` 的306×34 atlas、WebAudio解码PCM均只在浏览器内存；未输出可逆转换文件到源码或dist。正式替换应从各源输入替换并重新生成，避免只替换一个截图。
-- 本轮JPEG是开发证据，已获当前授权提交；不要当正式页面素材。10张文件的路径/哈希均列在resource-index.json；其余JSON/测试日志为数值、路径、哈希和运行事件，没有PNG/base64或音频buffer内联。
-- 此前P1、P2第二/三轮原始报告与截图索引保持原文，其“不提交截图/分发未定”描述的是当时边界；当前以本文件及第四轮用户决定为准，不回写历史实验事实。
-- 最终素材替换核对尚未执行，不代表进入正式结局、P3–P9或获准部署。下一轮新增/移动任何原版或替代素材时继续更新这里及机器清单。
+P1与P2各轮原始报告、哈希和失败记录保持原样。第二/三/四轮采用的仓库外样本与截图路径只记录当时实验环境；“只能本机/禁止Git或构建/必须全部替换”的旧方向均不再是当前规范。
+
+[第四轮原始资源/截图索引](evidence/celebration-round4/resource-index.json)仍准确描述其当时95项外部样本与10张Git截图；当时934,320字节庆典样本包含全量声音定义，不能与当前12事件筛选包体混用。模型/GUI运行时Canvas、BufferGeometry、精灵atlas和解码PCM从仓库源资源生成，不需要另外提交可逆转换文件。开发截图在docs中，不是正式场景背景或正式产品素材。
