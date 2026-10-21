@@ -1,5 +1,9 @@
 # 总体技术架构
 
+## P6工作站架构现状
+
+熔炉/高炉使用独立纯tick内核、显式version2内容和producer-owned输出校验；同一Web Lock事务减少有限输出、写目标并首次解锁，不复用合成预览的生成语义。`p6-processing-1`保留工作台及玩家稳定结构，迁移旧空炉；D07关闭/拆除规则不变。D08工作站完整计时已由用户明确批准：可见游戏页推进（GUI/设置继续、所有场景），隐藏/离线/主页不推进；独立Web Lock执行者加原事务锁及活动/代次检查，详见[实例和计时合同](p6/furnace-contract.md)。端口纯传输计划为后续漏斗保留，不表示网络已实现。下文此前待定状态不能覆盖本段，作物与D06仍待后续决策。
+
 当前GUI显示合同：`ui/icon-mask`从最终合成图标RGBA生成独立黑色alpha轮廓，按不可变帧对象缓存；所有目录页面共用，不处理槽底/数量/Tooltip，也不修改原版图标。`ui/player-model`保存同版本实体几何/UV与观察公式，`player-items`处理原版第三人称双手模型，`player-preview`用每个GameInventory一份独立Three渲染器，在原版人物窗口内显示Steve、外层皮肤和已提交装备/持物。预览canvas无输入面，独立framebuffer，不改变世界viewport/scissor；GUI关闭/无人物页面隐藏，不建额外RAF，卸载释放。渲染读取permanent.player布局，不能把未提交乐观装备当成稳定事实。人物背景保留，空人物区域不属于合格最终GUI。见[本次交付](p6/gui-visual-review.md)。领取票据门禁与D07不改。
 
 P6合成增量：D05完整合同及A目录返还已由用户明确批准。结果专用领域命令重新匹配配方，在P3锁内原子提交目标载体与首次取得；2×2页内输入与实例工作台grid9持久内容分离，信封p6-crafting-1兼容迁移P3/P5。详见[合同](p6/d05-proposal.md)和[交付](p6/crafting-review.md)。炉/漏斗业务、D06/D08仍后续，既有3D/方案B不改。

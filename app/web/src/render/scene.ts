@@ -52,7 +52,7 @@ export class SceneView {
   /** Bind stable logical instances without serializing GPU objects or admitting a product build region.
    * @param {SceneState} value Persistent current-scene facts.
    */
-  sync(value:SceneState):void{for(const child of [...this.persistent.children])this.release(child);for(const station of value.stations){const mesh=this.models.device(station.kind,station.facing,false);mesh.position.set(...station.cell);mesh.userData.id=station.id;this.persistent.add(mesh);}this.requestRender();}
+  sync(value:SceneState):void{for(const child of [...this.persistent.children])this.release(child);for(const station of value.stations){const mesh=this.models.device(station.kind,station.facing,station.contents.version===2&&station.contents.data.burn>0);mesh.position.set(...station.cell);mesh.userData.id=station.id;this.persistent.add(mesh);}this.requestRender();}
   /** Gate scene gestures before any ray access while a screen-space GUI owns input.
    * @param {boolean} enabled Whether world input is currently available.
    */

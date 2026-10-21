@@ -45,3 +45,6 @@ action('Run GUI alpha pixel checks',async()=>{receiptChannel.postMessage('visual
 action('Arm next crafting receipt delay',async()=>{receiptChannel.postMessage('arm');return{sent:'arm'};});
 action('Release crafting receipt',async()=>{receiptChannel.postMessage('release');return{sent:'release'};});
 window.addEventListener('pagehide',()=>receiptChannel.close());
+
+/** Configure only acquired source references; every output still requires real timed production and acquisition. */
+action('Fixture: furnace source carriers',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));for(const id of ['oak_log','stick','furnace','blast_furnace','raw_iron'])await session.dispatch({type:'unlock',item:'minecraft:'+id});for(const [index,id]of [[0,'furnace'],[1,'blast_furnace'],[2,'oak_log'],[3,'stick'],[4,'raw_iron']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'select',index:0},null,session.view.envelope!.state.progress.player.data);return session.view;});

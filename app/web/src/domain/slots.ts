@@ -1,7 +1,7 @@
 /** Bounded vanilla-style temporary slots; policies and stack identity are independent of menus and rendering. */
 import type {Stack,ItemRule} from '../rules/types.ts';
 export type ItemRules={items:Record<string,Pick<ItemRule,'maxStack'|'maxDamage'|'equipment'>>};
-export interface SlotPolicy {take:boolean;place:boolean;limit?:number;equipment?:string;accepts?:(stack:Stack)=>boolean}
+export interface SlotPolicy {take:boolean;place:boolean;limit?:number;limitFor?:(stack:Stack)=>number;equipment?:string;accepts?:(stack:Stack)=>boolean}
 export interface SlotValue {stack:Stack|null;policy:SlotPolicy}
 /** Normalize JSON component identity without treating key order as a stack difference.
  * @param {unknown} value JSON component payload.
@@ -18,10 +18,10 @@ export function sameStack(a:Stack,b:Stack,rules?:ItemRules):boolean{if(a.id!==b.
 /** Resolve capacity only after the destination's placement and equipment predicates accept the item.
  * @param {SlotValue} slot Destination.
  * @param {Stack} stack Incoming stack.
- * @param {ItemRules} rules Original limits.
+ * @param {ItemRules} rules Original limits, including an item-dependent native slot limit when present.
  * @return {number} Accepted maximum, or zero.
  */
-export function capacity(slot:SlotValue,stack:Stack,rules:ItemRules):number{const p=slot.policy,r=rules.items[stack.id];return !r||!p.place||p.equipment&&r.equipment!==p.equipment||p.accepts&&!p.accepts(stack)?0:Math.min(r.maxStack,p.limit??r.maxStack);}
+export function capacity(slot:SlotValue,stack:Stack,rules:ItemRules):number{const p=slot.policy,r=rules.items[stack.id];return !r||!p.place||p.equipment&&r.equipment!==p.equipment||p.accepts&&!p.accepts(stack)?0:Math.min(r.maxStack,p.limitFor?.(stack)??p.limit??r.maxStack);}
 /** Apply pickup, split, merge or a permitted whole-stack exchange in a single slot.
  * @param {SlotValue} slot Mutable transaction-local slot.
  * @param {Stack|null} cursor Carried stack.

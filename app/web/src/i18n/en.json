@@ -91,8 +91,14 @@
   "inventory.returned": "Returned to unlimited items: {items}.",
   "inventory.resultFull": "There is not enough space for a complete recipe batch.",
   "inventory.craftFailed": "Crafting could not be saved. Check the current slots and try again.",
-  "game.workbenchHint": "Hold a crafting table and use the floor in front of you to place it. Use the table to craft; Shift-use removes it.",
-  "game.workbenchPlaced": "Crafting table placed. Use it to open crafting.",
-  "game.workbenchRemoved": "Crafting table removed.",
-  "game.workbenchFailed": "This crafting-table action could not be saved."
+  "game.workbenchHint": "Hold a crafting table, furnace or blast furnace and use the floor to place it. Use a device to open it; Shift-use removes it.",
+  "game.workbenchPlaced": "Device placed. Use it to open its interface.",
+  "game.workbenchRemoved": "Device removed.",
+  "game.workbenchFailed": "This device action could not be saved.",
+  "inventory.furnace": "Furnace",
+  "inventory.blast_furnace": "Blast Furnace",
+  "inventory.furnaceNote": "Inputs and fuel are saved references. Processing takes time; collect the finite output to unlock it.",
+  "inventory.takeOutput": "Left: collect. Right with empty cursor: take half. Shift: move to hotbar.",
+  "inventory.outputFailed": "The output could not be collected. Check the current output and available space.",
+  "inventory.outputEmpty": "No processed output yet"
 }

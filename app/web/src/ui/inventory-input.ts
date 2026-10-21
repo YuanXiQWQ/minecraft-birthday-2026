@@ -4,7 +4,7 @@ import type {GameInventory,Slot} from './inventory.ts';import type {SlotRef} fro
  * @param {Slot|null} slot GUI cell.
  * @return {SlotRef|null} Finite identity or null.
  */
-export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
+export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='machine'?`machine:${slot.index!}`:slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */
 export class InventoryInput {
 gesture=new SlotGesture();outside=new OutsideClick();keys=new Set<string>();abort=new AbortController();start:Slot|null=null;quickMatch:Stack|null=null;

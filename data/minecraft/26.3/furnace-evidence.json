@@ -1,0 +1,49 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "method": "readClient locked hash; existing javap -c -p; no Java client execution",
+  "entries": {
+    "net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.class": {
+      "size": 24620,
+      "sha256": "b9b3022d9701bd64183c26cd9e97f823a28f337f73f79754b28287f245414b21"
+    },
+    "net/minecraft/world/inventory/AbstractFurnaceMenu.class": {
+      "size": 10127,
+      "sha256": "eae9be16492a52df568ae3e637824ffebdc084e16fde4b62568864c79597546a"
+    },
+    "net/minecraft/world/inventory/AbstractContainerMenu.class": {
+      "size": 35703,
+      "sha256": "4dcc15a5c6cb65973f18a3e330ad4416233b88b468fb2709ea431c7aebb01c02"
+    },
+    "net/minecraft/world/inventory/FurnaceFuelSlot.class": {
+      "size": 1478,
+      "sha256": "e9ebf8a5e36a9d0a1b78b67f42130eac7dccefbadb2d3a15c040de0a30a38935"
+    },
+    "net/minecraft/world/inventory/FurnaceResultSlot.class": {
+      "size": 2476,
+      "sha256": "d748fba6d261c06beccf2463d9d10da62cce85466907cba6f83f806cc8cd4249"
+    },
+    "net/minecraft/client/gui/screens/inventory/AbstractFurnaceScreen.class": {
+      "size": 4746,
+      "sha256": "1c87bb3ab98fbce67f07d500d709148ecd716fb5c365d713c53a699bb4051f3d"
+    },
+    "net/minecraft/client/gui/screens/inventory/FurnaceScreen.class": {
+      "size": 3272,
+      "sha256": "2467816b8a3ea46b5431474b14dd581aebe7e3e6c7206c4c395463a93e578329"
+    },
+    "net/minecraft/client/gui/screens/inventory/BlastFurnaceScreen.class": {
+      "size": 3276,
+      "sha256": "8e7f37d3f09794bacfa9b606ece41e4bb8cc1fb011a8c58591d9584092202f77"
+    },
+    "data/minecraft/tags/item/furnace_fuel_bottom_takeable.json": {
+      "size": 74,
+      "sha256": "036eb66f77d8575251a0ee7a66019f682b5e317325728b51a7253726a5f97858"
+    }
+  },
+  "bottomTakeable": {
+    "values": [
+      "minecraft:water_bucket",
+      "minecraft:bucket"
+    ]
+  }
+}

@@ -7,13 +7,15 @@
       "maxStack": 16
     },
     "minecraft:barrel": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:blast_furnace": {
       "maxStack": 64
     },
     "minecraft:bowl": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_items_extra_small"
     },
     "minecraft:bread": {
       "maxStack": 64
@@ -28,31 +30,37 @@
       "maxStack": 64
     },
     "minecraft:cartography_table": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:cauldron": {
       "maxStack": 64
     },
     "minecraft:charcoal": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_coal"
     },
     "minecraft:chest": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:chest_minecart": {
       "maxStack": 1
     },
     "minecraft:chiseled_bookshelf": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:chiseled_stone_bricks": {
       "maxStack": 64
     },
     "minecraft:coal": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_coal"
     },
     "minecraft:coal_block": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_coal_block"
     },
     "minecraft:cobblestone": {
       "maxStack": 64
@@ -67,13 +75,15 @@
       "maxStack": 64
     },
     "minecraft:composter": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:cracked_stone_bricks": {
       "maxStack": 64
     },
     "minecraft:crafting_table": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:egg": {
       "maxStack": 16
@@ -165,7 +175,8 @@
       "maxStack": 64
     },
     "minecraft:ladder": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:lantern": {
       "maxStack": 64
@@ -186,46 +197,60 @@
       "maxStack": 64
     },
     "minecraft:oak_boat": {
-      "maxStack": 1
+      "maxStack": 1,
+      "fuel": "minecraft:cooking/time_boats"
     },
     "minecraft:oak_button": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_items_extra_small"
     },
     "minecraft:oak_chest_boat": {
-      "maxStack": 1
+      "maxStack": 1,
+      "fuel": "minecraft:cooking/time_boats"
     },
     "minecraft:oak_door": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:oak_fence": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_fence_gate": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_log": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_planks": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_pressure_plate": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_sign": {
-      "maxStack": 16
+      "maxStack": 16,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:oak_slab": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_slabs"
     },
     "minecraft:oak_stairs": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_trapdoor": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:oak_wood": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:paper": {
       "maxStack": 64
@@ -251,7 +276,8 @@
       "maxStack": 64
     },
     "minecraft:smithing_table": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:smoker": {
       "maxStack": 64
@@ -263,7 +289,8 @@
       "maxStack": 64
     },
     "minecraft:stick": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_dry_plants"
     },
     "minecraft:stone": {
       "maxStack": 64
@@ -332,7 +359,8 @@
       "maxStack": 64
     },
     "minecraft:trapped_chest": {
-      "maxStack": 64
+      "maxStack": 64,
+      "fuel": "minecraft:cooking/time_wood_blocks"
     },
     "minecraft:tripwire_hook": {
       "maxStack": 64
@@ -345,27 +373,33 @@
     },
     "minecraft:wooden_axe": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:wooden_hoe": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:wooden_pickaxe": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:wooden_shovel": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:wooden_spear": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     },
     "minecraft:wooden_sword": {
       "maxStack": 1,
-      "maxDamage": 59
+      "maxDamage": 59,
+      "fuel": "minecraft:cooking/time_wood_items_large"
     }
   }
 }

@@ -1,6 +1,6 @@
-# Formal application — P5 base UI
+# Formal application
 
-Run commands **inside `app/`**, using Node 25.2.1/npm 11.6.2 (the tested environment). `npm ci` installs the exact existing P2 versions: Three 0.186.1, Vite 8.3.4 and TypeScript 7.0.2. No React or additional runtime library is required.
+Use Node 25.2.1/npm 11.6.2 with the pinned dependencies (Three 0.186.1, Vite 8.3.4, TypeScript 7.0.2).
 
 ```powershell
 cd app
@@ -10,54 +10,25 @@ npm run dev
 
 - Home: http://127.0.0.1:4183/
 - Game: http://127.0.0.1:4183/game/
-- `npm run check` and `npm test`: strict compilation and 50 domain/persistence/resource/localization/look/rule/inventory tests.
-- `npm run data:verify`: verify committed data/source hashes, replay all 112 reachable recipes and the 18-step cake chain. No client installation or external cache is needed.
-- `npm run build` / `npm run preview`: root output, preview port 4185.
-- `npm run build:pages` / `npm run preview:pages`: `/minecraft-birthday-2026/` output, preview port 4186.
-- `npm run test:built`: real HTTP checks against both built outputs, including all 474 original-resource/profile files and excluded internal routes.
+- Checks: `npm run check`, `npm test`, `npm run data:verify`, `node tools/inventory-rules.ts --check`.
+- Root build/preview: `npm run build`, `npm run preview` (4185).
+- Pages build/preview: `npm run build:pages`, `npm run preview:pages` (4186, /minecraft-birthday-2026/).
+- Both HTTP resource/boundary checks: `npm run test:built`.
 
-The two independent HTML entries share domain commands, save coordination, localization and rendering primitives. They do not import `experiments/`. The game page is a first-person architectural carrier with a shared presentation table, **not the completed farm or four scenes**. Pure recipe rules are available for later integration; no player completion shortcut, inventory economy or interactive crafting/processing business is included.
+The game is a real first-person 3D integration room, not the final four scenes. It has no movement, crosshair or pointer lock. Short right-click uses the picked object; right-drag turns the bounded camera. E opens the original screen-space catalogue; Esc/E/Done closes it. Personal and equipment pages contain the native Steve model. Locked catalogue art is masked only over the icon alpha silhouette.
 
-## Data and resources
+The unlimited acquired directory supplies bounded temporary stacks. Hotbar/equipment/offhand/toolbar presets persist. Personal cursor and 2x2 inputs clear on close or re-entry. Personal 2x2 and instance 3x3 crafting take complete recipe batches without consuming input references; approved remainders return to the directory. A product unlocks only after successful acquisition.
 
-- `web/src/domain/`: pure state, validation, commands and selectors.
-- `web/src/persistence/`: checksummed versioned envelope and exclusive Web Locks transactions.
-- `web/src/i18n/en.json`: editable draft English, including story, HTML fallback, accessibility and errors.
-- `web/src/birthday.json`: recipient/sender interpolation.
-- `web/src/render/`: original-resource loader, model compiler/factory and independent Three.js view.
-- `web/src/ui/`: original bitmap font and sprite buttons; no P2 temporary-slot rules.
-- `web/src/rules/`: pure matching, remainders, component predicates, native fuel/speed and tool/drop rules. `findCrafting`/`matchCrafting`/`matchCooking` return facts without unlocking items, discovering recipes or changing saves. `loadRules` loads the versioned normal-build data.
-- `../data/minecraft/26.3/`: complete classification and causal source proofs. Builds emit only the bounded `rules.json` and small runtime manifest at `BASE_URL + rules/minecraft/26.3/`; full catalogs and internal evidence stay out of the website.
-- `../resources/minecraft/26.3/`: committed originals, verified by the base and additive presentation manifests. Ordinary dev/build/preview needs no client installation or external cache.
+Hold an acquired crafting table, furnace or blast furnace and short right-click the allowed floor to place it. Short right-click opens its native GUI; Shift-right-click removes it and its contents. The carrier region is not a final P7 build area. Workbench inputs persist. Furnaces retain bounded input/fuel references, cook at native times, and store finite outputs. Input allows nonrecipe items; Shift routes by device recipe before fuel. Empty-cursor right-click takes half an actual output; Shift moves its finite content; number/F only take to an empty designated slot. A pending acquisition blocks other carrier changes, while close remains available.
 
-The table is an authored prefab assembled from original oak slab/post geometry and textures. Its transforms define a presentation table, not an additional native Minecraft block. The cake uses the original uncut model. Unsupported model features fail explicitly; see the P2 model record and P3 report.
+Only visible game-page active time advances all devices, including during GUI/settings. Hidden/offline/home-only time does not count. Multiple game pages share one native Web Lock simulation owner, with separate short save transactions and generation fences. Farming, final scenes, recipe-book discovery, the hopper network and final birthday celebration are not implemented here.
 
-Both pages start frontally inside a materially wider real 3D room. The home remains frontal. On the game page, a short right click selects the visible table; dragging at least 6 CSS pixels changes bounded yaw/pitch without moving the eye or emitting the click. This user-selected gesture is gated by the settings and inventory GUIs. The sensitivity and limits remain engineering values for later scene review, with no pointer lock or crosshair. A workstation menu is not implemented at P4.
+Original Java26.3 models, textures, GUI, font, icons, particles and sounds are committed under ../resources/minecraft/26.3/ and enter ordinary builds via audited manifests. No private cache/client installation is needed at runtime. Builds exclude docs, full clients, historical experiments and verification fixtures. Public release rights remain a separate review.
 
-The formal save key is `minecraft-birthday-2026:formal:save`. Reset clears progress only and preserves language, volume and mute. Invalid/future saves are kept unchanged and read-only. There is no destructive recovery flow or silent fallback save. Browsers without Web Locks are read-only, with a localized explanation.
+The versioned save key is minecraft-birthday-2026:formal:save. Current contentVersion is p6-processing-1; P3/P5/P6-crafting data migrates without dropping workbench/player/settings/cake facts. Furnace contents version2 validates producer output separately from unlocked carriers. Reset clears progress while retaining language/volume/mute. Invalid/future or failed saves remain unchanged/read-only. Web Locks absence is explicitly read-only.
 
-## Isolated verification
+## Isolated browser verification
 
-The formal game has an original-style unlimited catalogue (E / **Items (E)**), nine-slot HUD, offhand HUD, and equipment tab. Esc closes the screen; scene 1–9/wheel select a slot, while a catalogue item plus a number copies its native maximum into that hotbar slot. Left/right basic temporary pickup, splitting, merging and equipment validation use approved D04; middle click on an empty cursor clones the native maximum. Locked items remain inspectable but reject every implemented acquisition path.
+`npm run dev:verify` serves http://127.0.0.1:4184/__verify__/index.html. It is a separate origin/save from ordinary dev. The furnace-source fixture unlocks only source materials/devices and configures the hotbar; no output is granted. Open /__verify__/input.html for actual production UI and bounded trusted-event/state evidence. Existing receipt-arm/release controls can delay an actual committed crafting or furnace receipt only on this verification route. Ordinary dev and both builds exclude every fixture.
 
-`web/src/domain/slots.ts` and `inventory.ts` own pure carrier rules; `web/src/ui/inventory-input.ts` and `slot-gesture.ts` own GUI gestures; `ui/inventory.ts` renders and submits locked semantic transactions. `icon-model.ts`/`icons.ts` read actual item definitions, parents, GUI transforms, tint and special/composite branches. `web/src/i18n/items.en.json` holds original English names with a separate fallback interface. No generic substitute image is used. Catalogue resources are loaded automatically from the committed third manifest.
-
-Hotbar, selected slot, equipment/offhand and nine C/X toolbar presets persist in p5-layout-1. Exact checksummed P3 player reservations migrate to an empty layout without losing progress/settings/cake facts. **D07 is explicitly approved:** E/Esc/Done close the personal menu and clear its cursor; refresh/re-entry starts empty. Blur/PointerCancel only cancel staged gestures and retain the committed cursor. A cursor epoch rejects pre-close asynchronous results without rolling back submitted stable-slot transactions. Crafting now provides four temporary personal inputs using the original inventory background. Closing/re-entry clears these and the cursor together; blur/PointerCancel preserve committed inputs. Personal inputs also project native 2x2 recipe previews through the existing matcher. The read-only result has no transferable slot reference; it never grants an item, unlocks a product, discovers a recipe or processes remainders. Results cannot be taken; acquisition and station contents remain separate work. See `../docs/p6/personal-preview.md`. Saved toolbars exposes the existing nine presets in five scrollable native-style rows; its paper hints are informational. Backdrop left/right clicks discard all/one cursor items; menu borders, controls, Tooltip and slot-origin canceled drags are excluded. Native-style held-stack drag, middle clone/fill, double collect, finite Shift routing, hovered numeric exchange and F/Q/C/X use the shared domain reducer. C + 1-9 saves, X + 1-9 loads; Q removes one temporary unit and Ctrl+Q clears the stack, never an unlock. Without an open container, Shift from hotbar only autoequips valid armor; equipment returns to the finite hotbar. P6 supplies station routes. Physical right/middle drag and cancellation combinations still require manual validation; this is not full P5 acceptance.
-
-```powershell
-npm run dev:verify
-```
-
-Port **4184** is a separate test origin; open `/__verify__/index.html` and `/` in two tabs on that origin. Explicit fixture controls can grant a cake/place it, queue concurrent commands, test reset fencing and temporarily checkpoint a future-version value. These controls are absent from ordinary dev and every formal build. Restore the checkpoint after the future-version test. The long-copy page is `/__verify__/long.html`.
-
-**Fixture: unlock catalogue** grants all 113 identities only on this separate test origin. Open its `/game/` for visual/input testing; acquisition order in the fixture follows its commands, not a production alphabetical sort. `/__verify__/icons.html` renders a native-icon contact sheet, with per-item coverage in its hidden read-only record. The `/__verify__/input.html` page mounts the formal game with a bounded trusted-event recorder in hidden `#input-evidence`. All verification routes are unavailable in ordinary dev/build. Maintainers may regenerate resources with `node tools/catalogue-assets.ts --client <locked-26.3-client.jar>`; normal clone/build needs no client or external cache.
-
-**Read P4 rule data** checks browser loading/hash validation, native iron drops, adult-cow interaction, stick fuel and the cake grid/three bucket remainders. It compares the save bytes before and after the query. No rule-test action grants an item. Ordinary dev and verification use separate Vite caches to support simultaneous servers.
-
-Data regeneration (maintainers only) uses `npm run data:export -- --client <official-26.3-client.jar>` and an existing JDK25 `javap`; the tool rejects other input hashes and never executes Minecraft. See `../data/minecraft/26.3/README.md` and `../docs/p4/` for field limits, candidate sources and reproducibility. Updating sources requires regenerating the registry and reviewing save compatibility; alternate tree/egg profiles are not approved P7 layouts.
-
-For two-tab lock testing, reset test progress, click **Slow transaction: unlock log** in the first fixture tab, then **Fixture: unlock charcoal** in the second before the 1.5-second hold ends. Read both snapshots: both items must remain. Use **Run reset-before-stale-write check** for a queued old-generation write that must reject even without relying on event delivery.
-
-Both P3 foundation and its synthetic development-v0 envelope migrate their exact empty player reservation. P1/P2 experimental saves are deliberately not imported. The p6-crafting-1 envelope migrates P5 layouts and empty workbench reservations without changing the original saved bytes until a successful write. Crafting-table instances persist nine inputs; recipe-book, other station contents and timing remain reserved. The same-slot pickup and reset-before-stale-inventory fixture buttons use real Web Locks; their scheduling is test-only. See `../docs/p5/final-report.md`, `../docs/p5/final-coverage.md`, `../docs/p5/part2-report.md`, `../docs/p5/d07-review.md` and `../docs/p5/storage-input-contract.md` for the matrix, approved lifecycle contract and pending manual items. Tests use Node's built-in `--experimental-transform-types` to import the actual TypeScript UI class in the delayed-cursor harness; it does not add a package or claim physical input verification. See `../docs/p3/` for historical evidence, limitations and the storage contract.
-
-Crafting follows the approved D05 directory-return contract: previewing grants nothing; left/right take whole batches, Shift fills only bounded hotbar capacity, and remainders return to unlimited items on successful receipt. Hold a crafted table and right-use the floor beside/in front of the presentation table to place it, right-use it to open the native 3x3 GUI, or Shift-right-use to dismantle. The carrier-room floor policy is a P6 integration boundary, not the final P7 scene specification. Personal 2x2 inputs clear on close; station inputs persist. See `../docs/p6/crafting-review.md` and `../docs/p6/storage-crafting-contract.md`. The cake-ingredients fixture is verification-only and never unlocks cake directly.
+Tests and screenshots complement manual checks; physical right/middle drag, real minimization/background throttling, Java-client visual comparison and other browsers are not claimed passed by unit tests. Current implementation and evidence are indexed in ../docs/p6/furnace-review.md.
