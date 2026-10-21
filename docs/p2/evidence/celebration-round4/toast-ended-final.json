@@ -1,0 +1,690 @@
+{
+  "resourceStatus": "original-local",
+  "active": false,
+  "paused": false,
+  "hold": false,
+  "elapsed": 0,
+  "particles": 0,
+  "visible": 0,
+  "batch": {
+    "created": 7,
+    "released": 7,
+    "attached": false
+  },
+  "audio": {
+    "state": "running",
+    "initial": {
+      "state": "running",
+      "userActive": false,
+      "hasBeenActive": true
+    },
+    "decoded": 12,
+    "activeSources": 0,
+    "nodeChains": 0,
+    "volume": 0.2,
+    "muted": false,
+    "gain": 0.20000000298023224,
+    "peak": 0.10492683202028275,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 41.19219954648526,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.blast",
+        "sample": "fireworks/blast1",
+        "tick": 0,
+        "requested": 41.602108843537415,
+        "scheduled": 41.602108843537415,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 42.27192743764172,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.launch",
+        "sample": "fireworks/launch1",
+        "tick": 0,
+        "requested": 42.70215419501133,
+        "scheduled": 42.70215419501133,
+        "lateMs": 0,
+        "rawVolume": 3,
+        "volume": 1,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 48,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 43.461950113378684,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.in",
+        "sample": "ui/toast/in",
+        "tick": 0,
+        "requested": 43.92120181405895,
+        "scheduled": 43.92120181405895,
+        "lateMs": 0,
+        "rawVolume": 0.4,
+        "volume": 0.4,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 44.672290249433104,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.challenge_complete",
+        "sample": "ui/toast/challenge_complete",
+        "tick": 0,
+        "requested": 45.070589569160994,
+        "scheduled": 45.070589569160994,
+        "lateMs": 0,
+        "rawVolume": 0.6,
+        "volume": 0.6,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 45.84199546485261,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.twinkle",
+        "sample": "fireworks/twinkle1",
+        "tick": 0,
+        "requested": 46.260612244897956,
+        "scheduled": 46.260612244897956,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 0.9969316071015782,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 47.05233560090703,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.large_blast_far",
+        "sample": "fireworks/largeblast_far1",
+        "tick": 0,
+        "requested": 47.37226757369614,
+        "scheduled": 47.37226757369614,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 48.14077097505669,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.out",
+        "sample": "ui/toast/out",
+        "tick": 0,
+        "requested": 48.402653061224484,
+        "scheduled": 48.402653061224484,
+        "lateMs": 0,
+        "rawVolume": 0.4,
+        "volume": 0.4,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      },
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 49.26113378684807,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.challenge_complete",
+        "sample": "ui/toast/challenge_complete",
+        "tick": 0,
+        "requested": 49.61009070294784,
+        "scheduled": 49.61009070294784,
+        "lateMs": 0,
+        "rawVolume": 0.6,
+        "volume": 0.6,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      },
+      {
+        "kind": "ended",
+        "event": "ui.toast.challenge_complete",
+        "time": 56.401269841269844
+      }
+    ]
+  },
+  "runs": [],
+  "checks": {
+    "depth": {
+      "baseline": "d0431dc5",
+      "behind": "d0431dc5",
+      "front": "1e03e5c5",
+      "passed": true,
+      "source": "real WebGL readPixels; original spark_7; explicit opaque test plane"
+    },
+    "status": "PASS",
+    "passed": 20,
+    "rows": [
+      {
+        "shape": "small_ball",
+        "trail": false,
+        "twinkle": false,
+        "initial": 98,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "small_ball",
+        "trail": true,
+        "twinkle": false,
+        "initial": 98,
+        "children": 1270,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "small_ball",
+        "trail": false,
+        "twinkle": true,
+        "initial": 98,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "small_ball",
+        "trail": true,
+        "twinkle": true,
+        "initial": 98,
+        "children": 1270,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "large_ball",
+        "trail": false,
+        "twinkle": false,
+        "initial": 386,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "large_ball",
+        "trail": true,
+        "twinkle": false,
+        "initial": 386,
+        "children": 4981,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "large_ball",
+        "trail": false,
+        "twinkle": true,
+        "initial": 386,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "large_ball",
+        "trail": true,
+        "twinkle": true,
+        "initial": 386,
+        "children": 4981,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "star",
+        "trail": false,
+        "twinkle": false,
+        "initial": 121,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "star",
+        "trail": true,
+        "twinkle": false,
+        "initial": 121,
+        "children": 1549,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "star",
+        "trail": false,
+        "twinkle": true,
+        "initial": 121,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "star",
+        "trail": true,
+        "twinkle": true,
+        "initial": 121,
+        "children": 1549,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "creeper",
+        "trail": false,
+        "twinkle": false,
+        "initial": 265,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "creeper",
+        "trail": true,
+        "twinkle": false,
+        "initial": 265,
+        "children": 3372,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "creeper",
+        "trail": false,
+        "twinkle": true,
+        "initial": 265,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "creeper",
+        "trail": true,
+        "twinkle": true,
+        "initial": 265,
+        "children": 3372,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "burst",
+        "trail": false,
+        "twinkle": false,
+        "initial": 70,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "burst",
+        "trail": true,
+        "twinkle": false,
+        "initial": 70,
+        "children": 892,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "burst",
+        "trail": false,
+        "twinkle": true,
+        "initial": 70,
+        "children": 0,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "shape": "burst",
+        "trail": true,
+        "twinkle": true,
+        "initial": 70,
+        "children": 892,
+        "ended": true,
+        "pass": true
+      }
+    ],
+    "batchBalanced": true,
+    "singleSceneLoop": true,
+    "source": "actual browser simulation/batch; perceptual parity unverified"
+  },
+  "policy": null,
+  "visibility": [],
+  "loading": {
+    "version": "26.3",
+    "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+    "elapsedMs": 60.79999999701977,
+    "requests": [
+      {
+        "entry": "assets/minecraft/particles/firework.json",
+        "bytes": 222,
+        "sha256": "17bbca30b209fdeb96bd8e38f38f6e25fee95788f532a4528d757284992164cf"
+      },
+      {
+        "entry": "assets/minecraft/particles/flash.json",
+        "bytes": 45,
+        "sha256": "afc9fed65acb2620fa5da4cbf8b50d7b926dd4f5458ef84c10c347bc6debcc8f"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/flash.png",
+        "bytes": 774,
+        "sha256": "fb43dd3a354fb84f31b00a1d286a4dcd8beeb5daba75986ca1a5d18594500f30"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_0.png",
+        "bytes": 78,
+        "sha256": "be91dc02f3de33dd060b4d2d4e4987bd0853c4721b8db94c86f72e8d111ed9d9"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_1.png",
+        "bytes": 85,
+        "sha256": "35dae570734d89e8d5c5ea6beacc61014da7b51103f3692ec89684f8f5b09078"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_2.png",
+        "bytes": 90,
+        "sha256": "159017b370afa4e9cdca2fe4c95cb650d13b3743baa43ed49ca750564a83a3b8"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/largeblast1.ogg",
+        "bytes": 19489,
+        "sha256": "b11a1fef5e3f341fa5b93e561093d7a1536d612bbd9fb0a64c34482376cb656b"
+      },
+      {
+        "entry": "assets/minecraft/sounds.json",
+        "bytes": 635867,
+        "sha256": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/twinkle1.ogg",
+        "bytes": 15378,
+        "sha256": "03f558b5afbbdcd16e13b50c33dd39f5f997b054b7699f1b2347d4f091acbce2"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_3.png",
+        "bytes": 91,
+        "sha256": "05a3815096149e8f65ed07957cbcc9abf607675393021b998a8e87d5d9bdac8b"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/largeblast_far1.ogg",
+        "bytes": 23747,
+        "sha256": "b2a90fbbcb2c9759bfea592fba2bd7628b9b99ab21a51c2fb0262ad1c560cfc8"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/twinkle_far1.ogg",
+        "bytes": 25368,
+        "sha256": "080114260c8936688633fa0e61663e3ffd420d0dd76d06df9a7af373f025ad07"
+      },
+      {
+        "entry": "assets/minecraft/sounds/random/orb.ogg",
+        "bytes": 7815,
+        "sha256": "706f615c548ca86b780611526ec9d785bba62e2c10580cf7ef738a0757f4c093"
+      },
+      {
+        "entry": "assets/minecraft/sounds/random/levelup.ogg",
+        "bytes": 16694,
+        "sha256": "6668fd66a20eacb458565f3e0944aca66613750ac28ef94fb028bc258476b251"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_4.png",
+        "bytes": 97,
+        "sha256": "0b381533495f88ff21da0f99f3afd86c3608f9b181a3500fd4543abea97c7e52"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/blast1.ogg",
+        "bytes": 11824,
+        "sha256": "7edcecfa2b6204c30a9629e001c16fe195d673b254f7d6c13ec601a13aca4d3b"
+      },
+      {
+        "entry": "assets/minecraft/sounds/ui/toast/out.ogg",
+        "bytes": 21361,
+        "sha256": "78f870f75914fd6784b9cf6862887369a7e8604bd04eb4944562196bc3cdcaa1"
+      },
+      {
+        "entry": "assets/minecraft/sounds/ui/toast/challenge_complete.ogg",
+        "bytes": 101185,
+        "sha256": "058d3659ad630d5f07cebc989631ce5bf8568150fa46d07cdbc2fee7a6e1f989"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/blast_far1.ogg",
+        "bytes": 15945,
+        "sha256": "9030156f40ea8869da9986575d7b702ecad93e6885a00a360dc431da42628cfc"
+      },
+      {
+        "entry": "assets/minecraft/sounds/ui/toast/in.ogg",
+        "bytes": 21392,
+        "sha256": "71fcf933a29e83940c2b896585b1c9de846d4b5fb3e934b7ef642bd11733b884"
+      },
+      {
+        "entry": "assets/minecraft/sounds/fireworks/launch1.ogg",
+        "bytes": 16487,
+        "sha256": "25dc188ddaeab5589f532e53e47d5882681a47a8c7a76078765cf670aacbda8e"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_5.png",
+        "bytes": 96,
+        "sha256": "f9d042e733a39e386d199dbd90e7578f545fe09efd15ab5b1b5d3037b738af97"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_6.png",
+        "bytes": 94,
+        "sha256": "dd4fd77518077dd6ca227c5499b3aa57c02a998cbe632245cf7680b254a5150b"
+      },
+      {
+        "entry": "assets/minecraft/textures/particle/spark_7.png",
+        "bytes": 96,
+        "sha256": "f9d042e733a39e386d199dbd90e7578f545fe09efd15ab5b1b5d3037b738af97"
+      }
+    ],
+    "frames": [
+      "spark_7",
+      "spark_6",
+      "spark_5",
+      "spark_4",
+      "spark_3",
+      "spark_2",
+      "spark_1",
+      "spark_0"
+    ],
+    "images": [
+      {
+        "id": "flash",
+        "width": 32,
+        "height": 32
+      },
+      {
+        "id": "spark_0",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_1",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_2",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_3",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_4",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_5",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_6",
+        "width": 8,
+        "height": 8
+      },
+      {
+        "id": "spark_7",
+        "width": 8,
+        "height": 8
+      }
+    ],
+    "events": [
+      "entity.firework_rocket.blast_far",
+      "entity.firework_rocket.large_blast",
+      "entity.firework_rocket.twinkle_far",
+      "entity.experience_orb.pickup",
+      "entity.player.levelup",
+      "entity.firework_rocket.blast",
+      "entity.firework_rocket.launch",
+      "ui.toast.in",
+      "ui.toast.challenge_complete",
+      "entity.firework_rocket.twinkle",
+      "entity.firework_rocket.large_blast_far",
+      "ui.toast.out"
+    ],
+    "audioFiles": 12
+  },
+  "errors": [],
+  "heard": "UNVERIFIED",
+  "clock": "AudioContext; fixed simulation 20Hz",
+  "frameLoop": "existing scene adapter only"
+}

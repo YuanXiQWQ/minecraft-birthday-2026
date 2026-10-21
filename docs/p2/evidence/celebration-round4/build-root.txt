@@ -1,0 +1,79 @@
+
+> minecraft-birthday-p2-scene3d@0.1.0 build
+> npm run check && vite build && node tools/audit-build.mjs dist
+
+
+> minecraft-birthday-p2-scene3d@0.1.0 check
+> tsc --noEmit
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/game/index.html              0.44 kB │ gzip:   0.29 kB
+dist/index.html                   0.44 kB │ gzip:   0.29 kB
+dist/.vite/manifest.json          0.61 kB │ gzip:   0.22 kB
+dist/THIRD_PARTY_LICENSES.md      1.18 kB
+dist/assets/style--0DwFSWp.css    3.68 kB │ gzip:   1.41 kB
+dist/assets/home-4uyK17Tq.js      0.43 kB │ gzip:   0.24 kB
+dist/assets/style-CNoTzqay.js     3.85 kB │ gzip:   1.90 kB
+dist/assets/game-WJlVELWV.js    628.45 kB │ gzip: 163.79 kB
+
+✓ built in 447ms
+{
+  "build": "dist",
+  "homeJsBytes": 4291,
+  "originalAssets": false,
+  "internalRecords": false,
+  "files": [
+    {
+      "file": ".vite/manifest.json",
+      "bytes": 619,
+      "gzipBytes": 220,
+      "sha256": "82f614f6a51e590228f9b958b436e5e09d58c4e78c4662b49b871df3dad2adc0"
+    },
+    {
+      "file": "assets/game-WJlVELWV.js",
+      "bytes": 628459,
+      "gzipBytes": 162646,
+      "sha256": "78fff0ee15b9d5b71a9b35689e614e0cecd1c6bbe3260c9bb01c238c7ea27395"
+    },
+    {
+      "file": "assets/home-4uyK17Tq.js",
+      "bytes": 435,
+      "gzipBytes": 244,
+      "sha256": "fef9b82717cb5629ca1b6d09561190013d43c42a23a9604c2e206c8e0d7b5084"
+    },
+    {
+      "file": "assets/style--0DwFSWp.css",
+      "bytes": 3687,
+      "gzipBytes": 1409,
+      "sha256": "93a9911867433db3a6081e7980677f9e78f4919ce031c9b9471d864f3c48302a"
+    },
+    {
+      "file": "assets/style-CNoTzqay.js",
+      "bytes": 3856,
+      "gzipBytes": 1891,
+      "sha256": "b0a3285110b4c1db78597908acf54fee98a5a1b4448e197f55ea98afebcc705d"
+    },
+    {
+      "file": "game/index.html",
+      "bytes": 440,
+      "gzipBytes": 293,
+      "sha256": "d4912fb756405ca6cff8f78122ccdd4ac0ae86ba3f910fb6f6e11e07ab53b47d"
+    },
+    {
+      "file": "index.html",
+      "bytes": 447,
+      "gzipBytes": 298,
+      "sha256": "b3ba34271a3f5417df6a12744017f4cffc12175f03e834651dcb7c891ac3b764"
+    },
+    {
+      "file": "THIRD_PARTY_LICENSES.md",
+      "bytes": 1187,
+      "gzipBytes": 723,
+      "sha256": "7f0c5b094ce65b526b0adf5c4e4ce3592736412a247c035cd96cf23ffe059cee"
+    }
+  ]
+}

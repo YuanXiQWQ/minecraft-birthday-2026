@@ -1,0 +1,550 @@
+[
+  {
+    "event": "entity.firework_rocket.blast_far",
+    "state": "running",
+    "peak": 0.014064030721783638,
+    "records": [
+      {
+        "kind": "decoded",
+        "samples": [
+          {
+            "id": "fireworks/largeblast1",
+            "seconds": 2,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 88200
+          },
+          {
+            "id": "fireworks/twinkle1",
+            "seconds": 1.3338775510204082,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 58824
+          },
+          {
+            "id": "fireworks/largeblast_far1",
+            "seconds": 2.5,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 110250
+          },
+          {
+            "id": "fireworks/twinkle_far1",
+            "seconds": 2.5,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 110250
+          },
+          {
+            "id": "random/orb",
+            "seconds": 0.7444897959183674,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 32832
+          },
+          {
+            "id": "random/levelup",
+            "seconds": 1.75,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 77175
+          },
+          {
+            "id": "fireworks/blast1",
+            "seconds": 0.9970975056689343,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 43972
+          },
+          {
+            "id": "ui/toast/out",
+            "seconds": 1.5546485260770975,
+            "sampleRate": 44100,
+            "channels": 2,
+            "length": 68560
+          },
+          {
+            "id": "ui/toast/challenge_complete",
+            "seconds": 6.79047619047619,
+            "sampleRate": 44100,
+            "channels": 2,
+            "length": 299460
+          },
+          {
+            "id": "fireworks/blast_far1",
+            "seconds": 1.5,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 66150
+          },
+          {
+            "id": "ui/toast/in",
+            "seconds": 1.5459863945578232,
+            "sampleRate": 44100,
+            "channels": 2,
+            "length": 68178
+          },
+          {
+            "id": "fireworks/launch1",
+            "seconds": 1.6250113378684807,
+            "sampleRate": 44100,
+            "channels": 1,
+            "length": 71663
+          }
+        ]
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.blast_far",
+        "sample": "fireworks/blast_far1",
+        "tick": 0,
+        "requested": 33.440294784580495,
+        "scheduled": 33.440294784580495,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.large_blast",
+    "state": "running",
+    "peak": 0.13657119870185852,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 34.07238095238095,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.large_blast",
+        "sample": "fireworks/largeblast1",
+        "tick": 0,
+        "requested": 34.380702947845805,
+        "scheduled": 34.380702947845805,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.twinkle_far",
+    "state": "running",
+    "peak": 0.11797674745321274,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 35.08244897959184,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.twinkle_far",
+        "sample": "fireworks/twinkle_far1",
+        "tick": 0,
+        "requested": 35.42269841269841,
+        "scheduled": 35.42269841269841,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 0.9969316071015782,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.experience_orb.pickup",
+    "state": "running",
+    "peak": 0.006863810122013092,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 36.121541950113375,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.experience_orb.pickup",
+        "sample": "random/orb",
+        "tick": 0,
+        "requested": 36.47049886621315,
+        "scheduled": 36.47049886621315,
+        "lateMs": 0,
+        "rawVolume": 0.1,
+        "volume": 0.1,
+        "pitch": 0.9398029142525047,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 16,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.player.levelup",
+    "state": "running",
+    "peak": 0.04640890285372734,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 37.151927437641724,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.player.levelup",
+        "sample": "random/levelup",
+        "tick": 0,
+        "requested": 37.492176870748295,
+        "scheduled": 37.492176870748295,
+        "lateMs": 0,
+        "rawVolume": 0.75,
+        "volume": 0.75,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 16,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.blast",
+    "state": "running",
+    "peak": 0.1370086520910263,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 38.20263038548753,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.blast",
+        "sample": "fireworks/blast1",
+        "tick": 0,
+        "requested": 38.5428798185941,
+        "scheduled": 38.5428798185941,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.launch",
+    "state": "running",
+    "peak": 0.05531098693609238,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 39.230113378684806,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.launch",
+        "sample": "fireworks/launch1",
+        "tick": 0,
+        "requested": 39.59068027210884,
+        "scheduled": 39.59068027210884,
+        "lateMs": 0,
+        "rawVolume": 3,
+        "volume": 1,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 48,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "ui.toast.in",
+    "state": "running",
+    "peak": 0.005072584375739098,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 40.260498866213155,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.in",
+        "sample": "ui/toast/in",
+        "tick": 0,
+        "requested": 40.65009070294784,
+        "scheduled": 40.65009070294784,
+        "lateMs": 0,
+        "rawVolume": 0.4,
+        "volume": 0.4,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "ui.toast.challenge_complete",
+    "state": "running",
+    "peak": 0.09452815353870392,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 41.33151927437642,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.challenge_complete",
+        "sample": "ui/toast/challenge_complete",
+        "tick": 0,
+        "requested": 41.67176870748299,
+        "scheduled": 41.67176870748299,
+        "lateMs": 0,
+        "rawVolume": 0.6,
+        "volume": 0.6,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.twinkle",
+    "state": "running",
+    "peak": 0.1414465457201004,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 42.3502947845805,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.twinkle",
+        "sample": "fireworks/twinkle1",
+        "tick": 0,
+        "requested": 42.681836734693874,
+        "scheduled": 42.681836734693874,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 0.9969316071015782,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "entity.firework_rocket.large_blast_far",
+    "state": "running",
+    "peak": 0.1377960443496704,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 43.371972789115645,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "entity.firework_rocket.large_blast_far",
+        "sample": "fireworks/largeblast_far1",
+        "tick": 0,
+        "requested": 43.712222222222216,
+        "scheduled": 43.712222222222216,
+        "lateMs": 0,
+        "rawVolume": 20,
+        "volume": 1,
+        "pitch": 1.0146210714010522,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": true,
+        "radius": 320,
+        "contextState": "running"
+      }
+    ]
+  },
+  {
+    "event": "ui.toast.out",
+    "state": "running",
+    "peak": 0.0035633069928735495,
+    "records": [
+      {
+        "kind": "cancel",
+        "reason": "developer",
+        "time": 44.44009070294785,
+        "activeSources": 0
+      },
+      {
+        "kind": "activation",
+        "state": "running",
+        "running": true,
+        "userActive": true
+      },
+      {
+        "kind": "schedule",
+        "event": "ui.toast.out",
+        "sample": "ui/toast/out",
+        "tick": 0,
+        "requested": 44.760022675736955,
+        "scheduled": 44.760022675736955,
+        "lateMs": 0,
+        "rawVolume": 0.4,
+        "volume": 0.4,
+        "pitch": 1,
+        "position": [
+          0.5,
+          1.62,
+          6.5
+        ],
+        "spatial": false,
+        "contextState": "running"
+      }
+    ]
+  }
+]

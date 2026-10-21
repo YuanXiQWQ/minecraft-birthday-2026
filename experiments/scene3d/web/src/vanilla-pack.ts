@@ -36,10 +36,10 @@ export async function loadVanillaPack():Promise<VanillaPack> {
   const start=performance.now(), base='/__local_samples__/';
   const response=await fetch(base+'manifest.json',{cache:'no-store'});
   if(!response.ok)throw new Error('local-vanilla-samples-unavailable');
-  const manifest=await response.json() as {version:string;clientSha1:string;textureBytesExported:boolean;entries:Entry[];textures:{id:string;entry:string}[];gui?:{entries:string[]}};
+  const manifest=await response.json() as {version:string;clientSha1:string;textureBytesExported:boolean;entries:Entry[];textures:{id:string;entry:string}[];gui?:{entries:string[]};celebration?:{entries:string[]}};
   if(manifest.version!=='26.3'||manifest.clientSha1!=='e877b6a07acd633fb3bb475002175cec036e7b87'||!manifest.textureBytesExported)throw new Error('wrong-or-incomplete-sample-manifest');
   const bodies=new Map<string,ArrayBuffer>(), requests:{path:string;bytes:number;ms:number;sha256:string}[]=[];
-  await Promise.all(manifest.entries.filter(entry=>!manifest.gui?.entries.includes(entry.entry)).map(async entry=>{
+  await Promise.all(manifest.entries.filter(entry=>!manifest.gui?.entries.includes(entry.entry)&&!manifest.celebration?.entries.includes(entry.entry)).map(async entry=>{
     if(!/^assets\/minecraft\/(blockstates|models|textures)\/[a-z0-9_/-]+\.(json|png|png\.mcmeta)$/.test(entry.entry)||entry.entry.includes('..'))throw new Error('invalid-sample-entry');
     const tick=performance.now(), resource=await fetch(base+entry.entry,{cache:'no-store'});
     if(!resource.ok)throw new Error('sample-request-failed');const bytes=await resource.arrayBuffer();

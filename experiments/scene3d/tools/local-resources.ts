@@ -23,7 +23,7 @@ export function readLocalSamples(directory: string): Map<string,Uint8Array> {
   if(manifest.version!=='26.3'||manifest.clientSha1!==CLIENT_SHA1||manifest.textureBytesExported!==true)throw new Error('wrong-or-incomplete-sample-manifest');
   const files=new Map<string,Uint8Array>([['manifest.json',bytes]]);
   for(const item of manifest.entries) {
-    if(!/^assets\/minecraft\/(blockstates|models|textures|items|font)\/[a-z0-9_/-]+\.(json|png|png\.mcmeta)$/.test(item.entry)||item.entry.includes('..')||files.has(item.entry))throw new Error('invalid-sample-entry');
+    if(!/^assets\/minecraft\/(?:(?:blockstates|models|textures|items|font|particles|sounds)\/[a-z0-9_/-]+\.(?:json|png|png\.mcmeta|ogg)|sounds\.json)$/.test(item.entry)||item.entry.includes('..')||files.has(item.entry))throw new Error('invalid-sample-entry');
     const path=realpathSync(resolve(root,item.entry));
     if(!path.toLowerCase().startsWith((root+sep).toLowerCase()))throw new Error('sample-path-escape');
     const body=readFileSync(path);
@@ -50,7 +50,7 @@ export function localResourceMiddleware(directory?:string) {
     }
     const name=path.slice('/__local_samples__/'.length), body=files?.get(name);
     if(request.method!=='GET'||!body){response.statusCode=404;response.end('local-vanilla-samples-unavailable');return;}
-    response.setHeader('Content-Type',name.endsWith('.png')?'image/png':'application/json');
+    response.setHeader('Content-Type',name.endsWith('.png')?'image/png':name.endsWith('.ogg')?'audio/ogg':'application/json');
     response.setHeader('Content-Length',body.length);response.end(body);
   };
 }

@@ -1,0 +1,58 @@
+
+> minecraft-birthday-p2-scene3d@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ F01 small_ball original primary count and genuinely three-dimensional velocity (5.08ms)
+✔ F01 large_ball original primary count and genuinely three-dimensional velocity (2.6547ms)
+✔ F01 star original primary count and genuinely three-dimensional velocity (0.7769ms)
+✔ F01 creeper original primary count and genuinely three-dimensional velocity (0.9083ms)
+✔ F01 burst original primary count and genuinely three-dimensional velocity (0.9766ms)
+✔ F02 all shape and Trail/Twinkle combinations terminate with bounded children (189.1718ms)
+✔ F03 same seed and elapsed time produce identical state across 30/60/144 Hz refresh sequences (71.7399ms)
+✔ F04 gravity precedes motion, drag follows it, color approaches fade after half life (0.805ms)
+✔ F05 original reverse frame age formula, twinkle gate and trail birth age (1.5228ms)
+✔ F06 near/far boundary, blast/twinkle pitch ranges and integer-tick sound delay (0.724ms)
+✔ F07 original particle/audio cohort is explicitly blocked when absent (317.3796ms)
+✔ F08 Starter final tick includes the base lifetime before its fifteen extra twinkle ticks (0.2427ms)
+✔ C01 resize preserves eye position and central composition across desktop and portrait (7.9755ms)
+✔ D01 authored bounds, occupied and protected cells reject without mutation (1.1468ms)
+✔ D02 placement allocates independent stable instances (0.8005ms)
+✔ D03 hopper has five possible outlet directions, no upward or downward furnace (1.931ms)
+✔ D04 furnace ports and hopper collector use independent coordinate adjacency (1.466ms)
+✔ D05 rotation and removal cannot retain stale graph edges (1.1412ms)
+✔ D06 restore retains IDs, positions, orientation and derived edges (1.1874ms)
+✔ D07 rejects corrupted schema (0.4716ms)
+✔ D07 rejects corrupted overlap (0.5133ms)
+✔ D07 rejects corrupted direction (0.5414ms)
+✔ D07 rejects corrupted ID (0.5101ms)
+✔ D07 rejects corrupted next ID (0.4155ms)
+✔ D07 rejects corrupted kind (0.3292ms)
+✔ P01 face selection respects negative cell coordinates and epsilon (0.4607ms)
+✔ M01 inherited textures override parents without appending replaced elements (2.5276ms)
+✔ M02 model-parent, texture-variable cycles and missing references fail explicitly (1.0333ms)
+✔ M03 rotated north face has east normal in Y-up render coordinates (0.946ms)
+✔ M04 UV-lock and element rotations are rejected, not silently approximated (0.3945ms)
+✔ M05 original debug hopper is hollow and its outlet rotates toward east (6.773ms)
+✔ R01 repeated model creation/release balances owned geometry and shared materials (11.1834ms)
+✔ T01 frame summary uses actual intervals and rejects empty or invalid samples (0.716ms)
+✔ Q10 right split, single placement, finite merge and unlock invariance (2.4869ms)
+✔ Q11 drag snapshots stay bounded with duplicate, full and unsupported slots (0.7335ms)
+✔ Q12 clone, Shift research transfer, number swap and finite double collect (0.6896ms)
+✔ Q13 menu slot origins retain same-version menu topology, not a universal web card grid (0.3972ms)
+✔ Q14 child display contexts merge without dropping the inherited GUI transform (0.7319ms)
+✔ Q15 optional GUI cohort hashes, image dimensions and distinct item source routes (317.6736ms)
+✔ S01 render-only stone sample cannot occupy a legal build cell (4.3047ms)
+✔ U01 explicit asymmetric UVs rotate with their quad and remain texture-relative (3.8366ms)
+✔ U02 model state loader rejects multipart and missing originals rather than substituting debug (0.4779ms)
+✔ A01 original-style animation duration, explicit frames and wrap are deterministic (0.8104ms)
+✔ A02 nearest alpha sampling flips vertical UVs and clamps edge coordinates (0.3932ms)
+✔ L01 loopback sample transport rejects absent files, tampering, cross-origin and path escapes (179.802ms)
+✔ L02 optional original sample integrity check is explicitly skipped without external resources (266.4347ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1395.9914

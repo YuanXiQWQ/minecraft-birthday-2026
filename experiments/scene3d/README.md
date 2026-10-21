@@ -1,5 +1,7 @@
 # P2 第一轮：独立实时 3D 技术切片
 
+当前切片包含P2第四轮五形状烟花/粒子/WebAudio研究，详见[第四轮报告](../../docs/p2/celebration-review.md)。用户已允许原版资源与截图暂存Git/构建，最终采用其替代素材；[资源替换索引](../../docs/p2/resource-replacement-index.md)覆盖下方历史阶段禁入规则。本次原始样本仍沿用仓库外缓存，新增开发截图在docs，普通build无原版样本且明确BLOCKED。下文首轮/第二/第三轮能力与限制保留为阶段记录。
+
 本目录是隔离实验，不是正式游戏或完整 P2。验收结果与原始证据见 [P2 报告](../../docs/p2/report.md)。不引用 P1 二维界面，不自动进入未来正式构建。
 
 ## 运行与检查
@@ -100,3 +102,20 @@ npm run dev
 Run GUI foundation checks检验实际资源尺寸/槽patch/字宽/图标alpha/九宫格/物理像素缩放/边界及绑定门禁；`#gui-evidence` 提供只读事件/槽位/资源摘要。原生左右/中键、左拖、Shift、双击和数字键可试。Replay synthetic right drag是**不可信DOM事件回放**，不是实体右拖通过。关闭/重新打开重建夹具；有限组及实验Shift路由不是批准后的D04–D07业务，没有配方、燃烧、装备/结果领取或配方书。
 
 外部样本与原版资源截图不得放入Git。现有本机缓存和截图目录、缺口及测试证据见报告。普通 `build/preview` 故意没有原版样本，显示BLOCKED；不能使用调试几何/占位界面冒称原版GUI通过。根与子路径构建检查命令保持不变。
+
+## P2 第四轮：烟花、粒子与声音
+
+第三轮已通过审查，本轮仅为技术原型。上述资源禁入规则是历史边界，当前用户允许暂存并最终替换，详见本文件开头及独立索引。
+
+```powershell
+$env:MC_LOCAL_SAMPLES='C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-fireworks-20261020'
+npm run check
+npm test
+npm run dev -- --port 4178
+```
+
+打开 `/game/` 的 Developer tools：依次加载 local vanilla samples、local vanilla GUI、local celebration samples；Small Ball / Large Ball / Star / Creeper / Burst、Trail/Twinkle与组合均可独立测试。Enable audio 或明确的声音/烟花按钮激活WebAudio；普通构建缺资源明确BLOCKED。原版样本仅来自已核实26.3构件及官方资产索引，不安装或启动客户端。
+
+Pause/Resume控制共同模拟/音频时钟，Cancel停止未来与当前声音及粒子，Far sound fixture验证原版远声与距离延迟。单声音事件按钮可试听12事件；解码失败/拒绝自动播放为独立诊断。Hold visual snapshot仅冻结画面，不能用于音画同步结论。Export last celebration evidence在`#celebration-record`给出逐帧及完整时间线；`#celebration-evidence`是实时摘要。效果沿用原有唯一RAF，GUI不透传，重建会释放声音/批次/atlas。
+
+换机器生成仓库外缓存：`./tools/extract-celebration-samples.ps1 -Jar '<已有26.3 client.jar>' -Output '<外部新目录>' -AssetIndex '<34.json>' -Sounds '<sounds.json>'`。脚本校验构件和索引，按官方对象地址下载12个声音；无需重新安装依赖。完整步骤、真实浏览器两尺寸证据和人工试听/后台/Java对照未验证项见[第四轮报告](../../docs/p2/celebration-review.md)。没有正式结局、祝福文案、背景音乐、完整P2或P3–P9。

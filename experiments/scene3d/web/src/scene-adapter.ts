@@ -11,6 +11,7 @@ import { edges, key } from './domain.ts';
 import type { Cell, Facing, Kind, Layout } from './domain.ts';
 
 export interface Pick { id: string; role: 'device' | 'ground' | 'occluder'; point: Cell; normal: Cell; candidate: Cell }
+export interface SceneEffect {frame:(time:number,delta:number)=>void;afterFrame:()=>void;dispose:()=>void}
 /** A render-only stone probe stays outside the legal build cells to prevent hidden occupancy conflicts. */
 export const STONE_SAMPLE_CELL:Cell=[-5,0,-2];
 
@@ -51,6 +52,7 @@ export class SceneAdapter {
   lastFrame = 0;
   sampleSink: ((time: number, delta: number) => void) | null = null;
   onResize: (() => void) | null = null;
+  effect:SceneEffect|null=null;
 
   /** Allocate one perspective WebGL2 renderer and start the real frame loop.
    * @param {HTMLElement} host Canvas host.
@@ -238,7 +240,7 @@ export class SceneAdapter {
     if (this.disposed) return;
     const delta = this.lastFrame ? time-this.lastFrame : 0; this.lastFrame = time;
     if (delta > 0) { this.intervals.push(delta); if (this.intervals.length > 600) this.intervals.shift(); this.sampleSink?.(time,delta); }
-    this.renderOnce(); this.frameHandle = requestAnimationFrame(t => this.animate(t));
+    this.effect?.frame(time,delta);this.renderOnce();this.effect?.afterFrame(); this.frameHandle = requestAnimationFrame(t => this.animate(t));
   }
 
   /** Submit a frame with an optional deterministic texture-animation time for browser assertions.
@@ -265,9 +267,10 @@ export class SceneAdapter {
       vanilla:this.vanilla?.diagnostics()??null };
   }
 
-  /** Stop animation/observation and release model, helper, line, material and renderer resources. */
+  /** Stop animation/observation and release effects, audio, model, helper, line, material and renderer resources. */
   dispose(): void {
     if (this.disposed) return; this.disposed = true;
+    this.effect?.dispose();this.effect=null;
     cancelAnimationFrame(this.frameHandle); this.observer.disconnect(); this.sampleSink = null; this.onResize = null;
     this.showPreview(null,'furnace','north',false);
     for (const o of this.objects.values()) this.models.release(o); this.objects.clear(); this.signatures.clear();

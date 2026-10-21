@@ -1,0 +1,58 @@
+
+> minecraft-birthday-p2-scene3d@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ F01 small_ball original primary count and genuinely three-dimensional velocity (3.4056ms)
+✔ F01 large_ball original primary count and genuinely three-dimensional velocity (1.6242ms)
+✔ F01 star original primary count and genuinely three-dimensional velocity (0.7205ms)
+✔ F01 creeper original primary count and genuinely three-dimensional velocity (0.7932ms)
+✔ F01 burst original primary count and genuinely three-dimensional velocity (0.6258ms)
+✔ F02 all shape and Trail/Twinkle combinations terminate with bounded children (200.2401ms)
+✔ F03 same seed and elapsed time produce identical state across 30/60/144 Hz refresh sequences (92.793ms)
+✔ F04 gravity precedes motion, drag follows it, color approaches fade after half life (0.7154ms)
+✔ F05 original reverse frame age formula, twinkle gate and trail birth age (1.9395ms)
+✔ F06 near/far boundary, blast/twinkle pitch ranges and integer-tick sound delay (0.8956ms)
+﹣ F07 original particle/audio cohort is explicitly blocked when absent (0.3134ms) # BLOCKED: no configured original celebration resources
+✔ F08 Starter final tick includes the base lifetime before its fifteen extra twinkle ticks (0.2359ms)
+✔ C01 resize preserves eye position and central composition across desktop and portrait (7.2128ms)
+✔ D01 authored bounds, occupied and protected cells reject without mutation (1.4307ms)
+✔ D02 placement allocates independent stable instances (0.4902ms)
+✔ D03 hopper has five possible outlet directions, no upward or downward furnace (1.3534ms)
+✔ D04 furnace ports and hopper collector use independent coordinate adjacency (0.755ms)
+✔ D05 rotation and removal cannot retain stale graph edges (0.6743ms)
+✔ D06 restore retains IDs, positions, orientation and derived edges (0.9831ms)
+✔ D07 rejects corrupted schema (0.5001ms)
+✔ D07 rejects corrupted overlap (0.406ms)
+✔ D07 rejects corrupted direction (0.4904ms)
+✔ D07 rejects corrupted ID (0.7943ms)
+✔ D07 rejects corrupted next ID (0.8533ms)
+✔ D07 rejects corrupted kind (0.5218ms)
+✔ P01 face selection respects negative cell coordinates and epsilon (0.5895ms)
+✔ M01 inherited textures override parents without appending replaced elements (3.848ms)
+✔ M02 model-parent, texture-variable cycles and missing references fail explicitly (1.6481ms)
+✔ M03 rotated north face has east normal in Y-up render coordinates (3.0114ms)
+✔ M04 UV-lock and element rotations are rejected, not silently approximated (0.3759ms)
+✔ M05 original debug hopper is hollow and its outlet rotates toward east (6.5577ms)
+✔ R01 repeated model creation/release balances owned geometry and shared materials (12.2834ms)
+✔ T01 frame summary uses actual intervals and rejects empty or invalid samples (0.5708ms)
+✔ Q10 right split, single placement, finite merge and unlock invariance (5.0962ms)
+✔ Q11 drag snapshots stay bounded with duplicate, full and unsupported slots (0.7684ms)
+✔ Q12 clone, Shift research transfer, number swap and finite double collect (0.69ms)
+✔ Q13 menu slot origins retain same-version menu topology, not a universal web card grid (0.3857ms)
+✔ Q14 child display contexts merge without dropping the inherited GUI transform (0.8836ms)
+﹣ Q15 optional GUI cohort hashes, image dimensions and distinct item source routes (0.1837ms) # BLOCKED: no external original GUI cohort; no vanilla pass
+✔ S01 render-only stone sample cannot occupy a legal build cell (2.6797ms)
+✔ U01 explicit asymmetric UVs rotate with their quad and remain texture-relative (3.3029ms)
+✔ U02 model state loader rejects multipart and missing originals rather than substituting debug (0.6214ms)
+✔ A01 original-style animation duration, explicit frames and wrap are deterministic (0.7599ms)
+✔ A02 nearest alpha sampling flips vertical UVs and clamps edge coordinates (0.3493ms)
+✔ L01 loopback sample transport rejects absent files, tampering, cross-origin and path escapes (155.5584ms)
+﹣ L02 optional original sample integrity check is explicitly skipped without external resources (0.3243ms) # BLOCKED: MC_LOCAL_SAMPLES not configured; no vanilla pass claimed
+ℹ tests 46
+ℹ suites 0
+ℹ pass 43
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 3
+ℹ todo 0
+ℹ duration_ms 1128.97

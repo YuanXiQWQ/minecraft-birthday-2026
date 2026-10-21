@@ -10,6 +10,7 @@ import { vanillaBrowserChecks } from './vanilla-checks.ts';
 import { loadGuiPack } from './gui-pack.ts';
 import { GuiView } from './gui-view.ts';
 import { GUI_TEXT as G } from './gui-labels.ts';
+import { CelebrationController } from './celebration-controller.ts';
 import { measure } from './metrics.ts';
 import { TEXT as T } from './labels.ts';
 import './style.css';
@@ -28,6 +29,8 @@ const modalKeys=new Set<string>();
 let worldWheels=0;
 /** External samples are ephemeral and never serialized with the logical layout. */
 let localPack:VanillaPack|null=null;
+/** Celebration research owns no product trigger and shares the existing scene frame loop. */
+let celebration:CelebrationController;
 
 /** Build DOM safely without evaluating labels or state as markup.
  * @param {string} tag HTML tag.
@@ -157,13 +160,14 @@ function bindCanvas(): void {
 /** Replace the renderer while preserving logical state and the diagnostic eye station. */
 function restart(): void {
   if (busy||panelOpen) return;
-  clearPreview(); const old=adapter, vanilla=old.vanilla; old.dispose();
-  evidence.rendererRestarts.push({ disposed: old.disposed, created: old.models.created, released: old.models.released,
+  clearPreview(); const old=adapter, vanilla=old.vanilla; const oldEffect=celebration;old.dispose();
+  evidence.rendererRestarts.push({ celebration:{disposed:oldEffect.disposed,activeSources:oldEffect.audio.sources.size,nodeChains:oldEffect.audio.chains.size,geometryBalanced:oldEffect.batch?.created===oldEffect.batch?.released,atlasDisposed:oldEffect.batch?.disposed},disposed: old.disposed, created: old.models.created, released: old.models.released,
     sharedMaterials: old.models.materials.size, retainedDeviceMappings: old.objects.size, canvasConnected: old.renderer.domElement.isConnected,
     vanilla:vanilla?{created:vanilla.created,released:vanilla.released,textures:vanilla.textures.size,materials:vanilla.materials.size}:null });
   adapter=new SceneAdapter(viewport,T.canvas); adapter.setView(old.view); adapter.setDebugVisible(!developer.hidden);
   if(vanilla&&localPack)adapter.setVanilla(localPack);adapter.lit=old.lit;sampleSelect.value='';
   adapter.sync(layout); adapter.select(selected); bindCanvas(); adapter.renderOnce(); updateDiagnostics(); showEvidence();
+  celebration=new CelebrationController(adapter,developer);
 }
 
 /** Activate verified local originals explicitly; failure preserves the current mode and records a block.
@@ -283,4 +287,5 @@ for(const [label,body] of [[T.state,stateBox],[T.links,links],[T.targets,targets
 }
 developer.append(el('h2',T.developerTitle),el('p',T.help,'help'),assetTools,toolbar,actionsBar,diagnostics);
 app.append(developer); updateDiagnostics(); showEvidence();
+celebration=new CelebrationController(adapter,developer);
 window.addEventListener('pagehide',()=>{adapter.dispose();gui.pack?.dispose();});

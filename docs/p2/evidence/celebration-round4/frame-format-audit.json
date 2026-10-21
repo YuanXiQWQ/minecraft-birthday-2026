@@ -1,0 +1,71 @@
+{
+  "method": "one JSON object per raw frame; no rounding, filtering, downsampling or field removal; JSON.parse roundtrip asserted",
+  "files": [
+    {
+      "file": "1280-combined.json",
+      "rows": 1011,
+      "canonicalSha256": "2a283b2f400dafd7ce4fbb0616755143242c68993c178e86b7c62d98d5f0774e",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1280-joint-final.json",
+      "rows": 1442,
+      "canonicalSha256": "ae679dd9d1987fb3c31f250b9a9d83c3280051808f9cff221c902bd0190285a8",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-creeper.json",
+      "rows": 681,
+      "canonicalSha256": "60410ceb05267e7bfd387f619fed87e8a92cd4a26482a12006700149a0499f9f",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-joint-final.json",
+      "rows": 1382,
+      "canonicalSha256": "5e6417bd3f42326eac788d36259738d42dd6138c57103a1452d94f27aca329e7",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-joint-gui.json",
+      "rows": 1255,
+      "canonicalSha256": "947e472e304a83444b4ab79eb472e6cbf5c1c8216f62b49152a9214cb7b282ff",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-large_ball.json",
+      "rows": 943,
+      "canonicalSha256": "bda33136e3c2b9d07ac1838f2bf0cab662a4b1b569b9b7720ed4c51912ad71c2",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-small_ball.json",
+      "rows": 968,
+      "canonicalSha256": "c620de8976a41efcf96bb980b4f166dd814fe14d390c6b66b7326b835255a77c",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440-star.json",
+      "rows": 898,
+      "canonicalSha256": "b263f539b2ca1189f2eb05bd622be542b8fa83a6bc3748e10cf26f1fc0a99e65",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440x1502-burst.json",
+      "rows": 941,
+      "canonicalSha256": "4ddf6fe0bc15c358385c6796ee26ac2d56c1f5f9861fcb9c14a89efcd164d273",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "1440x1502-combined.json",
+      "rows": 1308,
+      "canonicalSha256": "a935221eb76ca2f6aa96dab5485b995241f3dffb24a5ceb152afcf1028c6e511",
+      "allValuesPreserved": true
+    },
+    {
+      "file": "far-large_ball.json",
+      "rows": 1130,
+      "canonicalSha256": "fa911c98d6d743ab9ef66faec6467a3a177721e471510894383ac42f5f27dab5",
+      "allValuesPreserved": true
+    }
+  ]
+}
