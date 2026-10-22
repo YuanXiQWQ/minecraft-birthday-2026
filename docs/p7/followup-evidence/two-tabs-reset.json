@@ -1,0 +1,27 @@
+{
+  "oldGeneration": "0f513d0d-1d13-4577-a6c0-24d5a7318941",
+  "a": {
+    "catalogueIcons": "113",
+    "generation": "89d60994-c026-4653-8777-8f42ac416065",
+    "hasCake": "false",
+    "inventoryReady": "true",
+    "resources": "26.3",
+    "revision": "6",
+    "saveStatus": "ready"
+  },
+  "b": {
+    "catalogueIcons": "113",
+    "generation": "89d60994-c026-4653-8777-8f42ac416065",
+    "hasCake": "false",
+    "inventoryReady": "true",
+    "resources": "26.3",
+    "revision": "6",
+    "saveStatus": "ready"
+  },
+  "instancesA": "[]",
+  "instancesB": "[]",
+  "volume": "0.75",
+  "mute": true,
+  "aFeedback": "Progress reset. Your preferences were kept.",
+  "bFeedback": "Progress changed or this page was restored. Choose Reset progress again to review a new confirmation."
+}

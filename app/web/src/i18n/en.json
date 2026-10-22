@@ -131,7 +131,7 @@
   "scene.cave": "Cave",
   "scene.farm": "Farm",
   "scene.home": "Home",
-  "game.worldHint": "Left: harvest. Right: use / place. Right drag: look. Alt + right: attach to device. Shift + right: dismantle. R: rotate. E: items.",
+  "game.worldHint": "Left: harvest. Right: use / place. Right drag: look. Alt + right: attach. Ctrl + Alt + right: above device. Shift + right: dismantle. R: rotate. E: items.",
   "game.harvested": "Resource harvested. New items appear in your catalogue (E).",
   "game.planted": "Seeds planted. Wheat grows in 12 active seconds.",
   "game.rotated": "Device rotated.",

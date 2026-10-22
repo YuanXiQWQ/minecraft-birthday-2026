@@ -1,0 +1,18 @@
+[
+  {
+    "targetMs": 0,
+    "actualMs": 5
+  },
+  {
+    "targetMs": 4100,
+    "actualMs": 4101
+  },
+  {
+    "targetMs": 8100,
+    "actualMs": 8106
+  },
+  {
+    "targetMs": 12100,
+    "actualMs": 12112
+  }
+]

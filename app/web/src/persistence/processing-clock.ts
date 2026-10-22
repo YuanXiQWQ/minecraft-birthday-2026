@@ -1,5 +1,15 @@
 /** One visible game document owns processing time; home pages and offline intervals never drive production. */
 import type {SaveSession} from './session.ts';import {LOCK_NAME} from './session.ts';
+/** A catch-up commit covers at most one ordinary 250ms sampling interval. */
+export const ACTIVE_BATCH_TICKS=5;
+/** Drain all earned visible-owner ticks with a browser turn between bounded atomic commits.
+ * @param {number} ticks Earned native ticks.
+ * @param {Function} commit Real persistence transaction.
+ * @param {Function} eligible Current owner/generation/visibility fence.
+ * @param {Function} yieldTurn Injectable browser task boundary.
+ * @return {Promise<number>} Count committed before ownership ends.
+ */
+export async function advanceActiveTicks(ticks:number,commit:(ticks:number)=>Promise<unknown>,eligible:()=>boolean,yieldTurn:()=>Promise<void>=()=>new Promise(resolve=>setTimeout(resolve,0))):Promise<number>{let committed=0;while(committed<ticks&&eligible()){const count=Math.min(ACTIVE_BATCH_TICKS,ticks-committed);await commit(count);committed+=count;if(committed<ticks)await yieldTurn();}return committed;}
 /** Convert measured active elapsed time into deterministic native ticks, retaining fractional ticks only within one ownership interval. */
 export class TickClock {
   last:number;remainder=0;
@@ -18,7 +28,7 @@ export function processingClock(session:SaveSession):()=>void{let disposed=false
   /** Advance only while the same visible owner and save generation remain valid.
    * @return {Promise<void>} Bounded locked tick updates.
    */
-  async function step():Promise<void>{if(ticking||!lease||!clock)return;const ticket=lease,epoch=session.view.envelope?.generation;if(document.hidden||disposed||!session.view.writable||session.suspended){stop();return;}if(epoch!==generation){generation=epoch??'';clock=new TickClock(performance.now());return;}let ticks=clock.sample(performance.now());if(!ticks)return;ticking=true;try{while(ticks>0&&lease===ticket&&!document.hidden&&!disposed){const n=Math.min(1200,ticks);await session.transact({type:'processing-tick',ticks:n},()=>!disposed&&!document.hidden&&lease===ticket&&session.view.envelope?.generation===epoch);ticks-=n;}}catch{if(lease===ticket)stop();}finally{ticking=false;}}
+  async function step():Promise<void>{if(ticking||!lease||!clock)return;const ticket=lease,epoch=session.view.envelope?.generation;if(document.hidden||disposed||!session.view.writable||session.suspended){stop();return;}if(epoch!==generation){generation=epoch??'';clock=new TickClock(performance.now());return;}const ticks=clock.sample(performance.now());if(!ticks)return;ticking=true;const eligible=()=>!disposed&&!document.hidden&&lease===ticket&&session.view.envelope?.generation===epoch;try{await advanceActiveTicks(ticks,n=>session.transact({type:'processing-tick',ticks:n},eligible),eligible);}catch{if(lease===ticket)stop();}finally{ticking=false;}}
   /** Acquire an available lease without waiting behind another active document.
    * @return {Promise<void>} Ownership attempt completion.
    */

@@ -1,0 +1,14 @@
+(node:9592) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ current camera ray replaces A with B without an extra mouse movement and rotation never emits Use (9.1705ms)
+✔ GUI, pointer outside canvas, removed geometry and camera aspect cannot leave an actionable old identity (2.5965ms)
+✔ explicit upper attachment uses the same valid neighbor for preview and final formal placement (25.0007ms)
+✔ formal WorldUse R re-picks and cannot rotate stale A or act during a look gesture (8.1084ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1037.0509

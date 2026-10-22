@@ -1,0 +1,17 @@
+{
+  "baseline": "b39faec72b4eb5bce9cdda375105aa8e277b116f",
+  "engineSha256Lf": {
+    "app/web/src/domain/state.ts": "673e284a920f6b365931d8a91316947b99104eaa12776bef3a38d820613871ff",
+    "app/web/src/domain/furnace.ts": "e046a85c4eafe1dd76d17e87e5e07cf42d8199dd9f2d46af4b5e2b5578524a1c",
+    "app/web/src/rules/matcher.ts": "e4be0a835c657a9bddc55bd129ce6a6b195201f4810cbbcf386a2a6f429d004a",
+    "app/web/src/ui/pixels.ts": "e9b13103d3ab16a8c660be4f70b5195ddfc493a4a73d19e0e50452f39a72cecb",
+    "app/web/src/persistence/processing-clock.ts": "c3050db100bc856f330428e2db308c6ef7957bbea59dc350fcc86b6d7e991a25",
+    "app/web/src/persistence/session.ts": "fdec38dc21f64fed7e7a544114f2254c040ab8130c512b259178e8a97a182c03",
+    "app/web/src/render/scene.ts": "d3f27eaad11e1c254e1de04acfd4fe7724309a70e5d267324f9f29ac255eb7a9",
+    "app/web/src/performance.ts": "c830ae5e1cac365404ededebc13942f2db84a49f5d9649f15ea61edf22e21d29",
+    "app/web/src/app.ts": "7cd46396a0cf2f9c771fe13fa72e58829b8524c8827885f253e4e512d96d372a"
+  },
+  "measurement": "unchanged engine during 5s warmup + 60s cohorts; desktop 1280x720 DPR1.25",
+  "subsequentChanges": "narrow-only CSS and additional verification-only stall action; neither changes the measured desktop processing kernel",
+  "ordinaryBuildFixtures": false
+}

@@ -1,0 +1,64 @@
+{
+  "fixture": true,
+  "injectedStallMs": 1500,
+  "elapsedMs": 3008.5,
+  "advancedTicks": 60,
+  "maximumBatch": 5,
+  "commits": [
+    {
+      "ticks": 5,
+      "duration": 0.6000000238418579
+    },
+    {
+      "ticks": 5,
+      "duration": 0.9000000357627869
+    },
+    {
+      "ticks": 5,
+      "duration": 0.7000000476837158
+    },
+    {
+      "ticks": 5,
+      "duration": 0.7999999523162842
+    },
+    {
+      "ticks": 5,
+      "duration": 0.5
+    },
+    {
+      "ticks": 5,
+      "duration": 0.699999988079071
+    },
+    {
+      "ticks": 3,
+      "duration": 0.6000000238418579
+    },
+    {
+      "ticks": 5,
+      "duration": 0.699999988079071
+    },
+    {
+      "ticks": 2,
+      "duration": 0.5
+    },
+    {
+      "ticks": 5,
+      "duration": 1.300000011920929
+    },
+    {
+      "ticks": 5,
+      "duration": 1
+    },
+    {
+      "ticks": 5,
+      "duration": 0.5
+    },
+    {
+      "ticks": 5,
+      "duration": 0.6000000238418579
+    }
+  ],
+  "completeStateEqualsNativeTicks": true,
+  "generationBefore": "p7-performance-chain",
+  "generationAfter": "p7-performance-chain"
+}

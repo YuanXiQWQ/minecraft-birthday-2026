@@ -1,0 +1,5 @@
+
+> minecraft-birthday-2026@0.1.0 check
+> tsc --noEmit
+
+tests/world-hover.test.ts(19,349): error TS2339: Property 'parent' does not exist on type 'never'.

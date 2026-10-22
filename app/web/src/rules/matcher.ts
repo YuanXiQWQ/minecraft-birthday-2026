@@ -1,5 +1,7 @@
 /** Vanilla grid matching is independent of GUI stacks, permanent acquisition and quantity adaptation policy. */
 import type {Ingredient,Stack,Recipe,Rules,Match} from './types.ts';
+/** Immutable versioned registries can reuse item-only cooking matches without caching counts or component payloads. */
+const cookingMatches=new WeakMap<Rules,Map<string,Recipe|null>>();
 /** Resolve literal or recursive-expanded tag alternatives, preserving namespaced identity.
  * @param {Ingredient} ingredient Same-version ingredient.
  * @param {Record<string,string[]>} tags Fully expanded item tags.
@@ -84,4 +86,4 @@ export function findCrafting(grid:(Stack|null)[],width:number,rules:Rules):Match
  * @param {Rules} rules Recipe registry.
  * @return {Recipe|null} Native recipe or no process.
  */
-export function matchCooking(input:Stack,station:'furnace'|'blast_furnace',rules:Rules):Recipe|null{const type=station==='furnace'?'minecraft:smelting':'minecraft:blasting';return rules.recipes.find(r=>r.type===type&&r.ingredient&&accepts(r.ingredient,input,rules))??null;}
+export function matchCooking(input:Stack,station:'furnace'|'blast_furnace',rules:Rules):Recipe|null{if(!Number.isSafeInteger(input.count)||input.count<=0)return null;const type=station==='furnace'?'minecraft:smelting':'minecraft:blasting',immutable=Object.isFrozen(rules)&&Object.isFrozen(rules.recipes)&&Object.isFrozen(rules.itemTags),key=type+':'+input.id;let cache=cookingMatches.get(rules);if(immutable&&cache?.has(key))return cache.get(key)!;const result=rules.recipes.find(r=>r.type===type&&r.ingredient&&accepts(r.ingredient,input,rules))??null;if(immutable){if(!cache){cache=new Map();cookingMatches.set(rules,cache);}cache.set(key,result);}return result;}

@@ -21,7 +21,7 @@ export class PixelUI {
    * @param {string} color Text tint.
    */
   text(host:HTMLElement,text:string,scale=2,color='#fff7de'):void{
-    if(this.texts.has(host)){const value=this.texts.get(host)!;value.text=text;this.updates.get(host)?.();return;}
+    if(this.texts.has(host)){const value=this.texts.get(host)!;if(value.text===text&&value.scale===scale&&value.color===color)return;value.text=text;value.scale=scale;value.color=color;this.updates.get(host)?.();return;}
     this.texts.set(host,{text,scale,color});host.classList.add('pixel-text');const canvas=document.createElement('canvas'),accessible=document.createElement('span');canvas.setAttribute('aria-hidden','true');accessible.className='sr-only';host.append(accessible,canvas);
     const draw=()=>{const value=this.texts.get(host)!,style=getComputedStyle(host);accessible.textContent=value.text;if(host.clientWidth<=0)return;const w=Math.max(16,host.clientWidth-parseFloat(style.paddingLeft)-parseFloat(style.paddingRight)-2),logical=Math.max(8,Math.floor(w/value.scale)),lines=wrap(value.text,logical-1,t=>this.font.width(t)),height=lines.length*12;canvas.width=logical;canvas.height=height;canvas.style.width=logical*value.scale+'px';canvas.style.height=height*value.scale+'px';const context=canvas.getContext('2d')!;context.imageSmoothingEnabled=false;lines.forEach((line,i)=>this.font.draw(context,line,style.textAlign==='center'?Math.max(0,Math.floor((logical-this.font.width(line))/2)):0,i*12,value.color,true));};
     this.updates.set(host,draw);let lastWidth=-1;const observer=new ResizeObserver(entries=>{const width=entries[0].contentRect.width;if(width===lastWidth)return;lastWidth=width;this.queue(draw);});observer.observe(host);this.observers.push(observer);draw();
