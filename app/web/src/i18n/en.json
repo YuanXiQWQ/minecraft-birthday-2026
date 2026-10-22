@@ -47,7 +47,7 @@
   "error.write-failed": "Your change could not be saved. Previous saved progress has not been replaced. Read it again before retrying.",
   "error.stale-session": "Progress was reset or replaced in another page. Read the current saved progress before making another change.",
   "error.session-restored": "This page was restored while a change was waiting. Read the current progress before trying again.",
-  "error.confirmation-stale": "Progress changed while this confirmation was open. Read it again and confirm a new reset if you still want one.",
+  "error.confirmation-stale": "Progress changed or this page was restored. Choose Reset progress again to review a new confirmation.",
   "error.lock-busy": "Another page is saving. Please try again in a moment.",
   "error.generic": "This action could not be completed safely. Existing saved progress has been kept.",
   "error.resource": "The original Minecraft resources could not be loaded. Please reload the page.",
@@ -100,5 +100,8 @@
   "inventory.furnaceNote": "Inputs and fuel are saved references. Processing takes time; collect the finite output to unlock it.",
   "inventory.takeOutput": "Left: collect. Right with empty cursor: take half. Shift: move to hotbar.",
   "inventory.outputFailed": "The output could not be collected. Check the current output and available space.",
-  "inventory.outputEmpty": "No processed output yet"
+  "inventory.outputEmpty": "No processed output yet",
+  "settings.saved": "Setting saved.",
+  "settings.saveFailed": "This setting could not be saved. The last committed value is shown. Check the storage message and retry.",
+  "settings.resetFailed": "Progress could not be reset. Check the storage message, retry storage, and review a new confirmation."
 }

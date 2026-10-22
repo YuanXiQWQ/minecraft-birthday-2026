@@ -1,0 +1,31 @@
+(node:49036) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ reset confirmation survives several seconds of formal processing and retains latest committed settings (45.5129ms)
+✔ ordinary reset clears complete progress and keeps latest preferences without processing (13.5845ms)
+✔ autonomous output and burn changes remain in the confirmed scope without silently acquiring output (8.5377ms)
+✔ manual unlock invalidates confirmation without poisoning a healthy session (9.7319ms)
+✔ manual layout invalidates confirmation without poisoning a healthy session (8.8758ms)
+✔ manual input invalidates confirmation without poisoning a healthy session (7.6836ms)
+✔ manual remove invalidates confirmation without poisoning a healthy session (8.0388ms)
+✔ a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry (8.2724ms)
+✔ restored pages cannot submit confirmation tickets issued before suspension (6.2542ms)
+✔ queued clock and finite acquisition cannot revive progress after reset or poison the new epoch (8.5732ms)
+✔ write failure preserves bytes, remains explicitly readonly and can be retried after refresh (7.55ms)
+✔ open reset confirmation never overwrites invalid backing bytes: not json (4.9244ms)
+✔ open reset confirmation never overwrites invalid backing bytes: {"format":99} (6.5692ms)
+✔ confirmation preserves checksum bytes and blocks reset (5.6762ms)
+✔ confirmation preserves unknown-version bytes and blocks reset (6.7577ms)
+✔ volume gesture survives continuous real processing publications with consistent displayed percent (19.5109ms)
+✔ remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields (7.5742ms)
+✔ older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority (5.662ms)
+✔ submitted language and mute drafts survive async processing snapshots until their own receipts settle (6.8944ms)
+✔ close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings (5.8871ms)
+✔ failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save (6.1316ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 652.0526

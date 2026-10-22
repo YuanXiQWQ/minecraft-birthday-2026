@@ -1,0 +1,38 @@
+(node:23528) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ reset confirmation survives several seconds of formal processing and retains latest committed settings (40.4008ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 589.9414
+
+✖ failing tests:
+
+test at app\tests\settings-regression.test.ts:10:1
+✖ reset confirmation survives several seconds of formal processing and retains latest committed settings (40.4008ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   failure: 'confirmation-stale',
+  +   stations: 1,
+  +   writable: false
+  -   failure: '',
+  -   stations: 0,
+  -   writable: true
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\settings-regression.test.ts:10:426)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { failure: 'confirmation-stale', writable: false, stations: 1 },
+    expected: { failure: '', writable: true, stations: 0 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

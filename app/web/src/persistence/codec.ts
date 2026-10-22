@@ -45,8 +45,8 @@ export async function decode(raw:string):Promise<Decoded>{
  * @return {boolean} Exact supported reservation.
  */
 function identityReserved(value:unknown):boolean{return !!value&&typeof value==='object'&&canonical(value)==='{"data":null,"version":0}';}
-/** Identify the exact value shown in a reset confirmation, including concurrent same-epoch updates.
+/** Identify the confirmed progress scope while excluding autonomous producer evolution and retained preferences.
  * @param {Envelope} envelope Visible valid snapshot.
  * @return {string} Confirmation token.
  */
-export function token(envelope:Envelope):string{return envelope.generation+':'+envelope.revision+':'+envelope.checksum;}
+export function token(envelope:Envelope):string{const p=envelope.state.progress,scenes=Object.fromEntries(Object.entries(p.scenes).map(([id,scene])=>[id,{...scene,stations:scene.stations.map(station=>({...station,contents:station.contents.version===2?{version:2,data:{input:station.contents.data.input,fuel:station.contents.data.fuel}}:station.contents}))}]));return canonical({format:envelope.format,contentVersion:envelope.contentVersion,vanillaVersion:envelope.vanillaVersion,generation:envelope.generation,progress:{...p,scenes}});}

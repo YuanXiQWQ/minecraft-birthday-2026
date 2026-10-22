@@ -1,6 +1,7 @@
 /** P3_TEST_ONLY: explicit command fixtures and real browser coordination, excluded from every normal build. */
 import {browserSession} from '../web/src/persistence/browser.ts';import {SAVE_KEY,LOCK_NAME,SaveSession} from '../web/src/persistence/session.ts';import {token} from '../web/src/persistence/codec.ts';
 import registered from '../web/src/data/registry.json' with {type:'json'};
+import {emptyFurnace} from '../web/src/domain/furnace.ts';
 import {potentialDrops} from '../web/src/rules/harvest.ts';import {cooking} from '../web/src/rules/process.ts';import {loadRules} from '../web/src/rules/load.ts';import {matchCrafting} from '../web/src/rules/matcher.ts';
 if(import.meta.env.MODE!=='verification')throw new Error('verification-only');
 /** Test origin owns no real user's ordinary-server save. */
@@ -48,3 +49,7 @@ window.addEventListener('pagehide',()=>receiptChannel.close());
 
 /** Configure only acquired source references; every output still requires real timed production and acquisition. */
 action('Fixture: furnace source carriers',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));for(const id of ['oak_log','stick','furnace','blast_furnace','raw_iron'])await session.dispatch({type:'unlock',item:'minecraft:'+id});for(const [index,id]of [[0,'furnace'],[1,'blast_furnace'],[2,'oak_log'],[3,'stick'],[4,'raw_iron']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'select',index:0},null,session.view.envelope!.state.progress.player.data);return session.view;});
+/** Seed references through real commands on the isolated origin; the visible game clock produces all output. */
+action('Fixture: running furnace',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));session.rules=await loadRules();session.policy={allows:()=>true};for(const id of ['furnace','oak_log','stick'])await session.dispatch({type:'unlock',item:'minecraft:'+id});await session.dispatch({type:'put-station',scene:'plains',station:{id:'settings-running',kind:'furnace',cell:[3,0,-1],facing:'south',contents:emptyFurnace()}});for(const[index,id]of [[0,'oak_log'],[1,'stick']] as const){const r=await session.editInventory({type:'source',item:'minecraft:'+id,mode:'left'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'machine-slot',index,button:0},r.cursor,session.view.envelope!.state.progress.player.data,undefined,{scene:'plains',id:'settings-running',expected:structuredClone(session.view.envelope!.state.progress.scenes.plains.stations[0].contents)});}return session.view;});
+/** Schedule a real second-session preference command without holding the transaction lock during the delay. */
+action('Fixture: delayed remote volume 80%',async()=>{await new Promise(r=>setTimeout(r,2000));await session.refresh();await session.dispatch({type:'settings',patch:{volume:.8,muted:false}});return session.view;});
