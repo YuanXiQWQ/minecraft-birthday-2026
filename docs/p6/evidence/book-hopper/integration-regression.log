@@ -1,0 +1,659 @@
+
+> minecraft-birthday-2026@0.1.0 test
+> node --experimental-transform-types --test tests/*.test.ts
+
+(node:35256) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D05 left/right target semantics grant a complete batch, preserve inputs and reject partial capacity or different components (19.9572ms)
+✔ D05 Shift is bounded by nine-slot capacity and complete batches, including uneven free capacity and native unstackables (12.6739ms)
+✔ D05 numeric/F targets do not swap existing different items, and invalid result operations cannot clone or discard outputs (3.5762ms)
+✔ D05 malformed or locked ingredient stacks, unknown component variants and invalid dimensions never grant results (2.3593ms)
+✖ D05 actual log-plank-stick-workbench-pick chain unlocks only after receipt without relying on discovery (37.2163ms)
+✔ D05 cake A returns exactly three buckets to the infinite directory with no hidden inventory or birthday completion (21.8575ms)
+✔ D05 native pristine repair results normalize only the matching default max_damage component (1.437ms)
+✔ workbench nine inputs reuse SlotPolicy, unique drag, Shift and numeric swap, and are excluded from player layout (2.6643ms)
+✔ D05 save failure and stale layout rejection leave product locked, input/target bytes untouched and emit no events (65.2496ms)
+✔ workbench contents persist on refresh, remain isolated by instance, reject stale/removed/wrong-scene contexts and reset safely (80.0828ms)
+✖ P5 migration preserves durable layout/settings/cake and upgrades empty workbench reservation without overwriting original bytes (7.5308ms)
+✔ D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products (36.4035ms)
+✔ D07 closing while an accepted result transaction resolves cannot restore the cursor or personal ingredients (4.4671ms)
+✔ successful SaveSession acquisition returns the actual committed cursor receipt for both first unlock and repeated known results (35.6883ms)
+✔ queued old-generation crafting cannot award a result after a reset acquires the same lock first (19.1486ms)
+✔ two real workbench commands with the same observed grid reject the stale writer independently of player layout revision (27.9485ms)
+✔ a result projection is never a general mutable slot, regardless of ordinary slot input operation (4.2952ms)
+✔ P6 carrier region admits approved floor devices and excludes the birthday table without authoring final four-scene limits (0.5333ms)
+(node:33648) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ personal preview matches one log in each 2x2 offset, shows native output count and does not scale by input quantity (15.1288ms)
+✔ personal preview respects native horizontal mirror and repeated ingredients (4.4707ms)
+✔ personal preview switches recipes, clears no-match inputs and never fits a three-wide recipe into 2x2 (2.3406ms)
+✔ personal preview does not mutate input, consume material or expose remainder transactions; unsupported rules are explicit (2.7426ms)
+✔ menu projection remains separate from slot references; a screen without an acquisition port stays read-only (16.5364ms)
+✔ D07 close and reset clear the actual menu preview without changing stable carriers (10.83ms)
+✖ previewing a still-locked product never writes a save, emits acquisition events or discovers a recipe (63.3889ms)
+(node:46004) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (66.1345ms)
+✔ normal receipt and post-receipt placement: {} (30.1924ms)
+✔ normal receipt and post-receipt placement: {"known":true} (29.7916ms)
+✔ normal receipt and post-receipt placement: {"merge":5} (20.9612ms)
+✔ normal receipt and post-receipt placement: {"bench":true} (42.7893ms)
+✔ normal receipt and post-receipt placement: {"bench":true,"known":true} (28.9583ms)
+✔ waiting receipt rejects empty carrier operation through the unified command entry (12.9348ms)
+✔ waiting receipt rejects occupied carrier operation through the unified command entry (24.2376ms)
+✔ waiting receipt rejects directory carrier operation through the unified command entry (11.6316ms)
+✔ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (14.4839ms)
+✔ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (12.0929ms)
+✔ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (19.3769ms)
+✔ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (18.9659ms)
+✔ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (17.9622ms)
+✔ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (21.3967ms)
+✔ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (33.0791ms)
+✔ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (19.4828ms)
+✔ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (43.2531ms)
+✔ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (26.8761ms)
+✔ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (13.9859ms)
+✔ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (27.1701ms)
+✔ workbench receipt also rejects empty-slot and directory operations while its real instance input persists (25.0926ms)
+✔ closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor (32.8526ms)
+✔ identity-checked cleanup cannot release ownership established by a different receipt (7.1383ms)
+(node:25768) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ unlock is immutable, monotonic and idempotent; side items follow first acquisition (16.487ms)
+✔ completion is a single table fact; requires unlocked cake, home context and the canonical table (9.3178ms)
+✔ placement accepts only explicit authored policy; stable instances remain separate from view and natural state (7.868ms)
+✔ unsupported IDs, contract payloads, malformed coordinates and extra durable fields are never discarded silently (2.2159ms)
+✔ progress reset retains approved settings and clears all progress without changing other snapshots (3.0529ms)
+(node:47760) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: false (147.4738ms)
+✔ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: true (91.3961ms)
+✔ formal furnace right split with existing same cursor merges only moved finite units (62.7931ms)
+✔ formal furnace pending Done close does not revive cursor and preserves instance input references (89.6615ms)
+✔ formal furnace pending E close does not revive cursor and preserves instance input references (66.8359ms)
+✔ formal furnace pending Esc close does not revive cursor and preserves instance input references (90.0551ms)
+✔ formal furnace failed write leaves output intact and gate releases for a successful retry (94.99ms)
+✔ formal furnace reset fences a committed delayed receipt without resurrection (98.0583ms)
+✔ formal furnace remove fences a committed delayed receipt without resurrection (92.4528ms)
+✔ formal furnace dispose fences a committed delayed receipt without resurrection (87.9713ms)
+✔ returning from finite furnace output to an unchanged empty personal grid cannot reuse producer preview cache (77.6993ms)
+(node:38380) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ native timed furnace oak_log -> charcoal (17.4436ms)
+✔ native timed furnace cobblestone -> stone (16.0846ms)
+✔ native timed furnace stone -> smooth_stone (13.7146ms)
+✔ native timed furnace raw_iron -> iron_ingot (5.6787ms)
+✔ native timed blast_furnace raw_iron -> iron_ingot (3.0016ms)
+✔ native timed blast_furnace iron_pickaxe -> iron_nugget (5.9076ms)
+✔ native timed furnace iron_pickaxe -> iron_nugget (10.6184ms)
+✔ blast furnace accepts manual log reference but never produces charcoal (32.3208ms)
+✔ all 34 reachable fuels use native contextual duration/speed, including short repeated cycles (130.2595ms)
+✔ large steps equal single ticks across restarts and continuous reference cycles (115.8464ms)
+✔ full or component-blocked output does not ignite; existing fire expires and progress resets (10.8346ms)
+✔ removing/changing input resets progress but not fire; removing fuel preserves current burn; unlit missing fuel cools by two (1.6533ms)
+✔ producer validation rejects arbitrary or mismatched locked output without relaxing normal carriers (4.5622ms)
+✔ finite output left/right/Shift/numeric/F move only actual quantity, respecting partial capacity and components (18.8574ms)
+✔ G24-G26 input accepts nonrecipe, Shift prioritizes recipe even when full, fuel slot bucket uses native GUI capacity (7.6262ms)
+✔ sided ports expose native input/fuel/output and bottom-takeable tag separately (0.7678ms)
+✔ real session produces locked finite output, atomic pickup unlocks once and cannot regenerate it (136.4821ms)
+✔ two devices in different scenes run independently and persist through refresh/close without changing cake (53.7097ms)
+✔ write failure, full target and layout conflict never partially deliver or unlock (184.0155ms)
+✔ competing output pickups have one winner; reset and dismantle fence older work (116.0477ms)
+✖ p6 crafting migration preserves workbench grid/player/settings/cake and upgrades only empty furnace reservations (67.9873ms)
+✔ active clock uses 50ms native ticks with fractions, fresh ownership discards handoff gaps (14.8119ms)
+✔ active ownership checked inside save lock and after checksum; inactive ticks never write (61.7198ms)
+✔ native output secondary pickup merges to capacity with an occupied matching cursor; numeric/F only take into empty slots (12.6972ms)
+✔ changing fuel never replaces current fire; the next ignition uses the new native duration (1.2099ms)
+✔ ownership lost during checksum computation cancels a tick without writing or poisoning the session (63.5727ms)
+✔ new producer placement cannot inject prefilled inputs or produced output (37.9471ms)
+✔ G25 directory and saved-toolbar Shift copy only one bounded native reference and keep recipe-before-fuel routing (2.5014ms)
+✔ same-kind instances in different scenes process independently while another scene is selected (77.2081ms)
+✔ serialized timers cannot bypass native recipe duration with zero, stale recipe or shortened cook total (1.035ms)
+✔ future sided transfer plans conserve finite source/target units and never grant an output fact (6.7311ms)
+(node:8304) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ silhouette preserves transparent holes and every fractional alpha without mutating original/composite frame pixels (5.1799ms)
+✔ wide Steve has six native cuboids, separate outer layers, original UVs and intact head/feet extents (5.37ms)
+✔ armor slot visibility, deformation and atlas height remain separate from skin and hand models (1.113ms)
+✔ mouse feedback uses same-version bounded atan and independent body/head tracking, with no animation clock (0.6624ms)
+✔ Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile (3050.7439ms)
+✔ composite held leaves retain native 0..1 transform pivots and shield keeps its entity-space inversion (1.4249ms)
+✔ formal stack painter leaves empty cells untouched even if a caller supplies locked=true (0.4814ms)
+✔ formal stack painter isolates mask selection from quantity text and does not replace the shared original cache (0.5828ms)
+(node:42968) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G03–G06 odd halves, partial merge, right one, component swap and capacity preserve finite counts (11.649ms)
+✔ G07 left drag distributes floor and retains odd remainders, deduplicates and excludes armor/wrong identity/full cells (7.3662ms)
+✔ G07 partial capacities do not silently redistribute or lose the unallocated remainder (1.0512ms)
+✔ G08 right drag allocates at most one per unique eligible cell and never refills its source (1.0263ms)
+✔ G10–G11 middle cloning requires empty cursor; middle drag fills native maxima and does not consume carried group (1.2475ms)
+✔ G12 collects only matching finite groups to max; output permission forbids inserting or exchanging (1.5281ms)
+✔ G13–G14 bounded Shift source/move snapshots preserve counts and autoequip by component (4.6485ms)
+✔ G15–G16 numeric/F swaps respect both directions, offhand max and armor restrictions (3.3248ms)
+✔ G17–G18 Q/CtrlQ delete finite units only; C/X presets copy bounded unlocked native groups (7.1434ms)
+✔ G19–G20 equipment auto-use swaps occupied compatible armor, never tool suffix guesses or durability (2.2115ms)
+✔ G30 staged gestures cancel atomically on boundary, blur/escape/cancel, reject mismatched release and deduplicate cells (1.142ms)
+✔ all 113 locked identities fail source/clone/drag/preset/old-state paths and components are explicitly bounded (99.0063ms)
+✔ stable carrier rules exactly project current P4 original maximum/equipment/damage data for all 113 items (4.6404ms)
+✔ finite operations conserve every identity across 1500 seeded mixed pick/drag/quick/collect/swap actions (199.2416ms)
+✔ native zero damage is the default identity; unsupported capacity/equippable component overrides cannot bypass policy (0.7845ms)
+✔ malformed command modes/buttons never fall through into another supported inventory operation (1.3067ms)
+✔ stable layout refresh and presets persist, cursor is absent; progress reset retains settings and clears layout (103.1389ms)
+✔ same-layout concurrent pickup commits once; changed layout conflicts safely rather than duplicating into two cursors (56.7732ms)
+✔ unrelated settings/unlock transactions merge with carrier intents; reset fences an already queued old layout write (57.4228ms)
+✖ P3 checksummed save migrates reserved player only, retains progress/settings/cake and old bytes until a valid change (12.7631ms)
+✔ carrier write failure cannot publish a successful pickup or overwrite previous bytes; extra persisted cursor is rejected (24.211ms)
+(node:22120) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P5 directory keeps every mainline index and appends side items by first acquisition, without sorting or unlocking (24.0505ms)
+✔ P5 every source command rejects all locked registered identities, including numeric, middle, left and right paths (44.711ms)
+✔ P5 catalogue is an inexhaustible source; repeated identical references and native stack caps never create permanent quantities (6.0905ms)
+✔ P5 bounded basic pickup halves odd groups, places one, merges to maximum and swaps distinct actual carriers (4.4827ms)
+✔ P5 original equipment identity rejects a tool in armor, allows a legal chestplate and uses the native offhand stack maximum (4.5435ms)
+✔ P5 nine selections wrap wheel boundaries and preserve browser/text focus shortcuts (1.9251ms)
+✔ P5 malformed or locked temporary carriers and maximum-count violations cannot bypass the command gate (2.291ms)
+✖ P5 temporary commands preserve P3 envelope shape, permanent monotonicity and deferred recipe/discovery contracts (37.241ms)
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (2879.8533ms)
+✔ P5 selects native spear GUI, default armor, date-dependent chest, grass tint and composite branches explicitly (2410.744ms)
+✔ P5 special cuboid geometry uses native dimensions, atlas UVs and face topology rather than a generic cube icon (2.2124ms)
+✔ P5 tooltip logical size preserves the original 12px outer margin and never violates 10px nine-slice borders (0.4633ms)
+(node:16100) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ look emits a right click only below threshold and a drag only after crossing it (5.8169ms)
+✔ look clamps angles and ignores unrelated pointers, with cancellation on GUI/blur independent of saved state (2.5553ms)
+(node:41856) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G17 outside uses the full protected menu plus border guard and Tooltip; native left/all and right/one preserve stable facts (7.3077ms)
+✔ G17 drag escape, border origin, middle, chord, canceled close and mismatched release never produce outside discard (0.661ms)
+✔ G18 saved-toolbar cells copy exact saved groups/components without mutating the existing nine presets (4.2564ms)
+✔ personal four inputs reuse native split/merge/drag/numeric/Shift permissions without producing any result (7.7444ms)
+✔ personal inputs honor native single/16 caps, locked groups, component identity and D07 epoch isolation (1.2751ms)
+✔ personal input transactions use fresh locked layout and never persist cells; reset fences old menu groups (108.1026ms)
+✔ all 113 locked identities are rejected in saved-toolbar copies and personal-grid entry paths (58.3665ms)
+(node:19912) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ codec detects tampering, future formats, invalid content and exact structural errors (51.7114ms)
+✖ documented development-v0 migrates in memory; failed migration never rewrites original bytes (4.9748ms)
+✖ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (41.0338ms)
+✔ concurrent sessions merge semantic commands against fresh facts under the shared lock (21.7279ms)
+✔ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (26.1322ms)
+✔ confirmation notices same-epoch changes and requires a new explicit reset (17.2206ms)
+✔ queued commands are fenced across suspend/resume even when the reset epoch has not changed (10.4178ms)
+✔ corrupt, future and missing storage capability preserve exact bytes and block writes/reset (4.8848ms)
+✔ unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap (1.5724ms)
+✔ write denial leaves both durable and presented facts unchanged, with an explicit retry path (15.4369ms)
+✔ rejected domain input does not poison a valid session or replace its saved bytes (9.8342ms)
+(node:41324) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D07 close clears cursor only, preserves stable layout and permanent facts, including when saving is read-only (13.4894ms)
+✔ D07 delayed pickup cannot resurrect a cursor after close, while its submitted stable-slot transaction completes (4.7574ms)
+✔ D07 reopening permits a fresh cursor without accepting the older close-boundary result (5.6887ms)
+✔ D07 close/re-entry boundaries reject older results and accept fresh isolated cursor snapshots (0.653ms)
+✔ D07 delayed personal input result is discarded on close while a fresh reopened input can commit (4.8733ms)
+✔ D07 reset initializes usable personal inputs immediately while an older menu result is still pending (5.5725ms)
+(node:19280) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (2458.451ms)
+✔ missing language keys fall back to English; missing English and missing interpolation fail visibly in tests (1.7519ms)
+✔ every statically declared page key exists in external English and all English glyphs fit the ASCII profile (5.0645ms)
+✔ long text wraps at words and within long tokens without deleting copy or exceeding the measured line width (0.9139ms)
+✔ presentation keeps native slab thickness and exact cake contact, with a materially larger authored environment (2380.2743ms)
+(node:33468) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P4 census parses 1763 nonbrewing recipes/21 types plus all 279 original brewing records; hashes and golden inputs match (17.3693ms)
+✔ P4 shaped offsets/mirror and strict empty slots work in 2x2 and 3x3 without converting pattern/key case (2.1669ms)
+✔ P4 shapeless matching respects repeated slots, tags and overlapping alternatives rather than greedy assignment (0.7397ms)
+✔ P4 cake accepts every native egg alternative and yields three independent bucket remainders (1.1161ms)
+✔ P4 correct tool uses actual incorrect-drop tags; fast gold never substitutes for stone on iron ore (2.0403ms)
+✔ P4 native stack, armor, damage, remainder and fuel identities come from registration evidence (1.4182ms)
+✔ P4 cooking matches station capabilities, stone chain and iron recovery without treating slot acceptance as processing (2.7972ms)
+✔ P4 reachable native repair supports pristine tools and damaged variants, but rejects unsupported component-bearing input (2.9523ms)
+✔ P4 recursive tags preserve nested alternatives, optional absent references and reject cycles (1.2433ms)
+✔ P4 fixed point provides causal proofs for every item, includes side products and excludes unavailable capabilities without inventing sources (5.1872ms)
+✖ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (41.6643ms)
+✔ P4 all twelve candidate source profiles reproduce causal closure and actually match their 112 recipes and cake chain (799.9345ms)
+✔ P4 component equality uses verified defaults and order-independent values; unsupported defaults and nonvanilla grid shapes are explicit (23.4457ms)
+✖ P4 runtime registry selects crafting facts without a GUI or any save mutation (5.7903ms)
+✔ P4 runtime source and cooking context use committed native predicates rather than station-name fuel guesses (4.671ms)
+(node:3728) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ reset confirmation survives several seconds of formal processing and retains latest committed settings (135.2517ms)
+✔ ordinary reset clears complete progress and keeps latest preferences without processing (48.9189ms)
+✔ autonomous output and burn changes remain in the confirmed scope without silently acquiring output (29.751ms)
+✔ manual unlock invalidates confirmation without poisoning a healthy session (34.6871ms)
+✔ manual layout invalidates confirmation without poisoning a healthy session (28.4127ms)
+✔ manual input invalidates confirmation without poisoning a healthy session (29.9633ms)
+✔ manual remove invalidates confirmation without poisoning a healthy session (29.5848ms)
+✔ a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry (31.326ms)
+✔ restored pages cannot submit confirmation tickets issued before suspension (23.486ms)
+✔ queued clock and finite acquisition cannot revive progress after reset or poison the new epoch (34.0916ms)
+✔ write failure preserves bytes, remains explicitly readonly and can be retried after refresh (23.6884ms)
+✔ open reset confirmation never overwrites invalid backing bytes: not json (17.9203ms)
+✔ open reset confirmation never overwrites invalid backing bytes: {"format":99} (15.7546ms)
+✔ confirmation preserves checksum bytes and blocks reset (16.8617ms)
+✔ confirmation preserves unknown-version bytes and blocks reset (17.7464ms)
+✔ volume gesture survives continuous real processing publications with consistent displayed percent (65.47ms)
+✔ remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields (34.4698ms)
+✔ older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority (24.6559ms)
+✔ submitted language and mute drafts survive async processing snapshots until their own receipts settle (29.0461ms)
+✔ close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings (23.2139ms)
+✔ failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save (18.1792ms)
+ℹ tests 204
+ℹ suites 0
+ℹ pass 191
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8229.4858
+
+✖ failing tests:
+
+test at tests\crafting-acquisition.test.ts:42:1
+✖ D05 actual log-plank-stick-workbench-pick chain unlocks only after receipt without relying on discovery (37.2163ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   data: {
+  +     known: [
+  +       'minecraft:crafting_table',
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal',
+  +       'minecraft:oak_slab',
+  +       'minecraft:oak_stairs',
+  +       'minecraft:barrel',
+  +       'minecraft:oak_fence',
+  +       'minecraft:oak_sign',
+  +       'minecraft:stick',
+  +       'minecraft:oak_button',
+  +       'minecraft:oak_door',
+  +       'minecraft:oak_fence_gate',
+  +       'minecraft:oak_pressure_plate',
+  +       'minecraft:oak_trapdoor',
+  +       'minecraft:wooden_spear',
+  +       'minecraft:wooden_sword',
+  +       'minecraft:campfire',
+  +       'minecraft:ladder',
+  +       'minecraft:wooden_axe',
+  +       'minecraft:wooden_hoe',
+  +       'minecraft:wooden_pickaxe',
+  +       'minecraft:wooden_shovel'
+  +     ],
+  +     unseen: [
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal',
+  +       'minecraft:oak_slab',
+  +       'minecraft:oak_stairs',
+  +       'minecraft:barrel',
+  +       'minecraft:oak_fence',
+  +       'minecraft:oak_sign',
+  +       'minecraft:stick',
+  +       'minecraft:oak_button',
+  +       'minecraft:oak_door',
+  +       'minecraft:oak_fence_gate',
+  +       'minecraft:oak_pressure_plate',
+  +       'minecraft:oak_trapdoor',
+  +       'minecraft:wooden_spear',
+  +       'minecraft:wooden_sword',
+  +       'minecraft:campfire',
+  +       'minecraft:ladder',
+  +       'minecraft:wooden_axe',
+  +       'minecraft:wooden_hoe',
+  +       'minecraft:wooden_pickaxe',
+  +       'minecraft:wooden_shovel'
+  +     ],
+  +     views: {
+  +       blast_furnace: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       crafting: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       furnace: {
+  +         filter: false,
+  +         open: false
+  +       }
+  +     }
+  +   },
+  +   version: 1
+  -   data: null,
+  -   version: 0
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-acquisition.test.ts:42:1426)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, data: { known: [Array], unseen: [Array], views: [Object] } },
+    expected: { version: 0, data: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\crafting-acquisition.test.ts:48:1
+✖ P5 migration preserves durable layout/settings/cake and upgrades empty workbench reservation without overwriting original bytes (7.5308ms)
+  Error: migration-failed
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:42:1268)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-acquisition.test.ts:48:630)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\crafting-preview.test.ts:21:1
+✖ previewing a still-locked product never writes a save, emits acquisition events or discovers a recipe (63.3889ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   data: {
+  +     known: [
+  +       'minecraft:crafting_table',
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal'
+  +     ],
+  +     unseen: [
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal'
+  +     ],
+  +     views: {
+  +       blast_furnace: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       crafting: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       furnace: {
+  +         filter: false,
+  +         open: false
+  +       }
+  +     }
+  +   },
+  +   version: 1
+  -   data: null,
+  -   version: 0
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-preview.test.ts:21:843)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, data: { known: [Array], unseen: [Array], views: [Object] } },
+    expected: { version: 0, data: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\domain.test.ts:5:1
+✖ unlock is immutable, monotonic and idempotent; side items follow first acquisition (16.487ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\domain.test.ts:7:10)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\furnace.test.ts:29:1
+✖ p6 crafting migration preserves workbench grid/player/settings/cake and upgrades only empty furnace reservations (67.9873ms)
+  Error: migration-failed
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:42:1268)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\furnace.test.ts:29:751)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\inventory-complete.test.ts:58:1
+✖ P3 checksummed save migrates reserved player only, retains progress/settings/cake and old bytes until a valid change (12.7631ms)
+  Error: migration-failed
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:42:1268)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory-complete.test.ts:58:621)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\inventory.test.ts:18:1
+✖ P5 temporary commands preserve P3 envelope shape, permanent monotonicity and deferred recipe/discovery contracts (37.241ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   data: {
+  +     known: [
+  +       'minecraft:crafting_table',
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal'
+  +     ],
+  +     unseen: [
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal'
+  +     ],
+  +     views: {
+  +       blast_furnace: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       crafting: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       furnace: {
+  +         filter: false,
+  +         open: false
+  +       }
+  +     }
+  +   },
+  +   version: 1
+  -   data: null,
+  -   version: 0
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory.test.ts:18:468)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, data: { known: [Array], unseen: [Array], views: [Object] } },
+    expected: { version: 0, data: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\inventory.test.ts:19:1
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (2879.8533ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  545 !== 490
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory.test.ts:19:407)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 545,
+    expected: 490,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\persistence.test.ts:24:1
+✖ documented development-v0 migrates in memory; failed migration never rewrites original bytes (4.9748ms)
+  Error: migration-failed
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:42:1268)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:25:291)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\persistence.test.ts:28:1
+✖ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (41.0338ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:28:585)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\resources-i18n.test.ts:5:1
+✖ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (2458.451ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  545 !== 490
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\resources-i18n.test.ts:6:160)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 545,
+    expected: 490,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\rules.test.ts:30:1
+✖ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (41.6643ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   data: {
+  +     known: [
+  +       'minecraft:crafting_table',
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal',
+  +       'minecraft:campfire',
+  +       'minecraft:smooth_stone_slab',
+  +       'minecraft:blast_furnace',
+  +       'minecraft:iron_chain',
+  +       'minecraft:lantern',
+  +       'minecraft:iron_ingot_from_nuggets',
+  +       'minecraft:name_tag'
+  +     ],
+  +     unseen: [
+  +       'minecraft:oak_planks',
+  +       'minecraft:oak_wood',
+  +       'minecraft:charcoal',
+  +       'minecraft:campfire',
+  +       'minecraft:smooth_stone_slab',
+  +       'minecraft:blast_furnace',
+  +       'minecraft:iron_chain',
+  +       'minecraft:lantern',
+  +       'minecraft:iron_ingot_from_nuggets',
+  +       'minecraft:name_tag'
+  +     ],
+  +     views: {
+  +       blast_furnace: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       crafting: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       furnace: {
+  +         filter: false,
+  +         open: false
+  +       }
+  +     }
+  +   },
+  +   version: 1
+  -   data: null,
+  -   version: 0
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\rules.test.ts:30:633)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, data: { known: [Array], unseen: [Array], views: [Object] } },
+    expected: { version: 0, data: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\rules.test.ts:34:1
+✖ P4 runtime registry selects crafting facts without a GUI or any save mutation (5.7903ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   data: {
+  +     known: [
+  +       'minecraft:crafting_table'
+  +     ],
+  +     unseen: [],
+  +     views: {
+  +       blast_furnace: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       crafting: {
+  +         filter: false,
+  +         open: false
+  +       },
+  +       furnace: {
+  +         filter: false,
+  +         open: false
+  +       }
+  +     }
+  +   },
+  +   version: 1
+  -   data: null,
+  -   version: 0
+    }
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\rules.test.ts:34:554)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { version: 1, data: { known: [Array], unseen: [], views: [Object] } },
+    expected: { version: 0, data: null },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

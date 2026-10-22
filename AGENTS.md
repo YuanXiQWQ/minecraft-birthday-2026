@@ -1,5 +1,7 @@
 # 项目记忆入口
 
+当前授权覆盖：7c2956d已审查；P6剩余漏斗五槽/有限端口和配方书已实现待审，见[交付报告](docs/p6/book-hopper-review.md)、[完成矩阵](docs/p6/p6-final-matrix.md)。D06完整方案已获用户“批准推荐完整方案”；当前信封p6-book-1，漏斗version3、recipeBook version1。下面旧阶段范围/D06待审描述为历史进度，以本段及最新用户指令为准；不自动进入P7/P8。
+
 - 当前定向回归：[持续加工与设置](docs/p6/settings-regression-review.md)。重置确认允许同代次自主加工，保留最新设置；设置草稿隔离进度快照，确认冲突不毒化会话。无新阶段授权，D04/D05(A)/D07/D08/D09及原领取门禁保留。
 
 - 当前范围：aab05b4视觉修复已审查；当前仅P6熔炉/高炉加工、实例GUI/有限输出取得和后续漏斗端口，见[加工交付](docs/p6/furnace-review.md)、[实例/时钟合同](docs/p6/furnace-contract.md)。D08工作站计时已明确批准；D04/D05(A)/D07、蒙版/Steve与原24项领取回归保留；不自动进入漏斗网络、配方书或P7/P8。

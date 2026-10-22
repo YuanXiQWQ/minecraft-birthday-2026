@@ -1,5 +1,7 @@
 # 原版资源清单、来源与使用索引
 
+P6配方书扩展：book-manifest.json索引54项新增原版资源及依赖；加清单后普通运行共545资源文件，原版漏斗背景复用。包含书/RecipeToast精灵、七种分类图标及父模型纹理；指南针仅分类固定原版16号帧。原始版本/哈希与来源见data/minecraft/26.3/book-evidence.json及[交付](../p6/book-hopper-review.md)，不增加替换要求。
+
 GUI视觉修复当前增量：新增[player-manifest](../../resources/minecraft/26.3/player-manifest.json)及11项原始资源：Steve宽臂皮肤、iron装备定义/两张盔甲atlas、三种可达长矛的第三人称父/子模型及持物贴图。382项原始依赖中371项复用已有资源，并记录13个只读客户端类哈希；类本身不进入构建。当前合计490资源/清单，包含4份清单；版本、原始SHA256及导出器哈希可复核。正常Git/dev/build直接使用，无外部缓存运行要求。见[GUI视觉报告](../p6/gui-visual-review.md)。下列各阶段计数保留历史范围。
 
 P6合成接入补充：原有`assets/minecraft/textures/gui/container/crafting_table.png`现加入CatalogueArt依赖加载；源文件仍属于已提交P2原版资源集，catalogue依赖402项，资源/清单仍478文件。已重新生成catalogue-manifest的来源/提取器哈希，普通根路径/Pages构建直接包含并校验。没有新增替代素材、客户端或外部缓存运行要求。详见[P6报告](../p6/crafting-review.md)。

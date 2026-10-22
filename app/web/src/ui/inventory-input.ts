@@ -4,7 +4,7 @@ import type {GameInventory,Slot} from './inventory.ts';import type {SlotRef} fro
  * @param {Slot|null} slot GUI cell.
  * @return {SlotRef|null} Finite identity or null.
  */
-export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='machine'?`machine:${slot.index!}`:slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
+export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='hopper'?`hopper:${slot.index!}`:slot?.kind==='machine'?`machine:${slot.index!}`:slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */
 export class InventoryInput {
 gesture=new SlotGesture();outside=new OutsideClick();keys=new Set<string>();abort=new AbortController();start:Slot|null=null;quickMatch:Stack|null=null;
@@ -29,7 +29,7 @@ if(e.code==='KeyQ'){e.preventDefault();if(e.repeat)return;this.cancelGesture();i
 /** Route wheel only to the active GUI or world hotbar, preserving text and browser zoom gestures.
  * @param {WheelEvent} e Wheel event.
  */
-wheel(e:WheelEvent):void{const u=this.ui;if(u.blocked()||e.ctrlKey||e.metaKey||e.altKey||e.deltaY===0||this.editing(e.target))return;if(u.carrierBusy()){e.preventDefault();this.cancelGesture();return;}if(u.modal.open){e.preventDefault();this.cancelGesture();if(u.tab==='presets'){u.sideOffset=Math.max(0,Math.min(4,u.sideOffset+Math.sign(e.deltaY)));u.hover=null;u.hideTooltip();u.draw();return;}const total=Math.max(0,directory(u.permanent!).length-18),rows=u.tab==='catalogue'?3:1;u.sideOffset=Math.max(0,Math.min(Math.max(0,Math.ceil(total/9)-rows),u.sideOffset+Math.sign(e.deltaY)));u.hover=null;u.hideTooltip();u.draw();}else if(e.target instanceof HTMLElement&&e.target.closest('.scene-panel,.hotbar')){e.preventDefault();u.command({type:'wheel',direction:e.deltaY});}}
+wheel(e:WheelEvent):void{const u=this.ui;if(u.blocked()||e.ctrlKey||e.metaKey||e.altKey||e.deltaY===0||this.editing(e.target))return;if(u.carrierBusy()){e.preventDefault();this.cancelGesture();return;}if(u.modal.open){e.preventDefault();this.cancelGesture();if(e.target instanceof HTMLElement&&e.target.closest('.recipe-book'))return;if(u.tab==='presets'){u.sideOffset=Math.max(0,Math.min(4,u.sideOffset+Math.sign(e.deltaY)));u.hover=null;u.hideTooltip();u.draw();return;}const total=Math.max(0,directory(u.permanent!).length-18),rows=u.tab==='catalogue'?3:1;u.sideOffset=Math.max(0,Math.min(Math.max(0,Math.ceil(total/9)-rows),u.sideOffset+Math.sign(e.deltaY)));u.hover=null;u.hideTooltip();u.draw();}else if(e.target instanceof HTMLElement&&e.target.closest('.scene-panel,.hotbar')){e.preventDefault();u.command({type:'wheel',direction:e.deltaY});}}
 /** Find the visible logical slot beneath a captured pointer without relying on the captured event target.
  * @param {number} x Client X.
  * @param {number} y Client Y.

@@ -1,5 +1,7 @@
 # P3 状态与存档契约
 
+当前P6扩展：contentVersion=p6-book-1；漏斗显式version3 slots5，recipeBook version1 known/unseen/views；严格迁移和新增命令/重置见[当前合同](../p6/book-hopper-review.md)。下表保留P3原始保留位定义，不作当前非空数据规范。
+
 后续扩展：P5第二部分已按用户明确要求加入九格/装备等稳定布局和P3迁移；D07完整方案也已获用户明确批准，当前合同与实际范围见[P5布局合同](../p5/storage-input-contract.md)。下面保留P3交付时的版本及保留位说明，不用历史待定状态覆盖后续决定。
 
 P6持续加工接入后，下面历史第2条的逐revision/checksum确认已被[设置定向回归合同](../p6/settings-regression-review.md)取代：当前确认绑定代次与进度范围，允许自主加工及设置更新，锁内完整校验不变；确认冲突可重新确认，不毒化健康会话。当前内容版本与实例合同见[P6加工合同](../p6/furnace-contract.md)。

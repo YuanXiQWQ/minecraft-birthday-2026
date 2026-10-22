@@ -6,7 +6,7 @@ import type {InventoryState} from './inventory.ts';
 import {capacity,sameStack,quickMove} from './slots.ts';
 import type {SlotValue} from './slots.ts';
 export type CraftTake={mode:'cursor'|'shift'|'hotbar'|'offhand';index?:number};
-export interface CraftReceipt {inventory:InventoryState;acquired:string[];batches:number;returned:Stack[]}
+export interface CraftReceipt {inventory:InventoryState;acquired:string[];batches:number;returned:Stack[];recipe?:string}
 /** Remove only verified redundant default components; unsupported overrides remain visible validation errors.
  * @param {Stack} stack Native matcher result.
  * @param {Rules} rules Same-version defaults.
@@ -38,5 +38,5 @@ export function takeCraft(current:InventoryState,take:CraftTake,unlocked:string[
   // Every batch contributes at least one item into at most nine native bounded destinations.
   for(let i=0;i<batches;i++){const source:SlotValue={stack:structuredClone(result),policy:{take:true,place:false}};quickMove(source,targets,rules);if(source.stack)throw Error('craft-incomplete-batch');}
   const returned:Stack[]=[];for(const s of match.remainders){if(!s)continue;const known=returned.find(v=>sameStack(v,s,rules));if(known)known.count+=s.count*batches;else returned.push({...structuredClone(s),count:s.count*batches});}
-  validateCarriers(inventory,eligible,rules);return{inventory,acquired,batches,returned};
+  validateCarriers(inventory,eligible,rules);return{inventory,acquired,batches,returned,recipe:match.recipe};
 }

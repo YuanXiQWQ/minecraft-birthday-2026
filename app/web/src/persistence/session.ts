@@ -68,6 +68,16 @@ export class SaveSession {
    * @return {Promise<CraftReceipt>} Successfully committed acquisition receipt.
    */
   async takeCraft(take:CraftTake,cursor:Stack|null,crafting:(Stack|null)[],expected:PlayerLayout,workbench?:WorkbenchContext):Promise<CraftReceipt>{const result=await this.transact({type:'craft-take',take,cursor,crafting,expected,workbench});return result.receipt!;}
+  /** Fill native inputs without acquiring a result, using the same shared transaction and lifecycle fences.
+   * @param {string} recipe Discovered native recipe ID.
+   * @param {boolean} max Bounded Shift fill.
+   * @param {Stack|null} cursor Unchanged page-owned cursor.
+   * @param {(Stack|null)[]} crafting Personal input precondition.
+   * @param {PlayerLayout} expected Stable layout precondition.
+   * @param {WorkbenchContext} workbench Optional observed instance.
+   * @return {Promise<InventoryState>} Committed carrier projection.
+   */
+  async fillRecipe(recipe:string,max:boolean,cursor:Stack|null,crafting:(Stack|null)[],expected:PlayerLayout,workbench?:WorkbenchContext):Promise<InventoryState>{return (await this.transact({type:'book-fill',recipe,max,cursor,crafting,expected,workbench})).inventory!;}
   /** Acquire finite machine output under the same transaction and lifecycle fences as crafting.
    * @param {FurnaceTake} take Finite destination operation.
    * @param {Stack|null} cursor Carried group.
@@ -79,12 +89,12 @@ export class SaveSession {
   /** Execute semantic work against freshly locked facts and preserve failed-write presentation.
    * @param {Command} command Domain intent with optional carrier precondition.
    * @param {Function} eligible Optional active-clock ownership fence checked inside the transaction.
-   * @return {Promise<{events:DomainEvent[],inventory?:InventoryState,receipt?:CraftReceipt}>} Committed events and optional ephemeral carrier result.
+   * @return {Promise<{events:DomainEvent[],inventory?:InventoryState,receipt?:CraftReceipt;transferred?:number}>} Committed events and optional ephemeral carrier result.
    */
-  async transact(command:Command,eligible?:()=>boolean):Promise<{events:DomainEvent[];inventory?:InventoryState;receipt?:CraftReceipt}>{
+  async transact(command:Command,eligible?:()=>boolean):Promise<{events:DomainEvent[];inventory?:InventoryState;receipt?:CraftReceipt;transferred?:number}>{
     const epoch=this.view.envelope?.generation,serial=this.serial;if(!this.locks||!this.view.writable||!epoch||this.disposed||this.suspended)throw new Error('save-read-only');
-    try{return await this.locks.exclusive(async()=>{if(eligible&&!eligible())throw new CommandRejected('processing-inactive');const raw=this.storage.getItem(SAVE_KEY);if(!raw)throw new Error('stale-session');const decoded=await decode(raw),current=decoded.envelope;if(current.generation!==epoch)throw new Error('stale-session');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');let result;try{result=transition(current.state,command,this.policy,this.rules);}catch(error){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});throw new CommandRejected(error instanceof Error?error.message:'invalid-command');}if(JSON.stringify(result.state)===JSON.stringify(current.state)){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});return {events:result.events,inventory:result.inventory,receipt:result.receipt};}
-      const next=await seal(result.state,epoch,current.revision+1);if(eligible&&!eligible())throw new CommandRejected('processing-inactive');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');try{this.storage.setItem(SAVE_KEY,JSON.stringify(next));}catch{throw new Error('write-failed');}this.publish({status:'ready',envelope:next,migrated:false,writable:true});for(const listener of this.eventListeners)listener(result.events);return {events:result.events,inventory:result.inventory,receipt:result.receipt};});}
+    try{return await this.locks.exclusive(async()=>{if(eligible&&!eligible())throw new CommandRejected('processing-inactive');const raw=this.storage.getItem(SAVE_KEY);if(!raw)throw new Error('stale-session');const decoded=await decode(raw),current=decoded.envelope;if(current.generation!==epoch)throw new Error('stale-session');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');let result;try{result=transition(current.state,command,this.policy,this.rules);}catch(error){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});throw new CommandRejected(error instanceof Error?error.message:'invalid-command');}if(JSON.stringify(result.state)===JSON.stringify(current.state)){this.publish({status:'ready',envelope:current,migrated:decoded.migrated,writable:true});return {events:result.events,inventory:result.inventory,receipt:result.receipt,transferred:result.transferred};}
+      const next=await seal(result.state,epoch,current.revision+1);if(eligible&&!eligible())throw new CommandRejected('processing-inactive');if(serial!==this.serial||this.disposed||this.suspended)throw new Error('session-restored');try{this.storage.setItem(SAVE_KEY,JSON.stringify(next));}catch{throw new Error('write-failed');}this.publish({status:'ready',envelope:next,migrated:false,writable:true});for(const listener of this.eventListeners)listener(result.events);return {events:result.events,inventory:result.inventory,receipt:result.receipt,transferred:result.transferred};});}
     catch(error){if(!(error instanceof CommandRejected)&&serial===this.serial&&this.view.envelope?.generation===epoch&&!this.disposed&&!this.suspended)this.fail(error);throw error;}
   }
   /** Reset valid progress under the same lock, requiring the confirmed progress scope and retaining the latest settings.

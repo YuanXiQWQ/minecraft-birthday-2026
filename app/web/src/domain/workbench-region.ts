@@ -7,4 +7,4 @@ export const WORKBENCH_REGION:PlacementPolicy={
  * @param {Station} station Requested workbench.
  * @return {boolean} Whether this carrier area admits the instance.
  */
-allows:(_scene,station)=>['crafting_table','furnace','blast_furnace'].includes(station.kind)&&station.cell[1]===0&&station.cell[0]>=-4&&station.cell[0]<=3&&station.cell[2]>=-5&&station.cell[2]<=2&&!(station.cell[0]>=-2&&station.cell[0]<=1&&station.cell[2]>=-1&&station.cell[2]<=0)};
+allows:(_scene,station)=>['crafting_table','furnace','blast_furnace','hopper'].includes(station.kind)&&station.cell[1]===0&&station.cell[0]>=-4&&station.cell[0]<=3&&station.cell[2]>=-5&&station.cell[2]<=2&&!(station.cell[0]>=-2&&station.cell[0]<=1&&station.cell[2]>=-1&&station.cell[2]<=0)};

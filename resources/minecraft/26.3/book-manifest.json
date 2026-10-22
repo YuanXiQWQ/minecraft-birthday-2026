@@ -1,0 +1,371 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "inputs": {
+    "assets/minecraft/textures/gui/recipe_book.png": "bcfd295ed33754c5262e26a3ce980d021b1a13b7cb308e1b9f21eeaceefc685a",
+    "assets/minecraft/textures/gui/container/hopper.png": "5f98e011ffbd3a1ecd00501a08f36bb3a6af3a3ed34eba2156b0361aca4cd43f",
+    "assets/minecraft/textures/gui/sprites/recipe_book/button.png": "a07e122e8af446135c38fb21cfbbc4bfc94da443ff5257b6e8f9c15b542393b1",
+    "assets/minecraft/textures/gui/sprites/recipe_book/button_highlighted.png": "a7c238109b5be7b2d441c4dd8d7ab10b85657262bf6e0c6cae6d236c68c4ad50",
+    "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay.png": "e6b49ce4fad4f567ab4cbf344c6e7c35a0d5228cdee6b7fd6ed4b708d239bd22",
+    "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_disabled.png": "e681996804199ce33b19a8e2ee3c0ed83c4e38c066ce781afd4aa8d3b17dc1fb",
+    "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_disabled_highlighted.png": "d2d6499954aa1ecb7ac62990886752fa257338a2f94c3256be9db55bfb933354",
+    "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_highlighted.png": "9f9d452b0530c5e07cf7f835a94bb662b4473566e3d87bb123d49e3720c30898",
+    "assets/minecraft/textures/gui/sprites/recipe_book/filter_disabled.png": "f97a7a6e5bd015a153b0590d4503ecf3d6b34e0c47b6091fb84b22fd29656a45",
+    "assets/minecraft/textures/gui/sprites/recipe_book/filter_disabled_highlighted.png": "fc1eab4e798fb76f26f536fbd8d70d4887678c03739193093348b02b4b9a9fd4",
+    "assets/minecraft/textures/gui/sprites/recipe_book/filter_enabled.png": "d826e4c69ea1684df85b7374791f2cf1dc549b20bf96a9abf8deefb6e872584b",
+    "assets/minecraft/textures/gui/sprites/recipe_book/filter_enabled_highlighted.png": "0b2a76bdc90402c0a93035f708419c2292b48d8c057a0ff1204eba73f10a36da",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_disabled.png": "c523b890a6fb7083f302adb5ab69c94094649942e3f092127a6500b003eaf7da",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_disabled_highlighted.png": "7b91dc3b29515d5ff5cdfa13f923e51bedcc6d91294e2441e9bddf683f107c6f",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_enabled.png": "47ace25802640faf07ff87b5d85c8bbc489ed54928a9fc3af385aa83ad6222d2",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_enabled_highlighted.png": "015d2f9db1e0a0e12190e514a08b1234b58bca2eb4d98eb19d39b94d0087e49b",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay.png": "3c132df5c9a0d70f666787d5bad392833bcf2217a65a4ca2fa4407498c9424ef",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_disabled.png": "23b85157490ada8f52ff6644766693da20dfea60f38e538a2c9a00114132b631",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_disabled_highlighted.png": "c2bcb67b1fee44916f81dfa075262c4de76ca7d0f06ff49d34f9a48324dcb2c8",
+    "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_highlighted.png": "ae65ca7874f342ec77941f548fc8e10306f0cb8b97e2a9d351c064d55b4a9d79",
+    "assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png": "92110cf9e2b01e9af7bc7b4b8a46469905c2ca0cc09820db3339a97770506bc5",
+    "assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png.mcmeta": "1d490688369c1bd7b79fcd6b38e9f8af3ac5d88abe226624c0e27569030c52f5",
+    "assets/minecraft/textures/gui/sprites/recipe_book/page_backward.png": "ce4ba6bdb92724b875a274a7891a0fa6dfae0ff6a4a8fdeb70073b139507746d",
+    "assets/minecraft/textures/gui/sprites/recipe_book/page_backward_highlighted.png": "a67eaa0463286e686bbb35e731c2bccf8a022289fb853e1986ddb18cddef1111",
+    "assets/minecraft/textures/gui/sprites/recipe_book/page_forward.png": "e1f0ab65888eaf07bf6a9f0c38a39a86b2b22e85dbb88cf289098bdee8132cb9",
+    "assets/minecraft/textures/gui/sprites/recipe_book/page_forward_highlighted.png": "5270a3c828afefa52284c25cc00eb5c211f5ce3ac881906876461ffe407579af",
+    "assets/minecraft/textures/gui/sprites/recipe_book/slot_craftable.png": "4310b974e53d8e84a5fe760161bb53219bcc2856a57131bfaf655f10eb8907fc",
+    "assets/minecraft/textures/gui/sprites/recipe_book/slot_many_craftable.png": "24d312620d9ad4d2ad924843310596bac87df9b5faba17e3501168920bb71526",
+    "assets/minecraft/textures/gui/sprites/recipe_book/slot_many_uncraftable.png": "3a16fab5d52b59ce7ce33fac59d60ff5903403d1a16443e32f6a7ea42487905f",
+    "assets/minecraft/textures/gui/sprites/recipe_book/slot_uncraftable.png": "3a16fab5d52b59ce7ce33fac59d60ff5903403d1a16443e32f6a7ea42487905f",
+    "assets/minecraft/textures/gui/sprites/recipe_book/tab.png": "dfc5aa25aea88ebe81308d41cd44f8722305195e407813b78c704a86d6fb9d78",
+    "assets/minecraft/textures/gui/sprites/recipe_book/tab_selected.png": "3044288ef5fc8f67dc70514398d35986bfafd729e53cd75fcf9710f8472ee399",
+    "assets/minecraft/textures/gui/sprites/toast/recipe.png": "270ae5ee13fff15d8973f33cc6564c9572c2420080a52b15b1fe2921d883545e",
+    "assets/minecraft/textures/gui/sprites/toast/recipe_book.png": "c6bd85133131c999c0222336c41510ef7975bd3282e73d1292a4f18cfb268b92",
+    "assets/minecraft/items/compass.json": "16ec7eefe2acbc9ebab9ff2f652c4d2fd5076ed37abcc67fb74bba229841e307",
+    "assets/minecraft/models/item/compass_16.json": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb",
+    "assets/minecraft/models/item/generated.json": "63190611202e75ad7b812bc9a4b31bd53f3e186895d7b53e5e280b0d1e30a67a",
+    "assets/minecraft/textures/item/compass_16.png": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8",
+    "assets/minecraft/items/golden_sword.json": "51d1129fc91ac0c7de4b4d7108d9b49643f2c140e0afac408537ef4d10e268f8",
+    "assets/minecraft/models/item/golden_sword.json": "fc65c5018630966e7aab4012b7c88f4ea80f61644dc02f85d32a6f11e8df8506",
+    "assets/minecraft/models/item/handheld.json": "8fe990d1c011429e27df2d49d35cf8571946370eac8d0fb7497aacede4ff20f5",
+    "assets/minecraft/textures/item/golden_sword.png": "fe02861c6a870269a16432a867b67e09cf8a417a56d060e053c921ffaf4aa988",
+    "assets/minecraft/items/bricks.json": "b4f2c3cbd4f745e0da28c656907b288478157f4bb906bf0520b17f01305d7b9d",
+    "assets/minecraft/models/block/bricks.json": "a5844d1c3c5e4f179746fccb7541878c1d769d0ed9e41773c469cdf1bbba014b",
+    "assets/minecraft/models/block/cube_all.json": "be3205d629ffb9e03834c3d1d083f8a2c62e9f9ae80820755129408634e9144a",
+    "assets/minecraft/models/block/cube.json": "3e4aacd02e816aeba38f83076596e18ded4cf49c01e17c62d1fce79850ffb84e",
+    "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+    "assets/minecraft/textures/block/bricks.png": "3242cb8e441c940156633b0d867e08c887ddaeaa32343b212d4b1e5ca3dae123",
+    "assets/minecraft/items/lava_bucket.json": "3a59d6d2968a5ed9eadbd807222425f18c80487f831983c78d2a2614afc0dac3",
+    "assets/minecraft/models/item/lava_bucket.json": "1f41d3978744594408001a531ae11a80d5de9653ce7e8334dcf1e70a667b1f84",
+    "assets/minecraft/textures/item/lava_bucket.png": "bd3528401d4bba44e196480194a1becb47a33974df2202d464922cd412183b1a",
+    "assets/minecraft/items/apple.json": "7d85b0783af4a7d98b5889cae62df0e5663fc3915fed40a7b701527bc7083499",
+    "assets/minecraft/models/item/apple.json": "e1bdbabd59ead8c6b2c0420c5c0a16adcc3ebeda65e5d4a46c7cde7de9f2ed03",
+    "assets/minecraft/textures/item/apple.png": "e6a57182db6029fff6d02fc774780fcec9f506b74226985445c91e5e7df5d9bb",
+    "assets/minecraft/items/redstone.json": "66ee3a8fd17ea02f53fa3250358b64cb6e589e3d36007c855700f51413c9dd2d",
+    "assets/minecraft/models/item/redstone.json": "30aa18d8d269407b92c378f0a32985ff3de0f695a19988f5f53b1f10d29e477b",
+    "assets/minecraft/textures/item/redstone.png": "6d0e6a1fd54142cd3de649e1100c428733512b322a0b0a530f62eae9f86881ec",
+    "assets/minecraft/items/cooked_porkchop.json": "e2635c074e8f36f38e1f0e7335fbe7194902c5545b5cdeac197dd916e3233db6",
+    "assets/minecraft/models/item/cooked_porkchop.json": "51e8f165a92eaa8e5e6a46077d7f705a72a5f9460fc2efc60d1c3d1953834d2a",
+    "assets/minecraft/textures/item/cooked_porkchop.png": "375ac21a18e7439527c8f5db65b8afae13ae1cd4db2b0b07d42a269742f15f26"
+  },
+  "entries": [
+    {
+      "entry": "assets/minecraft/items/apple.json",
+      "size": 87,
+      "sha256": "7d85b0783af4a7d98b5889cae62df0e5663fc3915fed40a7b701527bc7083499"
+    },
+    {
+      "entry": "assets/minecraft/items/bricks.json",
+      "size": 89,
+      "sha256": "b4f2c3cbd4f745e0da28c656907b288478157f4bb906bf0520b17f01305d7b9d"
+    },
+    {
+      "entry": "assets/minecraft/items/compass.json",
+      "size": 11768,
+      "sha256": "16ec7eefe2acbc9ebab9ff2f652c4d2fd5076ed37abcc67fb74bba229841e307"
+    },
+    {
+      "entry": "assets/minecraft/items/cooked_porkchop.json",
+      "size": 97,
+      "sha256": "e2635c074e8f36f38e1f0e7335fbe7194902c5545b5cdeac197dd916e3233db6"
+    },
+    {
+      "entry": "assets/minecraft/items/golden_sword.json",
+      "size": 94,
+      "sha256": "51d1129fc91ac0c7de4b4d7108d9b49643f2c140e0afac408537ef4d10e268f8"
+    },
+    {
+      "entry": "assets/minecraft/items/lava_bucket.json",
+      "size": 93,
+      "sha256": "3a59d6d2968a5ed9eadbd807222425f18c80487f831983c78d2a2614afc0dac3"
+    },
+    {
+      "entry": "assets/minecraft/items/redstone.json",
+      "size": 90,
+      "sha256": "66ee3a8fd17ea02f53fa3250358b64cb6e589e3d36007c855700f51413c9dd2d"
+    },
+    {
+      "entry": "assets/minecraft/models/block/bricks.json",
+      "size": 99,
+      "sha256": "a5844d1c3c5e4f179746fccb7541878c1d769d0ed9e41773c469cdf1bbba014b"
+    },
+    {
+      "entry": "assets/minecraft/models/item/apple.json",
+      "size": 100,
+      "sha256": "e1bdbabd59ead8c6b2c0420c5c0a16adcc3ebeda65e5d4a46c7cde7de9f2ed03"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_16.json",
+      "size": 105,
+      "sha256": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb"
+    },
+    {
+      "entry": "assets/minecraft/models/item/cooked_porkchop.json",
+      "size": 110,
+      "sha256": "51e8f165a92eaa8e5e6a46077d7f705a72a5f9460fc2efc60d1c3d1953834d2a"
+    },
+    {
+      "entry": "assets/minecraft/models/item/golden_sword.json",
+      "size": 106,
+      "sha256": "fc65c5018630966e7aab4012b7c88f4ea80f61644dc02f85d32a6f11e8df8506"
+    },
+    {
+      "entry": "assets/minecraft/models/item/lava_bucket.json",
+      "size": 106,
+      "sha256": "1f41d3978744594408001a531ae11a80d5de9653ce7e8334dcf1e70a667b1f84"
+    },
+    {
+      "entry": "assets/minecraft/models/item/redstone.json",
+      "size": 103,
+      "sha256": "30aa18d8d269407b92c378f0a32985ff3de0f695a19988f5f53b1f10d29e477b"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/bricks.png",
+      "size": 206,
+      "sha256": "3242cb8e441c940156633b0d867e08c887ddaeaa32343b212d4b1e5ca3dae123"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/recipe_book.png",
+      "size": 394,
+      "sha256": "bcfd295ed33754c5262e26a3ce980d021b1a13b7cb308e1b9f21eeaceefc685a"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/button.png",
+      "size": 247,
+      "sha256": "a07e122e8af446135c38fb21cfbbc4bfc94da443ff5257b6e8f9c15b542393b1"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/button_highlighted.png",
+      "size": 246,
+      "sha256": "a7c238109b5be7b2d441c4dd8d7ab10b85657262bf6e0c6cae6d236c68c4ad50"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay.png",
+      "size": 118,
+      "sha256": "e6b49ce4fad4f567ab4cbf344c6e7c35a0d5228cdee6b7fd6ed4b708d239bd22"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_disabled.png",
+      "size": 133,
+      "sha256": "e681996804199ce33b19a8e2ee3c0ed83c4e38c066ce781afd4aa8d3b17dc1fb"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_disabled_highlighted.png",
+      "size": 138,
+      "sha256": "d2d6499954aa1ecb7ac62990886752fa257338a2f94c3256be9db55bfb933354"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/crafting_overlay_highlighted.png",
+      "size": 140,
+      "sha256": "9f9d452b0530c5e07cf7f835a94bb662b4473566e3d87bb123d49e3720c30898"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/filter_disabled.png",
+      "size": 206,
+      "sha256": "f97a7a6e5bd015a153b0590d4503ecf3d6b34e0c47b6091fb84b22fd29656a45"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/filter_disabled_highlighted.png",
+      "size": 210,
+      "sha256": "fc1eab4e798fb76f26f536fbd8d70d4887678c03739193093348b02b4b9a9fd4"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/filter_enabled.png",
+      "size": 208,
+      "sha256": "d826e4c69ea1684df85b7374791f2cf1dc549b20bf96a9abf8deefb6e872584b"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/filter_enabled_highlighted.png",
+      "size": 207,
+      "sha256": "0b2a76bdc90402c0a93035f708419c2292b48d8c057a0ff1204eba73f10a36da"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_disabled.png",
+      "size": 225,
+      "sha256": "c523b890a6fb7083f302adb5ab69c94094649942e3f092127a6500b003eaf7da"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_disabled_highlighted.png",
+      "size": 228,
+      "sha256": "7b91dc3b29515d5ff5cdfa13f923e51bedcc6d91294e2441e9bddf683f107c6f"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_enabled.png",
+      "size": 228,
+      "sha256": "47ace25802640faf07ff87b5d85c8bbc489ed54928a9fc3af385aa83ad6222d2"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_filter_enabled_highlighted.png",
+      "size": 228,
+      "sha256": "015d2f9db1e0a0e12190e514a08b1234b58bca2eb4d98eb19d39b94d0087e49b"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay.png",
+      "size": 119,
+      "sha256": "3c132df5c9a0d70f666787d5bad392833bcf2217a65a4ca2fa4407498c9424ef"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_disabled.png",
+      "size": 135,
+      "sha256": "23b85157490ada8f52ff6644766693da20dfea60f38e538a2c9a00114132b631"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_disabled_highlighted.png",
+      "size": 139,
+      "sha256": "c2bcb67b1fee44916f81dfa075262c4de76ca7d0f06ff49d34f9a48324dcb2c8"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/furnace_overlay_highlighted.png",
+      "size": 142,
+      "sha256": "ae65ca7874f342ec77941f548fc8e10306f0cb8b97e2a9d351c064d55b4a9d79"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png",
+      "size": 122,
+      "sha256": "92110cf9e2b01e9af7bc7b4b8a46469905c2ca0cc09820db3339a97770506bc5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png.mcmeta",
+      "size": 163,
+      "sha256": "1d490688369c1bd7b79fcd6b38e9f8af3ac5d88abe226624c0e27569030c52f5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/page_backward.png",
+      "size": 120,
+      "sha256": "ce4ba6bdb92724b875a274a7891a0fa6dfae0ff6a4a8fdeb70073b139507746d"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/page_backward_highlighted.png",
+      "size": 149,
+      "sha256": "a67eaa0463286e686bbb35e731c2bccf8a022289fb853e1986ddb18cddef1111"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/page_forward.png",
+      "size": 124,
+      "sha256": "e1f0ab65888eaf07bf6a9f0c38a39a86b2b22e85dbb88cf289098bdee8132cb9"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/page_forward_highlighted.png",
+      "size": 147,
+      "sha256": "5270a3c828afefa52284c25cc00eb5c211f5ce3ac881906876461ffe407579af"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/slot_craftable.png",
+      "size": 109,
+      "sha256": "4310b974e53d8e84a5fe760161bb53219bcc2856a57131bfaf655f10eb8907fc"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/slot_many_craftable.png",
+      "size": 106,
+      "sha256": "24d312620d9ad4d2ad924843310596bac87df9b5faba17e3501168920bb71526"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/slot_many_uncraftable.png",
+      "size": 127,
+      "sha256": "3a16fab5d52b59ce7ce33fac59d60ff5903403d1a16443e32f6a7ea42487905f"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/slot_uncraftable.png",
+      "size": 127,
+      "sha256": "3a16fab5d52b59ce7ce33fac59d60ff5903403d1a16443e32f6a7ea42487905f"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/tab.png",
+      "size": 111,
+      "sha256": "dfc5aa25aea88ebe81308d41cd44f8722305195e407813b78c704a86d6fb9d78"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/recipe_book/tab_selected.png",
+      "size": 111,
+      "sha256": "3044288ef5fc8f67dc70514398d35986bfafd729e53cd75fcf9710f8472ee399"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/toast/recipe.png",
+      "size": 157,
+      "sha256": "270ae5ee13fff15d8973f33cc6564c9572c2420080a52b15b1fe2921d883545e"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/toast/recipe_book.png",
+      "size": 200,
+      "sha256": "c6bd85133131c999c0222336c41510ef7975bd3282e73d1292a4f18cfb268b92"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/apple.png",
+      "size": 203,
+      "sha256": "e6a57182db6029fff6d02fc774780fcec9f506b74226985445c91e5e7df5d9bb"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_16.png",
+      "size": 205,
+      "sha256": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/cooked_porkchop.png",
+      "size": 197,
+      "sha256": "375ac21a18e7439527c8f5db65b8afae13ae1cd4db2b0b07d42a269742f15f26"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/golden_sword.png",
+      "size": 194,
+      "sha256": "fe02861c6a870269a16432a867b67e09cf8a417a56d060e053c921ffaf4aa988"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/lava_bucket.png",
+      "size": 213,
+      "sha256": "bd3528401d4bba44e196480194a1becb47a33974df2202d464922cd412183b1a"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/redstone.png",
+      "size": 179,
+      "sha256": "6d0e6a1fd54142cd3de649e1100c428733512b322a0b0a530f62eae9f86881ec"
+    }
+  ],
+  "uiDefinitions": {
+    "minecraft:compass": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/compass_16"
+    },
+    "minecraft:golden_sword": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/golden_sword"
+    },
+    "minecraft:bricks": {
+      "type": "minecraft:model",
+      "model": "minecraft:block/bricks"
+    },
+    "minecraft:lava_bucket": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/lava_bucket"
+    },
+    "minecraft:apple": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/apple"
+    },
+    "minecraft:redstone": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/redstone"
+    },
+    "minecraft:cooked_porkchop": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/cooked_porkchop"
+    }
+  },
+  "limitations": [
+    "UI compass uses original no-lodestone angle-zero frame; no compass world navigation"
+  ]
+}
