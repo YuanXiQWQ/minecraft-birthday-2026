@@ -2,6 +2,8 @@
 
 ## 当前任务与规范
 
+用户最新明确授权 GitHub Pages 发布及 main 每次提交后的自动更新；工作流见 `.github/workflows/pages.yml`。仓库保持私有，只发布经过审计的 `app/dist-pages/`，不发布开发资料。历史“不部署”限制不适用于本次发布授权；这不代表其他P9工作自动获批。README保留英文生日祝福及实际网站链接。
+
 当前定向修复基线 f31d706：[缺料/耕地/Steve补证](docs/p8/repair/report.md)。有限填料、筛选、幽灵共用数量/组件分配；真实命中支撑格处理15/16耕地，Use按所持物分流。旧steve-left/top-left/bottom-right纯色截图无效，新九姿态以完整GUI原图及可核对坐标裁切为证。P8既定实现保留，不进入P9、不部署，提交后等待独立审查。
 
 
