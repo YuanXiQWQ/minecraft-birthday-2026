@@ -1,0 +1,128 @@
+[
+  {
+    "name": "center",
+    "source": "steve-repair-center-full.jpg",
+    "sourceSha256": "462448e32358d360acfde8332ea3770d5e1fb14a07808b57c96dfded8029a07b",
+    "crop": "steve-verified-center-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3218,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "left",
+    "source": "steve-repair-left-full.jpg",
+    "sourceSha256": "539e2f234d7dc141e564073da61c379825fb629def539ed4e19097c11486e3bc",
+    "crop": "steve-verified-left-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3426,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "right",
+    "source": "steve-repair-right-full.jpg",
+    "sourceSha256": "27ccb03379054c92f1d828be49af0032e6558e763d0476f2148368b3d63a6026",
+    "crop": "steve-verified-right-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3498,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "up",
+    "source": "steve-repair-up-full.jpg",
+    "sourceSha256": "09db3a73b866b88e58c5b92d7f759fee0c4a1cf3038bd053558b92b11d00a2c3",
+    "crop": "steve-verified-up-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3596,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "down",
+    "source": "steve-repair-down-full.jpg",
+    "sourceSha256": "5f125c5e9eb019bff100110503e65b14297780c2ff9ffca65defd000f070cb78",
+    "crop": "steve-verified-down-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 2937,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "top-left",
+    "source": "steve-repair-top-left-full.jpg",
+    "sourceSha256": "24452cac1c947d627b51b6a8ce592f07c3e2932e4a02e302f40cffa64f5dd470",
+    "crop": "steve-verified-top-left-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 4098,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "top-right",
+    "source": "steve-repair-top-right-full.jpg",
+    "sourceSha256": "0f7a25b6a876bc031f7cb5a9da81d34b59a8131e79ea91b92e5b92c8ec242b99",
+    "crop": "steve-verified-top-right-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 4073,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "bottom-left",
+    "source": "steve-repair-bottom-left-full.jpg",
+    "sourceSha256": "19c21e46a581c85f9f777bd46cb7891b9cfee0755de3b0aa0102295b8af9ab26",
+    "crop": "steve-verified-bottom-left-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3278,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  },
+  {
+    "name": "bottom-right",
+    "source": "steve-repair-bottom-right-full.jpg",
+    "sourceSha256": "2aced3fccf76085a0b4a339685cfac907c3b1bebd34dcb0979b5ccdfa6e984b5",
+    "crop": "steve-verified-bottom-right-crop.png",
+    "box": [
+      722,
+      180,
+      870,
+      390
+    ],
+    "cropUnique": 3282,
+    "method": "Unmodified full-page screenshot source; coordinate crop only, no scaling, synthesis or inserted pixels. Full image remains primary evidence."
+  }
+]

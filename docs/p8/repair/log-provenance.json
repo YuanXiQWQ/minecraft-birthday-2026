@@ -1,0 +1,86 @@
+[
+  {
+    "file": "baseline-farmland.log",
+    "capturedSha256": "4141fb8c052c049a192f1430e9d57ef1c80313a95ede66bf9f9e9f9a411bc225",
+    "storedSha256": "4141fb8c052c049a192f1430e9d57ef1c80313a95ede66bf9f9e9f9a411bc225",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "baseline-reproduction.log",
+    "capturedSha256": "0a1cfe4e50058dc304ff1441092a1192b7a2df78c53d1b4dbd272006393bee7e",
+    "storedSha256": "3a53be9c7b8cfde34030af45478d02f1ccdd159c0ecde9cc8a68e5cdf9d209df",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "formal-tests.log",
+    "capturedSha256": "728219f5ced294d373c0797eecb3ca44b9c6202d1f64a4d440dab65e0ad760a5",
+    "storedSha256": "677710265995272703046bd1d48f47df4957a9019b7250a50d3318976b9ec85c",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "http.log",
+    "capturedSha256": "2d011abfbcae71d74feca0587edce8cdb71298ae195a4d9474a423afaf344b88",
+    "storedSha256": "6adad2e2825b3649eac1882b146fb6217758768a9228962519185633f08df5bd",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "native-ray-tests.log",
+    "capturedSha256": "9b5ccc13cc2c0c0b904e8ee420598c1c9b48aff8270aafa6135be29fa3ba88d8",
+    "storedSha256": "b191d8175d8f9039f8c2a7ccbd99a903ef5e16913a048412b5dd9cef551e6304",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "p2-tests.log",
+    "capturedSha256": "6501393e396a01fb840f444e9abb18ed3253f52cb5bfcd37b84ba2eaa6a02ae2",
+    "storedSha256": "32949f1565fdf41045f41fecbc291a381172a8e282171a5c9c0eee03dbe7d04e",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "p4-data.log",
+    "capturedSha256": "0f75795a9824cec79fe05e2d68ff9f7f288e9d435cb2c5857ab5888771e55d28",
+    "storedSha256": "beabc452b7bee3b6c0b55c25f801351aeeb4d97f19fe6b320e04e8f8c6b58e2e",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "pages-build.log",
+    "capturedSha256": "26814d57db8675d7c1a1e02c269f8fcf595241acb5b742e380fc988f01e27783",
+    "storedSha256": "a741b88b66428736fbebc1f45b3d92b7947f58b6f45c004881c998715a1bf130",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "recheck.log",
+    "capturedSha256": "be0661ab62bf5802bf8c4983c6c88f6a7f08dd962ff5729257b1433c31cb1213",
+    "storedSha256": "82db783ab016ff196046d68fdb4d16994d600eea1d4f91eb75fb19ddd89bd031",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "root-build-first-failure.log",
+    "capturedSha256": "9a7cd6c9f6d67f34bb2724f632e67b5e6ffb37d52c370511b443ef548959b3c0",
+    "storedSha256": "50d4aa12657eb25d7710b8d4bc9318db5123688428ae2954c99533f90fef4180",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "root-build.log",
+    "capturedSha256": "41560aa09644cc1d26339e3aaa9a31b5b9cf8a9129d1ee328e7c8ecacd2ec89f",
+    "storedSha256": "af0895e361f02ff00ff46598f90d9e33163c0e805baac25d90526edc198057d5",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "target-tests.log",
+    "capturedSha256": "1d87a321892a84fbcc464aa00ffaba69b741882441d48b2de6d2fef85685a215",
+    "storedSha256": "e8e3b2bdbd39c3abe7607d3332c773ea5954074cdb762637733df1d2b8fc7200",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "typecheck-first-failure.log",
+    "capturedSha256": "2202320a5a96676a35015afb8672aa97fbce2a727276e5761910fd38ac2ec054",
+    "storedSha256": "436b88dac69644cb24e2f4759a10db903c5aaab52e79971b1742e94ef4f6631e",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  },
+  {
+    "file": "typecheck.log",
+    "capturedSha256": "d1ccfd55301aeb56158b4440b4bab33657996789425a54e7d2c328694c583349",
+    "storedSha256": "a9d4b6b38c7966f73720732e079fccd85e8c28171b55684e3489d895a569c321",
+    "normalization": "Line endings to LF, trailing line whitespace and trailing empty lines only; no diagnostic, assertion or result text removed."
+  }
+]

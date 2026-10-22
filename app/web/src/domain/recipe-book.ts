@@ -66,7 +66,60 @@ export function recipeGhost(recipe:Recipe,mode:BookMode,width:number,unlocked:st
  */
 export function fillRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],unlocked:string[],rules:Rules,max=false):(Stack|null)[]{const cells=recipeCells(recipe,mode,width);if(cells.length!==current.length)throw Error('recipe-menu-mismatch');const selected=cells.map((ingredient,i)=>{const old=current[i];if(!ingredient){if(old)throw Error('recipe-input-conflict');return null;}const choices=alternatives(ingredient,rules.itemTags).filter(id=>rules.items[id]&&unlocked.includes(id));if(!choices.length)throw Error('recipe-materials-missing');if(old){if(!choices.includes(old.id)||!sameStack(old,{id:old.id,count:1},rules))throw Error('recipe-input-conflict');return structuredClone(old);}return{id:choices[0],count:1};});const used=selected.filter((s):s is Stack=>!!s),limit=Math.min(64,...used.map(s=>rules.items[s.id].maxStack));if(!used.length)throw Error('recipe-input-empty');for(const s of used)s.count=max?Math.max(s.count,limit):s.count;if(mode==='crafting'&&!matchCrafting(recipe,selected,width,width,rules))throw Error('recipe-fill-mismatch');return selected;}
 
-/** Move actual player groups into compatible inputs atomically; missing materials never create quantities.
+/** One quantity-aware allocation keeps material absence separate from incompatible occupied inputs. */
+export interface OwnedRecipeAnalysis {grid:(Stack|null)[];pool:(Stack|null)[];missing:boolean[];conflicts:boolean[];complete:boolean}
+/** Allocate real groups globally across overlapping ingredients without counting input groups twice.
+ * @param {Recipe} recipe Native recipe.
+ * @param {BookMode} mode Menu capability.
+ * @param {number} width Input dimension.
+ * @param {(Stack|null)[]} current Actual inputs pinned to their cells.
+ * @param {(Stack|null)[]} owned Actual player inventory, excluding cursor and input cells.
+ * @param {Rules} rules Native capacities, identities and tags.
+ * @param {number} amount Requested fill level.
+ * @param {boolean} partial Whether a maximum satisfied subset is useful for display.
+ * @return {OwnedRecipeAnalysis} Immutable allocation and explicit failure categories.
+ */
+export function analyzeOwnedRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],owned:(Stack|null)[],rules:Rules,amount=1,partial=true):OwnedRecipeAnalysis {
+ const cells=recipeCells(recipe,mode,width);if(cells.length!==current.length)throw Error('recipe-menu-mismatch');
+ const conflicts=cells.map((ingredient,i)=>!!current[i]&&(!ingredient||!alternatives(ingredient,rules.itemTags).includes(current[i]!.id)));
+ const total=cells.filter(Boolean).length;let best:{grid:(Stack|null)[];pool:(Stack|null)[];missing:boolean[];score:number}|null=null;
+ /** Search complete identities with a bounded maximum-subset fallback for missing-material projections.
+  * @param {number} index Next logical cell.
+  * @param {(Stack|null)[]} pool Remaining finite groups.
+  * @param {(Stack|null)[]} grid Candidate inputs.
+  * @param {boolean[]} missing Unsatisfied requirements.
+  * @param {number} score Satisfied cells.
+  */
+ function assign(index:number,pool:(Stack|null)[],grid:(Stack|null)[],missing:boolean[],score:number):void {
+  if(best?.score===total||best&&score+cells.slice(index).filter(Boolean).length<=best.score)return;
+  if(index===cells.length){best={grid,pool,missing,score};return;}
+  const ingredient=cells[index],old=current[index];if(!ingredient||conflicts[index]){assign(index+1,pool,grid,missing,score);return;}
+  const ids=alternatives(ingredient,rules.itemTags),choices:Stack[]=[];
+  if(old)choices.push(old);else for(const s of pool)if(s&&ids.includes(s.id)&&!choices.some(c=>sameStack(c,s,rules)))choices.push(s);
+  for(const chosen of choices){if(amount>rules.items[chosen.id].maxStack)continue;let needed=Math.max(0,amount-(old?.count??0));if(pool.reduce((n,s)=>n+(s&&sameStack(s,chosen,rules)?s.count:0),0)<needed)continue;
+   const next=structuredClone(pool),filled=structuredClone(grid);for(let n=0;n<next.length&&needed;n++){const s=next[n];if(!s||!sameStack(s,chosen,rules))continue;const take=Math.min(needed,s.count);needed-=take;next[n]=s.count===take?null:{...s,count:s.count-take};}filled[index]={...chosen,count:Math.max(amount,old?.count??0)};assign(index+1,next,filled,[...missing],score+1);
+  }
+  if(partial){const absent=[...missing];absent[index]=true;assign(index+1,pool,grid,absent,score);}
+ }
+ assign(0,structuredClone(owned),structuredClone(current),cells.map(Boolean).map(()=>false),0);
+ const result=best as {grid:(Stack|null)[];pool:(Stack|null)[];missing:boolean[];score:number}|null;
+ return {...(result??{grid:structuredClone(current),pool:structuredClone(owned),missing:cells.map((v,i)=>!!v&&!conflicts[i])}),conflicts,complete:!!result&&result.score===total&&!conflicts.some(Boolean)};
+}
+/** Project finite availability using the exact fill allocator; alternatives cycle only where no group was reserved.
+ * @param {Recipe} recipe Displayed recipe.
+ * @param {BookMode} mode Menu capability.
+ * @param {number} width Input dimension.
+ * @param {(Stack|null)[]} current Actual inputs.
+ * @param {(Stack|null)[]} owned Actual 27+9 inventory without cursor.
+ * @param {Rules} rules Native rules.
+ * @param {number} frame Alternative animation frame.
+ * @return {OwnedRecipeAnalysis} Display-only cells and quantity-aware missing/conflict masks.
+ */
+export function ownedRecipeGhost(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],owned:(Stack|null)[],rules:Rules,frame=0):OwnedRecipeAnalysis {
+ const analysis=analyzeOwnedRecipe(recipe,mode,width,current,owned,rules),cells=recipeCells(recipe,mode,width);
+ analysis.grid=cells.map((ingredient,i)=>{if(!ingredient)return null;if(!analysis.missing[i]&&!analysis.conflicts[i]&&analysis.grid[i])return analysis.grid[i];const ids=alternatives(ingredient,rules.itemTags).filter(id=>rules.items[id]);return ids.length?{id:ids[Math.abs(frame)%ids.length],count:1}:null;});return analysis;
+}
+/** Move actual player groups into compatible inputs; failed allocations never mutate the supplied inventory.
  * @param {Recipe} recipe Native recipe.
  * @param {BookMode} mode Menu capability.
  * @param {number} width Input dimension.
@@ -74,22 +127,8 @@ export function fillRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Sta
  * @param {(Stack|null)[]} owned Mutable transaction-local 27+9 inventory.
  * @param {Rules} rules Native capacities and tags.
  * @param {boolean} max Fill the greatest bounded set supported by quantities.
- * @return {(Stack|null)[]} Finite filled inputs; owned is changed only on success.
+ * @return {(Stack|null)[]} Finite filled inputs.
  */
 export function fillOwnedRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],owned:(Stack|null)[],rules:Rules,max=false):(Stack|null)[]{
-  const cells=recipeCells(recipe,mode,width),base=structuredClone(owned),inputs=structuredClone(current);if(cells.length!==inputs.length)throw Error('recipe-menu-mismatch');for(let i=0;i<cells.length;i++){const s=inputs[i],ingredient=cells[i];if(s&&(!ingredient||!alternatives(ingredient,rules.itemTags).includes(s.id)))throw Error('recipe-input-conflict');}
-  /** Reserve complete compatible identities with backtracking across overlapping ingredient tags.
-   * @param {number} index Next recipe cell.
-   * @param {number} amount Requested bounded fill level.
-   * @param {(Stack|null)[]} pool Remaining transaction-local player groups.
-   * @param {(Stack|null)[]} grid Proposed inputs.
-   * @return {{grid:(Stack|null)[];pool:(Stack|null)[]}|null} Complete allocation or no mutation.
-   */
-  function assign(index:number,amount:number,pool:(Stack|null)[],grid:(Stack|null)[]):{grid:(Stack|null)[];pool:(Stack|null)[]}|null{
-    if(index===cells.length)return{grid,pool};const ingredient=cells[index];if(!ingredient)return assign(index+1,amount,pool,grid);
-    const old=inputs[index],ids=alternatives(ingredient,rules.itemTags),choices:Stack[]=[];
-    if(old)choices.push(old);else for(const s of pool)if(s&&ids.includes(s.id)&&!choices.some(c=>sameStack(c,s,rules)))choices.push(s);
-    for(const chosen of choices){if(amount>rules.items[chosen.id].maxStack)continue;let needed=Math.max(0,amount-(old?.count??0));if(pool.reduce((n,s)=>n+(s&&sameStack(s,chosen,rules)?s.count:0),0)<needed)continue;const next=structuredClone(pool),filled=structuredClone(grid);for(let n=0;n<next.length&&needed;n++){const s=next[n];if(!s||!sameStack(s,chosen,rules))continue;const take=Math.min(needed,s.count);needed-=take;next[n]=s.count===take?null:{...s,count:s.count-take};}filled[index]={...chosen,count:Math.max(amount,old?.count??0)};const result=assign(index+1,amount,next,filled);if(result)return result;}return null;
-  }
-  let best:ReturnType<typeof assign>=null;for(let amount=1;amount<=64;amount++){const result=assign(0,amount,base,inputs);if(!result)break;best=result;if(!max)break;}if(!best)throw Error('recipe-materials-missing');owned.splice(0,owned.length,...best.pool);return best.grid;
+ let best:OwnedRecipeAnalysis|null=null;for(let amount=1;amount<=64;amount++){const result=analyzeOwnedRecipe(recipe,mode,width,current,owned,rules,amount,false);if(result.conflicts.some(Boolean))throw Error('recipe-input-conflict');if(!result.complete)break;best=result;if(!max)break;}if(!best)throw Error('recipe-materials-missing');owned.splice(0,owned.length,...best.pool);return best.grid;
 }

@@ -1,0 +1,37 @@
+(node:38060) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: false (34.2055ms)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: true (15.8324ms)
+✔ personal fill receipt after Done cannot revive cursor or four inputs (6.938ms)
+✔ personal fill receipt after KeyE cannot revive cursor or four inputs (6.2651ms)
+✔ personal fill receipt after Escape cannot revive cursor or four inputs (6.6484ms)
+✔ workbench close preserves committed filled inputs while fencing its delayed cursor receipt (7.6295ms)
+✔ ordinary result receipt refuses recipe-book fill through the same gate (7.1617ms)
+✔ fill reset/dismantling fences late receipts and permits fresh menu work (12.7798ms)
+✔ fill failure is atomic, frees its gate, and allows retry without overwriting incompatible inputs (10.3327ms)
+✔ native ghost drawing never paints over a real finite input or a genuine matched output (10.6457ms)
+✔ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (10.4963ms)
+✔ unrelated real processing/settings snapshots preserve ghosts, while committed personal inputs clear them without acquiring ghost items (27.5167ms)
+✔ narrow book selection hides only the book and retains useful ghosts in the same personal lifecycle (14.3434ms)
+✔ actual close/reopen, device switch, scene switch and dismantle invalidate book projections without clearing durable instances (12.6838ms)
+✔ cross-session reset fences a real fill late receipt with an attached ghost/popup (12.2359ms)
+✔ cross-session reset fences a real acquisition late receipt with an attached ghost/popup (11.9538ms)
+✔ stale book preference failures and notification timeouts cannot mutate a new generation display (23.6372ms)
+✔ page disposal clears ghosts and toasts and prevents later book rendering or notification (6.4159ms)
+✔ detached recipe hit callbacks cannot reopen an old group after reset even when the same recipe is rediscovered (8.6237ms)
+✔ actual book ghost draw reports finite quantities across real sessions and clears only on new generation (21.6126ms)
+(node:36952) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ native 15/16 farmland ray previews and places crafting_table through formal Use and SaveSession (33.1201ms)
+✔ native 15/16 farmland ray previews and places furnace through formal Use and SaveSession (11.3846ms)
+✔ native 15/16 farmland ray previews and places hopper through formal Use and SaveSession (8.3949ms)
+✔ native dirt path and edge rays retain negative logical cells, while water is explicitly not support (4.8219ms)
+✔ plot Use without seeds sends no planting command, and remote occupancy/reset fence stale placement (10.514ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2015.9593

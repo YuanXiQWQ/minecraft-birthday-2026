@@ -1,0 +1,17 @@
+(node:26308) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ native 15/16 farmland ray previews and places crafting_table through formal Use and SaveSession (51.6947ms)
+✔ native 15/16 farmland ray previews and places furnace through formal Use and SaveSession (14.317ms)
+✔ native 15/16 farmland ray previews and places hopper through formal Use and SaveSession (12.1912ms)
+✔ native dirt path and edge rays retain negative logical cells, while water is explicitly not support (7.7519ms)
+✔ plot Use without seeds sends no planting command, and remote occupancy/reset fence stale placement (13.6734ms)
+✔ actual authored water geometry rejects placement even when its rendered top is hit (5.9778ms)
+✔ a queued farm placement cannot commit after another session changes the active scene (9.5783ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1839.6645

@@ -1,0 +1,469 @@
+[
+  {
+    "label": "table placed",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "484",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "0"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",3,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "null",
+        "player": "{\"skin\":\"minecraft:entity/player/wide/steve\",\"window\":{\"x\":26,\"y\":8,\"width\":49,\"height\":70,\"scale\":30},\"framebuffer\":[183,262],\"look\":{\"body\":0.42824348232889103,\"head\":0.42824348232889103,\"pitch\":-0.06047414588811304,\"tilt\":-0.06047414588811304},\"layout\":\"[{\\\"head\\\":null,\\\"chest\\\":null,\\\"legs\\\":null,\\\"feet\\\":null,\\\"offhand\\\":null},{\\\"id\\\":\\\"minecraft:crafting_table\\\",\\\"count\\\":64}]\",\"parts\":[\"head\",\"body\",\"rightArm\",\"leftArm\",\"rightLeg\",\"leftLeg\"],\"outerLayers\":6,\"hands\":1,\"armorParts\":0,\"renders\":1087,\"geometries\":13,\"textures\":5,\"animatedTextures\":0,\"calls\":78}",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "66",
+        "engine": "three.js r186",
+        "frames": "2333",
+        "geometry": "46",
+        "hover": "{\"id\":\"2157daf6-a410-494c-b2ef-180ce348ae16\",\"point\":[-4.237019350522902,0.03419545850960248,-1],\"normal\":[1.2246467991473532e-16,0,1]}",
+        "instances": "[[\"2157daf6-a410-494c-b2ef-180ce348ae16\",\"crafting_table\",[-5,0,-2],\"south\",false]]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":0,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25976"
+      }
+    }
+  },
+  {
+    "label": "after refresh",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "519",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "0"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",1,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "drag": "false",
+        "preview": "{\"status\":\"empty\",\"result\":null}"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "62",
+        "engine": "three.js r186",
+        "frames": "234",
+        "geometry": "45",
+        "hover": "null",
+        "instances": "[[\"2157daf6-a410-494c-b2ef-180ce348ae16\",\"crafting_table\",[-5,0,-2],\"south\",false]]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25964"
+      }
+    }
+  },
+  {
+    "label": "table mined, plot reusable",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "548",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "4"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",4,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "null",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "58",
+        "engine": "three.js r186",
+        "frames": "605",
+        "geometry": "44",
+        "hover": "{\"id\":\"ground\",\"point\":[-6.475216592720707,0,-5.229488092572371],\"normal\":[0,1,0],\"cell\":[-7,-1,-6]}",
+        "instances": "[]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25952"
+      }
+    }
+  },
+  {
+    "label": "furnace placed on plot",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "551",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "1"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",4,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "null",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "64",
+        "engine": "three.js r186",
+        "frames": "616",
+        "geometry": "46",
+        "hover": "{\"id\":\"5dd2718d-fcbd-4dac-9558-061e9aedeb01\",\"point\":[-4.237019350522903,0.03419545850960226,-1],\"normal\":[0,0,1]}",
+        "instances": "[[\"5dd2718d-fcbd-4dac-9558-061e9aedeb01\",\"furnace\",[-5,0,-2],\"south\",false]]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25976"
+      }
+    }
+  },
+  {
+    "label": "furnace mined",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "598",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "4"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",7,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "{\"input\":null,\"fuel\":null,\"output\":null,\"burn\":0,\"burnTotal\":0,\"cook\":0,\"cookTotal\":200,\"recipe\":null,\"speed\":1,\"outputRecipe\":null}",
+        "hopper": "null",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "70",
+        "engine": "three.js r186",
+        "frames": "1038",
+        "geometry": "56",
+        "hover": "{\"id\":\"ground\",\"point\":[-6.475216592720707,0,-5.229488092572371],\"normal\":[0,1,0],\"cell\":[-7,-1,-6]}",
+        "instances": "[]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25976"
+      }
+    }
+  },
+  {
+    "label": "hopper placed on plot",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "601",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "2"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",7,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "{\"input\":null,\"fuel\":null,\"output\":null,\"burn\":0,\"burnTotal\":0,\"cook\":0,\"cookTotal\":200,\"recipe\":null,\"speed\":1,\"outputRecipe\":null}",
+        "hopper": "null",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "64",
+        "engine": "three.js r186",
+        "frames": "1059",
+        "geometry": "46",
+        "hover": "{\"id\":\"plot:-5,0,-2\",\"point\":[-4.495374348313374,-0.06250000000000022,-1.4878051789092464],\"normal\":[0,1,0],\"cell\":[-5,-1,-2]}",
+        "instances": "[[\"0807fb67-64ad-48f2-af30-a07143f24812\",\"hopper\",[-5,0,-2],\"down\",false]]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "26080"
+      }
+    }
+  },
+  {
+    "label": "hopper mined",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "619",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "4"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",10,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "[null,null,null,null,null]",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[]",
+        "drawCalls": "58",
+        "engine": "three.js r186",
+        "frames": "1338",
+        "geometry": "44",
+        "hover": "{\"id\":\"ground\",\"point\":[-7.572865598982454,-2.220446049250313e-16,-7.323046098429465],\"normal\":[0,1,0],\"cell\":[-8,-1,-8]}",
+        "instances": "[]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25952"
+      }
+    }
+  },
+  {
+    "label": "seed planted through actual soil ray",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "621",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "3"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",10,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "[null,null,null,null,null]",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[{\"id\":\"7c6caeed-142e-4356-bb60-d2a2da946fc0\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":0}}}]",
+        "drawCalls": "59",
+        "engine": "three.js r186",
+        "frames": "1347",
+        "geometry": "45",
+        "hover": "{\"id\":\"plot:-5,0,-2\",\"point\":[-4.495374348313374,-0.06250000000000022,-1.4878051789092464],\"normal\":[0,1,0],\"cell\":[-5,-1,-2]}",
+        "instances": "[]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25968"
+      }
+    }
+  },
+  {
+    "label": "crop prevents device overwrite",
+    "state": {
+      "app": {
+        "catalogueIcons": "113",
+        "completed": "false",
+        "generation": "92017e35-9740-498d-a056-5d9a7c9b94e4",
+        "hasCake": "false",
+        "inventoryReady": "true",
+        "resources": "26.3",
+        "revision": "624",
+        "saveStatus": "ready"
+      },
+      "hotbar": {
+        "contents": "[{\"id\":\"minecraft:crafting_table\",\"count\":64},{\"id\":\"minecraft:furnace\",\"count\":64},{\"id\":\"minecraft:hopper\",\"count\":64},{\"id\":\"minecraft:wheat_seeds\",\"count\":64},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null]",
+        "offhand": "null",
+        "selected": "0"
+      },
+      "inventory": {
+        "acquiring": "false",
+        "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+        "book": "{\"generation\":\"92017e35-9740-498d-a056-5d9a7c9b94e4\",\"identity\":\"[\\\"92017e35-9740-498d-a056-5d9a7c9b94e4\\\",10,\\\"farm\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+        "crafting": "[null,null,null,null]",
+        "cursor": "null",
+        "drag": "false",
+        "dragPreview": "null",
+        "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+        "furnace": "null",
+        "hopper": "[null,null,null,null,null]",
+        "preview": "{\"status\":\"empty\",\"result\":null}",
+        "sideOffset": "0",
+        "stationId": "",
+        "tab": "crafting",
+        "workbench": "null"
+      },
+      "scene": {
+        "cake": "false",
+        "crops": "[{\"id\":\"7c6caeed-142e-4356-bb60-d2a2da946fc0\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":10}}}]",
+        "drawCalls": "63",
+        "engine": "three.js r186",
+        "frames": "1359",
+        "geometry": "46",
+        "hover": "{\"id\":\"plot:-5,0,-2\",\"point\":[-4.495374348313374,-0.06250000000000022,-1.4878051789092464],\"normal\":[0,1,0],\"cell\":[-5,-1,-2]}",
+        "instances": "[]",
+        "natural": "{\"epoch\":1,\"removed\":[],\"roll\":0}",
+        "recoveredWorld": "{\"tick\":1949,\"scene\":\"farm\",\"crops\":[]}",
+        "renderedScene": "farm",
+        "resourceVersion": "26.3",
+        "scene": "farm",
+        "triangles": "25980"
+      }
+    }
+  }
+]

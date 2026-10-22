@@ -6,19 +6,19 @@
 |---|---|---|---|---|
 |1 两原版页签/搜索|ui/inventory.ts、i18n/items.ts/原版zh_CN|experience词表/ID检索，P4图标113|catalogue1920-chinese-search、catalogue1440；木镐/wooden pickaxe指向同ID，只有指南针/箱子图标|无新增故事翻译，默认英文|
 |2 共享27+9|domain/inventory/state、codec p8-inventory-1|迁移/输入/取得/队列/重置全部回归，初始27空且解锁不入库|普通新档source→切箱子→bag0，后设备GUI显示同组；inventory1280-restored/helmet-hands|D07实际关闭清光标/四格保留；预设数据未删|
-|3 书并列/有限填料|recipe-book fillOwnedRecipe、UI|缺料拒绝、重复材料数量、标签回溯、组件冲突、Shift有界，代次9项保留|新档木板/棍/工具/蛋糕实际填料；inventory1920-main、inventory1440-book-and-player；560书内返回|原炉发现数据保留但隐藏入口，无免费材料|
+|3 书并列/有限填料|共享analyzeOwnedRecipe，实际数量/组件/标签全局分配；冲突和不足分离|1/3/4木板、1/3奶桶、既有输入不重复计数、重叠标签、UI实际红格及真实SaveSession回归|[修复证据](repair/report.md)：一木板三红格，另一真实标签补足后同幽灵四格可用，正常填料领取|原炉发现数据保留但隐藏入口，光标不计、无免费材料|
 |4 图标清晰|ui/icons128px、GUI/HUD/cursor高密度backing|113依赖及原版几何/UV/alpha全部回归|catalogue1440-alpha-and-icons、inventory1280-helmet-hands原木/板/台/炉/漏斗/工具同倍率|原版Java逐像素光照对照未验，不把哈希当外观证明|
 |5 工作台对齐|VanillaModels外层定位/内层中心旋转|四朝向Box3逐轴落在cell..cell+1、预览共工厂；实际射线回归|02-table-and-sticks、普通Farm实际台及链；刷新后原UUID/坐标|非立方漏斗保留，不改旧坐标|
 |6 光标中心|inventory draw/scaledCanvas/icon16中心|原输入/布局与边界测试保持|01-planks-acquired/个人页切换与trusted-drag-cursor实际画布，主体偏移8×scale|真实跨显示器DPR未验，当前实测约1|
 |7 来源取消|reduceInventory source|3物品×左/右/Shift/clone、同/异组件/锁定/上限真值表|普通source切页持物、清空重选，领域门禁未放宽|普通有限槽未改成来源语义|
 |8 来源Shift一组|同上/InventoryInput|原版64/16/1上限，无逐空格复制|新档取64原木、64种子、1奶桶、1头盔均可信Shift|非空光标不暗中覆盖|
 |9 松手前投影|draw(false)+同reduceInventory，鼠标状态机|奇数余数、重复/非法/满格/组件、取消及守恒回归|trusted-drag-intermediate.png为实际按住期间GUI原画布（非编辑/非松手后）；JSON isTrusted=true、已提交21/64与预览64/64不同、黄色满格；after全页|原生AX无右/中拖参数，二者实体中间帧留人工；GUI画布不含独立Steve WebGL层，完整GUI另有全页截图|
-|10 Steve观察|playerLook绝对角/预览尺寸复用|对称/无累积/垂直不相消，装备及缓存回归|steve中心/四方/四角九张实际局部；inventory1280-helmet-hands实际制作头盔、双手联动|保留pose-initial失败图；未声称Java客户端逐帧对照|
+|10 Steve观察|保留已审查玩家渲染和绝对鼠标姿态，不无故重写|旧/新clip逐文件审计；九张完整GUI与当帧指针/边界元数据|[九姿态有效证据](repair/screenshots.md)：中心/四方/四角全页原图与对应坐标裁切；盔甲/双手实际可见|旧steve-left、top-left、bottom-right纯色图无效；本次3张clip也无效。完整原图为主，Java逐帧对照未验|
 |11 炉消耗|tickFurnace|每点火扣1/完成扣1、堵塞余火/短燃料/能力/有限输出及队列11项|06 input64/fuel63→07 input60/fuel63/output4，手搭链20木→木炭；新补64有限组运输实测|永久目录资格仍无限，不自动补充|
 |12 有限Shift|playerTargets36、上下文炉/漏斗|10源+60目标→64+6；含主背包总量守恒、满/部分/异组件|真实main20木Shift入漏斗，来源变空；drag62→20/20/20余2；链63实际剩余|目录/结果各自有界特例不污染有限槽|
 |13 结果Tooltip|inventory.showTooltip|原像素/Tooltip与输入回归|实际木板/工具/蛋糕结果悬浮仅物品名，无A返还/点击教学|不是实现全游戏所有组件文本引擎|
 |14 原版耗时挖掘|domain/mining、WorldUse/SceneView|8正式WorldUse/SaveSession可控时钟：松手/GUI/转向/工具/代次/失效，工具硬度/掉落分离|普通3.3秒原木、1.4秒石/铁/煤；设备0.4秒不拆、1.4秒真拆，裂纹/反馈|原版破坏精灵/声音，12片纹理碎屑不是完整TerrainParticle复刻；实体右转期间的取消留工具限制|
-|15 真实表面自由放置|WORLD_REGION真实边界/碰撞、supported/sourceOccupied、自然层冲突|活来源拒绝/清地允许/支撑拒绝、方块面射线、占位与补货/网络回归|[-2,0,0]台、Farm前排支撑超旧区，Alt/Ctrl+Alt分层链、R端口；挖掉前支撑恢复空间|旧build参数仅历史负载夹具，不是正式白名单。全部布局数学上穷举并未证明，现有可见挖掘恢复兜底|
+|15 真实表面自由放置|实际命中支撑格+面计算；plot按持物播种/放置分流，水非实心|真实AuthoredWorld/原版15/16模型/SceneView射线/WorldUse/SaveSession：设备、负坐标、土径、水、占位/重置/场景迟到|[耕地实操](repair/report.md)：同地块放台/炉/漏斗、打开、耗时挖掉、刷新同坐标、再播种，作物拒绝覆盖|未加禁建资源区，全部可能布局仍未数学穷尽；既有漏斗面/恢复路径保持|
 
 ## 仍需实体/外部环境验证
 
