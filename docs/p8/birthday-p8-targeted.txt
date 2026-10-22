@@ -1,0 +1,34 @@
+(node:16876) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ cake acquisition/preview is not completion; placement requires held cake and current home table (5.7084ms)
+✔ one successful table transaction consumes one held cake and emits one local event; repeat and hydration never replay (19.7192ms)
+✔ concurrent table uses have one winner; stale layout does not consume or duplicate cake (11.6335ms)
+✔ failed durable write gives no false completion/event and supports a deliberate retry (7.9734ms)
+✔ reset retains latest audio preferences and fences an old table command from another generation (10.3053ms)
+✔ complete seeded twenty-second plan contains all five native shapes twice with trail/twinkle and finishes without particles (215.71ms)
+✔ real controller pauses active time, resumes without background backlog and cancels native batch on skip (2.7731ms)
+✔ real controller generation/reset/navigation invalidate transient replay without changing persistent cake facts (1.1645ms)
+(node:9392) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ new shared 27+9 inventory starts empty, and permanent acquisition does not populate it (8.8976ms)
+✔ catalogue truth table, component identity, maximum and lock: oak_log (2.0022ms)
+✔ catalogue truth table, component identity, maximum and lock: milk_bucket (0.7469ms)
+✔ catalogue truth table, component identity, maximum and lock: wooden_pickaxe (0.6898ms)
+✔ finite Shift merges four of ten into sixty, moves six to the next empty slot, and preserves source total (1.7508ms)
+✔ drag projection uses the exact commit reducer but cannot mutate real groups; repeated and full cells conserve odd remainder (0.527ms)
+✔ English, exact original simplified Chinese and namespaced IDs resolve the same reachable item (0.2425ms)
+✔ known but unowned materials cannot fill, while finite repeated ingredients move once and Shift has an owned upper bound (0.9818ms)
+✔ failed ingredient placement and component conflicts preserve every owned and input unit (0.48ms)
+✔ finite furnace consumes once on ignition and once on completion, leaving independent residual fire (2.4996ms)
+✔ p7 migration preserves saved counts and facts without stocking the new backpack (11.9453ms)
+✔ native hardness, efficient tool speed and drop tier are separate, with instantaneous grass (0.2832ms)
+✔ mouse pose is absolute, symmetric and has relative head pitch rather than cancelling its entire vertical look (0.2167ms)
+✔ all four native crafting-table roots occupy exactly their logical cube without losing the center pivot (1252.2845ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1886.6149

@@ -1,0 +1,70 @@
+{
+  "operation": "Only trailing horizontal whitespace, CRLF and extra EOF blank lines normalized for Git; no assertions, messages, test outcomes or failure records removed.",
+  "logs": [
+    {
+      "file": "config-timing-test-failure.log",
+      "rawSha256": "f5571efe581c76c001e138219019c89fb1cb788eeea5c9d60e6bf3d4230aa1a8",
+      "storedSha256": "f5571efe581c76c001e138219019c89fb1cb788eeea5c9d60e6bf3d4230aa1a8"
+    },
+    {
+      "file": "config-timing-typecheck-failure.log",
+      "rawSha256": "c02310be221599b7b3d5b0d40c2d4538f31e095c204fa04a0ee486227487281d",
+      "storedSha256": "c02310be221599b7b3d5b0d40c2d4538f31e095c204fa04a0ee486227487281d"
+    },
+    {
+      "file": "incorrect-test-cwd.log",
+      "rawSha256": "9c094724da2db97007a63a88e975d08bae1a5f6d0b3d8f0fbc8c7cca2cf2c403",
+      "storedSha256": "065e487e2551fb058467fe4b31b1dd784aed1ce407d896559abcfd534c03ad64"
+    },
+    {
+      "file": "p8-build-pages.log",
+      "rawSha256": "a1d043fca0758f0a4e9c317f23850478f9b58b672ce981b58bfdac282d97d4cf",
+      "storedSha256": "764b692a4c4c82382c330ff14ab2e7364103a815501f188161d51decc9bb8411"
+    },
+    {
+      "file": "p8-build-root.log",
+      "rawSha256": "612f6ca4afe38617a472bfe8d0d7033af7310127962b24c54cdde057f33a28af",
+      "storedSha256": "f058b7b17e0d1b00c0a73a9d6d626155c6609c14955d002d305c1c4f48551917"
+    },
+    {
+      "file": "p8-formal-tests.log",
+      "rawSha256": "3d1eb3de071050a1bd8b6ce76e7f0eab2518a11050fccd8324a3a7563d55fb8f",
+      "storedSha256": "3d1eb3de071050a1bd8b6ce76e7f0eab2518a11050fccd8324a3a7563d55fb8f"
+    },
+    {
+      "file": "p8-http.log",
+      "rawSha256": "88029532388fdeb6b4ed87038120a970f0c886f50f8b0a2b39ffc86a1a718d68",
+      "storedSha256": "88029532388fdeb6b4ed87038120a970f0c886f50f8b0a2b39ffc86a1a718d68"
+    },
+    {
+      "file": "p8-p2.log",
+      "rawSha256": "d229dfa10e79889d6a3784bf49586153404da1fef621b28873593de4ffbf46cf",
+      "storedSha256": "d229dfa10e79889d6a3784bf49586153404da1fef621b28873593de4ffbf46cf"
+    },
+    {
+      "file": "p8-p4.log",
+      "rawSha256": "0f75795a9824cec79fe05e2d68ff9f7f288e9d435cb2c5857ab5888771e55d28",
+      "storedSha256": "0f75795a9824cec79fe05e2d68ff9f7f288e9d435cb2c5857ab5888771e55d28"
+    },
+    {
+      "file": "p8-typecheck.log",
+      "rawSha256": "d1ccfd55301aeb56158b4440b4bab33657996789425a54e7d2c328694c583349",
+      "storedSha256": "b09d0194c2a8b707f958eaca83ce4007d99f6d77d3a9691e9200bfb4afb45b62"
+    },
+    {
+      "file": "birthday-p8-targeted.txt",
+      "rawSha256": "8a3aac3d670a4e31ed20ffa5315800e206b3ce279bb30012c64ef59c2f18f384",
+      "storedSha256": "8a3aac3d670a4e31ed20ffa5315800e206b3ce279bb30012c64ef59c2f18f384"
+    },
+    {
+      "file": "birthday-p8-tests1.txt",
+      "rawSha256": "5692abfd0b7bf2bbcf2b84a3b23090ef8fc1a9d139b70c53c6f21083d9517d4a",
+      "storedSha256": "92ca3a99d2585acd7ab395819cb351d96e932d327097f0388e5d39860b5c7fbf"
+    },
+    {
+      "file": "birthday-p8-tests2.txt",
+      "rawSha256": "9a9022c6b7e24381e8c2a47a0f729b9451f3a594c8073dc687e493fa14e39e70",
+      "storedSha256": "9a9022c6b7e24381e8c2a47a0f729b9451f3a594c8073dc687e493fa14e39e70"
+    }
+  ]
+}

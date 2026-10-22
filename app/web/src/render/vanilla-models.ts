@@ -118,7 +118,7 @@ export class VanillaModels {
   device(kind:Kind,facing:Facing,lit:boolean,tint?:number):Group {
     const sample=this.pack.samples.find(s=>s.block===kind&&(kind==='crafting_table'||s.state.includes(`facing=${facing}`))&&(!['furnace','blast_furnace'].includes(kind)||s.state.includes(`lit=${lit}`)));
     if(!sample)throw new Error('missing-original-state');const root=this.sample(sample,tint);
-    if(kind==='crafting_table'){const pivot=new Group();pivot.add(root);root.position.set(-.5,0,-.5);pivot.position.set(.5,0,.5);pivot.rotation.y=-['north','east','south','west'].indexOf(facing)*Math.PI/2;return pivot;}
+    if(kind==='crafting_table'){const pivot=new Group();pivot.add(root);root.position.set(-.5,0,-.5);pivot.position.set(.5,0,.5);const placement=new Group();placement.add(pivot);pivot.rotation.y=-['north','east','south','west'].indexOf(facing)*Math.PI/2;return placement;}
     return root;
   }
 

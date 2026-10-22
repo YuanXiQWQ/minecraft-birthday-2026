@@ -1,0 +1,31 @@
+{
+  "renamedToActualJPEG": {
+    "01-planks-acquired.png": "01-planks-acquired.jpg",
+    "02-table-and-sticks.png": "02-table-and-sticks.jpg",
+    "03-wooden-pickaxe.png": "03-wooden-pickaxe.jpg",
+    "04-mined-cobble-and-actual-supply.png": "04-mined-cobble-and-actual-supply.jpg",
+    "05-furnace-and-stone-pickaxe.png": "05-furnace-and-stone-pickaxe.jpg",
+    "06-finite-furnace-running.png": "06-finite-furnace-running.jpg",
+    "07-output-before-acquisition.png": "07-output-before-acquisition.jpg",
+    "08-iron-taken.png": "08-iron-taken.jpg",
+    "09-drag-after-release.png": "09-drag-after-release.jpg",
+    "10-bucket-acquired.png": "10-bucket-acquired.jpg",
+    "11-milk-egg-cane.png": "11-milk-egg-cane.jpg",
+    "12-crop-planted.png": "12-crop-planted.jpg",
+    "13-crop-real-planted.png": "13-crop-real-planted.jpg",
+    "14-crop-observed.png": "14-crop-observed.jpg",
+    "15-crop-mature.png": "15-crop-mature.jpg",
+    "16-wheat-harvested.png": "16-wheat-harvested.jpg",
+    "17-real-cake-inputs.png": "17-real-cake-inputs.jpg",
+    "18-cake-acquired-not-complete.png": "18-cake-acquired-not-complete.jpg",
+    "19-hoppers-legally-crafted.png": "19-hoppers-legally-crafted.jpg",
+    "20-hand-built-finite-chain.png": "20-hand-built-finite-chain.jpg",
+    "21-top-hopper-finite-20-logs.png": "21-top-hopper-finite-20-logs.jpg",
+    "22-side-hopper-finite-fuel.png": "22-side-hopper-finite-fuel.jpg",
+    "23-bottom-finite-charcoal-auto-acquired.png": "23-bottom-finite-charcoal-auto-acquired.jpg",
+    "24-device-mined-to-restore-access.png": "24-device-mined-to-restore-access.jpg",
+    "25-home-still-empty-after-cake-acquisition.png": "25-home-still-empty-after-cake-acquisition.jpg",
+    "26-native-steve-personal-inventory.png": "26-native-steve-personal-inventory.jpg"
+  },
+  "pixelsEdited": false
+}

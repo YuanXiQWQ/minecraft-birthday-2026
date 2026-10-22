@@ -1,5 +1,8 @@
 # 原版资源清单、来源与使用索引
 
+P8当前增量：[interaction-manifest](../../resources/minecraft/26.3/interaction-manifest.json)新增10张原版破坏阶段、4张原版指南针/箱子页签背景、advancement toast及原版zh_CN词表，共16份素材+1清单；合计643份普通运行资源/清单。搜索别名只投影113候选物品并单独哈希，新增-text属性保持克隆字节稳定。原版烟花/12声音复用已有清单；无新增外部缓存或强制替换。见[当前体验/P8报告](../p8/report.md)。下文626等计数为历史范围。
+
+
 P7当前资源：world-manifest新增80份所需原版资产及1清单，合计626份运行资源/清单，正常Git/dev/build默认加载。地形/作物模型和父依赖、动画元数据、两成年实体皮肤、草/叶色图和7交互声音事件，派生实体几何及只读class哈希见[P7交付](../p7/report.md)。此前545/490/478计数是各阶段历史范围。没有强制素材替换计划。
 
 P6配方书扩展：book-manifest.json索引54项新增原版资源及依赖；加清单后普通运行共545资源文件，原版漏斗背景复用。包含书/RecipeToast精灵、七种分类图标及父模型纹理；指南针仅分类固定原版16号帧。原始版本/哈希与来源见data/minecraft/26.3/book-evidence.json及[交付](../p6/book-hopper-review.md)，不增加替换要求。

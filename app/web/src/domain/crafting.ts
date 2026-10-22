@@ -1,7 +1,7 @@
 /** Approved D05 complete-batch acquisition and directory remainder returns, independent of screens and storage. */
 import {findCrafting} from '../rules/matcher.ts';
 import type {Rules,Stack} from '../rules/types.ts';
-import {validateCarriers,validateStack,cell} from './inventory.ts';
+import {validateCarriers,validateStack,cell,playerTargets} from './inventory.ts';
 import type {InventoryState} from './inventory.ts';
 import {capacity,sameStack,quickMove} from './slots.ts';
 import type {SlotValue} from './slots.ts';
@@ -29,7 +29,7 @@ export function takeCraft(current:InventoryState,take:CraftTake,unlocked:string[
   const result=carrierResult(match.result,rules),acquired=[result.id,...match.remainders.flatMap(s=>s?[s.id]:[])].filter((id,i,all)=>all.indexOf(id)===i),eligible=[...new Set([...unlocked,...acquired])];
   validateStack(result,eligible,rules);for(const s of match.remainders)validateStack(s,eligible,rules);
   let targets:SlotValue[];
-  if(take.mode==='shift')targets=Array.from({length:9},(_,i)=>cell(inventory,`hotbar:${i}`));
+  if(take.mode==='shift')targets=playerTargets(inventory,true);
   else if(take.mode==='hotbar'){if(!Number.isInteger(take.index)||take.index!<0||take.index!>8)throw Error('invalid-hotbar-index');targets=[cell(inventory,`hotbar:${take.index!}`)];}
   else if(take.mode==='offhand')targets=[cell(inventory,'equipment:offhand')];
   else targets=[{/** Read the carried group. @return {Stack|null} Current cursor. */get stack(){return inventory.cursor;},/** Set the carried group. @param {Stack|null} s Whole-batch result. */set stack(s){inventory.cursor=s;},policy:{take:true,place:true}}];

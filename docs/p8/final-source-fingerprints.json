@@ -1,0 +1,20 @@
+{
+  "baseline": "c3ee1e6eb2ce6299414b09dd88e224ec62c3f148",
+  "normalization": "CRLF to LF",
+  "finalSourceSHA256": {
+    "app/web/src/domain/inventory.ts": "622640f36cdc6bd88e8160592ba76682a807c455352565bb820c914c5a59764a",
+    "app/web/src/domain/furnace.ts": "345e669b384b3fa10d96142e106b3d95287015052a71b2bc0ea03000edbe34db",
+    "app/web/src/domain/recipe-book.ts": "e2d9f12d7dc901904b1eadf8ff617cf1be518ab93b3172e26cc21ed1044cd6a3",
+    "app/web/src/domain/world-config.ts": "5d5ebdf66cd77c06fecbd05ce0c5baea37a52dbe91f09b83f2ec6875154c53c5",
+    "app/web/src/ui/inventory.ts": "87d44f2ea9ecded06429723454d13467f1c71df7e0dc458698050de744a6b2d0",
+    "app/web/src/ui/inventory-input.ts": "46cd07024a72b49555fe3f3e82c3eacd0d39f2159ad8e466fe7d1ce2b50b6805",
+    "app/web/src/ui/world-use.ts": "a4b212eefe13872c9179b0338df025641cf52e08df63dd9eb2bcdf98cdb18b54",
+    "app/web/src/render/scene.ts": "5353fc32dc3be8e4e39ff91927167d086a604a6b36a567f6d268c4e1c87877bb",
+    "app/web/src/celebration/birthday.ts": "fc6b784d1d9ebc588954cc0be3dd1aa0b61f66d864eb66a16546bbf529f85bbe",
+    "app/web/src/celebration/plan.ts": "fe81263073f763e0b15e735639a5b7cf122f793aa687072d43bc4d6a42890a75",
+    "app/web/src/celebration/firework-simulation.ts": "7d207d6e18d0d2b18108b1be377a489ce4bd0fa90687c4d3fae19b5e1c8be82a",
+    "app/web/src/celebration/firework-batch.ts": "3c53dfd33b9ff0718368c56e7fbe1e9fbc70537fa5e298c49abdc06225a6a75b"
+  },
+  "p2SimulationSHA256": "7d207d6e18d0d2b18108b1be377a489ce4bd0fa90687c4d3fae19b5e1c8be82a",
+  "nativeResourceIndex": "resources/minecraft/26.3/interaction-manifest.json"
+}

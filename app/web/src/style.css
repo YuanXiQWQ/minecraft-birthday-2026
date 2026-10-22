@@ -41,3 +41,13 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 /* Passive feedback never owns world input; narrow layouts reserve the wrapped save-status height. */
 .game .selection{pointer-events:none}
 @media(max-width:700px){.world-navigation button{min-width:75px}.game .hotbar{bottom:64px}.game .selection{bottom:132px}.game-layout .copy{max-height:none;overflow:visible}}
+
+/* Original icon tabs stay attached to their native container. */
+.inventory-tabs{display:flex;justify-content:flex-end;gap:0;min-width:0;margin:0;height:calc(30px * var(--gui-scale));padding-right:calc(6px * var(--gui-scale))}.inventory-tabs .inventory-tab{flex:none;width:calc(28px * var(--gui-scale));height:calc(32px * var(--gui-scale));padding:0;border:0;background:transparent;image-rendering:pixelated}.inventory-tab canvas{width:100%;height:100%;image-rendering:pixelated}.inventory-tab[aria-pressed=true]{transform:translateY(2px)}.catalogue-search{position:absolute;background:#373737;color:white;border:1px solid #aaa;box-sizing:border-box;padding:0 2px}.inventory-panel{flex:none}.inventory-hint[hidden]{display:none}
+
+.inventory-tabs[hidden]{display:none}
+
+.birthday-celebration{position:fixed;inset:0;z-index:12;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:20px 16px 105px;box-sizing:border-box}.birthday-message{max-width:min(880px,94vw);text-align:center;text-shadow:2px 2px #222;filter:drop-shadow(0 2px 3px #000)}.birthday-message h2{margin:0 0 12px}.birthday-message p{margin:6px auto}.birthday-controls{pointer-events:auto;display:flex;gap:10px}.birthday-controls button{max-width:90vw}.birthday-toast{position:absolute;right:12px;top:12px;width:320px;height:64px;image-rendering:pixelated}.birthday-celebration p[role=status]{max-width:90vw;background:#191919d9;padding:8px;font-size:14px}.birthday-celebration [hidden]{display:none}.birthday-celebration[data-playing=false]{padding-bottom:110px}.birthday-celebration:not([data-playing=true]) .birthday-controls button[hidden]{display:none}
+@media(max-width:700px){.birthday-celebration{padding-bottom:155px}.birthday-message{font-size:12px}.birthday-toast{width:240px;height:48px}.birthday-controls{flex-direction:column}.birthday-celebration[data-playing=false]{padding-bottom:160px}}
+
+.birthday-message{width:min(880px,94vw);flex:none}.birthday-controls button{width:280px;flex:none;padding:8px 14px}.birthday-message .pixel-text{width:100%}.birthday-message h2{font-size:24px}.birthday-message p{background:#142219bb;padding:5px 10px}.birthday-controls{flex:none}@media(max-width:700px){.birthday-message{width:94vw}.birthday-message p{padding:3px}.birthday-controls button{width:min(280px,90vw)}}

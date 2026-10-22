@@ -18,7 +18,7 @@ export const PLAYER_WINDOWS={personal:{x:26,y:8,width:49,height:70,scale:30},equ
  * @param {number} dy Logical mouse Y relative to preview center.
  * @return {object} Radian model-space rotations derived from InventoryScreen's 40/20 constants.
  */
-export function playerLook(dx:number,dy:number){const x=Math.atan(-dx/40),y=Math.atan(-dy/40),r=Math.PI/180;return{body:-x*20*r,head:-x*20*r,pitch:-y*20*r,tilt:y*20*r};}
+export function playerLook(dx:number,dy:number){const x=Math.atan(-dx/40),y=Math.atan(dy/40),r=Math.PI/180;return{body:-x*20*r,head:-x*20*r,pitch:y*20*r,tilt:y*20*r};}
 /** Build native Cube polygon UVs with deformation changing geometry only, never stretching atlas coordinates.
  * @param {number[]} box Native x,y,z,width,height,depth,u,v.
  * @param {string} texture Original atlas identity.

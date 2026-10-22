@@ -65,3 +65,31 @@ export function recipeGhost(recipe:Recipe,mode:BookMode,width:number,unlocked:st
  * @return {(Stack|null)[]} Actual input plan, never an acquisition or result grant.
  */
 export function fillRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],unlocked:string[],rules:Rules,max=false):(Stack|null)[]{const cells=recipeCells(recipe,mode,width);if(cells.length!==current.length)throw Error('recipe-menu-mismatch');const selected=cells.map((ingredient,i)=>{const old=current[i];if(!ingredient){if(old)throw Error('recipe-input-conflict');return null;}const choices=alternatives(ingredient,rules.itemTags).filter(id=>rules.items[id]&&unlocked.includes(id));if(!choices.length)throw Error('recipe-materials-missing');if(old){if(!choices.includes(old.id)||!sameStack(old,{id:old.id,count:1},rules))throw Error('recipe-input-conflict');return structuredClone(old);}return{id:choices[0],count:1};});const used=selected.filter((s):s is Stack=>!!s),limit=Math.min(64,...used.map(s=>rules.items[s.id].maxStack));if(!used.length)throw Error('recipe-input-empty');for(const s of used)s.count=max?Math.max(s.count,limit):s.count;if(mode==='crafting'&&!matchCrafting(recipe,selected,width,width,rules))throw Error('recipe-fill-mismatch');return selected;}
+
+/** Move actual player groups into compatible inputs atomically; missing materials never create quantities.
+ * @param {Recipe} recipe Native recipe.
+ * @param {BookMode} mode Menu capability.
+ * @param {number} width Input dimension.
+ * @param {(Stack|null)[]} current Current input groups.
+ * @param {(Stack|null)[]} owned Mutable transaction-local 27+9 inventory.
+ * @param {Rules} rules Native capacities and tags.
+ * @param {boolean} max Fill the greatest bounded set supported by quantities.
+ * @return {(Stack|null)[]} Finite filled inputs; owned is changed only on success.
+ */
+export function fillOwnedRecipe(recipe:Recipe,mode:BookMode,width:number,current:(Stack|null)[],owned:(Stack|null)[],rules:Rules,max=false):(Stack|null)[]{
+  const cells=recipeCells(recipe,mode,width),base=structuredClone(owned),inputs=structuredClone(current);if(cells.length!==inputs.length)throw Error('recipe-menu-mismatch');for(let i=0;i<cells.length;i++){const s=inputs[i],ingredient=cells[i];if(s&&(!ingredient||!alternatives(ingredient,rules.itemTags).includes(s.id)))throw Error('recipe-input-conflict');}
+  /** Reserve complete compatible identities with backtracking across overlapping ingredient tags.
+   * @param {number} index Next recipe cell.
+   * @param {number} amount Requested bounded fill level.
+   * @param {(Stack|null)[]} pool Remaining transaction-local player groups.
+   * @param {(Stack|null)[]} grid Proposed inputs.
+   * @return {{grid:(Stack|null)[];pool:(Stack|null)[]}|null} Complete allocation or no mutation.
+   */
+  function assign(index:number,amount:number,pool:(Stack|null)[],grid:(Stack|null)[]):{grid:(Stack|null)[];pool:(Stack|null)[]}|null{
+    if(index===cells.length)return{grid,pool};const ingredient=cells[index];if(!ingredient)return assign(index+1,amount,pool,grid);
+    const old=inputs[index],ids=alternatives(ingredient,rules.itemTags),choices:Stack[]=[];
+    if(old)choices.push(old);else for(const s of pool)if(s&&ids.includes(s.id)&&!choices.some(c=>sameStack(c,s,rules)))choices.push(s);
+    for(const chosen of choices){if(amount>rules.items[chosen.id].maxStack)continue;let needed=Math.max(0,amount-(old?.count??0));if(pool.reduce((n,s)=>n+(s&&sameStack(s,chosen,rules)?s.count:0),0)<needed)continue;const next=structuredClone(pool),filled=structuredClone(grid);for(let n=0;n<next.length&&needed;n++){const s=next[n];if(!s||!sameStack(s,chosen,rules))continue;const take=Math.min(needed,s.count);needed-=take;next[n]=s.count===take?null:{...s,count:s.count-take};}filled[index]={...chosen,count:Math.max(amount,old?.count??0)};const result=assign(index+1,amount,next,filled);if(result)return result;}return null;
+  }
+  let best:ReturnType<typeof assign>=null;for(let amount=1;amount<=64;amount++){const result=assign(0,amount,base,inputs);if(!result)break;best=result;if(!max)break;}if(!best)throw Error('recipe-materials-missing');owned.splice(0,owned.length,...best.pool);return best.grid;
+}

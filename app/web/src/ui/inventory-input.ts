@@ -4,7 +4,7 @@ import type {GameInventory,Slot} from './inventory.ts';import type {SlotRef} fro
  * @param {Slot|null} slot GUI cell.
  * @return {SlotRef|null} Finite identity or null.
  */
-export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='hopper'?`hopper:${slot.index!}`:slot?.kind==='machine'?`machine:${slot.index!}`:slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
+export function slotRef(slot:Slot|null):SlotRef|null{return slot?.kind==='backpack'?`backpack:${slot.index!}`:slot?.kind==='hopper'?`hopper:${slot.index!}`:slot?.kind==='machine'?`machine:${slot.index!}`:slot?.kind==='workbench'?`workbench:${slot.index!}`:slot?.kind==='crafting'?`crafting:${slot.index!}`:slot?.kind==='hotbar'?`hotbar:${slot.index!}`:slot?.kind==='equipment'?`equipment:${slot.equipment!}`:null;}
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */
 export class InventoryInput {
 gesture=new SlotGesture();outside=new OutsideClick();keys=new Set<string>();abort=new AbortController();start:Slot|null=null;quickMatch:Stack|null=null;
@@ -20,7 +20,7 @@ editing(target:EventTarget|null):boolean{return target instanceof HTMLElement&&!
 /** Route hotkeys according to screen and hovered slot; numeric GUI operations never select the world hotbar.
  * @param {KeyboardEvent} e Browser key event.
  */
-key(e:KeyboardEvent):void{const u=this.ui;if(u.blocked()||this.editing(e.target)||e.altKey||e.metaKey)return;if(e.ctrlKey&&e.code!=='KeyQ')return;if(u.carrierBusy()&&e.code!=='KeyE'&&e.code!=='Escape'){if(/^(Digit[1-9]|Key[FQCX])$/.test(e.code))e.preventDefault();this.cancel();return;}if(!e.ctrlKey&&(e.code==='KeyC'||e.code==='KeyX')){this.keys.add(e.code);return;}const n=/^Digit[1-9]$/.test(e.code)?Number(e.code.at(-1))-1:null;
+key(e:KeyboardEvent):void{const u=this.ui;if(u.blocked())return;if(e.code==='Escape'&&u.modal.open){e.preventDefault();e.stopPropagation();this.cancel();u.close();return;}if(this.editing(e.target)||e.altKey||e.metaKey)return;if(e.ctrlKey&&e.code!=='KeyQ')return;if(u.carrierBusy()&&e.code!=='KeyE'&&e.code!=='Escape'){if(/^(Digit[1-9]|Key[FQCX])$/.test(e.code))e.preventDefault();this.cancel();return;}if(!e.ctrlKey&&(e.code==='KeyC'||e.code==='KeyX')){this.keys.add(e.code);return;}const n=/^Digit[1-9]$/.test(e.code)?Number(e.code.at(-1))-1:null;
 if(n!==null&&(this.keys.has('KeyC')||this.keys.has('KeyX'))){e.preventDefault();if(!e.repeat)u.command({type:'preset',index:n,mode:this.keys.has('KeyC')?'save':'load'});return;}
 const intent=inventoryKey(e.code,false,e.ctrlKey);if(intent==='inventory'){e.preventDefault();if(!e.repeat){this.cancel();u.modal.open?u.close():u.open();}return;}if(intent==='escape'&&u.modal.open){e.preventDefault();e.stopPropagation();this.cancel();u.close();return;}
 if(n!==null&&!e.ctrlKey){e.preventDefault();if(u.modal.open){if(e.repeat)return;this.cancelGesture();const s=u.hover,ref=slotRef(s);if(s?.kind==='preview')u.takeResult({mode:'hotbar',index:n});else if(s?.kind==='source')u.copySource(s,'number',n);else if(ref)u.command({type:'swap',slot:ref,target:`hotbar:${n}`});}else u.command({type:'select',index:n});return;}
@@ -40,15 +40,15 @@ at(x:number,y:number):Slot|null{const b=document.elementFromPoint(x,y)?.closest<
  * @param {Slot|null} slot Hovered slot.
  * @return {SlotRef|null} Legal finite destination.
  */
-eligible(slot:Slot|null):SlotRef|null{const ref=slotRef(slot),u=this.ui,c=u.value.cursor;if(!ref||!c)return null;const s=cell(u.value,ref);if(capacity(s,c,u.rules)<=(s.stack?.count??0)||s.stack&&!sameStack(s.stack,c,u.rules))return null;const a=this.gesture.active;if(a&&a.button!==1&&!a.slots.has(ref)&&a.slots.size>=c.count)return null;return ref;}
+eligible(slot:Slot|null):SlotRef|null{const ref=slotRef(slot),u=this.ui,c=u.value.cursor;if(!ref||!c)return null;const s=cell(u.value,ref);if(capacity(s,c,u.rules)<=0||s.stack&&!sameStack(s.stack,c,u.rules))return null;const a=this.gesture.active;if(a&&a.button!==1&&!a.slots.has(ref)&&a.slots.size>=c.count)return null;return ref;}
 /** Reject presses during receipt ownership; otherwise stage until a matching release commits the gesture.
  * @param {PointerEvent} e Browser pointer press.
  */
-down(e:PointerEvent):void{if(this.ui.carrierBusy()){e.preventDefault();this.cancelGesture();return;}if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info')return;e.preventDefault();this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='preview'?'result':s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
+down(e:PointerEvent):void{if(this.ui.carrierBusy()){e.preventDefault();this.cancelGesture();return;}if(!this.ui.modal.open||!this.ui.writable||(e.button<0||e.button>2))return;const s=this.at(e.clientX,e.clientY);if(!s||s.kind==='preset-info')return;e.preventDefault();if(typeof HTMLElement!=='undefined'&&e.target instanceof HTMLElement)e.target.closest<HTMLElement>('.inventory-slot')?.focus({preventScroll:true});this.start=s;const ref=slotRef(s);if(!e.shiftKey)this.quickMatch=null;else if(!this.gesture.last)this.quickMatch=ref?structuredClone(cell(this.ui.value,ref).stack):null;this.gesture.begin(e.pointerId,e.button as 0|1|2,s.kind==='preview'?'result':s.kind==='source'?'source:'+s.item+':'+s.preset+':'+s.presetCell:ref!,e.clientX,e.clientY,e.shiftKey,this.eligible(s));this.ui.panel.setPointerCapture(e.pointerId);this.ui.hideTooltip();}
 /** Track unique eligible cells and cancel when leaving the interface bounds.
  * @param {PointerEvent} e Browser pointer move.
  */
-move(e:PointerEvent):void{if(this.ui.carrierBusy()){this.cancelGesture();return;}const a=this.gesture.active;if(a&&e.buttons!==(a.button===0?1:a.button===1?4:2)){this.cancel();return;}const r=this.ui.panel.getBoundingClientRect();this.gesture.move(e.pointerId,e.clientX,e.clientY,this.eligible(this.at(e.clientX,e.clientY)),e.clientX>=r.left&&e.clientX<r.right&&e.clientY>=r.top&&e.clientY<r.bottom);this.ui.modal.dataset.drag=String(!!this.gesture.active?.drag);}
+move(e:PointerEvent):void{if(this.ui.carrierBusy()){this.cancelGesture();return;}const a=this.gesture.active;if(a&&e.buttons!==(a.button===0?1:a.button===1?4:2)){this.cancel();return;}const r=this.ui.panel.getBoundingClientRect();this.gesture.move(e.pointerId,e.clientX,e.clientY,this.eligible(this.at(e.clientX,e.clientY)),e.clientX>=r.left&&e.clientX<r.right&&e.clientY>=r.top&&e.clientY<r.bottom);this.ui.modal.dataset.drag=String(!!this.gesture.active?.drag);if(a)this.ui.draw(false);}
 /** Commit only a valid staged gesture outside receipt ownership; canceled presses cannot activate after receipt release.
  * @param {PointerEvent} e Browser release.
  */
@@ -60,7 +60,7 @@ up(e:PointerEvent):void{if(this.ui.carrierBusy()){e.preventDefault();this.cancel
  */
 isOutside(x:number,y:number):boolean{const u=this.ui,areas=[u.modal.getBoundingClientRect()];if(!u.tooltip.hidden)areas.push(u.tooltip.getBoundingClientRect());return outsideMenu(x,y,areas);}
 /** Cancel uncommitted drag without discarding already committed carriers. */
-cancelGesture():void{const outsidePointer=this.outside.active?.pointer;this.outside.cancel();if(outsidePointer!==undefined&&this.ui.modal.hasPointerCapture(outsidePointer))this.ui.modal.releasePointerCapture(outsidePointer);const pointer=this.gesture.active?.pointer;this.gesture.cancel();this.start=null;if(pointer!==undefined&&this.ui.panel.hasPointerCapture(pointer))this.ui.panel.releasePointerCapture(pointer);this.ui.modal.dataset.drag='false';}
+cancelGesture():void{const outsidePointer=this.outside.active?.pointer;this.outside.cancel();if(outsidePointer!==undefined&&this.ui.modal.hasPointerCapture(outsidePointer))this.ui.modal.releasePointerCapture(outsidePointer);const pointer=this.gesture.active?.pointer;this.gesture.cancel();this.start=null;if(pointer!==undefined&&this.ui.panel.hasPointerCapture(pointer))this.ui.panel.releasePointerCapture(pointer);this.ui.modal.dataset.drag='false';if(this.ui.modal.open)this.ui.draw(false);}
 /** Cancel all GUI gesture/chord state on ownership, focus or lifecycle changes. */
 cancel():void{this.cancelGesture();this.quickMatch=null;this.keys.clear();}
 /** Release every listener and pending gesture when the UI is disposed. */

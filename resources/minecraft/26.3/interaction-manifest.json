@@ -1,0 +1,115 @@
+{
+  "classes": {
+    "net/minecraft/world/level/block/Blocks.class": "2208668d8b07b2de44870cd557bb0e01625d451f55cac20c6b299f54f20638b7",
+    "net/minecraft/world/level/block/state/BlockBehaviour.class": "c407675a1f665d14f73103c2896b7f4c109890ce409fda662d77824fd991747d",
+    "net/minecraft/world/entity/player/Player.class": "28ad0c7756a5cbdfde6c22772f585da9177d6f9eb418ea5ff2dd85657d81dfb2",
+    "net/minecraft/client/gui/screens/inventory/InventoryScreen.class": "4ee77bb0b79ed8bdd7705b398aee0379c99f36785b577f5b27795c63b9643966"
+  },
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "inputs": {
+    "assets/minecraft/textures/block/destroy_stage_0.png": "a9646f290314ddff5edf4e8cfcaeabf5cd3679f35256547f9ab606139fd66cf7",
+    "assets/minecraft/textures/block/destroy_stage_1.png": "888c47b9ddfa60a35d3a8323829aa2db75ae19d2e04b82951510b755a5f7b6db",
+    "assets/minecraft/textures/block/destroy_stage_2.png": "b4d1779c587523960817b862611bd13375415892a739751cd518b82574d108b4",
+    "assets/minecraft/textures/block/destroy_stage_3.png": "a4ff05650ad917dd875ba2b6fa0b3fd4ed4a1773ecac87ef241ec0d3c4ff2cd1",
+    "assets/minecraft/textures/block/destroy_stage_4.png": "ba6abd3eef8474fb5b769f7a26e400769d7a806048c9b95e7bea91e7de47ef1f",
+    "assets/minecraft/textures/block/destroy_stage_5.png": "633e558c9bb13da4ab71df667bb4533c484f9cc5c166164e04292502ab2351a9",
+    "assets/minecraft/textures/block/destroy_stage_6.png": "e2d6371698dff727db1f06f9176033c3f6774671f4c87718c05ac38910b12e21",
+    "assets/minecraft/textures/block/destroy_stage_7.png": "6e5ccf47bd4534bca0ef360bd93330e354bfc3f7aaf1d6c498cd9f30c21bd8a5",
+    "assets/minecraft/textures/block/destroy_stage_8.png": "b3ca3a7f5c75c242bf3adbe0f63289e6ab28dd2f6b8f7d6f25f3da39b10eb4aa",
+    "assets/minecraft/textures/block/destroy_stage_9.png": "37aff035cb4ba9d7666b4d8b3270caa5427d0d15ff6850d3bd6c105246bd0638",
+    "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_selected_1.png": "a42984c5b9fa520a59f15002f070d72e3812575c5e491ee537e39d9d8eb124b4",
+    "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_selected_7.png": "f7804e815df99b3e91617970b326c041fa753542da1b36b8f05f73d4bdf4e5f3",
+    "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_unselected_1.png": "74a911839ae62153cd636b5e400a852424eec744132dfc7bf556387e6fd75644",
+    "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_unselected_7.png": "74a911839ae62153cd636b5e400a852424eec744132dfc7bf556387e6fd75644",
+    "assets/minecraft/textures/gui/sprites/toast/advancement.png": "15a959d338d8ce98c1381f95d34f7143377669bcadae1198900bea88144d6634",
+    "assets/minecraft/lang/zh_cn.json": "1533a83d5341f7484da695e530dc739688e6b79325561e0f92d0509d54acd245"
+  },
+  "entries": [
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_0.png",
+      "size": 89,
+      "sha256": "a9646f290314ddff5edf4e8cfcaeabf5cd3679f35256547f9ab606139fd66cf7"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_1.png",
+      "size": 102,
+      "sha256": "888c47b9ddfa60a35d3a8323829aa2db75ae19d2e04b82951510b755a5f7b6db"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_2.png",
+      "size": 111,
+      "sha256": "b4d1779c587523960817b862611bd13375415892a739751cd518b82574d108b4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_3.png",
+      "size": 128,
+      "sha256": "a4ff05650ad917dd875ba2b6fa0b3fd4ed4a1773ecac87ef241ec0d3c4ff2cd1"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_4.png",
+      "size": 139,
+      "sha256": "ba6abd3eef8474fb5b769f7a26e400769d7a806048c9b95e7bea91e7de47ef1f"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_5.png",
+      "size": 153,
+      "sha256": "633e558c9bb13da4ab71df667bb4533c484f9cc5c166164e04292502ab2351a9"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_6.png",
+      "size": 160,
+      "sha256": "e2d6371698dff727db1f06f9176033c3f6774671f4c87718c05ac38910b12e21"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_7.png",
+      "size": 171,
+      "sha256": "6e5ccf47bd4534bca0ef360bd93330e354bfc3f7aaf1d6c498cd9f30c21bd8a5"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_8.png",
+      "size": 179,
+      "sha256": "b3ca3a7f5c75c242bf3adbe0f63289e6ab28dd2f6b8f7d6f25f3da39b10eb4aa"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/destroy_stage_9.png",
+      "size": 180,
+      "sha256": "37aff035cb4ba9d7666b4d8b3270caa5427d0d15ff6850d3bd6c105246bd0638"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_selected_1.png",
+      "size": 114,
+      "sha256": "a42984c5b9fa520a59f15002f070d72e3812575c5e491ee537e39d9d8eb124b4"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_selected_7.png",
+      "size": 114,
+      "sha256": "f7804e815df99b3e91617970b326c041fa753542da1b36b8f05f73d4bdf4e5f3"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_unselected_1.png",
+      "size": 106,
+      "sha256": "74a911839ae62153cd636b5e400a852424eec744132dfc7bf556387e6fd75644"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_unselected_7.png",
+      "size": 106,
+      "sha256": "74a911839ae62153cd636b5e400a852424eec744132dfc7bf556387e6fd75644"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/toast/advancement.png",
+      "size": 157,
+      "sha256": "15a959d338d8ce98c1381f95d34f7143377669bcadae1198900bea88144d6634"
+    },
+    {
+      "entry": "assets/minecraft/lang/zh_cn.json",
+      "size": 562116,
+      "sha256": "1533a83d5341f7484da695e530dc739688e6b79325561e0f92d0509d54acd245"
+    }
+  ],
+  "language": {
+    "index": "34",
+    "sha1": "561ed7800004b882b8eeb032ffbe2bf03895bb44",
+    "aliasesSha256": "560197a09f96591b5b7f9e68d40f5b03e8b08e7e1bbdfbd8fd6ca07f44e43dc5"
+  }
+}

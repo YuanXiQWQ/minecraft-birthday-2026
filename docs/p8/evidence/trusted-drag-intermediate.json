@@ -1,0 +1,256 @@
+{
+  "trusted": true,
+  "at": 23265,
+  "preview": {
+    "backpack": [
+      {
+        "id": "minecraft:oak_log",
+        "count": 2
+      },
+      {
+        "id": "minecraft:stick",
+        "count": 2
+      },
+      {
+        "id": "minecraft:oak_planks",
+        "count": 59
+      },
+      {
+        "id": "minecraft:milk_bucket",
+        "count": 1
+      },
+      {
+        "id": "minecraft:cobblestone",
+        "count": 64
+      },
+      {
+        "id": "minecraft:stick",
+        "count": 64
+      },
+      {
+        "id": "minecraft:chest",
+        "count": 1
+      },
+      {
+        "id": "minecraft:oak_log",
+        "count": 20
+      },
+      {
+        "id": "minecraft:oak_log",
+        "count": 20
+      },
+      {
+        "id": "minecraft:milk_bucket",
+        "count": 1
+      },
+      null,
+      {
+        "id": "minecraft:iron_ingot",
+        "count": 60
+      },
+      {
+        "id": "minecraft:wheat",
+        "count": 64
+      },
+      {
+        "id": "minecraft:sugar_cane",
+        "count": 64
+      },
+      {
+        "id": "minecraft:egg",
+        "count": 16
+      },
+      {
+        "id": "minecraft:milk_bucket",
+        "count": 1
+      },
+      {
+        "id": "minecraft:sugar",
+        "count": 2
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      {
+        "id": "minecraft:oak_log",
+        "count": 21
+      },
+      {
+        "id": "minecraft:oak_log",
+        "count": 64
+      },
+      {
+        "id": "minecraft:oak_log",
+        "count": 64
+      },
+      {
+        "id": "minecraft:oak_log",
+        "count": 1
+      }
+    ],
+    "selected": 2,
+    "hotbar": [
+      {
+        "id": "minecraft:crafting_table",
+        "count": 1
+      },
+      {
+        "id": "minecraft:wooden_pickaxe",
+        "count": 1
+      },
+      {
+        "id": "minecraft:stone_pickaxe",
+        "count": 1
+      },
+      {
+        "id": "minecraft:furnace",
+        "count": 1
+      },
+      null,
+      {
+        "id": "minecraft:wheat_seeds",
+        "count": 64
+      },
+      null,
+      {
+        "id": "minecraft:hopper",
+        "count": 4
+      },
+      null
+    ],
+    "equipment": {
+      "head": {
+        "id": "minecraft:iron_helmet",
+        "count": 1
+      },
+      "chest": null,
+      "legs": null,
+      "feet": null,
+      "offhand": {
+        "id": "minecraft:bucket",
+        "count": 1
+      }
+    },
+    "presets": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "cursor": {
+      "id": "minecraft:oak_log",
+      "count": 21
+    },
+    "crafting": [
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "committedBackpack": [
+    {
+      "id": "minecraft:oak_log",
+      "count": 2
+    },
+    {
+      "id": "minecraft:stick",
+      "count": 2
+    },
+    {
+      "id": "minecraft:oak_planks",
+      "count": 59
+    },
+    {
+      "id": "minecraft:milk_bucket",
+      "count": 1
+    },
+    {
+      "id": "minecraft:cobblestone",
+      "count": 64
+    },
+    {
+      "id": "minecraft:stick",
+      "count": 64
+    },
+    {
+      "id": "minecraft:chest",
+      "count": 1
+    },
+    {
+      "id": "minecraft:oak_log",
+      "count": 20
+    },
+    {
+      "id": "minecraft:oak_log",
+      "count": 20
+    },
+    {
+      "id": "minecraft:milk_bucket",
+      "count": 1
+    },
+    null,
+    {
+      "id": "minecraft:iron_ingot",
+      "count": 60
+    },
+    {
+      "id": "minecraft:wheat",
+      "count": 64
+    },
+    {
+      "id": "minecraft:sugar_cane",
+      "count": 64
+    },
+    {
+      "id": "minecraft:egg",
+      "count": 16
+    },
+    {
+      "id": "minecraft:milk_bucket",
+      "count": 1
+    },
+    {
+      "id": "minecraft:sugar",
+      "count": 2
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      "id": "minecraft:oak_log",
+      "count": 21
+    },
+    {
+      "id": "minecraft:oak_log",
+      "count": 21
+    },
+    {
+      "id": "minecraft:oak_log",
+      "count": 64
+    },
+    {
+      "id": "minecraft:oak_log",
+      "count": 1
+    }
+  ],
+  "viewport": [
+    1280,
+    720
+  ],
+  "canvasBacking": [
+    704,
+    664
+  ]
+}
