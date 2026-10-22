@@ -1,0 +1,14 @@
+/** Small interaction-event adapter uses verified native samples after an actual user gesture. */
+import{RESOURCE_BASE}from'./resources.ts';import type{Settings}from'../domain/types.ts';
+/** Own bounded decoded buffers and cancellable voices; the existing simulation remains silent in background. */
+export class WorldAudio{
+ context:AudioContext|null=null;buffers=new Map<string,AudioBuffer>();voices=new Set<AudioBufferSourceNode>();disposed=false;
+ /** Retain verified event/hash documents and current preference projection. @param {Map<string,any>} documents Native manifest documents. @param {Function} settings Latest committed preferences. */
+ constructor(public documents:Map<string,any>,public settings:()=>Settings){}
+ /** Activate only in a trusted interaction, with visible browser capability failures left nonfatal. */
+ activate():void{if(this.disposed)return;try{this.context??=new AudioContext();void this.context.resume().catch(()=>{});}catch{}}
+ /** Decode one native event variant with integrity verification and bounded node ownership. @param {string} id Native sound event identity. */
+ async play(id:string):Promise<void>{const c=this.context,settings=this.settings();if(!c||this.disposed||document.hidden||settings.muted||!settings.volume)return;const definition=this.documents.get('assets/minecraft/world-sounds.json')?.[id],raw=definition?.sounds?.[0];if(!raw)return;const name=typeof raw==='string'?raw:raw.name,path='assets/minecraft/sounds/'+name.replace('minecraft:','')+'.ogg';try{let buffer=this.buffers.get(path);if(!buffer){const manifest=await(await fetch(RESOURCE_BASE+'world-manifest.json')).json(),entry=manifest.entries.find((e:any)=>e.entry===path);if(!entry)throw Error('sound-missing');const response=await fetch(RESOURCE_BASE+path);if(!response.ok)throw Error('sound-missing');const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');if(hash!==entry.sha256)throw Error('sound-integrity');buffer=await c.decodeAudioData(bytes);this.buffers.set(path,buffer);}if(this.disposed||document.hidden)return;const current=this.settings();if(current.muted)return;const source=c.createBufferSource(),gain=c.createGain();source.buffer=buffer;source.playbackRate.value=typeof raw==='object'?raw.pitch??1:1;gain.gain.value=current.volume*(typeof raw==='object'?raw.volume??1:1);source.connect(gain).connect(c.destination);this.voices.add(source);source.onended=()=>{this.voices.delete(source);source.disconnect();gain.disconnect();};source.start();}catch{/* Sound failure never changes an acquisition transaction. */}}
+ /** Cancel voices and close the bounded audio context. */
+ dispose():void{this.disposed=true;for(const v of this.voices)v.stop();this.voices.clear();this.buffers.clear();void this.context?.close();}
+}

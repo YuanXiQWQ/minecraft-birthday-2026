@@ -1,0 +1,100 @@
+(node:40760) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ new world has no granted items; native log does not require axe and decorative leaves are rejected (20.1113ms)
+✔ wrong tool destroys iron without granting it; return refills natural nodes without clearing durable layout (17.4997ms)
+✔ stone and coal require actual selected tool rather than best unlocked tool (8.2061ms)
+✔ shared visit identity rejects double collection and obsolete visit; refresh does not refill (6.9632ms)
+✔ failed harvest write preserves resource and unlock; refresh permits retry once (4.4669ms)
+✔ grass chance uses shared reproducible native rolls and cane/egg profile adds no source kinds (55.5701ms)
+✔ adult cow requires held bucket; unlocked bucket elsewhere is insufficient; milk never removes cow (5.4837ms)
+✔ approved crop stages use 240 shared active ticks, persist and survive scene re-entry without offline compensation (11.6368ms)
+✔ immature harvest returns only seed, does not grant wheat; same plot supports replant; duplicate crop rejected (8.4619ms)
+✔ natural refill never overwrites persistent device contents or crops (7.7158ms)
+✔ native hopper push moves one finite item, waits eight ticks and never duplicates permanent sources (10.1738ms)
+✔ hopper top input and side fuel use actual ports and finite reference movement (8.5348ms)
+✔ processing output remains locked until real bottom extraction; then native provenance discovers once (49.4018ms)
+✔ full target, incompatible components and empty source conserve finite totals (56.5921ms)
+✔ cycles and competing sources remain bounded and conserve finite contents (182.0592ms)
+✔ large and single tick results are identical, including all-scene networks and crop growth (200.7231ms)
+✔ production port intent cannot teleport between distant IDs (3.3744ms)
+✔ rotation breaks connection; dismantling and same-cell recreation never inherit content or cooldown (6.9454ms)
+✔ natural/crop/network timers do not invalidate open reset confirmation; manual actions still do (54.2017ms)
+✖ P6 book save migrates without clearing existing carriers, devices, discovery, settings or cake (8.4298ms)
+✔ network write failure rolls back both endpoints and unlock, then retry commits once (9.9973ms)
+✔ authored build volume excludes every natural and crop lane; upper cells require actual support (5.1785ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 21
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1187.7571
+
+✖ failing tests:
+
+test at app\tests\world.test.ts:41:1
+✖ P6 book save migrates without clearing existing carriers, devices, discovery, settings or cake (8.4298ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      cakePlacement: {
+        scene: 'home',
+        table: 'birthday-table'
+      },
+  ...
+            'minecraft:crafting_table',
+  +         'minecraft:coal_block',
+  +         'minecraft:oak_planks',
+  +         'minecraft:oak_wood',
+  +         'minecraft:raw_iron_block',
+  +         'minecraft:wooden_spear',
+  +         'minecraft:wooden_sword',
+  +         'minecraft:campfire',
+  +         'minecraft:ladder',
+  +         'minecraft:smoker',
+  +         'minecraft:charcoal',
+  +         'minecraft:iron_ingot_from_blasting_raw_iron',
+  +         'minecraft:iron_ingot_from_smelting_raw_iron',
+  +         'minecraft:wooden_axe',
+  +         'minecraft:wooden_hoe',
+  +         'minecraft:wooden_pickaxe',
+  +         'minecraft:wooden_shovel'
+          ],
+  +       unseen: [
+  +         'minecraft:coal_block',
+  +         'minecraft:oak_planks',
+  +         'minecraft:oak_wood',
+  +         'minecraft:raw_iron_block',
+  +         'minecraft:wooden_spear',
+  +         'minecraft:wooden_sword',
+  +         'minecraft:campfire',
+  +         'minecraft:ladder',
+  +         'minecraft:smoker',
+  +         'minecraft:charcoal',
+  +         'minecraft:iron_ingot_from_blasting_raw_iron',
+  +         'minecraft:iron_ingot_from_smelting_raw_iron',
+  +         'minecraft:wooden_axe',
+  +         'minecraft:wooden_hoe',
+  +         'minecraft:wooden_pickaxe',
+  +         'minecraft:wooden_shovel'
+  +       ],
+  -       unseen: [],
+          views: {
+            blast_furnace: {
+              filter: false,
+              open: false
+            },
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\world.test.ts:41:877)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { unlocked: [ 'minecraft:hopper', 'minecraft:furnace', 'minecraft:oak_log', 'minecraft:stick', 'minecraft:coal', 'minecraft:raw_iron', 'minecraft:cake' ], scene: 'plains', scenes: { plains: [Object], cave: [Object], farm: [Object], home: [Object] }, player: { version: 1, data: [Object] }, recipeBook: { version: 1, data: [Object] }, cakePlacement: { scene: 'home', table: 'birthday-table' }, world: { version: 1, tick: 0, manual: 0, visits: [Object], hoppers: {} } },
+    expected: { world: { version: 1, tick: 0, manual: 0, visits: [Object], hoppers: {} }, unlocked: [ 'minecraft:hopper', 'minecraft:furnace', 'minecraft:oak_log', 'minecraft:stick', 'minecraft:coal', 'minecraft:raw_iron', 'minecraft:cake' ], scene: 'plains', scenes: { plains: [Object], cave: [Object], farm: [Object], home: [Object] }, player: { version: 1, data: [Object] }, recipeBook: { version: 1, data: [Object] }, cakePlacement: { scene: 'home', table: 'birthday-table' } },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -12,7 +12,7 @@
   "home.tableLabel": "A real three-dimensional wooden birthday table",
   "game.eyebrow": "Welcome to {sender}'s farm",
   "game.title": "A little world to make your own",
-  "game.note": "Your progress will stay with you. More of the farm is on its way.",
+  "game.note": "Explore, gather and make something sweet.",
   "game.back": "Back to your birthday",
   "game.sceneLabel": "First-person three-dimensional scene; use the mouse pointer to select visible objects",
   "table.selected": "A table, waiting for something sweet.",
@@ -126,5 +126,16 @@
   "book.inputConflict": "Clear incompatible inputs before filling this recipe. Existing groups were kept.",
   "book.failed": "The recipe inputs could not be filled. No ingredients or products were granted.",
   "book.newTitle": "New Recipes Unlocked!",
-  "book.newDescription": "Check your recipe book"
+  "book.newDescription": "Check your recipe book",
+  "scene.plains": "Plains",
+  "scene.cave": "Cave",
+  "scene.farm": "Farm",
+  "scene.home": "Home",
+  "game.worldHint": "Left: harvest. Right: use / place. Right drag: look. Alt + right: attach to device. Shift + right: dismantle. R: rotate. E: items.",
+  "game.harvested": "Resource harvested. New items appear in your catalogue (E).",
+  "game.planted": "Seeds planted. Wheat grows in 12 active seconds.",
+  "game.rotated": "Device rotated.",
+  "game.invalidPosition": "Choose a free, supported cell in the building area.",
+  "game.actionFailed": "That action could not be saved. Check your held item and try again.",
+  "game.acquired": "First acquired: {item}"
 }

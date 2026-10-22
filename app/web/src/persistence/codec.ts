@@ -1,10 +1,11 @@
 /** Versioned, checksum-protected durable values; failed reads retain their original bytes. */
+import {emptyWorld} from '../domain/world-state.ts';
 import {ensure,freeze,validateState} from '../domain/state.ts';
 import type {State} from '../domain/types.ts';
 import {emptyHopper} from '../domain/hopper.ts';import {initialBook} from '../domain/recipe-book.ts';
 import {emptyFurnace} from '../domain/furnace.ts';
 import {emptyInventory,layout} from '../domain/inventory.ts';
-export interface Envelope {format:1;contentVersion:'p6-book-1';vanillaVersion:'26.3';generation:string;revision:number;state:State;checksum:string}
+export interface Envelope {format:1;contentVersion:'p7-world-1';vanillaVersion:'26.3';generation:string;revision:number;state:State;checksum:string}
 export interface Decoded {envelope:Envelope;migrated:boolean}
 /** Canonical encoding includes every own field in a stable order; arrays keep semantic acquisition order.
  * @param {unknown} value Plain JSON value.
@@ -27,7 +28,7 @@ export async function checksum(value:unknown):Promise<string>{return Array.from(
  * @param {number} revision Revision within this epoch.
  * @return {Promise<Envelope>} Valid checksummed value.
  */
-export async function seal(state:State,generation:string,revision:number):Promise<Envelope>{validateState(state);ensure(/^[a-zA-Z0-9_-]{1,80}$/.test(generation)&&Number.isSafeInteger(revision)&&revision>=0);const body={format:1 as const,contentVersion:'p6-book-1' as const,vanillaVersion:'26.3' as const,generation,revision,state:structuredClone(state)};return freeze({...body,checksum:await checksum(body)});}
+export async function seal(state:State,generation:string,revision:number):Promise<Envelope>{validateState(state);ensure(/^[a-zA-Z0-9_-]{1,80}$/.test(generation)&&Number.isSafeInteger(revision)&&revision>=0);const body={format:1 as const,contentVersion:'p7-world-1' as const,vanillaVersion:'26.3' as const,generation,revision,state:structuredClone(state)};return freeze({...body,checksum:await checksum(body)});}
 /** Decode checksummed versions; P3 player, native workbench/furnace contents, hopper reservations and D06 discovery migrate without rewriting storage.
  * @param {string} raw Stored original bytes.
  * @return {Promise<Decoded>} Valid snapshot and explicit migration status.
@@ -37,9 +38,9 @@ export async function decode(raw:string):Promise<Decoded>{
   ensure(value&&typeof value==='object'&&!Array.isArray(value),'corrupt-save');ensure(Number.isInteger(value.format),'corrupt-save');ensure(value.format<=1,'future-save');ensure(value.format>=0,'unsupported-save');
   ensure(Object.keys(value).sort().join('|')==='checksum|contentVersion|format|generation|revision|state|vanillaVersion','unsupported-save');
   const {checksum:stored,...body}=value;ensure(typeof stored==='string'&&stored===await checksum(body),'checksum-mismatch');
-  ensure(value.vanillaVersion==='26.3'&&(value.format===0?value.contentVersion==='p3-development-0':['p3-foundation-1','p5-layout-1','p6-crafting-1','p6-processing-1','p6-book-1'].includes(value.contentVersion)),'unsupported-content');
-  const migrated=value.contentVersion!=='p6-book-1',oldPlayer=!['p5-layout-1','p6-crafting-1','p6-processing-1','p6-book-1'].includes(value.contentVersion);
-  try{if(oldPlayer){ensure(identityReserved(value.state?.progress?.player),'pending-contract-version');value.state.progress.player={version:1,data:layout(emptyInventory())};}if(migrated){ensure(identityReserved(value.state?.progress?.recipeBook),'pending-contract-version');value.state.progress.recipeBook=initialBook(value.state.progress.unlocked);validateState(value.state);for(const scene of Object.values(value.state.progress.scenes) as State['progress']['scenes'][keyof State['progress']['scenes']][])for(const station of scene.stations){if(!['p6-crafting-1','p6-processing-1'].includes(value.contentVersion)){ensure(identityReserved(station.contents),'pending-contract-version');if(station.kind==='crafting_table')station.contents={version:1,data:{grid:Array(9).fill(null)}};}if((station.kind==='furnace'||station.kind==='blast_furnace')&&value.contentVersion!=='p6-processing-1'){ensure(identityReserved(station.contents),'pending-contract-version');station.contents=emptyFurnace();}if(station.kind==='hopper'){ensure(identityReserved(station.contents),'pending-contract-version');station.contents=emptyHopper();}}}validateState(value.state);const envelope=await seal(value.state,value.generation,value.revision);return {envelope,migrated};}catch(error){throw new Error(migrated?'migration-failed':error instanceof Error?error.message:'invalid-save');}
+  ensure(value.vanillaVersion==='26.3'&&(value.format===0?value.contentVersion==='p3-development-0':['p3-foundation-1','p5-layout-1','p6-crafting-1','p6-processing-1','p6-book-1','p7-world-1'].includes(value.contentVersion)),'unsupported-content');
+  const migrated=value.contentVersion!=='p7-world-1',oldPlayer=!['p5-layout-1','p6-crafting-1','p6-processing-1','p6-book-1','p7-world-1'].includes(value.contentVersion);
+  try{if(oldPlayer){ensure(identityReserved(value.state?.progress?.player),'pending-contract-version');value.state.progress.player={version:1,data:layout(emptyInventory())};}if(migrated){if(!value.state.progress.world)value.state.progress.world=emptyWorld();if(value.contentVersion!=='p6-book-1'){ensure(identityReserved(value.state?.progress?.recipeBook),'pending-contract-version');value.state.progress.recipeBook=initialBook(value.state.progress.unlocked);}validateState(value.state);for(const scene of Object.values(value.state.progress.scenes) as State['progress']['scenes'][keyof State['progress']['scenes']][])for(const station of scene.stations){if(!['p6-crafting-1','p6-processing-1','p6-book-1'].includes(value.contentVersion)){ensure(identityReserved(station.contents),'pending-contract-version');if(station.kind==='crafting_table')station.contents={version:1,data:{grid:Array(9).fill(null)}};}if((station.kind==='furnace'||station.kind==='blast_furnace')&&!['p6-processing-1','p6-book-1'].includes(value.contentVersion)){ensure(identityReserved(station.contents),'pending-contract-version');station.contents=emptyFurnace();}if(station.kind==='hopper'&&value.contentVersion!=='p6-book-1'){ensure(identityReserved(station.contents),'pending-contract-version');station.contents=emptyHopper();}}}validateState(value.state);const envelope=await seal(value.state,value.generation,value.revision);return {envelope,migrated};}catch(error){throw new Error(migrated?'migration-failed':error instanceof Error?error.message:'invalid-save');}
 }
 /** Recognize only the unpopulated P3 player contract; arbitrary old payloads cannot be silently dropped.
  * @param {unknown} value Old player payload.
@@ -50,4 +51,4 @@ function identityReserved(value:unknown):boolean{return !!value&&typeof value===
  * @param {Envelope} envelope Visible valid snapshot.
  * @return {string} Confirmation token.
  */
-export function token(envelope:Envelope):string{const p=envelope.state.progress,scenes=Object.fromEntries(Object.entries(p.scenes).map(([id,scene])=>[id,{...scene,stations:scene.stations.map(station=>({...station,contents:station.contents.version===2?{version:2,data:{input:station.contents.data.input,fuel:station.contents.data.fuel}}:station.contents}))}]));return canonical({format:envelope.format,contentVersion:envelope.contentVersion,vanillaVersion:envelope.vanillaVersion,generation:envelope.generation,progress:{...p,scenes}});}
+export function token(envelope:Envelope):string{return canonical({format:envelope.format,contentVersion:envelope.contentVersion,vanillaVersion:envelope.vanillaVersion,generation:envelope.generation,manual:envelope.state.progress.world.manual});}

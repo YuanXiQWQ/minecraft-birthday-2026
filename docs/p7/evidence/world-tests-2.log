@@ -1,0 +1,32 @@
+(node:33204) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ new world has no granted items; native log does not require axe and decorative leaves are rejected (21.6139ms)
+✔ wrong tool destroys iron without granting it; return refills natural nodes without clearing durable layout (17.7918ms)
+✔ stone and coal require actual selected tool rather than best unlocked tool (8.7145ms)
+✔ shared visit identity rejects double collection and obsolete visit; refresh does not refill (7.3033ms)
+✔ failed harvest write preserves resource and unlock; refresh permits retry once (6.8164ms)
+✔ grass chance uses shared reproducible native rolls and cane/egg profile adds no source kinds (65.7374ms)
+✔ adult cow requires held bucket; unlocked bucket elsewhere is insufficient; milk never removes cow (7.0679ms)
+✔ approved crop stages use 240 shared active ticks, persist and survive scene re-entry without offline compensation (17.6904ms)
+✔ immature harvest returns only seed, does not grant wheat; same plot supports replant; duplicate crop rejected (10.4576ms)
+✔ natural refill never overwrites persistent device contents or crops (7.3077ms)
+✔ native hopper push moves one finite item, waits eight ticks and never duplicates permanent sources (10.3928ms)
+✔ hopper top input and side fuel use actual ports and finite reference movement (11.6269ms)
+✔ processing output remains locked until real bottom extraction; then native provenance discovers once (60.3229ms)
+✔ full target, incompatible components and empty source conserve finite totals (73.1285ms)
+✔ cycles and competing sources remain bounded and conserve finite contents (246.1373ms)
+✔ large and single tick results are identical, including all-scene networks and crop growth (210.6385ms)
+✔ production port intent cannot teleport between distant IDs (4.3783ms)
+✔ rotation breaks connection; dismantling and same-cell recreation never inherit content or cooldown (8.3383ms)
+✔ natural/crop/network timers do not invalidate open reset confirmation; manual actions still do (59.1063ms)
+✔ P6 book save migrates without clearing existing carriers, devices, discovery, settings or cake (8.3436ms)
+✔ network write failure rolls back both endpoints and unlock, then retry commits once (6.3684ms)
+✔ authored build volume excludes every natural and crop lane; upper cells require actual support (7.4361ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1331.4142

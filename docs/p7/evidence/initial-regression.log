@@ -1,0 +1,1131 @@
+
+> minecraft-birthday-2026@0.1.0 test
+> node --experimental-transform-types --test tests/*.test.ts
+
+(node:24128) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ hopper five native slots preserve split/merge/drag quantities, caps, components and reject locked sources (8.0593ms)
+✔ hopper Shift directory copies one bounded reference; finite Shift routes conserve source and native reverse hotbar order (1.6992ms)
+✖ two hopper instances retain independent contents on refresh and cross-session editing/removal/reset reject stale owners (11.5591ms)
+✖ finite furnace output transfer acquires only on a successful atomic target insertion; repeat does not duplicate (5.9257ms)
+✖ finite port transaction rollback and acquisition gate: wrong-face (2.804ms)
+✖ finite port transaction rollback and acquisition gate: full (2.1661ms)
+✖ finite port transaction rollback and acquisition gate: components (1.7576ms)
+✖ finite port transaction rollback and acquisition gate: write (2.0869ms)
+✖ finite port transaction rollback and acquisition gate: removed (1.386ms)
+✖ finite port transaction rollback and acquisition gate: competition (2.7685ms)
+✖ hopper insertion reaches furnace top even for nonrecipe, fuel side, and bottom extraction rejects ordinary fuel (2.018ms)
+✖ reset first under the shared lock fences queued old finite transfer without reviving instances (4.8085ms)
+✔ D06 raw egg/log/stick predicates discover early, never grant products, and special repair stays outside book (1.5107ms)
+✔ D06 ten distinct acquisitions map native occupied slots; water event is not fabricated (0.9867ms)
+✔ every one of 111 reachable ordinary recipes has exact original discovery evidence and a legal bounded full fill (15.307ms)
+✔ menu capability, repeat ingredients, native tag alternatives, component conflict and ghost isolation (1.1891ms)
+✖ formal personal fill leaves nonempty cursor intact, previews do not acquire, and fill failures preserve exact bytes (3.0547ms)
+✖ hand-crafting an undiscovered boat awards provenance only after actual receipt; failed write and refresh never replay discovery (2.725ms)
+✖ p6-processing migration preserves nonempty furnace, workbench, carriers/settings/cake; initializes hopper and silent discovery (2.6823ms)
+✖ book settings/unseen persist, processing keeps confirmation stable, reset clears new fields while preserving preferences (2.3054ms)
+✔ normal resource profile includes original hopper/book backgrounds, sprites, native tab symbols and hash-verified bytes (1704.5261ms)
+✖ furnace side fuel and partial hopper transfers conserve finite groups under real save commands (1.7688ms)
+✖ blast_furnace side fuel and partial hopper transfers conserve finite groups under real save commands (1.0031ms)
+(node:17928) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ formal recipe fill owns the unified gate and preserves nonempty cursor: false (28.928ms)
+✖ formal recipe fill owns the unified gate and preserves nonempty cursor: true (6.4809ms)
+✖ personal fill receipt after Done cannot revive cursor or four inputs (5.5013ms)
+✖ personal fill receipt after KeyE cannot revive cursor or four inputs (3.7838ms)
+✖ personal fill receipt after Escape cannot revive cursor or four inputs (3.2441ms)
+✖ workbench close preserves committed filled inputs while fencing its delayed cursor receipt (3.152ms)
+✖ ordinary result receipt refuses recipe-book fill through the same gate (2.9166ms)
+✖ fill reset/dismantling fences late receipts and permits fresh menu work (5.7067ms)
+✖ fill failure is atomic, frees its gate, and allows retry without overwriting incompatible inputs (3.9593ms)
+✖ native ghost drawing never paints over a real finite input or a genuine matched output (3.5984ms)
+✖ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (5.7423ms)
+✖ unrelated real processing/settings snapshots preserve ghosts, while committed personal inputs clear them without acquiring ghost items (2.4833ms)
+✖ narrow book selection hides only the book and retains useful ghosts in the same personal lifecycle (4.1707ms)
+✖ actual close/reopen, device switch, scene switch and dismantle invalidate book projections without clearing durable instances (4.9209ms)
+✖ cross-session reset fences a real fill late receipt with an attached ghost/popup (7.5616ms)
+✖ cross-session reset fences a real acquisition late receipt with an attached ghost/popup (3.0632ms)
+✖ stale book preference failures and notification timeouts cannot mutate a new generation display (2.4676ms)
+✖ page disposal clears ghosts and toasts and prevents later book rendering or notification (7.3871ms)
+✖ detached recipe hit callbacks cannot reopen an old group after reset even when the same recipe is rediscovered (8.4864ms)
+(node:24520) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D05 left/right target semantics grant a complete batch, preserve inputs and reject partial capacity or different components (18.7918ms)
+✔ D05 Shift is bounded by nine-slot capacity and complete batches, including uneven free capacity and native unstackables (5.7489ms)
+✔ D05 numeric/F targets do not swap existing different items, and invalid result operations cannot clone or discard outputs (2.3265ms)
+✔ D05 malformed or locked ingredient stacks, unknown component variants and invalid dimensions never grant results (1.549ms)
+✔ D05 actual log-plank-stick-workbench-pick chain unlocks only after receipt without relying on discovery (21.9896ms)
+✔ D05 cake A returns exactly three buckets to the infinite directory with no hidden inventory or birthday completion (9.0787ms)
+✔ D05 native pristine repair results normalize only the matching default max_damage component (0.8351ms)
+✔ workbench nine inputs reuse SlotPolicy, unique drag, Shift and numeric swap, and are excluded from player layout (1.3144ms)
+✖ D05 save failure and stale layout rejection leave product locked, input/target bytes untouched and emit no events (22.5171ms)
+✖ workbench contents persist on refresh, remain isolated by instance, reject stale/removed/wrong-scene contexts and reset safely (6.4862ms)
+✖ P5 migration preserves durable layout/settings/cake and upgrades empty workbench reservation without overwriting original bytes (7.4416ms)
+✖ D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products (3.0938ms)
+✔ D07 closing while an accepted result transaction resolves cannot restore the cursor or personal ingredients (3.2275ms)
+✖ successful SaveSession acquisition returns the actual committed cursor receipt for both first unlock and repeated known results (4.3033ms)
+✖ queued old-generation crafting cannot award a result after a reset acquires the same lock first (3.2552ms)
+✖ two real workbench commands with the same observed grid reject the stale writer independently of player layout revision (2.9208ms)
+✔ a result projection is never a general mutable slot, regardless of ordinary slot input operation (4.1408ms)
+✔ P6 carrier region admits approved floor devices and excludes the birthday table without authoring final four-scene limits (0.3804ms)
+(node:14420) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ personal preview matches one log in each 2x2 offset, shows native output count and does not scale by input quantity (6.9593ms)
+✔ personal preview respects native horizontal mirror and repeated ingredients (2.6307ms)
+✔ personal preview switches recipes, clears no-match inputs and never fits a three-wide recipe into 2x2 (1.766ms)
+✔ personal preview does not mutate input, consume material or expose remainder transactions; unsupported rules are explicit (1.2379ms)
+✔ menu projection remains separate from slot references; a screen without an acquisition port stays read-only (8.1909ms)
+✔ D07 close and reset clear the actual menu preview without changing stable carriers (4.1935ms)
+✖ previewing a still-locked product never writes a save, emits acquisition events or discovers a recipe (16.0906ms)
+(node:47848) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (32.787ms)
+✖ normal receipt and post-receipt placement: {} (6.7773ms)
+✖ normal receipt and post-receipt placement: {"known":true} (3.0327ms)
+✖ normal receipt and post-receipt placement: {"merge":5} (3.3954ms)
+✖ normal receipt and post-receipt placement: {"bench":true} (3.3221ms)
+✖ normal receipt and post-receipt placement: {"bench":true,"known":true} (2.1343ms)
+✖ waiting receipt rejects empty carrier operation through the unified command entry (1.8023ms)
+✖ waiting receipt rejects occupied carrier operation through the unified command entry (4.6074ms)
+✖ waiting receipt rejects directory carrier operation through the unified command entry (3.404ms)
+✖ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (5.6892ms)
+✖ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (3.1457ms)
+✖ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (2.2453ms)
+✖ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.5688ms)
+✖ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.6421ms)
+✖ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.2982ms)
+✖ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (2.1872ms)
+✖ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (2.4405ms)
+✖ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (2.7283ms)
+✖ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (217.065ms)
+✖ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (2.6092ms)
+✖ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (2.9793ms)
+✖ workbench receipt also rejects empty-slot and directory operations while its real instance input persists (2.2104ms)
+✖ closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor (2.4895ms)
+✖ identity-checked cleanup cannot release ownership established by a different receipt (2.0924ms)
+(node:4508) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ unlock is immutable, monotonic and idempotent; side items follow first acquisition (12.015ms)
+✔ completion is a single table fact; requires unlocked cake, home context and the canonical table (3.8906ms)
+✔ placement accepts only explicit authored policy; stable instances remain separate from view and natural state (5.7609ms)
+✔ unsupported IDs, contract payloads, malformed coordinates and extra durable fields are never discarded silently (1.5569ms)
+✔ progress reset retains approved settings and clears all progress without changing other snapshots (2.023ms)
+(node:23092) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: false (21.4932ms)
+✖ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: true (4.8277ms)
+✖ formal furnace right split with existing same cursor merges only moved finite units (2.0397ms)
+✖ formal furnace pending Done close does not revive cursor and preserves instance input references (2.2322ms)
+✖ formal furnace pending E close does not revive cursor and preserves instance input references (1.8155ms)
+✖ formal furnace pending Esc close does not revive cursor and preserves instance input references (3.3604ms)
+✖ formal furnace failed write leaves output intact and gate releases for a successful retry (2.7777ms)
+✖ formal furnace reset fences a committed delayed receipt without resurrection (2.7333ms)
+✖ formal furnace remove fences a committed delayed receipt without resurrection (5.5672ms)
+✖ formal furnace dispose fences a committed delayed receipt without resurrection (2.4291ms)
+✖ returning from finite furnace output to an unchanged empty personal grid cannot reuse producer preview cache (2.2664ms)
+(node:30860) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ native timed furnace oak_log -> charcoal (7.2827ms)
+✔ native timed furnace cobblestone -> stone (8.3932ms)
+✔ native timed furnace stone -> smooth_stone (8.2651ms)
+✔ native timed furnace raw_iron -> iron_ingot (2.9746ms)
+✔ native timed blast_furnace raw_iron -> iron_ingot (1.4962ms)
+✔ native timed blast_furnace iron_pickaxe -> iron_nugget (2.8888ms)
+✔ native timed furnace iron_pickaxe -> iron_nugget (5.9797ms)
+✔ blast furnace accepts manual log reference but never produces charcoal (17.2464ms)
+✔ all 34 reachable fuels use native contextual duration/speed, including short repeated cycles (59.3556ms)
+✔ large steps equal single ticks across restarts and continuous reference cycles (50.2421ms)
+✔ full or component-blocked output does not ignite; existing fire expires and progress resets (4.1063ms)
+✔ removing/changing input resets progress but not fire; removing fuel preserves current burn; unlit missing fuel cools by two (0.7567ms)
+✔ producer validation rejects arbitrary or mismatched locked output without relaxing normal carriers (2.0664ms)
+✔ finite output left/right/Shift/numeric/F move only actual quantity, respecting partial capacity and components (9.0019ms)
+✔ G24-G26 input accepts nonrecipe, Shift prioritizes recipe even when full, fuel slot bucket uses native GUI capacity (2.5026ms)
+✔ sided ports expose native input/fuel/output and bottom-takeable tag separately (0.43ms)
+✖ real session produces locked finite output, atomic pickup unlocks once and cannot regenerate it (28.0714ms)
+✖ two devices in different scenes run independently and persist through refresh/close without changing cake (7.0962ms)
+✖ write failure, full target and layout conflict never partially deliver or unlock (3.5931ms)
+✖ competing output pickups have one winner; reset and dismantle fence older work (4.2842ms)
+✖ p6 crafting migration preserves workbench grid/player/settings/cake and upgrades only empty furnace reservations (3.554ms)
+✔ active clock uses 50ms native ticks with fractions, fresh ownership discards handoff gaps (0.7329ms)
+✖ active ownership checked inside save lock and after checksum; inactive ticks never write (3.0711ms)
+✔ native output secondary pickup merges to capacity with an occupied matching cursor; numeric/F only take into empty slots (7.5881ms)
+✔ changing fuel never replaces current fire; the next ignition uses the new native duration (0.73ms)
+✖ ownership lost during checksum computation cancels a tick without writing or poisoning the session (5.2126ms)
+✖ new producer placement cannot inject prefilled inputs or produced output (2.4961ms)
+✔ G25 directory and saved-toolbar Shift copy only one bounded native reference and keep recipe-before-fuel routing (1.8927ms)
+✖ same-kind instances in different scenes process independently while another scene is selected (3.6919ms)
+✔ serialized timers cannot bypass native recipe duration with zero, stale recipe or shortened cook total (0.6928ms)
+✔ future sided transfer plans conserve finite source/target units and never grant an output fact (2.341ms)
+(node:48236) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ silhouette preserves transparent holes and every fractional alpha without mutating original/composite frame pixels (2.6995ms)
+✔ wide Steve has six native cuboids, separate outer layers, original UVs and intact head/feet extents (4.104ms)
+✔ armor slot visibility, deformation and atlas height remain separate from skin and hand models (0.3806ms)
+✔ mouse feedback uses same-version bounded atan and independent body/head tracking, with no animation clock (0.2561ms)
+✔ Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile (1166.1758ms)
+✔ composite held leaves retain native 0..1 transform pivots and shield keeps its entity-space inversion (0.5846ms)
+✔ formal stack painter leaves empty cells untouched even if a caller supplies locked=true (0.1785ms)
+✔ formal stack painter isolates mask selection from quantity text and does not replace the shared original cache (0.1998ms)
+(node:6456) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G03–G06 odd halves, partial merge, right one, component swap and capacity preserve finite counts (5.5906ms)
+✔ G07 left drag distributes floor and retains odd remainders, deduplicates and excludes armor/wrong identity/full cells (1.9968ms)
+✔ G07 partial capacities do not silently redistribute or lose the unallocated remainder (0.4322ms)
+✔ G08 right drag allocates at most one per unique eligible cell and never refills its source (0.4876ms)
+✔ G10–G11 middle cloning requires empty cursor; middle drag fills native maxima and does not consume carried group (0.5966ms)
+✔ G12 collects only matching finite groups to max; output permission forbids inserting or exchanging (0.5074ms)
+✔ G13–G14 bounded Shift source/move snapshots preserve counts and autoequip by component (2.1272ms)
+✔ G15–G16 numeric/F swaps respect both directions, offhand max and armor restrictions (0.6293ms)
+✔ G17–G18 Q/CtrlQ delete finite units only; C/X presets copy bounded unlocked native groups (1.373ms)
+✔ G19–G20 equipment auto-use swaps occupied compatible armor, never tool suffix guesses or durability (0.7414ms)
+✔ G30 staged gestures cancel atomically on boundary, blur/escape/cancel, reject mismatched release and deduplicate cells (0.66ms)
+✔ all 113 locked identities fail source/clone/drag/preset/old-state paths and components are explicitly bounded (26.1996ms)
+✔ stable carrier rules exactly project current P4 original maximum/equipment/damage data for all 113 items (2.443ms)
+✔ finite operations conserve every identity across 1500 seeded mixed pick/drag/quick/collect/swap actions (97.0971ms)
+✔ native zero damage is the default identity; unsupported capacity/equippable component overrides cannot bypass policy (0.4552ms)
+✔ malformed command modes/buttons never fall through into another supported inventory operation (0.5559ms)
+✖ stable layout refresh and presets persist, cursor is absent; progress reset retains settings and clears layout (24.6367ms)
+✖ same-layout concurrent pickup commits once; changed layout conflicts safely rather than duplicating into two cursors (7.0535ms)
+✖ unrelated settings/unlock transactions merge with carrier intents; reset fences an already queued old layout write (3.5216ms)
+✔ P3 checksummed save migrates reserved player only, retains progress/settings/cake and old bytes until a valid change (12.7541ms)
+✖ carrier write failure cannot publish a successful pickup or overwrite previous bytes; extra persisted cursor is rejected (2.9159ms)
+(node:31292) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P5 directory keeps every mainline index and appends side items by first acquisition, without sorting or unlocking (10.6159ms)
+✔ P5 every source command rejects all locked registered identities, including numeric, middle, left and right paths (14.0842ms)
+✔ P5 catalogue is an inexhaustible source; repeated identical references and native stack caps never create permanent quantities (4.9921ms)
+✔ P5 bounded basic pickup halves odd groups, places one, merges to maximum and swaps distinct actual carriers (5.1095ms)
+✔ P5 original equipment identity rejects a tool in armor, allows a legal chestplate and uses the native offhand stack maximum (4.7273ms)
+✔ P5 nine selections wrap wheel boundaries and preserve browser/text focus shortcuts (1.568ms)
+✔ P5 malformed or locked temporary carriers and maximum-count violations cannot bypass the command gate (1.3293ms)
+✖ P5 temporary commands preserve P3 envelope shape, permanent monotonicity and independent recipe/discovery contracts (18.2777ms)
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (1105.5048ms)
+✔ P5 selects native spear GUI, default armor, date-dependent chest, grass tint and composite branches explicitly (589.7226ms)
+✔ P5 special cuboid geometry uses native dimensions, atlas UVs and face topology rather than a generic cube icon (0.5912ms)
+✔ P5 tooltip logical size preserves the original 12px outer margin and never violates 10px nine-slice borders (0.227ms)
+(node:26828) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ look emits a right click only below threshold and a drag only after crossing it (1.9144ms)
+✔ look clamps angles and ignores unrelated pointers, with cancellation on GUI/blur independent of saved state (1.5246ms)
+(node:17156) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ G17 outside uses the full protected menu plus border guard and Tooltip; native left/all and right/one preserve stable facts (4.6513ms)
+✔ G17 drag escape, border origin, middle, chord, canceled close and mismatched release never produce outside discard (0.4095ms)
+✔ G18 saved-toolbar cells copy exact saved groups/components without mutating the existing nine presets (2.8867ms)
+✔ personal four inputs reuse native split/merge/drag/numeric/Shift permissions without producing any result (3.6974ms)
+✔ personal inputs honor native single/16 caps, locked groups, component identity and D07 epoch isolation (0.7654ms)
+✖ personal input transactions use fresh locked layout and never persist cells; reset fences old menu groups (15.7338ms)
+✔ all 113 locked identities are rejected in saved-toolbar copies and personal-grid entry paths (17.8994ms)
+(node:26784) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ codec detects tampering, future formats, invalid content and exact structural errors (15.4989ms)
+✔ documented development-v0 migrates in memory; failed migration never rewrites original bytes (14.679ms)
+✖ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (3.3117ms)
+✖ concurrent sessions merge semantic commands against fresh facts under the shared lock (4.8525ms)
+✖ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (5.2573ms)
+✖ confirmation notices same-epoch changes and requires a new explicit reset (5.6927ms)
+✖ queued commands are fenced across suspend/resume even when the reset epoch has not changed (4.295ms)
+✔ corrupt, future and missing storage capability preserve exact bytes and block writes/reset (1.502ms)
+✔ unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap (0.3926ms)
+✖ write denial leaves both durable and presented facts unchanged, with an explicit retry path (2.8916ms)
+✖ rejected domain input does not poison a valid session or replace its saved bytes (3.456ms)
+(node:22424) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ D07 close clears cursor only, preserves stable layout and permanent facts, including when saving is read-only (7.8989ms)
+✔ D07 delayed pickup cannot resurrect a cursor after close, while its submitted stable-slot transaction completes (2.8849ms)
+✔ D07 reopening permits a fresh cursor without accepting the older close-boundary result (3.5906ms)
+✔ D07 close/re-entry boundaries reject older results and accept fresh isolated cursor snapshots (0.4179ms)
+✔ D07 delayed personal input result is discarded on close while a fresh reopened input can commit (2.731ms)
+✔ D07 reset initializes usable personal inputs immediately while an older menu result is still pending (2.4445ms)
+(node:7116) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height (983.2173ms)
+✔ missing language keys fall back to English; missing English and missing interpolation fail visibly in tests (0.6965ms)
+✔ every statically declared page key exists in external English and all English glyphs fit the ASCII profile (2.3503ms)
+✔ long text wraps at words and within long tokens without deleting copy or exceeding the measured line width (0.2821ms)
+✔ presentation keeps native slab thickness and exact cake contact, with a materially larger authored environment (559.8923ms)
+(node:18508) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ P4 census parses 1763 nonbrewing recipes/21 types plus all 279 original brewing records; hashes and golden inputs match (15.4178ms)
+✔ P4 shaped offsets/mirror and strict empty slots work in 2x2 and 3x3 without converting pattern/key case (2.0867ms)
+✔ P4 shapeless matching respects repeated slots, tags and overlapping alternatives rather than greedy assignment (0.9191ms)
+✔ P4 cake accepts every native egg alternative and yields three independent bucket remainders (3.6704ms)
+✔ P4 correct tool uses actual incorrect-drop tags; fast gold never substitutes for stone on iron ore (0.6881ms)
+✔ P4 native stack, armor, damage, remainder and fuel identities come from registration evidence (0.3953ms)
+✔ P4 cooking matches station capabilities, stone chain and iron recovery without treating slot acceptance as processing (0.8548ms)
+✔ P4 reachable native repair supports pristine tools and damaged variants, but rejects unsupported component-bearing input (1.0516ms)
+✔ P4 recursive tags preserve nested alternatives, optional absent references and reject cycles (0.436ms)
+✔ P4 fixed point provides causal proofs for every item, includes side products and excludes unavailable capabilities without inventing sources (1.9099ms)
+✖ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (11.9594ms)
+✔ P4 all twelve candidate source profiles reproduce causal closure and actually match their 112 recipes and cake chain (379.4783ms)
+✔ P4 component equality uses verified defaults and order-independent values; unsupported defaults and nonvanilla grid shapes are explicit (9.8539ms)
+✔ P4 runtime registry selects crafting facts without a GUI or any save mutation (3.469ms)
+✔ P4 runtime source and cooking context use committed native predicates rather than station-name fuel guesses (3.6005ms)
+(node:48888) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ reset confirmation survives several seconds of formal processing and retains latest committed settings (15.8777ms)
+✖ ordinary reset clears complete progress and keeps latest preferences without processing (6.2706ms)
+✖ autonomous output and burn changes remain in the confirmed scope without silently acquiring output (3.239ms)
+✖ manual unlock invalidates confirmation without poisoning a healthy session (4.8341ms)
+✖ manual layout invalidates confirmation without poisoning a healthy session (1.8596ms)
+✖ manual input invalidates confirmation without poisoning a healthy session (1.7837ms)
+✖ manual remove invalidates confirmation without poisoning a healthy session (2.2197ms)
+✖ a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry (2.4779ms)
+✖ restored pages cannot submit confirmation tickets issued before suspension (2.761ms)
+✖ queued clock and finite acquisition cannot revive progress after reset or poison the new epoch (3.1461ms)
+✖ write failure preserves bytes, remains explicitly readonly and can be retried after refresh (2.3129ms)
+✖ open reset confirmation never overwrites invalid backing bytes: not json (2.026ms)
+✖ open reset confirmation never overwrites invalid backing bytes: {"format":99} (4.2377ms)
+✖ confirmation preserves checksum bytes and blocks reset (2.113ms)
+✖ confirmation preserves unknown-version bytes and blocks reset (2.0061ms)
+✖ volume gesture survives continuous real processing publications with consistent displayed percent (2.0113ms)
+✖ remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields (1.7752ms)
+✖ older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority (1.5763ms)
+✖ submitted language and mute drafts survive async processing snapshots until their own receipts settle (1.7237ms)
+✖ close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings (3.2372ms)
+✖ failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save (2.7059ms)
+ℹ tests 246
+ℹ suites 0
+ℹ pass 122
+ℹ fail 124
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3024.928
+
+✖ failing tests:
+
+test at tests\book-hopper.test.ts:33:1
+✖ two hopper instances retain independent contents on refresh and cross-session editing/removal/reset reject stale owners (11.5591ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:35:1
+✖ finite furnace output transfer acquires only on a successful atomic target insertion; repeat does not duplicate (5.9257ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: wrong-face (2.804ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: full (2.1661ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: components (1.7576ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: write (2.0869ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: removed (1.386ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:37:96
+✖ finite port transaction rollback and acquisition gate: competition (2.7685ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:39:1
+✖ hopper insertion reaches furnace top even for nonrecipe, fuel side, and bottom extraction rejects ordinary fuel (2.018ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:41:1
+✖ reset first under the shared lock fences queued old finite transfer without reviving instances (4.8085ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:51:1
+✖ formal personal fill leaves nonempty cursor intact, previews do not acquire, and fill failures preserve exact bytes (3.0547ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:53:1
+✖ hand-crafting an undiscovered boat awards provenance only after actual receipt; failed write and refresh never replay discovery (2.725ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:55:1
+✖ p6-processing migration preserves nonempty furnace, workbench, carriers/settings/cake; initializes hopper and silent discovery (2.6823ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:57:1
+✖ book settings/unseen persist, processing keeps confirmation stable, reset clears new fields while preserving preferences (2.3054ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:61:56
+✖ furnace side fuel and partial hopper transfers conserve finite groups under real save commands (1.7688ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-hopper.test.ts:61:56
+✖ blast_furnace side fuel and partial hopper transfers conserve finite groups under real save commands (1.0031ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:15:33
+✖ formal recipe fill owns the unified gate and preserves nonempty cursor: false (28.928ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:15:33
+✖ formal recipe fill owns the unified gate and preserves nonempty cursor: true (6.4809ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:17:45
+✖ personal fill receipt after Done cannot revive cursor or four inputs (5.5013ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:17:45
+✖ personal fill receipt after KeyE cannot revive cursor or four inputs (3.7838ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:17:45
+✖ personal fill receipt after Escape cannot revive cursor or four inputs (3.2441ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:19:1
+✖ workbench close preserves committed filled inputs while fencing its delayed cursor receipt (3.152ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:21:1
+✖ ordinary result receipt refuses recipe-book fill through the same gate (2.9166ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:23:1
+✖ fill reset/dismantling fences late receipts and permits fresh menu work (5.7067ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:25:1
+✖ fill failure is atomic, frees its gate, and allows retry without overwriting incompatible inputs (3.9593ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:27:1
+✖ native ghost drawing never paints over a real finite input or a genuine matched output (3.5984ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:35:1
+✖ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (5.7423ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:38:1
+✖ unrelated real processing/settings snapshots preserve ghosts, while committed personal inputs clear them without acquiring ghost items (2.4833ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:40:1
+✖ narrow book selection hides only the book and retains useful ghosts in the same personal lifecycle (4.1707ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:42:1
+✖ actual close/reopen, device switch, scene switch and dismantle invalidate book projections without clearing durable instances (4.9209ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:44:32
+✖ cross-session reset fences a real fill late receipt with an attached ghost/popup (7.5616ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:44:32
+✖ cross-session reset fences a real acquisition late receipt with an attached ghost/popup (3.0632ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:46:1
+✖ stale book preference failures and notification timeouts cannot mutate a new generation display (2.4676ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:48:1
+✖ page disposal clears ghosts and toasts and prevents later book rendering or notification (7.3871ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\book-queue.test.ts:51:1
+✖ detached recipe hit callbacks cannot reopen an old group after reset even when the same recipe is rediscovered (8.4864ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:46:1
+✖ D05 save failure and stale layout rejection leave product locked, input/target bytes untouched and emit no events (22.5171ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:47:1
+✖ workbench contents persist on refresh, remain isolated by instance, reject stale/removed/wrong-scene contexts and reset safely (6.4862ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:48:1
+✖ P5 migration preserves durable layout/settings/cake and upgrades empty workbench reservation without overwriting original bytes (7.4416ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'p7-world-1'
+  - 'p6-book-1'
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-acquisition.test.ts:48:780)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'p7-world-1',
+    expected: 'p6-book-1',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\crafting-acquisition.test.ts:49:1
+✖ D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products (3.0938ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:52:1
+✖ successful SaveSession acquisition returns the actual committed cursor receipt for both first unlock and repeated known results (4.3033ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:54:1
+✖ queued old-generation crafting cannot award a result after a reset acquires the same lock first (3.2552ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-acquisition.test.ts:56:1
+✖ two real workbench commands with the same observed grid reject the stale writer independently of player layout revision (2.9208ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-preview.test.ts:21:1
+✖ previewing a still-locked product never writes a save, emits acquisition events or discovers a recipe (16.0906ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+      at async SaveSession.transact (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:16)
+      at async SaveSession.dispatch (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:52:66)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\crafting-preview.test.ts:21:293)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\crafting-queue.test.ts:35:1
+✖ receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession (32.787ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:50:87
+✖ normal receipt and post-receipt placement: {} (6.7773ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:50:87
+✖ normal receipt and post-receipt placement: {"known":true} (3.0327ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:50:87
+✖ normal receipt and post-receipt placement: {"merge":5} (3.3954ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:50:87
+✖ normal receipt and post-receipt placement: {"bench":true} (3.3221ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:50:87
+✖ normal receipt and post-receipt placement: {"bench":true,"known":true} (2.1343ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:51:54
+✖ waiting receipt rejects empty carrier operation through the unified command entry (1.8023ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:51:54
+✖ waiting receipt rejects occupied carrier operation through the unified command entry (4.6074ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:51:54
+✖ waiting receipt rejects directory carrier operation through the unified command entry (3.404ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:53:1
+✖ all ordinary semantic mutation families are refused before any stale cursor or layout can be captured (5.6892ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:55:1
+✖ waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI (3.1457ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:57:1
+✖ a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally (2.2453ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:59:45
+✖ D07 KeyE remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.5688ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:59:45
+✖ D07 Escape remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.6421ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:59:45
+✖ D07 Done remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input (2.2982ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:61:1
+✖ a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable (2.1872ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:63:1
+✖ layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout (2.4405ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:65:1
+✖ cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers (2.7283ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:67:1
+✖ cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance (217.065ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:69:1
+✖ disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result (2.6092ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:71:1
+✖ ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers (2.9793ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:73:1
+✖ workbench receipt also rejects empty-slot and directory operations while its real instance input persists (2.2104ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:75:1
+✖ closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor (2.4895ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\crafting-queue.test.ts:77:1
+✖ identity-checked cleanup cannot release ownership established by a different receipt (2.0924ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:34:33
+✖ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: false (21.4932ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:34:33
+✖ formal furnace UI unresolved receipt rejects all carrier mutation families and preserves actual finite output delivery: true (4.8277ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:35:1
+✖ formal furnace right split with existing same cursor merges only moved finite units (2.0397ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:36:39
+✖ formal furnace pending Done close does not revive cursor and preserves instance input references (2.2322ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:36:39
+✖ formal furnace pending E close does not revive cursor and preserves instance input references (1.8155ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:36:39
+✖ formal furnace pending Esc close does not revive cursor and preserves instance input references (3.3604ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:37:1
+✖ formal furnace failed write leaves output intact and gate releases for a successful retry (2.7777ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:38:50
+✖ formal furnace reset fences a committed delayed receipt without resurrection (2.7333ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:38:50
+✖ formal furnace remove fences a committed delayed receipt without resurrection (5.5672ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:38:50
+✖ formal furnace dispose fences a committed delayed receipt without resurrection (2.4291ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace-queue.test.ts:39:1
+✖ returning from finite furnace output to an unchanged empty personal grid cannot reuse producer preview cache (2.2664ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:25:1
+✖ real session produces locked finite output, atomic pickup unlocks once and cannot regenerate it (28.0714ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:26:1
+✖ two devices in different scenes run independently and persist through refresh/close without changing cake (7.0962ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:27:1
+✖ write failure, full target and layout conflict never partially deliver or unlock (3.5931ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:28:1
+✖ competing output pickups have one winner; reset and dismantle fence older work (4.2842ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:29:1
+✖ p6 crafting migration preserves workbench grid/player/settings/cake and upgrades only empty furnace reservations (3.554ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:31:1
+✖ active ownership checked inside save lock and after checksum; inactive ticks never write (3.0711ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:34:1
+✖ ownership lost during checksum computation cancels a tick without writing or poisoning the session (5.2126ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:35:1
+✖ new producer placement cannot inject prefilled inputs or produced output (2.4961ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\furnace.test.ts:37:1
+✖ same-kind instances in different scenes process independently while another scene is selected (3.6919ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\inventory-complete.test.ts:55:1
+✖ stable layout refresh and presets persist, cursor is absent; progress reset retains settings and clears layout (24.6367ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\inventory-complete.test.ts:56:1
+✖ same-layout concurrent pickup commits once; changed layout conflicts safely rather than duplicating into two cursors (7.0535ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\inventory-complete.test.ts:57:1
+✖ unrelated settings/unlock transactions merge with carrier intents; reset fences an already queued old layout write (3.5216ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\inventory-complete.test.ts:59:1
+✖ carrier write failure cannot publish a successful pickup or overwrite previous bytes; extra persisted cursor is rejected (2.9159ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\inventory.test.ts:18:1
+✖ P5 temporary commands preserve P3 envelope shape, permanent monotonicity and independent recipe/discovery contracts (18.2777ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory.test.ts:18:451)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\inventory.test.ts:19:1
+✖ P5 all 113 original item definitions resolve their default GUI dependencies and item names with auditable original bytes (1105.5048ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'c476e6f7250a61717b5d28273d975a2602e9adae9cd02a626880c5082cd79b7d'
+  - '4b5cfadcb0fa2d485e7e3feab94227251653f60fa14d69da264188c0540c0563'
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\inventory.test.ts:19:499)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'c476e6f7250a61717b5d28273d975a2602e9adae9cd02a626880c5082cd79b7d',
+    expected: '4b5cfadcb0fa2d485e7e3feab94227251653f60fa14d69da264188c0540c0563',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p5-closeout.test.ts:22:1
+✖ personal input transactions use fresh locked layout and never persist cells; reset fences old menu groups (15.7338ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+      at async SaveSession.transact (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:16)
+      at async SaveSession.dispatch (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:52:66)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\p5-closeout.test.ts:22:324)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\persistence.test.ts:23:1
+✖ codec detects tampering, future formats, invalid content and exact structural errors (15.4989ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:23:204)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+
+test at tests\persistence.test.ts:28:1
+✖ missing storage initializes under coordination; hydration and duplicate commands do not replay first events (3.3117ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\persistence.test.ts:29:1
+✖ concurrent sessions merge semantic commands against fresh facts under the shared lock (4.8525ms)
+  Error: save-read-only
+      at SaveSession.transact (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:95:148)
+      at SaveSession.dispatch (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:52:77)
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:29:312)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\persistence.test.ts:30:1
+✖ queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event (5.2573ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\persistence.test.ts:33:1
+✖ confirmation notices same-epoch changes and requires a new explicit reset (5.6927ms)
+  Error: save-read-only
+      at SaveSession.transact (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:95:148)
+      at SaveSession.dispatch (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:52:77)
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:33:260)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\persistence.test.ts:34:1
+✖ queued commands are fenced across suspend/resume even when the reset epoch has not changed (4.295ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /session-restored/. Input:
+  
+  'Error: pending-contract-version'
+  
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:34:386)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: pending-contract-version
+        at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+        at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223),
+    expected: /session-restored/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\persistence.test.ts:37:1
+✖ write denial leaves both durable and presented facts unchanged, with an explicit retry path (2.8916ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /write-failed/. Input:
+  
+  'Error: pending-contract-version'
+  
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:37:229)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: pending-contract-version
+        at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+        at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223),
+    expected: /write-failed/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\persistence.test.ts:38:1
+✖ rejected domain input does not poison a valid session or replace its saved bytes (3.456ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /invalid-cake-placement/. Input:
+  
+  'Error: pending-contract-version'
+  
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\persistence.test.ts:38:201)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: pending-contract-version
+        at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+        at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223),
+    expected: /invalid-cake-placement/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\rules.test.ts:30:1
+✖ P4 expanded registry preserves P3 envelopes and unlock invariants; recipe knowledge never grants or discovers an item (11.9594ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\rules.test.ts:30:383)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at tests\settings-regression.test.ts:16:1
+✖ reset confirmation survives several seconds of formal processing and retains latest committed settings (15.8777ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:18:1
+✖ ordinary reset clears complete progress and keeps latest preferences without processing (6.2706ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:20:1
+✖ autonomous output and burn changes remain in the confirmed scope without silently acquiring output (3.239ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:22:67
+✖ manual unlock invalidates confirmation without poisoning a healthy session (4.8341ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:22:67
+✖ manual layout invalidates confirmation without poisoning a healthy session (1.8596ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:22:67
+✖ manual input invalidates confirmation without poisoning a healthy session (1.7837ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:22:67
+✖ manual remove invalidates confirmation without poisoning a healthy session (2.2197ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:24:1
+✖ a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry (2.4779ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:26:1
+✖ restored pages cannot submit confirmation tickets issued before suspension (2.761ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:28:1
+✖ queued clock and finite acquisition cannot revive progress after reset or poison the new epoch (3.1461ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:30:1
+✖ write failure preserves bytes, remains explicitly readonly and can be retried after refresh (2.3129ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:32:59
+✖ open reset confirmation never overwrites invalid backing bytes: not json (2.026ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:32:59
+✖ open reset confirmation never overwrites invalid backing bytes: {"format":99} (4.2377ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:34:59
+✖ confirmation preserves checksum bytes and blocks reset (2.113ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:34:59
+✖ confirmation preserves unknown-version bytes and blocks reset (2.0061ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:42:1
+✖ volume gesture survives continuous real processing publications with consistent displayed percent (2.0113ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:44:1
+✖ remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields (1.7752ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:46:1
+✖ older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority (1.5763ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:48:1
+✖ submitted language and mute drafts survive async processing snapshots until their own receipts settle (1.7237ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:50:1
+✖ close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings (3.2372ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)
+
+test at tests\settings-regression.test.ts:52:1
+✖ failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save (2.7059ms)
+  Error: pending-contract-version
+      at decode (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\codec.ts:43:1450)
+      at async <anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\web\src\persistence\session.ts:96:223)

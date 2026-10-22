@@ -1,0 +1,37 @@
+
+> minecraft-birthday-2026@0.1.0 test:built
+> node --test tests/built.test.mjs
+
+✖ formal HTTP / has both entries, original bytes and no internal/test routes (6109.0391ms)
+✔ formal HTTP /minecraft-birthday-2026/ has both entries, original bytes and no internal/test routes (15219.2796ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21962.17
+
+✖ failing tests:
+
+test at tests\built.test.mjs:4:85
+✖ formal HTTP / has both entries, original bytes and no internal/test routes (6109.0391ms)
+  TypeError: fetch failed
+      at node:internal/deps/undici/undici:15845:13
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async TestContext.<anonymous> (file:///F:/JerryCode/YuanXi-WarmNest/GitHub/Projects/minecraft-birthday-2026/app/tests/built.test.mjs:6:66)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    [cause]: Error: bad port
+        at makeNetworkError (node:internal/deps/undici/undici:10147:35)
+        at mainFetch (node:internal/deps/undici/undici:11515:22)
+        at fetching (node:internal/deps/undici/undici:11502:7)
+        at fetch (node:internal/deps/undici/undici:11368:20)
+        at fetch (node:internal/deps/undici/undici:15843:10)
+        at fetch (node:internal/bootstrap/web/exposed-window-or-worker:83:12)
+        at TestContext.<anonymous> (file:///F:/JerryCode/YuanXi-WarmNest/GitHub/Projects/minecraft-birthday-2026/app/tests/built.test.mjs:6:72)
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  }

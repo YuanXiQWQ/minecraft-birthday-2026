@@ -1,0 +1,20 @@
+{
+  "environment": "Node v25.2.1",
+  "fixture": true,
+  "stationCount": 126,
+  "counts": {
+    "furnace": 42,
+    "hopper": 84
+  },
+  "warmupChunks": 10,
+  "sampleChunks": 50,
+  "ticksPerChunk": 5,
+  "chunkMs": {
+    "p50": 4.594400000000064,
+    "p95": 7.857999999999947,
+    "max": 9.545900000000017
+  },
+  "large300TickMs": 168.47439999999995,
+  "largeEqualsSmall": false,
+  "scope": "Pure transition; excludes persistence, GUI and GPU. Not a browser FPS measurement."
+}

@@ -1,0 +1,126 @@
+{
+  "scene": "plains",
+  "stations": [
+    {
+      "cell": [
+        3,
+        0,
+        0
+      ],
+      "contents": {
+        "data": {
+          "slots": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "version": 3
+      },
+      "facing": "east",
+      "id": "bottom"
+    },
+    {
+      "cell": [
+        4,
+        0,
+        0
+      ],
+      "contents": {
+        "data": {
+          "slots": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "version": 3
+      },
+      "facing": "down",
+      "id": "receiver"
+    },
+    {
+      "cell": [
+        3,
+        1,
+        0
+      ],
+      "contents": {
+        "data": {
+          "burn": 0,
+          "burnTotal": 0,
+          "cook": 0,
+          "cookTotal": 200,
+          "fuel": {
+            "count": 1,
+            "id": "minecraft:stick"
+          },
+          "input": {
+            "count": 1,
+            "id": "minecraft:oak_log"
+          },
+          "output": null,
+          "outputRecipe": null,
+          "recipe": "minecraft:charcoal",
+          "speed": 1
+        },
+        "version": 2
+      },
+      "facing": "south",
+      "id": "producer"
+    },
+    {
+      "cell": [
+        3,
+        2,
+        0
+      ],
+      "contents": {
+        "data": {
+          "slots": [
+            {
+              "count": 8,
+              "id": "minecraft:oak_log"
+            },
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "version": 3
+      },
+      "facing": "down",
+      "id": "top"
+    },
+    {
+      "cell": [
+        4,
+        1,
+        0
+      ],
+      "contents": {
+        "data": {
+          "slots": [
+            {
+              "count": 8,
+              "id": "minecraft:stick"
+            },
+            null,
+            null,
+            null,
+            null
+          ]
+        },
+        "version": 3
+      },
+      "facing": "west",
+      "id": "side"
+    }
+  ],
+  "tick": 0
+}

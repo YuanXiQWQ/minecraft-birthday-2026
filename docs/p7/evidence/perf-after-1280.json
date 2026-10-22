@@ -1,0 +1,37 @@
+{
+  "fixture": true,
+  "warmupFrames": 30,
+  "measuredFrames": 330,
+  "elapsedMs": 3442,
+  "viewport": [
+    1280,
+    720
+  ],
+  "dpr": 1.0000000149011612,
+  "cycle": 0,
+  "scene": "plains",
+  "instances": 126,
+  "objects": 163,
+  "drawCalls": 428,
+  "triangles": 34944,
+  "geometry": 163,
+  "textures": 29,
+  "owned": {
+    "created": 385,
+    "released": 222
+  },
+  "frameMs": {
+    "p50": 4.2000000000116415,
+    "p95": 11.400000000023283,
+    "max": 545.5999999999767,
+    "over16_7": 8,
+    "over33_3": 7,
+    "over50": 5
+  },
+  "cpuSubmissionMs": {
+    "p50": 1.4000000059604645,
+    "p95": 2.800000011920929,
+    "max": 5.4000000059604645
+  },
+  "note": "RAF/request-to-request and CPU submission; no GPU timer query, no low-end or human validation"
+}

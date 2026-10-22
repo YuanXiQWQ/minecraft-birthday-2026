@@ -3,7 +3,7 @@
   "exporter": "p5-catalogue-1",
   "adapterSources": {
     "ui/icon-model.ts": "6c000a40dcb93bf003542c1a4c7b6ee6462f2635ea022d5aa94074c4ab1db3d1",
-    "render/model-format.ts": "4b5cfadcb0fa2d485e7e3feab94227251653f60fa14d69da264188c0540c0563"
+    "render/model-format.ts": "4c22f7f6627459a240c90592320430a7defe2c52962e95d18438b622a0fb28e7"
   },
   "exporterSha256": "30f6801bc9280e50d8d8102ebf8f72c2bef5c3635d20effe7e7abcad153794a5",
   "namesSha256": "4e7d6de8545e3b56744b7bb13c5610f7e2ebc713fcae7c34438773cfdd9ab369",

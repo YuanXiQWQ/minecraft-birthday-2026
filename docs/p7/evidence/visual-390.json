@@ -1,0 +1,26 @@
+[
+  {
+    "height": 844,
+    "scene": "plains",
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "height": 844,
+    "scene": "cave",
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "height": 844,
+    "scene": "farm",
+    "scroll": 390,
+    "width": 390
+  },
+  {
+    "height": 844,
+    "scene": "home",
+    "scroll": 390,
+    "width": 390
+  }
+]
