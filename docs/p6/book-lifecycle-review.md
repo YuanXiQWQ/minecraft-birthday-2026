@@ -6,23 +6,23 @@
 
 保留修复前的真实浏览器双标签记录和正式类失败测试，见[evidence/book-lifecycle/](evidence/book-lifecycle/)。新测试调用正式GameInventory.sync、RecipeBookView.choose/drawGhost及真实SaveSession，第二会话共享同一存储和排他锁；旧实现失败于book.ghost仍为torch而非null。没有复制生产方法到测试副本。
 
-浏览器使用两个同源4184/__verify__/input.html页面和独立控制页：通过正式命令取得石镐触发原版火把发现，未取得煤/木棍，个人四格为空，点击火把产生幽灵。第二页通过正式Settings→Reset progress…→Yes, reset progress重置；第一页全程不关闭、不刷新。
+浏览器使用两个同源4184/ __verify__/input.html页面和独立控制页：通过正式命令取得石镐触发原版火把发现，未取得煤/木棍，个人四格为空，点击火把产生幽灵。第二页通过正式Settings→Reset progress…→Yes, reset progress重置；第一页全程不关闭、不刷新。
 
-| 同一序列 | 修复前重置后 | 修复后重置后 |
-| --- | --- | --- |
-| generation | 已切换 | 已切换 |
-| 真实四格/结果 | 四空格/null | 四空格/null |
-| unlocked/known | 空/仅工作台 | 空/仅工作台 |
-| 个人GUI | 保持打开 | 保持打开 |
-| 旧火把幽灵 | 仍绘制，data-book.ghost=torch | null，原版背景/槽位重绘，无旧幽灵 |
-| 旧展开层/查询 | 缺少代次围栏 | popup=null、查询/页/悬浮等清理 |
-| 本地首次发现Toast | 不绑定代次 | 立即隐藏、清像素/可访问状态、取消旧定时器 |
+| 同一序列          | 修复前重置后                  | 修复后重置后                              |
+|-------------------|-------------------------------|-------------------------------------------|
+| generation        | 已切换                        | 已切换                                    |
+| 真实四格/结果     | 四空格/null                   | 四空格/null                               |
+| unlocked/known    | 空/仅工作台                   | 空/仅工作台                               |
+| 个人GUI           | 保持打开                      | 保持打开                                  |
+| 旧火把幽灵        | 仍绘制，data-book.ghost=torch | null，原版背景/槽位重绘，无旧幽灵         |
+| 旧展开层/查询     | 缺少代次围栏                  | popup=null、查询/页/悬浮等清理            |
+| 本地首次发现Toast | 不绑定代次                    | 立即隐藏、清像素/可访问状态、取消旧定时器 |
 
 旧实现只比较菜单ID与真实输入签名。重置前后四空格相同；书收起后render提前返回，drawGhost仍能按旧Recipe对象绘制。永久发现和真实物品数据本身没有损坏。
 
 ## 局部实现
 
-- GameInventory.sync在代次变化时调用book.resetTransient(true)，与原个人载体/领取票据围栏一起执行；clearPersonal在关闭、设备切换和退出时调用统一菜单显示清理。
+- GameInventory.sync在代次变化时调用book.resetTransient (true)，与原个人载体/领取票据围栏一起执行；clearPersonal在关闭、设备切换和退出时调用统一菜单显示清理。
 - RecipeBookView.scope绑定generation、PersonalCursor.epoch、场景、个人/设备ID及能力/维度；故同ID或同输入无法跨代次复用。仅收起书不改变scope，加工计时和设置也不进入scope。
 - resetTransient统一清ghost/输入签名、popup、query/search、page/category/hover、groups/控件签名及书画布，并立即发布可检查状态。真实主容器仍由GameInventory.draw先清背景再画有效内容，不通过修改真实槽位解决显示问题。
 - render、paint、drawGhost先校验scope；幽灵必须仍已发现、适用于当前菜单且真实输入签名相同。关闭书时仍可绘制同生命周期的合法幽灵；不清永久发现，不把幽灵写入真实输入、结果或存档。
@@ -59,6 +59,6 @@ IAB Chromium155 / Windows；桌面1280×720、DPR1.25，窄屏375×812，具体�
 
 ## 复现与阶段判断
 
-npm --prefix app run dev:verify；打开两个同源/__verify__/input.html及控制页/__verify__/index.html。先在第二应用页正式重置隔离进度；控制页Fixture: discover torch只取得石镐；第一页个人Crafting打开配方书点击火把。再在第二应用页正式重置，不关闭/刷新第一页，观察幽灵与展开消失。控制页Fixture: torch materials只取得煤/木棍，重新发现后可实际填充/领取。测试按钮不在普通运行路径。
+npm --prefix app run dev:verify；打开两个同源/ __verify__/input.html及控制页/ __verify__/index.html。先在第二应用页正式重置隔离进度；控制页Fixture: discover torch只取得石镐；第一页个人Crafting打开配方书点击火把。再在第二应用页正式重置，不关闭/刷新第一页，观察幽灵与展开消失。控制页Fixture: torch materials只取得煤/木棍，重新发现后可实际填充/领取。测试按钮不在普通运行路径。
 
 技术建议：本次已明确复现的P6显示缺陷已修复且通过定向与整体回归，P6代码具备提交放行审查条件；原人工缺口不被冒称完成。用户仍需独立审查并授权下一阶段；不自动进入P7，完整漏斗邻接/网络、四场景与结局仍未实施。见[更新后的完成矩阵](p6-final-matrix.md)。

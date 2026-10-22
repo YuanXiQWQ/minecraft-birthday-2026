@@ -54,4 +54,4 @@ data = input, fuel, output,
 
 手动输入允许不可加工物；燃料GUI槽依据原版`FurnaceFuelSlot`允许燃料/空桶，空桶GUI容量1。Shift先按该设备的配方路由，再燃料；优先目标满时不偷偷换到燃料格。目录/预设Shift只复制一次有界组，永久目录无数量；玩家来源正常有限移动。
 
-`furnacePorts/furnacePortAllows/insertFurnacePort/extractFurnacePort`提供纯传输计划：上方输入0，侧面燃料1，下方输出2/燃料1；底面抽燃料需原版`furnace_fuel_bottom_takeable`标签。实体插桶条件与GUI容量规则分别处理。传输计划保留数量，不自行取得或写存档；未来漏斗必须在同一共享事务中提交源减少、合法目标增加及D05自动取得。**当前没有完整漏斗网络**，不删减后续范围。
+`furnacePorts/furnacePortAllows/insertFurnacePort/extractFurnacePort`提供纯传输计划：上方输入0，侧面燃料1，下方输出2/燃料1；底面抽燃料需原版`furnace_fuel_bottom_takeable`标签。实体插桶条件与GUI容量规则分别处理。传输计划保留数量，不自行取得或写存档；未来漏斗必须在同一共享事务中提交源减少、合法目标增加及D05自动取得。 **当前没有完整漏斗网络**，不删减后续范围。

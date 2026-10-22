@@ -10,20 +10,20 @@
 
 展开开发工具，Enable audio 或 Test selected sound 通过用户手势激活。先取消正在播放的声音，逐项选择 Original sound event，再 Test selected sound；不要只依据调度日志填写“听到了”。
 
-| 状态 | 原版事件 | 人工记录（能听到/内容、音高、响度、尾音或异常） |
-| --- | --- | --- |
-| 待人工验证 | entity.firework_rocket.launch | |
-| 待人工验证 | entity.firework_rocket.blast | |
-| 待人工验证 | entity.firework_rocket.blast_far | |
-| 待人工验证 | entity.firework_rocket.large_blast | |
-| 待人工验证 | entity.firework_rocket.large_blast_far | |
-| 待人工验证 | entity.firework_rocket.twinkle | |
-| 待人工验证 | entity.firework_rocket.twinkle_far | |
-| 待人工验证 | ui.toast.in | |
-| 待人工验证 | ui.toast.out | |
-| 待人工验证 | ui.toast.challenge_complete | |
-| 待人工验证 | entity.experience_orb.pickup | |
-| 待人工验证 | entity.player.levelup | |
+| 状态       | 原版事件                               | 人工记录（能听到/内容、音高、响度、尾音或异常） |
+|------------|----------------------------------------|-------------------------------------------------|
+| 待人工验证 | entity.firework_rocket.launch          |                                                 |
+| 待人工验证 | entity.firework_rocket.blast           |                                                 |
+| 待人工验证 | entity.firework_rocket.blast_far       |                                                 |
+| 待人工验证 | entity.firework_rocket.large_blast     |                                                 |
+| 待人工验证 | entity.firework_rocket.large_blast_far |                                                 |
+| 待人工验证 | entity.firework_rocket.twinkle         |                                                 |
+| 待人工验证 | entity.firework_rocket.twinkle_far     |                                                 |
+| 待人工验证 | ui.toast.in                            |                                                 |
+| 待人工验证 | ui.toast.out                           |                                                 |
+| 待人工验证 | ui.toast.challenge_complete            |                                                 |
+| 待人工验证 | entity.experience_orb.pickup           |                                                 |
+| 待人工验证 | entity.player.levelup                  |                                                 |
 
 - [ ] 待人工验证：静音、0音量、低/中音量，取消当前声及未来排队声音；恢复音量后没有积压补放。
 - [ ] 待人工验证：Small/Large Ball及组合声画配合；开启Far sound fixture比较近/远样本。原版大于10格有刻量化传播延迟，不能把这一延迟直接判为失同步。

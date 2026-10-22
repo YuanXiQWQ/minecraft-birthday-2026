@@ -1,23 +1,244 @@
 /** Formal camera-ray and WorldUse wiring tests keep keyboard actions independent of stale hover projections. */
-import test from 'node:test';import assert from 'node:assert/strict';
-import {Scene,Group,Mesh,BoxGeometry,MeshBasicMaterial,PerspectiveCamera,Raycaster} from 'three';
-import {SceneView} from '../web/src/render/scene.ts';import {Look} from '../web/src/render/look.ts';import {WorldUse,placement} from '../web/src/ui/world-use.ts';import {SaveSession} from '../web/src/persistence/session.ts';import {initialState} from '../web/src/domain/state.ts';import {seal} from '../web/src/persistence/codec.ts';import {WORLD_REGION} from '../web/src/domain/world-config.ts';import {emptyHopper} from '../web/src/domain/hopper.ts';import type {GameInventory} from '../web/src/ui/inventory.ts';import type {Pick} from '../web/src/render/scene.ts';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {Scene, Group, Mesh, BoxGeometry, MeshBasicMaterial, PerspectiveCamera, Raycaster} from 'three';
+import {SceneView} from '../web/src/render/scene.ts';
+import {Look} from '../web/src/render/look.ts';
+import {WorldUse, placement} from '../web/src/ui/world-use.ts';
+import {SaveSession} from '../web/src/persistence/session.ts';
+import {initialState} from '../web/src/domain/state.ts';
+import {seal} from '../web/src/persistence/codec.ts';
+import {WORLD_REGION} from '../web/src/domain/world-config.ts';
+import {emptyHopper} from '../web/src/domain/hopper.ts';
+import type {GameInventory} from '../web/src/ui/inventory.ts';
+import type {Pick} from '../web/src/render/scene.ts';
+
 /** Create a CPU-only formal SceneView with real perspective/depth geometry and actual current ray methods.
  * @return {SceneView} Formal method receiver with a renderer boundary substitute.
  */
-function view():SceneView{const v=Object.create(SceneView.prototype) as SceneView;Object.assign(v,{scene:new Scene(),world:new Group(),persistent:new Group(),camera:new PerspectiveCamera(70,1000/600,.1,90),ray:new Raycaster(),look:new Look(),input:true,lost:false,disposed:false,basePitch:0,pointerPosition:[500,300],pointer:null,rightTarget:null,models:{accepts:()=>true},renderer:{domElement:{dataset:{},style:{},getBoundingClientRect:()=>({left:0,right:1000,top:0,bottom:600,width:1000,height:600}),hasPointerCapture:()=>false}},onHover:null,requestRender:()=>{},showPreview:()=>{}});v.cancel=()=>v.cancelInput();v.scene.add(v.world,v.persistent);v.camera.position.set(0,1.62,7);v.camera.lookAt(0,1.62,0);v.camera.rotation.order='YXZ';for(const[id,x]of [['a',0],['b',3]] as const){const m=new Mesh(new BoxGeometry(1,1,1),new MeshBasicMaterial());m.position.set(x,1.62,0);m.userData.id=id;v.persistent.add(m);}return v;}
+function view(): SceneView {
+    const v = Object.create(SceneView.prototype) as SceneView;
+    Object.assign(v, {
+        scene: new Scene(),
+        world: new Group(),
+        persistent: new Group(),
+        camera: new PerspectiveCamera(70, 1000 / 600, .1, 90),
+        ray: new Raycaster(),
+        look: new Look(),
+        input: true,
+        lost: false,
+        disposed: false,
+        basePitch: 0,
+        pointerPosition: [500, 300],
+        pointer: null,
+        rightTarget: null,
+        models: {accepts: () => true},
+        renderer: {
+            domElement: {
+                dataset: {},
+                style: {},
+                getBoundingClientRect: () => ({left: 0, right: 1000, top: 0, bottom: 600, width: 1000, height: 600}),
+                hasPointerCapture: () => false
+            }
+        },
+        onHover: null,
+        requestRender: () => {
+        },
+        showPreview: () => {
+        }
+    });
+    v.cancel = () => v.cancelInput();
+    v.scene.add(v.world, v.persistent);
+    v.camera.position.set(0, 1.62, 7);
+    v.camera.lookAt(0, 1.62, 0);
+    v.camera.rotation.order = 'YXZ';
+    for (const [id, x] of [['a', 0], ['b', 3]] as const) {
+        const m = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial());
+        m.position.set(x, 1.62, 0);
+        m.userData.id = id;
+        v.persistent.add(m);
+    }
+    return v;
+}
+
 /** Native event-shaped input for direct formal handler tests, separate from trusted browser acceptance.
  * @param {Partial<PointerEvent>} patch Event fields.
  * @return {PointerEvent} Handler input without dispatching a DOM event.
  */
-function pointer(patch:Partial<PointerEvent>={}):PointerEvent{return{pointerId:1,clientX:500,clientY:300,button:2,buttons:2,shiftKey:false,altKey:false,...patch} as PointerEvent;}
+function pointer(patch: Partial<PointerEvent> = {}): PointerEvent {
+    return {
+        pointerId: 1,
+        clientX: 500,
+        clientY: 300,
+        button: 2,
+        buttons: 2,
+        shiftKey: false,
+        altKey: false, ...patch
+    } as PointerEvent;
+}
 
-test('current camera ray replaces A with B without an extra mouse movement and rotation never emits Use',()=>{const v=view();v.persistent.children[1].position.x=6;let hover:Pick|null=null,used=0;v.onHover=h=>hover=h;v.onUse=()=>used++;assert.equal(v.refreshHover()!.id,'a');v.look.begin(1,500,300);v.movePointer(pointer({clientX:635}),true);assert.equal(hover,null);assert.equal(v.refreshHover(),null);v.releasePointer(pointer({clientX:635,buttons:0}));assert.equal(used,0);assert.equal((hover as Pick|null)?.id,'b');assert.equal(v.refreshHover()!.id,'b');assert.equal(v.pointerPosition![0],635);});
+test('current camera ray replaces A with B without an extra mouse movement and rotation never emits Use', () => {
+    const v = view();
+    v.persistent.children[1].position.x = 6;
+    let hover: Pick | null = null, used = 0;
+    v.onHover = h => hover = h;
+    v.onUse = () => used++;
+    assert.equal(v.refreshHover()!.id, 'a');
+    v.look.begin(1, 500, 300);
+    v.movePointer(pointer({clientX: 635}), true);
+    assert.equal(hover, null);
+    assert.equal(v.refreshHover(), null);
+    v.releasePointer(pointer({clientX: 635, buttons: 0}));
+    assert.equal(used, 0);
+    assert.equal((hover as Pick | null)?.id, 'b');
+    assert.equal(v.refreshHover()!.id, 'b');
+    assert.equal(v.pointerPosition![0], 635);
+});
 
-test('GUI, pointer outside canvas, removed geometry and camera aspect cannot leave an actionable old identity',()=>{const v=view();assert.equal(v.refreshHover()!.id,'a');v.persistent.remove(v.persistent.children[0]);assert.equal(v.refreshHover(),null);v.pointerPosition=[-1,300];assert.equal(v.refreshHover(),null);v.camera.aspect=.5;v.camera.updateProjectionMatrix();v.setInputEnabled(false);assert.equal(v.pointerPosition,null);assert.equal(v.refreshHover(),null);v.setInputEnabled(true);assert.equal(v.refreshHover(),null);v.pointerPosition=[500,300];v.lost=true;assert.equal(v.refreshHover(),null);v.lost=false;v.disposed=true;assert.equal(v.refreshHover(),null);});
+test('GUI, pointer outside canvas, removed geometry and camera aspect cannot leave an actionable old identity', () => {
+    const v = view();
+    assert.equal(v.refreshHover()!.id, 'a');
+    v.persistent.remove(v.persistent.children[0]);
+    assert.equal(v.refreshHover(), null);
+    v.pointerPosition = [-1, 300];
+    assert.equal(v.refreshHover(), null);
+    v.camera.aspect = .5;
+    v.camera.updateProjectionMatrix();
+    v.setInputEnabled(false);
+    assert.equal(v.pointerPosition, null);
+    assert.equal(v.refreshHover(), null);
+    v.setInputEnabled(true);
+    assert.equal(v.refreshHover(), null);
+    v.pointerPosition = [500, 300];
+    v.lost = true;
+    assert.equal(v.refreshHover(), null);
+    v.lost = false;
+    v.disposed = true;
+    assert.equal(v.refreshHover(), null);
+});
 
-test('home projection renders each actual cake transition once and skips unrelated progress snapshots',()=>{const v=view();let frames=0;v.cake=null;v.config={cakeY:1.5} as any;v.model=()=>new Group();v.requestRender=()=>{frames++;};v.setCake(false);for(let i=0;i<100;i++)v.setCake(false);assert.equal(frames,1);v.setCake(true);assert.equal((v.cake as Group|null)?.parent,v.world);for(let i=0;i<100;i++)v.setCake(true);assert.equal(frames,2);v.setCake(false);assert.equal(v.cake,null);assert.equal(frames,3);});
+test('home projection renders each actual cake transition once and skips unrelated progress snapshots', () => {
+    const v = view();
+    let frames = 0;
+    v.cake = null;
+    v.config = {cakeY: 1.5} as any;
+    v.model = () => new Group();
+    v.requestRender = () => {
+        frames++;
+    };
+    v.setCake(false);
+    for (let i = 0; i < 100; i++) v.setCake(false);
+    assert.equal(frames, 1);
+    v.setCake(true);
+    assert.equal((v.cake as Group | null)?.parent, v.world);
+    for (let i = 0; i < 100; i++) v.setCake(true);
+    assert.equal(frames, 2);
+    v.setCake(false);
+    assert.equal(v.cake, null);
+    assert.equal(frames, 3);
+});
 
-test('explicit upper attachment uses the same valid neighbor for preview and final formal placement',{timeout:5000},async()=>{const state=initialState();state.progress.unlocked=['minecraft:hopper'];state.progress.player.data.hotbar[0]={id:'minecraft:hopper',count:1};state.progress.scenes.plains.stations=[{id:'anchor',kind:'hopper',cell:[3,0,0],facing:'down',contents:emptyHopper()}];let raw=JSON.stringify(await seal(state,'upper',0));const session=new SaveSession({getItem:()=>raw,setItem:(_k,v)=>raw=v},{exclusive:work=>work()},WORLD_REGION);await session.refresh();const scene=view(),use=Object.create(WorldUse.prototype) as WorldUse;let preview:unknown=null;scene.showPreview=value=>preview=value;Object.assign(use,{scene,session,inventory:{value:{...structuredClone(state.progress.player.data),cursor:null}},notify:()=>{},sound:()=>{},facing:'down',above:true,scope:'upper:plains',hover:{id:'anchor',point:[3.4,.5,1],normal:[0,0,1]}});use.preview();const hit=use.attachHit(use.hover!,true),candidate=placement(hit,session,'hopper','down');assert.deepEqual((preview as any).cell,[3,1,0]);assert.deepEqual(preview,candidate);const saved=new Promise<void>(resolve=>{const off=session.subscribe(s=>{if(s.envelope!.revision>0){off();resolve();}});});use.place(hit);await saved;const placed=session.view.envelope!.state.progress.scenes.plains.stations[1];assert.deepEqual(placed.cell,candidate.cell);assert.equal(placed.facing,candidate.facing);assert.equal(session.view.envelope!.state.progress.player.data.hotbar[0]!.count,1);});
+test('explicit upper attachment uses the same valid neighbor for preview and final formal placement', {timeout: 5000}, async () => {
+    const state = initialState();
+    state.progress.unlocked = ['minecraft:hopper'];
+    state.progress.player.data.hotbar[0] = {id: 'minecraft:hopper', count: 1};
+    state.progress.scenes.plains.stations = [{
+        id: 'anchor',
+        kind: 'hopper',
+        cell: [3, 0, 0],
+        facing: 'down',
+        contents: emptyHopper()
+    }];
+    let raw = JSON.stringify(await seal(state, 'upper', 0));
+    const session = new SaveSession({
+        getItem: () => raw,
+        setItem: (_k, v) => raw = v
+    }, {exclusive: work => work()}, WORLD_REGION);
+    await session.refresh();
+    const scene = view(), use = Object.create(WorldUse.prototype) as WorldUse;
+    let preview: unknown = null;
+    scene.showPreview = value => preview = value;
+    Object.assign(use, {
+        scene,
+        session,
+        inventory: {value: {...structuredClone(state.progress.player.data), cursor: null}},
+        notify: () => {
+        },
+        sound: () => {
+        },
+        facing: 'down',
+        above: true,
+        scope: 'upper:plains',
+        hover: {id: 'anchor', point: [3.4, .5, 1], normal: [0, 0, 1]}
+    });
+    use.preview();
+    const hit = use.attachHit(use.hover!, true), candidate = placement(hit, session, 'hopper', 'down');
+    assert.deepEqual((preview as any).cell, [3, 1, 0]);
+    assert.deepEqual(preview, candidate);
+    const saved = new Promise<void>(resolve => {
+        const off = session.subscribe(s => {
+            if (s.envelope!.revision > 0) {
+                off();
+                resolve();
+            }
+        });
+    });
+    use.place(hit);
+    await saved;
+    const placed = session.view.envelope!.state.progress.scenes.plains.stations[1];
+    assert.deepEqual(placed.cell, candidate.cell);
+    assert.equal(placed.facing, candidate.facing);
+    assert.equal(session.view.envelope!.state.progress.player.data.hotbar[0]!.count, 1);
+});
 
-test('formal WorldUse R re-picks and cannot rotate stale A or act during a look gesture',{timeout:5000},async()=>{const previous=globalThis.window;const target=new EventTarget();Object.defineProperty(globalThis,'window',{value:target,configurable:true});try{const state=initialState();state.progress.unlocked=['minecraft:hopper'];state.progress.scenes.plains.stations=['a','b'].map((id,i)=>({id,kind:'hopper',cell:[2+i,0,0],facing:'down',contents:emptyHopper()}));let raw=JSON.stringify(await seal(state,'hover',0));const s=new SaveSession({getItem:()=>raw,setItem:(_k,v)=>raw=v},{exclusive:work=>work()},WORLD_REGION);await s.refresh();const v=view(),inventory={modal:{open:false}} as GameInventory,use=new WorldUse(v,inventory,s,()=>{},()=>{});v.refreshHover();assert.equal(use.hover!.id,'a');v.camera.rotation.y=-.405;v.look.begin(1,500,300);const key=new Event('keydown',{cancelable:true});Object.assign(key,{code:'KeyR',repeat:false,ctrlKey:false,altKey:false,metaKey:false});target.dispatchEvent(key);await Promise.resolve();assert.deepEqual(s.view.envelope!.state.progress.scenes.plains.stations.map(x=>x.facing),['down','down']);v.look.cancel();const committed=new Promise<void>(resolve=>{const unsubscribe=s.subscribe(snapshot=>{if(snapshot.envelope!.revision>0){unsubscribe();resolve();}});});target.dispatchEvent(key);await committed;assert.equal(use.hover!.id,'b');assert.deepEqual(s.view.envelope!.state.progress.scenes.plains.stations.map(x=>x.facing),['down','north']);use.dispose();}finally{Object.defineProperty(globalThis,'window',{value:previous,configurable:true});}});
+test('formal WorldUse R re-picks and cannot rotate stale A or act during a look gesture', {timeout: 5000}, async () => {
+    const previous = globalThis.window;
+    const target = new EventTarget();
+    Object.defineProperty(globalThis, 'window', {value: target, configurable: true});
+    try {
+        const state = initialState();
+        state.progress.unlocked = ['minecraft:hopper'];
+        state.progress.scenes.plains.stations = ['a', 'b'].map((id, i) => ({
+            id,
+            kind: 'hopper',
+            cell: [2 + i, 0, 0],
+            facing: 'down',
+            contents: emptyHopper()
+        }));
+        let raw = JSON.stringify(await seal(state, 'hover', 0));
+        const s = new SaveSession({
+            getItem: () => raw,
+            setItem: (_k, v) => raw = v
+        }, {exclusive: work => work()}, WORLD_REGION);
+        await s.refresh();
+        const v = view(), inventory = {modal: {open: false}} as GameInventory,
+            use = new WorldUse(v, inventory, s, () => {
+            }, () => {
+            });
+        v.refreshHover();
+        assert.equal(use.hover!.id, 'a');
+        v.camera.rotation.y = -.405;
+        v.look.begin(1, 500, 300);
+        const key = new Event('keydown', {cancelable: true});
+        Object.assign(key, {code: 'KeyR', repeat: false, ctrlKey: false, altKey: false, metaKey: false});
+        target.dispatchEvent(key);
+        await Promise.resolve();
+        assert.deepEqual(s.view.envelope!.state.progress.scenes.plains.stations.map(x => x.facing), ['down', 'down']);
+        v.look.cancel();
+        const committed = new Promise<void>(resolve => {
+            const unsubscribe = s.subscribe(snapshot => {
+                if (snapshot.envelope!.revision > 0) {
+                    unsubscribe();
+                    resolve();
+                }
+            });
+        });
+        target.dispatchEvent(key);
+        await committed;
+        assert.equal(use.hover!.id, 'b');
+        assert.deepEqual(s.view.envelope!.state.progress.scenes.plains.stations.map(x => x.facing), ['down', 'north']);
+        use.dispose();
+    } finally {
+        Object.defineProperty(globalThis, 'window', {value: previous, configurable: true});
+    }
+});

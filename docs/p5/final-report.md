@@ -13,21 +13,21 @@
 
 输入仍为已核验client SHA1 `e877b6a07acd633fb3bb475002175cec036e7b87`，复用已有JDK25 `javap -c -p`只读查看，没有启动Java客户端或安装依赖。[证据指纹](evidence/final/native-evidence.json)记录同版class和GUI资源SHA256。
 
-- `CreativeModeInventoryScreen.hasClickedOutside`字节码0–79：容器半开矩形、排除所选标签。`slotClicked`1171–1316：有carried且outside才丢弃，原button0整组并清carried、button1 split(1)。DOM按钮0/2是左右键，不能照抄客户端0/1。项目按用户边界删除临时组，不生成原版ItemEntity。
+- `CreativeModeInventoryScreen.hasClickedOutside`字节码0–79：容器半开矩形、排除所选标签。`slotClicked`1171–1316：有carried且outside才丢弃，原button0整组并清carried、button1 split (1)。DOM按钮0/2是左右键，不能照抄客户端0/1。项目按用户边界删除临时组，不生成原版ItemEntity。
 - 原版HOTBAR页读取HotbarManager九组；空组有锁定用途的信息纸，ItemPicker五行滚动。项目使用原九组数据和信息提示；世界移动、能力切换、完整生存背包不加入。创造来源已审查的项目适配保持，不宣称空白/异类来源等所有原版slotClicked分支一致。
 - 原版个人菜单会返还/掉出临时组；D07已明确选择关闭清光标和个人格。这是批准适配，不标为Java实机一致。G17外围矩形在网页加入导航/Tooltip保护，避免将网页扩展控件当作世界丢弃区。
 
 ## 自动化与真实浏览器
 
-| 检查 | 结果/证据 |
-| --- | --- |
-| 类型 | 通过，[check.txt](evidence/final/check.txt) |
+| 检查               | 结果/证据                                                                                                                                                                                                                                                           |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 类型               | 通过，[check.txt](evidence/final/check.txt)                                                                                                                                                                                                                         |
 | 正式单元/存档/规则 | **84通过，0失败/跳过**，[unit.txt](evidence/final/unit.txt)。含9项新增测试：外侧边界、取消、预设组/组件、四格与数量/权限、锁内临时事务、全113锁定反例、真实GameInventory方法的延迟个人格关闭隔离、旧事务等待中重置后立即使用个人格；原P3/稳定布局/迁移/重置测试保留 |
-| P4 | 113物品/112可达配方/2042分类/18步蛋糕证明及哈希通过，[data.txt](evidence/final/data.txt)；无P4数据或配方规则改动 |
-| P2关键回归 | **48通过，0失败/跳过**，[p2.txt](evidence/final/p2.txt) |
-| 普通根/Pages构建 | 两构建和审计通过，[根](evidence/final/build-root.txt)、[子路径](evidence/final/build-pages.txt) |
-| 实际HTTP | **2通过**，[built-http.txt](evidence/final/built-http.txt)：逐字节478资源/清单及规则文件，排除docs/AGENTS、实验、客户端、测试入口和内部数据全集 |
-| 普通dev/构建浏览器 | 4183、4185、4186子路径均实际打开个人四格与预设页，113图标初始化，锁定主线仍18，滚动条End到4、焦点E能关闭、无控制台error，[built-browser.json](evidence/final/built-browser.json) |
+| P4                 | 113物品/112可达配方/2042分类/18步蛋糕证明及哈希通过，[data.txt](evidence/final/data.txt)；无P4数据或配方规则改动                                                                                                                                                    |
+| P2关键回归         | **48通过，0失败/跳过**，[p2.txt](evidence/final/p2.txt)                                                                                                                                                                                                             |
+| 普通根/Pages构建   | 两构建和审计通过，[根](evidence/final/build-root.txt)、[子路径](evidence/final/build-pages.txt)                                                                                                                                                                     |
+| 实际HTTP           | **2通过**，[built-http.txt](evidence/final/built-http.txt)：逐字节478资源/清单及规则文件，排除docs/AGENTS、实验、客户端、测试入口和内部数据全集                                                                                                                     |
+| 普通dev/构建浏览器 | 4183、4185、4186子路径均实际打开个人四格与预设页，113图标初始化，锁定主线仍18，滚动条End到4、焦点E能关闭、无控制台error，[built-browser.json](evidence/final/built-browser.json)                                                                                    |
 
 本次真实环境为Windows Chromium155。1280×720/DPR1.25使用GUI3×；显式1440×900与700×600视口观察DPR约1，个人板528×498/352×332，导航、格子和文本可见，[布局记录](evidence/final/layouts.json)、[1280个人](evidence/final/crafting-1280.png)、[1440个人](evidence/final/crafting-1440.png)、[700个人](evidence/final/crafting-700.png)、[1280预设](evidence/final/presets-1280.png)。这不是所有DPR/设备/引擎都通过。
 
@@ -45,9 +45,9 @@
 
 ## 资源与复现
 
-新增原版`scroller.png`和`scroller_disabled.png`两文件；inventory.png已在P2 cohort中，本次加入catalogue加载依赖。资源共**478文件/清单**，catalogue段363条、401依赖；[catalogue-manifest](../../resources/minecraft/26.3/catalogue-manifest.json)保存输入、版本、字节及哈希，导出器可从同一已校验客户端复现。113默认图标/字体/Tooltip正常Git/build，不增加外部缓存限制。没有扩展复杂组件、人物模型或正式加工资源。公开发布权利仍独立审查，本次无部署。
+新增原版`scroller.png`和`scroller_disabled.png`两文件；inventory.png已在P2 cohort中，本次加入catalogue加载依赖。资源共 **478文件/清单**，catalogue段363条、401依赖；[catalogue-manifest](../../resources/minecraft/26.3/catalogue-manifest.json)保存输入、版本、字节及哈希，导出器可从同一已校验客户端复现。113默认图标/字体/Tooltip正常Git/build，不增加外部缓存限制。没有扩展复杂组件、人物模型或正式加工资源。公开发布权利仍独立审查，本次无部署。
 
-普通运行`npm --prefix app run dev`→4183/game/。完整取放验证用`dev:verify`→4184/__verify__/index.html的Fixture: unlock catalogue，再开同源/__verify__/input.html；验证入口不进普通构建。三个菜单标签与C/X共用同一布局，Crafting只显示输入。外侧点击按住后拖动不会丢弃，静止左/右点击才提交删除。
+普通运行`npm --prefix app run dev`→4183/game/。完整取放验证用`dev:verify`→4184/ __verify__/index.html的Fixture: unlock catalogue，再开同源/ __verify__/input.html；验证入口不进普通构建。三个菜单标签与C/X共用同一布局，Crafting只显示输入。外侧点击按住后拖动不会丢弃，静止左/右点击才提交删除。
 
 ## 进入P6的技术建议
 

@@ -1,38 +1,241 @@
 /** Deterministic failure and interleaving tests complement, rather than replace, real browser Web Locks tests. */
-import test from 'node:test';import assert from 'node:assert/strict';import {canonical,checksum,decode,seal,token} from '../web/src/persistence/codec.ts';import {LOCK_NAME,SAVE_KEY,SaveSession} from '../web/src/persistence/session.ts';import type {StoragePort,LockPort} from '../web/src/persistence/session.ts';import {initialState} from '../web/src/domain/state.ts';
-/** Isolate storage failures and unrelated origin data for each test. */
-class Memory implements StoragePort {values=new Map<string,string>([['other-project:save','untouched']]);denyRead=false;denyWrite=false;
-  /** Read raw test bytes or raise an explicit capability failure.
-   * @param {string} key Storage key.
-   * @return {string|null} Raw value.
-   */
-  getItem(key:string):string|null{if(this.denyRead)throw new Error('storage-unavailable');return this.values.get(key)??null;}
-  /** Simulate atomic setItem and quota denial without partial data mutation.
-   * @param {string} key Storage key.
-   * @param {string} value Complete value.
-   */
-  setItem(key:string,value:string):void{if(this.denyWrite)throw new Error('write-failed');this.values.set(key,value);}}
-/** Deterministic shared coordinator models exclusive callback scheduling, not localStorage compare-and-swap. */
-class Mutex implements LockPort {tail:Promise<unknown>=Promise.resolve();
-  /** Serialize every callback even when the preceding transaction rejects.
-   * @param {Function} work Transaction.
-   * @return {Promise<T>} Callback result.
-   */
-  exclusive<T>(work:()=>Promise<T>):Promise<T>{const p=this.tail.then(work);this.tail=p.catch(()=>{});return p;}}
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {canonical, checksum, decode, seal, token} from '../web/src/persistence/codec.ts';
+import {LOCK_NAME, SAVE_KEY, SaveSession} from '../web/src/persistence/session.ts';
+import type {StoragePort, LockPort} from '../web/src/persistence/session.ts';
+import {initialState} from '../web/src/domain/state.ts';
 
-test('codec detects tampering, future formats, invalid content and exact structural errors',async()=>{const envelope=await seal(initialState(),'epoch-a',0),raw=JSON.stringify(envelope);assert.deepEqual((await decode(raw)).envelope,envelope);assert.equal(canonical({b:1,a:2}),canonical({a:2,b:1}));await assert.rejects(()=>decode('{'),/corrupt-save/);await assert.rejects(()=>decode(JSON.stringify({...envelope,revision:3})),/checksum/);await assert.rejects(()=>decode(JSON.stringify({...envelope,format:9})),/future-save/);const {checksum:_,...body}=envelope;const bad={...body,state:{...body.state,extra:true}};await assert.rejects(async()=>decode(JSON.stringify({...bad,checksum:await checksum(bad)})),/invalid-save/);});
-test('documented development-v0 migrates in memory; failed migration never rewrites original bytes',async()=>{
-  const e=await seal(initialState(),'legacy-a',0),{checksum:_,...base}=e,body={...base,format:0,contentVersion:'p3-development-0',state:{...base.state,progress:{...base.state.progress,player:{version:0,data:null},recipeBook:{version:0,data:null}}}},raw=JSON.stringify({...body,state:{...body.state,progress:{...body.state.progress,player:body.state.progress.player.version===1?{version:1,data:Object.fromEntries(Object.entries(body.state.progress.player.data??{}).filter(([k])=>k!=='backpack'))}:body.state.progress.player}},checksum:await checksum({...body,state:{...body.state,progress:{...body.state.progress,player:body.state.progress.player.version===1?{version:1,data:Object.fromEntries(Object.entries(body.state.progress.player.data??{}).filter(([k])=>k!=='backpack'))}:body.state.progress.player}}})});const decoded=await decode(raw);assert.equal(decoded.migrated,true);assert.equal(decoded.envelope.format,1);const memory=new Memory();memory.setItem(SAVE_KEY,raw);const session=new SaveSession(memory,new Mutex());await session.refresh();assert.equal(session.view.migrated,true);assert.equal(memory.getItem(SAVE_KEY),raw);await session.dispatch({type:'unlock',item:'minecraft:oak_log'});assert.equal(JSON.parse(memory.getItem(SAVE_KEY)!).format,1);
-  const invalid={...body,state:{...body.state,settings:{...body.state.settings,volume:7}}},bad=JSON.stringify({...invalid,checksum:await checksum(invalid)});memory.setItem(SAVE_KEY,bad);await session.refresh();assert.equal(session.view.status,'migration-failed');assert.equal(memory.getItem(SAVE_KEY),bad);
+/** Isolate storage failures and unrelated origin data for each test. */
+class Memory implements StoragePort {
+    values = new Map<string, string>([['other-project:save', 'untouched']]);
+    denyRead = false;
+    denyWrite = false;
+
+    /** Read raw test bytes or raise an explicit capability failure.
+     * @param {string} key Storage key.
+     * @return {string|null} Raw value.
+     */
+    getItem(key: string): string | null {
+        if (this.denyRead) throw new Error('storage-unavailable');
+        return this.values.get(key) ?? null;
+    }
+
+    /** Simulate atomic setItem and quota denial without partial data mutation.
+     * @param {string} key Storage key.
+     * @param {string} value Complete value.
+     */
+    setItem(key: string, value: string): void {
+        if (this.denyWrite) throw new Error('write-failed');
+        this.values.set(key, value);
+    }
+}
+
+/** Deterministic shared coordinator models exclusive callback scheduling, not localStorage compare-and-swap. */
+class Mutex implements LockPort {
+    tail: Promise<unknown> = Promise.resolve();
+
+    /** Serialize every callback even when the preceding transaction rejects.
+     * @param {Function} work Transaction.
+     * @return {Promise<T>} Callback result.
+     */
+    exclusive<T>(work: () => Promise<T>): Promise<T> {
+        const p = this.tail.then(work);
+        this.tail = p.catch(() => {
+        });
+        return p;
+    }
+}
+
+test('codec detects tampering, future formats, invalid content and exact structural errors', async () => {
+    const envelope = await seal(initialState(), 'epoch-a', 0), raw = JSON.stringify(envelope);
+    assert.deepEqual((await decode(raw)).envelope, envelope);
+    assert.equal(canonical({b: 1, a: 2}), canonical({a: 2, b: 1}));
+    await assert.rejects(() => decode('{'), /corrupt-save/);
+    await assert.rejects(() => decode(JSON.stringify({...envelope, revision: 3})), /checksum/);
+    await assert.rejects(() => decode(JSON.stringify({...envelope, format: 9})), /future-save/);
+    const {checksum: _, ...body} = envelope;
+    const bad = {...body, state: {...body.state, extra: true}};
+    await assert.rejects(async () => decode(JSON.stringify({...bad, checksum: await checksum(bad)})), /invalid-save/);
 });
-test('missing storage initializes under coordination; hydration and duplicate commands do not replay first events',async()=>{const memory=new Memory(),mutex=new Mutex(),a=new SaveSession(memory,mutex);await a.refresh();assert.equal(a.view.status,'ready');let notifications=0;a.eventListeners.add(events=>notifications+=events.filter(e=>e.type==='item-unlocked').length);await a.dispatch({type:'unlock',item:'minecraft:egg'});await a.dispatch({type:'unlock',item:'minecraft:egg'});await a.refresh();const b=new SaveSession(memory,mutex);b.eventListeners.add(events=>notifications+=events.length);await b.refresh();assert.equal(notifications,1);assert.deepEqual(b.view.envelope!.state.progress.unlocked,['minecraft:egg']);assert.ok(!memory.getItem(SAVE_KEY)!.includes('celebration'));});
-test('concurrent sessions merge semantic commands against fresh facts under the shared lock',async()=>{const m=new Memory(),locks=new Mutex(),a=new SaveSession(m,locks),b=new SaveSession(m,locks);await Promise.all([a.refresh(),b.refresh()]);await Promise.all([a.dispatch({type:'unlock',item:'minecraft:egg'}),b.dispatch({type:'unlock',item:'minecraft:charcoal'})]);const latest=(await decode(m.getItem(SAVE_KEY)!)).envelope;assert.deepEqual(new Set(latest.state.progress.unlocked),new Set(['minecraft:egg','minecraft:charcoal']));assert.equal(latest.revision,2);assert.match(LOCK_NAME,/minecraft-birthday-2026/);});
-test('queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event',async()=>{
-  const m=new Memory(),locks=new Mutex(),a=new SaveSession(m,locks),b=new SaveSession(m,locks);await Promise.all([a.refresh(),b.refresh()]);await a.dispatch({type:'settings',patch:{volume:.7,locale:'en'}});await b.refresh();let release!:()=>void;const held=locks.exclusive(()=>new Promise<void>(r=>release=r));await Promise.resolve();const reset=a.reset(token(a.view.envelope!)),stale=b.dispatch({type:'unlock',item:'minecraft:cake'});release();await held;await reset;await assert.rejects(stale,/stale-session/);const latest=(await decode(m.getItem(SAVE_KEY)!)).envelope;assert.deepEqual(latest.state.progress.unlocked,[]);assert.equal(latest.state.settings.volume,.7);assert.equal(m.getItem('other-project:save'),'untouched');await b.resume();await b.dispatch({type:'unlock',item:'minecraft:oak_log'});assert.deepEqual((await decode(m.getItem(SAVE_KEY)!)).envelope.state.progress.unlocked,['minecraft:oak_log']);
+test('documented development-v0 migrates in memory; failed migration never rewrites original bytes', async () => {
+    const e = await seal(initialState(), 'legacy-a', 0), {checksum: _, ...base} = e, body = {
+        ...base,
+        format: 0,
+        contentVersion: 'p3-development-0',
+        state: {
+            ...base.state,
+            progress: {...base.state.progress, player: {version: 0, data: null}, recipeBook: {version: 0, data: null}}
+        }
+    }, raw = JSON.stringify({
+        ...body,
+        state: {
+            ...body.state,
+            progress: {
+                ...body.state.progress,
+                player: body.state.progress.player.version === 1 ? {
+                    version: 1,
+                    data: Object.fromEntries(Object.entries(body.state.progress.player.data ?? {}).filter(([k]) => k !== 'backpack'))
+                } : body.state.progress.player
+            }
+        },
+        checksum: await checksum({
+            ...body,
+            state: {
+                ...body.state,
+                progress: {
+                    ...body.state.progress,
+                    player: body.state.progress.player.version === 1 ? {
+                        version: 1,
+                        data: Object.fromEntries(Object.entries(body.state.progress.player.data ?? {}).filter(([k]) => k !== 'backpack'))
+                    } : body.state.progress.player
+                }
+            }
+        })
+    });
+    const decoded = await decode(raw);
+    assert.equal(decoded.migrated, true);
+    assert.equal(decoded.envelope.format, 1);
+    const memory = new Memory();
+    memory.setItem(SAVE_KEY, raw);
+    const session = new SaveSession(memory, new Mutex());
+    await session.refresh();
+    assert.equal(session.view.migrated, true);
+    assert.equal(memory.getItem(SAVE_KEY), raw);
+    await session.dispatch({type: 'unlock', item: 'minecraft:oak_log'});
+    assert.equal(JSON.parse(memory.getItem(SAVE_KEY)!).format, 1);
+    const invalid = {...body, state: {...body.state, settings: {...body.state.settings, volume: 7}}},
+        bad = JSON.stringify({...invalid, checksum: await checksum(invalid)});
+    memory.setItem(SAVE_KEY, bad);
+    await session.refresh();
+    assert.equal(session.view.status, 'migration-failed');
+    assert.equal(memory.getItem(SAVE_KEY), bad);
 });
-test('confirmation notices same-epoch changes and requires a new explicit reset',async()=>{const m=new Memory(),l=new Mutex(),a=new SaveSession(m,l),b=new SaveSession(m,l);await a.refresh();await b.refresh();const confirmation=token(a.view.envelope!);await b.dispatch({type:'unlock',item:'minecraft:egg'});await assert.rejects(()=>a.reset(confirmation),/confirmation-stale/);assert.ok((await decode(m.getItem(SAVE_KEY)!)).envelope.state.progress.unlocked.includes('minecraft:egg'));assert.equal(a.view.writable,true);await a.reset(token(a.view.envelope!));assert.deepEqual(a.view.envelope!.state.progress.unlocked,[]);});
-test('queued commands are fenced across suspend/resume even when the reset epoch has not changed',async()=>{const m=new Memory(),l=new Mutex(),s=new SaveSession(m,l);await s.refresh();let release!:()=>void;const held=l.exclusive(()=>new Promise<void>(r=>release=r));await Promise.resolve();const action=s.dispatch({type:'unlock',item:'minecraft:egg'});s.suspend();release();await held;await assert.rejects(action,/session-restored/);await s.resume();assert.deepEqual(s.view.envelope!.state.progress.unlocked,[]);});
-test('corrupt, future and missing storage capability preserve exact bytes and block writes/reset',async()=>{for(const raw of ['not json',JSON.stringify({format:99})]){const m=new Memory();m.setItem(SAVE_KEY,raw);const s=new SaveSession(m,new Mutex());await s.refresh();assert.equal(s.view.writable,false);await assert.rejects(()=>s.dispatch({type:'unlock',item:'minecraft:egg'}));await assert.rejects(()=>s.reset('anything'));assert.equal(m.getItem(SAVE_KEY),raw);}const m=new Memory();m.denyRead=true;const unavailable=new SaveSession(m,new Mutex());await unavailable.refresh();assert.equal(unavailable.view.status,'storage-unavailable');assert.equal(m.values.has(SAVE_KEY),false);});
-test('unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap',async()=>{const m=new Memory(),s=new SaveSession(m,null);await s.refresh();assert.equal(s.view.status,'lock-unavailable');assert.equal(m.getItem(SAVE_KEY),null);await assert.rejects(()=>s.dispatch({type:'unlock',item:'minecraft:egg'}),/read-only/);});
-test('write denial leaves both durable and presented facts unchanged, with an explicit retry path',async()=>{const m=new Memory(),s=new SaveSession(m,new Mutex());await s.refresh();const raw=m.getItem(SAVE_KEY);m.denyWrite=true;await assert.rejects(()=>s.dispatch({type:'unlock',item:'minecraft:egg'}),/write-failed/);assert.equal(m.getItem(SAVE_KEY),raw);assert.deepEqual(s.view.envelope!.state.progress.unlocked,[]);assert.equal(s.view.status,'write-failed');m.denyWrite=false;await s.refresh();await s.dispatch({type:'unlock',item:'minecraft:egg'});assert.equal(s.view.status,'ready');});
-test('rejected domain input does not poison a valid session or replace its saved bytes',async()=>{const m=new Memory(),s=new SaveSession(m,new Mutex());await s.refresh();const raw=m.getItem(SAVE_KEY);await assert.rejects(()=>s.dispatch({type:'record-cake-placement',scene:'home',table:'birthday-table'}),/invalid-cake-placement/);assert.equal(s.view.writable,true);assert.equal(m.getItem(SAVE_KEY),raw);await s.dispatch({type:'unlock',item:'minecraft:egg'});assert.equal(s.view.status,'ready');});
+test('missing storage initializes under coordination; hydration and duplicate commands do not replay first events', async () => {
+    const memory = new Memory(), mutex = new Mutex(), a = new SaveSession(memory, mutex);
+    await a.refresh();
+    assert.equal(a.view.status, 'ready');
+    let notifications = 0;
+    a.eventListeners.add(events => notifications += events.filter(e => e.type === 'item-unlocked').length);
+    await a.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    await a.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    await a.refresh();
+    const b = new SaveSession(memory, mutex);
+    b.eventListeners.add(events => notifications += events.length);
+    await b.refresh();
+    assert.equal(notifications, 1);
+    assert.deepEqual(b.view.envelope!.state.progress.unlocked, ['minecraft:egg']);
+    assert.ok(!memory.getItem(SAVE_KEY)!.includes('celebration'));
+});
+test('concurrent sessions merge semantic commands against fresh facts under the shared lock', async () => {
+    const m = new Memory(), locks = new Mutex(), a = new SaveSession(m, locks), b = new SaveSession(m, locks);
+    await Promise.all([a.refresh(), b.refresh()]);
+    await Promise.all([a.dispatch({type: 'unlock', item: 'minecraft:egg'}), b.dispatch({
+        type: 'unlock',
+        item: 'minecraft:charcoal'
+    })]);
+    const latest = (await decode(m.getItem(SAVE_KEY)!)).envelope;
+    assert.deepEqual(new Set(latest.state.progress.unlocked), new Set(['minecraft:egg', 'minecraft:charcoal']));
+    assert.equal(latest.revision, 2);
+    assert.match(LOCK_NAME, /minecraft-birthday-2026/);
+});
+test('queued stale writes after reset cannot resurrect progress, even before the old page receives any storage event', async () => {
+    const m = new Memory(), locks = new Mutex(), a = new SaveSession(m, locks), b = new SaveSession(m, locks);
+    await Promise.all([a.refresh(), b.refresh()]);
+    await a.dispatch({type: 'settings', patch: {volume: .7, locale: 'en'}});
+    await b.refresh();
+    let release!: () => void;
+    const held = locks.exclusive(() => new Promise<void>(r => release = r));
+    await Promise.resolve();
+    const reset = a.reset(token(a.view.envelope!)), stale = b.dispatch({type: 'unlock', item: 'minecraft:cake'});
+    release();
+    await held;
+    await reset;
+    await assert.rejects(stale, /stale-session/);
+    const latest = (await decode(m.getItem(SAVE_KEY)!)).envelope;
+    assert.deepEqual(latest.state.progress.unlocked, []);
+    assert.equal(latest.state.settings.volume, .7);
+    assert.equal(m.getItem('other-project:save'), 'untouched');
+    await b.resume();
+    await b.dispatch({type: 'unlock', item: 'minecraft:oak_log'});
+    assert.deepEqual((await decode(m.getItem(SAVE_KEY)!)).envelope.state.progress.unlocked, ['minecraft:oak_log']);
+});
+test('confirmation notices same-epoch changes and requires a new explicit reset', async () => {
+    const m = new Memory(), l = new Mutex(), a = new SaveSession(m, l), b = new SaveSession(m, l);
+    await a.refresh();
+    await b.refresh();
+    const confirmation = token(a.view.envelope!);
+    await b.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    await assert.rejects(() => a.reset(confirmation), /confirmation-stale/);
+    assert.ok((await decode(m.getItem(SAVE_KEY)!)).envelope.state.progress.unlocked.includes('minecraft:egg'));
+    assert.equal(a.view.writable, true);
+    await a.reset(token(a.view.envelope!));
+    assert.deepEqual(a.view.envelope!.state.progress.unlocked, []);
+});
+test('queued commands are fenced across suspend/resume even when the reset epoch has not changed', async () => {
+    const m = new Memory(), l = new Mutex(), s = new SaveSession(m, l);
+    await s.refresh();
+    let release!: () => void;
+    const held = l.exclusive(() => new Promise<void>(r => release = r));
+    await Promise.resolve();
+    const action = s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    s.suspend();
+    release();
+    await held;
+    await assert.rejects(action, /session-restored/);
+    await s.resume();
+    assert.deepEqual(s.view.envelope!.state.progress.unlocked, []);
+});
+test('corrupt, future and missing storage capability preserve exact bytes and block writes/reset', async () => {
+    for (const raw of ['not json', JSON.stringify({format: 99})]) {
+        const m = new Memory();
+        m.setItem(SAVE_KEY, raw);
+        const s = new SaveSession(m, new Mutex());
+        await s.refresh();
+        assert.equal(s.view.writable, false);
+        await assert.rejects(() => s.dispatch({type: 'unlock', item: 'minecraft:egg'}));
+        await assert.rejects(() => s.reset('anything'));
+        assert.equal(m.getItem(SAVE_KEY), raw);
+    }
+    const m = new Memory();
+    m.denyRead = true;
+    const unavailable = new SaveSession(m, new Mutex());
+    await unavailable.refresh();
+    assert.equal(unavailable.view.status, 'storage-unavailable');
+    assert.equal(m.values.has(SAVE_KEY), false);
+});
+test('unsupported lock capability is read-only; native storage is never treated as atomic compare-and-swap', async () => {
+    const m = new Memory(), s = new SaveSession(m, null);
+    await s.refresh();
+    assert.equal(s.view.status, 'lock-unavailable');
+    assert.equal(m.getItem(SAVE_KEY), null);
+    await assert.rejects(() => s.dispatch({type: 'unlock', item: 'minecraft:egg'}), /read-only/);
+});
+test('write denial leaves both durable and presented facts unchanged, with an explicit retry path', async () => {
+    const m = new Memory(), s = new SaveSession(m, new Mutex());
+    await s.refresh();
+    const raw = m.getItem(SAVE_KEY);
+    m.denyWrite = true;
+    await assert.rejects(() => s.dispatch({type: 'unlock', item: 'minecraft:egg'}), /write-failed/);
+    assert.equal(m.getItem(SAVE_KEY), raw);
+    assert.deepEqual(s.view.envelope!.state.progress.unlocked, []);
+    assert.equal(s.view.status, 'write-failed');
+    m.denyWrite = false;
+    await s.refresh();
+    await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    assert.equal(s.view.status, 'ready');
+});
+test('rejected domain input does not poison a valid session or replace its saved bytes', async () => {
+    const m = new Memory(), s = new SaveSession(m, new Mutex());
+    await s.refresh();
+    const raw = m.getItem(SAVE_KEY);
+    await assert.rejects(() => s.dispatch({
+        type: 'record-cake-placement',
+        scene: 'home',
+        table: 'birthday-table'
+    }), /invalid-cake-placement/);
+    assert.equal(s.view.writable, true);
+    assert.equal(m.getItem(SAVE_KEY), raw);
+    await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    assert.equal(s.view.status, 'ready');
+});

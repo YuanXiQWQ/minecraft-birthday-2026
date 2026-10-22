@@ -1,7 +1,7 @@
 /** B-only local adjacency and bounded hopper scheduling, without world simulation. */
-import { OPPOSITE, adjacent } from './definitions.mjs';
-import { canExtract, faceSlots, moveFinite } from './containers.mjs';
-import { at } from './placement.mjs';
+import {OPPOSITE, adjacent} from './definitions.mjs';
+import {canExtract, faceSlots, moveFinite} from './containers.mjs';
+import {at} from './placement.mjs';
 
 /** Rebuild graph edges from positions, so removal cannot leave cached connections.
  * @param {object} state Experiment state.
@@ -16,7 +16,12 @@ export function connections(state) {
       kind: 'push', from: hopper.id, to: target.id, face: OPPOSITE[hopper.facing],
     });
     const source = at(state, adjacent(hopper.pos, 'up'));
-    if (source && source.type !== 'crafting_table') edges.push({ kind: 'pull', from: source.id, to: hopper.id, face: 'down' });
+    if (source && source.type !== 'crafting_table') edges.push({
+      kind: 'pull',
+      from: source.id,
+      to: hopper.id,
+      face: 'down'
+    });
   }
   return edges;
 }
@@ -46,7 +51,7 @@ function transferEdge(state, edge, budgets, emit, acquire) {
       budgets.set(budgetKey, budgets.get(budgetKey) - 1);
       if (target.type === 'hopper' && wasEmpty) target.cooldown = Math.max(target.cooldown, 8);
       if (a === 2 && ['furnace', 'blast_furnace'].includes(source.type)) acquire(item);
-      emit('transfer', { from: source.id, to: target.id, item, sourceSlot: a, targetSlot: b });
+      emit('transfer', {from: source.id, to: target.id, item, sourceSlot: a, targetSlot: b});
       return true;
     }
   }

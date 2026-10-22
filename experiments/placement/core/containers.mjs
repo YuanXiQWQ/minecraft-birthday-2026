@@ -1,5 +1,5 @@
 /** Shared finite carriers and side-aware ports for the isolated A/B experiment. */
-import { ITEMS, recipeFor } from './definitions.mjs';
+import {ITEMS, recipeFor} from './definitions.mjs';
 
 /** Validate a sample finite stack, independently of permanent unlock state.
  * @param {object|null} stack Temporary stack.
@@ -7,7 +7,7 @@ import { ITEMS, recipeFor } from './definitions.mjs';
  */
 export function validStack(stack) {
   return stack === null || (stack && Object.hasOwn(ITEMS, stack.item)
-    && Number.isInteger(stack.count) && stack.count > 0 && stack.count <= ITEMS[stack.item].max);
+      && Number.isInteger(stack.count) && stack.count > 0 && stack.count <= ITEMS[stack.item].max);
 }
 
 /** Calculate capacity before modifying either participant in a transfer.
@@ -42,7 +42,7 @@ export function canInsert(entity, slot, stack) {
   if (slot === 2) return false;
   if (slot === 0) return true;
   return Boolean(ITEMS[stack.item].fuel)
-    || (stack.item === 'bucket' && entity.slots[1]?.item !== 'bucket');
+      || (stack.item === 'bucket' && entity.slots[1]?.item !== 'bucket');
 }
 
 /** Enforce the bottom-only restriction for furnace fuel-slot extraction.
@@ -54,7 +54,7 @@ export function canInsert(entity, slot, stack) {
 export function canExtract(entity, slot, face) {
   if (!entity.slots[slot]) return false;
   return !(['furnace', 'blast_furnace'].includes(entity.type) && slot === 1 && face === 'down')
-    || ['bucket', 'water_bucket'].includes(entity.slots[slot].item);
+      || ['bucket', 'water_bucket'].includes(entity.slots[slot].item);
 }
 
 /** Move finite groups atomically; an insertion failure leaves the source intact.
@@ -71,7 +71,7 @@ export function moveFinite(source, sourceSlot, target, targetSlot, requested = 1
   if (!stack || !canInsert(target, targetSlot, stack)) return 0;
   const amount = Math.min(stack.count, capacity(target.slots[targetSlot], stack), requested);
   if (!Number.isInteger(amount) || amount <= 0) return 0;
-  target.slots[targetSlot] = { item: stack.item, count: (target.slots[targetSlot]?.count ?? 0) + amount };
+  target.slots[targetSlot] = {item: stack.item, count: (target.slots[targetSlot]?.count ?? 0) + amount};
   stack.count -= amount;
   if (!stack.count) source.slots[sourceSlot] = null;
   return amount;
@@ -84,7 +84,7 @@ export function moveFinite(source, sourceSlot, target, targetSlot, requested = 1
  */
 export function quickRoute(entity, stack) {
   if (entity.type === 'hopper' || entity.type === 'crafting_table') return entity.slots.map((_, i) => i);
-  const probe = { ...entity, slots: [stack, null, null] };
+  const probe = {...entity, slots: [stack, null, null]};
   if (recipeFor(probe)) return [0];
   return ITEMS[stack.item].fuel ? [1] : [];
 }

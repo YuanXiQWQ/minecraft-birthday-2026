@@ -1,69 +1,420 @@
 /** P3_TEST_ONLY: explicit command fixtures and real browser coordination, excluded from every normal build. */
-import {browserSession} from '../web/src/persistence/browser.ts';import {SAVE_KEY,LOCK_NAME,SaveSession} from '../web/src/persistence/session.ts';import {token} from '../web/src/persistence/codec.ts';
-import registered from '../web/src/data/registry.json' with {type:'json'};
-import {emptyHopper} from '../web/src/domain/hopper.ts';import type {Kind} from '../web/src/domain/types.ts';
+import {browserSession} from '../web/src/persistence/browser.ts';
+import {SAVE_KEY, LOCK_NAME, SaveSession} from '../web/src/persistence/session.ts';
+import {token} from '../web/src/persistence/codec.ts';
+import registered from '../web/src/data/registry.json' with {type: 'json'};
+import {emptyHopper} from '../web/src/domain/hopper.ts';
+import type {Kind} from '../web/src/domain/types.ts';
 import {emptyFurnace} from '../web/src/domain/furnace.ts';
-import {potentialDrops} from '../web/src/rules/harvest.ts';import {cooking} from '../web/src/rules/process.ts';import {loadRules} from '../web/src/rules/load.ts';import {matchCrafting} from '../web/src/rules/matcher.ts';
-if(import.meta.env.MODE!=='verification')throw new Error('verification-only');
+import {potentialDrops} from '../web/src/rules/harvest.ts';
+import {cooking} from '../web/src/rules/process.ts';
+import {loadRules} from '../web/src/rules/load.ts';
+import {matchCrafting} from '../web/src/rules/matcher.ts';
+
+if (import.meta.env.MODE !== 'verification') throw new Error('verification-only');
 /** Test origin owns no real user's ordinary-server save. */
-const connection=browserSession(),session=connection.session,output=document.getElementById('verification')!,controls=document.getElementById('controls')!;
+const connection = browserSession(), session = connection.session, output = document.getElementById('verification')!,
+    controls = document.getElementById('controls')!;
 /** Explicit browser action records are separate from domain events and durable facts. */
-const records:object[]=[];
+const records: object[] = [];
+
 /** Publish inspectable test evidence without accessing renderer internals.
  * @param {object} record Optional new evidence row.
  */
-function publish(record?:object):void{if(record)records.push(record);output.textContent=JSON.stringify({origin:location.origin,mode:import.meta.env.MODE,environment:{userAgent:navigator.userAgent,viewport:[innerWidth,innerHeight],dpr:devicePixelRatio},nativeLocks:!!navigator.locks,snapshot:session.view,records},null,2);}
+function publish(record?: object): void {
+    if (record) records.push(record);
+    output.textContent = JSON.stringify({
+        origin: location.origin,
+        mode: import.meta.env.MODE,
+        environment: {userAgent: navigator.userAgent, viewport: [innerWidth, innerHeight], dpr: devicePixelRatio},
+        nativeLocks: !!navigator.locks,
+        snapshot: session.view,
+        records
+    }, null, 2);
+}
+
 /** Add a test-only button whose completion or rejection is recorded for real browser inspection.
  * @param {string} label Explicit fixture operation.
  * @param {Function} action Test action.
  */
-function action(label:string,action:()=>Promise<unknown>):void{const b=document.createElement('button');b.textContent=label;b.addEventListener('click',()=>{const start=Date.now();publish({label,phase:'start',start});void action().then(result=>publish({label,phase:'done',start,end:Date.now(),result})).catch(error=>publish({label,phase:'rejected',start,end:Date.now(),reason:String(error)}));});controls.append(b);}
-session.subscribe(()=>publish());await session.refresh();
-action('Read current save',()=>session.refresh());
-action('Fixture: unlock catalogue',async()=>{for(const item of registered)await session.dispatch({type:'unlock',item});return session.view;});
-action('Read P4 rule data',async()=>{const before=localStorage.getItem(SAVE_KEY),rules=await loadRules(),recipe=rules.recipes.find(r=>r.id==='minecraft:cake')!,grid=['milk_bucket','milk_bucket','milk_bucket','sugar','egg','sugar','wheat','wheat','wheat'].map(id=>({id:'minecraft:'+id,count:1}));return{items:Object.keys(rules.items).length,recipes:rules.recipes.length,ironDrop:potentialDrops('minecraft:iron_ore',{id:'minecraft:stone_pickaxe',count:1},rules),milkRule:rules.interactions.milk,stickFuel:cooking('minecraft:stick','furnace',200,rules),cake:matchCrafting(recipe,grid,3,3,rules),saveUnchanged:before===localStorage.getItem(SAVE_KEY)};});
-action('Fixture: unlock log',()=>session.dispatch({type:'unlock',item:'minecraft:oak_log'}));
-action('Fixture: unlock charcoal',()=>session.dispatch({type:'unlock',item:'minecraft:charcoal'}));
-action('Fixture: place cake',async()=>{await session.dispatch({type:'unlock',item:'minecraft:cake'});await session.dispatch({type:'select-scene',scene:'home'});await session.editInventory({type:'source',item:'minecraft:cake',mode:'number',index:0},null,session.view.envelope!.state.progress.player.data);await session.dispatch({type:'record-cake-placement',scene:'home',table:'birthday-table'});return session.view;});
-action('Fixture: reset progress',async()=>{await session.refresh();return session.reset(token(session.view.envelope!));});
-action('Slow transaction: unlock log',async()=>{let calls=0;const slow=new SaveSession(localStorage,{exclusive:work=>navigator.locks.request(LOCK_NAME,async()=>{calls++;if(calls>1){publish({phase:'real-lock-held',at:Date.now()});await new Promise(r=>setTimeout(r,1500));}return work();})});await slow.refresh();const events=await slow.dispatch({type:'unlock',item:'minecraft:oak_log'});await session.refresh();slow.dispose();return events;});
-action('Run reset-before-stale-write check',async()=>{await session.refresh();const other=browserSession();await other.session.refresh();let release!:()=>void,entered!:()=>void;const ready=new Promise<void>(r=>entered=r),held=navigator.locks.request(LOCK_NAME,async()=>{entered();await new Promise<void>(r=>release=r);});await ready;const reset=session.reset(token(session.view.envelope!)),stale=other.session.dispatch({type:'unlock',item:'minecraft:charcoal'}),both=Promise.allSettled([reset,stale]);release();await held;const results=await both;await session.refresh();other.dispose();return{results:results.map(r=>r.status==='rejected'?{status:r.status,reason:String(r.reason)}:r),passed:results[0].status==='fulfilled'&&results[1].status==='rejected'&&String(results[1].reason).includes('stale-session')&&!session.view.envelope!.state.progress.unlocked.length};});
-action('Checkpoint then write future fixture',async()=>{await navigator.locks.request(LOCK_NAME,()=>{const raw=localStorage.getItem(SAVE_KEY)!;sessionStorage.setItem('p3-verification-backup',raw);localStorage.setItem(SAVE_KEY,JSON.stringify({format:99}));});await session.refresh();return {status:session.view.status,raw:localStorage.getItem(SAVE_KEY)};});
-action('Restore checkpoint',async()=>{await navigator.locks.request(LOCK_NAME,()=>{const raw=sessionStorage.getItem('p3-verification-backup');if(!raw)throw new Error('missing-test-checkpoint');localStorage.setItem(SAVE_KEY,raw);});await session.refresh();});
-action('Run missing-capability checks',async()=>{const readonly=new SaveSession(localStorage,null);await readonly.refresh();const storageFailure=new SaveSession({getItem:()=>{throw new Error('storage-unavailable');},setItem:()=>{throw new Error('write-failed');}},null);await storageFailure.refresh();return{scope:'explicit injected unsupported capabilities, not a real private-browser claim',lockUnavailable:readonly.view.status,storageUnavailable:storageFailure.view.status};});
-action('Run concurrent inventory pickup',async()=>{await session.refresh();await session.dispatch({type:'unlock',item:'minecraft:oak_planks'});await session.editInventory({type:'source',item:'minecraft:oak_planks',mode:'number',index:8},null,session.view.envelope!.state.progress.player.data);const other=browserSession();await other.session.refresh();const expected=session.view.envelope!.state.progress.player.data,results=await Promise.allSettled([session.editInventory({type:'slot',index:8,button:0},null,expected),other.session.editInventory({type:'slot',index:8,button:0},null,expected)]);await session.refresh();other.dispose();return{scope:'two cooperating sessions using real native Web Locks; a separate open game tab observes storage events',results:results.map(r=>r.status==='fulfilled'?{status:r.status,cursor:r.value.cursor}:{status:r.status,reason:String(r.reason)}),savedSlot:session.view.envelope!.state.progress.player.data.hotbar[8],passed:results.filter(r=>r.status==='fulfilled').length===1&&results.some(r=>r.status==='rejected'&&String(r.reason).includes('inventory-conflict'))};});
-action('Run reset-before-stale-inventory check',async()=>{await session.refresh();const other=browserSession();await other.session.refresh();let release!:()=>void,entered!:()=>void;const ready=new Promise<void>(r=>entered=r),held=navigator.locks.request(LOCK_NAME,async()=>{entered();await new Promise<void>(r=>release=r);});await ready;const reset=session.reset(token(session.view.envelope!)),stale=other.session.editInventory({type:'source',item:'minecraft:oak_planks',mode:'number',index:0},null,other.session.view.envelope!.state.progress.player.data),both=Promise.allSettled([reset,stale]);release();await held;const results=await both;await session.refresh();other.dispose();return{results:results.map(r=>r.status==='rejected'?{status:r.status,reason:String(r.reason)}:{status:r.status}),passed:results[0].status==='fulfilled'&&results[1].status==='rejected'&&String(results[1].reason).includes('stale-session')&&!session.view.envelope!.state.progress.player.data.hotbar.some(Boolean)};});
-window.addEventListener('pagehide',()=>connection.dispose());
+function action(label: string, action: () => Promise<unknown>): void {
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.addEventListener('click', () => {
+        const start = Date.now();
+        publish({label, phase: 'start', start});
+        void action().then(result => publish({
+            label,
+            phase: 'done',
+            start,
+            end: Date.now(),
+            result
+        })).catch(error => publish({label, phase: 'rejected', start, end: Date.now(), reason: String(error)}));
+    });
+    controls.append(b);
+}
+
+session.subscribe(() => publish());
+await session.refresh();
+action('Read current save', () => session.refresh());
+action('Fixture: unlock catalogue', async () => {
+    for (const item of registered) await session.dispatch({type: 'unlock', item});
+    return session.view;
+});
+action('Read P4 rule data', async () => {
+    const before = localStorage.getItem(SAVE_KEY), rules = await loadRules(),
+        recipe = rules.recipes.find(r => r.id === 'minecraft:cake')!,
+        grid = ['milk_bucket', 'milk_bucket', 'milk_bucket', 'sugar', 'egg', 'sugar', 'wheat', 'wheat', 'wheat'].map(id => ({
+            id: 'minecraft:' + id,
+            count: 1
+        }));
+    return {
+        items: Object.keys(rules.items).length,
+        recipes: rules.recipes.length,
+        ironDrop: potentialDrops('minecraft:iron_ore', {id: 'minecraft:stone_pickaxe', count: 1}, rules),
+        milkRule: rules.interactions.milk,
+        stickFuel: cooking('minecraft:stick', 'furnace', 200, rules),
+        cake: matchCrafting(recipe, grid, 3, 3, rules),
+        saveUnchanged: before === localStorage.getItem(SAVE_KEY)
+    };
+});
+action('Fixture: unlock log', () => session.dispatch({type: 'unlock', item: 'minecraft:oak_log'}));
+action('Fixture: unlock charcoal', () => session.dispatch({type: 'unlock', item: 'minecraft:charcoal'}));
+action('Fixture: place cake', async () => {
+    await session.dispatch({type: 'unlock', item: 'minecraft:cake'});
+    await session.dispatch({type: 'select-scene', scene: 'home'});
+    await session.editInventory({
+        type: 'source',
+        item: 'minecraft:cake',
+        mode: 'number',
+        index: 0
+    }, null, session.view.envelope!.state.progress.player.data);
+    await session.dispatch({type: 'record-cake-placement', scene: 'home', table: 'birthday-table'});
+    return session.view;
+});
+action('Fixture: reset progress', async () => {
+    await session.refresh();
+    return session.reset(token(session.view.envelope!));
+});
+action('Slow transaction: unlock log', async () => {
+    let calls = 0;
+    const slow = new SaveSession(localStorage, {
+        exclusive: work => navigator.locks.request(LOCK_NAME, async () => {
+            calls++;
+            if (calls > 1) {
+                publish({phase: 'real-lock-held', at: Date.now()});
+                await new Promise(r => setTimeout(r, 1500));
+            }
+            return work();
+        })
+    });
+    await slow.refresh();
+    const events = await slow.dispatch({type: 'unlock', item: 'minecraft:oak_log'});
+    await session.refresh();
+    slow.dispose();
+    return events;
+});
+action('Run reset-before-stale-write check', async () => {
+    await session.refresh();
+    const other = browserSession();
+    await other.session.refresh();
+    let release!: () => void, entered!: () => void;
+    const ready = new Promise<void>(r => entered = r), held = navigator.locks.request(LOCK_NAME, async () => {
+        entered();
+        await new Promise<void>(r => release = r);
+    });
+    await ready;
+    const reset = session.reset(token(session.view.envelope!)),
+        stale = other.session.dispatch({type: 'unlock', item: 'minecraft:charcoal'}),
+        both = Promise.allSettled([reset, stale]);
+    release();
+    await held;
+    const results = await both;
+    await session.refresh();
+    other.dispose();
+    return {
+        results: results.map(r => r.status === 'rejected' ? {status: r.status, reason: String(r.reason)} : r),
+        passed: results[0].status === 'fulfilled' && results[1].status === 'rejected' && String(results[1].reason).includes('stale-session') && !session.view.envelope!.state.progress.unlocked.length
+    };
+});
+action('Checkpoint then write future fixture', async () => {
+    await navigator.locks.request(LOCK_NAME, () => {
+        const raw = localStorage.getItem(SAVE_KEY)!;
+        sessionStorage.setItem('p3-verification-backup', raw);
+        localStorage.setItem(SAVE_KEY, JSON.stringify({format: 99}));
+    });
+    await session.refresh();
+    return {status: session.view.status, raw: localStorage.getItem(SAVE_KEY)};
+});
+action('Restore checkpoint', async () => {
+    await navigator.locks.request(LOCK_NAME, () => {
+        const raw = sessionStorage.getItem('p3-verification-backup');
+        if (!raw) throw new Error('missing-test-checkpoint');
+        localStorage.setItem(SAVE_KEY, raw);
+    });
+    await session.refresh();
+});
+action('Run missing-capability checks', async () => {
+    const readonly = new SaveSession(localStorage, null);
+    await readonly.refresh();
+    const storageFailure = new SaveSession({
+        getItem: () => {
+            throw new Error('storage-unavailable');
+        }, setItem: () => {
+            throw new Error('write-failed');
+        }
+    }, null);
+    await storageFailure.refresh();
+    return {
+        scope: 'explicit injected unsupported capabilities, not a real private-browser claim',
+        lockUnavailable: readonly.view.status,
+        storageUnavailable: storageFailure.view.status
+    };
+});
+action('Run concurrent inventory pickup', async () => {
+    await session.refresh();
+    await session.dispatch({type: 'unlock', item: 'minecraft:oak_planks'});
+    await session.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_planks',
+        mode: 'number',
+        index: 8
+    }, null, session.view.envelope!.state.progress.player.data);
+    const other = browserSession();
+    await other.session.refresh();
+    const expected = session.view.envelope!.state.progress.player.data,
+        results = await Promise.allSettled([session.editInventory({
+            type: 'slot',
+            index: 8,
+            button: 0
+        }, null, expected), other.session.editInventory({type: 'slot', index: 8, button: 0}, null, expected)]);
+    await session.refresh();
+    other.dispose();
+    return {
+        scope: 'two cooperating sessions using real native Web Locks; a separate open game tab observes storage events',
+        results: results.map(r => r.status === 'fulfilled' ? {
+            status: r.status,
+            cursor: r.value.cursor
+        } : {status: r.status, reason: String(r.reason)}),
+        savedSlot: session.view.envelope!.state.progress.player.data.hotbar[8],
+        passed: results.filter(r => r.status === 'fulfilled').length === 1 && results.some(r => r.status === 'rejected' && String(r.reason).includes('inventory-conflict'))
+    };
+});
+action('Run reset-before-stale-inventory check', async () => {
+    await session.refresh();
+    const other = browserSession();
+    await other.session.refresh();
+    let release!: () => void, entered!: () => void;
+    const ready = new Promise<void>(r => entered = r), held = navigator.locks.request(LOCK_NAME, async () => {
+        entered();
+        await new Promise<void>(r => release = r);
+    });
+    await ready;
+    const reset = session.reset(token(session.view.envelope!)), stale = other.session.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_planks',
+        mode: 'number',
+        index: 0
+    }, null, other.session.view.envelope!.state.progress.player.data), both = Promise.allSettled([reset, stale]);
+    release();
+    await held;
+    const results = await both;
+    await session.refresh();
+    other.dispose();
+    return {
+        results: results.map(r => r.status === 'rejected' ? {
+            status: r.status,
+            reason: String(r.reason)
+        } : {status: r.status}),
+        passed: results[0].status === 'fulfilled' && results[1].status === 'rejected' && String(results[1].reason).includes('stale-session') && !session.view.envelope!.state.progress.player.data.hotbar.some(Boolean)
+    };
+});
+window.addEventListener('pagehide', () => connection.dispose());
 
 /** Unlock only cake ingredients on the isolated verification origin; cake still requires the formal result transaction. */
-action('Fixture: unlock cake ingredients',async()=>{await session.refresh();for(const item of ['milk_bucket','bucket','sugar','egg','wheat'])await session.dispatch({type:'unlock',item:'minecraft:'+item});return session.view.envelope!.state.progress.unlocked;});
+action('Fixture: unlock cake ingredients', async () => {
+    await session.refresh();
+    for (const item of ['milk_bucket', 'bucket', 'sugar', 'egg', 'wheat']) await session.dispatch({
+        type: 'unlock',
+        item: 'minecraft:' + item
+    });
+    return session.view.envelope!.state.progress.unlocked;
+});
 
 /** Verification-only coordination never holds the application's persistence lock. */
-const receiptChannel=new BroadcastChannel('minecraft-birthday-2026:verify:craft-receipt');
+const receiptChannel = new BroadcastChannel('minecraft-birthday-2026:verify:craft-receipt');
 /** Exercise real stable-layout transactions on the isolated origin; no renderer state is injected. */
-action('Fixture: equip Steve sample',async()=>{session.rules=await loadRules();for(const [slot,id]of [['head','iron_helmet'],['chest','iron_chestplate'],['legs','iron_leggings'],['feet','iron_boots']]){const r=await session.editInventory({type:'source',item:'minecraft:'+id,mode:'left'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'equipment',slot:slot as 'head'|'chest'|'legs'|'feet',button:0},r.cursor,session.view.envelope!.state.progress.player.data);}for(const [index,id]of [[0,'wooden_pickaxe'],[1,'oak_log']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'source',item:'minecraft:shield',mode:'offhand'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'select',index:0},null,session.view.envelope!.state.progress.player.data);return session.view;});
-action('Run held model dependency checks',async()=>{receiptChannel.postMessage('held');return{sent:'held'};});
-action('Run GUI alpha pixel checks',async()=>{receiptChannel.postMessage('visual');return{sent:'visual'};});
-action('Arm next crafting receipt delay',async()=>{receiptChannel.postMessage('arm');return{sent:'arm'};});
-action('Release crafting receipt',async()=>{receiptChannel.postMessage('release');return{sent:'release'};});
-window.addEventListener('pagehide',()=>receiptChannel.close());
+action('Fixture: equip Steve sample', async () => {
+    session.rules = await loadRules();
+    for (const [slot, id] of [['head', 'iron_helmet'], ['chest', 'iron_chestplate'], ['legs', 'iron_leggings'], ['feet', 'iron_boots']]) {
+        const r = await session.editInventory({
+            type: 'source',
+            item: 'minecraft:' + id,
+            mode: 'left'
+        }, null, session.view.envelope!.state.progress.player.data);
+        await session.editInventory({
+            type: 'equipment',
+            slot: slot as 'head' | 'chest' | 'legs' | 'feet',
+            button: 0
+        }, r.cursor, session.view.envelope!.state.progress.player.data);
+    }
+    for (const [index, id] of [[0, 'wooden_pickaxe'], [1, 'oak_log']] as const) await session.editInventory({
+        type: 'source',
+        item: 'minecraft:' + id,
+        mode: 'number',
+        index
+    }, null, session.view.envelope!.state.progress.player.data);
+    await session.editInventory({
+        type: 'source',
+        item: 'minecraft:shield',
+        mode: 'offhand'
+    }, null, session.view.envelope!.state.progress.player.data);
+    await session.editInventory({type: 'select', index: 0}, null, session.view.envelope!.state.progress.player.data);
+    return session.view;
+});
+action('Run held model dependency checks', async () => {
+    receiptChannel.postMessage('held');
+    return {sent: 'held'};
+});
+action('Run GUI alpha pixel checks', async () => {
+    receiptChannel.postMessage('visual');
+    return {sent: 'visual'};
+});
+action('Arm next crafting receipt delay', async () => {
+    receiptChannel.postMessage('arm');
+    return {sent: 'arm'};
+});
+action('Release crafting receipt', async () => {
+    receiptChannel.postMessage('release');
+    return {sent: 'release'};
+});
+window.addEventListener('pagehide', () => receiptChannel.close());
 
 /** Configure only acquired source references; every output still requires real timed production and acquisition. */
-action('Fixture: furnace source carriers',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));for(const id of ['oak_log','stick','furnace','blast_furnace','raw_iron'])await session.dispatch({type:'unlock',item:'minecraft:'+id});for(const [index,id]of [[0,'furnace'],[1,'blast_furnace'],[2,'oak_log'],[3,'stick'],[4,'raw_iron']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'select',index:0},null,session.view.envelope!.state.progress.player.data);return session.view;});
+action('Fixture: furnace source carriers', async () => {
+    await session.refresh();
+    await session.reset(token(session.view.envelope!));
+    for (const id of ['oak_log', 'stick', 'furnace', 'blast_furnace', 'raw_iron']) await session.dispatch({
+        type: 'unlock',
+        item: 'minecraft:' + id
+    });
+    for (const [index, id] of [[0, 'furnace'], [1, 'blast_furnace'], [2, 'oak_log'], [3, 'stick'], [4, 'raw_iron']] as const) await session.editInventory({
+        type: 'source',
+        item: 'minecraft:' + id,
+        mode: 'number',
+        index
+    }, null, session.view.envelope!.state.progress.player.data);
+    await session.editInventory({type: 'select', index: 0}, null, session.view.envelope!.state.progress.player.data);
+    return session.view;
+});
 /** Seed references through real commands on the isolated origin; the visible game clock produces all output. */
-action('Fixture: running furnace',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));session.rules=await loadRules();session.policy={allows:()=>true};for(const id of ['furnace','oak_log','stick'])await session.dispatch({type:'unlock',item:'minecraft:'+id});await session.dispatch({type:'put-station',scene:'plains',station:{id:'settings-running',kind:'furnace',cell:[3,0,-1],facing:'south',contents:emptyFurnace()}});for(const[index,id]of [[0,'oak_log'],[1,'stick']] as const){const r=await session.editInventory({type:'source',item:'minecraft:'+id,mode:'left'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'machine-slot',index,button:0},r.cursor,session.view.envelope!.state.progress.player.data,undefined,{scene:'plains',id:'settings-running',expected:structuredClone(session.view.envelope!.state.progress.scenes.plains.stations[0].contents)});}return session.view;});
+action('Fixture: running furnace', async () => {
+    await session.refresh();
+    await session.reset(token(session.view.envelope!));
+    session.rules = await loadRules();
+    session.policy = {allows: () => true};
+    for (const id of ['furnace', 'oak_log', 'stick']) await session.dispatch({type: 'unlock', item: 'minecraft:' + id});
+    await session.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {id: 'settings-running', kind: 'furnace', cell: [3, 0, -1], facing: 'south', contents: emptyFurnace()}
+    });
+    for (const [index, id] of [[0, 'oak_log'], [1, 'stick']] as const) {
+        const r = await session.editInventory({
+            type: 'source',
+            item: 'minecraft:' + id,
+            mode: 'left'
+        }, null, session.view.envelope!.state.progress.player.data);
+        await session.editInventory({
+            type: 'machine-slot',
+            index,
+            button: 0
+        }, r.cursor, session.view.envelope!.state.progress.player.data, undefined, {
+            scene: 'plains',
+            id: 'settings-running',
+            expected: structuredClone(session.view.envelope!.state.progress.scenes.plains.stations[0].contents)
+        });
+    }
+    return session.view;
+});
 /** Schedule a real second-session preference command without holding the transaction lock during the delay. */
-action('Fixture: delayed remote volume 80%',async()=>{await new Promise(r=>setTimeout(r,2000));await session.refresh();await session.dispatch({type:'settings',patch:{volume:.8,muted:false}});return session.view;});
+action('Fixture: delayed remote volume 80%', async () => {
+    await new Promise(r => setTimeout(r, 2000));
+    await session.refresh();
+    await session.dispatch({type: 'settings', patch: {volume: .8, muted: false}});
+    return session.view;
+});
 
 /** Prepare only acquired sources and empty real instances; GUI actions and the active clock perform all filling/production. */
-action('Fixture: P6 book and hopper',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));session.rules=await loadRules();session.policy={allows:()=>true};for(const id of ['crafting_table','furnace','blast_furnace','hopper','oak_log','oak_planks','stick','egg','raw_iron'])await session.dispatch({type:'unlock',item:'minecraft:'+id});for(const [id,kind,x,z]of [['book-table','crafting_table',-3,-3],['book-furnace','furnace',3,-1],['book-blast','blast_furnace',3,-3],['book-hopper','hopper',-3,-1],['book-hopper-2','hopper',-3,-5]] as [string,Kind,number,number][])await session.dispatch({type:'put-station',scene:'plains',station:{id,kind,cell:[x,0,z],facing:kind==='hopper'?'down':'south',contents:kind==='hopper'?emptyHopper():kind==='crafting_table'?{version:1,data:{grid:Array(9).fill(null)}}:emptyFurnace()}});return session.view;});
+action('Fixture: P6 book and hopper', async () => {
+    await session.refresh();
+    await session.reset(token(session.view.envelope!));
+    session.rules = await loadRules();
+    session.policy = {allows: () => true};
+    for (const id of ['crafting_table', 'furnace', 'blast_furnace', 'hopper', 'oak_log', 'oak_planks', 'stick', 'egg', 'raw_iron']) await session.dispatch({
+        type: 'unlock',
+        item: 'minecraft:' + id
+    });
+    for (const [id, kind, x, z] of [['book-table', 'crafting_table', -3, -3], ['book-furnace', 'furnace', 3, -1], ['book-blast', 'blast_furnace', 3, -3], ['book-hopper', 'hopper', -3, -1], ['book-hopper-2', 'hopper', -3, -5]] as [string, Kind, number, number][]) await session.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {
+            id,
+            kind,
+            cell: [x, 0, z],
+            facing: kind === 'hopper' ? 'down' : 'south',
+            contents: kind === 'hopper' ? emptyHopper() : kind === 'crafting_table' ? {
+                version: 1,
+                data: {grid: Array(9).fill(null)}
+            } : emptyFurnace()
+        }
+    });
+    return session.view;
+});
 /** Optional verification-only opening keeps instance identity; world pickup is tested separately with trusted pointer input. */
-for(const [label,id]of [['table','book-table'],['furnace','book-furnace'],['blast furnace','book-blast'],['hopper','book-hopper']])action('Fixture: open '+label,async()=>{receiptChannel.postMessage({openInstance:id});return{openedBy:'verification-message',id};});
+for (const [label, id] of [['table', 'book-table'], ['furnace', 'book-furnace'], ['blast furnace', 'book-blast'], ['hopper', 'book-hopper']]) action('Fixture: open ' + label, async () => {
+    receiptChannel.postMessage({openInstance: id});
+    return {openedBy: 'verification-message', id};
+});
 
 /** Discover the native torch recipe through a real acquisition while leaving its materials absent. */
-action('Fixture: discover torch',async()=>{await session.refresh();await session.dispatch({type:'unlock',item:'minecraft:stone_pickaxe'});return session.view;});
+action('Fixture: discover torch', async () => {
+    await session.refresh();
+    await session.dispatch({type: 'unlock', item: 'minecraft:stone_pickaxe'});
+    return session.view;
+});
 /** Supply only torch ingredients through formal acquisition commands on the isolated verification origin. */
-action('Fixture: torch materials',async()=>{await session.refresh();for(const id of ['coal','stick'])await session.dispatch({type:'unlock',item:'minecraft:'+id});return session.view;});
+action('Fixture: torch materials', async () => {
+    await session.refresh();
+    for (const id of ['coal', 'stick']) await session.dispatch({type: 'unlock', item: 'minecraft:' + id});
+    return session.view;
+});
 
 /** Prepare finite repair samples through the formal transaction API on this disposable verification origin. */
-action('Fixture: finite ghost and farmland repair',async()=>{await session.refresh();await session.reset(token(session.view.envelope!));session.rules=await loadRules();for(const id of ['oak_planks','crafting_table','furnace','hopper','wheat_seeds','iron_helmet','iron_chestplate','iron_leggings','iron_boots','stone_pickaxe','bucket','milk_bucket','sugar','egg','wheat'])await session.dispatch({type:'unlock',item:'minecraft:'+id});for(const[index,id]of [[0,'crafting_table'],[1,'furnace'],[2,'hopper'],[3,'wheat_seeds'],[4,'stone_pickaxe']] as const)await session.editInventory({type:'source',item:'minecraft:'+id,mode:'number',index},null,session.view.envelope!.state.progress.player.data);const r=await session.editInventory({type:'source',item:'minecraft:oak_planks',mode:'left'},null,session.view.envelope!.state.progress.player.data);await session.editInventory({type:'backpack-slot',index:0,button:0},r.cursor,session.view.envelope!.state.progress.player.data);await session.dispatch({type:'select-scene',scene:'farm'});return session.view;});
+action('Fixture: finite ghost and farmland repair', async () => {
+    await session.refresh();
+    await session.reset(token(session.view.envelope!));
+    session.rules = await loadRules();
+    for (const id of ['oak_planks', 'crafting_table', 'furnace', 'hopper', 'wheat_seeds', 'iron_helmet', 'iron_chestplate', 'iron_leggings', 'iron_boots', 'stone_pickaxe', 'bucket', 'milk_bucket', 'sugar', 'egg', 'wheat']) await session.dispatch({
+        type: 'unlock',
+        item: 'minecraft:' + id
+    });
+    for (const [index, id] of [[0, 'crafting_table'], [1, 'furnace'], [2, 'hopper'], [3, 'wheat_seeds'], [4, 'stone_pickaxe']] as const) await session.editInventory({
+        type: 'source',
+        item: 'minecraft:' + id,
+        mode: 'number',
+        index
+    }, null, session.view.envelope!.state.progress.player.data);
+    const r = await session.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_planks',
+        mode: 'left'
+    }, null, session.view.envelope!.state.progress.player.data);
+    await session.editInventory({
+        type: 'backpack-slot',
+        index: 0,
+        button: 0
+    }, r.cursor, session.view.envelope!.state.progress.player.data);
+    await session.dispatch({type: 'select-scene', scene: 'farm'});
+    return session.view;
+});

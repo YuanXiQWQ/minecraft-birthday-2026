@@ -10,7 +10,7 @@
 - 实际点击原版个人Crafting与配方书Oak Planks，正式填充结果为`minecraft:oak_planks x4`。窄屏收书后仍有真实预览。随后可信左键领取，光标4木板、木板目录解锁且save ready，Done后光标/四格为空；见ordinary-planks.json及ordinary-planks-390.jpg。全链和工作站建造尚未形成完整可靠记录，不把纯命令蛋糕测试算作通过。
 - 四场景切换通过实际按钮；截图前核对`data-rendered-scene`并等待合成器，完整页面JPEG捕获。早期未等异步存档/合成器的截图不作为验收依据。
 - `*-1280.jpg`四场景实际1280×720，`visual-1280.json`记录当前场景/尺寸/draw calls；`*-390.jpg`及`visual-390.json`实际390×844，document.scrollWidth=390，无页面横向溢出。
-- `*-1440.jpg`为1440×900画面。1920×1080正式画布实际1920×946、页面scrollWidth1920、资源26.3就绪；该尺寸完整截图报Unable to capture screenshot，**不宣称已取得1920完整截图或四场景完整截图验收**。
+- `*-1440.jpg`为1440×900画面。1920×1080正式画布实际1920×946、页面scrollWidth1920、资源26.3就绪；该尺寸完整截图报Unable to capture screenshot， **不宣称已取得1920完整截图或四场景完整截图验收**。
 - `*-unconfirmed-viewport.jpg`是早期视口设置作用于另一标签造成的1440图像，名称明确标注，不作为1920证据。后续检查同时核对实际innerWidth和JPEG像素尺寸。
 
 ![平原](evidence/plains-1280.jpg)
@@ -20,7 +20,7 @@
 
 ## 独立夹具，不是普通页面主线
 
-`/__verify__/world.html`使用正式SceneView/AuthoredWorld/transition和原版资源，仅持有自己的内存状态，不授物到普通应用存档。Dense legal layout构建126个合法坐标实例，Advance240调用权威全场景tick，实际看到输入从上层H进入炉、底部H收到产物；它证明真实浏览器执行了网络/渲染，**不证明玩家已从普通页面搭建这条链**。
+`/__verify__/world.html`使用正式SceneView/AuthoredWorld/transition和原版资源，仅持有自己的内存状态，不授物到普通应用存档。Dense legal layout构建126个合法坐标实例，Advance240调用权威全场景tick，实际看到输入从上层H进入炉、底部H收到产物；它证明真实浏览器执行了网络/渲染， **不证明玩家已从普通页面搭建这条链**。
 
 早期1280/DPR1.25、360RAF记录见`perf-before-1280.json`：126实例、1,352 calls、34,944 triangles、CPU提交p50 2.5ms、p95 3.2ms，帧p50约4.2ms。这是该机器/短时/夹具记录，不等于普通游戏或低端性能通过。按纹理合并后读取428 calls，保留原模型面。早期连续帧复测遇到HMR/批量动作时序造成记录无效；稳定版本单独触发后取得perf-after-1440.json：330帧p50约4.2ms、p95约4.3ms、max20.8ms，>16.7ms一次、>33.3/50ms零次，CPU提交p50约1ms/p95约1.6ms。时长仅约1.54秒，分辨率/DPR与before不同，不作严格FPS优化因果或长期性能结论。
 

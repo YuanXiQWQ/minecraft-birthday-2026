@@ -1,61 +1,294 @@
 /** Native screen-plane recipe book renders original sprites, grouped recipes, search and display-only ghosts. */
-import type {GameInventory} from './inventory.ts';import type {Recipe} from '../rules/types.ts';import {BOOK_RECIPES,bookApplicable,recipeGhost,analyzeOwnedRecipe,ownedRecipeGhost} from '../domain/recipe-book.ts';import type {BookMode} from '../domain/recipe-book.ts';import {itemName} from '../i18n/items.ts';import {drawSprite} from './vanilla.ts';
+import type {GameInventory} from './inventory.ts';
+import type {Recipe} from '../rules/types.ts';
+import {
+  BOOK_RECIPES,
+  bookApplicable,
+  recipeGhost,
+  analyzeOwnedRecipe,
+  ownedRecipeGhost
+} from '../domain/recipe-book.ts';
+import type {BookMode} from '../domain/recipe-book.ts';
+import {itemName} from '../i18n/items.ts';
+import {drawSprite} from './vanilla.ts';
+
 /** One persistent discovery group can contain several native recipes. */
-interface RecipeGroup {key:string;recipes:Recipe[]}
+interface RecipeGroup {
+  key: string;
+  recipes: Recipe[];
+}
+
 /** Own one book per formal menu; temporary ghosts never become domain stacks. */
 export class RecipeBookView {
-  root:HTMLDivElement;canvas:HTMLCanvasElement;controls:HTMLDivElement;search:HTMLInputElement;toggle:HTMLButtonElement;toast:HTMLCanvasElement;query='';category='all';page=0;popup:RecipeGroup|null=null;ghost:Recipe|null=null;ghostInputs='';identity='';signature='';hover='';groups:RecipeGroup[]=[];clock=0;toastTimer=0;displayEpoch=0;toastEpoch=0;generation='';disposed=false;abort=new AbortController();
+  root: HTMLDivElement;
+  canvas: HTMLCanvasElement;
+  controls: HTMLDivElement;
+  search: HTMLInputElement;
+  toggle: HTMLButtonElement;
+  toast: HTMLCanvasElement;
+  query = '';
+  category = 'all';
+  page = 0;
+  popup: RecipeGroup | null = null;
+  ghost: Recipe | null = null;
+  ghostInputs = '';
+  identity = '';
+  signature = '';
+  hover = '';
+  groups: RecipeGroup[] = [];
+  clock = 0;
+  toastTimer = 0;
+  displayEpoch = 0;
+  toastEpoch = 0;
+  generation = '';
+  disposed = false;
+  abort = new AbortController();
+
   /** Attach original pixel surfaces without adding a WebGL context or taking ownership of slot events.
    * @param {GameInventory} ui Existing native screen owner.
    * @param {HTMLElement} body Menu body containing the native container.
    */
-  constructor(public ui:GameInventory,public body:HTMLElement){this.root=document.createElement('div');this.root.className='recipe-book';this.canvas=document.createElement('canvas');this.canvas.width=147;this.canvas.height=166;this.controls=document.createElement('div');this.controls.className='recipe-book-controls';this.search=document.createElement('input');this.search.type='search';this.search.maxLength=50;this.search.className='recipe-book-search';this.search.setAttribute('aria-label',ui.text('book.search'));this.search.addEventListener('input',()=>{this.query=this.search.value;this.page=0;this.popup=null;this.render();},{signal:this.abort.signal});this.root.append(this.canvas,this.controls,this.search);body.prepend(this.root);this.toggle=document.createElement('button');this.toggle.type='button';this.toggle.className='recipe-book-toggle';this.toggle.setAttribute('aria-label',ui.text('book.toggle'));this.toggle.addEventListener('click',()=>{ui.input.cancelGesture();this.change({open:!this.isOpen()});},{signal:this.abort.signal});ui.panel.append(this.toggle);this.toast=document.createElement('canvas');this.toast.width=160;this.toast.height=32;this.toast.className='recipe-toast';this.toast.setAttribute('role','status');this.toast.hidden=true;ui.host.append(this.toast);this.root.addEventListener('pointerenter',()=>{ui.hover=null;ui.hideTooltip();},{signal:this.abort.signal});this.root.addEventListener('contextmenu',e=>e.preventDefault(),{signal:this.abort.signal});this.clock=window.setInterval(()=>{if(ui.modal.open&&!document.hidden){this.paint();if(this.ghost)ui.draw(false);}},1000);}
+  constructor(public ui: GameInventory, public body: HTMLElement) {
+    this.root = document.createElement('div');
+    this.root.className = 'recipe-book';
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = 147;
+    this.canvas.height = 166;
+    this.controls = document.createElement('div');
+    this.controls.className = 'recipe-book-controls';
+    this.search = document.createElement('input');
+    this.search.type = 'search';
+    this.search.maxLength = 50;
+    this.search.className = 'recipe-book-search';
+    this.search.setAttribute('aria-label', ui.text('book.search'));
+    this.search.addEventListener('input', () => {
+      this.query = this.search.value;
+      this.page = 0;
+      this.popup = null;
+      this.render();
+    }, {signal: this.abort.signal});
+    this.root.append(this.canvas, this.controls, this.search);
+    body.prepend(this.root);
+    this.toggle = document.createElement('button');
+    this.toggle.type = 'button';
+    this.toggle.className = 'recipe-book-toggle';
+    this.toggle.setAttribute('aria-label', ui.text('book.toggle'));
+    this.toggle.addEventListener('click', () => {
+      ui.input.cancelGesture();
+      this.change({open: !this.isOpen()});
+    }, {signal: this.abort.signal});
+    ui.panel.append(this.toggle);
+    this.toast = document.createElement('canvas');
+    this.toast.width = 160;
+    this.toast.height = 32;
+    this.toast.className = 'recipe-toast';
+    this.toast.setAttribute('role', 'status');
+    this.toast.hidden = true;
+    ui.host.append(this.toast);
+    this.root.addEventListener('pointerenter', () => {
+      ui.hover = null;
+      ui.hideTooltip();
+    }, {signal: this.abort.signal});
+    this.root.addEventListener('contextmenu', e => e.preventDefault(), {signal: this.abort.signal});
+    this.clock = window.setInterval(() => {
+      if (ui.modal.open && !document.hidden) {
+        this.paint();
+        if (this.ghost) ui.draw(false);
+      }
+    }, 1000);
+  }
+
   /** Identify a temporary display by save generation, personal lifetime and actual menu capability.
    * @return {string} Stable scope independent of book visibility, processing timers and settings.
    */
-  scope():string{return JSON.stringify([this.ui.generation,this.ui.personal.epoch,this.ui.permanent?.progress.scene,this.ui.modal.open&&this.ui.tab==='crafting'&&this.ui.station?.expected.version!==3?[this.ui.station?.id??'personal',this.mode(),this.width()]:null]);}
+  scope(): string {
+    return JSON.stringify([this.ui.generation, this.ui.personal.epoch, this.ui.permanent?.progress.scene, this.ui.modal.open && this.ui.tab === 'crafting' && this.ui.station?.expected.version !== 3 ? [this.ui.station?.id ?? 'personal', this.mode(), this.width()] : null]);
+  }
+
   /** Publish temporary display diagnostics separately from all real item carriers. */
-  publish():void{this.ui.modal.dataset.book=JSON.stringify({generation:this.ui.generation,identity:this.identity,mode:this.mode(),width:this.width(),open:!this.root.hidden,query:this.query,category:this.category,page:this.page,groups:this.groups.length,recipes:this.groups.flatMap(g=>g.recipes.map(r=>r.id)),ghost:this.ghost?.id??null,popup:this.popup?.key??null,overlay:this.body.classList.contains('book-only'),toast:!this.toast.hidden,toastRecipes:this.toast.dataset.recipes??null});}
+  publish(): void {
+    this.ui.modal.dataset.book = JSON.stringify({
+      generation: this.ui.generation,
+      identity: this.identity,
+      mode: this.mode(),
+      width: this.width(),
+      open: !this.root.hidden,
+      query: this.query,
+      category: this.category,
+      page: this.page,
+      groups: this.groups.length,
+      recipes: this.groups.flatMap(g => g.recipes.map(r => r.id)),
+      ghost: this.ghost?.id ?? null,
+      popup: this.popup?.key ?? null,
+      overlay: this.body.classList.contains('book-only'),
+      toast: !this.toast.hidden,
+      toastRecipes: this.toast.dataset.recipes ?? null
+    });
+  }
+
   /** Clear a notification and fence its timeout without touching permanent discovery. */
-  clearToast():void{this.toastEpoch++;clearTimeout(this.toastTimer);this.toastTimer=0;this.toast.hidden=true;this.toast.getContext('2d')!.clearRect(0,0,160,32);delete this.toast.dataset.recipes;this.toast.removeAttribute('aria-label');this.publish();}
+  clearToast(): void {
+    this.toastEpoch++;
+    clearTimeout(this.toastTimer);
+    this.toastTimer = 0;
+    this.toast.hidden = true;
+    this.toast.getContext('2d')!.clearRect(0, 0, 160, 32);
+    delete this.toast.dataset.recipes;
+    this.toast.removeAttribute('aria-label');
+    this.publish();
+  }
+
   /** Invalidate menu-owned projections and callbacks; a save replacement also clears the global discovery toast.
    * @param {boolean} notification Whether the save generation or owner is ending.
    */
-  resetTransient(notification=false):void{this.displayEpoch++;this.generation=this.ui.generation;this.identity='';this.ghost=null;this.ghostInputs='';delete this.ui.modal.dataset.ghostAvailability;this.popup=null;this.query='';this.search.value='';this.page=0;this.category='all';this.hover='';this.signature='';this.groups=[];this.root.hidden=true;this.body.classList.toggle('book-only',false);this.controls.replaceChildren();this.canvas.getContext('2d')!.clearRect(0,0,147,166);this.ui.notice='';this.ui.hideTooltip();if(notification)this.clearToast();this.publish();}
+  resetTransient(notification = false): void {
+    this.displayEpoch++;
+    this.generation = this.ui.generation;
+    this.identity = '';
+    this.ghost = null;
+    this.ghostInputs = '';
+    delete this.ui.modal.dataset.ghostAvailability;
+    this.popup = null;
+    this.query = '';
+    this.search.value = '';
+    this.page = 0;
+    this.category = 'all';
+    this.hover = '';
+    this.signature = '';
+    this.groups = [];
+    this.root.hidden = true;
+    this.body.classList.toggle('book-only', false);
+    this.controls.replaceChildren();
+    this.canvas.getContext('2d')!.clearRect(0, 0, 147, 166);
+    this.ui.notice = '';
+    this.ui.hideTooltip();
+    if (notification) this.clearToast();
+    this.publish();
+  }
+
   /** Validate both discovered identity and current container dimensions.
    * @param {Recipe} recipe Candidate display recipe.
    * @return {boolean} Whether this save and menu can still show the recipe.
    */
-  validRecipe(recipe:Recipe):boolean{return !!this.ui.permanent?.progress.recipeBook.data.known.includes(recipe.id)&&bookApplicable(recipe,this.mode(),this.width());}
+  validRecipe(recipe: Recipe): boolean {
+    return !!this.ui.permanent?.progress.recipeBook.data.known.includes(recipe.id) && bookApplicable(recipe, this.mode(), this.width());
+  }
+
   /** Reconcile lifecycle before any timer, menu or ghost draw; closing only the book keeps the same scope. */
-  syncScope():void{if(this.disposed)return;if(this.generation!==this.ui.generation)this.resetTransient(true);const scope=this.scope();if(this.identity!==scope){this.resetTransient();this.identity=scope;}if(this.ghost&&(!this.validRecipe(this.ghost)||this.ghostInputs!==this.inputsSignature())){this.ghost=null;this.ghostInputs='';}if(this.popup&&this.popup.recipes.some(r=>!this.validRecipe(r)))this.popup=null;}
+  syncScope(): void {
+    if (this.disposed) return;
+    if (this.generation !== this.ui.generation) this.resetTransient(true);
+    const scope = this.scope();
+    if (this.identity !== scope) {
+      this.resetTransient();
+      this.identity = scope;
+    }
+    if (this.ghost && (!this.validRecipe(this.ghost) || this.ghostInputs !== this.inputsSignature())) {
+      this.ghost = null;
+      this.ghostInputs = '';
+    }
+    if (this.popup && this.popup.recipes.some(r => !this.validRecipe(r))) this.popup = null;
+  }
+
   /** Reject detached controls and asynchronous errors belonging to a previous menu or save.
    * @param {number} epoch Captured temporary display epoch.
    * @param {string} scope Captured menu identity.
    * @return {boolean} Whether a callback still owns the active screen.
    */
-  current(epoch:number,scope:string):boolean{return !this.disposed&&!this.ui.disposed&&epoch===this.displayEpoch&&scope===this.identity&&scope===this.scope();}
+  current(epoch: number, scope: string): boolean {
+    return !this.disposed && !this.ui.disposed && epoch === this.displayEpoch && scope === this.identity && scope === this.scope();
+  }
+
   /** Resolve capability without confusing a hopper with a crafting station. @return {BookMode} Applicable processing family. */
-  mode():BookMode{return this.ui.station?.expected.version===2?this.ui.machineKind():'crafting';}
+  mode(): BookMode {
+    return this.ui.station?.expected.version === 2 ? this.ui.machineKind() : 'crafting';
+  }
+
   /** Resolve actual crafting dimensions. @return {number} Personal two, table three, processor one. */
-  width():number{return this.ui.station?.expected.version===2?1:this.ui.station?3:2;}
+  width(): number {
+    return this.ui.station?.expected.version === 2 ? 1 : this.ui.station ? 3 : 2;
+  }
+
   /** Read persisted open state. @return {boolean} Whether this capability's book is open. */
-  isOpen():boolean{return !!this.ui.permanent?.progress.recipeBook.data.views[this.mode()].open;}
+  isOpen(): boolean {
+    return !!this.ui.permanent?.progress.recipeBook.data.views[this.mode()].open;
+  }
+
   /** Persist only native open/filter settings through the semantic save port.
    * @param {object} patch User book preference.
    */
-  change(patch:{open?:boolean;filter?:boolean}):void{const epoch=this.displayEpoch,scope=this.identity;this.popup=null;void this.ui.bookCommand?.({type:'book-settings',mode:this.mode(),patch}).catch(()=>{if(!this.current(epoch,scope))return;this.ui.notice=this.ui.text('book.failed');this.ui.draw(false);});}
+  change(patch: { open?: boolean; filter?: boolean }): void {
+    const epoch = this.displayEpoch, scope = this.identity;
+    this.popup = null;
+    void this.ui.bookCommand?.({type: 'book-settings', mode: this.mode(), patch}).catch(() => {
+      if (!this.current(epoch, scope)) return;
+      this.ui.notice = this.ui.text('book.failed');
+      this.ui.draw(false);
+    });
+  }
+
   /** Resolve original GUI-relative images. @param {string} path Sprite path. @return {HTMLCanvasElement} Verified native pixels. */
-  image(path:string):HTMLCanvasElement{return this.ui.image(path);}
+  image(path: string): HTMLCanvasElement {
+    return this.ui.image(path);
+  }
+
   /** Position and update one book without recreating active search or slot controls on timer snapshots. */
-  render():void{if(this.disposed)return;this.syncScope();const u=this.ui,available=u.modal.open&&u.tab==='crafting'&&(!u.station||u.station.expected.version===1||u.station.expected.version===0),id=this.identity;this.toggle.hidden=!available;const open=available&&this.isOpen();this.root.hidden=!open;const overlay=open&&innerWidth<379*u.scale;this.body.classList.toggle('book-only',overlay);const tx=u.station?.expected.version===2?20:u.station?5:104,ty=u.station?.expected.version===2?35:u.station?35:60;this.toggle.style.cssText=`left:${tx*u.scale}px;top:${ty*u.scale}px;width:${20*u.scale}px;height:${18*u.scale}px`;this.toggle.style.backgroundImage=`url(${(import.meta.env?.BASE_URL??'/')}minecraft/26.3/assets/minecraft/textures/gui/sprites/recipe_book/button.png)`;this.root.style.cssText=`width:${147*u.scale}px;height:${166*u.scale}px;margin-left:${28*u.scale}px`;this.canvas.style.width=147*u.scale+'px';this.canvas.style.height=166*u.scale+'px';this.search.style.cssText=`left:${25*u.scale}px;top:${13*u.scale}px;width:${81*u.scale}px;height:${14*u.scale}px;font-size:${9*u.scale}px`;if(!open){this.publish();return;}const settings=u.permanent!.progress.recipeBook.data.views[this.mode()],known=new Set(u.permanent!.progress.recipeBook.data.known),query=this.query.trim().toLowerCase(),groups=new Map<string,RecipeGroup>();for(const recipe of BOOK_RECIPES){if(!known.has(recipe.id)||!bookApplicable(recipe,this.mode(),this.width())||this.category!=='all'&&(recipe.category??'misc')!==this.category||query&&!((itemName(recipe.result!.id!)+' '+recipe.id).toLowerCase().includes(query))||settings.filter&&!this.craftable(recipe))continue;const key=recipe.type+':'+(recipe.category??'misc')+':'+(recipe.group||recipe.id);if(!groups.has(key))groups.set(key,{key,recipes:[]});groups.get(key)!.recipes.push(recipe);}this.groups=[...groups.values()];this.page=Math.min(this.page,Math.max(0,Math.ceil(this.groups.length/20)-1));const signature=JSON.stringify([id,u.scale,this.page,this.category,this.query,this.groups.map(g=>g.key),settings.filter,this.popup?.key,overlay]);if(signature!==this.signature){this.signature=signature;this.buildControls();}this.paint();this.publish();}
+  render(): void {
+    if (this.disposed) return;
+    this.syncScope();
+    const u = this.ui,
+        available = u.modal.open && u.tab === 'crafting' && (!u.station || u.station.expected.version === 1 || u.station.expected.version === 0),
+        id = this.identity;
+    this.toggle.hidden = !available;
+    const open = available && this.isOpen();
+    this.root.hidden = !open;
+    const overlay = open && innerWidth < 379 * u.scale;
+    this.body.classList.toggle('book-only', overlay);
+    const tx = u.station?.expected.version === 2 ? 20 : u.station ? 5 : 104,
+        ty = u.station?.expected.version === 2 ? 35 : u.station ? 35 : 60;
+    this.toggle.style.cssText = `left:${tx * u.scale}px;top:${ty * u.scale}px;width:${20 * u.scale}px;height:${18 * u.scale}px`;
+    this.toggle.style.backgroundImage = `url(${(import.meta.env?.BASE_URL ?? '/')}minecraft/26.3/assets/minecraft/textures/gui/sprites/recipe_book/button.png)`;
+    this.root.style.cssText = `width:${147 * u.scale}px;height:${166 * u.scale}px;margin-left:${28 * u.scale}px`;
+    this.canvas.style.width = 147 * u.scale + 'px';
+    this.canvas.style.height = 166 * u.scale + 'px';
+    this.search.style.cssText = `left:${25 * u.scale}px;top:${13 * u.scale}px;width:${81 * u.scale}px;height:${14 * u.scale}px;font-size:${9 * u.scale}px`;
+    if (!open) {
+      this.publish();
+      return;
+    }
+    const settings = u.permanent!.progress.recipeBook.data.views[this.mode()],
+        known = new Set(u.permanent!.progress.recipeBook.data.known), query = this.query.trim().toLowerCase(),
+        groups = new Map<string, RecipeGroup>();
+    for (const recipe of BOOK_RECIPES) {
+      if (!known.has(recipe.id) || !bookApplicable(recipe, this.mode(), this.width()) || this.category !== 'all' && (recipe.category ?? 'misc') !== this.category || query && !((itemName(recipe.result!.id!) + ' ' + recipe.id).toLowerCase().includes(query)) || settings.filter && !this.craftable(recipe)) continue;
+      const key = recipe.type + ':' + (recipe.category ?? 'misc') + ':' + (recipe.group || recipe.id);
+      if (!groups.has(key)) groups.set(key, {key, recipes: []});
+      groups.get(key)!.recipes.push(recipe);
+    }
+    this.groups = [...groups.values()];
+    this.page = Math.min(this.page, Math.max(0, Math.ceil(this.groups.length / 20) - 1));
+    const signature = JSON.stringify([id, u.scale, this.page, this.category, this.query, this.groups.map(g => g.key), settings.filter, this.popup?.key, overlay]);
+    if (signature !== this.signature) {
+      this.signature = signature;
+      this.buildControls();
+    }
+    this.paint();
+    this.publish();
+  }
+
   /** Determine material qualification separately from current grid conflicts and product acquisition.
    * @param {Recipe} recipe Applicable discovered recipe.
    * @return {boolean} Whether finite owned groups fit all requirements and current inputs.
    */
-  craftable(recipe:Recipe):boolean{return analyzeOwnedRecipe(recipe,this.mode(),this.width(),this.ui.value.workbench??this.ui.value.crafting??Array(4).fill(null),[...this.ui.value.backpack,...this.ui.value.hotbar],this.ui.rules,1,false).complete;}
+  craftable(recipe: Recipe): boolean {
+    return analyzeOwnedRecipe(recipe, this.mode(), this.width(), this.ui.value.workbench ?? this.ui.value.crafting ?? Array(4).fill(null), [...this.ui.value.backpack, ...this.ui.value.hotbar], this.ui.rules, 1, false).complete;
+  }
+
   /** Capture actual inputs only; a ghost cannot participate in this signature. @return {string} Stable real-input identity. */
-  inputsSignature():string{return JSON.stringify(this.ui.station?.expected.version===2?[this.ui.station.expected.data.input]:this.ui.value.workbench??this.ui.value.crafting);}
+  inputsSignature(): string {
+    return JSON.stringify(this.ui.station?.expected.version === 2 ? [this.ui.station.expected.data.input] : this.ui.value.workbench ?? this.ui.value.crafting);
+  }
+
   /** Add a semantic original-pixel hit target; a press begun during a receipt cannot become a later fill.
    * @param {string} label External localized accessibility text.
    * @param {number[]} box Logical native bounds.
@@ -64,13 +297,158 @@ export class RecipeBookView {
    * @param {Function} alternate Optional original right-click group expansion.
    * @param {string[]} tooltip Native item name and optional group hint.
    */
-  hit(label:string,box:number[],key:string,action:(event:MouseEvent)=>void,alternate?:()=>void,tooltip:string[]=[label]):void{const b=document.createElement('button');b.type='button';b.className='recipe-book-hit';b.setAttribute('aria-label',label);b.dataset.bookControl=key;b.style.cssText=`left:${box[0]*this.ui.scale}px;top:${box[1]*this.ui.scale}px;width:${box[2]*this.ui.scale}px;height:${box[3]*this.ui.scale}px`;const epoch=this.displayEpoch,scope=this.identity;let blockedPress=false;b.addEventListener('pointerdown',()=>{blockedPress=!this.current(epoch,scope)||this.ui.carrierBusy();});b.addEventListener('click',e=>{if(blockedPress||!this.current(epoch,scope)){blockedPress=false;return;}action(e);});b.addEventListener('contextmenu',e=>{e.preventDefault();if(!blockedPress&&this.current(epoch,scope))alternate?.();});b.addEventListener('pointerenter',e=>{if(!this.current(epoch,scope))return;this.ui.hover=null;this.hover=key;this.paint();this.ui.showTooltipText(tooltip,e.clientX,e.clientY);});b.addEventListener('pointerleave',()=>{if(!this.current(epoch,scope))return;this.hover='';this.ui.hideTooltip();this.paint();});this.controls.append(b);}
+  hit(label: string, box: number[], key: string, action: (event: MouseEvent) => void, alternate?: () => void, tooltip: string[] = [label]): void {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'recipe-book-hit';
+    b.setAttribute('aria-label', label);
+    b.dataset.bookControl = key;
+    b.style.cssText = `left:${box[0] * this.ui.scale}px;top:${box[1] * this.ui.scale}px;width:${box[2] * this.ui.scale}px;height:${box[3] * this.ui.scale}px`;
+    const epoch = this.displayEpoch, scope = this.identity;
+    let blockedPress = false;
+    b.addEventListener('pointerdown', () => {
+      blockedPress = !this.current(epoch, scope) || this.ui.carrierBusy();
+    });
+    b.addEventListener('click', e => {
+      if (blockedPress || !this.current(epoch, scope)) {
+        blockedPress = false;
+        return;
+      }
+      action(e);
+    });
+    b.addEventListener('contextmenu', e => {
+      e.preventDefault();
+      if (!blockedPress && this.current(epoch, scope)) alternate?.();
+    });
+    b.addEventListener('pointerenter', e => {
+      if (!this.current(epoch, scope)) return;
+      this.ui.hover = null;
+      this.hover = key;
+      this.paint();
+      this.ui.showTooltipText(tooltip, e.clientX, e.clientY);
+    });
+    b.addEventListener('pointerleave', () => {
+      if (!this.current(epoch, scope)) return;
+      this.hover = '';
+      this.ui.hideTooltip();
+      this.paint();
+    });
+    this.controls.append(b);
+  }
+
   /** List native category tab identities for the current processing family. @return {string[]} Original category order. */
-  categories():string[]{return this.mode()==='crafting'?['all','equipment','building','misc','redstone']:this.mode()==='furnace'?['all','food','blocks','misc']:['all','blocks','misc'];}
+  categories(): string[] {
+    return this.mode() === 'crafting' ? ['all', 'equipment', 'building', 'misc', 'redstone'] : this.mode() === 'furnace' ? ['all', 'food', 'blocks', 'misc'] : ['all', 'blocks', 'misc'];
+  }
+
   /** Rebuild hit targets only when geometry or the filtered page changes. */
-  buildControls():void{this.controls.replaceChildren();const pageGroups=this.groups.slice(this.page*20,this.page*20+20);this.categories().forEach((category,i)=>this.hit(this.ui.text('book.category.'+category),[-28,3+i*27,35,27],'tab:'+category,()=>{this.category=category;this.page=0;this.popup=null;this.render();}));this.hit(this.ui.text('book.filter'),[110,12,26,16],'filter',()=>this.change({filter:!this.ui.permanent!.progress.recipeBook.data.views[this.mode()].filter}));pageGroups.forEach((group,i)=>this.hit(this.ui.text('book.recipe',{item:itemName(group.recipes[0].result!.id!),variants:group.recipes.length}),[11+i%5*25,31+Math.floor(i/5)*25,25,25],'recipe:'+i,e=>this.choose(group.recipes[Math.floor(performance.now()/1000)%group.recipes.length],e.shiftKey),()=>{this.popup=group;this.render();},[itemName(group.recipes[0].result!.id!),...(group.recipes.length>1?[this.ui.text('book.more')]:[])]));if(this.page>0)this.hit(this.ui.text('book.previous'),[38,137,12,17],'previous',()=>{this.page--;this.popup=null;this.render();});if((this.page+1)*20<this.groups.length)this.hit(this.ui.text('book.next'),[93,137,12,17],'next',()=>{this.page++;this.popup=null;this.render();});if(this.body.classList.contains('book-only'))this.hit(this.ui.text('book.toggle'),[126,146,20,18],'close',()=>this.change({open:false}));if(this.popup){const cols=Math.min(4,this.popup.recipes.length);this.popup.recipes.forEach((recipe,i)=>this.hit(itemName(recipe.result!.id!),[7+i%cols*25,37+Math.floor(i/cols)*25,24,24],'variant:'+i,e=>this.choose(recipe,e.shiftKey)));}const viewed=pageGroups.flatMap(g=>g.recipes.map(r=>r.id)).filter(id=>this.ui.permanent!.progress.recipeBook.data.unseen.includes(id));if(viewed.length)void this.ui.bookCommand?.({type:'book-seen',recipes:viewed}).catch(()=>{});}
+  buildControls(): void {
+    this.controls.replaceChildren();
+    const pageGroups = this.groups.slice(this.page * 20, this.page * 20 + 20);
+    this.categories().forEach((category, i) => this.hit(this.ui.text('book.category.' + category), [-28, 3 + i * 27, 35, 27], 'tab:' + category, () => {
+      this.category = category;
+      this.page = 0;
+      this.popup = null;
+      this.render();
+    }));
+    this.hit(this.ui.text('book.filter'), [110, 12, 26, 16], 'filter', () => this.change({filter: !this.ui.permanent!.progress.recipeBook.data.views[this.mode()].filter}));
+    pageGroups.forEach((group, i) => this.hit(this.ui.text('book.recipe', {
+      item: itemName(group.recipes[0].result!.id!),
+      variants: group.recipes.length
+    }), [11 + i % 5 * 25, 31 + Math.floor(i / 5) * 25, 25, 25], 'recipe:' + i, e => this.choose(group.recipes[Math.floor(performance.now() / 1000) % group.recipes.length], e.shiftKey), () => {
+      this.popup = group;
+      this.render();
+    }, [itemName(group.recipes[0].result!.id!), ...(group.recipes.length > 1 ? [this.ui.text('book.more')] : [])]));
+    if (this.page > 0) this.hit(this.ui.text('book.previous'), [38, 137, 12, 17], 'previous', () => {
+      this.page--;
+      this.popup = null;
+      this.render();
+    });
+    if ((this.page + 1) * 20 < this.groups.length) this.hit(this.ui.text('book.next'), [93, 137, 12, 17], 'next', () => {
+      this.page++;
+      this.popup = null;
+      this.render();
+    });
+    if (this.body.classList.contains('book-only')) this.hit(this.ui.text('book.toggle'), [126, 146, 20, 18], 'close', () => this.change({open: false}));
+    if (this.popup) {
+      const cols = Math.min(4, this.popup.recipes.length);
+      this.popup.recipes.forEach((recipe, i) => this.hit(itemName(recipe.result!.id!), [7 + i % cols * 25, 37 + Math.floor(i / cols) * 25, 24, 24], 'variant:' + i, e => this.choose(recipe, e.shiftKey)));
+    }
+    const viewed = pageGroups.flatMap(g => g.recipes.map(r => r.id)).filter(id => this.ui.permanent!.progress.recipeBook.data.unseen.includes(id));
+    if (viewed.length) void this.ui.bookCommand?.({type: 'book-seen', recipes: viewed}).catch(() => {
+    });
+  }
+
   /** Draw original layout, result icons and small native ingredient overlays without changing any slot. */
-  paint():void{if(this.disposed)return;this.syncScope();if(this.root.hidden)return;const u=this.ui,c=this.canvas.getContext('2d')!,frame=Math.floor(performance.now()/1000);c.clearRect(-28,0,175,166);c.imageSmoothingEnabled=false;c.drawImage(this.image('recipe_book'),0,0,147,166,0,0,147,166);const filter=u.permanent!.progress.recipeBook.data.views[this.mode()].filter;this.sprite(c,(this.mode()==='crafting'?'filter':'furnace_filter')+'_'+(filter?'enabled':'disabled')+(this.hover==='filter'?'_highlighted':''),110,12,26,16);u.pixels.font.draw(c,this.query||u.text('book.searchHint'),25,16,this.query?'#ffffff':'#777777',false);this.groups.slice(this.page*20,this.page*20+20).forEach((group,i)=>{const r=group.recipes[frame%group.recipes.length],x=11+i%5*25,y=31+Math.floor(i/5)*25;this.sprite(c,'slot_'+(group.recipes.length>1?'many_':'')+(this.craftable(r)?'craftable':'uncraftable'),x,y,25,25);u.stack(c,{id:r.result!.id!,count:r.result!.count??1},x+4,y+4);if(u.permanent!.progress.recipeBook.data.unseen.includes(r.id)){c.fillStyle='#ffff55';c.fillRect(x+21,y+1,2,2);}});const pages=Math.max(1,Math.ceil(this.groups.length/20)),counter=u.text('book.page',{page:this.page+1,pages});u.pixels.font.draw(c,counter,73-u.pixels.font.width(counter)/2,141,'#ffffff',false);if(this.page>0)this.sprite(c,'page_backward'+(this.hover==='previous'?'_highlighted':''),38,137,12,17);if(this.page+1<pages)this.sprite(c,'page_forward'+(this.hover==='next'?'_highlighted':''),93,137,12,17);if(this.body.classList.contains('book-only'))this.sprite(c,'button',126,146,20,18);for(const [i,category]of this.categories().entries()){const b=this.controls.querySelector<HTMLButtonElement>('[data-book-control="tab:'+category+'"]');if(!b)continue;const tile=document.createElement('canvas');tile.width=35;tile.height=27;const tc=tile.getContext('2d')!;tc.imageSmoothingEnabled=false;tc.drawImage(this.image('sprites/recipe_book/tab'+(category===this.category?'_selected':'')),0,0);const icons:Record<string,string[]>={all:['compass'],equipment:['iron_axe','golden_sword'],building:['bricks'],misc:this.mode()==='crafting'?['lava_bucket','apple']:['iron_ingot'],redstone:['redstone'],food:['cooked_porkchop'],blocks:['stone']};icons[category].forEach((id,k)=>u.stack(tc,{id:'minecraft:'+id,count:1},icons[category].length>1?3+k*12:9,5));b.style.backgroundImage='url('+tile.toDataURL()+')';b.style.backgroundSize='100% 100%';b.dataset.tabIndex=String(i);}if(this.popup){const cols=Math.min(4,this.popup.recipes.length),w=cols*25+8,h=Math.ceil(this.popup.recipes.length/cols)*25+8,path='assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png';drawSprite(c,this.image('sprites/recipe_book/overlay_recipe'),u.art.documents.get(path+'.mcmeta')?.gui?.scaling,3,33,Math.max(32,w),Math.max(32,h));this.popup.recipes.forEach((recipe,i)=>{const x=7+i%cols*25,y=37+Math.floor(i/cols)*25;this.sprite(c,(this.mode()==='crafting'?'crafting':'furnace')+'_overlay'+(this.craftable(recipe)?'':'_disabled'),x,y,24,24);recipeGhost(recipe,this.mode(),this.width(),u.permanent!.progress.unlocked,u.rules,frame).grid.forEach((s,n)=>{if(!s)return;const icon=u.art.icons.get(s.id);if(icon)c.drawImage(icon,x+3+n%this.width()*7,y+3+Math.floor(n/this.width())*7,6,6);});});}}
+  paint(): void {
+    if (this.disposed) return;
+    this.syncScope();
+    if (this.root.hidden) return;
+    const u = this.ui, c = this.canvas.getContext('2d')!, frame = Math.floor(performance.now() / 1000);
+    c.clearRect(-28, 0, 175, 166);
+    c.imageSmoothingEnabled = false;
+    c.drawImage(this.image('recipe_book'), 0, 0, 147, 166, 0, 0, 147, 166);
+    const filter = u.permanent!.progress.recipeBook.data.views[this.mode()].filter;
+    this.sprite(c, (this.mode() === 'crafting' ? 'filter' : 'furnace_filter') + '_' + (filter ? 'enabled' : 'disabled') + (this.hover === 'filter' ? '_highlighted' : ''), 110, 12, 26, 16);
+    u.pixels.font.draw(c, this.query || u.text('book.searchHint'), 25, 16, this.query ? '#FFF' : '#777', false);
+    this.groups.slice(this.page * 20, this.page * 20 + 20).forEach((group, i) => {
+      const r = group.recipes[frame % group.recipes.length], x = 11 + i % 5 * 25, y = 31 + Math.floor(i / 5) * 25;
+      this.sprite(c, 'slot_' + (group.recipes.length > 1 ? 'many_' : '') + (this.craftable(r) ? 'craftable' : 'uncraftable'), x, y, 25, 25);
+      u.stack(c, {id: r.result!.id!, count: r.result!.count ?? 1}, x + 4, y + 4);
+      if (u.permanent!.progress.recipeBook.data.unseen.includes(r.id)) {
+        c.fillStyle = '#FF5';
+        c.fillRect(x + 21, y + 1, 2, 2);
+      }
+    });
+    const pages = Math.max(1, Math.ceil(this.groups.length / 20)),
+        counter = u.text('book.page', {page: this.page + 1, pages});
+    u.pixels.font.draw(c, counter, 73 - u.pixels.font.width(counter) / 2, 141, '#FFF', false);
+    if (this.page > 0) this.sprite(c, 'page_backward' + (this.hover === 'previous' ? '_highlighted' : ''), 38, 137, 12, 17);
+    if (this.page + 1 < pages) this.sprite(c, 'page_forward' + (this.hover === 'next' ? '_highlighted' : ''), 93, 137, 12, 17);
+    if (this.body.classList.contains('book-only')) this.sprite(c, 'button', 126, 146, 20, 18);
+    for (const [i, category] of this.categories().entries()) {
+      const b = this.controls.querySelector<HTMLButtonElement>('[data-book-control="tab:' + category + '"]');
+      if (!b) continue;
+      const tile = document.createElement('canvas');
+      tile.width = 35;
+      tile.height = 27;
+      const tc = tile.getContext('2d')!;
+      tc.imageSmoothingEnabled = false;
+      tc.drawImage(this.image('sprites/recipe_book/tab' + (category === this.category ? '_selected' : '')), 0, 0);
+      const icons: Record<string, string[]> = {
+        all: ['compass'],
+        equipment: ['iron_axe', 'golden_sword'],
+        building: ['bricks'],
+        misc: this.mode() === 'crafting' ? ['lava_bucket', 'apple'] : ['iron_ingot'],
+        redstone: ['redstone'],
+        food: ['cooked_porkchop'],
+        blocks: ['stone']
+      };
+      icons[category].forEach((id, k) => u.stack(tc, {
+        id: 'minecraft:' + id,
+        count: 1
+      }, icons[category].length > 1 ? 3 + k * 12 : 9, 5));
+      b.style.backgroundImage = 'url(' + tile.toDataURL() + ')';
+      b.style.backgroundSize = '100% 100%';
+      b.dataset.tabIndex = String(i);
+    }
+    if (this.popup) {
+      const cols = Math.min(4, this.popup.recipes.length), w = cols * 25 + 8,
+          h = Math.ceil(this.popup.recipes.length / cols) * 25 + 8,
+          path = 'assets/minecraft/textures/gui/sprites/recipe_book/overlay_recipe.png';
+      drawSprite(c, this.image('sprites/recipe_book/overlay_recipe'), u.art.documents.get(path + '.mcmeta')?.gui?.scaling, 3, 33, Math.max(32, w), Math.max(32, h));
+      this.popup.recipes.forEach((recipe, i) => {
+        const x = 7 + i % cols * 25, y = 37 + Math.floor(i / cols) * 25;
+        this.sprite(c, (this.mode() === 'crafting' ? 'crafting' : 'furnace') + '_overlay' + (this.craftable(recipe) ? '' : '_disabled'), x, y, 24, 24);
+        recipeGhost(recipe, this.mode(), this.width(), u.permanent!.progress.unlocked, u.rules, frame).grid.forEach((s, n) => {
+          if (!s) return;
+          const icon = u.art.icons.get(s.id);
+          if (icon) c.drawImage(icon, x + 3 + n % this.width() * 7, y + 3 + Math.floor(n / this.width()) * 7, 6, 6);
+        });
+      });
+    }
+  }
+
   /** Draw one original sprite at its exact logical bounds.
    * @param {CanvasRenderingContext2D} ctx Book plane.
    * @param {string} name Native sprite name.
@@ -79,21 +457,109 @@ export class RecipeBookView {
    * @param {number} w Logical width.
    * @param {number} h Logical height.
    */
-  sprite(ctx:CanvasRenderingContext2D,name:string,x:number,y:number,w:number,h:number):void{ctx.drawImage(this.image('sprites/recipe_book/'+name),x,y,w,h);}
+  sprite(ctx: CanvasRenderingContext2D, name: string, x: number, y: number, w: number, h: number): void {
+    ctx.drawImage(this.image('sprites/recipe_book/' + name), x, y, w, h);
+  }
+
   /** Select an actual native recipe; missing ingredients produce only a display projection.
    * @param {Recipe} recipe Applicable discovered recipe.
    * @param {boolean} max Shift bounded fill intent.
    */
-  choose(recipe:Recipe,max:boolean):void{if(this.disposed||this.identity!==this.scope()||!this.validRecipe(recipe)||this.ui.carrierBusy()||this.ui.pending||!this.ui.writable)return;this.popup=null;if(!this.craftable(recipe)){this.ghost=recipe;this.ghostInputs=this.inputsSignature();this.ui.notice=this.ui.text(analyzeOwnedRecipe(recipe,this.mode(),this.width(),this.ui.value.workbench??this.ui.value.crafting??Array(4).fill(null),[...this.ui.value.backpack,...this.ui.value.hotbar],this.ui.rules).conflicts.some(Boolean)?'book.conflict':'book.missing');this.ui.draw();}else{this.ghost=null;this.ui.fillInputs(recipe.id,max);}if(this.body.classList.contains('book-only'))this.change({open:false});}
+  choose(recipe: Recipe, max: boolean): void {
+    if (this.disposed || this.identity !== this.scope() || !this.validRecipe(recipe) || this.ui.carrierBusy() || this.ui.pending || !this.ui.writable) return;
+    this.popup = null;
+    if (!this.craftable(recipe)) {
+      this.ghost = recipe;
+      this.ghostInputs = this.inputsSignature();
+      this.ui.notice = this.ui.text(analyzeOwnedRecipe(recipe, this.mode(), this.width(), this.ui.value.workbench ?? this.ui.value.crafting ?? Array(4).fill(null), [...this.ui.value.backpack, ...this.ui.value.hotbar], this.ui.rules).conflicts.some(Boolean) ? 'book.conflict' : 'book.missing');
+      this.ui.draw();
+    } else {
+      this.ghost = null;
+      this.ui.fillInputs(recipe.id, max);
+    }
+    if (this.body.classList.contains('book-only')) this.change({open: false});
+  }
+
   /** Overlay genuine missing-material ghosts in the existing native inputs, never in carriers or persistence.
    * @param {CanvasRenderingContext2D} ctx Original container canvas.
    */
-  drawGhost(ctx:CanvasRenderingContext2D):void{if(this.disposed)return;this.syncScope();this.publish();if(!this.ghost){delete this.ui.modal.dataset.ghostAvailability;return;}const display=ownedRecipeGhost(this.ghost,this.mode(),this.width(),this.ui.value.workbench??this.ui.value.crafting??Array(4).fill(null),[...this.ui.value.backpack,...this.ui.value.hotbar],this.ui.rules,Math.floor(performance.now()/1000)),slots=this.ui.slots.filter(s=>['crafting','workbench','machine'].includes(s.kind));this.ui.modal.dataset.ghostAvailability=JSON.stringify({missing:display.missing,conflicts:display.conflicts,complete:display.complete,grid:display.grid});for(const [i,s]of display.grid.entries()){const slot=slots[i];if(!s||!slot||this.ui.slotStack(slot))continue;ctx.fillStyle=display.missing[i]?'#ff000060':'#ffffff30';ctx.fillRect(slot.x+1,slot.y+1,16,16);ctx.save();ctx.globalAlpha=.55;this.ui.stack(ctx,s,slot.x+1,slot.y+1);ctx.restore();}const output=this.ui.slots.find(slot=>slot.kind==='preview');if(output&&!this.ui.preview.result&&!(this.ui.station?.expected.version===2&&this.ui.station.expected.data.output)){ctx.save();ctx.globalAlpha=.55;this.ui.stack(ctx,{id:this.ghost.result!.id!,count:this.ghost.result!.count??1},output.x+1,output.y+1);ctx.restore();}}
+  drawGhost(ctx: CanvasRenderingContext2D): void {
+    if (this.disposed) return;
+    this.syncScope();
+    this.publish();
+    if (!this.ghost) {
+      delete this.ui.modal.dataset.ghostAvailability;
+      return;
+    }
+    const display = ownedRecipeGhost(this.ghost, this.mode(), this.width(), this.ui.value.workbench ?? this.ui.value.crafting ?? Array(4).fill(null), [...this.ui.value.backpack, ...this.ui.value.hotbar], this.ui.rules, Math.floor(performance.now() / 1000)),
+        slots = this.ui.slots.filter(s => ['crafting', 'workbench', 'machine'].includes(s.kind));
+    this.ui.modal.dataset.ghostAvailability = JSON.stringify({
+      missing: display.missing,
+      conflicts: display.conflicts,
+      complete: display.complete,
+      grid: display.grid
+    });
+    for (const [i, s] of display.grid.entries()) {
+      const slot = slots[i];
+      if (!s || !slot || this.ui.slotStack(slot)) continue;
+      ctx.fillStyle = display.missing[i] ? '#FF000060' : '#FFFFFF30';
+      ctx.fillRect(slot.x + 1, slot.y + 1, 16, 16);
+      ctx.save();
+      ctx.globalAlpha = .55;
+      this.ui.stack(ctx, s, slot.x + 1, slot.y + 1);
+      ctx.restore();
+    }
+    const output = this.ui.slots.find(slot => slot.kind === 'preview');
+    if (output && !this.ui.preview.result && !(this.ui.station?.expected.version === 2 && this.ui.station.expected.data.output)) {
+      ctx.save();
+      ctx.globalAlpha = .55;
+      this.ui.stack(ctx, {
+        id: this.ghost.result!.id!,
+        count: this.ghost.result!.count ?? 1
+      }, output.x + 1, output.y + 1);
+      ctx.restore();
+    }
+  }
+
   /** Present a single original-style discovery toast only for newly committed local events.
    * @param {string[]} recipes Newly discovered IDs, never hydration events.
    * @param {string} generation Source save generation.
    */
-  notify(recipes:string[],generation=this.ui.generation):void{if(this.disposed||this.ui.disposed||generation!==this.ui.generation)return;this.syncScope();recipes=recipes.filter(id=>this.ui.permanent?.progress.recipeBook.data.known.includes(id));if(!recipes.length)return;const c=this.toast.getContext('2d')!;c.clearRect(0,0,160,32);c.imageSmoothingEnabled=false;c.drawImage(this.image('sprites/toast/recipe'),0,0);this.ui.pixels.font.draw(c,this.ui.text('book.newTitle'),30,7,'#500050',false);this.ui.pixels.font.draw(c,this.ui.text('book.newDescription'),30,18,'#000000',false);const r=BOOK_RECIPES.find(r=>recipes.includes(r.id));if(r)this.ui.stack(c,{id:r.result!.id!,count:1},8,8);this.toast.setAttribute('aria-label',this.ui.text('book.newTitle')+' '+this.ui.text('book.newDescription'));this.toast.dataset.recipes=JSON.stringify(recipes);const scale=Math.max(1,Math.min(2,Math.floor((innerWidth-16)/160)));this.toast.style.width=160*scale+'px';this.toast.style.height=32*scale+'px';this.toast.hidden=false;clearTimeout(this.toastTimer);const ticket=++this.toastEpoch;this.toastTimer=window.setTimeout(()=>{if(!this.disposed&&ticket===this.toastEpoch&&generation===this.ui.generation)this.clearToast();},5000);this.publish();}
+  notify(recipes: string[], generation = this.ui.generation): void {
+    if (this.disposed || this.ui.disposed || generation !== this.ui.generation) return;
+    this.syncScope();
+    recipes = recipes.filter(id => this.ui.permanent?.progress.recipeBook.data.known.includes(id));
+    if (!recipes.length) return;
+    const c = this.toast.getContext('2d')!;
+    c.clearRect(0, 0, 160, 32);
+    c.imageSmoothingEnabled = false;
+    c.drawImage(this.image('sprites/toast/recipe'), 0, 0);
+    this.ui.pixels.font.draw(c, this.ui.text('book.newTitle'), 30, 7, '#500050', false);
+    this.ui.pixels.font.draw(c, this.ui.text('book.newDescription'), 30, 18, '#000', false);
+    const r = BOOK_RECIPES.find(r => recipes.includes(r.id));
+    if (r) this.ui.stack(c, {id: r.result!.id!, count: 1}, 8, 8);
+    this.toast.setAttribute('aria-label', this.ui.text('book.newTitle') + ' ' + this.ui.text('book.newDescription'));
+    this.toast.dataset.recipes = JSON.stringify(recipes);
+    const scale = Math.max(1, Math.min(2, Math.floor((innerWidth - 16) / 160)));
+    this.toast.style.width = 160 * scale + 'px';
+    this.toast.style.height = 32 * scale + 'px';
+    this.toast.hidden = false;
+    clearTimeout(this.toastTimer);
+    const ticket = ++this.toastEpoch;
+    this.toastTimer = window.setTimeout(() => {
+      if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation) this.clearToast();
+    }, 5000);
+    this.publish();
+  }
+
   /** Release book-only timers, hit targets and notifications with the owning formal screen. */
-  dispose():void{this.disposed=true;this.resetTransient(true);this.abort.abort();clearInterval(this.clock);this.root.remove();this.toggle.remove();this.toast.remove();}
+  dispose(): void {
+    this.disposed = true;
+    this.resetTransient(true);
+    this.abort.abort();
+    clearInterval(this.clock);
+    this.root.remove();
+    this.toggle.remove();
+    this.toast.remove();
+  }
 }

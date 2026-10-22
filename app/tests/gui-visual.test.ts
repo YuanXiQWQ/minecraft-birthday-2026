@@ -1,15 +1,117 @@
 /** Pure silhouette, native Steve geometry, resource and hand-context contracts supplement actual browser visual checks. */
 import {GameInventory} from '../web/src/ui/inventory.ts';
-import {definitionTransform} from '../web/src/ui/player-items.ts';import {Vector3} from 'three';
-import {createHash} from 'node:crypto';import {readFileSync} from 'node:fs';import {resolve} from 'node:path';
-import test from 'node:test';import assert from 'node:assert/strict';import {silhouette} from '../web/src/ui/icon-mask.ts';import {PLAYER_PARTS,PLAYER_WINDOWS,playerCube,playerLook,armorParts} from '../web/src/ui/player-model.ts';import {resources} from '../tools/resources.ts';import {iconParts,iconModel} from '../web/src/ui/icon-model.ts';
-test('silhouette preserves transparent holes and every fractional alpha without mutating original/composite frame pixels',()=>{const source=new Uint8ClampedArray([12,34,56,0,255,40,70,255,100,200,40,127,80,60,20,1]),copy=source.slice(),out=silhouette(source);assert.deepEqual(out,new Uint8ClampedArray([0,0,0,0,0,0,0,255,0,0,0,127,0,0,0,1]));assert.deepEqual(source,copy);out[3]=200;assert.equal(source[3],0);assert.throws(()=>silhouette(new Uint8ClampedArray(3)));});
-test('wide Steve has six native cuboids, separate outer layers, original UVs and intact head/feet extents',()=>{assert.equal(PLAYER_PARTS.length,6);assert.deepEqual(PLAYER_PARTS.map(p=>p.name),['head','body','rightArm','leftArm','rightLeg','leftLeg']);let low=Infinity,high=-Infinity;for(const p of PLAYER_PARTS){const c=playerCube(p.box,'skin');assert.equal(c.positions.length,72);assert.equal(c.indices.length,36);for(let i=1;i<c.positions.length;i+=3){low=Math.min(low,c.positions[i]*16+p.pivot[1]);high=Math.max(high,c.positions[i]*16+p.pivot[1]);}const outer=playerCube(p.overlay,'skin',64,p.inflate);assert.notDeepEqual(outer.positions,c.positions);assert.ok(c.uvs.every(v=>v>=0&&v<=1));}assert.equal(low,-8);assert.equal(high,24);const front=playerCube(PLAYER_PARTS[0].box,'skin').uvs.slice(24,32);assert.deepEqual(front,[16/64,1-8/64,8/64,1-8/64,8/64,1-16/64,16/64,1-16/64]);for(const b of Object.values(PLAYER_WINDOWS))assert.ok(b.height>32/16*.9375*b.scale);});
-test('armor slot visibility, deformation and atlas height remain separate from skin and hand models',()=>{assert.deepEqual(armorParts('head'),['head']);assert.deepEqual(armorParts('chest'),['body','rightArm','leftArm']);assert.deepEqual(armorParts('legs'),['body','rightLeg','leftLeg']);assert.deepEqual(armorParts('feet'),['rightLeg','leftLeg']);const base=playerCube(PLAYER_PARTS[0].box,'iron',32),wide=playerCube(PLAYER_PARTS[0].box,'iron',32,1);assert.deepEqual(base.uvs,wide.uvs);assert.equal(Math.min(...wide.positions),-9/16);assert.ok(wide.uvs.every(v=>v>=0&&v<=1));});
-test('mouse feedback uses same-version bounded atan and independent body/head tracking, with no animation clock',()=>{assert.equal(Math.abs(playerLook(0,0).body),0);assert.ok(playerLook(100,50).body>0);assert.ok(playerLook(-100,-50).body<0);assert.equal(playerLook(100,50).head,playerLook(100,50).body);assert.ok(Math.abs(playerLook(1e9,1e9).body)<Math.PI*Math.PI/18);assert.deepEqual(playerLook(42,17),playerLook(42,17));});
-test('Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile',()=>{const files=resources(),decode=(p:string)=>JSON.parse(new TextDecoder().decode(files.get(p))),profile=decode('player-manifest.json');assert.equal(profile.entries.length,11);assert.equal(profile.exporterSha256,createHash('sha256').update(readFileSync(resolve('tools/player-assets.ts'),'utf8').replaceAll('\r\n','\n')).digest('hex'));for(const [path,hash]of Object.entries(profile.inputs))if(files.has(path))assert.equal(createHash('sha256').update(files.get(path)!).digest('hex'),hash);assert.equal(profile.clientSha1,'e877b6a07acd633fb3bb475002175cec036e7b87');for(const n of ['textures/entity/player/wide/steve.png','textures/entity/equipment/humanoid/iron.png','textures/entity/equipment/humanoid_leggings/iron.png','equipment/iron.json'])assert.ok(files.has('assets/minecraft/'+n));const catalogue=decode('catalogue-manifest.json');assert.equal(catalogue.items.length,113);for(const id of catalogue.items)for(const context of ['thirdperson_righthand','thirdperson_lefthand'])for(const p of iconParts(decode('assets/minecraft/items/'+id.split(':')[1]+'.json').model,'10-21',[],context)){const m=iconModel(p.model,n=>decode('assets/minecraft/models/'+n.split(':')[1]+'.json'));assert.ok(m.builtin||m.elements||p.special);assert.ok(m.display?.[context]||m.display?.thirdperson_righthand||m.builtin||m.elements||p.special);}assert.ok(Object.keys(profile.equipment).every(id=>id.startsWith('minecraft:iron_')));});
+import {definitionTransform} from '../web/src/ui/player-items.ts';
+import {Vector3} from 'three';
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {silhouette} from '../web/src/ui/icon-mask.ts';
+import {PLAYER_PARTS, PLAYER_WINDOWS, playerCube, playerLook, armorParts} from '../web/src/ui/player-model.ts';
+import {resources} from '../tools/resources.ts';
+import {iconParts, iconModel} from '../web/src/ui/icon-model.ts';
 
-test('composite held leaves retain native 0..1 transform pivots and shield keeps its entity-space inversion',()=>{const rotation=[0,1,0,0],head=definitionTransform([{left_rotation:rotation,translation:[1,0,1]}]),foot=definitionTransform([{left_rotation:rotation,translation:[1,0,2]}]);assert.deepEqual(new Vector3().applyMatrix4(head).toArray(),[0,0,0]);assert.deepEqual(new Vector3().applyMatrix4(foot).toArray(),[0,0,1]);assert.deepEqual(new Vector3(0,1,2).applyMatrix4(definitionTransform([{scale:[1,-1,-1]}],false)).toArray(),[0,-1,-2]);});
+test('silhouette preserves transparent holes and every fractional alpha without mutating original/composite frame pixels', () => {
+    const source = new Uint8ClampedArray([12, 34, 56, 0, 255, 40, 70, 255, 100, 200, 40, 127, 80, 60, 20, 1]),
+        copy = source.slice(), out = silhouette(source);
+    assert.deepEqual(out, new Uint8ClampedArray([0, 0, 0, 0, 0, 0, 0, 255, 0, 0, 0, 127, 0, 0, 0, 1]));
+    assert.deepEqual(source, copy);
+    out[3] = 200;
+    assert.equal(source[3], 0);
+    assert.throws(() => silhouette(new Uint8ClampedArray(3)));
+});
+test('wide Steve has six native cuboids, separate outer layers, original UVs and intact head/feet extents', () => {
+    assert.equal(PLAYER_PARTS.length, 6);
+    assert.deepEqual(PLAYER_PARTS.map(p => p.name), ['head', 'body', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg']);
+    let low = Infinity, high = -Infinity;
+    for (const p of PLAYER_PARTS) {
+        const c = playerCube(p.box, 'skin');
+        assert.equal(c.positions.length, 72);
+        assert.equal(c.indices.length, 36);
+        for (let i = 1; i < c.positions.length; i += 3) {
+            low = Math.min(low, c.positions[i] * 16 + p.pivot[1]);
+            high = Math.max(high, c.positions[i] * 16 + p.pivot[1]);
+        }
+        const outer = playerCube(p.overlay, 'skin', 64, p.inflate);
+        assert.notDeepEqual(outer.positions, c.positions);
+        assert.ok(c.uvs.every(v => v >= 0 && v <= 1));
+    }
+    assert.equal(low, -8);
+    assert.equal(high, 24);
+    const front = playerCube(PLAYER_PARTS[0].box, 'skin').uvs.slice(24, 32);
+    assert.deepEqual(front, [16 / 64, 1 - 8 / 64, 8 / 64, 1 - 8 / 64, 8 / 64, 1 - 16 / 64, 16 / 64, 1 - 16 / 64]);
+    for (const b of Object.values(PLAYER_WINDOWS)) assert.ok(b.height > 32 / 16 * .9375 * b.scale);
+});
+test('armor slot visibility, deformation and atlas height remain separate from skin and hand models', () => {
+    assert.deepEqual(armorParts('head'), ['head']);
+    assert.deepEqual(armorParts('chest'), ['body', 'rightArm', 'leftArm']);
+    assert.deepEqual(armorParts('legs'), ['body', 'rightLeg', 'leftLeg']);
+    assert.deepEqual(armorParts('feet'), ['rightLeg', 'leftLeg']);
+    const base = playerCube(PLAYER_PARTS[0].box, 'iron', 32), wide = playerCube(PLAYER_PARTS[0].box, 'iron', 32, 1);
+    assert.deepEqual(base.uvs, wide.uvs);
+    assert.equal(Math.min(...wide.positions), -9 / 16);
+    assert.ok(wide.uvs.every(v => v >= 0 && v <= 1));
+});
+test('mouse feedback uses same-version bounded atan and independent body/head tracking, with no animation clock', () => {
+    assert.equal(Math.abs(playerLook(0, 0).body), 0);
+    assert.ok(playerLook(100, 50).body > 0);
+    assert.ok(playerLook(-100, -50).body < 0);
+    assert.equal(playerLook(100, 50).head, playerLook(100, 50).body);
+    assert.ok(Math.abs(playerLook(1e9, 1e9).body) < Math.PI * Math.PI / 18);
+    assert.deepEqual(playerLook(42, 17), playerLook(42, 17));
+});
+test('Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile', () => {
+    const files = resources(), decode = (p: string) => JSON.parse(new TextDecoder().decode(files.get(p))),
+        profile = decode('player-manifest.json');
+    assert.equal(profile.entries.length, 11);
+    assert.equal(profile.exporterSha256, createHash('sha256').update(readFileSync(resolve('tools/player-assets.ts'), 'utf8').replaceAll('\r\n', '\n')).digest('hex'));
+    for (const [path, hash] of Object.entries(profile.inputs)) if (files.has(path)) assert.equal(createHash('sha256').update(files.get(path)!).digest('hex'), hash);
+    assert.equal(profile.clientSha1, 'e877b6a07acd633fb3bb475002175cec036e7b87');
+    for (const n of ['textures/entity/player/wide/steve.png', 'textures/entity/equipment/humanoid/iron.png', 'textures/entity/equipment/humanoid_leggings/iron.png', 'equipment/iron.json']) assert.ok(files.has('assets/minecraft/' + n));
+    const catalogue = decode('catalogue-manifest.json');
+    assert.equal(catalogue.items.length, 113);
+    for (const id of catalogue.items) for (const context of ['thirdperson_righthand', 'thirdperson_lefthand']) for (const p of iconParts(decode('assets/minecraft/items/' + id.split(':')[1] + '.json').model, '10-21', [], context)) {
+        const m = iconModel(p.model, n => decode('assets/minecraft/models/' + n.split(':')[1] + '.json'));
+        assert.ok(m.builtin || m.elements || p.special);
+        assert.ok(m.display?.[context] || m.display?.thirdperson_righthand || m.builtin || m.elements || p.special);
+    }
+    assert.ok(Object.keys(profile.equipment).every(id => id.startsWith('minecraft:iron_')));
+});
 
-test('formal stack painter leaves empty cells untouched even if a caller supplies locked=true',()=>{const context=new Proxy({}, {/** Reject any attempt to access an empty cell drawing operation. */get(){throw Error('empty-cell-painted');}});GameInventory.prototype.stack.call({} as GameInventory,context as CanvasRenderingContext2D,null,0,0,true);});
-test('formal stack painter isolates mask selection from quantity text and does not replace the shared original cache',()=>{const original={} as HTMLCanvasElement,mask={} as HTMLCanvasElement,images:unknown[]=[],labels:string[]=[],icons=new Map([['minecraft:egg',original]]),ui={art:{icons},masks:{get:()=>mask},pixels:{font:{width:()=>6,draw:(_c:unknown,text:string)=>labels.push(text)}}};const ctx={drawImage:(source:unknown)=>images.push(source)} as unknown as CanvasRenderingContext2D;GameInventory.prototype.stack.call(ui as unknown as GameInventory,ctx,{id:'minecraft:egg',count:2},0,0,true);GameInventory.prototype.stack.call(ui as unknown as GameInventory,ctx,{id:'minecraft:egg',count:2},0,0,false);assert.deepEqual(images,[mask,original]);assert.deepEqual(labels,['2','2']);assert.equal(icons.get('minecraft:egg'),original);});
+test('composite held leaves retain native 0..1 transform pivots and shield keeps its entity-space inversion', () => {
+    const rotation = [0, 1, 0, 0], head = definitionTransform([{left_rotation: rotation, translation: [1, 0, 1]}]),
+        foot = definitionTransform([{left_rotation: rotation, translation: [1, 0, 2]}]);
+    assert.deepEqual(new Vector3().applyMatrix4(head).toArray(), [0, 0, 0]);
+    assert.deepEqual(new Vector3().applyMatrix4(foot).toArray(), [0, 0, 1]);
+    assert.deepEqual(new Vector3(0, 1, 2).applyMatrix4(definitionTransform([{scale: [1, -1, -1]}], false)).toArray(), [0, -1, -2]);
+});
+
+test('formal stack painter leaves empty cells untouched even if a caller supplies locked=true', () => {
+    const context = new Proxy({}, {
+        /** Reject any attempt to access an empty cell drawing operation. */get() {
+            throw Error('empty-cell-painted');
+        }
+    });
+    GameInventory.prototype.stack.call({} as GameInventory, context as CanvasRenderingContext2D, null, 0, 0, true);
+});
+test('formal stack painter isolates mask selection from quantity text and does not replace the shared original cache', () => {
+    const original = {} as HTMLCanvasElement, mask = {} as HTMLCanvasElement, images: unknown[] = [],
+        labels: string[] = [], icons = new Map([['minecraft:egg', original]]), ui = {
+            art: {icons},
+            masks: {get: () => mask},
+            pixels: {font: {width: () => 6, draw: (_c: unknown, text: string) => labels.push(text)}}
+        };
+    const ctx = {drawImage: (source: unknown) => images.push(source)} as unknown as CanvasRenderingContext2D;
+    GameInventory.prototype.stack.call(ui as unknown as GameInventory, ctx, {
+        id: 'minecraft:egg',
+        count: 2
+    }, 0, 0, true);
+    GameInventory.prototype.stack.call(ui as unknown as GameInventory, ctx, {
+        id: 'minecraft:egg',
+        count: 2
+    }, 0, 0, false);
+    assert.deepEqual(images, [mask, original]);
+    assert.deepEqual(labels, ['2', '2']);
+    assert.equal(icons.get('minecraft:egg'), original);
+});

@@ -1,52 +1,366 @@
 /** Settings regressions exercise formal save transactions and native processing without a copied reset implementation. */
-import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {SaveSession} from '../web/src/persistence/session.ts';import {token,decode,seal,checksum} from '../web/src/persistence/codec.ts';
-import {SettingsEdits} from '../web/src/ui/settings-edits.ts';import {initialProgress} from '../web/src/domain/state.ts';import {emptyFurnace} from '../web/src/domain/furnace.ts';import type {Rules} from '../web/src/rules/types.ts';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {SaveSession} from '../web/src/persistence/session.ts';
+import {token, decode, seal, checksum} from '../web/src/persistence/codec.ts';
+import {SettingsEdits} from '../web/src/ui/settings-edits.ts';
+import {initialProgress} from '../web/src/domain/state.ts';
+import {emptyFurnace} from '../web/src/domain/furnace.ts';
+import type {Rules} from '../web/src/rules/types.ts';
+
 /** Audited runtime recipes and native fuel providers. */
-const rules=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8')) as Rules;
+const rules = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json', import.meta.url), 'utf8')) as Rules;
+
 /** Create a real running furnace with shared deterministic locks and controllable write failure.
  * @return {Promise<object>} Real session and backing storage controls.
  */
-async function setup(){let raw:string|null=null,deny=false,tail:Promise<unknown>=Promise.resolve();const storage={getItem:()=>raw,setItem:(_key:string,v:string)=>{if(deny)throw Error('write-failed');raw=v;}},locks={
-/** Serialize real session work.
- * @param {Function} work Transaction.
- * @return {Promise<T>} Committed result.
- */
-exclusive<T>(work:()=>Promise<T>):Promise<T>{const p=tail.then(work);tail=p.catch(()=>{});return p;}};const s=new SaveSession(storage,locks,{allows:()=>true});s.rules=rules;await s.refresh();for(const id of ['furnace','oak_log','stick'])await s.dispatch({type:'unlock',item:'minecraft:'+id});await s.dispatch({type:'put-station',scene:'plains',station:{id:'running',kind:'furnace',cell:[2,0,0],facing:'south',contents:emptyFurnace()}});for(const[index,id]of [[0,'oak_log'],[1,'stick']] as const){const r=await s.editInventory({type:'source',item:'minecraft:'+id,mode:'clone'},null,s.view.envelope!.state.progress.player.data);await s.editInventory({type:'machine-slot',index,button:0},r.cursor,s.view.envelope!.state.progress.player.data,undefined,{scene:'plains',id:'running',expected:structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)});}return{s,storage,locks,raw:()=>raw,write:(value:string)=>raw=value,deny:(value:boolean)=>deny=value};}
-test('reset confirmation survives several seconds of formal processing and retains latest committed settings',async()=>{const h=await setup(),s=h.s,confirmation=token(s.view.envelope!);await s.dispatch({type:'settings',patch:{volume:.65,muted:true}});for(let i=0;i<20;i++)await s.dispatch({type:'processing-tick',ticks:5});let failure='';try{await s.reset(confirmation);}catch(error){failure=(error as Error).message;}assert.deepEqual({failure,writable:s.view.writable,stations:s.view.envelope!.state.progress.scenes.plains.stations.length},{failure:'',writable:true,stations:0});assert.equal(s.view.envelope!.state.settings.volume,.65);assert.equal(s.view.envelope!.state.settings.muted,true);});
+async function setup() {
+    let raw: string | null = null, deny = false, tail: Promise<unknown> = Promise.resolve();
+    const storage = {
+        getItem: () => raw, setItem: (_key: string, v: string) => {
+            if (deny) throw Error('write-failed');
+            raw = v;
+        }
+    }, locks = {
+        /** Serialize real session work.
+         * @param {Function} work Transaction.
+         * @return {Promise<T>} Committed result.
+         */
+        exclusive<T>(work: () => Promise<T>): Promise<T> {
+            const p = tail.then(work);
+            tail = p.catch(() => {
+            });
+            return p;
+        }
+    };
+    const s = new SaveSession(storage, locks, {allows: () => true});
+    s.rules = rules;
+    await s.refresh();
+    for (const id of ['furnace', 'oak_log', 'stick']) await s.dispatch({type: 'unlock', item: 'minecraft:' + id});
+    await s.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {id: 'running', kind: 'furnace', cell: [2, 0, 0], facing: 'south', contents: emptyFurnace()}
+    });
+    for (const [index, id] of [[0, 'oak_log'], [1, 'stick']] as const) {
+        const r = await s.editInventory({
+            type: 'source',
+            item: 'minecraft:' + id,
+            mode: 'clone'
+        }, null, s.view.envelope!.state.progress.player.data);
+        await s.editInventory({
+            type: 'machine-slot',
+            index,
+            button: 0
+        }, r.cursor, s.view.envelope!.state.progress.player.data, undefined, {
+            scene: 'plains',
+            id: 'running',
+            expected: structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)
+        });
+    }
+    return {
+        s,
+        storage,
+        locks,
+        raw: () => raw,
+        write: (value: string) => raw = value,
+        deny: (value: boolean) => deny = value
+    };
+}
 
-test('ordinary reset clears complete progress and keeps latest preferences without processing',async()=>{const h=await setup(),s=h.s;for(const item of ['cake','crafting_table'])await s.dispatch({type:'unlock',item:'minecraft:'+item});await s.dispatch({type:'put-station',scene:'plains',station:{id:'table',kind:'crafting_table',cell:[3,0,0],facing:'north',contents:{version:1,data:{grid:[{id:'minecraft:oak_log',count:1},...Array(8).fill(null)]}}}});await s.editInventory({type:'source',item:'minecraft:stick',mode:'number',index:0},null,s.view.envelope!.state.progress.player.data);await s.dispatch({type:'select-scene',scene:'home'});await s.editInventory({type:'source',item:'minecraft:cake',mode:'number',index:0},null,s.view.envelope!.state.progress.player.data);await s.dispatch({type:'record-cake-placement',scene:'home',table:'birthday-table'});const c=token(s.view.envelope!),old=s.view.envelope!.generation;await s.dispatch({type:'settings',patch:{locale:'fr',volume:.75,muted:true}});await s.reset(c);assert.notEqual(s.view.envelope!.generation,old);assert.deepEqual(s.view.envelope!.state.progress,initialProgress());assert.deepEqual(s.view.envelope!.state.settings,{locale:'fr',volume:.75,muted:true});assert.equal(s.view.writable,true);});
+test('reset confirmation survives several seconds of formal processing and retains latest committed settings', async () => {
+    const h = await setup(), s = h.s, confirmation = token(s.view.envelope!);
+    await s.dispatch({type: 'settings', patch: {volume: .65, muted: true}});
+    for (let i = 0; i < 20; i++) await s.dispatch({type: 'processing-tick', ticks: 5});
+    let failure = '';
+    try {
+        await s.reset(confirmation);
+    } catch (error) {
+        failure = (error as Error).message;
+    }
+    assert.deepEqual({
+        failure,
+        writable: s.view.writable,
+        stations: s.view.envelope!.state.progress.scenes.plains.stations.length
+    }, {failure: '', writable: true, stations: 0});
+    assert.equal(s.view.envelope!.state.settings.volume, .65);
+    assert.equal(s.view.envelope!.state.settings.muted, true);
+});
 
-test('autonomous output and burn changes remain in the confirmed scope without silently acquiring output',async()=>{const {s}=await setup(),c=token(s.view.envelope!);await s.dispatch({type:'processing-tick',ticks:240});const d=s.view.envelope!.state.progress.scenes.plains.stations[0].contents;assert.equal(d.version,2);if(d.version!==2)throw Error('fixture');assert.equal(d.data.output!.count,1);assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));assert.equal(token(s.view.envelope!),c);await s.reset(c);assert.deepEqual(s.view.envelope!.state.progress,initialProgress());});
+test('ordinary reset clears complete progress and keeps latest preferences without processing', async () => {
+    const h = await setup(), s = h.s;
+    for (const item of ['cake', 'crafting_table']) await s.dispatch({type: 'unlock', item: 'minecraft:' + item});
+    await s.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {
+            id: 'table',
+            kind: 'crafting_table',
+            cell: [3, 0, 0],
+            facing: 'north',
+            contents: {version: 1, data: {grid: [{id: 'minecraft:oak_log', count: 1}, ...Array(8).fill(null)]}}
+        }
+    });
+    await s.editInventory({
+        type: 'source',
+        item: 'minecraft:stick',
+        mode: 'number',
+        index: 0
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.dispatch({type: 'select-scene', scene: 'home'});
+    await s.editInventory({
+        type: 'source',
+        item: 'minecraft:cake',
+        mode: 'number',
+        index: 0
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.dispatch({type: 'record-cake-placement', scene: 'home', table: 'birthday-table'});
+    const c = token(s.view.envelope!), old = s.view.envelope!.generation;
+    await s.dispatch({type: 'settings', patch: {locale: 'fr', volume: .75, muted: true}});
+    await s.reset(c);
+    assert.notEqual(s.view.envelope!.generation, old);
+    assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
+    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', volume: .75, muted: true});
+    assert.equal(s.view.writable, true);
+});
 
-for(const change of ['unlock','layout','input','remove'] as const)test('manual '+change+' invalidates confirmation without poisoning a healthy session',async()=>{const {s}=await setup(),c=token(s.view.envelope!);if(change==='unlock')await s.dispatch({type:'unlock',item:'minecraft:egg'});if(change==='layout')await s.editInventory({type:'source',item:'minecraft:stick',mode:'number',index:0},null,s.view.envelope!.state.progress.player.data);if(change==='input')await s.editInventory({type:'machine-slot',index:0,button:0},null,s.view.envelope!.state.progress.player.data,undefined,{scene:'plains',id:'running',expected:structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)});if(change==='remove')await s.dispatch({type:'remove-station',scene:'plains',id:'running'});await assert.rejects(()=>s.reset(c),/confirmation-stale/);assert.equal(s.view.writable,true);assert.equal(s.view.status,'ready');await s.dispatch({type:'settings',patch:{volume:.35}});await s.reset(token(s.view.envelope!));assert.equal(s.view.envelope!.state.settings.volume,.35);});
+test('autonomous output and burn changes remain in the confirmed scope without silently acquiring output', async () => {
+    const {s} = await setup(), c = token(s.view.envelope!);
+    await s.dispatch({type: 'processing-tick', ticks: 240});
+    const d = s.view.envelope!.state.progress.scenes.plains.stations[0].contents;
+    assert.equal(d.version, 2);
+    if (d.version !== 2) throw Error('fixture');
+    assert.equal(d.data.output!.count, 1);
+    assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));
+    assert.equal(token(s.view.envelope!), c);
+    await s.reset(c);
+    assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
+});
 
-test('a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry',async()=>{const h=await setup(),a=h.s,b=new SaveSession(h.storage,h.locks);b.rules=rules;await b.refresh();const old=token(a.view.envelope!);await b.reset(token(b.view.envelope!));await b.dispatch({type:'unlock',item:'minecraft:egg'});await assert.rejects(()=>a.reset(old),/confirmation-stale/);assert.equal(a.view.writable,true);assert.equal(a.view.envelope!.generation,b.view.envelope!.generation);assert.deepEqual(a.view.envelope!.state.progress.unlocked,['minecraft:egg']);await a.reset(token(a.view.envelope!));assert.deepEqual(a.view.envelope!.state.progress,initialProgress());});
+for (const change of ['unlock', 'layout', 'input', 'remove'] as const) test('manual ' + change + ' invalidates confirmation without poisoning a healthy session', async () => {
+    const {s} = await setup(), c = token(s.view.envelope!);
+    if (change === 'unlock') await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    if (change === 'layout') await s.editInventory({
+        type: 'source',
+        item: 'minecraft:stick',
+        mode: 'number',
+        index: 0
+    }, null, s.view.envelope!.state.progress.player.data);
+    if (change === 'input') await s.editInventory({
+        type: 'machine-slot',
+        index: 0,
+        button: 0
+    }, null, s.view.envelope!.state.progress.player.data, undefined, {
+        scene: 'plains',
+        id: 'running',
+        expected: structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)
+    });
+    if (change === 'remove') await s.dispatch({type: 'remove-station', scene: 'plains', id: 'running'});
+    await assert.rejects(() => s.reset(c), /confirmation-stale/);
+    assert.equal(s.view.writable, true);
+    assert.equal(s.view.status, 'ready');
+    await s.dispatch({type: 'settings', patch: {volume: .35}});
+    await s.reset(token(s.view.envelope!));
+    assert.equal(s.view.envelope!.state.settings.volume, .35);
+});
 
-test('restored pages cannot submit confirmation tickets issued before suspension',async()=>{const {s}=await setup(),c=token(s.view.envelope!),serial=s.serial;s.suspend();await s.resume();await assert.rejects(()=>s.reset(c,serial),/confirmation-stale/);assert.equal(s.view.writable,true);assert.equal(s.view.envelope!.state.progress.scenes.plains.stations.length,1);await s.reset(token(s.view.envelope!),s.serial);});
+test('a reset in another tab invalidates old confirmation, publishes current healthy epoch and permits explicit retry', async () => {
+    const h = await setup(), a = h.s, b = new SaveSession(h.storage, h.locks);
+    b.rules = rules;
+    await b.refresh();
+    const old = token(a.view.envelope!);
+    await b.reset(token(b.view.envelope!));
+    await b.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    await assert.rejects(() => a.reset(old), /confirmation-stale/);
+    assert.equal(a.view.writable, true);
+    assert.equal(a.view.envelope!.generation, b.view.envelope!.generation);
+    assert.deepEqual(a.view.envelope!.state.progress.unlocked, ['minecraft:egg']);
+    await a.reset(token(a.view.envelope!));
+    assert.deepEqual(a.view.envelope!.state.progress, initialProgress());
+});
 
-test('queued clock and finite acquisition cannot revive progress after reset or poison the new epoch',async()=>{const h=await setup(),s=h.s;await s.dispatch({type:'processing-tick',ticks:200});const epoch=s.view.envelope!.generation,expected=s.view.envelope!.state.progress.player.data,workbench={scene:'plains' as const,id:'running',expected:structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)};let release!:()=>void;const held=h.locks.exclusive(()=>new Promise<void>(r=>release=r));await Promise.resolve();const reset=s.reset(token(s.view.envelope!)),tick=s.transact({type:'processing-tick',ticks:200},()=>s.view.envelope?.generation===epoch),take=s.takeOutput({mode:'cursor'},null,expected,workbench),done=Promise.allSettled([reset,tick,take]);release();await held;const results=await done;assert.equal(results[0].status,'fulfilled');assert.match(String((results[1] as PromiseRejectedResult).reason),/inactive/);assert.match(String((results[2] as PromiseRejectedResult).reason),/stale-session/);assert.deepEqual((await decode(h.raw()!)).envelope.state.progress,initialProgress());assert.equal(s.view.writable,true);await s.dispatch({type:'unlock',item:'minecraft:egg'});});
+test('restored pages cannot submit confirmation tickets issued before suspension', async () => {
+    const {s} = await setup(), c = token(s.view.envelope!), serial = s.serial;
+    s.suspend();
+    await s.resume();
+    await assert.rejects(() => s.reset(c, serial), /confirmation-stale/);
+    assert.equal(s.view.writable, true);
+    assert.equal(s.view.envelope!.state.progress.scenes.plains.stations.length, 1);
+    await s.reset(token(s.view.envelope!), s.serial);
+});
 
-test('write failure preserves bytes, remains explicitly readonly and can be retried after refresh',async()=>{const h=await setup(),c=token(h.s.view.envelope!),before=h.raw();h.deny(true);await assert.rejects(()=>h.s.reset(c),/write-failed/);assert.equal(h.raw(),before);assert.equal(h.s.view.status,'write-failed');assert.equal(h.s.view.writable,false);h.deny(false);await h.s.refresh();await h.s.reset(token(h.s.view.envelope!));assert.deepEqual(h.s.view.envelope!.state.progress,initialProgress());});
+test('queued clock and finite acquisition cannot revive progress after reset or poison the new epoch', async () => {
+    const h = await setup(), s = h.s;
+    await s.dispatch({type: 'processing-tick', ticks: 200});
+    const epoch = s.view.envelope!.generation, expected = s.view.envelope!.state.progress.player.data, workbench = {
+        scene: 'plains' as const,
+        id: 'running',
+        expected: structuredClone(s.view.envelope!.state.progress.scenes.plains.stations[0].contents)
+    };
+    let release!: () => void;
+    const held = h.locks.exclusive(() => new Promise<void>(r => release = r));
+    await Promise.resolve();
+    const reset = s.reset(token(s.view.envelope!)),
+        tick = s.transact({type: 'processing-tick', ticks: 200}, () => s.view.envelope?.generation === epoch),
+        take = s.takeOutput({mode: 'cursor'}, null, expected, workbench),
+        done = Promise.allSettled([reset, tick, take]);
+    release();
+    await held;
+    const results = await done;
+    assert.equal(results[0].status, 'fulfilled');
+    assert.match(String((results[1] as PromiseRejectedResult).reason), /inactive/);
+    assert.match(String((results[2] as PromiseRejectedResult).reason), /stale-session/);
+    assert.deepEqual((await decode(h.raw()!)).envelope.state.progress, initialProgress());
+    assert.equal(s.view.writable, true);
+    await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+});
 
-for(const raw of ['not json',JSON.stringify({format:99})])test('open reset confirmation never overwrites invalid backing bytes: '+raw,async()=>{const h=await setup(),c=token(h.s.view.envelope!);h.write(raw);await assert.rejects(()=>h.s.reset(c),/corrupt|future/);assert.equal(h.raw(),raw);assert.equal(h.s.view.writable,false);});
+test('write failure preserves bytes, remains explicitly readonly and can be retried after refresh', async () => {
+    const h = await setup(), c = token(h.s.view.envelope!), before = h.raw();
+    h.deny(true);
+    await assert.rejects(() => h.s.reset(c), /write-failed/);
+    assert.equal(h.raw(), before);
+    assert.equal(h.s.view.status, 'write-failed');
+    assert.equal(h.s.view.writable, false);
+    h.deny(false);
+    await h.s.refresh();
+    await h.s.reset(token(h.s.view.envelope!));
+    assert.deepEqual(h.s.view.envelope!.state.progress, initialProgress());
+});
 
-for(const kind of ['checksum','unknown-version'] as const)test('confirmation preserves '+kind+' bytes and blocks reset',async()=>{const h=await setup(),c=token(h.s.view.envelope!),e=await seal(h.s.view.envelope!.state,h.s.view.envelope!.generation,0),{checksum:_,...base}=e,body={...base,contentVersion:'unknown-content'};h.write(kind==='checksum'?JSON.stringify({...e,checksum:'wrong'}):JSON.stringify({...body,checksum:await checksum(body)}));const raw=h.raw();await assert.rejects(()=>h.s.reset(c),/checksum|unsupported-content/);assert.equal(h.raw(),raw);assert.equal(h.s.view.writable,false);});
+for (const raw of ['not json', JSON.stringify({format: 99})]) test('open reset confirmation never overwrites invalid backing bytes: ' + raw, async () => {
+    const h = await setup(), c = token(h.s.view.envelope!);
+    h.write(raw);
+    await assert.rejects(() => h.s.reset(c), /corrupt|future/);
+    assert.equal(h.raw(), raw);
+    assert.equal(h.s.view.writable, false);
+});
+
+for (const kind of ['checksum', 'unknown-version'] as const) test('confirmation preserves ' + kind + ' bytes and blocks reset', async () => {
+    const h = await setup(), c = token(h.s.view.envelope!),
+        e = await seal(h.s.view.envelope!.state, h.s.view.envelope!.generation, 0), {checksum: _, ...base} = e,
+        body = {...base, contentVersion: 'unknown-content'};
+    h.write(kind === 'checksum' ? JSON.stringify({...e, checksum: 'wrong'}) : JSON.stringify({
+        ...body,
+        checksum: await checksum(body)
+    }));
+    const raw = h.raw();
+    await assert.rejects(() => h.s.reset(c), /checksum|unsupported-content/);
+    assert.equal(h.raw(), raw);
+    assert.equal(h.s.view.writable, false);
+});
 
 /** Bind the production draft projection to actual SaveSession publications.
  * @param {SaveSession} s Real preference and processing owner.
  * @return {SettingsEdits} Active view draft model.
  */
-function bindEdits(s:SaveSession):SettingsEdits{const edits=new SettingsEdits();s.subscribe(v=>{if(v.envelope)edits.sync(v.envelope.state.settings,v.envelope.generation);});return edits;}
+function bindEdits(s: SaveSession): SettingsEdits {
+    const edits = new SettingsEdits();
+    s.subscribe(v => {
+        if (v.envelope) edits.sync(v.envelope.state.settings, v.envelope.generation);
+    });
+    return edits;
+}
 
-test('volume gesture survives continuous real processing publications with consistent displayed percent',async()=>{const {s}=await setup(),edits=bindEdits(s);edits.stage('volume',.4);for(let i=0;i<20;i++){await s.dispatch({type:'processing-tick',ticks:5});assert.equal(edits.view()!.volume,.4);assert.equal(Math.round(edits.view()!.volume*100),40);}assert.equal(s.view.envelope!.state.settings.volume,.2);const draft=edits.submit('volume')!;await s.dispatch({type:'settings',patch:{volume:draft.value as number}});assert.ok(edits.finish('volume',draft.ticket));assert.equal(edits.view()!.volume,.4);await s.refresh();assert.equal(s.view.envelope!.state.settings.volume,.4);});
+test('volume gesture survives continuous real processing publications with consistent displayed percent', async () => {
+    const {s} = await setup(), edits = bindEdits(s);
+    edits.stage('volume', .4);
+    for (let i = 0; i < 20; i++) {
+        await s.dispatch({type: 'processing-tick', ticks: 5});
+        assert.equal(edits.view()!.volume, .4);
+        assert.equal(Math.round(edits.view()!.volume * 100), 40);
+    }
+    assert.equal(s.view.envelope!.state.settings.volume, .2);
+    const draft = edits.submit('volume')!;
+    await s.dispatch({type: 'settings', patch: {volume: draft.value as number}});
+    assert.ok(edits.finish('volume', draft.ticket));
+    assert.equal(edits.view()!.volume, .4);
+    await s.refresh();
+    assert.equal(s.view.envelope!.state.settings.volume, .4);
+});
 
-test('remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields',async()=>{const h=await setup(),s=h.s,b=new SaveSession(h.storage,h.locks),edits=bindEdits(s);await b.refresh();await b.dispatch({type:'settings',patch:{volume:.7}});await s.refresh();assert.equal(edits.view()!.volume,.7);edits.stage('volume',.4);await b.dispatch({type:'settings',patch:{volume:.9,locale:'fr',muted:true}});await s.refresh();assert.equal(edits.view()!.volume,.4);assert.equal(edits.view()!.muted,true);const d=edits.submit('volume')!;await s.dispatch({type:'settings',patch:{volume:d.value as number}});edits.finish('volume',d.ticket);assert.deepEqual(s.view.envelope!.state.settings,{locale:'fr',muted:true,volume:.4});await b.dispatch({type:'settings',patch:{volume:.8}});await s.refresh();assert.equal(edits.view()!.volume,.8);});
+test('remote settings sync when idle; during editing local explicit commit wins its field and merges latest other fields', async () => {
+    const h = await setup(), s = h.s, b = new SaveSession(h.storage, h.locks), edits = bindEdits(s);
+    await b.refresh();
+    await b.dispatch({type: 'settings', patch: {volume: .7}});
+    await s.refresh();
+    assert.equal(edits.view()!.volume, .7);
+    edits.stage('volume', .4);
+    await b.dispatch({type: 'settings', patch: {volume: .9, locale: 'fr', muted: true}});
+    await s.refresh();
+    assert.equal(edits.view()!.volume, .4);
+    assert.equal(edits.view()!.muted, true);
+    const d = edits.submit('volume')!;
+    await s.dispatch({type: 'settings', patch: {volume: d.value as number}});
+    edits.finish('volume', d.ticket);
+    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', muted: true, volume: .4});
+    await b.dispatch({type: 'settings', patch: {volume: .8}});
+    await s.refresh();
+    assert.equal(edits.view()!.volume, .8);
+});
 
-test('older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority',async()=>{const h=await setup(),s=h.s,edits=bindEdits(s);edits.stage('volume',.4);const older=edits.submit('volume')!;await s.dispatch({type:'settings',patch:{volume:.4}});edits.stage('volume',.6);assert.equal(edits.finish('volume',older.ticket),false);assert.equal(edits.view()!.volume,.6);const current=edits.submit('volume')!;await s.dispatch({type:'settings',patch:{volume:.6}});await s.dispatch({type:'settings',patch:{volume:.8}});assert.ok(edits.finish('volume',current.ticket));assert.equal(edits.view()!.volume,.8);});
+test('older acknowledgements cannot clear a new volume gesture or replay a stale preference over later remote authority', async () => {
+    const h = await setup(), s = h.s, edits = bindEdits(s);
+    edits.stage('volume', .4);
+    const older = edits.submit('volume')!;
+    await s.dispatch({type: 'settings', patch: {volume: .4}});
+    edits.stage('volume', .6);
+    assert.equal(edits.finish('volume', older.ticket), false);
+    assert.equal(edits.view()!.volume, .6);
+    const current = edits.submit('volume')!;
+    await s.dispatch({type: 'settings', patch: {volume: .6}});
+    await s.dispatch({type: 'settings', patch: {volume: .8}});
+    assert.ok(edits.finish('volume', current.ticket));
+    assert.equal(edits.view()!.volume, .8);
+});
 
-test('submitted language and mute drafts survive async processing snapshots until their own receipts settle',async()=>{const {s}=await setup(),edits=bindEdits(s);edits.stage('locale','fr');edits.stage('muted',true);const l=edits.submit('locale')!,m=edits.submit('muted')!;await s.dispatch({type:'processing-tick',ticks:10});assert.equal(edits.view()!.locale,'fr');assert.equal(edits.view()!.muted,true);await s.dispatch({type:'settings',patch:{locale:'fr'}});edits.finish('locale',l.ticket);await s.dispatch({type:'settings',patch:{muted:true}});edits.finish('muted',m.ticket);assert.deepEqual(edits.view(),s.view.envelope!.state.settings);});
+test('submitted language and mute drafts survive async processing snapshots until their own receipts settle', async () => {
+    const {s} = await setup(), edits = bindEdits(s);
+    edits.stage('locale', 'fr');
+    edits.stage('muted', true);
+    const l = edits.submit('locale')!, m = edits.submit('muted')!;
+    await s.dispatch({type: 'processing-tick', ticks: 10});
+    assert.equal(edits.view()!.locale, 'fr');
+    assert.equal(edits.view()!.muted, true);
+    await s.dispatch({type: 'settings', patch: {locale: 'fr'}});
+    edits.finish('locale', l.ticket);
+    await s.dispatch({type: 'settings', patch: {muted: true}});
+    edits.finish('muted', m.ticket);
+    assert.deepEqual(edits.view(), s.view.envelope!.state.settings);
+});
 
-test('close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings',async()=>{const {s}=await setup(),edits=bindEdits(s);edits.stage('volume',.4);edits.cancelEditing();assert.equal(edits.submit('volume'),null);assert.equal(edits.view()!.volume,.2);edits.stage('muted',true);const m=edits.submit('muted')!;edits.cancelEditing();assert.equal(edits.view()!.muted,true);edits.cancel();await s.dispatch({type:'settings',patch:{muted:true}});assert.equal(edits.finish('muted',m.ticket),false);assert.equal(edits.view()!.muted,true);edits.stage('volume',.9);await s.reset(token(s.view.envelope!));assert.equal(edits.view()!.volume,.2);assert.equal(edits.drafts.size,0);});
+test('close, blur, cancel and reset discard only appropriate drafts, never undo submitted durable settings', async () => {
+    const {s} = await setup(), edits = bindEdits(s);
+    edits.stage('volume', .4);
+    edits.cancelEditing();
+    assert.equal(edits.submit('volume'), null);
+    assert.equal(edits.view()!.volume, .2);
+    edits.stage('muted', true);
+    const m = edits.submit('muted')!;
+    edits.cancelEditing();
+    assert.equal(edits.view()!.muted, true);
+    edits.cancel();
+    await s.dispatch({type: 'settings', patch: {muted: true}});
+    assert.equal(edits.finish('muted', m.ticket), false);
+    assert.equal(edits.view()!.muted, true);
+    edits.stage('volume', .9);
+    await s.reset(token(s.view.envelope!));
+    assert.equal(edits.view()!.volume, .2);
+    assert.equal(edits.drafts.size, 0);
+});
 
-test('failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save',async()=>{const h=await setup(),edits=bindEdits(h.s);edits.stage('volume',.55);const d=edits.submit('volume')!;h.deny(true);await assert.rejects(()=>h.s.dispatch({type:'settings',patch:{volume:.55}}),/write-failed/);assert.equal(edits.view()!.volume,.55);assert.ok(edits.finish('volume',d.ticket));assert.equal(edits.view()!.volume,.2);assert.equal(h.s.view.writable,false);h.deny(false);await h.s.refresh();assert.equal(edits.view()!.volume,.2);});
+test('failed preference commit reverts to latest committed authority with a failed receipt, not a pretend save', async () => {
+    const h = await setup(), edits = bindEdits(h.s);
+    edits.stage('volume', .55);
+    const d = edits.submit('volume')!;
+    h.deny(true);
+    await assert.rejects(() => h.s.dispatch({type: 'settings', patch: {volume: .55}}), /write-failed/);
+    assert.equal(edits.view()!.volume, .55);
+    assert.ok(edits.finish('volume', d.ticket));
+    assert.equal(edits.view()!.volume, .2);
+    assert.equal(h.s.view.writable, false);
+    h.deny(false);
+    await h.s.refresh();
+    assert.equal(edits.view()!.volume, .2);
+});

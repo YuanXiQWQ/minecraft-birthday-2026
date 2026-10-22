@@ -1,61 +1,559 @@
 /** Formal hopper, D06 discovery, finite port transactions and migration use the real shared persistence layer. */
-import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';
-import {SaveSession} from '../web/src/persistence/session.ts';import {checksum,decode,token} from '../web/src/persistence/codec.ts';import {emptyHopper,reduceHopperInventory} from '../web/src/domain/hopper.ts';import {emptyFurnace} from '../web/src/domain/furnace.ts';import {initialBook,discover,BOOK_RECIPES,bookApplicable,fillRecipe,recipeGhost,validateBook} from '../web/src/domain/recipe-book.ts';import type {InventoryState} from '../web/src/domain/inventory.ts';import {emptyInventory} from '../web/src/domain/inventory.ts';import {initialProgress} from '../web/src/domain/state.ts';import {matchCrafting} from '../web/src/rules/matcher.ts';import {resources} from '../tools/resources.ts';import type {Rules,Stack} from '../web/src/rules/types.ts';import type {WorkbenchContext,Kind} from '../web/src/domain/types.ts';import type {TransferPlan} from '../web/src/domain/device-transfer.ts';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {SaveSession} from '../web/src/persistence/session.ts';
+import {checksum, decode, token} from '../web/src/persistence/codec.ts';
+import {emptyHopper, reduceHopperInventory} from '../web/src/domain/hopper.ts';
+import {emptyFurnace} from '../web/src/domain/furnace.ts';
+import {
+    initialBook,
+    discover,
+    BOOK_RECIPES,
+    bookApplicable,
+    fillRecipe,
+    recipeGhost,
+    validateBook
+} from '../web/src/domain/recipe-book.ts';
+import type {InventoryState} from '../web/src/domain/inventory.ts';
+import {emptyInventory} from '../web/src/domain/inventory.ts';
+import {initialProgress} from '../web/src/domain/state.ts';
+import {matchCrafting} from '../web/src/rules/matcher.ts';
+import {resources} from '../tools/resources.ts';
+import type {Rules, Stack} from '../web/src/rules/types.ts';
+import type {WorkbenchContext, Kind} from '../web/src/domain/types.ts';
+import type {TransferPlan} from '../web/src/domain/device-transfer.ts';
+
 /** Exact P4 runtime subset, never a hand-authored recipe list. */
-const rules=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8')) as Rules;
+const rules = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json', import.meta.url), 'utf8')) as Rules;
+
 /** Build a native finite stack. @param {string} id Original path. @param {number} count Units. @return {Stack} Native group. */
-function stack(id:string,count=1):Stack{return{id:'minecraft:'+id,count};}
+function stack(id: string, count = 1): Stack {
+    return {id: 'minecraft:' + id, count};
+}
+
 /** Create shared storage and a deterministic exclusive queue for actual SaveSession calls.
  * @return {Promise<object>} Real session, latest contexts and failure controls.
  */
-async function harness(){let raw:string|null=null,deny=false,tail:Promise<unknown>=Promise.resolve();const storage={getItem:()=>raw,setItem:(_k:string,v:string)=>{if(deny)throw Error('write-failed');raw=v;}},locks={exclusive<T>(work:()=>Promise<T>):Promise<T>{const p=tail.then(work);tail=p.catch(()=>{});return p;}};const s=new SaveSession(storage,locks,{allows:()=>true});s.rules=rules;await s.refresh();return{s,storage,locks,raw:()=>raw,write:(v:string)=>raw=v,deny:(v:boolean)=>deny=v,context:(id:string):WorkbenchContext=>({scene:'plains',id,expected:structuredClone(s.view.envelope!.state.progress.scenes.plains.stations.find(x=>x.id===id)!.contents)}),other:async()=>{const b=new SaveSession(storage,locks,{allows:()=>true});b.rules=rules;await b.refresh();return b;}};}
+async function harness() {
+    let raw: string | null = null, deny = false, tail: Promise<unknown> = Promise.resolve();
+    const storage = {
+        getItem: () => raw, setItem: (_k: string, v: string) => {
+            if (deny) throw Error('write-failed');
+            raw = v;
+        }
+    }, locks = {
+        exclusive<T>(work: () => Promise<T>): Promise<T> {
+            const p = tail.then(work);
+            tail = p.catch(() => {
+            });
+            return p;
+        }
+    };
+    const s = new SaveSession(storage, locks, {allows: () => true});
+    s.rules = rules;
+    await s.refresh();
+    return {
+        s,
+        storage,
+        locks,
+        raw: () => raw,
+        write: (v: string) => raw = v,
+        deny: (v: boolean) => deny = v,
+        context: (id: string): WorkbenchContext => ({
+            scene: 'plains',
+            id,
+            expected: structuredClone(s.view.envelope!.state.progress.scenes.plains.stations.find(x => x.id === id)!.contents)
+        }),
+        other: async () => {
+            const b = new SaveSession(storage, locks, {allows: () => true});
+            b.rules = rules;
+            await b.refresh();
+            return b;
+        }
+    };
+}
+
 /** Place a legal empty persistent station using the actual command.
  * @param {SaveSession} s Real writer.
  * @param {string} id Instance identity.
  * @param {Kind} kind Native device.
  * @param {number} x Independent test position.
  */
-async function place(s:SaveSession,id:string,kind:Kind,x:number):Promise<void>{await s.dispatch({type:'unlock',item:'minecraft:'+kind});await s.dispatch({type:'put-station',scene:'plains',station:{id,kind,cell:[x,0,0],facing:kind==='hopper'?'down':'south',contents:kind==='hopper'?emptyHopper():kind==='crafting_table'?{version:1,data:{grid:Array(9).fill(null)}}:emptyFurnace()}});}
+async function place(s: SaveSession, id: string, kind: Kind, x: number): Promise<void> {
+    await s.dispatch({type: 'unlock', item: 'minecraft:' + kind});
+    await s.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {
+            id,
+            kind,
+            cell: [x, 0, 0],
+            facing: kind === 'hopper' ? 'down' : 'south',
+            contents: kind === 'hopper' ? emptyHopper() : kind === 'crafting_table' ? {
+                version: 1,
+                data: {grid: Array(9).fill(null)}
+            } : emptyFurnace()
+        }
+    });
+}
+
 /** Prepare native hopper/furnace references while leaving output locked until real timed production.
  * @return {Promise<object>} Actual producer and finite target fixtures.
  */
-async function producer(){const h=await harness();await place(h.s,'furnace','furnace',2);await place(h.s,'hopper','hopper',3);for(const [index,id]of [[0,'oak_log'],[1,'stick']] as const){await h.s.dispatch({type:'unlock',item:'minecraft:'+id});const r=await h.s.editInventory({type:'source',item:'minecraft:'+id,mode:'clone'},null,h.s.view.envelope!.state.progress.player.data);await h.s.editInventory({type:'machine-slot',index,button:0},r.cursor,h.s.view.envelope!.state.progress.player.data,undefined,h.context('furnace'));}await h.s.dispatch({type:'processing-tick',ticks:200});return h;}
+async function producer() {
+    const h = await harness();
+    await place(h.s, 'furnace', 'furnace', 2);
+    await place(h.s, 'hopper', 'hopper', 3);
+    for (const [index, id] of [[0, 'oak_log'], [1, 'stick']] as const) {
+        await h.s.dispatch({type: 'unlock', item: 'minecraft:' + id});
+        const r = await h.s.editInventory({
+            type: 'source',
+            item: 'minecraft:' + id,
+            mode: 'clone'
+        }, null, h.s.view.envelope!.state.progress.player.data);
+        await h.s.editInventory({
+            type: 'machine-slot',
+            index,
+            button: 0
+        }, r.cursor, h.s.view.envelope!.state.progress.player.data, undefined, h.context('furnace'));
+    }
+    await h.s.dispatch({type: 'processing-tick', ticks: 200});
+    return h;
+}
+
 /** Resolve bounded output-to-hopper intent against freshly observed contexts.
  * @param {object} h Real test owner.
  * @return {TransferPlan} One-unit native bottom extraction.
  */
-function outputPlan(h:Awaited<ReturnType<typeof producer>>):TransferPlan{return{source:{context:h.context('furnace'),face:'down',index:2},target:{context:h.context('hopper'),face:'up'},count:1};}
+function outputPlan(h: Awaited<ReturnType<typeof producer>>): TransferPlan {
+    return {
+        source: {context: h.context('furnace'), face: 'down', index: 2},
+        target: {context: h.context('hopper'), face: 'up'},
+        count: 1
+    };
+}
 
-test('hopper five native slots preserve split/merge/drag quantities, caps, components and reject locked sources',()=>{let v={...emptyInventory(),hopper:Array(5).fill(null),cursor:stack('oak_planks',7)},ids=['minecraft:oak_planks'];v=reduceHopperInventory(v,{type:'drag',slots:['hopper:0','hopper:1','hopper:1','hopper:2'],mode:'left'},ids,rules) as typeof v;assert.deepEqual(v.hopper.map(s=>s?.count??0),[2,2,2,0,0]);assert.equal(v.cursor?.count,1);v=reduceHopperInventory(v,{type:'hopper-slot',index:0,button:2},ids,rules) as typeof v;assert.equal(v.hopper![0]?.count,3);assert.equal(v.cursor,null);assert.throws(()=>reduceHopperInventory(v,{type:'source',item:'minecraft:iron_ingot',mode:'shift'},ids,rules),/locked/);for(const index of [-1,5,Infinity])assert.throws(()=>reduceHopperInventory(v,{type:'hopper-slot',index,button:0},ids,rules));const custom={...stack('oak_planks',64),components:{'minecraft:custom_data':{v:1}}};v.hopper![3]=custom;v.cursor=stack('oak_planks',1);v=reduceHopperInventory(v,{type:'hopper-slot',index:3,button:0},ids,rules) as typeof v;assert.deepEqual(v.cursor,custom);assert.deepEqual(v.hopper![3],stack('oak_planks'));});
+test('hopper five native slots preserve split/merge/drag quantities, caps, components and reject locked sources', () => {
+    let v = {...emptyInventory(), hopper: Array(5).fill(null), cursor: stack('oak_planks', 7)},
+        ids = ['minecraft:oak_planks'];
+    v = reduceHopperInventory(v, {
+        type: 'drag',
+        slots: ['hopper:0', 'hopper:1', 'hopper:1', 'hopper:2'],
+        mode: 'left'
+    }, ids, rules) as typeof v;
+    assert.deepEqual(v.hopper.map(s => s?.count ?? 0), [2, 2, 2, 0, 0]);
+    assert.equal(v.cursor?.count, 1);
+    v = reduceHopperInventory(v, {type: 'hopper-slot', index: 0, button: 2}, ids, rules) as typeof v;
+    assert.equal(v.hopper![0]?.count, 3);
+    assert.equal(v.cursor, null);
+    assert.throws(() => reduceHopperInventory(v, {
+        type: 'source',
+        item: 'minecraft:iron_ingot',
+        mode: 'shift'
+    }, ids, rules), /locked/);
+    for (const index of [-1, 5, Infinity]) assert.throws(() => reduceHopperInventory(v, {
+        type: 'hopper-slot',
+        index,
+        button: 0
+    }, ids, rules));
+    const custom = {...stack('oak_planks', 64), components: {'minecraft:custom_data': {v: 1}}};
+    v.hopper![3] = custom;
+    v.cursor = stack('oak_planks', 1);
+    v = reduceHopperInventory(v, {type: 'hopper-slot', index: 3, button: 0}, ids, rules) as typeof v;
+    assert.deepEqual(v.cursor, custom);
+    assert.deepEqual(v.hopper![3], stack('oak_planks'));
+});
 
-test('hopper Shift directory copies one bounded reference; finite Shift routes conserve source and native reverse hotbar order',()=>{let v:InventoryState={...emptyInventory(),hopper:Array(5).fill(null)},ids=['minecraft:oak_planks'];v=reduceHopperInventory(v,{type:'source',item:ids[0],mode:'shift'},ids,rules);assert.deepEqual(v.cursor,stack('oak_planks',64));assert.ok(v.hotbar.every(s=>!s));v=reduceHopperInventory(v,{type:'hopper-slot',index:0,button:0},ids,rules);v=reduceHopperInventory(v,{type:'quick',slot:'hopper:0'},ids,rules);assert.equal(v.hopper![0],null);assert.deepEqual(v.hotbar[8],stack('oak_planks',64));v=reduceHopperInventory(v,{type:'quick',slot:'hotbar:8'},ids,rules);assert.deepEqual(v.hopper![0],stack('oak_planks',64));assert.equal(v.hotbar[8],null);});
+test('hopper Shift directory copies one bounded reference; finite Shift routes conserve source and native reverse hotbar order', () => {
+    let v: InventoryState = {...emptyInventory(), hopper: Array(5).fill(null)}, ids = ['minecraft:oak_planks'];
+    v = reduceHopperInventory(v, {type: 'source', item: ids[0], mode: 'shift'}, ids, rules);
+    assert.deepEqual(v.cursor, stack('oak_planks', 64));
+    assert.ok(v.hotbar.every(s => !s));
+    v = reduceHopperInventory(v, {type: 'hopper-slot', index: 0, button: 0}, ids, rules);
+    v = reduceHopperInventory(v, {type: 'quick', slot: 'hopper:0'}, ids, rules);
+    assert.equal(v.hopper![0], null);
+    assert.deepEqual(v.hotbar[8], stack('oak_planks', 64));
+    v = reduceHopperInventory(v, {type: 'quick', slot: 'hotbar:8'}, ids, rules);
+    assert.deepEqual(v.hopper![0], stack('oak_planks', 64));
+    assert.equal(v.hotbar[8], null);
+});
 
-test('two hopper instances retain independent contents on refresh and cross-session editing/removal/reset reject stale owners',async()=>{const h=await harness(),s=h.s;await place(s,'a','hopper',2);await place(s,'b','hopper',3);await s.dispatch({type:'unlock',item:'minecraft:stick'});const r=await s.editInventory({type:'source',item:'minecraft:stick',mode:'left'},null,s.view.envelope!.state.progress.player.data);await s.editInventory({type:'hopper-slot',index:2,button:0},r.cursor,s.view.envelope!.state.progress.player.data,undefined,h.context('a'));const b=await h.other();assert.equal(b.view.envelope!.state.progress.scenes.plains.stations[0].contents.version,3);assert.deepEqual((h.context('a').expected as any).data.slots[2],stack('stick'));assert.deepEqual((h.context('b').expected as any).data.slots,Array(5).fill(null));const expected=h.context('a'),layout=s.view.envelope!.state.progress.player.data;const results=await Promise.allSettled([s.editInventory({type:'hopper-slot',index:2,button:0},null,layout,undefined,expected),b.editInventory({type:'hopper-slot',index:2,button:0},null,layout,undefined,expected)]);assert.equal(results.filter(r=>r.status==='fulfilled').length,1);await s.refresh();const old=h.context('a');await s.dispatch({type:'remove-station',scene:'plains',id:'a'});await assert.rejects(()=>s.editInventory({type:'hopper-slot',index:2,button:0},null,s.view.envelope!.state.progress.player.data,undefined,old),/unavailable/);await s.reset(token(s.view.envelope!));assert.deepEqual(s.view.envelope!.state.progress,initialProgress());});
+test('two hopper instances retain independent contents on refresh and cross-session editing/removal/reset reject stale owners', async () => {
+    const h = await harness(), s = h.s;
+    await place(s, 'a', 'hopper', 2);
+    await place(s, 'b', 'hopper', 3);
+    await s.dispatch({type: 'unlock', item: 'minecraft:stick'});
+    const r = await s.editInventory({
+        type: 'source',
+        item: 'minecraft:stick',
+        mode: 'left'
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.editInventory({
+        type: 'hopper-slot',
+        index: 2,
+        button: 0
+    }, r.cursor, s.view.envelope!.state.progress.player.data, undefined, h.context('a'));
+    const b = await h.other();
+    assert.equal(b.view.envelope!.state.progress.scenes.plains.stations[0].contents.version, 3);
+    assert.deepEqual((h.context('a').expected as any).data.slots[2], stack('stick'));
+    assert.deepEqual((h.context('b').expected as any).data.slots, Array(5).fill(null));
+    const expected = h.context('a'), layout = s.view.envelope!.state.progress.player.data;
+    const results = await Promise.allSettled([s.editInventory({
+        type: 'hopper-slot',
+        index: 2,
+        button: 0
+    }, null, layout, undefined, expected), b.editInventory({
+        type: 'hopper-slot',
+        index: 2,
+        button: 0
+    }, null, layout, undefined, expected)]);
+    assert.equal(results.filter(r => r.status === 'fulfilled').length, 1);
+    await s.refresh();
+    const old = h.context('a');
+    await s.dispatch({type: 'remove-station', scene: 'plains', id: 'a'});
+    await assert.rejects(() => s.editInventory({
+        type: 'hopper-slot',
+        index: 2,
+        button: 0
+    }, null, s.view.envelope!.state.progress.player.data, undefined, old), /unavailable/);
+    await s.reset(token(s.view.envelope!));
+    assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
+});
 
-test('finite furnace output transfer acquires only on a successful atomic target insertion; repeat does not duplicate',async()=>{const h=await producer(),s=h.s;assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));const plan=outputPlan(h),r=await s.transact({type:'device-transfer',plan});assert.equal(r.transferred,1);assert.deepEqual((h.context('hopper').expected as any).data.slots[0],stack('charcoal'));assert.equal((h.context('furnace').expected as any).data.output,null);assert.equal(r.events.filter(e=>e.type==='item-unlocked').length,1);const empty=await s.transact({type:'device-transfer',plan:outputPlan(h)});assert.equal(empty.transferred,0);assert.deepEqual(empty.events,[]);await assert.rejects(()=>s.dispatch({type:'device-transfer',plan}),/conflict/);});
+test('finite furnace output transfer acquires only on a successful atomic target insertion; repeat does not duplicate', async () => {
+    const h = await producer(), s = h.s;
+    assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));
+    const plan = outputPlan(h), r = await s.transact({type: 'device-transfer', plan});
+    assert.equal(r.transferred, 1);
+    assert.deepEqual((h.context('hopper').expected as any).data.slots[0], stack('charcoal'));
+    assert.equal((h.context('furnace').expected as any).data.output, null);
+    assert.equal(r.events.filter(e => e.type === 'item-unlocked').length, 1);
+    const empty = await s.transact({type: 'device-transfer', plan: outputPlan(h)});
+    assert.equal(empty.transferred, 0);
+    assert.deepEqual(empty.events, []);
+    await assert.rejects(() => s.dispatch({type: 'device-transfer', plan}), /conflict/);
+});
 
-for(const issue of ['wrong-face','full','components','write','removed','competition'] as const)test('finite port transaction rollback and acquisition gate: '+issue,async()=>{const h=await producer(),s=h.s;if(issue==='full'||issue==='components'){await s.dispatch({type:'unlock',item:issue==='full'?'minecraft:stick':'minecraft:charcoal'});const v=structuredClone(s.view.envelope!.state),contents=v.progress.scenes.plains.stations[1].contents as any;contents.data.slots=Array.from({length:5},()=>issue==='full'?stack('stick',64):{...stack('charcoal',64),components:{'minecraft:custom_data':{v:1}}});const {seal}=await import('../web/src/persistence/codec.ts');h.write(JSON.stringify(await seal(v,s.view.envelope!.generation,s.view.envelope!.revision+1)));await s.refresh();}const plan=outputPlan(h),before=h.raw();if(issue==='wrong-face')plan.source.face='up';if(issue==='write')h.deny(true);if(issue==='removed'){await s.dispatch({type:'remove-station',scene:'plains',id:'hopper'});await assert.rejects(()=>s.dispatch({type:'device-transfer',plan}),/unavailable/);assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));return;}if(issue==='competition'){const b=await h.other(),results=await Promise.allSettled([s.transact({type:'device-transfer',plan}),b.transact({type:'device-transfer',plan})]);assert.equal(results.filter(r=>r.status==='fulfilled'&&r.value.transferred===1).length,1);return;}if(issue==='write'){await assert.rejects(()=>s.dispatch({type:'device-transfer',plan}),/write-failed/);assert.equal(h.raw(),before);assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));return;}const result=await s.transact({type:'device-transfer',plan});assert.equal(result.transferred,0);assert.equal(h.raw(),before);assert.deepEqual(result.events,[]);});
+for (const issue of ['wrong-face', 'full', 'components', 'write', 'removed', 'competition'] as const) test('finite port transaction rollback and acquisition gate: ' + issue, async () => {
+    const h = await producer(), s = h.s;
+    if (issue === 'full' || issue === 'components') {
+        await s.dispatch({type: 'unlock', item: issue === 'full' ? 'minecraft:stick' : 'minecraft:charcoal'});
+        const v = structuredClone(s.view.envelope!.state),
+            contents = v.progress.scenes.plains.stations[1].contents as any;
+        contents.data.slots = Array.from({length: 5}, () => issue === 'full' ? stack('stick', 64) : {
+            ...stack('charcoal', 64),
+            components: {'minecraft:custom_data': {v: 1}}
+        });
+        const {seal} = await import('../web/src/persistence/codec.ts');
+        h.write(JSON.stringify(await seal(v, s.view.envelope!.generation, s.view.envelope!.revision + 1)));
+        await s.refresh();
+    }
+    const plan = outputPlan(h), before = h.raw();
+    if (issue === 'wrong-face') plan.source.face = 'up';
+    if (issue === 'write') h.deny(true);
+    if (issue === 'removed') {
+        await s.dispatch({type: 'remove-station', scene: 'plains', id: 'hopper'});
+        await assert.rejects(() => s.dispatch({type: 'device-transfer', plan}), /unavailable/);
+        assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));
+        return;
+    }
+    if (issue === 'competition') {
+        const b = await h.other(), results = await Promise.allSettled([s.transact({
+            type: 'device-transfer',
+            plan
+        }), b.transact({type: 'device-transfer', plan})]);
+        assert.equal(results.filter(r => r.status === 'fulfilled' && r.value.transferred === 1).length, 1);
+        return;
+    }
+    if (issue === 'write') {
+        await assert.rejects(() => s.dispatch({type: 'device-transfer', plan}), /write-failed/);
+        assert.equal(h.raw(), before);
+        assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:charcoal'));
+        return;
+    }
+    const result = await s.transact({type: 'device-transfer', plan});
+    assert.equal(result.transferred, 0);
+    assert.equal(h.raw(), before);
+    assert.deepEqual(result.events, []);
+});
 
-test('hopper insertion reaches furnace top even for nonrecipe, fuel side, and bottom extraction rejects ordinary fuel',async()=>{const h=await producer(),s=h.s;await s.dispatch({type:'unlock',item:'minecraft:egg'});let r=await s.editInventory({type:'source',item:'minecraft:egg',mode:'left'},null,s.view.envelope!.state.progress.player.data);await s.editInventory({type:'hopper-slot',index:0,button:0},r.cursor,s.view.envelope!.state.progress.player.data,undefined,h.context('hopper'));await s.editInventory({type:'machine-slot',index:0,button:0},null,s.view.envelope!.state.progress.player.data,undefined,h.context('furnace'));let result=await s.transact({type:'device-transfer',plan:{source:{context:h.context('hopper'),face:'side',index:0},target:{context:h.context('furnace'),face:'up'},count:1}});assert.equal(result.transferred,1);assert.equal((h.context('furnace').expected as any).data.input.id,'minecraft:egg');result=await s.transact({type:'device-transfer',plan:{source:{context:h.context('furnace'),face:'down',index:1},target:{context:h.context('hopper'),face:'up'},count:1}});assert.equal(result.transferred,0);});
+test('hopper insertion reaches furnace top even for nonrecipe, fuel side, and bottom extraction rejects ordinary fuel', async () => {
+    const h = await producer(), s = h.s;
+    await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    let r = await s.editInventory({
+        type: 'source',
+        item: 'minecraft:egg',
+        mode: 'left'
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.editInventory({
+        type: 'hopper-slot',
+        index: 0,
+        button: 0
+    }, r.cursor, s.view.envelope!.state.progress.player.data, undefined, h.context('hopper'));
+    await s.editInventory({
+        type: 'machine-slot',
+        index: 0,
+        button: 0
+    }, null, s.view.envelope!.state.progress.player.data, undefined, h.context('furnace'));
+    let result = await s.transact({
+        type: 'device-transfer',
+        plan: {
+            source: {context: h.context('hopper'), face: 'side', index: 0},
+            target: {context: h.context('furnace'), face: 'up'},
+            count: 1
+        }
+    });
+    assert.equal(result.transferred, 1);
+    assert.equal((h.context('furnace').expected as any).data.input.id, 'minecraft:egg');
+    result = await s.transact({
+        type: 'device-transfer',
+        plan: {
+            source: {context: h.context('furnace'), face: 'down', index: 1},
+            target: {context: h.context('hopper'), face: 'up'},
+            count: 1
+        }
+    });
+    assert.equal(result.transferred, 0);
+});
 
-test('reset first under the shared lock fences queued old finite transfer without reviving instances',async()=>{const h=await producer(),s=h.s,plan=outputPlan(h);let release!:()=>void;const held=h.locks.exclusive(()=>new Promise<void>(r=>release=r));await Promise.resolve();const reset=s.reset(token(s.view.envelope!)),old=s.dispatch({type:'device-transfer',plan}),done=Promise.allSettled([reset,old]);release();await held;const result=await done;assert.equal(result[0].status,'fulfilled');assert.equal(result[1].status,'rejected');assert.deepEqual(s.view.envelope!.state.progress,initialProgress());assert.equal(s.view.writable,true);});
+test('reset first under the shared lock fences queued old finite transfer without reviving instances', async () => {
+    const h = await producer(), s = h.s, plan = outputPlan(h);
+    let release!: () => void;
+    const held = h.locks.exclusive(() => new Promise<void>(r => release = r));
+    await Promise.resolve();
+    const reset = s.reset(token(s.view.envelope!)), old = s.dispatch({type: 'device-transfer', plan}),
+        done = Promise.allSettled([reset, old]);
+    release();
+    await held;
+    const result = await done;
+    assert.equal(result[0].status, 'fulfilled');
+    assert.equal(result[1].status, 'rejected');
+    assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
+    assert.equal(s.view.writable, true);
+});
 
-test('D06 raw egg/log/stick predicates discover early, never grant products, and special repair stays outside book',()=>{const book=initialBook();assert.deepEqual(book.data.known,['minecraft:crafting_table']);assert.deepEqual(book.data.unseen,[]);const added=discover(book,['minecraft:egg','minecraft:oak_log','minecraft:stick']);for(const id of ['cake','oak_planks','charcoal','wooden_pickaxe'])assert.ok(added.includes('minecraft:'+id));assert.deepEqual(discover(book,['minecraft:egg','minecraft:oak_log','minecraft:stick']),[]);assert.ok(!book.data.known.includes('minecraft:repair_item'));validateBook(book);});
+test('D06 raw egg/log/stick predicates discover early, never grant products, and special repair stays outside book', () => {
+    const book = initialBook();
+    assert.deepEqual(book.data.known, ['minecraft:crafting_table']);
+    assert.deepEqual(book.data.unseen, []);
+    const added = discover(book, ['minecraft:egg', 'minecraft:oak_log', 'minecraft:stick']);
+    for (const id of ['cake', 'oak_planks', 'charcoal', 'wooden_pickaxe']) assert.ok(added.includes('minecraft:' + id));
+    assert.deepEqual(discover(book, ['minecraft:egg', 'minecraft:oak_log', 'minecraft:stick']), []);
+    assert.ok(!book.data.known.includes('minecraft:repair_item'));
+    validateBook(book);
+});
 
-test('D06 ten distinct acquisitions map native occupied slots; water event is not fabricated',()=>{const book=initialBook(),ids=Object.keys(rules.items).filter(id=>id!=='minecraft:chest');discover(book,ids.slice(0,9));assert.ok(!book.data.known.includes('minecraft:chest'));discover(book,ids.slice(0,10));assert.ok(book.data.known.includes('minecraft:chest'));assert.ok(!book.data.known.includes('minecraft:oak_boat'));discover(book,ids.slice(0,10),['minecraft:oak_boat']);assert.ok(book.data.known.includes('minecraft:oak_boat'));});
+test('D06 ten distinct acquisitions map native occupied slots; water event is not fabricated', () => {
+    const book = initialBook(), ids = Object.keys(rules.items).filter(id => id !== 'minecraft:chest');
+    discover(book, ids.slice(0, 9));
+    assert.ok(!book.data.known.includes('minecraft:chest'));
+    discover(book, ids.slice(0, 10));
+    assert.ok(book.data.known.includes('minecraft:chest'));
+    assert.ok(!book.data.known.includes('minecraft:oak_boat'));
+    discover(book, ids.slice(0, 10), ['minecraft:oak_boat']);
+    assert.ok(book.data.known.includes('minecraft:oak_boat'));
+});
 
-test('every one of 111 reachable ordinary recipes has exact original discovery evidence and a legal bounded full fill',()=>{const unlocked=Object.keys(rules.items);assert.equal(BOOK_RECIPES.length,111);for(const recipe of BOOK_RECIPES){const mode=recipe.type==='minecraft:smelting'?'furnace':recipe.type==='minecraft:blasting'?'blast_furnace':'crafting',width=mode==='crafting'?3:1,grid=fillRecipe(recipe,mode,width,Array(width*width).fill(null),unlocked,rules,true);assert.ok(grid.some(Boolean),recipe.id);for(const s of grid)if(s)assert.ok(s.count<=rules.items[s.id].maxStack);if(mode==='crafting')assert.ok(matchCrafting(recipe,grid,width,width,rules),recipe.id);}const evidence=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/book-evidence.json',import.meta.url),'utf8'));assert.equal(createHash('sha256').update(readFileSync(new URL('../web/src/data/recipe-book.json',import.meta.url))).digest('hex'),evidence.runtimeSha256);assert.equal(Object.keys(evidence.advances).length,111);assert.equal(createHash('sha256').update(readFileSync(new URL('../tools/book-assets.ts',import.meta.url),'utf8').replaceAll('\r\n','\n')).digest('hex'),evidence.exporterSha256);const native=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/manifest.json',import.meta.url),'utf8'));for(const [path,hash]of Object.entries(evidence.advances))assert.equal(native.inputs[path],hash,path);});
+test('every one of 111 reachable ordinary recipes has exact original discovery evidence and a legal bounded full fill', () => {
+    const unlocked = Object.keys(rules.items);
+    assert.equal(BOOK_RECIPES.length, 111);
+    for (const recipe of BOOK_RECIPES) {
+        const mode = recipe.type === 'minecraft:smelting' ? 'furnace' : recipe.type === 'minecraft:blasting' ? 'blast_furnace' : 'crafting',
+            width = mode === 'crafting' ? 3 : 1,
+            grid = fillRecipe(recipe, mode, width, Array(width * width).fill(null), unlocked, rules, true);
+        assert.ok(grid.some(Boolean), recipe.id);
+        for (const s of grid) if (s) assert.ok(s.count <= rules.items[s.id].maxStack);
+        if (mode === 'crafting') assert.ok(matchCrafting(recipe, grid, width, width, rules), recipe.id);
+    }
+    const evidence = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/book-evidence.json', import.meta.url), 'utf8'));
+    assert.equal(createHash('sha256').update(readFileSync(new URL('../web/src/data/recipe-book.json', import.meta.url))).digest('hex'), evidence.runtimeSha256);
+    assert.equal(Object.keys(evidence.advances).length, 111);
+    assert.equal(createHash('sha256').update(readFileSync(new URL('../tools/book-assets.ts', import.meta.url), 'utf8').replaceAll('\r\n', '\n')).digest('hex'), evidence.exporterSha256);
+    const native = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/manifest.json', import.meta.url), 'utf8'));
+    for (const [path, hash] of Object.entries(evidence.advances)) assert.equal(native.inputs[path], hash, path);
+});
 
-test('menu capability, repeat ingredients, native tag alternatives, component conflict and ghost isolation',()=>{const cake=BOOK_RECIPES.find(r=>r.id==='minecraft:cake')!,charcoal=BOOK_RECIPES.find(r=>r.id==='minecraft:charcoal')!;assert.equal(bookApplicable(cake,'crafting',2),false);assert.equal(bookApplicable(charcoal,'blast_furnace',1),false);assert.throws(()=>fillRecipe(cake,'crafting',2,Array(4).fill(null),Object.keys(rules.items),rules),/menu/);const ids=['minecraft:egg'],ghost=recipeGhost(cake,'crafting',3,ids,rules);assert.equal(ghost.grid.filter(s=>s?.id==='minecraft:milk_bucket').length,3);assert.ok(ghost.missing.some(Boolean));assert.throws(()=>fillRecipe(cake,'crafting',3,Array(9).fill(null),ids,rules),/missing/);const plank=BOOK_RECIPES.find(r=>r.id==='minecraft:oak_planks')!,filled=fillRecipe(plank,'crafting',2,[stack('oak_log'),null,null,null],['minecraft:oak_log'],rules,true);assert.deepEqual(filled[0],stack('oak_log',64));assert.throws(()=>fillRecipe(plank,'crafting',2,[{...stack('oak_log'),components:{'minecraft:custom_data':{v:1}}},null,null,null],['minecraft:oak_log'],rules),/conflict/);assert.throws(()=>fillRecipe(plank,'crafting',2,[stack('stick'),null,null,null],['minecraft:oak_log','minecraft:stick'],rules),/conflict/);});
+test('menu capability, repeat ingredients, native tag alternatives, component conflict and ghost isolation', () => {
+    const cake = BOOK_RECIPES.find(r => r.id === 'minecraft:cake')!,
+        charcoal = BOOK_RECIPES.find(r => r.id === 'minecraft:charcoal')!;
+    assert.equal(bookApplicable(cake, 'crafting', 2), false);
+    assert.equal(bookApplicable(charcoal, 'blast_furnace', 1), false);
+    assert.throws(() => fillRecipe(cake, 'crafting', 2, Array(4).fill(null), Object.keys(rules.items), rules), /menu/);
+    const ids = ['minecraft:egg'], ghost = recipeGhost(cake, 'crafting', 3, ids, rules);
+    assert.equal(ghost.grid.filter(s => s?.id === 'minecraft:milk_bucket').length, 3);
+    assert.ok(ghost.missing.some(Boolean));
+    assert.throws(() => fillRecipe(cake, 'crafting', 3, Array(9).fill(null), ids, rules), /missing/);
+    const plank = BOOK_RECIPES.find(r => r.id === 'minecraft:oak_planks')!,
+        filled = fillRecipe(plank, 'crafting', 2, [stack('oak_log'), null, null, null], ['minecraft:oak_log'], rules, true);
+    assert.deepEqual(filled[0], stack('oak_log', 64));
+    assert.throws(() => fillRecipe(plank, 'crafting', 2, [{
+        ...stack('oak_log'),
+        components: {'minecraft:custom_data': {v: 1}}
+    }, null, null, null], ['minecraft:oak_log'], rules), /conflict/);
+    assert.throws(() => fillRecipe(plank, 'crafting', 2, [stack('stick'), null, null, null], ['minecraft:oak_log', 'minecraft:stick'], rules), /conflict/);
+});
 
-test('formal personal fill leaves nonempty cursor intact, previews do not acquire, and fill failures preserve exact bytes',async()=>{const h=await harness(),s=h.s;await s.dispatch({type:'unlock',item:'minecraft:oak_log'});const supplied=await s.editInventory({type:'source',item:'minecraft:oak_log',mode:'clone'},null,s.view.envelope!.state.progress.player.data);await s.editInventory({type:'backpack-slot',index:0,button:0},supplied.cursor,s.view.envelope!.state.progress.player.data);const cursor=stack('oak_log',3),before=h.raw(),r=await s.fillRecipe('minecraft:oak_planks',false,cursor,Array(4).fill(null),s.view.envelope!.state.progress.player.data);assert.deepEqual(r.cursor,cursor);assert.deepEqual(r.crafting![0],stack('oak_log'));assert.notEqual(h.raw(),before);const committed=h.raw();assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));await assert.rejects(()=>s.fillRecipe('minecraft:cake',false,cursor,Array(4).fill(null),s.view.envelope!.state.progress.player.data),/not-discovered/);assert.equal(h.raw(),committed);});
+test('formal personal fill leaves nonempty cursor intact, previews do not acquire, and fill failures preserve exact bytes', async () => {
+    const h = await harness(), s = h.s;
+    await s.dispatch({type: 'unlock', item: 'minecraft:oak_log'});
+    const supplied = await s.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_log',
+        mode: 'clone'
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.editInventory({
+        type: 'backpack-slot',
+        index: 0,
+        button: 0
+    }, supplied.cursor, s.view.envelope!.state.progress.player.data);
+    const cursor = stack('oak_log', 3), before = h.raw(),
+        r = await s.fillRecipe('minecraft:oak_planks', false, cursor, Array(4).fill(null), s.view.envelope!.state.progress.player.data);
+    assert.deepEqual(r.cursor, cursor);
+    assert.deepEqual(r.crafting![0], stack('oak_log'));
+    assert.notEqual(h.raw(), before);
+    const committed = h.raw();
+    assert.ok(!s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));
+    await assert.rejects(() => s.fillRecipe('minecraft:cake', false, cursor, Array(4).fill(null), s.view.envelope!.state.progress.player.data), /not-discovered/);
+    assert.equal(h.raw(), committed);
+});
 
-test('hand-crafting an undiscovered boat awards provenance only after actual receipt; failed write and refresh never replay discovery',async()=>{const h=await harness(),s=h.s;await place(s,'table','crafting_table',2);await s.dispatch({type:'unlock',item:'minecraft:oak_planks'});assert.ok(!s.view.envelope!.state.progress.recipeBook.data.known.includes('minecraft:oak_boat'));const recipe=rules.recipes.find(r=>r.id==='minecraft:oak_boat')!,v=structuredClone(s.view.envelope!.state);const grid=fillRecipe(recipe,'crafting',3,Array(9).fill(null),v.progress.unlocked,rules);(v.progress.scenes.plains.stations[0].contents as any).data.grid=grid;const {seal}=await import('../web/src/persistence/codec.ts');h.write(JSON.stringify(await seal(v,s.view.envelope!.generation,s.view.envelope!.revision+1)));await s.refresh();let notifications=0;s.eventListeners.add(events=>notifications+=events.filter(e=>e.type==='recipes-discovered').length);h.deny(true);await assert.rejects(()=>s.takeCraft({mode:'cursor'},null,Array(4).fill(null),s.view.envelope!.state.progress.player.data,h.context('table')),/write-failed/);assert.equal(notifications,0);h.deny(false);await s.refresh();await s.takeCraft({mode:'cursor'},null,Array(4).fill(null),s.view.envelope!.state.progress.player.data,h.context('table'));assert.equal(notifications,1);assert.ok(s.view.envelope!.state.progress.recipeBook.data.known.includes(recipe.id));await s.refresh();await h.other();assert.equal(notifications,1);});
+test('hand-crafting an undiscovered boat awards provenance only after actual receipt; failed write and refresh never replay discovery', async () => {
+    const h = await harness(), s = h.s;
+    await place(s, 'table', 'crafting_table', 2);
+    await s.dispatch({type: 'unlock', item: 'minecraft:oak_planks'});
+    assert.ok(!s.view.envelope!.state.progress.recipeBook.data.known.includes('minecraft:oak_boat'));
+    const recipe = rules.recipes.find(r => r.id === 'minecraft:oak_boat')!, v = structuredClone(s.view.envelope!.state);
+    const grid = fillRecipe(recipe, 'crafting', 3, Array(9).fill(null), v.progress.unlocked, rules);
+    (v.progress.scenes.plains.stations[0].contents as any).data.grid = grid;
+    const {seal} = await import('../web/src/persistence/codec.ts');
+    h.write(JSON.stringify(await seal(v, s.view.envelope!.generation, s.view.envelope!.revision + 1)));
+    await s.refresh();
+    let notifications = 0;
+    s.eventListeners.add(events => notifications += events.filter(e => e.type === 'recipes-discovered').length);
+    h.deny(true);
+    await assert.rejects(() => s.takeCraft({mode: 'cursor'}, null, Array(4).fill(null), s.view.envelope!.state.progress.player.data, h.context('table')), /write-failed/);
+    assert.equal(notifications, 0);
+    h.deny(false);
+    await s.refresh();
+    await s.takeCraft({mode: 'cursor'}, null, Array(4).fill(null), s.view.envelope!.state.progress.player.data, h.context('table'));
+    assert.equal(notifications, 1);
+    assert.ok(s.view.envelope!.state.progress.recipeBook.data.known.includes(recipe.id));
+    await s.refresh();
+    await h.other();
+    assert.equal(notifications, 1);
+});
 
-test('p6-processing migration preserves nonempty furnace, workbench, carriers/settings/cake; initializes hopper and silent discovery',async()=>{const h=await producer(),s=h.s;await place(s,'table','crafting_table',4);await place(s,'old-hopper','hopper',5);await s.dispatch({type:'unlock',item:'minecraft:egg'});await s.dispatch({type:'unlock',item:'minecraft:cake'});await s.dispatch({type:'select-scene',scene:'home'});await s.editInventory({type:'source',item:'minecraft:cake',mode:'number',index:0},null,s.view.envelope!.state.progress.player.data);await s.dispatch({type:'record-cake-placement',scene:'home',table:'birthday-table'});await s.dispatch({type:'settings',patch:{volume:.7,muted:true}});const old=structuredClone(s.view.envelope!) as any;old.contentVersion='p6-processing-1';old.state.progress.recipeBook={version:0,data:null};for(const device of old.state.progress.scenes.plains.stations)if(device.kind==='hopper')device.contents={version:0,data:null};delete old.checksum;delete old.state.progress.player.data.backpack;const raw=JSON.stringify({...old,checksum:await checksum(old)}),decoded=await decode(raw);assert.equal(decoded.migrated,true);assert.equal(decoded.envelope.contentVersion,'p8-inventory-1');assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations.slice(0,3),s.view.envelope!.state.progress.scenes.plains.stations.slice(0,3));assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations[3].contents,emptyHopper());assert.ok(decoded.envelope.state.progress.recipeBook.data.known.includes('minecraft:cake'));assert.deepEqual(decoded.envelope.state.progress.recipeBook.data.unseen,[]);assert.deepEqual(decoded.envelope.state.settings,s.view.envelope!.state.settings);h.write(raw);await s.refresh();assert.equal(h.raw(),raw);old.state.progress.recipeBook={version:0,data:{unexpected:1}};await assert.rejects(()=>checksum(old).then(c=>decode(JSON.stringify({...old,checksum:c}))),/migration-failed/);});
+test('p6-processing migration preserves nonempty furnace, workbench, carriers/settings/cake; initializes hopper and silent discovery', async () => {
+    const h = await producer(), s = h.s;
+    await place(s, 'table', 'crafting_table', 4);
+    await place(s, 'old-hopper', 'hopper', 5);
+    await s.dispatch({type: 'unlock', item: 'minecraft:egg'});
+    await s.dispatch({type: 'unlock', item: 'minecraft:cake'});
+    await s.dispatch({type: 'select-scene', scene: 'home'});
+    await s.editInventory({
+        type: 'source',
+        item: 'minecraft:cake',
+        mode: 'number',
+        index: 0
+    }, null, s.view.envelope!.state.progress.player.data);
+    await s.dispatch({type: 'record-cake-placement', scene: 'home', table: 'birthday-table'});
+    await s.dispatch({type: 'settings', patch: {volume: .7, muted: true}});
+    const old = structuredClone(s.view.envelope!) as any;
+    old.contentVersion = 'p6-processing-1';
+    old.state.progress.recipeBook = {version: 0, data: null};
+    for (const device of old.state.progress.scenes.plains.stations) if (device.kind === 'hopper') device.contents = {
+        version: 0,
+        data: null
+    };
+    delete old.checksum;
+    delete old.state.progress.player.data.backpack;
+    const raw = JSON.stringify({...old, checksum: await checksum(old)}), decoded = await decode(raw);
+    assert.equal(decoded.migrated, true);
+    assert.equal(decoded.envelope.contentVersion, 'p8-inventory-1');
+    assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations.slice(0, 3), s.view.envelope!.state.progress.scenes.plains.stations.slice(0, 3));
+    assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations[3].contents, emptyHopper());
+    assert.ok(decoded.envelope.state.progress.recipeBook.data.known.includes('minecraft:cake'));
+    assert.deepEqual(decoded.envelope.state.progress.recipeBook.data.unseen, []);
+    assert.deepEqual(decoded.envelope.state.settings, s.view.envelope!.state.settings);
+    h.write(raw);
+    await s.refresh();
+    assert.equal(h.raw(), raw);
+    old.state.progress.recipeBook = {version: 0, data: {unexpected: 1}};
+    await assert.rejects(() => checksum(old).then(c => decode(JSON.stringify({
+        ...old,
+        checksum: c
+    }))), /migration-failed/);
+});
 
-test('book settings/unseen persist, processing keeps confirmation stable, reset clears new fields while preserving preferences',async()=>{const h=await producer(),s=h.s;await s.dispatch({type:'book-settings',mode:'furnace',patch:{open:true,filter:true}});const known=s.view.envelope!.state.progress.recipeBook.data.known;await s.dispatch({type:'book-seen',recipes:known});const c=token(s.view.envelope!);for(let i=0;i<10;i++)await s.dispatch({type:'processing-tick',ticks:5});assert.equal(token(s.view.envelope!),c);await s.refresh();assert.deepEqual(s.view.envelope!.state.progress.recipeBook.data.views.furnace,{open:true,filter:true});assert.deepEqual(s.view.envelope!.state.progress.recipeBook.data.unseen,[]);await s.reset(c);assert.deepEqual(s.view.envelope!.state.progress,initialProgress());});
+test('book settings/unseen persist, processing keeps confirmation stable, reset clears new fields while preserving preferences', async () => {
+    const h = await producer(), s = h.s;
+    await s.dispatch({type: 'book-settings', mode: 'furnace', patch: {open: true, filter: true}});
+    const known = s.view.envelope!.state.progress.recipeBook.data.known;
+    await s.dispatch({type: 'book-seen', recipes: known});
+    const c = token(s.view.envelope!);
+    for (let i = 0; i < 10; i++) await s.dispatch({type: 'processing-tick', ticks: 5});
+    assert.equal(token(s.view.envelope!), c);
+    await s.refresh();
+    assert.deepEqual(s.view.envelope!.state.progress.recipeBook.data.views.furnace, {open: true, filter: true});
+    assert.deepEqual(s.view.envelope!.state.progress.recipeBook.data.unseen, []);
+    await s.reset(c);
+    assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
+});
 
-test('normal resource profile includes original hopper/book backgrounds, sprites, native tab symbols and hash-verified bytes',()=>{const all=resources();for(const name of ['container/hopper.png','recipe_book.png','sprites/recipe_book/button.png','sprites/recipe_book/overlay_recipe.png','sprites/toast/recipe.png'])assert.ok(all.has('assets/minecraft/textures/gui/'+name),name);assert.ok(all.has('book-manifest.json'));for(const path of all.keys())assert.ok(!path.endsWith('.class')&&!path.endsWith('.jar'));});
+test('normal resource profile includes original hopper/book backgrounds, sprites, native tab symbols and hash-verified bytes', () => {
+    const all = resources();
+    for (const name of ['container/hopper.png', 'recipe_book.png', 'sprites/recipe_book/button.png', 'sprites/recipe_book/overlay_recipe.png', 'sprites/toast/recipe.png']) assert.ok(all.has('assets/minecraft/textures/gui/' + name), name);
+    assert.ok(all.has('book-manifest.json'));
+    for (const path of all.keys()) assert.ok(!path.endsWith('.class') && !path.endsWith('.jar'));
+});
 
-for(const kind of ['furnace','blast_furnace'] as const)test(kind+' side fuel and partial hopper transfers conserve finite groups under real save commands',async()=>{const h=await harness(),s=h.s;await place(s,'machine',kind,2);await place(s,'source','hopper',3);await place(s,'target','hopper',4);await s.dispatch({type:'unlock',item:'minecraft:stick'});let receipt=await s.editInventory({type:'source',item:'minecraft:stick',mode:'shift'},null,s.view.envelope!.state.progress.player.data,undefined,h.context('source'));assert.deepEqual(receipt.cursor,stack('stick',64));await s.editInventory({type:'hopper-slot',index:0,button:0},receipt.cursor,s.view.envelope!.state.progress.player.data,undefined,h.context('source'));const transfer=(source:string,target:string,face:'up'|'side'|'down',count:number)=>s.transact({type:'device-transfer',plan:{source:{context:h.context(source),face:'down',index:0},target:{context:h.context(target),face},count}});assert.equal((await transfer('source','machine','side',63)).transferred,63);assert.equal((h.context('source').expected as any).data.slots[0].count,1);assert.equal((h.context('machine').expected as any).data.fuel.count,63);receipt=await s.editInventory({type:'source',item:'minecraft:stick',mode:'shift'},null,s.view.envelope!.state.progress.player.data,undefined,h.context('source'));await s.editInventory({type:'hopper-slot',index:0,button:0},receipt.cursor,s.view.envelope!.state.progress.player.data,undefined,h.context('source'));assert.equal((await transfer('source','machine','side',64)).transferred,1);assert.equal((h.context('source').expected as any).data.slots[0].count,63);assert.equal((h.context('machine').expected as any).data.fuel.count,64);assert.equal((await transfer('source','target','up',64)).transferred,63);assert.equal((h.context('source').expected as any).data.slots[0],null);assert.equal((h.context('target').expected as any).data.slots[0].count,63);const before=h.raw();assert.equal((await transfer('target','machine','down',1)).transferred,0);assert.equal(h.raw(),before);});
+for (const kind of ['furnace', 'blast_furnace'] as const) test(kind + ' side fuel and partial hopper transfers conserve finite groups under real save commands', async () => {
+    const h = await harness(), s = h.s;
+    await place(s, 'machine', kind, 2);
+    await place(s, 'source', 'hopper', 3);
+    await place(s, 'target', 'hopper', 4);
+    await s.dispatch({type: 'unlock', item: 'minecraft:stick'});
+    let receipt = await s.editInventory({
+        type: 'source',
+        item: 'minecraft:stick',
+        mode: 'shift'
+    }, null, s.view.envelope!.state.progress.player.data, undefined, h.context('source'));
+    assert.deepEqual(receipt.cursor, stack('stick', 64));
+    await s.editInventory({
+        type: 'hopper-slot',
+        index: 0,
+        button: 0
+    }, receipt.cursor, s.view.envelope!.state.progress.player.data, undefined, h.context('source'));
+    const transfer = (source: string, target: string, face: 'up' | 'side' | 'down', count: number) => s.transact({
+        type: 'device-transfer',
+        plan: {
+            source: {context: h.context(source), face: 'down', index: 0},
+            target: {context: h.context(target), face},
+            count
+        }
+    });
+    assert.equal((await transfer('source', 'machine', 'side', 63)).transferred, 63);
+    assert.equal((h.context('source').expected as any).data.slots[0].count, 1);
+    assert.equal((h.context('machine').expected as any).data.fuel.count, 63);
+    receipt = await s.editInventory({
+        type: 'source',
+        item: 'minecraft:stick',
+        mode: 'shift'
+    }, null, s.view.envelope!.state.progress.player.data, undefined, h.context('source'));
+    await s.editInventory({
+        type: 'hopper-slot',
+        index: 0,
+        button: 0
+    }, receipt.cursor, s.view.envelope!.state.progress.player.data, undefined, h.context('source'));
+    assert.equal((await transfer('source', 'machine', 'side', 64)).transferred, 1);
+    assert.equal((h.context('source').expected as any).data.slots[0].count, 63);
+    assert.equal((h.context('machine').expected as any).data.fuel.count, 64);
+    assert.equal((await transfer('source', 'target', 'up', 64)).transferred, 63);
+    assert.equal((h.context('source').expected as any).data.slots[0], null);
+    assert.equal((h.context('target').expected as any).data.slots[0].count, 63);
+    const before = h.raw();
+    assert.equal((await transfer('target', 'machine', 'down', 1)).transferred, 0);
+    assert.equal(h.raw(), before);
+});

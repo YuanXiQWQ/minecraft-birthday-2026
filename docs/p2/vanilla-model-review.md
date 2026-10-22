@@ -6,13 +6,13 @@
 
 五类原版方块已从校验通过的同版JAR提取，在本机浏览器中实际生成Mesh、绑定原始PNG、绘制并执行真实摄像机拾取；不再仅是离线BufferGeometry探针。
 
-| 类别 | 原版状态/变体 | 本轮浏览器证据 | 适用边界 |
-| --- | --- | --- | --- |
-| stone | 4种显式模型选择，包括mirrored及180° | 四种逐项绘制/拾取、UV材质输出；场景含独立单位石块 | 常规布局确定选择第0项，gallery列全4项；未实现随机权重调度 |
-| furnace | 四方向×lit两态，共8 | 八态逐项绘制/拾取；前面法线独立预期；south可见前面的lit实际帧缓冲与未点亮不同 | lit为材质探针，不执行熔炼，不宣称原版发光/照明已复刻 |
-| hopper | down/north/east/south/west，共5 | 原版多元素及各朝向；开口射线命中内底11/16而非完整立方体顶面；alpha裁剪与拾取过滤 | 没有增加五槽传输或新的漏斗规则系统；沿用P2派生邻接 |
-| crafting_table | 原版单态 | 实际贴图、顶面/侧面UV及摄像机拾取；三维实例仍可旋转 | 原版无facing状态，B实例旋转采用已有实验约定，不伪造原版facing属性 |
-| blast_furnace | 四方向×lit两态，共8 | 八态逐项绘制/拾取、前面方向、lit输出差异及动画 | 使用实际16×32两帧PNG，frametime=10，interpolate=true；未实现炉加工 |
+| 类别           | 原版状态/变体                       | 本轮浏览器证据                                                                   | 适用边界                                                           |
+|----------------|-------------------------------------|----------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| stone          | 4种显式模型选择，包括mirrored及180° | 四种逐项绘制/拾取、UV材质输出；场景含独立单位石块                                | 常规布局确定选择第0项，gallery列全4项；未实现随机权重调度          |
+| furnace        | 四方向×lit两态，共8                 | 八态逐项绘制/拾取；前面法线独立预期；south可见前面的lit实际帧缓冲与未点亮不同    | lit为材质探针，不执行熔炼，不宣称原版发光/照明已复刻               |
+| hopper         | down/north/east/south/west，共5     | 原版多元素及各朝向；开口射线命中内底11/16而非完整立方体顶面；alpha裁剪与拾取过滤 | 没有增加五槽传输或新的漏斗规则系统；沿用P2派生邻接                 |
+| crafting_table | 原版单态                            | 实际贴图、顶面/侧面UV及摄像机拾取；三维实例仍可旋转                              | 原版无facing状态，B实例旋转采用已有实验约定，不伪造原版facing属性  |
+| blast_furnace  | 四方向×lit两态，共8                 | 八态逐项绘制/拾取、前面方向、lit输出差异及动画                                   | 使用实际16×32两帧PNG，frametime=10，interpolate=true；未实现炉加工 |
 
 合计26种状态/变体、16张PNG、38个原始样本文件（21个JSON、16个PNG、1个动画元数据）。原客户端SHA-1仍为 `e877b6a07acd633fb3bb475002175cec036e7b87`。提取工具核对整个JAR，服务端和浏览器分别再核对每份样本的SHA-256及字节数。
 
@@ -22,14 +22,14 @@
 
 流程：外部JAR → `extract-model-samples.ps1 -IncludeTextures` → 仓库外manifest/样本 → 显式配置的loopback dev中间件 → 浏览器哈希/解码 → `compileSamples` → `VanillaModels` → 既有SceneAdapter Mesh/Raycaster。没有生成含原版数据的正式构建、资源包或演示归档。
 
-| 文件 | 当前职责 |
-| --- | --- |
-| `tools/extract-model-samples.ps1` | 默认仅外部JSON/PNG哈希；显式开关才在仓库外提取这五类的PNG与动画元数据；拒绝仓库内输出 |
-| `tools/local-resources.ts` / `vite.config.ts` | 只在配置MC_LOCAL_SAMPLES的本机dev服务器提供清单内样本；校验真实路径/哈希，拒绝非本机Host、跨Origin和未列文件；无CORS放行、无目录浏览 |
-| `web/src/model-format.ts` / `vanilla-pack.ts` | 父继承、子覆盖、纹理变量、面/默认UV、90°面旋转及直角blockstate变换；枚举精确variant而非按名字画近似模型；原始像素只留浏览器内存 |
-| `web/src/vanilla-models.ts` | 原版几何、按面材质组、最近邻sRGB纹理、FrontSide、二值alpha；从原始条带像素产生动画/插值帧；几何/材质/纹理有独立释放计数 |
-| `web/src/scene-adapter.ts` | 在同一眼位/布局下切换原版工厂与明确的调试回退；原版放置预览保留材质和实际几何；最近可见三角形加UV alpha过滤；可选择的gallery不写领域存档 |
-| `web/src/vanilla-checks.ts` | 真WebGL绘制、GPU帧缓冲摘要、26状态拾取、前面方向、开口、alpha、动画及几何周转检查；无原版资源时返回blocked/零通过 |
+| 文件                                          | 当前职责                                                                                                                                 |
+|-----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| `tools/extract-model-samples.ps1`             | 默认仅外部JSON/PNG哈希；显式开关才在仓库外提取这五类的PNG与动画元数据；拒绝仓库内输出                                                    |
+| `tools/local-resources.ts` / `vite.config.ts` | 只在配置MC_LOCAL_SAMPLES的本机dev服务器提供清单内样本；校验真实路径/哈希，拒绝非本机Host、跨Origin和未列文件；无CORS放行、无目录浏览     |
+| `web/src/model-format.ts` / `vanilla-pack.ts` | 父继承、子覆盖、纹理变量、面/默认UV、90°面旋转及直角blockstate变换；枚举精确variant而非按名字画近似模型；原始像素只留浏览器内存          |
+| `web/src/vanilla-models.ts`                   | 原版几何、按面材质组、最近邻sRGB纹理、FrontSide、二值alpha；从原始条带像素产生动画/插值帧；几何/材质/纹理有独立释放计数                  |
+| `web/src/scene-adapter.ts`                    | 在同一眼位/布局下切换原版工厂与明确的调试回退；原版放置预览保留材质和实际几何；最近可见三角形加UV alpha过滤；可选择的gallery不写领域存档 |
+| `web/src/vanilla-checks.ts`                   | 真WebGL绘制、GPU帧缓冲摘要、26状态拾取、前面方向、开口、alpha、动画及几何周转检查；无原版资源时返回blocked/零通过                        |
 
 所有原版模型、PNG、动画元数据、浏览器截图保留在：
 
@@ -54,17 +54,17 @@ C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-materials-20261020
 
 实际环境为Windows平台、内置Chromium155、WebGL2 / ANGLE Direct3D11、NVIDIA RTX3080Ti Laptop GPU、hardwareConcurrency=20。使用浏览器桌面视口覆盖，不代表外部Chrome/Firefox/Safari或低端GPU均通过。相机保持Front `(0.5,1.62,6.5)`、FOV70；这些仍是已接受的实验配置，非正式手势决定。
 
-| 检查 | 结果 | 证据 |
-| --- | --- | --- |
-| TypeScript | 通过 | `npm run check`；没有安装依赖或更换渲染栈 |
-| 无原版环境Node测试 | 27通过、1明确跳过、0失败 | 现有21项保留；L02说明缺MC_LOCAL_SAMPLES，不记作原版通过 |
-| 配置原版环境Node测试 | 28/28通过 | 额外校验外部清单与26状态；UV/动画/alpha和本机传输边界用独立合成夹具；S01确认展示石块在合法建造区外 |
-| 最新离线原版探针 | 26状态通过 | [路径/哈希/计数](vanilla-offline-results.json)，此文件本身不含模型或像素 |
-| 原有浏览器核心 | 原版/调试两种模式、两种尺寸均17/17通过 | [1440原版](evidence/vanilla-round2/core-1440.json)、[1280原版](evidence/vanilla-round2/core-1280.json)、[1440调试](evidence/vanilla-round2/debug-1440.json)、[1280调试](evidence/vanilla-round2/debug-1280.json) |
-| 新增原版浏览器断言 | 两种尺寸均11/11通过，26状态逐项绘制/拾取 | [1440](evidence/vanilla-round2/models-1440.json)、[1280](evidence/vanilla-round2/models-1280.json)；包含真实帧缓冲摘要，未保存像素 |
-| 原版模式真实鼠标/控件 | 7项通过 | [记录](evidence/vanilla-round2/pointer-save-lifecycle.json)：偏心工作台/GUI隔离、三维预览、放置east、转向south、拆除、读档、重建释放 |
-| 1280实际鼠标及布局 | 通过 | [记录](evidence/vanilla-round2/layout-1280.json)，1280×720画布，工具默认隐藏，偏心真实点击打开workbench二维GUI |
-| 根/仓库子路径静态包 | 两个构建/审计及2个HTTP用例通过 | 首页不加载游戏；build/preview不能请求原版接口/PNG，开发资料和原始构件404 |
+| 检查                  | 结果                                     | 证据                                                                                                                                                                                                             |
+|-----------------------|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| TypeScript            | 通过                                     | `npm run check`；没有安装依赖或更换渲染栈                                                                                                                                                                        |
+| 无原版环境Node测试    | 27通过、1明确跳过、0失败                 | 现有21项保留；L02说明缺MC_LOCAL_SAMPLES，不记作原版通过                                                                                                                                                          |
+| 配置原版环境Node测试  | 28/28通过                                | 额外校验外部清单与26状态；UV/动画/alpha和本机传输边界用独立合成夹具；S01确认展示石块在合法建造区外                                                                                                               |
+| 最新离线原版探针      | 26状态通过                               | [路径/哈希/计数](vanilla-offline-results.json)，此文件本身不含模型或像素                                                                                                                                         |
+| 原有浏览器核心        | 原版/调试两种模式、两种尺寸均17/17通过   | [1440原版](evidence/vanilla-round2/core-1440.json)、[1280原版](evidence/vanilla-round2/core-1280.json)、[1440调试](evidence/vanilla-round2/debug-1440.json)、[1280调试](evidence/vanilla-round2/debug-1280.json) |
+| 新增原版浏览器断言    | 两种尺寸均11/11通过，26状态逐项绘制/拾取 | [1440](evidence/vanilla-round2/models-1440.json)、[1280](evidence/vanilla-round2/models-1280.json)；包含真实帧缓冲摘要，未保存像素                                                                               |
+| 原版模式真实鼠标/控件 | 7项通过                                  | [记录](evidence/vanilla-round2/pointer-save-lifecycle.json)：偏心工作台/GUI隔离、三维预览、放置east、转向south、拆除、读档、重建释放                                                                             |
+| 1280实际鼠标及布局    | 通过                                     | [记录](evidence/vanilla-round2/layout-1280.json)，1280×720画布，工具默认隐藏，偏心真实点击打开workbench二维GUI                                                                                                   |
+| 根/仓库子路径静态包   | 两个构建/审计及2个HTTP用例通过           | 首页不加载游戏；build/preview不能请求原版接口/PNG，开发资料和原始构件404                                                                                                                                         |
 
 核心B03–B07使用独立遮挡夹具，确认真实最近表面、前墙挡后方、拆墙后可见、面法线及预览不自命中；B08/B09确认上供料/侧燃料/下抽出邻接及旋转断连。原版几何模式跑同样断言，没有仅用离线测试代替浏览器。
 
@@ -80,12 +80,12 @@ C:/Users/YuanXi/AppData/Local/Temp/minecraft-birthday-2026-p2-materials-20261020
 
 常规展示石块位于 `[-5,0,-2]`，由S01保证不占用合法建造单元；它仍是无采集功能的渲染探针。早期截图中该石块曾处于区内，已以区外配置复核，未修改领域放置规则或摄像机。
 
-| 视口/模式 | draw calls | triangles | GPU几何/纹理计数 | 三次平均FPS | p95间隔 | 最大间隔 |
-| --- | --- | --- | --- | --- | --- | --- |
-| 1440×900 调试 | 56 | 656 | 58 / 1 | 240.0 / 240.0 / 239.9 | 均约4.3ms | 4.5 / 4.4 / 8.2ms |
-| 1440×900 原版 | 175 | 580 | 33 / 17 | 240.0 / 239.9 / 239.9 | 均约4.3ms | 4.5 / 8.4 / 8.3ms |
-| 1280×720 原版 | 175 | 580 | 33 / 17 | 240.0 / 240.0 / 240.0 | 均约4.3ms | 4.8 / 4.5 / 4.5ms |
-| 1280×720 调试 | 56 | 656 | 58 / 1 | 240.0 / 240.0 / 240.0 | 均约4.3ms | 4.6 / 4.9 / 4.8ms |
+| 视口/模式     | draw calls | triangles | GPU几何/纹理计数 | 三次平均FPS           | p95间隔   | 最大间隔          |
+|---------------|------------|-----------|------------------|-----------------------|-----------|-------------------|
+| 1440×900 调试 | 56         | 656       | 58 / 1           | 240.0 / 240.0 / 239.9 | 均约4.3ms | 4.5 / 4.4 / 8.2ms |
+| 1440×900 原版 | 175        | 580       | 33 / 17          | 240.0 / 239.9 / 239.9 | 均约4.3ms | 4.5 / 8.4 / 8.3ms |
+| 1280×720 原版 | 175        | 580       | 33 / 17          | 240.0 / 240.0 / 240.0 | 均约4.3ms | 4.8 / 4.5 / 4.5ms |
+| 1280×720 调试 | 56         | 656       | 58 / 1           | 240.0 / 240.0 / 240.0 | 均约4.3ms | 4.6 / 4.9 / 4.8ms |
 
 原始数据：[调试1440](evidence/vanilla-round2/performance-debug.json)、[原版1440](evidence/vanilla-round2/performance-vanilla-1440.json)、[原版1280](evidence/vanilla-round2/performance-vanilla-1280.json)、[调试1280](evidence/vanilla-round2/performance-debug-1280.json)。两尺寸均关闭gallery/选中轮廓、先跑相应模式断言再采样，原版模式预热了全部样本材质。资源工厂拥有16张原版纹理，renderer计数17还包括内部资源，不将两者混同。两尺寸backing pixels分别为1800×1125和1600×900，渲染DPR保持创建时的1.25；视口覆盖后的浏览器DPR读数按原始记录保留。
 

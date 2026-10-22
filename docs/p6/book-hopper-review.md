@@ -55,7 +55,7 @@ book-manifest.json新增54个原版资源（及清单自身）；正常运行资
 
 普通运行：npm --prefix app run dev -- --port 4183，访问/及/game/；所有已实现原版资源默认加载。游戏仍是正式承载区，不是P7四场景。需已有解锁才可放置/填充，普通页面无测试授物按钮。
 
-隔离复现：npm --prefix app run dev:verify；打开4184/__verify__/index.html与input.html，先点Fixture: P6 book and hopper。点击真实漏斗/炉模型或明确的open-instance夹具；之后的取放、搜索、填充、领取、刷新均由正式类执行。Fixture: unlock catalogue仅用于完整目录视觉检查，不能据此声称游戏已能采集所有资源。
+隔离复现：npm --prefix app run dev:verify；打开4184/ __verify__/index.html与input.html，先点Fixture: P6 book and hopper。点击真实漏斗/炉模型或明确的open-instance夹具；之后的取放、搜索、填充、领取、刷新均由正式类执行。Fixture: unlock catalogue仅用于完整目录视觉检查，不能据此声称游戏已能采集所有资源。
 
 本次不新增研究阶段。P6代码完成矩阵见[p6-final-matrix.md](p6-final-matrix.md)，提交后停止等待独立审查。
 

@@ -6,12 +6,12 @@
 
 通过浏览器视口能力设置实际CSS尺寸，逐页读取innerWidth/innerHeight核对后截取完整视口，不改变网页缩放。最终12项记录在[layout-matrix.json](evidence/layout-matrix.json)，最终截图不是P1二维诊断界面。桌面DPR约1，窄屏约1.000000015；前期状态回归环境DPR1.25，不能当作完整DPR矩阵。
 
-| 实际视口 | 空桌/蛋糕/游戏 | 页面尺寸 | 观察 |
-| --- | --- | --- | --- |
-| 1920×1080 | 三项原版资源26.3、ready | 1920×1080 | 全宽房间、正面桌面、无准星，桌面/蛋糕居中 |
-| 1440×900 | 同上 | 1440×900 | 真实透视/遮挡，桌面保留厚度，蛋糕贴合 |
-| 1280×720 | 同上 | 1280×720 | 最终紧凑间距下蛋糕完整，按钮可见，无页面溢出 |
-| 390×844 | 同上 | 375×1072（15px纵向滚动条） | 无横向溢出，文字换行、按钮可用；自然向下滚动，非桌面空间验收替代 |
+| 实际视口  | 空桌/蛋糕/游戏          | 页面尺寸                   | 观察                                                             |
+|-----------|-------------------------|----------------------------|------------------------------------------------------------------|
+| 1920×1080 | 三项原版资源26.3、ready | 1920×1080                  | 全宽房间、正面桌面、无准星，桌面/蛋糕居中                        |
+| 1440×900  | 同上                    | 1440×900                   | 真实透视/遮挡，桌面保留厚度，蛋糕贴合                            |
+| 1280×720  | 同上                    | 1280×720                   | 最终紧凑间距下蛋糕完整，按钮可见，无页面溢出                     |
+| 390×844   | 同上                    | 375×1072（15px纵向滚动条） | 无横向溢出，文字换行、按钮可用；自然向下滚动，非桌面空间验收替代 |
 
 空桌与游戏72 draw calls，蛋糕78；这只是当前静态展示的绘制计数，不是正式四场景/联合庆典性能验收。真实环境4836个基础立方体实例加桌面/蛋糕，原版几何/UV不通过拉伸伪造。事件驱动渲染，无永久空转RAF。尚未测此展示在目标低端机器的连续帧分布。
 
@@ -32,15 +32,15 @@
 
 ## 自动化与构建
 
-| 检查 | 结果与日志 |
-| --- | --- |
-| TypeScript strict | 通过，[typecheck](evidence/typecheck.log) |
-| 正式应用单元 | 38通过，0失败/跳过，[unit-tests](evidence/unit-tests.log) |
-| P2原实验回归 | 48通过，0失败/跳过，[p2-regression](evidence/p2-regression.log) |
-| 全数据/源码/执行链 | 2042分类、112执行、113证明/18步链，通过，[data-verify](evidence/data-verify.log) |
-| 同输入重复导出 | 7个JSON及状态注册表逐字节一致，[reproducibility](evidence/reproducibility.json) |
-| 根/Pages构建与产物审计 | 均通过，[root](evidence/build-root.log)、[pages](evidence/build-pages.log) |
-| 实际HTTP产物 | 2通过、0失败；每套114原版资源/清单＋2规则文件字节一致；内部资料、fixture、JAR及全catalog/coverage为404，[HTTP](evidence/http-build.log) |
+| 检查                   | 结果与日志                                                                                                                              |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| TypeScript strict      | 通过，[typecheck](evidence/typecheck.log)                                                                                               |
+| 正式应用单元           | 38通过，0失败/跳过，[unit-tests](evidence/unit-tests.log)                                                                               |
+| P2原实验回归           | 48通过，0失败/跳过，[p2-regression](evidence/p2-regression.log)                                                                         |
+| 全数据/源码/执行链     | 2042分类、112执行、113证明/18步链，通过，[data-verify](evidence/data-verify.log)                                                        |
+| 同输入重复导出         | 7个JSON及状态注册表逐字节一致，[reproducibility](evidence/reproducibility.json)                                                         |
+| 根/Pages构建与产物审计 | 均通过，[root](evidence/build-root.log)、[pages](evidence/build-pages.log)                                                              |
+| 实际HTTP产物           | 2通过、0失败；每套114原版资源/清单＋2规则文件字节一致；内部资料、fixture、JAR及全catalog/coverage为404，[HTTP](evidence/http-build.log) |
 
 普通网站仅含双入口、运行模块、原版资源及必要规范化规则。未把完整客户端、个人路径、研究日志、临时目录或完整数据目录复制到网站。无需MC_LOCAL_SAMPLES、开发专用加载按钮或本机Java运行。
 
@@ -59,6 +59,6 @@
 
 ## 复现
 
-在app中运行npm run dev，打开4183/与/game/；npm run dev:verify打开4184/__verify__/index.html，另开4184/观察测试完成状态，使用Read P4 rule data。普通页不授蛋糕。
+在app中运行npm run dev，打开4183/与/game/；npm run dev:verify打开4184/ __verify__/index.html，另开4184/观察测试完成状态，使用Read P4 rule data。普通页不授蛋糕。
 
 npm run check、npm test、npm run data:verify、npm run build、npm run build:pages、npm run test:built。实际预览npm run preview（4185）/npm run preview:pages（4186/minecraft-birthday-2026/）。只校验/运行不需要客户端；重导需要同哈希官方输入及已有javap，步骤见数据README。

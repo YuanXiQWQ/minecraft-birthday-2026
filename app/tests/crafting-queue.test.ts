@@ -1,77 +1,507 @@
 /** Formal UI method bodies and real SaveSession transactions with controlled receipt timing; DOM rendering is stubbed, not browser input. */
-import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {layout} from '../web/src/domain/inventory.ts';import {GameInventory} from '../web/src/ui/inventory.ts';import {InventoryInput} from '../web/src/ui/inventory-input.ts';import type {Slot} from '../web/src/ui/inventory.ts';import {SlotGesture} from '../web/src/ui/slot-gesture.ts';import {OutsideClick} from '../web/src/ui/outside-click.ts';import {PersonalCursor} from '../web/src/domain/personal-menu.ts';import {SaveSession} from '../web/src/persistence/session.ts';import {token} from '../web/src/persistence/codec.ts';import type {Rules,Stack} from '../web/src/rules/types.ts';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {layout} from '../web/src/domain/inventory.ts';
+import {GameInventory} from '../web/src/ui/inventory.ts';
+import {InventoryInput} from '../web/src/ui/inventory-input.ts';
+import type {Slot} from '../web/src/ui/inventory.ts';
+import {SlotGesture} from '../web/src/ui/slot-gesture.ts';
+import {OutsideClick} from '../web/src/ui/outside-click.ts';
+import {PersonalCursor} from '../web/src/domain/personal-menu.ts';
+import {SaveSession} from '../web/src/persistence/session.ts';
+import {token} from '../web/src/persistence/codec.ts';
+import type {Rules, Stack} from '../web/src/rules/types.ts';
+
 /** Actual committed P4 recipes and components. */
-const rules=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8')) as Rules;
+const rules = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json', import.meta.url), 'utf8')) as Rules;
+
 /** Construct native bounded ingredients.
  * @param {string} id Original item path.
  * @param {number} count Temporary count.
  * @return {Stack} Ingredient group.
  */
-function item(id:string,count=1):Stack{return{id:'minecraft:'+id,count};}
+function item(id: string, count = 1): Stack {
+    return {id: 'minecraft:' + id, count};
+}
+
 /** Allocate a manually resolved promise without a timer or a production delay hook.
  * @return {object} Promise and release callback.
  */
-function latch(){let release!:()=>void;const promise=new Promise<void>(r=>release=r);return{promise,release};}
+function latch() {
+    let release!: () => void;
+    const promise = new Promise<void>(r => release = r);
+    return {promise, release};
+}
+
 /** Bind actual UI/input prototype methods to presentation stubs and the real persistence class.
  * @param {object} options Initial acquisition and station configuration.
  * @return {Promise<object>} UI, session and controlled receipt boundary.
  */
-async function harness(options:{known?:boolean;merge?:number;bench?:boolean}={}){
-  let raw:string|null=null,deny=false,tail:Promise<unknown>=Promise.resolve();const s=new SaveSession({getItem:()=>raw,setItem:(_k,v)=>{if(deny)throw Error('write-failed');raw=v;}},{exclusive(work){const p=tail.then(work);tail=p.catch(()=>{});return p;}},{allows:()=>true});s.rules=rules;await s.refresh();for(const id of ['oak_log',...(options.known||options.merge?['oak_planks']:[]),...(options.bench?['crafting_table']:[])])await s.dispatch({type:'unlock',item:'minecraft:'+id});
-  if(options.bench)await s.dispatch({type:'put-station',scene:'plains',station:{id:'table',kind:'crafting_table',cell:[2,0,0],facing:'north',contents:{version:1,data:{grid:[item('oak_log'),...Array(8).fill(null)]}}}});
-  const u=Object.create(GameInventory.prototype) as GameInventory;u.value={} as any;u.station=null;u.notice='';u.permanent=null;u.generation='';u.queueEpoch=0;u.pending=0;u.queue=Promise.resolve();u.personal=new PersonalCursor();u.disposed=false;u.rules=rules;u.previewSignature='';u.preview={status:'empty',result:null};u.modal={open:true,dataset:{},setAttribute(){},close(){this.open=false;},showModal(){this.open=true;},querySelector(){return{focus(){}};},hasPointerCapture(){return false;},releasePointerCapture(){},getBoundingClientRect(){return{left:0,right:400,top:0,bottom:400};},remove(){}} as any;
-  u.panel={setPointerCapture(){},hasPointerCapture(){return false;},releasePointerCapture(){},getBoundingClientRect(){return{left:0,right:400,top:0,bottom:400};}} as any;
-  const input=Object.create(InventoryInput.prototype) as InventoryInput;input.ui=u;input.gesture=new SlotGesture();input.outside=new OutsideClick();input.keys=new Set();input.abort=new AbortController();input.start=null;input.quickMatch=null;input.editing=()=>false;input.at=()=>u.hover;u.input=input;
-  u.tooltip={hidden:true,remove(){}} as any;u.cursor={hidden:true,remove(){}} as any;u.hud={remove(){}} as any;u.art={dispose(){}} as any;u.abort=new AbortController();u.animation=0;u.draw=()=>u.refreshPreview();u.gate=()=>{};u.blocked=()=>false;u.text=k=>k;u.pixels={text(){}} as any;
-  let ordinary=0;u.commit=(...args)=>{ordinary++;return s.editInventory(...args);};const entered=latch(),release=latch();let pause=true;
-  u.acquire=async(...args)=>{const r=await s.takeCraft(...args);if(pause){pause=false;entered.release();await release.promise;}return r;};
-  s.subscribe(v=>{if(v.envelope)u.sync(v.envelope.state,v.writable,v.envelope.generation);});
-  if(options.bench)u.openWorkbench('table');else{u.personal.crafting=[item('oak_log'),null,null,null];u.value.crafting=structuredClone(u.personal.crafting);}
-  if(options.merge){u.personal.value=item('oak_planks',options.merge);u.value.cursor=structuredClone(u.personal.value);}u.refreshPreview();
-  return{u,s,entered:entered.promise,release:release.release,raw:()=>raw,ordinary:()=>ordinary,deny:(value:boolean)=>{deny=value;},other:async()=>{const other=new SaveSession(s.storage,s.locks,s.policy);other.rules=rules;await other.refresh();return other;}};
+async function harness(options: { known?: boolean; merge?: number; bench?: boolean } = {}) {
+    let raw: string | null = null, deny = false, tail: Promise<unknown> = Promise.resolve();
+    const s = new SaveSession({
+        getItem: () => raw, setItem: (_k, v) => {
+            if (deny) throw Error('write-failed');
+            raw = v;
+        }
+    }, {
+        exclusive(work) {
+            const p = tail.then(work);
+            tail = p.catch(() => {
+            });
+            return p;
+        }
+    }, {allows: () => true});
+    s.rules = rules;
+    await s.refresh();
+    for (const id of ['oak_log', ...(options.known || options.merge ? ['oak_planks'] : []), ...(options.bench ? ['crafting_table'] : [])]) await s.dispatch({
+        type: 'unlock',
+        item: 'minecraft:' + id
+    });
+    if (options.bench) await s.dispatch({
+        type: 'put-station',
+        scene: 'plains',
+        station: {
+            id: 'table',
+            kind: 'crafting_table',
+            cell: [2, 0, 0],
+            facing: 'north',
+            contents: {version: 1, data: {grid: [item('oak_log'), ...Array(8).fill(null)]}}
+        }
+    });
+    const u = Object.create(GameInventory.prototype) as GameInventory;
+    u.value = {} as any;
+    u.station = null;
+    u.notice = '';
+    u.permanent = null;
+    u.generation = '';
+    u.queueEpoch = 0;
+    u.pending = 0;
+    u.queue = Promise.resolve();
+    u.personal = new PersonalCursor();
+    u.disposed = false;
+    u.rules = rules;
+    u.previewSignature = '';
+    u.preview = {status: 'empty', result: null};
+    u.modal = {
+        open: true, dataset: {}, setAttribute() {
+        }, close() {
+            this.open = false;
+        }, showModal() {
+            this.open = true;
+        }, querySelector() {
+            return {
+                focus() {
+                }
+            };
+        }, hasPointerCapture() {
+            return false;
+        }, releasePointerCapture() {
+        }, getBoundingClientRect() {
+            return {left: 0, right: 400, top: 0, bottom: 400};
+        }, remove() {
+        }
+    } as any;
+    u.panel = {
+        setPointerCapture() {
+        }, hasPointerCapture() {
+            return false;
+        }, releasePointerCapture() {
+        }, getBoundingClientRect() {
+            return {left: 0, right: 400, top: 0, bottom: 400};
+        }
+    } as any;
+    const input = Object.create(InventoryInput.prototype) as InventoryInput;
+    input.ui = u;
+    input.gesture = new SlotGesture();
+    input.outside = new OutsideClick();
+    input.keys = new Set();
+    input.abort = new AbortController();
+    input.start = null;
+    input.quickMatch = null;
+    input.editing = () => false;
+    input.at = () => u.hover;
+    u.input = input;
+    u.tooltip = {
+        hidden: true, remove() {
+        }
+    } as any;
+    u.cursor = {
+        hidden: true, remove() {
+        }
+    } as any;
+    u.hud = {
+        remove() {
+        }
+    } as any;
+    u.art = {
+        dispose() {
+        }
+    } as any;
+    u.abort = new AbortController();
+    u.animation = 0;
+    u.draw = () => u.refreshPreview();
+    u.gate = () => {
+    };
+    u.blocked = () => false;
+    u.text = k => k;
+    u.pixels = {
+        text() {
+        }
+    } as any;
+    let ordinary = 0;
+    u.commit = (...args) => {
+        ordinary++;
+        return s.editInventory(...args);
+    };
+    const entered = latch(), release = latch();
+    let pause = true;
+    u.acquire = async (...args) => {
+        const r = await s.takeCraft(...args);
+        if (pause) {
+            pause = false;
+            entered.release();
+            await release.promise;
+        }
+        return r;
+    };
+    s.subscribe(v => {
+        if (v.envelope) u.sync(v.envelope.state, v.writable, v.envelope.generation);
+    });
+    if (options.bench) u.openWorkbench('table'); else {
+        u.personal.crafting = [item('oak_log'), null, null, null];
+        u.value.crafting = structuredClone(u.personal.crafting);
+    }
+    if (options.merge) {
+        u.personal.value = item('oak_planks', options.merge);
+        u.value.cursor = structuredClone(u.personal.value);
+    }
+    u.refreshPreview();
+    return {
+        u,
+        s,
+        entered: entered.promise,
+        release: release.release,
+        raw: () => raw,
+        ordinary: () => ordinary,
+        deny: (value: boolean) => {
+            deny = value;
+        },
+        other: async () => {
+            const other = new SaveSession(s.storage, s.locks, s.policy);
+            other.rules = rules;
+            await other.refresh();
+            return other;
+        }
+    };
 }
 
-test('receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession',async()=>{const h=await harness();h.u.takeResult({mode:'cursor'});await h.entered;assert.equal(h.u.value.cursor,null);assert.ok(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));h.u.command({type:'slot',index:0,button:0});h.release();await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.equal(h.u.value.hotbar[0],null);assert.equal(h.ordinary(),0);});
+test('receipt boundary: empty hotbar click cannot overwrite four planks acquired by the formal UI and real SaveSession', async () => {
+    const h = await harness();
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    assert.equal(h.u.value.cursor, null);
+    assert.ok(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));
+    h.u.command({type: 'slot', index: 0, button: 0});
+    h.release();
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.equal(h.u.value.hotbar[0], null);
+    assert.equal(h.ordinary(), 0);
+});
 
 /** Send actual input-router logic a controlled key; this is a unit event object, not a trusted browser event.
  * @param {string} code Key code.
  * @param {boolean} ctrl Control modifier.
  * @return {KeyboardEvent} Minimal event fixture.
  */
-function key(code:string,ctrl=false):KeyboardEvent{return{code,ctrlKey:ctrl,altKey:false,metaKey:false,repeat:false,target:null,preventDefault(){},stopPropagation(){}} as unknown as KeyboardEvent;}
+function key(code: string, ctrl = false): KeyboardEvent {
+    return {
+        code, ctrlKey: ctrl, altKey: false, metaKey: false, repeat: false, target: null, preventDefault() {
+        }, stopPropagation() {
+        }
+    } as unknown as KeyboardEvent;
+}
+
 /** Build a staged pointer fixture for the actual input-router methods.
  * @param {number} buttons Pressed-button bit mask.
  * @param {number} x Client coordinate.
  * @return {PointerEvent} Explicitly simulated unit event.
  */
-function pointer(buttons:number,x=10):PointerEvent{return{pointerId:1,button:0,buttons,clientX:x,clientY:10,shiftKey:false,timeStamp:1000+x,preventDefault(){}} as PointerEvent;}
+function pointer(buttons: number, x = 10): PointerEvent {
+    return {
+        pointerId: 1,
+        button: 0,
+        buttons,
+        clientX: x,
+        clientY: 10,
+        shiftKey: false,
+        timeStamp: 1000 + x,
+        preventDefault() {
+        }
+    } as PointerEvent;
+}
 
-for(const options of [{},{known:true},{merge:5},{bench:true},{bench:true,known:true}])test('normal receipt and post-receipt placement: '+JSON.stringify(options),async()=>{const h=await harness(options);h.u.takeResult({mode:'cursor'});await h.entered;h.release();await h.u.queue;assert.equal(h.u.value.cursor?.count,(options.merge??0)+4);h.u.command({type:'slot',index:0,button:0});await h.u.queue;assert.equal(h.u.value.cursor,null);assert.equal(h.u.value.hotbar[0]?.count,(options.merge??0)+4);assert.equal(h.ordinary(),1);});
-for(const source of ['empty','occupied','directory'])test('waiting receipt rejects '+source+' carrier operation through the unified command entry',async()=>{const h=await harness();if(source==='occupied')await h.s.editInventory({type:'source',item:'minecraft:oak_log',mode:'number',index:0},null,layout(h.u.value));const stable=structuredClone(h.u.value.hotbar);h.u.takeResult({mode:'cursor'});await h.entered;h.u.command(source==='directory'?{type:'source',item:'minecraft:oak_log',mode:'clone'}:{type:'slot',index:0,button:0});h.release();await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.deepEqual(h.u.value.hotbar,stable);assert.equal(h.ordinary(),0);});
+for (const options of [{}, {known: true}, {merge: 5}, {bench: true}, {
+    bench: true,
+    known: true
+}]) test('normal receipt and post-receipt placement: ' + JSON.stringify(options), async () => {
+    const h = await harness(options);
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.release();
+    await h.u.queue;
+    assert.equal(h.u.value.cursor?.count, (options.merge ?? 0) + 4);
+    h.u.command({type: 'slot', index: 0, button: 0});
+    await h.u.queue;
+    assert.equal(h.u.value.cursor, null);
+    assert.equal(h.u.value.hotbar[0]?.count, (options.merge ?? 0) + 4);
+    assert.equal(h.ordinary(), 1);
+});
+for (const source of ['empty', 'occupied', 'directory']) test('waiting receipt rejects ' + source + ' carrier operation through the unified command entry', async () => {
+    const h = await harness();
+    if (source === 'occupied') await h.s.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_log',
+        mode: 'number',
+        index: 0
+    }, null, layout(h.u.value));
+    const stable = structuredClone(h.u.value.hotbar);
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.u.command(source === 'directory' ? {type: 'source', item: 'minecraft:oak_log', mode: 'clone'} : {
+        type: 'slot',
+        index: 0,
+        button: 0
+    });
+    h.release();
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.deepEqual(h.u.value.hotbar, stable);
+    assert.equal(h.ordinary(), 0);
+});
 
-test('all ordinary semantic mutation families are refused before any stale cursor or layout can be captured',async()=>{const h=await harness({known:true});h.u.takeResult({mode:'cursor'});await h.entered;const before=h.raw();for(const intent of [{type:'source',item:'minecraft:oak_log',mode:'number',index:0},{type:'source',item:'minecraft:oak_log',mode:'offhand'},{type:'equipment',slot:'offhand',button:0},{type:'drop',cursor:true,all:true},{type:'swap',slot:'hotbar:0',target:'equipment:offhand'},{type:'preset',index:0,mode:'save'},{type:'preset',index:0,mode:'load'},{type:'drag',slots:['hotbar:0'],mode:'middle'},{type:'collect',slot:'hotbar:0'},{type:'quick',slot:'crafting:0'},{type:'equip'},{type:'select',index:3},{type:'wheel',direction:1}])h.u.command(intent as any);h.release();await h.u.queue;assert.equal(h.ordinary(),0);assert.equal(h.raw(),before);assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.ok(h.u.value.hotbar.every(s=>s===null));});
+test('all ordinary semantic mutation families are refused before any stale cursor or layout can be captured', async () => {
+    const h = await harness({known: true});
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    const before = h.raw();
+    for (const intent of [{type: 'source', item: 'minecraft:oak_log', mode: 'number', index: 0}, {
+        type: 'source',
+        item: 'minecraft:oak_log',
+        mode: 'offhand'
+    }, {type: 'equipment', slot: 'offhand', button: 0}, {type: 'drop', cursor: true, all: true}, {
+        type: 'swap',
+        slot: 'hotbar:0',
+        target: 'equipment:offhand'
+    }, {type: 'preset', index: 0, mode: 'save'}, {type: 'preset', index: 0, mode: 'load'}, {
+        type: 'drag',
+        slots: ['hotbar:0'],
+        mode: 'middle'
+    }, {type: 'collect', slot: 'hotbar:0'}, {type: 'quick', slot: 'crafting:0'}, {type: 'equip'}, {
+        type: 'select',
+        index: 3
+    }, {type: 'wheel', direction: 1}]) h.u.command(intent as any);
+    h.release();
+    await h.u.queue;
+    assert.equal(h.ordinary(), 0);
+    assert.equal(h.raw(), before);
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.ok(h.u.value.hotbar.every(s => s === null));
+});
 
-test('waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI',async()=>{const h=await harness();h.u.takeResult({mode:'cursor'});await h.entered;h.u.hover={kind:'hotbar',index:0,x:0,y:0};for(const code of ['Digit1','KeyF','KeyQ','KeyC','Digit2','KeyX','Digit3'])h.u.input.key(key(code));h.u.input.key(key('KeyQ',true));assert.equal(h.u.modal.open,true);h.release();await h.u.queue;assert.equal(h.ordinary(),0);assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.ok(h.u.value.presets.every(p=>p===null));});
+test('waiting receipt rejects actual keyboard-router numeric/F/Q/C/X preset paths without closing the GUI', async () => {
+    const h = await harness();
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.u.hover = {kind: 'hotbar', index: 0, x: 0, y: 0};
+    for (const code of ['Digit1', 'KeyF', 'KeyQ', 'KeyC', 'Digit2', 'KeyX', 'Digit3']) h.u.input.key(key(code));
+    h.u.input.key(key('KeyQ', true));
+    assert.equal(h.u.modal.open, true);
+    h.release();
+    await h.u.queue;
+    assert.equal(h.ordinary(), 0);
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.ok(h.u.value.presets.every(p => p === null));
+});
 
-test('a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally',async()=>{const h=await harness(),slot:Slot={kind:'hotbar',index:0,x:0,y:0};h.u.hover=slot;h.u.takeResult({mode:'cursor'});await h.entered;h.u.input.down(pointer(1));h.u.input.move(pointer(1,30));h.release();await h.u.queue;h.u.input.up(pointer(0,30));await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.equal(h.ordinary(),0);h.u.input.down(pointer(1));h.u.hover={...slot,index:1};h.u.input.move(pointer(1,40));h.u.input.up(pointer(0,40));await h.u.queue;assert.equal(h.u.value.cursor,null);assert.equal(h.u.value.hotbar[0]?.count,2);assert.equal(h.u.value.hotbar[1]?.count,2);});
+test('a press begun while waiting cannot turn into a click or drag after the receipt; a fresh drag still distributes normally', async () => {
+    const h = await harness(), slot: Slot = {kind: 'hotbar', index: 0, x: 0, y: 0};
+    h.u.hover = slot;
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.u.input.down(pointer(1));
+    h.u.input.move(pointer(1, 30));
+    h.release();
+    await h.u.queue;
+    h.u.input.up(pointer(0, 30));
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.equal(h.ordinary(), 0);
+    h.u.input.down(pointer(1));
+    h.u.hover = {...slot, index: 1};
+    h.u.input.move(pointer(1, 40));
+    h.u.input.up(pointer(0, 40));
+    await h.u.queue;
+    assert.equal(h.u.value.cursor, null);
+    assert.equal(h.u.value.hotbar[0]?.count, 2);
+    assert.equal(h.u.value.hotbar[1]?.count, 2);
+});
 
-for(const close of ['KeyE','Escape','Done'])test('D07 '+close+' remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input',async()=>{const h=await harness();h.u.takeResult({mode:'cursor'});await h.entered;if(close==='Done')h.u.close();else h.u.input.key(key(close));assert.equal(h.u.modal.open,false);assert.equal(h.u.modal.dataset.acquiring,'false');h.u.open();h.u.command({type:'source',item:'minecraft:oak_log',mode:'left'});h.release();await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_log'));assert.ok(h.u.value.crafting!.every(s=>s===null));assert.equal(h.ordinary(),1);assert.ok(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));});
+for (const close of ['KeyE', 'Escape', 'Done']) test('D07 ' + close + ' remains usable during a delayed receipt and a reopened menu accepts fresh ordinary input', async () => {
+    const h = await harness();
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    if (close === 'Done') h.u.close(); else h.u.input.key(key(close));
+    assert.equal(h.u.modal.open, false);
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    h.u.open();
+    h.u.command({type: 'source', item: 'minecraft:oak_log', mode: 'left'});
+    h.release();
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_log'));
+    assert.ok(h.u.value.crafting!.every(s => s === null));
+    assert.equal(h.ordinary(), 1);
+    assert.ok(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'));
+});
 
-test('a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable',async()=>{const h=await harness();h.deny(true);h.u.takeResult({mode:'cursor'});await h.u.queue;assert.equal(h.u.modal.dataset.acquiring,'false');assert.equal(h.u.value.cursor,null);assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'),false);h.deny(false);await h.s.refresh();h.u.takeResult({mode:'cursor'});await h.entered;h.release();await h.u.queue;h.u.command({type:'slot',index:0,button:0});await h.u.queue;assert.deepEqual(h.u.value.hotbar[0],item('oak_planks',4));});
+test('a failed write releases receipt ownership without publishing an unlock; retry and later slot input remain usable', async () => {
+    const h = await harness();
+    h.deny(true);
+    h.u.takeResult({mode: 'cursor'});
+    await h.u.queue;
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    assert.equal(h.u.value.cursor, null);
+    assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'), false);
+    h.deny(false);
+    await h.s.refresh();
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.release();
+    await h.u.queue;
+    h.u.command({type: 'slot', index: 0, button: 0});
+    await h.u.queue;
+    assert.deepEqual(h.u.value.hotbar[0], item('oak_planks', 4));
+});
 
-test('layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout',async()=>{const h=await harness(),other=await h.other();await other.editInventory({type:'source',item:'minecraft:oak_log',mode:'number',index:0},null,other.view.envelope!.state.progress.player.data);h.u.takeResult({mode:'cursor'});await h.u.queue;assert.equal(h.u.modal.dataset.craftError,'inventory-conflict');assert.equal(h.u.modal.dataset.acquiring,'false');assert.equal(h.u.value.hotbar[0]?.id,'minecraft:oak_log');assert.equal(h.u.value.cursor,null);assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'),false);h.u.command({type:'slot',index:0,button:0});await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_log',64));});
+test('layout conflict rejects the real transaction and releases the GUI gate without erasing the winning layout', async () => {
+    const h = await harness(), other = await h.other();
+    await other.editInventory({
+        type: 'source',
+        item: 'minecraft:oak_log',
+        mode: 'number',
+        index: 0
+    }, null, other.view.envelope!.state.progress.player.data);
+    h.u.takeResult({mode: 'cursor'});
+    await h.u.queue;
+    assert.equal(h.u.modal.dataset.craftError, 'inventory-conflict');
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    assert.equal(h.u.value.hotbar[0]?.id, 'minecraft:oak_log');
+    assert.equal(h.u.value.cursor, null);
+    assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'), false);
+    h.u.command({type: 'slot', index: 0, button: 0});
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_log', 64));
+});
 
-test('cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers',async()=>{const h=await harness();h.u.takeResult({mode:'cursor'});await h.entered;const other=await h.other();await other.reset(token(other.view.envelope!));await h.s.refresh();assert.equal(h.u.modal.dataset.acquiring,'false');await other.dispatch({type:'unlock',item:'minecraft:oak_log'});await h.s.refresh();h.u.command({type:'source',item:'minecraft:oak_log',mode:'left'});h.release();await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_log'));assert.ok(h.u.value.crafting!.every(s=>s===null));assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'),false);});
+test('cross-session reset invalidates an older receipt and its cleanup cannot disturb fresh-generation carriers', async () => {
+    const h = await harness();
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    const other = await h.other();
+    await other.reset(token(other.view.envelope!));
+    await h.s.refresh();
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    await other.dispatch({type: 'unlock', item: 'minecraft:oak_log'});
+    await h.s.refresh();
+    h.u.command({type: 'source', item: 'minecraft:oak_log', mode: 'left'});
+    h.release();
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_log'));
+    assert.ok(h.u.value.crafting!.every(s => s === null));
+    assert.equal(h.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'), false);
+});
 
-test('cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance',async()=>{const h=await harness({bench:true});h.u.takeResult({mode:'cursor'});await h.entered;const other=await h.other();await other.dispatch({type:'remove-station',scene:'plains',id:'table'});await h.s.refresh();assert.equal(h.u.modal.open,false);assert.equal(h.u.modal.dataset.acquiring,'false');h.release();await h.u.queue;assert.equal(h.u.value.cursor,null);assert.equal(h.u.station,null);assert.equal(h.u.value.workbench,undefined);assert.equal(h.s.view.envelope!.state.progress.scenes.plains.stations.length,0);});
+test('cross-session workbench removal closes the real UI before the receipt returns and never resurrects an invalid instance', async () => {
+    const h = await harness({bench: true});
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    const other = await h.other();
+    await other.dispatch({type: 'remove-station', scene: 'plains', id: 'table'});
+    await h.s.refresh();
+    assert.equal(h.u.modal.open, false);
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    h.release();
+    await h.u.queue;
+    assert.equal(h.u.value.cursor, null);
+    assert.equal(h.u.station, null);
+    assert.equal(h.u.value.workbench, undefined);
+    assert.equal(h.s.view.envelope!.state.progress.scenes.plains.stations.length, 0);
+});
 
-test('disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result',async()=>{const h=await harness();h.u.takeResult({mode:'hotbar',index:0});await h.entered;const saved=h.raw();h.u.dispose();h.release();await h.u.queue;assert.equal(h.u.modal.dataset.acquiring,'false');assert.equal(h.u.personal.value,null);assert.equal(h.raw(),saved);assert.equal(h.s.view.envelope!.state.progress.player.data.hotbar[0]?.count,4);});
+test('disposal clears ownership and the eventual receipt cannot restore page carriers or mutate the saved stable result', async () => {
+    const h = await harness();
+    h.u.takeResult({mode: 'hotbar', index: 0});
+    await h.entered;
+    const saved = h.raw();
+    h.u.dispose();
+    h.release();
+    await h.u.queue;
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+    assert.equal(h.u.personal.value, null);
+    assert.equal(h.raw(), saved);
+    assert.equal(h.s.view.envelope!.state.progress.player.data.hotbar[0]?.count, 4);
+});
 
-test('ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers',async()=>{const h=await harness();h.u.command({type:'source',item:'minecraft:oak_log',mode:'left'});h.u.command({type:'slot',index:0,button:0});h.u.command({type:'source',item:'minecraft:oak_log',mode:'left'});h.u.command({type:'slot',index:1,button:0});await h.u.queue;assert.equal(h.ordinary(),4);assert.deepEqual(h.u.value.hotbar.slice(0,2),[item('oak_log'),item('oak_log')]);assert.equal(h.u.value.cursor,null);});
+test('ordinary continuous input keeps its original queue behavior when no crafting receipt owns the carriers', async () => {
+    const h = await harness();
+    h.u.command({type: 'source', item: 'minecraft:oak_log', mode: 'left'});
+    h.u.command({type: 'slot', index: 0, button: 0});
+    h.u.command({type: 'source', item: 'minecraft:oak_log', mode: 'left'});
+    h.u.command({type: 'slot', index: 1, button: 0});
+    await h.u.queue;
+    assert.equal(h.ordinary(), 4);
+    assert.deepEqual(h.u.value.hotbar.slice(0, 2), [item('oak_log'), item('oak_log')]);
+    assert.equal(h.u.value.cursor, null);
+});
 
-test('workbench receipt also rejects empty-slot and directory operations while its real instance input persists',async()=>{const h=await harness({bench:true});h.u.takeResult({mode:'cursor'});await h.entered;h.u.command({type:'slot',index:0,button:0});h.u.command({type:'source',item:'minecraft:oak_log',mode:'left'});h.release();await h.u.queue;assert.deepEqual(h.u.value.cursor,item('oak_planks',4));assert.equal(h.ordinary(),0);assert.equal(h.u.value.workbench?.[0]?.count,1);h.u.close();assert.equal(h.u.value.cursor,null);h.u.openWorkbench('table');assert.equal(h.u.value.workbench?.[0]?.count,1);});
+test('workbench receipt also rejects empty-slot and directory operations while its real instance input persists', async () => {
+    const h = await harness({bench: true});
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.u.command({type: 'slot', index: 0, button: 0});
+    h.u.command({type: 'source', item: 'minecraft:oak_log', mode: 'left'});
+    h.release();
+    await h.u.queue;
+    assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
+    assert.equal(h.ordinary(), 0);
+    assert.equal(h.u.value.workbench?.[0]?.count, 1);
+    h.u.close();
+    assert.equal(h.u.value.cursor, null);
+    h.u.openWorkbench('table');
+    assert.equal(h.u.value.workbench?.[0]?.count, 1);
+});
 
-test('closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor',async()=>{const h=await harness({bench:true});h.u.takeResult({mode:'cursor'});await h.entered;h.u.close();h.release();await h.u.queue;assert.equal(h.u.value.cursor,null);h.u.openWorkbench('table');assert.equal(h.u.value.workbench?.[0]?.id,'minecraft:oak_log');assert.equal(h.u.modal.dataset.acquiring,'false');});
+test('closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor', async () => {
+    const h = await harness({bench: true});
+    h.u.takeResult({mode: 'cursor'});
+    await h.entered;
+    h.u.close();
+    h.release();
+    await h.u.queue;
+    assert.equal(h.u.value.cursor, null);
+    h.u.openWorkbench('table');
+    assert.equal(h.u.value.workbench?.[0]?.id, 'minecraft:oak_log');
+    assert.equal(h.u.modal.dataset.acquiring, 'false');
+});
 
-test('identity-checked cleanup cannot release ownership established by a different receipt',async()=>{const h=await harness(),old={},current={};h.u.acquisition=current;h.u.modal.dataset.acquiring='true';h.u.clearAcquisition(old);assert.equal(h.u.carrierBusy(),true);h.u.clearAcquisition(current);assert.equal(h.u.carrierBusy(),false);});
+test('identity-checked cleanup cannot release ownership established by a different receipt', async () => {
+    const h = await harness(), old = {}, current = {};
+    h.u.acquisition = current;
+    h.u.modal.dataset.acquiring = 'true';
+    h.u.clearAcquisition(old);
+    assert.equal(h.u.carrierBusy(), true);
+    h.u.clearAcquisition(current);
+    assert.equal(h.u.carrierBusy(), false);
+});

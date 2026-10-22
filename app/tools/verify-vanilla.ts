@@ -1,12 +1,48 @@
 /** Clone-local verification checks committed outputs and executes native recipe witnesses without downloading or running Minecraft. */
-import {readFileSync} from 'node:fs';import {resolve} from 'node:path';import {createHash} from 'node:crypto';import assert from 'node:assert/strict';import {verify} from './vanilla/verify.ts';import type {Rules} from '../web/src/rules/types.ts';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+import {verify} from './vanilla/verify.ts';
+import type {Rules} from '../web/src/rules/types.ts';
+
 /** Generated evidence is outside the served web root. */
-const root=resolve(import.meta.dirname,'../../data/minecraft/26.3'),manifest=JSON.parse(readFileSync(resolve(root,'manifest.json'),'utf8'));
-for(const f of manifest.files){const b=readFileSync(resolve(root,f.file));assert.equal(b.length,f.bytes);assert.equal(createHash('sha256').update(b).digest('hex'),f.sha256);}
-for(const [file,hash]of Object.entries(manifest.exporterSources)){const source=readFileSync(resolve(import.meta.dirname,'..',file),'utf8').replaceAll('\r\n','\n');assert.equal(createHash('sha256').update(source).digest('hex'),hash,'stale-export:'+file);}
+const root = resolve(import.meta.dirname, '../../data/minecraft/26.3'),
+    manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
+for (const f of manifest.files) {
+    const b = readFileSync(resolve(root, f.file));
+    assert.equal(b.length, f.bytes);
+    assert.equal(createHash('sha256').update(b).digest('hex'), f.sha256);
+}
+for (const [file, hash] of Object.entries(manifest.exporterSources)) {
+    const source = readFileSync(resolve(import.meta.dirname, '..', file), 'utf8').replaceAll('\r\n', '\n');
+    assert.equal(createHash('sha256').update(source).digest('hex'), hash, 'stale-export:' + file);
+}
 /** Full offline catalog is independent of the bounded runtime recipe cohort. */
-const catalog=JSON.parse(readFileSync(resolve(root,'catalog.json'),'utf8')),coverage=JSON.parse(readFileSync(resolve(root,'coverage.json'),'utf8')),rules:Rules={recipes:catalog.recipes,items:catalog.items,itemTags:catalog.itemTags,blockTags:catalog.blockTags,intProviders:catalog.providers.int,floatProviders:catalog.providers.float,loot:catalog.loot,sourceBlocks:catalog.sourceBlocks,interactions:catalog.interactions},result=verify(rules,coverage.proofs,coverage.coverage);
-assert.deepEqual(JSON.parse(JSON.stringify(result)),JSON.parse(readFileSync(resolve(root,'cake-chain.json'),'utf8')));assert.equal(result.checked,112);assert.equal(coverage.coverage.length,2042);assert.equal(coverage.coverage.filter((r:any)=>r.status==='blocked').length,0);
+const catalog = JSON.parse(readFileSync(resolve(root, 'catalog.json'), 'utf8')),
+    coverage = JSON.parse(readFileSync(resolve(root, 'coverage.json'), 'utf8')), rules: Rules = {
+        recipes: catalog.recipes,
+        items: catalog.items,
+        itemTags: catalog.itemTags,
+        blockTags: catalog.blockTags,
+        intProviders: catalog.providers.int,
+        floatProviders: catalog.providers.float,
+        loot: catalog.loot,
+        sourceBlocks: catalog.sourceBlocks,
+        interactions: catalog.interactions
+    }, result = verify(rules, coverage.proofs, coverage.coverage);
+assert.deepEqual(JSON.parse(JSON.stringify(result)), JSON.parse(readFileSync(resolve(root, 'cake-chain.json'), 'utf8')));
+assert.equal(result.checked, 112);
+assert.equal(coverage.coverage.length, 2042);
+assert.equal(coverage.coverage.filter((r: any) => r.status === 'blocked').length, 0);
 /** The durable registry contains only the selected profile's reachable IDs, not every native item or every candidate variant. */
-const registry=readFileSync(resolve(import.meta.dirname,'../web/src/data/registry.json'));assert.equal(createHash('sha256').update(registry).digest('hex'),manifest.registrySha256);assert.deepEqual(JSON.parse(registry.toString()),Object.keys(coverage.proofs).sort());
-console.log(JSON.stringify({verifiedRecipes:result.checked,classifiedRecipes:coverage.coverage.length,reachableItems:Object.keys(coverage.proofs).length,cakeChainSteps:result.chain.length,outputsAndExporterHashes:true},null,2));
+const registry = readFileSync(resolve(import.meta.dirname, '../web/src/data/registry.json'));
+assert.equal(createHash('sha256').update(registry).digest('hex'), manifest.registrySha256);
+assert.deepEqual(JSON.parse(registry.toString()), Object.keys(coverage.proofs).sort());
+console.log(JSON.stringify({
+    verifiedRecipes: result.checked,
+    classifiedRecipes: coverage.coverage.length,
+    reachableItems: Object.keys(coverage.proofs).length,
+    cakeChainSteps: result.chain.length,
+    outputsAndExporterHashes: true
+}, null, 2));

@@ -15,12 +15,12 @@
 
 浏览器在隔离验证来源使用夹具仅准备解锁资格、有限一木板和设备；后续操作走 `/game/` 的真实鼠标/键盘。不是重新声称从无授物新档走完整主线。
 
-| 实际页面证据 | 结果 |
-|---|---|
-|[一木板全页](evidence/ghost-1-plank-full.jpg)、[状态](evidence/ghost-1-plank.json)|一个可用格、三个红格，四个真实输入及真实结果为空|
-|[另一标签补足后全页](evidence/ghost-cross-tab-sufficient-full-v2.jpg)、[状态对照](evidence/ghost-cross-tab-v2.json)|原菜单/幽灵不重开，四格全部可用，27+9 中实际四木板；随后可信点击填料并领取工作台|
-|[实际填料领取](evidence/ghost-filled-and-acquired-full.jpg)|真实输入成功，光标取得工作台|
-|[同场景远端重置前](evidence/ghost-same-scene-before-reset-full.jpg)、[后](evidence/ghost-same-scene-after-reset-full.jpg)、[状态](evidence/ghost-same-scene-reset.json)|另一标签通过正式设置确认重置；原菜单不关闭、不刷新，旧幽灵消失|
+| 实际页面证据                                                                                                                                                            | 结果                                                                             |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [一木板全页](evidence/ghost-1-plank-full.jpg)、[状态](evidence/ghost-1-plank.json)                                                                                      | 一个可用格、三个红格，四个真实输入及真实结果为空                                 |
+| [另一标签补足后全页](evidence/ghost-cross-tab-sufficient-full-v2.jpg)、[状态对照](evidence/ghost-cross-tab-v2.json)                                                     | 原菜单/幽灵不重开，四格全部可用，27+9 中实际四木板；随后可信点击填料并领取工作台 |
+| [实际填料领取](evidence/ghost-filled-and-acquired-full.jpg)                                                                                                             | 真实输入成功，光标取得工作台                                                     |
+| [同场景远端重置前](evidence/ghost-same-scene-before-reset-full.jpg)、[后](evidence/ghost-same-scene-after-reset-full.jpg)、[状态](evidence/ghost-same-scene-reset.json) | 另一标签通过正式设置确认重置；原菜单不关闭、不刷新，旧幽灵消失                   |
 
 `ghost-cross-tab.json` / 第一张同名无 v2 截图是提交尚未投影时的即时观察，仍记录旧数量；不是补足成功证据。有效补足证据使用 v2，在实际提交及跨标签投影后检查。首次 `ghost-4-planks-before-fill` 已切换菜单，因此无幽灵，也不作为同生命周期更新证明。`ghost-before/after-remote-reset` 是Farm重置到Plains引起菜单关闭的记录；同场景保持打开的有效序列使用 `ghost-same-scene-*`，不混用。
 
@@ -33,6 +33,7 @@
 `WorldUse.use` 仅在命中耕地且实际选中种子时播种；持允许设备进入正常放置；其他持物不发播种命令。已有作物/设备仍按领域占用拒绝覆盖。
 
 [实际世界操作状态](evidence/world-actions.json)包含：
+
 1. 普通鼠标右击真实 15/16 耕地，工作台落在 `[-5,0,-2]`；刷新仍为同 ID/坐标，真实设备可打开。
 2. 石镐/按住左键挖掉，依次在同一耕地放熔炉和漏斗，打开对应 GUI，再耗时拆除。
 3. 同地块持种子右击播种；换工作台再次右击，作物保留且不新增实例。
@@ -43,7 +44,7 @@
 
 ## 3. Steve：证据失败而非已证实人物消失
 
-[旧证据逐文件审计](evidence/historical-steve-audit.json)确认：`steve-left.jpg`、`steve-top-left.jpg`、`steve-bottom-right.jpg` 是 147×210 单色图，**无效**。`pose-initial-*` 还有五张单色图（具体文件见 JSON），原来已标失败，继续保留。其余旧局部图非空并不单独构成姿态正确证明。
+[旧证据逐文件审计](evidence/historical-steve-audit.json)确认：`steve-left.jpg`、`steve-top-left.jpg`、`steve-bottom-right.jpg` 是 147×210 单色图， **无效**。`pose-initial-*` 还有五张单色图（具体文件见 JSON），原来已标失败，继续保留。其余旧局部图非空并不单独构成姿态正确证明。
 
 本次以相同截图接口复现：`steve-repair-up-full.jpg` 同帧完整 GUI 清楚显示 Steve，但随后按实际 DOM 预览边界调用浏览器 clip，`steve-repair-up-local.jpg` 返回纯背景；另有 top-left/bottom-left clip 同样失败。完整 GUI 和模型始终显示，所有实际 DOM 边界均有效。此处证实的是截图局部截取路径异常；旧样本缺少同时全页和逐帧边界，无法完全逆推出旧图的单次内部原因。没有证据支持重写人物渲染系统。
 

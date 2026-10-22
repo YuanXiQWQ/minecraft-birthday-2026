@@ -4,24 +4,24 @@
 
 ## 复现与状态对照
 
-| 同一用例 | 修复前正式实现 | 修复后正式实现 |
-| --- | --- | --- |
-| 真实SaveSession建立炉子、填入原木/木棍、打开确认后推进100 tick，再确认 | `confirmation-stale`、`writable=false`、炉子仍存在；原始失败日志[before-reset.log](evidence/settings-regression/before-reset.log) | 正常创建新generation，进度等于initialProgress，保留最新设置，会话可写 |
-| 真实浏览器左键按住音量滑块约2.2秒，1→0.4，期间加工提交9次 | input记录0.4，revision96→105后pointerup读取1；最终仍100%，没有有效change；[原始记录](evidence/settings-regression/before-volume-browser.json) | revision33→42时仍0.4，change提交0.4，显示40%，存档及刷新均0.4；[对应记录](evidence/settings-regression/after-volume-browser.json) |
-| 他页先重置，再按本页旧确认 | 原实现会把确认冲突当作故障禁写 | 拒绝旧确认、展示重新确认的操作提示，保持ready/可写；可继续改音量并显式重新确认重置 |
+| 同一用例                                                               | 修复前正式实现                                                                                                                                | 修复后正式实现                                                                                                                    |
+|------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| 真实SaveSession建立炉子、填入原木/木棍、打开确认后推进100 tick，再确认 | `confirmation-stale`、`writable=false`、炉子仍存在；原始失败日志[before-reset.log](evidence/settings-regression/before-reset.log)             | 正常创建新generation，进度等于initialProgress，保留最新设置，会话可写                                                             |
+| 真实浏览器左键按住音量滑块约2.2秒，1→0.4，期间加工提交9次              | input记录0.4，revision96→105后pointerup读取1；最终仍100%，没有有效change；[原始记录](evidence/settings-regression/before-volume-browser.json) | revision33→42时仍0.4，change提交0.4，显示40%，存档及刷新均0.4；[对应记录](evidence/settings-regression/after-volume-browser.json) |
+| 他页先重置，再按本页旧确认                                             | 原实现会把确认冲突当作故障禁写                                                                                                                | 拒绝旧确认、展示重新确认的操作提示，保持ready/可写；可继续改音量并显式重新确认重置                                                |
 
 复现使用正式方法，没有把方法体复制进测试。浏览器测试夹具只在verification模式创建输入引用和实例；实际输出由正式processingClock/processing-tick产生，设置由正式挂载页面操作。
 
 ## 确认与失败的边界
 
-`codec.token()`现在表示**代次与已确认的进度范围**，不再等于整份信封的revision/checksum：
+`codec.token()`现在表示 **代次与已确认的进度范围**，不再等于整份信封的revision/checksum：
 
 - 保留format/contentVersion/vanillaVersion/generation、解锁事实、场景、稳定玩家布局、工作台内容、设备身份/位置/方向/输入/燃料引用、作物保留字段、配方书字段和蛋糕事实。
 - 排除要保留的设置，以及同一炉实例的自主计时、待领取输出及其配方来源等加工字段。确认授权清除这些已列设备的完整当前内容；不要求玩家重新确认每次余火/输出变化。
 - 新解锁、布局改变、实例增加/拆除/输入变化等仍拒绝旧确认。仅把已解锁输出取到临时光标且不改变上述范围时，不额外以revision拒绝；D07下重置仍清除该临时光标。这不是授物或无限加工规则的变化。
 - 所有读取先走原decode及完整SHA-256/结构/内容版本校验；忽略revision作为确认条件不等于忽略存档校验。
 
-正式UI还捕获签发时的session.serial。挂起恢复、导航、关闭设置均使旧确认不可继续使用；没有自动替换确认token。SaveSession.reset在共享锁内重新读取并校验，原子保留**最新已提交**的语言/音量/静音，生成新代次和空进度。设置面板与确认仍可持续推进加工。
+正式UI还捕获签发时的session.serial。挂起恢复、导航、关闭设置均使旧确认不可继续使用；没有自动替换确认token。SaveSession.reset在共享锁内重新读取并校验，原子保留 **最新已提交**的语言/音量/静音，生成新代次和空进度。设置面板与确认仍可持续推进加工。
 
 确认范围冲突用CommandRejected返回，并投影最新有效存档，健康会话继续可写；UI隐藏旧确认并提供“Reset progress again”的明确反馈。实际损坏/未知版本/校验错误/写入失败仍保护原始字节并禁写，可通过原Retry storage重读。缺失存档不会由重置路径悄悄初始化。
 
@@ -40,14 +40,14 @@
 
 ## 自动化结果
 
-| 检查 | 结果与证据 |
-| --- | --- |
-| TypeScript | `npm --prefix app run check`通过；根路径构建也执行相同检查 |
-| 正式测试 | **204/204**；新增21项设置回归；原24项合成领取时序及11项炉GUI队列测试保留且通过；[完整日志](evidence/settings-regression/formal-tests.log) |
-| P4 | 113可达物品、112可达配方、2042分类配方、18步蛋糕链、导出哈希通过；[日志](evidence/settings-regression/p4-data.log)；inventory-rules --check的113项派生规则校验通过 |
-| P2关键回归 | **48/48**；[日志](evidence/settings-regression/p2-tests.log) |
+| 检查             | 结果与证据                                                                                                                                                                                                |
+|------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| TypeScript       | `npm --prefix app run check`通过；根路径构建也执行相同检查                                                                                                                                                |
+| 正式测试         | **204/204**；新增21项设置回归；原24项合成领取时序及11项炉GUI队列测试保留且通过；[完整日志](evidence/settings-regression/formal-tests.log)                                                                 |
+| P4               | 113可达物品、112可达配方、2042分类配方、18步蛋糕链、导出哈希通过；[日志](evidence/settings-regression/p4-data.log)；inventory-rules --check的113项派生规则校验通过                                        |
+| P2关键回归       | **48/48**；[日志](evidence/settings-regression/p2-tests.log)                                                                                                                                              |
 | 根路径/Pages构建 | 都通过，构建资源审计通过；[根日志](evidence/settings-regression/build-root.log)、[Pages日志](evidence/settings-regression/build-pages.log)。Three.js大chunk提示仍存在，不作为本次性能改善或跨设备性能结论 |
-| 实际静态HTTP | **2/2**；两入口、所有资源字节及规则数据、JS/CSS路径和内部/夹具404检查通过；[日志](evidence/settings-regression/http-built.log) |
+| 实际静态HTTP     | **2/2**；两入口、所有资源字节及规则数据、JS/CSS路径和内部/夹具404检查通过；[日志](evidence/settings-regression/http-built.log)                                                                            |
 
 21项新测试覆盖：无加工重置、100 tick持续加工后重置、未取得输出仍未解锁、解锁/布局/输入/拆除确认冲突、他页新代次、旧页面serial、锁队列内重置先于旧tick/领取、真实SaveSession写入失败及重试、损坏/未来版本/未知内容/校验失败、连续加工投影、交错字段合并、旧回执对新草稿、语言/静音、关闭/取消/重置以及设置保存失败。现有确认安全测试增加健康会话和显式重试断言，没有删除安全断言。
 

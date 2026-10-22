@@ -1,6 +1,6 @@
 # P6 熔炉/高炉交付与验证
 
-日期：2026-10-21。基线aab05b4已审查；本次只实现两种加工设备及后续漏斗端口，未开始配方书、P7或P8。蒙版、Steve、领取票据、D04/D05(A)/D07、生日主页及真正3D/第一人称/方案B保持。[D08明确批准与存档合同](furnace-contract.md)。
+日期：2026-10-21。基线aab05b4已审查；本次只实现两种加工设备及后续漏斗端口，未开始配方书、P7或P8。蒙版、Steve、领取票据、D04/D05 (A)/D07、生日主页及真正3D/第一人称/方案B保持。[D08明确批准与存档合同](furnace-contract.md)。
 
 ## 已实现
 
@@ -20,7 +20,7 @@
 
 ## 自动化
 
-最终类型检查通过，正式**183/183**、P2关键回归**48/48**、构建HTTP **2/2**，零失败/跳过。P4仍为113物品、112可达配方、2042分类、18步蛋糕链。原24项领取时序断言保留，只补齐DOM替身的`setAttribute`能力；未删除或弱化断言。
+最终类型检查通过，正式 **183/183**、P2关键回归 **48/48**、构建HTTP **2/2**，零失败/跳过。P4仍为113物品、112可达配方、2042分类、18步蛋糕链。原24项领取时序断言保留，只补齐DOM替身的`setAttribute`能力；未删除或弱化断言。
 
 新增`furnace.test.ts`与`furnace-queue.test.ts`直接调用正式内核、GameInventory方法和真实SaveSession，覆盖：
 
@@ -34,11 +34,11 @@
 
 ## 实际浏览器
 
-Windows、内置Chromium155，1280×720/DPR1.25及1440×900/DPR约1。使用隔离verification入口挂载**正式app**，测试夹具仅提供源物品解锁/布局和真实事务回执延迟；没有替换加工/输入实现，没有直接授予产物。
+Windows、内置Chromium155，1280×720/DPR1.25及1440×900/DPR约1。使用隔离verification入口挂载 **正式app**，测试夹具仅提供源物品解锁/布局和真实事务回执延迟；没有替换加工/输入实现，没有直接授予产物。
 
 1. 真实鼠标短右键在地板放置熔炉，从原版模型打开GUI；目录各复制一件原木/木棍填入。截图[加工中1280](evidence/furnace/processing-1280.jpg)，实际状态`burnTotal=100,cookTotal=200`。产物留槽时解锁集中没有木炭：[领取前](evidence/furnace/before-first-pickup.json)。稍后累计2木炭，实际点击后光标2、炉输出空、木炭事实增加：[领取后](evidence/furnace/after-first-pickup.json)。两个记录之间持续生产，不能把前图的1与后图的2误判为复制。
 2. 独立高炉允许原木暂放但不点火：[无配方](evidence/furnace/blast-nonrecipe.json)。换粗铁后实际`burnTotal=50,cookTotal=100,speed=2`；[1280原版高炉](evidence/furnace/blast-native-1280.jpg)、[三维两设备](evidence/furnace/world-two-devices-1280.jpg)。模型之间有真实前后遮挡，点击可分别打开对应ID。
-3. 输出领取成功但测试回执延迟时，再点空快捷栏格：等待期`acquiring=true,cursor=null`，不会提交旧光标；释放后光标**3铁锭**、空目标仍空，随后正常放入目标。证据[等待](evidence/furnace/receipt-wait-empty-click.json)、[释放](evidence/furnace/receipt-released.json)、[后续正常移动及真实GUI右键](evidence/furnace/after-pickup-move-right-input.json)。等待时炉继续生产，后来输出4是新的加工结果。
+3. 输出领取成功但测试回执延迟时，再点空快捷栏格：等待期`acquiring=true,cursor=null`，不会提交旧光标；释放后光标 **3铁锭**、空目标仍空，随后正常放入目标。证据[等待](evidence/furnace/receipt-wait-empty-click.json)、[释放](evidence/furnace/receipt-released.json)、[后续正常移动及真实GUI右键](evidence/furnace/after-pickup-move-right-input.json)。等待时炉继续生产，后来输出4是新的加工结果。
 4. 实际Shift把当时34木炭移动到九格：[有限Shift](evidence/furnace/shift-finite-output.json)。刷新后实例内容、方向、布局仍在。1440原版熔炉：[最终截图](evidence/furnace/final-furnace-1440.jpg)。真实右键把24输出分成光标12/输出12：[前](evidence/furnace/right-output-before.json)、[后](evidence/furnace/right-output-after.json)。数字8指向已占用格被拒绝：[证据](evidence/furnace/numeric-occupied-rejected.json)；F移14到空副手，源清空：[证据](evidence/furnace/offhand-output.json)。测试延迟状态中的旧failed表示前一个数字领取拒绝，不表示随后F失败；正式GUI已清除旧错误。
 5. 真正双页、同源Web Locks：最终R3两页均`visible`；44.7秒内A提交0tick，B提交895tick（采样批次边界约±5tick），没有两页各推进一遍。原执行页离开后，另一页累计860tick/172次提交，证明接管。[R3原始记录](evidence/furnace/two-pages-r3-start-a.json)及同目录start/end-a/b、[接管](evidence/furnace/after-owner-transfer.json)。首次记录`two-pages-start-b.json`在发布DOM前读取为空，保留但不用于通过结论；R2遇开发热更新，不用于最终连续计时判断。
 6. 设置界面保持打开121.698秒，实际执行者增加2436tick，炉内木炭8→20；[前](evidence/furnace/settings-clock-before.json)、[后](evidence/furnace/settings-clock-after.json)。没有因设置中断。

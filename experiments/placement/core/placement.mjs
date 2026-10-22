@@ -1,12 +1,14 @@
 /** Placement policies and a hand-authored fixture safety proof; not the P4 closure engine. */
-import { FIXED_SLOTS, ITEMS, PROTECTED, SIZE, SOURCES, inBounds, key } from './definitions.mjs';
+import {FIXED_SLOTS, ITEMS, PROTECTED, SIZE, SOURCES, inBounds, key} from './definitions.mjs';
 
 /** Index an instance by its logical coordinates.
  * @param {object} state Experiment state.
  * @param {number[]} pos Cell to inspect.
  * @return {object|undefined} Occupant.
  */
-export function at(state, pos) { return Object.values(state.entities).find(e => key(e.pos) === key(pos)); }
+export function at(state, pos) {
+  return Object.values(state.entities).find(e => key(e.pos) === key(pos));
+}
 
 /** Enumerate permitted work cells for the current fixture, independent of occupancy.
  * @param {object} state Experiment state.
@@ -44,17 +46,17 @@ export function policyError(state, type, pos) {
 export function safetyError(state) {
   const unlocked = new Set(state.unlocked);
   const open = buildCells(state).filter(p => !at(state, p)
-    && !PROTECTED.some(q => key(q.pos) === key(p)));
+      && !PROTECTED.some(q => key(q.pos) === key(p)));
   const entities = Object.values(state.entities);
   const bench = entities.some(e => e.type === 'crafting_table') || open.some(p => !policyError(state, 'crafting_table', p));
   const furnace = entities.some(e => ['furnace', 'blast_furnace'].includes(e.type))
-    || open.some(p => !policyError(state, 'furnace', p));
+      || open.some(p => !policyError(state, 'furnace', p));
   if (!bench) return 'last-bench-position';
   if (!furnace) return 'last-smelter-position';
   const needsBench = !entities.some(e => e.type === 'crafting_table');
   const needsFurnace = !entities.some(e => ['furnace', 'blast_furnace'].includes(e.type));
   if (needsBench && needsFurnace && !open.some(a => !policyError(state, 'crafting_table', a)
-    && open.some(b => key(a) !== key(b) && !policyError(state, 'furnace', b)))) return 'last-workspace-capacity';
+      && open.some(b => key(a) !== key(b) && !policyError(state, 'furnace', b)))) return 'last-workspace-capacity';
   const sourceAvailable = item => SOURCES.some(s => s.item === item && !at(state, s.pos));
   const wood = unlocked.has('oak_log') || sourceAvailable('oak_log');
   const sticks = unlocked.has('stick') || wood;
@@ -62,10 +64,10 @@ export function safetyError(state) {
   const cobble = unlocked.has('cobblestone') || (sourceAvailable('cobblestone') && woodPick);
   const stonePick = unlocked.has('stone_pickaxe') || (cobble && sticks && bench);
   const iron = unlocked.has('iron_ingot') || unlocked.has('raw_iron')
-    || (sourceAvailable('raw_iron') && stonePick);
+      || (sourceAvailable('raw_iron') && stonePick);
   if (!iron) return 'last-iron-path';
   const fuel = state.unlocked.some(id => ITEMS[id].fuel)
-    || sourceAvailable('oak_log') || (sourceAvailable('coal') && woodPick);
+      || sourceAvailable('oak_log') || (sourceAvailable('coal') && woodPick);
   if (!unlocked.has('iron_ingot') && !fuel) return 'last-fuel-path';
   return null;
 }
