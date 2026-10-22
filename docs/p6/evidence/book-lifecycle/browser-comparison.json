@@ -1,0 +1,469 @@
+{
+  "beforeFix": {
+    "before": {
+      "generation": "4cab24b7-0638-4ad4-b201-93c09bc22618",
+      "open": true,
+      "book": {
+        "mode": "crafting",
+        "width": 2,
+        "open": true,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 2,
+        "recipes": [
+          "minecraft:crafting_table",
+          "minecraft:torch"
+        ],
+        "ghost": "minecraft:torch",
+        "overlay": false
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [
+        "minecraft:stone_pickaxe"
+      ],
+      "known": [
+        "minecraft:crafting_table",
+        "minecraft:torch"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 10
+    },
+    "after": {
+      "generation": "e3f2a749-a1f1-47c7-976f-6493776246bb",
+      "open": true,
+      "book": {
+        "mode": "crafting",
+        "width": 2,
+        "open": false,
+        "ghost": "minecraft:torch"
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [],
+      "known": [
+        "minecraft:crafting_table"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 10
+    }
+  },
+  "fixed": {
+    "before": {
+      "generation": "e3f2a749-a1f1-47c7-976f-6493776246bb",
+      "open": true,
+      "book": {
+        "generation": "e3f2a749-a1f1-47c7-976f-6493776246bb",
+        "identity": "[\"e3f2a749-a1f1-47c7-976f-6493776246bb\",1,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": true,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 2,
+        "recipes": [
+          "minecraft:crafting_table",
+          "minecraft:torch"
+        ],
+        "ghost": "minecraft:torch",
+        "popup": "minecraft:crafting_shaped:misc:minecraft:torch",
+        "overlay": false,
+        "toast": false,
+        "toastRecipes": null
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [
+        "minecraft:stone_pickaxe"
+      ],
+      "known": [
+        "minecraft:crafting_table",
+        "minecraft:torch"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 10
+    },
+    "after": {
+      "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+      "open": true,
+      "book": {
+        "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+        "identity": "[\"45265c6b-9810-4cbb-ada7-0de76e87a0a6\",2,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": false,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 0,
+        "recipes": [],
+        "ghost": null,
+        "popup": null,
+        "overlay": false,
+        "toast": false,
+        "toastRecipes": null
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [],
+      "known": [
+        "minecraft:crafting_table"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 10
+    }
+  },
+  "narrow": {
+    "before": {
+      "generation": "46c8fcac-712d-46fd-a35d-c63c05d32069",
+      "open": true,
+      "book": {
+        "generation": "46c8fcac-712d-46fd-a35d-c63c05d32069",
+        "identity": "[\"46c8fcac-712d-46fd-a35d-c63c05d32069\",1,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": false,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 2,
+        "recipes": [
+          "minecraft:crafting_table",
+          "minecraft:torch"
+        ],
+        "ghost": "minecraft:torch",
+        "popup": null,
+        "overlay": false,
+        "toast": false,
+        "toastRecipes": null
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [
+        "minecraft:stone_pickaxe"
+      ],
+      "known": [
+        "minecraft:crafting_table",
+        "minecraft:torch"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 375,
+        "height": 812,
+        "dpr": 1.0000000149011612
+      },
+      "trustedInput": 6
+    },
+    "after": {
+      "generation": "3b17f1ba-9cac-42c3-8aa0-f67288b3cdd3",
+      "open": true,
+      "book": {
+        "generation": "3b17f1ba-9cac-42c3-8aa0-f67288b3cdd3",
+        "identity": "[\"3b17f1ba-9cac-42c3-8aa0-f67288b3cdd3\",2,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": false,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 0,
+        "recipes": [],
+        "ghost": null,
+        "popup": null,
+        "overlay": false,
+        "toast": false,
+        "toastRecipes": null
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [],
+      "known": [
+        "minecraft:crafting_table"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 375,
+        "height": 812,
+        "dpr": 1.0000000149011612
+      },
+      "trustedInput": 6
+    }
+  },
+  "toast": {
+    "before": {
+      "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+      "open": true,
+      "book": {
+        "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+        "identity": "[\"45265c6b-9810-4cbb-ada7-0de76e87a0a6\",4,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": true,
+        "query": "oak planks",
+        "category": "all",
+        "page": 0,
+        "groups": 1,
+        "recipes": [
+          "minecraft:oak_planks"
+        ],
+        "ghost": null,
+        "popup": null,
+        "overlay": false,
+        "toast": true,
+        "toastRecipes": "[\"minecraft:oak_slab\",\"minecraft:oak_stairs\",\"minecraft:barrel\",\"minecraft:oak_fence\",\"minecraft:oak_sign\",\"minecraft:stick\",\"minecraft:oak_button\",\"minecraft:oak_door\",\"minecraft:oak_fence_gate\",\"minecraft:oak_pressure_plate\",\"minecraft:oak_trapdoor\"]"
+      },
+      "grid": [
+        {
+          "id": "minecraft:oak_log",
+          "count": 1
+        },
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "matched",
+        "recipe": "minecraft:oak_planks",
+        "result": {
+          "id": "minecraft:oak_planks",
+          "count": 4
+        }
+      },
+      "unlocked": [
+        "minecraft:stone_pickaxe",
+        "minecraft:coal",
+        "minecraft:stick",
+        "minecraft:torch",
+        "minecraft:oak_log",
+        "minecraft:oak_planks"
+      ],
+      "known": [
+        "minecraft:crafting_table",
+        "minecraft:torch",
+        "minecraft:coal_block",
+        "minecraft:campfire",
+        "minecraft:wooden_spear",
+        "minecraft:wooden_sword",
+        "minecraft:ladder",
+        "minecraft:wooden_axe",
+        "minecraft:wooden_hoe",
+        "minecraft:wooden_pickaxe",
+        "minecraft:wooden_shovel",
+        "minecraft:oak_planks",
+        "minecraft:oak_wood",
+        "minecraft:charcoal",
+        "minecraft:oak_slab",
+        "minecraft:oak_stairs",
+        "minecraft:barrel",
+        "minecraft:oak_fence",
+        "minecraft:oak_sign",
+        "minecraft:stick",
+        "minecraft:oak_button",
+        "minecraft:oak_door",
+        "minecraft:oak_fence_gate",
+        "minecraft:oak_pressure_plate",
+        "minecraft:oak_trapdoor"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 24
+    },
+    "after": {
+      "generation": "46c8fcac-712d-46fd-a35d-c63c05d32069",
+      "open": true,
+      "book": {
+        "generation": "46c8fcac-712d-46fd-a35d-c63c05d32069",
+        "identity": "[\"46c8fcac-712d-46fd-a35d-c63c05d32069\",5,\"plains\",[\"personal\",\"crafting\",2]]",
+        "mode": "crafting",
+        "width": 2,
+        "open": false,
+        "query": "",
+        "category": "all",
+        "page": 0,
+        "groups": 0,
+        "recipes": [],
+        "ghost": null,
+        "popup": null,
+        "overlay": false,
+        "toast": false,
+        "toastRecipes": null
+      },
+      "grid": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "result": {
+        "status": "empty",
+        "result": null
+      },
+      "unlocked": [],
+      "known": [
+        "minecraft:crafting_table"
+      ],
+      "environment": {
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+        "width": 1280,
+        "height": 720,
+        "dpr": 1.25
+      },
+      "trustedInput": 24
+    }
+  },
+  "recovered": {
+    "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+    "open": true,
+    "book": {
+      "generation": "45265c6b-9810-4cbb-ada7-0de76e87a0a6",
+      "identity": "[\"45265c6b-9810-4cbb-ada7-0de76e87a0a6\",2,\"plains\",[\"personal\",\"crafting\",2]]",
+      "mode": "crafting",
+      "width": 2,
+      "open": true,
+      "query": "torch",
+      "category": "all",
+      "page": 0,
+      "groups": 1,
+      "recipes": [
+        "minecraft:torch"
+      ],
+      "ghost": null,
+      "popup": null,
+      "overlay": false,
+      "toast": false,
+      "toastRecipes": null
+    },
+    "grid": [
+      {
+        "id": "minecraft:coal",
+        "count": 1
+      },
+      null,
+      {
+        "id": "minecraft:stick",
+        "count": 1
+      },
+      null
+    ],
+    "result": {
+      "status": "matched",
+      "recipe": "minecraft:torch",
+      "result": {
+        "id": "minecraft:torch",
+        "count": 4
+      }
+    },
+    "unlocked": [
+      "minecraft:stone_pickaxe",
+      "minecraft:coal",
+      "minecraft:stick",
+      "minecraft:torch"
+    ],
+    "known": [
+      "minecraft:crafting_table",
+      "minecraft:torch",
+      "minecraft:coal_block",
+      "minecraft:campfire",
+      "minecraft:wooden_spear",
+      "minecraft:wooden_sword",
+      "minecraft:ladder",
+      "minecraft:wooden_axe",
+      "minecraft:wooden_hoe",
+      "minecraft:wooden_pickaxe",
+      "minecraft:wooden_shovel"
+    ],
+    "environment": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+      "width": 1280,
+      "height": 720,
+      "dpr": 1.25
+    },
+    "trustedInput": 16
+  },
+  "screenshots": {
+    "before-fix-after-reset.png": "f85516d408027f5fccf67d7f5ab005132581cd8f8feb5417a21b19e1c3dbbfd3",
+    "before-fix-before-reset.png": "9d2f9b4dbec116f0bcb5bb0ca2e3d4c87462023d7e522b0be2e5693e386c9023",
+    "desktop-ghost-book-open.png": "476b731917d821a982c3913a9ba6c51f498f6b6c642540c88f02adfbd15ae25b",
+    "fixed-after-reset.png": "9d4ca0f197f55ca1fd906cf91e39b3a1ef542911c2a2ef4adae2691fad39343e",
+    "fixed-before-reset.png": "173cda4c281f71a200bee3d6a81797e94548f8c38c40178e412075f8b9c720f2",
+    "narrow-375-after-reset.png": "697bbce91840c652edee5f0103f8f429a7175a9d00d55c8abc5a970b884b5320",
+    "narrow-375-collapsed.png": "8135958cd7ffd808baaa23be281a0fe8f8cd31487d4e77753ce82d40927fc1cc",
+    "recovered-torch-acquisition.png": "296b21bcbec1955d1bf086b790a10dd1f4a76e8c4aadba1cc3c3b1c6b1a4eac6",
+    "toast-after-reset.png": "42c8e43ebdfc7dd91bced7fd082ad9ece14525a07edf56b4aa602adaf099860e",
+    "toast-before-reset.png": "9b40ca7ed91ca0a29435491dc33e21a67ca7924fc5d44803bda3a54536f18480"
+  }
+}

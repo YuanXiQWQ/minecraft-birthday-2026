@@ -1,0 +1,21 @@
+(node:35308) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: false (14.3615ms)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: true (6.9103ms)
+✔ personal fill receipt after Done cannot revive cursor or four inputs (3.5535ms)
+✔ personal fill receipt after KeyE cannot revive cursor or four inputs (1.9959ms)
+✔ personal fill receipt after Escape cannot revive cursor or four inputs (1.7522ms)
+✔ workbench close preserves committed filled inputs while fencing its delayed cursor receipt (4.3451ms)
+✔ ordinary result receipt refuses recipe-book fill through the same gate (3.2784ms)
+✔ fill reset/dismantling fences late receipts and permits fresh menu work (4.832ms)
+✔ fill failure is atomic, frees its gate, and allows retry without overwriting incompatible inputs (5.8522ms)
+✔ native ghost drawing never paints over a real finite input or a genuine matched output (5.0332ms)
+✔ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (4.1882ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 406.7903

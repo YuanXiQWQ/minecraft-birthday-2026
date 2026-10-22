@@ -1,0 +1,60 @@
+(node:36636) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: false (15.1904ms)
+✔ formal recipe fill owns the unified gate and preserves nonempty cursor: true (7.5741ms)
+✔ personal fill receipt after Done cannot revive cursor or four inputs (3.8723ms)
+✔ personal fill receipt after KeyE cannot revive cursor or four inputs (2.1248ms)
+✔ personal fill receipt after Escape cannot revive cursor or four inputs (1.819ms)
+✔ workbench close preserves committed filled inputs while fencing its delayed cursor receipt (3.2555ms)
+✔ ordinary result receipt refuses recipe-book fill through the same gate (3.0311ms)
+✔ fill reset/dismantling fences late receipts and permits fresh menu work (4.9753ms)
+✔ fill failure is atomic, frees its gate, and allows retry without overwriting incompatible inputs (5.9585ms)
+✔ native ghost drawing never paints over a real finite input or a genuine matched output (4.6758ms)
+✖ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (4.7243ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 10
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 411.9463
+
+✖ failing tests:
+
+test at app\tests\book-queue.test.ts:35:1
+✖ empty personal grid with a real book ghost must clear on a second SaveSession reset despite identical input signatures (4.7243ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   id: 'minecraft:torch',
+  +   key: {
+  +     '#': 'minecraft:stick',
+  +     X: [
+  +       'minecraft:coal',
+  +       'minecraft:charcoal'
+  +     ]
+  +   },
+  +   pattern: [
+  +     'X',
+  +     '#'
+  +   ],
+  +   result: {
+  +     count: 4,
+  +     id: 'minecraft:torch'
+  +   },
+  +   type: 'minecraft:crafting_shaped'
+  + }
+  - null
+  
+      at TestContext.<anonymous> (F:\JerryCode\YuanXi-WarmNest\GitHub\Projects\minecraft-birthday-2026\app\tests\book-queue.test.ts:35:754)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { id: 'minecraft:torch', type: 'minecraft:crafting_shaped', key: { '#': 'minecraft:stick', X: [Array] }, pattern: [ 'X', '#' ], result: { count: 4, id: 'minecraft:torch' } },
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
