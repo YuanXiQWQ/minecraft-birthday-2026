@@ -3,7 +3,7 @@ import native from '../data/processing-rules.json' with {type: 'json'};
 import type {Rules, Stack, Recipe} from '../rules/types.ts';
 import {matchCooking} from '../rules/matcher.ts';
 import {cooking} from '../rules/process.ts';
-import {validateStack, validateCarriers, cell, reduceInventory, playerTargets} from './inventory.ts';
+import {validateStack, validateCarriers, cell, reduceInventory, playerTargets, storeAcquired} from './inventory.ts';
 import type {InventoryState, InventoryCommand} from './inventory.ts';
 import {sameStack, quickMove} from './slots.ts';
 import type {SlotValue} from './slots.ts';
@@ -207,7 +207,7 @@ export function furnacePortAllows(data: FurnaceData, face: 'up' | 'down' | 'side
     return index === 0 || index === 1 && (!!rules.items[stack.id]?.fuel || stack.id === 'minecraft:bucket' && data.fuel?.id !== 'minecraft:bucket');
 }
 
-/** Move a finite produced group into legal player targets; caller commits output and acquisition in one transaction.
+/** Move finite output into explicit targets or hotbar-first Shift delivery; caller commits output and acquisition atomically.
  * @param {InventoryState} current Player carriers, excluding producer slots.
  * @param {FurnaceContents} contents Valid producer-owned output.
  * @param {FurnaceTake} take Finite destination and optional right split.
@@ -237,7 +237,7 @@ export function takeFurnace(current: InventoryState, contents: FurnaceContents, 
     if ((take.mode === 'hotbar' || take.mode === 'offhand') && targets[0].stack) throw Error('craft-target-full');
     const offered = take.mode === 'cursor' && !inventory.cursor && take.button === 2 ? Math.ceil(s.count / 2) : s.count,
         source: SlotValue = {stack: {...s, count: offered}, policy: {take: true, place: false}};
-    quickMove(source, targets, rules);
+    if (take.mode === 'shift') storeAcquired(source, inventory, rules, true); else quickMove(source, targets, rules);
     const moved = offered - (source.stack?.count ?? 0);
     if (!moved) throw Error('craft-target-full');
     next.data.output = s.count === moved ? null : {...s, count: s.count - moved};

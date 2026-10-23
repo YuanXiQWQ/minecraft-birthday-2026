@@ -40,7 +40,7 @@ for (const place of ['never-unlocked', 'unlocked-only', 'backpack', 'unselected'
     if (['wood','stone','gold'].includes(place)) s.progress.player.data.hotbar[0] = stack(place === 'wood' ? 'wooden_pickaxe' : place === 'stone' ? 'stone_pickaxe' : 'golden_pickaxe');
     const r = transition(s,{type:'harvest-node',scene:'cave',node:'stone:0',visit:0,expected:s.progress.player.data},undefined,rules), allowed = ['wood','stone','gold'].includes(place);
     assert.equal(r.state.progress.unlocked.includes(stack('cobblestone').id),allowed);
-    assert.equal(r.state.progress.player.data.backpack.reduce((n,s) => n + (s?.id===stack('cobblestone').id?s.count:0),0),allowed?1:0);
+    assert.equal([...r.state.progress.player.data.hotbar,...r.state.progress.player.data.backpack].reduce((n,s) => n + (s?.id===stack('cobblestone').id?s.count:0),0),allowed?1:0);
     assert.equal(r.events.some(e=>e.type==='items-acquired'),allowed);
 });
 for (const [tool,allowed] of [['wooden_pickaxe',false],['stone_pickaxe',true]] as const) test('iron loot tier is not tool speed: ' + tool, () => {

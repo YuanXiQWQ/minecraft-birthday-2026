@@ -406,3 +406,15 @@ export function playerTargets(value: InventoryState, reverse = false): SlotValue
     const refs: SlotRef[] = [...Array.from({length: 27}, (_, i) => `backpack:${i}` as SlotRef), ...Array.from({length: 9}, (_, i) => `hotbar:${i}` as SlotRef)];
     return (reverse ? refs.reverse() : refs).map(ref => cell(value, ref));
 }
+
+/** Merge acquired items into existing groups, then prefer hotbar vacancies over backpack vacancies.
+ * @param {SlotValue} source Actual finite acquisition, retaining any overflow.
+ * @param {InventoryState} value Transaction-local player carriers.
+ * @param {ItemRules} rules Original capacities and component identities.
+ * @param {boolean} reverse Preserve a result menu's right-to-left order within each carrier band.
+ */
+export function storeAcquired(source: SlotValue, value: InventoryState, rules: ItemRules, reverse = false): void {
+    const hotbar = Array.from({length: 9}, (_, i) => cell(value, `hotbar:${i}`)),
+        backpack = Array.from({length: 27}, (_, i) => cell(value, `backpack:${i}`));
+    quickMove(source, [...(reverse ? hotbar.reverse() : hotbar), ...(reverse ? backpack.reverse() : backpack)], rules);
+}

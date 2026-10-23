@@ -1,7 +1,7 @@
 /** Finite native crafting consumption and remainder delivery, independent of screens and storage. */
 import {findCrafting} from '../rules/matcher.ts';
 import type {Rules, Stack} from '../rules/types.ts';
-import {validateCarriers, validateStack, cell, playerTargets} from './inventory.ts';
+import {validateCarriers, validateStack, cell, playerTargets, storeAcquired} from './inventory.ts';
 import type {InventoryState} from './inventory.ts';
 import {capacity, sameStack, quickMove} from './slots.ts';
 import type {SlotValue} from './slots.ts';
@@ -28,7 +28,7 @@ export function carrierResult(stack: Stack, rules: Rules): Stack {
     return value;
 }
 
-/** Consume complete native batches and place actual remainders before accepting an atomic result delivery.
+/** Consume complete batches and deliver automatic results/remainders hotbar-first before accepting an atomic receipt.
  * @param {InventoryState} current Player carriers and current recipe inputs.
  * @param {CraftTake} take Explicit result route.
  * @param {string[]} unlocked Permanent acquisition facts.
@@ -64,7 +64,7 @@ export function takeCraft(current: InventoryState, take: CraftTake, unlocked: st
         const free = targets.reduce((n, slot) => n + (!slot.stack || sameStack(slot.stack, result, rules) ? Math.max(0, capacity(slot, result, rules) - (slot.stack?.count ?? 0)) : 0), 0);
         if (free < result.count) {firstError = 'craft-target-full'; break;}
         const output: SlotValue = {stack: structuredClone(result), policy: {take: true, place: false}};
-        quickMove(output, targets, rules);
+        if (take.mode === 'shift') storeAcquired(output, next, rules, true); else quickMove(output, targets, rules);
         if (output.stack) throw Error('craft-incomplete-batch');
         let overflow = false;
         for (const i of match.used) {
@@ -76,7 +76,7 @@ export function takeCraft(current: InventoryState, take: CraftTake, unlocked: st
             else if (sameStack(grid[i]!, remainder, rules) && grid[i]!.count + remainder.count <= rules.items[remainder.id].maxStack) grid[i]!.count += remainder.count;
             else {
                 const source: SlotValue = {stack: structuredClone(remainder), policy: {take: true, place: false}};
-                quickMove(source, playerTargets(next), rules);
+                storeAcquired(source, next, rules);
                 if (source.stack) overflow = true;
             }
         }

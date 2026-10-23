@@ -1,3 +1,5 @@
+当前入包路由补充：[新增堆叠优先快捷栏](hotbar-acquisition/report.md)，保留同类合并及全部容量/取得事务保护。
+
 场景资源变更强制要求：沿用构建版本化清单请求，并验证旧缓存更新、刷新恢复及root/Pages首帧。规则见项目根目录AGENTS.md，故障与回归证据见[资源清单缓存修正](resource-cache/report.md)。
 
 当前降水纠正：[雨雪UV上下端点及实际连续帧](rain-direction/report.md)。保留后续草原升级和所有既有玩法。

@@ -35,7 +35,7 @@ import {
 import type {FurnaceKind} from './furnace.ts';
 import reachable from '../data/registry.json' with {type: 'json'};
 import nativeInventory from '../data/inventory-rules.json' with {type: 'json'};
-import {emptyInventory, layout, reduceInventory, validateStack, validateCarriers, playerTargets} from './inventory.ts';
+import {emptyInventory, layout, reduceInventory, validateStack, validateCarriers, playerTargets, storeAcquired} from './inventory.ts';
 import {takeCraft} from './crafting.ts';
 import type {CraftReceipt} from './crafting.ts';
 import type {Rules, Stack} from '../rules/types.ts';
@@ -64,7 +64,7 @@ function acquisition(p: Progress, drops: Stack[], deposited: Stack[], overflow: 
     if (drops.length) events.push({type: 'items-acquired', stacks: structuredClone(drops), deposited: structuredClone(deposited), overflow: structuredClone(overflow)});
 }
 
-/** Deliver as much actual harvest as fits while settling every valid drop exactly once.
+/** Deliver harvest with hotbar-first vacancies, retaining compatible merges, overflow facts and one settlement.
  * @param {Progress} p Transaction-local resource and player facts.
  * @param {Stack[]} drops Native loot already rolled for this resource lifetime.
  * @param {Rules} rules Same-version limits and identity comparison.
@@ -74,7 +74,7 @@ function depositHarvest(p: Progress, drops: Stack[], rules: Rules, events: Domai
     const deposited: Stack[] = [], overflow: Stack[] = [], carriers = {...p.player.data, cursor: null};
     for (const drop of drops) {
         const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
-        quickMove(source, playerTargets(carriers), rules);
+        storeAcquired(source, carriers, rules);
         const count = drop.count - (source.stack?.count ?? 0);
         if (count) deposited.push({...structuredClone(drop), count});
         if (source.stack) overflow.push(structuredClone(source.stack));
@@ -403,7 +403,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 const carriers = {...p.player.data, cursor: null};
                 for (const drop of drops) {
                     const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
-                    quickMove(source, playerTargets(carriers), rules);
+                    storeAcquired(source, carriers, rules);
                     ensure(!source.stack, 'inventory-full');
                 }
                 acquisition(p, converted, converted, [], events);

@@ -1,0 +1,207 @@
+{
+  "provenance": "Normal built /game/, fresh isolated origin; native 3500ms left hold, no grants or domain calls. Root build identifies baseline f985f47 with only this fix copied into an isolated worktree. Actual pointer lock unavailable; normal visible-pointer fallback used.",
+  "before": {
+    "pointer": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":11}",
+    "root": {
+      "boot": "ready",
+      "build": "f985f47ed0b3",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "b1cd758c-4f8c-40bb-9b3c-471b647263af",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "399",
+      "saveStatus": "ready"
+    }
+  },
+  "commandBeforeHotbar": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "after": {
+    "harvest": {
+      "backpack": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "command": {
+        "expected": {
+          "backpack": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "equipment": {
+            "chest": null,
+            "feet": null,
+            "head": null,
+            "legs": null,
+            "offhand": null
+          },
+          "hotbar": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "presets": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "selected": 0
+        },
+        "node": "oak_log:2",
+        "scene": "plains",
+        "type": "harvest-node",
+        "visit": 0
+      },
+      "events": [
+        {
+          "item": "minecraft:oak_log",
+          "type": "item-unlocked"
+        },
+        {
+          "deposited": [
+            {
+              "count": 1,
+              "id": "minecraft:oak_log"
+            }
+          ],
+          "overflow": [],
+          "stacks": [
+            {
+              "count": 1,
+              "id": "minecraft:oak_log"
+            }
+          ],
+          "type": "items-acquired"
+        },
+        {
+          "recipes": [
+            "minecraft:oak_planks",
+            "minecraft:oak_wood",
+            "minecraft:charcoal"
+          ],
+          "type": "recipes-discovered"
+        }
+      ],
+      "selected": 0,
+      "unlocked": [
+        "minecraft:oak_log"
+      ]
+    },
+    "root": {
+      "boot": "ready",
+      "build": "f985f47ed0b3",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "b1cd758c-4f8c-40bb-9b3c-471b647263af",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "483",
+      "saveStatus": "ready"
+    }
+  },
+  "afterRefresh": {
+    "root": {
+      "boot": "ready",
+      "build": "f985f47ed0b3",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "b1cd758c-4f8c-40bb-9b3c-471b647263af",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "678",
+      "saveStatus": "ready"
+    },
+    "slots": [
+      "Slot 1: Oak Log",
+      "Slot 2: Empty",
+      "Slot 3: Empty",
+      "Slot 4: Empty",
+      "Slot 5: Empty",
+      "Slot 6: Empty",
+      "Slot 7: Empty",
+      "Slot 8: Empty",
+      "Slot 9: Empty"
+    ]
+  },
+  "assertions": {
+    "startedEmpty": true,
+    "backpackStillEmpty": true,
+    "oneRealLog": true,
+    "restoredFirstSlot": true,
+    "sameGeneration": true
+  }
+}

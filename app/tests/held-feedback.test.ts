@@ -37,7 +37,7 @@ async function mining() {
 test('one held press settles two successive real nodes, waiting five ticks before the exposed target',async t=>{
  // Share the explicit synthetic time origin with the asynchronous completion clock.
  t.mock.method(performance,'now',()=>0);
- const h=await mining();try{h.use.beginMining(h.scene.refreshHover()!,0);h.use.advanceMining(3000);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0']);h.target('node:oak_log:1');h.use.advanceMining(3249);assert.equal(h.use.mining,null);h.use.advanceMining(3250);assert.equal((h.use.mining as WorldUse['mining'])?.id,'node:oak_log:1');h.use.advanceMining(6250);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0','oak_log:1']);assert.equal(h.s.view.envelope!.state.progress.player.data.backpack[0]?.count,2);assert.equal(h.use.holding,true);}finally{h.restore();}
+ const h=await mining();try{h.use.beginMining(h.scene.refreshHover()!,0);h.use.advanceMining(3000);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0']);h.target('node:oak_log:1');h.use.advanceMining(3249);assert.equal(h.use.mining,null);h.use.advanceMining(3250);assert.equal((h.use.mining as WorldUse['mining'])?.id,'node:oak_log:1');h.use.advanceMining(6250);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0','oak_log:1']);assert.equal(h.s.view.envelope!.state.progress.player.data.hotbar[0]?.count,2);assert.equal(h.use.holding,true);}finally{h.restore();}
 });
 
 test('held target change and empty ray reset only progress, never reuse progress against the new block',async()=>{
