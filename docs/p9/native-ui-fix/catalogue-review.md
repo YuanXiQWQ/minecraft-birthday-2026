@@ -35,3 +35,5 @@
 - 隔离普通`/game/`、1280×720、DPR1.25、GUI倍率2.4（正式DOM记录），无授物/改档：按E打开后AX焦点立即为Search Items，未点击输入框直接用原生键盘o/a/k得到`oak`。点击空槽后输入f得到`oakf`，焦点仍在搜索；切个人页并打开配方书，焦点为Toggle recipe book而不是Search recipes；返回物品搜索和Esc关闭重开后都自动聚焦。
 - 实际画面和状态见[catalogue-evidence/](catalogue-evidence/)：`open-search.jpg`包含未点击即出现的下划线光标与固定指南针；`direct-typing.jpg/json`为原生键盘输入；`retained-focus.json`、`recipe-book-focus.json`、`reopened-focus.json`分别记录上述焦点边界。没有把DOM合成输入称为原生操作。
 - 类型检查、P4核验、根路径/Pages构建及HTTP/资源检查执行，最终CI/部署及线上构建ID分别于交付回复核实。实体输入/人工听觉/Java动态并排等既有未验项不因本项变为通过。
+
+局部证据核对：首次`bookmark-and-search`截图恰逢源码HMR关闭界面，只截到世界，已保留为`invalid-hmr-bookmark-crop.jpg`，不能作为书签通过证据。重新通过AX确认Search Items持有焦点、完整画面确有物品页后，补拍`open-search-final.jpg`及`bookmark-and-search.jpg`，并实际查看局部确认含指南针、搜索框与下划线。没有编辑图片补画内容。
