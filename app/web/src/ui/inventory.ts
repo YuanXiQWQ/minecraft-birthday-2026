@@ -303,13 +303,14 @@ export class GameInventory {
         return b;
     }
 
-    /** Synchronize the versioned stable layout; reset epochs fence queued operations and clear page-owned carriers and recipe-book projections.
+    /** Synchronize saved layout and language; reset epochs fence queued operations and clear page-owned carriers and recipe-book projections.
      * @param {State} state Permanent facts.
      * @param {boolean} writable Save currently available.
      * @param {string} generation Reset generation fence.
      */
     sync(state: State, writable: boolean, generation: string): void {
-        const rebuild = this.generation !== generation || JSON.stringify(this.permanent?.progress.unlocked) !== JSON.stringify(state.progress.unlocked);
+        const languageChanged = !!this.permanent && this.permanent.settings.locale !== state.settings.locale;
+        const rebuild = languageChanged || this.generation !== generation || JSON.stringify(this.permanent?.progress.unlocked) !== JSON.stringify(state.progress.unlocked);
         if (!this.pending && this.permanent && JSON.stringify(this.permanent.progress.player) !== JSON.stringify(state.progress.player)) this.input.cancelGesture();
         if (this.generation !== generation) {
             this.clearAcquisition();
@@ -322,6 +323,17 @@ export class GameInventory {
             this.input.cancel();
         }
         this.permanent = state;
+        if (languageChanged) {
+            this.book?.localize();
+            this.modal.setAttribute('aria-label', this.text('inventory.title'));
+            this.hud.setAttribute('aria-label', this.text('inventory.hotbar'));
+            this.search.setAttribute('aria-label', this.text('inventory.nativeSearch'));
+            this.scrollbar.setAttribute('aria-label', this.text('inventory.presetScroll'));
+            for (const button of this.modal.querySelectorAll<HTMLButtonElement>('.inventory-tabs button')) {
+                button.setAttribute('aria-label', this.text('inventory.' + (button.dataset.tab === 'catalogue' ? 'catalogue' : 'player')));
+            }
+            this.hideTooltip();
+        }
         this.writable = writable;
         if (this.station) {
             const found = state.progress.scenes[state.progress.scene].stations.find(s => s.id === this.station!.id && ['crafting_table', 'furnace', 'blast_furnace', 'hopper'].includes(s.kind));
@@ -345,6 +357,7 @@ export class GameInventory {
         if (!this.pending) this.syncWorkbench();
         const signature = JSON.stringify({
             generation,
+            locale: state.settings.locale,
             unlocked: state.progress.unlocked,
             player: state.progress.player,
             station: this.station,
@@ -356,6 +369,12 @@ export class GameInventory {
             this.draw(rebuild);
         }
     }
+
+    /** Resolve an original item name in this inventory's committed language.
+     * @param {string} id Namespaced item identity.
+     * @return {string} Localized item name with English fallback.
+     */
+    name(id: string): string {return itemName(id, this.permanent?.settings.locale);}
 
     /** Reject unresolved-receipt mutations before capturing carriers; otherwise stage and serialize the semantic intent under the shared lock.
      * @param {InventoryCommand} intent Bounded input intent.
@@ -540,7 +559,7 @@ export class GameInventory {
             const i = Number(button.dataset.hotbar), s = this.value.hotbar[i];
             button.setAttribute('aria-label', this.text('inventory.slot', {
                 number: i + 1,
-                item: s ? itemName(s.id) : this.text('inventory.empty')
+                item: s ? this.name(s.id) : this.text('inventory.empty')
             }));
             button.setAttribute('aria-pressed', String(i === this.value.selected));
             button.style.left = (i * 20 + 2) * this.scale + 'px';
@@ -556,7 +575,7 @@ export class GameInventory {
             this.stack(off, this.value.equipment.offhand, 3, 4);
         }
         this.offhandCanvas.style.cssText = 'left:' + (-31 * this.scale) + 'px;top:0;width:' + 29 * this.scale + 'px;height:' + 24 * this.scale + 'px';
-        this.offhandCanvas.setAttribute('aria-label', this.text('inventory.gear.offhand', {item: this.value.equipment.offhand ? itemName(this.value.equipment.offhand.id) : this.text('inventory.empty')}));
+        this.offhandCanvas.setAttribute('aria-label', this.text('inventory.gear.offhand', {item: this.value.equipment.offhand ? this.name(this.value.equipment.offhand.id) : this.text('inventory.empty')}));
         this.hud.dataset.offhand = JSON.stringify(this.value.equipment.offhand);
         this.hud.dataset.selected = String(this.value.selected);
         this.hud.dataset.contents = JSON.stringify(this.value.hotbar);
@@ -773,11 +792,11 @@ export class GameInventory {
      */
     slotLabel(slot: Slot, stack: Stack | null): string {
         if (slot.kind === 'preview') return stack ? this.text('inventory.previewResult', {
-            item: itemName(stack.id),
+            item: this.name(stack.id),
             count: stack.count
         }) : this.text('inventory.empty');
         if (slot.kind === 'preset-info') return this.text('inventory.presetInfo', {number: slot.preset! + 1});
-        const name = stack ? itemName(stack.id) : this.text('inventory.empty');
+        const name = stack ? this.name(stack.id) : this.text('inventory.empty');
         return slot.kind === 'equipment' ? this.text('inventory.gear.' + slot.equipment, {item: name}) : stack ? (slot.kind === 'source' && slot.preset === undefined ? name : name + (stack.count > 1 ? ' ' + stack.count : '')) + (slot.locked ? ' - ' + this.text('inventory.locked') : '') : name;
     }
 
@@ -984,30 +1003,31 @@ export class GameInventory {
             this.hideTooltip();
             return;
         }
-        const lines = slot.kind === 'preset-info' ? [this.text('inventory.presetInfo', {number: slot.preset! + 1})] : [itemName(stack!.id!), ...(slot.locked ? [this.text('inventory.locked')] : [])];
+        const lines = slot.kind === 'preset-info' ? [this.text('inventory.presetInfo', {number: slot.preset! + 1})] : [this.name(stack!.id!), ...(slot.locked ? [this.text('inventory.locked')] : [])];
         this.showTooltipText(lines, x, y);
     }
 
-    /** Paint an original screen-space tooltip without adding a hit surface.
+    /** Paint a native tooltip with sufficient backing pixels for Unicode strokes and no hit surface.
      * @param {string[]} lines Localized text lines.
      * @param {number} x Client X.
      * @param {number} y Client Y.
      */
     showTooltipText(lines: string[], x: number, y: number): void {
         const {width, height} = tooltipBox(lines.map(s => this.pixels.font.width(s))),
-            canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
+            canvas = document.createElement('canvas'), resolution = Math.max(1,this.scale*Math.min(globalThis.devicePixelRatio??1,4));
+        canvas.width = Math.ceil(width * resolution);
+        canvas.height = Math.ceil(height * resolution);
         canvas.style.width = width * this.scale + 'px';
         canvas.style.height = height * this.scale + 'px';
         const ctx = canvas.getContext('2d')!;
+        ctx.setTransform(canvas.width/width,0,0,canvas.height/height,0,0);
         for (const name of ['background', 'frame']) {
             const path = 'assets/minecraft/textures/gui/sprites/tooltip/' + name + '.png',
                 image = this.art.images.get(path);
             if (!image) throw Error('missing-native-tooltip');
             drawSprite(ctx, image, this.art.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, width, height);
         }
-        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : lines[0] === itemName('minecraft:cake') ? itemColor('minecraft:cake') : '#FFF', true));
+        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : lines[0] === this.name('minecraft:cake') ? itemColor('minecraft:cake') : '#FFF', true));
         const accessible = document.createElement('span');
         accessible.className = 'sr-only';
         accessible.textContent = lines.join(' ');

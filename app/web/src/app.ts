@@ -6,7 +6,7 @@ import type {LoadingPort} from './ui/loading-screen.ts';
 import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
-import {GameChat} from './ui/chat.ts';
+import {GameChat, nativeScale} from './ui/chat.ts';
 import {AdvancementView} from './ui/advancements.ts';
 import {advancementChat} from './ui/advancement-chat.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
@@ -23,7 +23,7 @@ import {SettingsEdits} from './ui/settings-edits.ts';
 import type {SettingKey} from './ui/settings-edits.ts';
 import {processingClock} from './persistence/processing-clock.ts';
 import birthday from './birthday.json' with {type: 'json'};
-import {translate, loadLocale, ENGLISH} from './i18n/index.ts';
+import {translate, localeDictionary, displayLocale, LANGUAGES, ENGLISH} from './i18n/index.ts';
 import type {Dictionary} from './i18n/index.ts';
 import {browserSession} from './persistence/browser.ts';
 import {token} from './persistence/codec.ts';
@@ -47,7 +47,7 @@ import {loadRules} from './rules/load.ts';
 export async function mount(page: 'home' | 'game', locale: Dictionary = {}, loading?: LoadingPort): Promise<void> {
     const root = document.getElementById('app')!, base = import.meta.env.BASE_URL;
     let dictionary = locale, pixels: PixelUI | null = null, scene: SceneView | null = null, disposed = false,
-        confirmation: string | null = null, confirmationSerial = 0, resetting = false, localeGeneration = 0;
+        confirmation: string | null = null, confirmationSerial = 0, resetting = false, activeLocale = '';
     const appAbort = new AbortController();
     const edits = new SettingsEdits(), runtime = initialRuntime(), connection = browserSession(),
         session = connection.session,
@@ -55,9 +55,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
-    let languageChoice: HTMLButtonElement | null = null;
+    const languageChoices = new Map<string, HTMLButtonElement>();
     const nativeScreens: NativeScreens[] = [];
     let navigationPanel: NavigationPanel | null = null, startup: GameStartup | null = null;
+    let homeButtonObserver: ResizeObserver | null = null;
     let localWeather: LocalWeather | null = null, weatherTimeControl: HTMLButtonElement | null = null, weatherModeControl: HTMLButtonElement | null = null, weatherGeneration='', weatherMode='game';
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
@@ -126,6 +127,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         return b;
     }
 
+    /** Keep homepage controls at the same DPI-aligned GUI scale as native game menus. */
+    function layoutHomeButtons(): void {
+        root.style.setProperty('--home-gui-scale', String(nativeScale(document.documentElement)));
+        for (const b of root.querySelectorAll<HTMLElement>('header .mc-button, .copy .mc-button')) pixels?.refreshButton(b);
+    }
+
     document.title = t(page === 'home' ? 'html.homeTitle' : 'html.gameTitle');
     document.documentElement.lang = 'en';
     root.className = page;
@@ -152,12 +159,13 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     dialog.setAttribute('aria-label', t('settings.title'));
     dialog.id = 'settings';
     const dialogTitle = node('h2', 'settings.title'), languageLabel = node('label', 'settings.language'),
-        language = document.createElement('select'), option = document.createElement('option');
-    option.value = 'en';
-    option.textContent = t('settings.english');
+        language = document.createElement('select');
+    for (const entry of LANGUAGES) {
+        const option = document.createElement('option');
+        option.value = entry.id; option.textContent = entry.name; language.append(option);
+    }
     language.id = 'language';
     languageLabel.setAttribute('for', language.id);
-    language.append(option);
     const volumeLabel = node('label', 'settings.volume', 'volume-label', {percent: 20});
     const volume = document.createElement('input');
     volume.type = 'range';
@@ -276,14 +284,17 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             pixels?.updates.get(volume)?.();
             for(const [key,input] of soundSliders){input.value=String(value[key]??1);const name=t('soundCategory.'+SOUND_CHANNELS.find(([k])=>k===key)![1]);input.dataset.nativeLabel=(value[key]??1)===0?t('menu.soundOff',{name}):t('menu.soundVolume',{name,percent:Math.floor((value[key]??1)*100)});input.setAttribute('aria-label',input.dataset.nativeLabel);input.disabled=!session.view.writable||resetting;pixels?.updates.get(input)?.();}
             mute.checked = value.muted;
-            language.value = Array.from(language.options).some(option => option.value === value.locale) ? value.locale : 'en';
+            language.value = displayLocale(value.locale);
             setText(volumeLabel, 'settings.volume', {percent: Math.floor(value.volume * 100)});
             if(weatherTimeControl)setText(weatherTimeControl,value.sky?.time==='real'?'weather.timeReal':'weather.timeGame');
             if(weatherModeControl)setText(weatherModeControl,value.sky?.weather==='real'?'weather.modeReal':'weather.modeGame');
             const nextMode=value.sky?.weather??'game';if(weatherMode==='real'&&nextMode!=='real')localWeather?.stop();weatherMode=nextMode;
         }
         language.disabled = volume.disabled = mute.disabled = reset.disabled = !session.view.writable || resetting;
-        if (languageChoice) languageChoice.disabled = language.disabled;
+        for (const [id, choice] of languageChoices) {
+            choice.disabled = language.disabled;
+            choice.setAttribute('aria-selected', String(id === language.value));
+        }
         for(const control of [weatherTimeControl,weatherModeControl])if(control)control.disabled=!session.view.writable||resetting;
         worldAudio?.sync();
         music?.sync();
@@ -361,11 +372,38 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         if (value.envelope) {
             const s = value.envelope.state, placed = hasCake(s);
             root.dataset.completed = String(placed);
-            celebration?.sync();
             if (page === 'game' && lastWorldScene !== s.progress.scene) {
                 void inventory?.close(true);
                 lastWorldScene = s.progress.scene;
             }
+            const nextLocale = displayLocale(s.settings.locale);
+            if (activeLocale !== nextLocale) {
+                activeLocale = nextLocale;
+                dictionary = {...localeDictionary(nextLocale), ...locale};
+                for (const [element, binding] of bindings) setText(element, binding.key, binding.values);
+                document.title = t(page === 'home' ? 'html.homeTitle' : 'html.gameTitle');
+                document.documentElement.lang = nextLocale;
+                dialog.setAttribute('aria-label', t('settings.title'));
+                host.querySelector('canvas[data-scene]')?.setAttribute('aria-label', t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'));
+                const search = languageSection.querySelector<HTMLInputElement>('.language-search');
+                if (search) {
+                    search.dataset.nativeHint = t('book.searchHint'); search.setAttribute('aria-label', t('menu.languageSearch'));
+                    pixels?.updates.get(search)?.();
+                }
+                languageSection.querySelector('[role=listbox]')?.setAttribute('aria-label', t('settings.language'));
+                if (chat) {
+                    chat.root.setAttribute('aria-label', t('chat.input')); chat.input.setAttribute('aria-label', t('chat.input')); chat.paint();
+                }
+                const loadingHost = document.getElementById('native-loading');
+                if (loadingHost) {
+                    loadingHost.dataset.label = t('loading.terrain'); loadingHost.dataset.failure = t('error.resource');
+                    loadingHost.setAttribute('aria-label', t('loading.terrain'));
+                }
+                navigationPanel?.edge.setAttribute('aria-label', t('a11y.showScenes'));
+                celebration?.localize();
+                for (const screen of nativeScreens) screen.layout();
+            }
+            celebration?.sync();
             inventory?.sync(s, value.writable, value.envelope.generation);
             advancements?.sync(s.progress.advancements,value.envelope.generation);
             if (page === 'home') scene?.setCake(placed);
@@ -382,14 +420,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                 for (const b of navigation.querySelectorAll<HTMLButtonElement>('button')) b.setAttribute('aria-current', String(b.dataset.scene === s.progress.scene));
                 feedback('scene.' + s.progress.scene, {}, 'scene');
             }
-            const generation = ++localeGeneration;
-            void loadLocale(s.settings.locale).then(next => {
-                if (disposed || generation !== localeGeneration) return;
-                dictionary = {...next, ...locale};
-                for (const [element, binding] of bindings) setText(element, binding.key, binding.values);
-                document.title = t(page === 'home' ? 'html.homeTitle' : 'html.gameTitle');
-                document.documentElement.lang = s.settings.locale === 'en' ? 'en' : Object.keys(next).length ? s.settings.locale : 'en';
-            });
         }
         paintSettings();
         retry.hidden = value.status === 'ready' || value.status === 'loading';
@@ -528,17 +558,28 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             setText(element, binding.key, binding.values);
         }
         for (const b of root.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('button,a.invite')) pixels.button(b);
+        if (page === 'home') {
+            homeButtonObserver = new ResizeObserver(layoutHomeButtons);
+            homeButtonObserver.observe(document.documentElement);
+            layoutHomeButtons();
+        }
         pixels.slider(volume);
         for(const input of soundSliders.values())pixels.slider(input);
         pixels.field(username);
         const languages = document.createElement('div'); languages.className = 'native-language-list'; languages.setAttribute('role', 'listbox'); languages.setAttribute('aria-label', t('settings.language'));
-        languageChoice = document.createElement('button'); languageChoice.type = 'button'; languageChoice.setAttribute('role', 'option'); languageChoice.setAttribute('aria-selected', 'true');
-        languageChoice.className = 'native-language-row'; languageChoice.disabled = language.disabled; pixels.text(languageChoice, t('settings.englishNative'), 2, '#FFFFFF');
-        languageChoice.addEventListener('click', () => {language.value = 'en'; edits.stage('locale','en'); preferences('locale');});
-        languages.append(languageChoice);
+        for (const entry of LANGUAGES) {
+            const choice = document.createElement('button'); choice.type = 'button'; choice.setAttribute('role', 'option');
+            choice.setAttribute('aria-selected', String(entry.id === language.value)); choice.dataset.locale = entry.id;
+            choice.className = 'native-language-row'; choice.disabled = language.disabled; pixels.text(choice, entry.name, 2, '#FFFFFF');
+            choice.addEventListener('click', () => {language.value = entry.id; edits.stage('locale', entry.id); preferences('locale');});
+            languageChoices.set(entry.id, choice); languages.append(choice);
+        }
         const languageSearch = document.createElement('input'); languageSearch.type = 'text'; languageSearch.className = 'language-search'; languageSearch.maxLength = 256; languageSearch.dataset.nativeHeight = '15'; languageSearch.dataset.nativeHint = t('book.searchHint'); languageSearch.dataset.italicHint = 'true'; languageSearch.setAttribute('aria-label', t('menu.languageSearch'));
         languageSection.append(languageSearch, languages, node('p','menu.languageAccuracy','language-accuracy')); pixels.field(languageSearch);
-        languageSearch.addEventListener('input', () => {languageChoice!.hidden = !t('settings.englishNative').toLowerCase().includes(languageSearch.value.toLowerCase());});
+        languageSearch.addEventListener('input', () => {
+            const query = languageSearch.value.trim().toLowerCase();
+            for (const entry of LANGUAGES) languageChoices.get(entry.id)!.hidden = !(entry.name + ' ' + entry.search).toLowerCase().includes(query);
+        });
         nativeScreens.push(new NativeScreens(dialog, page === 'game' ? host : document.documentElement, pixels, () => optionsPage, {title: dialogTitle, navigation: optionNavigation, sections: optionSections, volume, volumeLabel, languageLabel, language, username, usernameLabel, warning, reset, confirmation: confirmSection, feedback: [preferenceFeedback,resetFeedback], done: close}));
         if (menu) nativeScreens.push(new NativeScreens(menu, host, pixels, () => 'pause', null));
         showOptions('options');
@@ -604,7 +645,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                     }
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
-                        for (const line of harvestFeedback(event, t)) chat?.append(line);
+                        for (const line of harvestFeedback(event, t, session.view.envelope?.state.settings.locale)) chat?.append(line);
                     } else if (event.type === 'item-unlocked') {
                         if (!taught) {taught = true; chat?.append([{text: t('chat.tutorial')}]);}
                     }
@@ -663,7 +704,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         clearText(preferenceFeedback);
         if (event.persisted) return;
         disposed = true;
-        appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); localWeather?.dispose();
+        appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); homeButtonObserver?.disconnect(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
         chat?.dispose();

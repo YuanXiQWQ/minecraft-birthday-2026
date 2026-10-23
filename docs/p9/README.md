@@ -1,3 +1,5 @@
+当前本地化：[简体中文切换、原版物品/命令/进度文本](localization/report.md)；[语言列表、页脚位置和原版Unihex参数纠正](language-style/report.md)覆盖前次低分辨率过滤绘制方案，保持双路径、缓存升级和存档保护。
+
 当前主页/设置清理：[删除残留说明、重置后退出、移除重复定位按钮](home-cleanup/report.md)。实际主页/游戏页重置与双路径画面单列验证。
 
 当前进度系统：[七条 Java26.3 原版可达进度](advancements/report.md)，真实玩家槽与播种事务判定、criteria 独立持久化、旧档静默适配、L键原版页面及与配方共享的 Toast；[原版进度聊天纠正](advancement-chat/report.md)移除自定义取得消息，按真实进度公告，不触发生日演出。

@@ -116,6 +116,21 @@
       "entry": "assets/minecraft/textures/gui/project_favicon.png",
       "size": 2063,
       "sha256": "580ba697b652aa80088d23126ae3ecbd45c2d9e26979511f445dbc6a71845b27"
+    },
+    {
+      "entry": "assets/minecraft/font/include/unifont.json",
+      "size": 3993,
+      "sha256": "8b0624ab98ad3e6d4038b581f3cc83c497587a92e764da7784f7a4dfd528c1be"
+    },
+    {
+      "entry": "assets/minecraft/textures/font/nonlatin_european.png",
+      "size": 4867,
+      "sha256": "21e91bd394e0790da5db58c99d6f89712977930d6f746fb298824f73c47e7027"
+    },
+    {
+      "entry": "assets/minecraft/textures/font/accented.png",
+      "size": 7694,
+      "sha256": "b9088c6e0496eba5df8733848a9d034381e5a656da08a6f70b9a77d178a0d0ba"
     }
   ],
   "inputs": {
@@ -141,17 +156,24 @@
     "assets/minecraft/textures/gui/sprites/widget/text_field_highlighted.png.mcmeta": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
     "assets/minecraft/font/project_unifont.json": "4fd3314d93169e2e777647ce742fc529535646a0ff8a0bceff521d3f251f77f2",
     "assets/minecraft/font/unifont_license.txt": "1e74cb82bf476843e97c2596297b04219b1a7e51f7238944a8c031cb9401fa87",
-    "assets/minecraft/textures/gui/project_favicon.png": "580ba697b652aa80088d23126ae3ecbd45c2d9e26979511f445dbc6a71845b27"
+    "assets/minecraft/textures/gui/project_favicon.png": "580ba697b652aa80088d23126ae3ecbd45c2d9e26979511f445dbc6a71845b27",
+    "assets/minecraft/font/include/unifont.json": "8b0624ab98ad3e6d4038b581f3cc83c497587a92e764da7784f7a4dfd528c1be",
+    "assets/minecraft/textures/font/nonlatin_european.png": "21e91bd394e0790da5db58c99d6f89712977930d6f746fb298824f73c47e7027",
+    "assets/minecraft/textures/font/accented.png": "b9088c6e0496eba5df8733848a9d034381e5a656da08a6f70b9a77d178a0d0ba"
   },
   "derivedFont": {
     "asset": "minecraft/font/unifont.zip",
     "sha1": "ccd5ac4767ce0a9c71d1dd62f2dc25449789b5dd",
     "member": "unifont_all_no_pua-17.0.01.hex",
-    "conversion": "hex rows to JSON, unchanged bitmaps"
+    "conversion": "hex rows to JSON, unchanged bitmaps",
+    "definition": {
+      "asset": "minecraft/font/include/unifont.json",
+      "sha1": "402ded0eebd448033ef415e861a17513075f80e7"
+    }
   },
   "favicon": {
     "asset": "icons/icon_32x32.png",
     "sha1": "af96f55a90eaf11b327f1b5f8834a051027dc506"
   },
-  "exporterSha256": "12187316663f6a3326dff87f8284271eba015e4692911dda7395db7fb93941e4"
+  "exporterSha256": "d4b770534366cbfffa52417aba18dfd49a2ae3175203f4fa44bc534ce07a8136"
 }

@@ -9,8 +9,11 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 #app{min-height:100svh;display:flex;flex-direction:column}.home-layout,.game-layout{position:relative;display:flow-root;flex:1 0 auto;min-height:500px}
 .scene-panel{position:absolute;inset:0;min-width:0;overflow:hidden}.scene-panel>canvas[role=img]{position:absolute;inset:0;width:100%;height:100%;image-rendering:auto;touch-action:none}
 .copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;min-width:0;padding:22px 28px;background:#17251bd9;pointer-events:none}
-.home-layout .copy{margin:96px auto 0;width:min(1000px,calc(100% - 48px));text-align:center;background:linear-gradient(#13251aef,#13251ac9);border:1px solid #91a58b55}
+.home-layout .copy{margin:max(96px,calc(20px * var(--home-gui-scale,2) + 40px)) auto 0;width:min(1000px,calc(100% - 48px));text-align:center;background:linear-gradient(#13251aef,#13251ac9);border:1px solid #91a58b55}
 .copy h1{color:#ffffff}.copy .invite{pointer-events:auto;align-self:center;width:min(390px,100%);margin-top:2px}
+.home>header .mc-button,.home .copy>.mc-button{--button-scale:var(--home-gui-scale,2);height:calc(20px * var(--button-scale));min-height:0;min-width:0;padding:0}
+.home>header .mc-button{width:calc(100px * var(--button-scale))}.home .copy>.invite{width:min(calc(200px * var(--button-scale)),100%)}
+.home>header .mc-button>canvas:not(.button-sprite),.home .copy>.mc-button>canvas:not(.button-sprite){position:absolute;left:0;top:calc(6px * var(--button-scale));max-width:none;pointer-events:none}
 .game-layout .copy{width:min(520px,calc(100% - 48px));margin:20px 24px 0;gap:12px}
 
 #retry-save{margin:0 32px 20px;max-width:420px}
@@ -93,8 +96,14 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 .native-screen .mc-button>canvas:not(.button-sprite){position:absolute;top:12px;left:0;max-width:none;pointer-events:none}
 .native-screen h2{text-align:center;color:white}.native-screen .native-text-field,.native-screen .native-slider{height:40px}
 .native-screen section{pointer-events:none}.native-screen section>*,.native-screen section input{pointer-events:auto}
-.native-language-list{overflow-y:auto;pointer-events:auto}.native-language-row{position:relative;display:block;width:100%;height:36px;background:#000000aa;border:2px solid #808080;padding:0;outline:2px solid #000;outline-offset:-4px;color:white;text-align:center}
-.native-language-row:focus,.native-language-row:hover{border-color:white}.native-language-row>canvas{margin:8px auto 0;pointer-events:none}
+.native-language-list{overflow-y:auto;pointer-events:auto}
+.settings .native-language-row{position:relative;display:block;width:100%;height:36px;min-height:36px;margin:0;padding:0;background:transparent;border:0;outline:0;color:white;text-align:center;cursor:pointer}
+.native-language-row>canvas{position:absolute;left:0;top:10px;margin:0;pointer-events:none}
+.native-language-row[aria-selected=true]{background:#000;box-shadow:inset 0 0 0 2px #808080}
+.native-language-list:focus-within .native-language-row[aria-selected=true]{box-shadow:inset 0 0 0 2px #fff}
+/* The native language screen overlays the world without retaining homepage cards or floating game controls. */
+.home:has(#settings[open][data-native-page=language]) .copy,.home:has(#settings[open][data-native-page=language])>header,.game:has(#settings[open][data-native-page=language])>.world-navigation,.game:has(#settings[open][data-native-page=language])>.navigation-edge,.game:has(#settings[open][data-native-page=language])>header,.game:has(#settings[open][data-native-page=language]) .birthday-celebration{visibility:hidden;pointer-events:none}
+.settings.native-screen[open][data-native-page=language]::backdrop{background:transparent}
 .native-screen #reset-confirmation{background:#161616f5;border:2px solid #888;padding:8px;overflow:auto;z-index:3;pointer-events:auto}
 .native-screen #reset-confirmation h3,.native-screen #reset-confirmation p{margin:0 0 8px}.native-screen #reset-confirmation button{position:relative;height:40px;margin:4px 0;width:100%}
 .native-screen .volume-label{display:none}.native-screen .native-text-field>input{opacity:0}.native-screen p[role=status]{pointer-events:none}

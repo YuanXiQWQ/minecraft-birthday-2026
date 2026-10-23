@@ -7,11 +7,12 @@ import type {TextRun} from './item-style.ts';
 /** Format only capacity shortfalls; committed pickup quantities remain in domain receipts.
  * @param {DomainEvent} event Commit-only quantity receipt.
  * @param {Function} text Localized message lookup.
+ * @param {string} locale Committed display language for item names.
  * @return {TextRun[][]} Capacity-warning lines without ordinary pickup notifications.
  */
-export function harvestFeedback(event: DomainEvent, text: (key: string, values: Record<string, string | number>) => string): TextRun[][] {
+export function harvestFeedback(event: DomainEvent, text: (key: string, values: Record<string, string | number>) => string, locale = 'en'): TextRun[][] {
     if (event.type !== 'items-acquired') return [];
     return [
-        ...(event.overflow ?? []).map(stack => [{text: text('game.harvestOverflow', {count: stack.count, item: itemName(stack.id)}), color: FAILURE_COLOR}])
+        ...(event.overflow ?? []).map(stack => [{text: text('game.harvestOverflow', {count: stack.count, item: itemName(stack.id, locale)}), color: FAILURE_COLOR}])
     ];
 }

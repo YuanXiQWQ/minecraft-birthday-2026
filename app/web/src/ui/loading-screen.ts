@@ -2,6 +2,7 @@
 import {BoxGeometry, CubeTexture, DoubleSide, LinearFilter, Matrix4, Mesh, NoColorSpace, PerspectiveCamera, Scene, ShaderMaterial, WebGLRenderer} from 'three';
 import {NativeMenuBlur} from '../render/native-menu-blur.ts';
 import {BitmapFont} from './vanilla.ts';
+import {wrap} from './pixels.ts';
 import {LoadingProgress, loadingCell, loadingLayout, LOADING_RADIUS, PANORAMA_FACES} from './loading-progress.ts';
 import type {LoadingStage} from './loading-progress.ts';
 import {RESOURCE_BASE as BASE, fetchManifest} from '../render/resource-fetch.ts';
@@ -97,7 +98,7 @@ export class LoadingScreen implements LoadingPort {
      * @param {number} total Planned units for this owner.
      */
     update(stage: LoadingStage, done: number, total = 1): void {this.progress.update(stage, done, total);}
-    /** Paint native panorama and progress at current DPR, keeping wrapped labels above the bar.
+    /** Paint native panorama and progress at current DPR, wrapping localized labels by measured glyph width.
      * @param {number} now RAF realtime milliseconds.
      */
     render(now: number): void {
@@ -113,13 +114,7 @@ export class LoadingScreen implements LoadingPort {
             c.setTransform(dpr * layout.scale, 0, 0, dpr * layout.scale, 0, 0);
             const pattern = c.createPattern(this.image('menu_background.png'), 'repeat')!; pattern.setTransform(new DOMMatrix().scale(2)); c.fillStyle = pattern; c.fillRect(0, 0, layout.w, layout.h);
             c.imageSmoothingEnabled = false;
-            const text = this.error || this.host.dataset.label || '', lines: string[] = [];
-            let line = '';
-            for (const word of text.split(' ')) {
-                const candidate = line ? line + ' ' + word : word;
-                if (line && this.font.width(candidate) > layout.w - 16) {lines.push(line); line = word;} else line = candidate;
-            }
-            if (line) lines.push(line);
+            const text = this.error || this.host.dataset.label || '', lines = wrap(text, layout.w - 16, value => this.font!.width(value));
             lines.forEach((value, index) => this.font!.draw(c, value, layout.cx - Math.floor(this.font!.width(value) / 2), layout.textY - (lines.length - 1 - index) * 12, '#FFFFFF', true));
             if (!this.error) {
                 c.fillStyle = '#000000'; c.fillRect(layout.barX, layout.barY, 200, 2);

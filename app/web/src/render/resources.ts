@@ -36,7 +36,7 @@ export interface Resources extends VanillaPack {
     models: Record<string, string>;
 }
 
-/** Verify authored models, required material pixels and shared GUI/font widgets used by each page.
+/** Verify authored models, materials, GUI widgets and every default-font provider required by each page.
  * @param {boolean} world Whether authored game scenery and entity dependencies are required.
  * @param {Function} progress Optional actual verified/decode completion observer.
  * @return {Promise<Resources>} Audited resource ownership; no debug substitute is provided.
@@ -64,7 +64,7 @@ export async function loadResources(world = false, progress?: (done: number, tot
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native advancements'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native controls'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const path of Object.keys(manifests.find(m=>m.source?.includes('bounded native controls'))?.inputs??{}))wanted.add(path);
-    const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || e.entry.startsWith('assets/minecraft/textures/gui/') || e.entry === 'assets/minecraft/ambience-sounds.json' || world && wanted.has(e.entry)));
+    const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry.startsWith('assets/minecraft/textures/font/') || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || e.entry.startsWith('assets/minecraft/textures/gui/') || e.entry === 'assets/minecraft/ambience-sounds.json' || world && wanted.has(e.entry)));
     let completed = 0;
     progress?.(0, entries.length);
     await Promise.all(entries.map(async e => {

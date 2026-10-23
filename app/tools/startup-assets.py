@@ -19,7 +19,7 @@ def fetch(url, digest):
 
 
 def main():
-    """Extract six panorama faces and their overlay while retaining audited shared GUI/font inputs."""
+    """Extract six panorama faces and retain audited ASCII and Unicode loading-screen font inputs."""
     lock = json.loads((ROOT / 'docs/p1/evidence-lock.json').read_text(encoding='utf-8'))['officialSources']['assetIndex']
     index = json.loads(fetch(lock['url'], lock['sha1']))['objects']
     names = [f'minecraft/textures/gui/title/background/panorama_{i}.png' for i in range(6)] + ['minecraft/textures/gui/title/background/panorama_overlay.png']
@@ -36,7 +36,7 @@ def main():
     with ThreadPoolExecutor(max_workers=6) as pool:
         entries = list(pool.map(take, names))
     inputs = {}
-    for name in ['assets/minecraft/font/include/default.json', 'assets/minecraft/font/include/space.json', 'assets/minecraft/textures/font/ascii.png', 'assets/minecraft/textures/gui/menu_background.png']:
+    for name in ['assets/minecraft/font/include/default.json', 'assets/minecraft/font/include/space.json', 'assets/minecraft/font/include/unifont.json', 'assets/minecraft/font/project_unifont.json', 'assets/minecraft/textures/font/ascii.png', 'assets/minecraft/textures/font/nonlatin_european.png', 'assets/minecraft/textures/font/accented.png', 'assets/minecraft/textures/gui/menu_background.png']:
         body = (OUT / name).read_bytes()
         inputs[name] = {'size': len(body), 'sha256': hashlib.sha256(body).hexdigest()}
     manifest = {'version': '26.3', 'clientSha1': 'e877b6a07acd633fb3bb475002175cec036e7b87', 'source': 'Official Java 26.3 asset index; original CubeMapTexture panorama for LevelLoadingScreen', 'assetIndex': lock, 'entries': entries, 'inputs': inputs}

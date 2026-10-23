@@ -1,0 +1,157 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "entries": [
+    {
+      "entry": "assets/minecraft/shaders/include/light.glsl",
+      "size": 866,
+      "sha256": "57364b31f9a361aba051e38a9a36e87890ab39798d88aadad0620d6768bc0401"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/inworld_menu_background.png",
+      "size": 74,
+      "sha256": "515f7821d6bea28de86e607f6a53011e658d00a121179bb980719f39ac62df51"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/menu_background.png",
+      "size": 74,
+      "sha256": "515f7821d6bea28de86e607f6a53011e658d00a121179bb980719f39ac62df51"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/container/creative_inventory/tab_item_search.png",
+      "size": 339,
+      "sha256": "5beb338993747a964b0a8a8d30f0b3b964dbfab09c7fd0d2ef470b863a3fccca"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_back.png",
+      "size": 88,
+      "sha256": "2b3f92787fec7c692bd004ac6da24181b109f708fc9656b6168c93bcff9f228a"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_back.png.mcmeta",
+      "size": 163,
+      "sha256": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_front.png",
+      "size": 88,
+      "sha256": "c7a4ed756226870b85a3f4d070707f9d76689123683149b53c203530883ea2da"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_front.png.mcmeta",
+      "size": 163,
+      "sha256": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider.png",
+      "size": 1142,
+      "sha256": "19866c723b986b57300a5248f6255ceb0e464faf673f73fdcf4158da1195c250"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider.png.mcmeta",
+      "size": 164,
+      "sha256": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle.png",
+      "size": 156,
+      "sha256": "f2517ca7604176f2f6b669bf54988af811b03f66bd0369b9964d0318b064d70d"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle.png.mcmeta",
+      "size": 285,
+      "sha256": "e455ece745d4f9d34e477a20dc60f0899e769e7c4fbdf0c2b7a9ccfab615201c"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png",
+      "size": 159,
+      "sha256": "4993928f1426f89f540e221abef79f4086d0a57d14b663bcc008fb0c80ebde74"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png.mcmeta",
+      "size": 285,
+      "sha256": "e455ece745d4f9d34e477a20dc60f0899e769e7c4fbdf0c2b7a9ccfab615201c"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_highlighted.png",
+      "size": 1165,
+      "sha256": "406e28df8f21c63364a44d2215f0914bd240854683b06fbf6c53167736bd7c98"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/slider_highlighted.png.mcmeta",
+      "size": 164,
+      "sha256": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/text_field.png",
+      "size": 98,
+      "sha256": "612f7835250f9d8477efbe54b9602ad800bbde89e2c983efc3f4bfbb80fb57d0"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/text_field.png.mcmeta",
+      "size": 164,
+      "sha256": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/text_field_highlighted.png",
+      "size": 98,
+      "sha256": "5495b8c462529aea99e953a67916026de845eeb6065cccf2b4a093d10f9151bb"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/text_field_highlighted.png.mcmeta",
+      "size": 164,
+      "sha256": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5"
+    },
+    {
+      "entry": "assets/minecraft/font/project_unifont.json",
+      "size": 8180037,
+      "sha256": "4fd3314d93169e2e777647ce742fc529535646a0ff8a0bceff521d3f251f77f2"
+    },
+    {
+      "entry": "assets/minecraft/font/unifont_license.txt",
+      "size": 24142,
+      "sha256": "1e74cb82bf476843e97c2596297b04219b1a7e51f7238944a8c031cb9401fa87"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/project_favicon.png",
+      "size": 2063,
+      "sha256": "580ba697b652aa80088d23126ae3ecbd45c2d9e26979511f445dbc6a71845b27"
+    }
+  ],
+  "inputs": {
+    "assets/minecraft/shaders/include/light.glsl": "57364b31f9a361aba051e38a9a36e87890ab39798d88aadad0620d6768bc0401",
+    "assets/minecraft/textures/gui/inworld_menu_background.png": "515f7821d6bea28de86e607f6a53011e658d00a121179bb980719f39ac62df51",
+    "assets/minecraft/textures/gui/menu_background.png": "515f7821d6bea28de86e607f6a53011e658d00a121179bb980719f39ac62df51",
+    "assets/minecraft/textures/gui/container/creative_inventory/tab_item_search.png": "5beb338993747a964b0a8a8d30f0b3b964dbfab09c7fd0d2ef470b863a3fccca",
+    "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_back.png": "2b3f92787fec7c692bd004ac6da24181b109f708fc9656b6168c93bcff9f228a",
+    "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_back.png.mcmeta": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220",
+    "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_front.png": "c7a4ed756226870b85a3f4d070707f9d76689123683149b53c203530883ea2da",
+    "assets/minecraft/textures/gui/sprites/container/bundle/slot_highlight_front.png.mcmeta": "0c80f4bc91b5be8c65a626b52a7087860e9961fca4a9be45962369b9b929f220",
+    "assets/minecraft/textures/gui/sprites/widget/slider.png": "19866c723b986b57300a5248f6255ceb0e464faf673f73fdcf4158da1195c250",
+    "assets/minecraft/textures/gui/sprites/widget/slider.png.mcmeta": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
+    "assets/minecraft/textures/gui/sprites/widget/slider_handle.png": "f2517ca7604176f2f6b669bf54988af811b03f66bd0369b9964d0318b064d70d",
+    "assets/minecraft/textures/gui/sprites/widget/slider_handle.png.mcmeta": "e455ece745d4f9d34e477a20dc60f0899e769e7c4fbdf0c2b7a9ccfab615201c",
+    "assets/minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png": "4993928f1426f89f540e221abef79f4086d0a57d14b663bcc008fb0c80ebde74",
+    "assets/minecraft/textures/gui/sprites/widget/slider_handle_highlighted.png.mcmeta": "e455ece745d4f9d34e477a20dc60f0899e769e7c4fbdf0c2b7a9ccfab615201c",
+    "assets/minecraft/textures/gui/sprites/widget/slider_highlighted.png": "406e28df8f21c63364a44d2215f0914bd240854683b06fbf6c53167736bd7c98",
+    "assets/minecraft/textures/gui/sprites/widget/slider_highlighted.png.mcmeta": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
+    "assets/minecraft/textures/gui/sprites/widget/text_field.png": "612f7835250f9d8477efbe54b9602ad800bbde89e2c983efc3f4bfbb80fb57d0",
+    "assets/minecraft/textures/gui/sprites/widget/text_field.png.mcmeta": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
+    "assets/minecraft/textures/gui/sprites/widget/text_field_highlighted.png": "5495b8c462529aea99e953a67916026de845eeb6065cccf2b4a093d10f9151bb",
+    "assets/minecraft/textures/gui/sprites/widget/text_field_highlighted.png.mcmeta": "d7dd31a632fe41be64e07ef0676b726e50f0af053e638742ec1f6f9550a1b7e5",
+    "assets/minecraft/font/project_unifont.json": "4fd3314d93169e2e777647ce742fc529535646a0ff8a0bceff521d3f251f77f2",
+    "assets/minecraft/font/unifont_license.txt": "1e74cb82bf476843e97c2596297b04219b1a7e51f7238944a8c031cb9401fa87",
+    "assets/minecraft/textures/gui/project_favicon.png": "580ba697b652aa80088d23126ae3ecbd45c2d9e26979511f445dbc6a71845b27"
+  },
+  "derivedFont": {
+    "asset": "minecraft/font/unifont.zip",
+    "sha1": "ccd5ac4767ce0a9c71d1dd62f2dc25449789b5dd",
+    "member": "unifont_all_no_pua-17.0.01.hex",
+    "conversion": "hex rows to JSON, unchanged bitmaps"
+  },
+  "favicon": {
+    "asset": "icons/icon_32x32.png",
+    "sha1": "af96f55a90eaf11b327f1b5f8834a051027dc506"
+  },
+  "exporterSha256": "12187316663f6a3326dff87f8284271eba015e4692911dda7395db7fb93941e4"
+}

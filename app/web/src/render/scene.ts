@@ -250,6 +250,7 @@ export class SceneView {
         };
         canvas.addEventListener('pointerdown', this.down);
         canvas.addEventListener('pointermove', this.move);
+        canvas.addEventListener('mousemove', e => this.moveLockedMouse(e), {signal: this.controlsAbort.signal});
         canvas.addEventListener('pointerup', this.up);
         canvas.addEventListener('pointercancel', this.cancel);
         canvas.addEventListener('lostpointercapture', this.captureLost);
@@ -312,22 +313,28 @@ export class SceneView {
         if (id !== undefined && this.renderer.domElement.hasPointerCapture(id)) this.renderer.domElement.releasePointerCapture(id);
     }
 
-    /** Update a scene gesture without retaining an actionable hit while the camera rotates.
+    /** Consume the Pointer Lock MouseEvent stream once, independently of visible-pointer coordinates.
+     * @param {MouseEvent} e Browser relative mouse movement.
+     */
+    moveLockedMouse(e: MouseEvent): void {
+        if (!this.input || this.lost || !this.mode?.actual) return;
+        if (this.pointer !== null && !(e.buttons & 1)) {this.cancel(); return;}
+        if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
+        this.look.relative(e.movementX, e.movementY);
+        this.camera.rotation.set(this.look.pitch, this.look.yaw, 0, 'YXZ');
+        this.camera.updateMatrixWorld(true); this.refreshHover(); this.requestRender();
+    }
+
+    /** Update a visible-pointer scene gesture without retaining an actionable hit while the camera rotates.
      * @param {PointerEvent} e Native pointer movement.
-     * @param {boolean} game Whether bounded first-person look is enabled.
+     * @param {boolean} game Whether first-person look is enabled.
      */
     movePointer(e: PointerEvent, game: boolean): void {
-        if (!this.input || this.lost) return;
+        if (!this.input || this.lost || this.mode?.actual) return;
         if (this.pointer !== null && !(e.buttons & 1)) {this.cancel(); return;}
         if (this.pointer !== null && !this.mode?.actual) {
             const bounds = this.renderer.domElement.getBoundingClientRect();
             if (e.clientX < bounds.left || e.clientX >= bounds.right || e.clientY < bounds.top || e.clientY >= bounds.bottom) {this.cancel(); return;}
-        }
-        if (this.mode?.actual) {
-            if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
-            this.look.relative(e.movementX, e.movementY);
-            this.camera.rotation.set(this.look.pitch, this.look.yaw, 0, 'YXZ');
-            this.camera.updateMatrixWorld(true); this.refreshHover(); this.requestRender(); return;
         }
         this.pointerPosition = [e.clientX, e.clientY];
         if (!this.look.active) {

@@ -58,7 +58,7 @@ export class PixelUI {
         this.font = new BitmapFont(resources.documents, resources.guiImages);
     }
 
-    /** Attach searchable, accessible text and a wrapping original-font canvas.
+    /** Attach accessible original text at displayed framebuffer resolution and its widget or explicit GUI scale.
      * @param {HTMLElement} host Existing semantic heading, paragraph, label or button.
      * @param {string} text Localized copy.
      * @param {number} scale Integer GUI pixel scale.
@@ -84,14 +84,18 @@ export class PixelUI {
             const value = this.texts.get(host)!, style = getComputedStyle(host);
             accessible.textContent = value.text;
             if (host.clientWidth <= 0) return;
-            const w = Math.max(16, host.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - 2),
-                logical = Math.max(8, Math.floor(w / value.scale)),
-                lines = wrap(value.text, logical - 1, t => this.font.width(t)), height = lines.length * 12;
-            canvas.width = logical;
-            canvas.height = height;
-            canvas.style.width = logical * value.scale + 'px';
-            canvas.style.height = height * value.scale + 'px';
+            const scale = parseFloat(style.getPropertyValue('--button-scale')) || value.scale,
+                w = Math.max(16, host.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (host.matches('.native-language-row,.language-accuracy')?0:2)),
+                logical = Math.max(8, Math.floor(w / scale)),
+                lines = wrap(value.text, logical - 1, t => this.font.width(t)), height = lines.length * 12,
+                resolution = Math.max(1,(parseFloat(style.getPropertyValue('--button-scale'))||value.scale)*host.getBoundingClientRect().width/host.clientWidth*Math.min(globalThis.devicePixelRatio??1,4));
+            canvas.width = Math.ceil(logical * resolution);
+            canvas.height = Math.ceil(height * resolution);
+            canvas.dataset.logicalHeight = String(height);
+            canvas.style.width = logical * scale + 'px';
+            canvas.style.height = height * scale + 'px';
             const context = canvas.getContext('2d')!;
+            context.setTransform(canvas.width/logical, 0, 0, canvas.height/height, 0, 0);
             context.imageSmoothingEnabled = false;
             lines.forEach((line, i) => this.font.draw(context, line, style.textAlign === 'center' ? Math.max(0, Math.floor((logical - this.font.width(line)) / 2)) : 0, i * 12, value.color, true));
         };
@@ -108,7 +112,7 @@ export class PixelUI {
         draw();
     }
 
-    /** Paint original nine-slice button states behind localized, accessible text.
+    /** Paint original nine-slice button states at the widget's GUI scale behind accessible text.
      * @param {HTMLButtonElement|HTMLAnchorElement} button Interactive DOM control.
      */
     button(button: HTMLButtonElement | HTMLAnchorElement): void {
@@ -126,8 +130,9 @@ export class PixelUI {
                 image = this.resources.guiImages.get(path);
             if (!image) return;
             const label = this.texts.get(button); if (label) {label.color = disabled ? '#A0A0A0' : '#FFFFFF'; this.updates.get(button)?.();}
-            canvas.width = Math.max(16, Math.ceil(button.clientWidth / 2));
-            canvas.height = Math.max(20, Math.ceil(button.clientHeight / 2));
+            const scale = parseFloat(getComputedStyle(button).getPropertyValue('--button-scale')) || 2;
+            canvas.width = Math.max(16, Math.round(button.clientWidth / scale));
+            canvas.height = Math.max(20, Math.round(button.clientHeight / scale));
             const context = canvas.getContext('2d')!;
             context.imageSmoothingEnabled = false;
             drawSprite(context, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, canvas.width, canvas.height);
@@ -176,7 +181,7 @@ export class PixelUI {
         draw();
     }
 
-    /** Map native Java slider coordinates and key steps onto HTML range accessibility and the existing settings edit lifecycle.
+    /** Render native slider labels at Unicode resolution and retain HTML range accessibility and edit lifecycle.
      * @param {HTMLInputElement} input Real bounded range control.
      */
     slider(input: HTMLInputElement): void {
@@ -185,16 +190,16 @@ export class PixelUI {
         let highlighted = false, changing = true, pointer: number | null = null;
         input.step = 'any';
         const draw = () => {
-            const width = Math.max(40, Math.floor(host.clientWidth / 2));
-            canvas.width = width; canvas.height = 20;
-            const ctx = canvas.getContext('2d')!; ctx.imageSmoothingEnabled = false;
+            const width = Math.max(40, Math.floor(host.clientWidth / 2)), label = input.dataset.nativeLabel ?? '',
+                resolution = Math.max(1,host.getBoundingClientRect().width/width*Math.min(globalThis.devicePixelRatio??1,4));
+            canvas.width = Math.ceil(width * resolution); canvas.height = Math.ceil(20 * resolution);
+            const ctx = canvas.getContext('2d')!; ctx.setTransform(canvas.width/width,0,0,canvas.height/20,0,0); ctx.imageSmoothingEnabled = false;
             for (const handle of [false, true]) {
                 const name = 'slider' + (handle ? '_handle' : '') + (highlighted ? '_highlighted' : ''), path = 'assets/minecraft/textures/gui/sprites/widget/' + name + '.png', image = this.resources.guiImages.get(path);
                 if (!image) continue;
                 const fraction = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
                 drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.floor((width - 8) * fraction) : 0, 0, handle ? 8 : width, 20);
             }
-            const label = input.dataset.nativeLabel ?? '';
             this.font.draw(ctx, label, Math.floor((width - this.font.width(label)) / 2), 6, '#FFFFFF', true);
         };
         /** Apply the native bounded slider value through the existing semantic input/change contract.

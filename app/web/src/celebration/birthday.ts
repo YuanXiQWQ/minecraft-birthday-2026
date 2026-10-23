@@ -106,6 +106,7 @@ export class BirthdayCelebration {
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) this.pause(); else if (this.paused) void this.resume();
     }, {signal: this.abort.signal});
+    this.localize();
     this.sync();
   }
 
@@ -139,6 +140,16 @@ export class BirthdayCelebration {
       this.root.dataset.error = String(error);
     }
     this.publish();
+  }
+
+  /** Refresh birthday copy and toast pixels without replaying the celebration or changing saved completion. */
+  localize(): void {
+    const keys = ['celebration.title', 'celebration.body', 'celebration.signature'];
+    this.root.setAttribute('aria-label', this.text('celebration.label'));
+    [...this.message.children].forEach((element, i) => this.pixels.text(element as HTMLElement, this.text(keys[i]), i === 0 ? 3 : 2));
+    this.pixels.text(this.replay, this.text('celebration.replay'), 2);
+    this.pixels.text(this.skip, this.text('celebration.skip'), 2);
+    this.drawToast();
   }
 
   /** Project committed completion and effective audio settings; reset or leaving home invalidates asynchronous playback. */
@@ -190,9 +201,12 @@ export class BirthdayCelebration {
     this.view.requestRender();
   }
 
-  /** Paint the original advancement toast with a real cake icon and externalized birthday text. */
+  /** Paint the native birthday toast at displayed framebuffer resolution, retaining original Unicode masks. */
   drawToast(): void {
+    const scale=Math.max(1,(this.toast.getBoundingClientRect().width||320)/160*Math.min(globalThis.devicePixelRatio??1,4));
+    this.toast.width=Math.ceil(160*scale);this.toast.height=Math.ceil(32*scale);
     const c = this.toast.getContext('2d')!;
+    c.setTransform(this.toast.width/160,0,0,this.toast.height/32,0,0);
     c.clearRect(0, 0, 160, 32);
     c.imageSmoothingEnabled = false;
     const image = this.art.images.get('assets/minecraft/textures/gui/sprites/toast/advancement.png');

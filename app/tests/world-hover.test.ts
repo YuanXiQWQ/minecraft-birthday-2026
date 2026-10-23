@@ -77,6 +77,18 @@ function pointer(patch: Partial<PointerEvent> = {}): PointerEvent {
     } as PointerEvent;
 }
 
+test('locked look consumes MouseEvent deltas once and ignores companion PointerEvent coordinates', () => {
+    const v=view();v.mode={actual:true} as any;
+    for(let i=0;i<200;i++) {
+        v.movePointer(pointer({movementX:-1200,movementY:0,clientX:i%2?0:1000}),true);
+        v.moveLockedMouse(pointer({movementX:30,movementY:0}));
+        assert.ok(Math.abs(v.look.yaw+(i+1)*.09)<1e-10);
+        assert.equal(v.camera.rotation.y,v.look.yaw);
+    }
+    const yaw=v.look.yaw;v.input=false;v.moveLockedMouse(pointer({movementX:100,movementY:0}));assert.equal(v.look.yaw,yaw);
+    v.input=true;v.mode!.actual=false;v.moveLockedMouse(pointer({movementX:100,movementY:0}));assert.equal(v.look.yaw,yaw);
+});
+
 test('current camera ray replaces A with B without an extra mouse movement and rotation never emits Use', () => {
     const v = view();
     v.persistent.children[1].position.x = 6;

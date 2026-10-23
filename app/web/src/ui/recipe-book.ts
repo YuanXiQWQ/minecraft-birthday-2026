@@ -13,7 +13,7 @@ import {
   ownedRecipeGhost
 } from '../domain/recipe-book.ts';
 import type {BookMode} from '../domain/recipe-book.ts';
-import {itemName} from '../i18n/items.ts';
+import {matchesItem} from '../i18n/items.ts';
 import {drawSprite} from './vanilla.ts';
 
 /** One persistent discovery group can contain several native recipes. */
@@ -252,7 +252,7 @@ export class RecipeBookView {
     return this.ui.image(path);
   }
 
-  /** Position and update one book without recreating active search or slot controls on timer snapshots. */
+  /** Position and localize one book without recreating active search or slot controls on timer snapshots. */
   render(): void {
     if (this.disposed) return;
     this.syncScope();
@@ -293,14 +293,14 @@ export class RecipeBookView {
         known = new Set(u.permanent!.progress.recipeBook.data.known), query = this.query.trim().toLowerCase(),
         groups = new Map<string, RecipeGroup>();
     for (const recipe of BOOK_RECIPES) {
-      if (!known.has(recipe.id) || !bookApplicable(recipe, this.mode(), this.width()) || this.category !== 'all' && (recipe.category ?? 'misc') !== this.category || query && !((itemName(recipe.result!.id!) + ' ' + recipe.id).toLowerCase().includes(query)) || settings.filter && !this.craftable(recipe)) continue;
+      if (!known.has(recipe.id) || !bookApplicable(recipe, this.mode(), this.width()) || this.category !== 'all' && (recipe.category ?? 'misc') !== this.category || query && !matchesItem(recipe.result!.id!, query) && !recipe.id.toLowerCase().includes(query) || settings.filter && !this.craftable(recipe)) continue;
       const key = recipe.type + ':' + (recipe.category ?? 'misc') + ':' + (recipe.group || recipe.id);
       if (!groups.has(key)) groups.set(key, {key, recipes: []});
       groups.get(key)!.recipes.push(recipe);
     }
     this.groups = [...groups.values()];
     this.page = Math.min(this.page, Math.max(0, Math.ceil(this.groups.length / 20) - 1));
-    const signature = JSON.stringify([id, u.scale, this.page, this.category, this.query, this.groups.map(g => g.key), settings.filter, this.popup?.key, overlay]);
+    const signature = JSON.stringify([id, u.permanent?.settings.locale, u.scale, this.page, this.category, this.query, this.groups.map(g => g.key), settings.filter, this.popup?.key, overlay]);
     if (signature !== this.signature) {
       this.signature = signature;
       this.buildControls();
@@ -309,6 +309,12 @@ export class RecipeBookView {
     this.acknowledgeVisible();
     this.paint();
     this.publish();
+  }
+
+  /** Refresh semantic book controls after a committed display-language change. */
+  localize(): void {
+    this.search.setAttribute('aria-label', this.ui.text('book.search'));
+    this.toggle.setAttribute('aria-label', this.ui.text('book.toggle'));
   }
 
   /** Determine material qualification separately from current grid conflicts and product acquisition.
@@ -396,13 +402,13 @@ export class RecipeBookView {
     }));
     this.hit(this.ui.text('book.filter'), [110, 12, 26, 16], 'filter', () => this.change({filter: !this.ui.permanent!.progress.recipeBook.data.views[this.mode()].filter}));
     pageGroups.forEach((group, i) => this.hit(this.ui.text('book.recipe', {
-      item: itemName(group.recipes[0].result!.id!),
+      item: this.ui.name(group.recipes[0].result!.id!),
       variants: group.recipes.length
     }), [11 + i % 5 * 25, 31 + Math.floor(i / 5) * 25, 25, 25], 'recipe:' + i, e => this.choose(group.recipes[Math.floor(performance.now() / 1000) % group.recipes.length], e.shiftKey), () => {
       if (group.recipes.length < 2) return;
       this.popup = group;
       this.render();
-    }, [itemName(group.recipes[0].result!.id!), ...(group.recipes.length > 1 ? [this.ui.text('book.more')] : [])]));
+    }, [this.ui.name(group.recipes[0].result!.id!), ...(group.recipes.length > 1 ? [this.ui.text('book.more')] : [])]));
     if (this.page > 0) this.hit(this.ui.text('book.previous'), [38, 137, 12, 17], 'previous', () => {
       this.page--;
       this.popup = null;
@@ -416,7 +422,7 @@ export class RecipeBookView {
     if (this.body.classList.contains('book-only')) this.hit(this.ui.text('book.toggle'), [126, 146, 20, 18], 'close', () => this.change({open: false}));
     if (this.popup) {
       const cols = Math.min(4, this.popup.recipes.length);
-      this.popup.recipes.forEach((recipe, i) => this.hit(itemName(recipe.result!.id!), [7 + i % cols * 25, 37 + Math.floor(i / cols) * 25, 24, 24], 'variant:' + i, e => this.choose(recipe, e.shiftKey)));
+      this.popup.recipes.forEach((recipe, i) => this.hit(this.ui.name(recipe.result!.id!), [7 + i % cols * 25, 37 + Math.floor(i / cols) * 25, 24, 24], 'variant:' + i, e => this.choose(recipe, e.shiftKey)));
     }
     this.startPulses();
 

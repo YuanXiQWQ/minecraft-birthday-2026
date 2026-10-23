@@ -1,0 +1,74 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Official Java 26.3 asset index; original CubeMapTexture panorama for LevelLoadingScreen",
+  "assetIndex": {
+    "id": "34",
+    "sha1": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
+    "size": 597035,
+    "totalSize": 484894038,
+    "url": "https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json"
+  },
+  "entries": [
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_0.png",
+      "size": 599239,
+      "sha256": "fe50e18180901c1a38899ac3cd897d0e29314bee3948bfcacb384cb22b8693bc",
+      "assetSha1": "479ad40b906b87eab6d9eaa66f273226988dc2b2"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_1.png",
+      "size": 955457,
+      "sha256": "a8e122cbd7c30539a668d6ab51ea8326972055231a5ff4ef94447a8b7847ed21",
+      "assetSha1": "6a84d4afab797aaf9f6ad283ebcd5899493c5c64"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_2.png",
+      "size": 784924,
+      "sha256": "c1ee66e087b028853f42f67703e109792a71db972b4f8aa7c4f23cf54fe0e09d",
+      "assetSha1": "a9368ad23ea1b7517cc2fdf5b3d73cec45a045db"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_3.png",
+      "size": 650997,
+      "sha256": "5baf6aefb4d6670d03f172e1720d2abd8483324d337bb7a6e713dae11ea3bdf9",
+      "assetSha1": "4e260704b88f2cd57fbc05abcd1a4264df733f91"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_4.png",
+      "size": 759750,
+      "sha256": "5b36a80e6480e7eee327a4513eb68315e4a0498d573df4733affab690aa3e92e",
+      "assetSha1": "17229c85a056fa9e97e9b025fd76e1e081b36317"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_5.png",
+      "size": 359529,
+      "sha256": "65120e8bd0420394b71926b005fd80e67358db9c9e3696ed1ad6d73b3b630917",
+      "assetSha1": "61331fc97f54d2f7500cdbb14d16bc1244539272"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/title/background/panorama_overlay.png",
+      "size": 86,
+      "sha256": "4cabea349b45c137de6ab4472303fb20fb94b07a119c8926aa54575ffbab91e6",
+      "assetSha1": "9dd32387135eefa7ab95996d52a5ca4cec8a3b30"
+    }
+  ],
+  "inputs": {
+    "assets/minecraft/font/include/default.json": {
+      "size": 19118,
+      "sha256": "e17f8a4289db15bf662df3ab623ad4dd9bda9d2b2e3e9e9e743234ff186bd0c4"
+    },
+    "assets/minecraft/font/include/space.json": {
+      "size": 170,
+      "sha256": "f87f46eca8c1731f0452ca539035ebdfbc52be3024fc74a910721832496d1ee1"
+    },
+    "assets/minecraft/textures/font/ascii.png": {
+      "size": 810,
+      "sha256": "e8646f1ed1f4bfd597d262cca3d8fac88ceaaa62807bbd5e607b2e3fe41c928a"
+    },
+    "assets/minecraft/textures/gui/menu_background.png": {
+      "size": 74,
+      "sha256": "515f7821d6bea28de86e607f6a53011e658d00a121179bb980719f39ac62df51"
+    }
+  }
+}

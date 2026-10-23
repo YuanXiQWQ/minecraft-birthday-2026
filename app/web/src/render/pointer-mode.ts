@@ -27,8 +27,9 @@ export class PointerMode {
             this.intentional = false;
         }, {signal: this.abort.signal});
         document.addEventListener('pointerlockerror', () => {
-            if (this.requested !== this.epoch || this.paused || this.disposed) return;
-            this.pending = false; this.desired = 'visible'; this.change(); this.publish(); this.warn();
+            // Promise requests classify unsupported raw input before deciding whether acquisition failed.
+            if (this.inFlight || !this.pending) return;
+            this.fail(this.requested);
         }, {signal: this.abort.signal});
         window.addEventListener('blur', () => this.suspend(), {signal: this.abort.signal});
         document.addEventListener('visibilitychange', () => {if (document.hidden) this.suspend();}, {signal: this.abort.signal});
@@ -36,6 +37,29 @@ export class PointerMode {
     }
     /** Coalesce the error event and promise rejection for the same denied browser capability. */
     warn(): void {if (!this.warned) {this.warned = true; this.failure();}}
+    /** Report a current acquisition failure without reviving suspended input.
+     * @param {number} epoch Acquisition generation.
+     */
+    fail(epoch: number): void {
+        if (epoch !== this.epoch || this.paused || this.disposed) return;
+        this.pending = false; this.desired = 'visible'; this.change(); this.publish(); this.warn();
+    }
+    /** Prefer raw relative input and retry only an explicitly unsupported capability.
+     * @param {number} epoch Acquisition generation.
+     * @param {boolean} raw Whether to request OS raw movement.
+     * @return {Promise<void>|undefined} Completion, or undefined for legacy event-only browsers.
+     */
+    request(epoch: number, raw: boolean): Promise<void> | undefined {
+        const options = {unadjustedMovement: true};
+        const result = raw ? this.canvas.requestPointerLock(options) : this.canvas.requestPointerLock();
+        if (!result) return;
+        return result.catch((error: unknown) => {
+            if (raw && error instanceof Error && error.name === 'NotSupportedError' && epoch === this.epoch && !this.paused && !this.disposed && this.desired === 'hidden') {
+                return this.request(epoch, false);
+            }
+            throw error;
+        });
+    }
     /** Publish real lock diagnostics independently of persistence. */
     publish(): void {this.canvas.dataset.pointerMode = JSON.stringify({desired: this.desired, actual: this.actual, pending: this.pending, paused: this.paused, epoch: this.epoch});}
     /** Request only inside a trusted canvas gesture; consume that gesture even if acquisition fails.
@@ -47,10 +71,10 @@ export class PointerMode {
         this.warned = false; this.pending = true; this.requested = this.epoch;
         const epoch = this.epoch, ticket = {}; this.inFlight = ticket;
         try {
-            const pending = this.canvas.requestPointerLock();
-            if (pending) void pending.then(() => {if (epoch !== this.epoch && document.pointerLockElement === this.canvas) this.release();}).catch(() => {if (epoch === this.epoch && !this.disposed) {this.pending = false; this.desired = 'visible'; this.publish(); this.warn();}}).finally(() => {if (this.inFlight === ticket) this.inFlight = null;});
+            const pending = this.request(epoch, true);
+            if (pending) void pending.then(() => {if (epoch !== this.epoch && document.pointerLockElement === this.canvas) this.release();}).catch(() => this.fail(epoch)).finally(() => {if (this.inFlight === ticket) this.inFlight = null;});
             else this.inFlight = null;
-        } catch {this.inFlight = null; this.pending = false; this.desired = 'visible'; this.warn();}
+        } catch {this.inFlight = null; this.fail(epoch);}
         this.publish(); return true;
     }
     /** Invalidate in-flight acquisition and release this canvas without affecting another owner. */

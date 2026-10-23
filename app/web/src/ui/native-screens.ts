@@ -14,6 +14,12 @@ export function menuLayout(width:number,height:number,page:string){const header=
  * @return {object} Nonoverlapping logical widget bounds.
  */
 export function optionFlow(width:number,count:number){const columns=width>=310?2:1,buttonWidth=Math.min(columns===2?150:200,columns===2?Math.floor((width-24)/2):width-16),groupWidth=columns*buttonWidth+(columns-1)*8,warningY=67+Math.ceil(count/columns)*24;return{columns,buttonWidth,groupWidth,warningY,resetY:warningY};}
+/** Reproduce LanguageSelectionList rows and the centered 37-pixel content of its 53-pixel footer.
+ * @param {number} width Logical screen width.
+ * @param {number} height Logical screen height.
+ * @return {object} Native list and footer anchors.
+ */
+export function languageLayout(width:number,height:number){const rowWidth=Math.min(270,width-16);return{rowWidth,rowLeft:(width-rowWidth)/2,rowHeight:18,listTop:36,firstRow:2,textTop:5,warningY:height-45,doneY:height-28};}
 export interface ScreenControls {title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
 /** Position one supported native screen; transaction callbacks remain owned by app/settings. */
 export class NativeScreens {
@@ -49,7 +55,7 @@ export class NativeScreens {
      * @param {number} width Available logical width.
      * @return {number} Actual line height for the next text block.
      */
-    placeText(element:HTMLElement,x:number,y:number,width:number):number{this.place(element,x,y,width,12);this.pixels.updates.get(element)?.();const value=this.pixels.texts.get(element),canvas=element.querySelector('canvas'),height=Math.max(12,(canvas?.height??12)*(value?.scale??2)/2);this.place(element,x,y,width,height);return height;}
+    placeText(element:HTMLElement,x:number,y:number,width:number):number{this.place(element,x,y,width,12);this.pixels.updates.get(element)?.();const value=this.pixels.texts.get(element),canvas=element.querySelector('canvas'),height=Math.max(12,Number(canvas?.dataset.logicalHeight??canvas?.height??12)*(value?.scale??2)/2);this.place(element,x,y,width,height);return height;}
     /** Render native section textures and aligned full-span or left-column controls within the viewport. */
     layout():void{
         for (const element of this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)')) {const value=this.pixels.texts.get(element); if(value) this.pixels.text(element,value.text,value.scale,'#FFFFFF');}
@@ -81,13 +87,13 @@ export class NativeScreens {
         const channelSliders=[...u.sections.get('sound')!.querySelectorAll<HTMLInputElement>('input[type=range]')].filter(input=>input!==u.volume);
         channelSliders.forEach((input,i)=>this.place(input.parentElement!,narrow?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+(i%2)*(flow.buttonWidth+8),28+Math.floor(i/(narrow?1:2))*24,narrow?flow.groupWidth:flow.buttonWidth));
         u.languageLabel.classList.add('sr-only');
-        const list=u.sections.get('language')!.querySelector<HTMLElement>('[role=listbox]');
-        if(list){this.place(list,(w-Math.min(308,w-16))/2,layout.header+4,Math.min(308,w-16),h-layout.header-layout.footer-8);}
+        const language=languageLayout(w,h),list=u.sections.get('language')!.querySelector<HTMLElement>('[role=listbox]');
+        if(list){this.place(list,language.rowLeft,language.listTop,language.rowWidth,h-language.listTop-layout.footer);list.style.paddingTop=language.firstRow*2+'px';}
         const search=u.sections.get('language')!.querySelector<HTMLInputElement>('.language-search');
         if(search)this.place(search.parentElement!, (w-pw)/2,17,pw,15);
         const accuracy=u.sections.get('language')!.querySelector<HTMLElement>('.language-accuracy');
-        if(accuracy){this.place(accuracy,0,h-layout.footer+4,w,9);this.pixels.text(accuracy,this.pixels.texts.get(accuracy)?.text??'',2,'#BABABA');}
-        if(page==='language')this.place(u.done,(w-pw)/2,h-26,pw);
+        if(accuracy){this.place(accuracy,0,language.warningY,w,9);this.pixels.text(accuracy,this.pixels.texts.get(accuracy)?.text??'',2,'#BABABA');}
+        if(page==='language')this.place(u.done,(w-pw)/2,language.doneY,pw);
         this.place(u.usernameLabel,(w-pw)/2,layout.contentY,pw,9);this.place(u.username.parentElement!,(w-pw)/2,layout.contentY+12,pw);
         [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+40+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         const weather=u.sections.get('weather');
@@ -107,6 +113,7 @@ export class NativeScreens {
             [...u.confirmation.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),y+28+textHeight+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         }
         this.dialog.querySelectorAll<HTMLElement>('.mc-button').forEach(b=>this.pixels.refreshButton(b));
+        this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)').forEach(element=>this.pixels.updates.get(element)?.());
         this.dialog.querySelectorAll<HTMLInputElement>('.native-text-field>input,.native-slider>input').forEach(input=>this.pixels.updates.get(input)?.());
     }
     /** Disconnect dimension and page observers when the document ends. */
