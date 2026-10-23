@@ -142,6 +142,7 @@ export class GameInventory {
                 this.sideOffset = 0;
                 this.hover = null;
                 this.draw();
+                if (!this.focusCatalogue()) button.focus({preventScroll: true});
             }, {signal: this.abort.signal});
             tabs.append(button);
         }
@@ -167,6 +168,7 @@ export class GameInventory {
             this.hideTooltip();
             this.draw();
         }, {signal: this.abort.signal});
+        for (const type of ['pointerup', 'pointercancel']) this.scrollbar.addEventListener(type, () => this.focusCatalogue(), {signal: this.abort.signal});
         this.search = document.createElement('input');
         this.search.type = 'search'; this.search.maxLength = 50;
         this.search.className = 'catalogue-search';
@@ -224,6 +226,12 @@ export class GameInventory {
         this.cursor.hidden = true;
         this.modal.append(this.tooltip, this.cursor);
         host.append(this.hud, this.modal);
+        this.modal.addEventListener('pointerdown', e => {
+            if (this.tab === 'catalogue' && !this.station && e.target instanceof HTMLElement && !e.target.closest('input')) {
+                e.preventDefault();
+                this.focusCatalogue();
+            }
+        }, {capture: true, signal: this.abort.signal});
         for (const type of ['pointerdown', 'pointerup', 'pointermove', 'click', 'dblclick', 'auxclick', 'contextmenu', 'wheel']) this.modal.addEventListener(type, event => {
             event.stopPropagation();
             if (['contextmenu', 'auxclick', 'wheel'].includes(type)) event.preventDefault();
@@ -421,7 +429,16 @@ export class GameInventory {
         this.hover = null;
         this.modal.show();
         this.draw();
-        this.modal.querySelector('button')?.focus();
+        if (!this.focusCatalogue()) this.modal.querySelector('button')?.focus();
+    }
+
+    /** Keep the creative search editor ready for typing throughout its visible tab lifetime.
+     * @return {boolean} Whether catalogue search owns keyboard focus.
+     */
+    focusCatalogue(): boolean {
+        if (!this.modal.open || this.station || this.tab !== 'catalogue' || this.search.hidden) return false;
+        if (document.activeElement !== this.search) this.search.focus({preventScroll: true});
+        return true;
     }
 
     /** Clear personal carried items and inputs at close/re-entry, fencing older asynchronous menu results. */

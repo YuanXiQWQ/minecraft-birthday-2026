@@ -82,7 +82,7 @@ export class InventoryInput {
         return target instanceof HTMLElement && !!target.closest('input:not([type="range"]),textarea,select,[contenteditable]:not([contenteditable="false"])');
     }
 
-    /** Route hotkeys according to screen and hovered slot; numeric GUI operations never select the world hotbar.
+    /** Route creative search numeric hover actions before text capture; other editors retain their own key ownership.
      * @param {KeyboardEvent} e Browser key event.
      */
     key(e: KeyboardEvent): void {
@@ -95,7 +95,8 @@ export class InventoryInput {
             u.close();
             return;
         }
-        if (this.editing(e.target) || e.altKey || e.metaKey) return;
+        const catalogueNumber = e.target === u.search && u.modal.open && u.tab === 'catalogue' && !u.station && !e.isComposing && !e.ctrlKey && !!u.hover && (u.hover.kind === 'source' || !!slotRef(u.hover)) && /^Digit[1-9]$/.test(e.code);
+        if (this.editing(e.target) && !catalogueNumber || e.altKey || e.metaKey || e.isComposing) return;
         if (e.ctrlKey && e.code !== 'KeyQ') return;
         if (u.carrierBusy() && e.code !== 'KeyE' && e.code !== 'Escape') {
             if (/^(Digit[1-9]|Key[FQCX])$/.test(e.code)) e.preventDefault();
@@ -240,7 +241,7 @@ export class InventoryInput {
         const s = this.at(e.clientX, e.clientY);
         if (!s || s.kind === 'preset-info') return;
         e.preventDefault();
-        if (typeof HTMLElement !== 'undefined' && e.target instanceof HTMLElement) e.target.closest<HTMLElement>('.inventory-slot')?.focus({preventScroll: true});
+        if (!this.ui.focusCatalogue() && typeof HTMLElement !== 'undefined' && e.target instanceof HTMLElement) e.target.closest<HTMLElement>('.inventory-slot')?.focus({preventScroll: true});
         this.start = s;
         const ref = slotRef(s);
         if (!e.shiftKey) this.quickMatch = null; else if (!this.gesture.last) this.quickMatch = ref ? structuredClone(cell(this.ui.value, ref).stack) : null;

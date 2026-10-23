@@ -37,9 +37,9 @@
     "assets/minecraft/textures/gui/sprites/toast/recipe.png": "270ae5ee13fff15d8973f33cc6564c9572c2420080a52b15b1fe2921d883545e",
     "assets/minecraft/textures/gui/sprites/toast/recipe_book.png": "c6bd85133131c999c0222336c41510ef7975bd3282e73d1292a4f18cfb268b92",
     "assets/minecraft/items/compass.json": "16ec7eefe2acbc9ebab9ff2f652c4d2fd5076ed37abcc67fb74bba229841e307",
-    "assets/minecraft/models/item/compass_16.json": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb",
+    "assets/minecraft/models/item/compass_12.json": "66377186b32e6fe8b6dd7e4d20791b3f7cc26015412c7def924adf338169bbfc",
     "assets/minecraft/models/item/generated.json": "63190611202e75ad7b812bc9a4b31bd53f3e186895d7b53e5e280b0d1e30a67a",
-    "assets/minecraft/textures/item/compass_16.png": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8",
+    "assets/minecraft/textures/item/compass_12.png": "b513404a2d8c886b97ea9d5bfa07ea00b4f7d631e5a616bc166c72e54e290ee2",
     "assets/minecraft/items/golden_sword.json": "51d1129fc91ac0c7de4b4d7108d9b49643f2c140e0afac408537ef4d10e268f8",
     "assets/minecraft/models/item/golden_sword.json": "fc65c5018630966e7aab4012b7c88f4ea80f61644dc02f85d32a6f11e8df8506",
     "assets/minecraft/models/item/handheld.json": "8fe990d1c011429e27df2d49d35cf8571946370eac8d0fb7497aacede4ff20f5",
@@ -110,9 +110,9 @@
       "sha256": "e1bdbabd59ead8c6b2c0420c5c0a16adcc3ebeda65e5d4a46c7cde7de9f2ed03"
     },
     {
-      "entry": "assets/minecraft/models/item/compass_16.json",
+      "entry": "assets/minecraft/models/item/compass_12.json",
       "size": 105,
-      "sha256": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb"
+      "sha256": "66377186b32e6fe8b6dd7e4d20791b3f7cc26015412c7def924adf338169bbfc"
     },
     {
       "entry": "assets/minecraft/models/item/cooked_porkchop.json",
@@ -310,9 +310,9 @@
       "sha256": "e6a57182db6029fff6d02fc774780fcec9f506b74226985445c91e5e7df5d9bb"
     },
     {
-      "entry": "assets/minecraft/textures/item/compass_16.png",
-      "size": 205,
-      "sha256": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8"
+      "entry": "assets/minecraft/textures/item/compass_12.png",
+      "size": 211,
+      "sha256": "b513404a2d8c886b97ea9d5bfa07ea00b4f7d631e5a616bc166c72e54e290ee2"
     },
     {
       "entry": "assets/minecraft/textures/item/cooked_porkchop.png",
@@ -338,7 +338,7 @@
   "uiDefinitions": {
     "minecraft:compass": {
       "type": "minecraft:model",
-      "model": "minecraft:item/compass_16"
+      "model": "minecraft:item/compass_12"
     },
     "minecraft:golden_sword": {
       "type": "minecraft:model",
@@ -365,8 +365,12 @@
       "model": "minecraft:item/cooked_porkchop"
     }
   },
+  "uiCompass": {
+    "model": "minecraft:item/compass_12",
+    "direction": "northwest",
+    "purpose": "fixed UI symbol matching the user reference; not world navigation"
+  },
   "limitations": [
-    "UI compass uses original no-lodestone angle-zero frame; no compass world navigation"
-  ],
-  "exporterSha256": "1f41fa00e8fce1fe27f87625407001f72c763fb6964d8d957aedb9791959cc17"
+    "Fixed UI compass uses an original frame; Minecraft world spawn/owner compass calculation is not simulated"
+  ]
 }

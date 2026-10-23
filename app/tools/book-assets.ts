@@ -45,7 +45,8 @@ const icons = ['compass', 'golden_sword', 'bricks', 'lava_bucket', 'apple', 'red
     uiDefinitions: Record<string, any> = {};
 for (const id of icons) {
     const definition = JSON.parse(take('assets/minecraft/items/' + id + '.json').toString());
-    const node = id === 'compass' ? definition.model.on_false.entries[0].model : definition.model;
+    const node = id === 'compass' ? definition.model.on_false.entries.find((entry: any) => entry.model.model === 'minecraft:item/compass_12')?.model : definition.model;
+    if (!node) throw Error('missing-native-ui-compass');
     uiDefinitions['minecraft:' + id] = node;
     for (const part of iconParts(node, '10-21')) {
         model(part.model);
@@ -79,7 +80,8 @@ writeJSON(resolve(out, 'book-manifest.json'), {
     inputs: Object.fromEntries(Object.entries(inputs).filter(([p]) => p.startsWith('assets/'))),
     entries,
     uiDefinitions,
-    limitations: ['UI compass uses original no-lodestone angle-zero frame; no compass world navigation']
+    uiCompass: {model: 'minecraft:item/compass_12', direction: 'northwest', purpose: 'fixed UI symbol matching the user reference; not world navigation'},
+    limitations: ['Fixed UI compass uses an original frame; Minecraft world spawn/owner compass calculation is not simulated']
 });
 const classes = Object.fromEntries([...jar].filter(([p]) => /(RecipeBookComponent|RecipeBookPage|RecipeButton|RecipeCraftingHolder|HopperMenu|HopperScreen|RecipeToast|GhostSlots|ServerPlaceRecipe|PlaceRecipeHelper)\.class$/.test(p)).map(([p, b]) => [p, createHash('sha256').update(b).digest('hex')]));
 writeJSON(resolve(root, 'data/minecraft/26.3/book-evidence.json'), {
