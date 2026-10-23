@@ -37,6 +37,13 @@ function device(id: string, cell: Cell, furnace: boolean, facing: Station['facin
 }
 
 state.progress.unlocked = ['furnace', 'hopper', 'oak_log', 'stick'].map(id => 'minecraft:' + id);
+/** Explicit finite-device fixture for native mouse checks, separate from ordinary acquisition evidence. */
+if (layout === 'plains-review') {
+    state.progress.unlocked.push('minecraft:iron_pickaxe');
+    state.progress.player.data.hotbar[0] = {id: 'minecraft:furnace', count: 1};
+    state.progress.player.data.hotbar[1] = {id: 'minecraft:hopper', count: 1};
+    state.progress.player.data.hotbar[2] = {id: 'minecraft:iron_pickaxe', count: 1};
+}
 if (layout === 'chain') {
     const list = [device('bottom', [3, 0, 0], false, 'east'), device('receiver', [4, 0, 0], false), device('producer', [3, 1, 0], true), device('top', [3, 2, 0], false), device('side', [4, 1, 0], false, 'west')];
     if (list[4].contents.version === 3) list[4].contents.data.slots[0] = {id: 'minecraft:stick', count: 64};

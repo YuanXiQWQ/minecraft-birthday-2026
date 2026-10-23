@@ -12,7 +12,7 @@ import {PRESENTATION} from '../web/src/render/presentation.ts';
 test('both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height', () => {
     const files = resources(), profile = JSON.parse(new TextDecoder().decode(files.get('presentation-manifest.json')));
     assert.equal(profile.entries.length, 17);
-    assert.equal(files.size,754+1+JSON.parse(new TextDecoder().decode(files.get('ambience-manifest.json'))).entries.length+1+JSON.parse(new TextDecoder().decode(files.get('startup-manifest.json'))).entries.length);
+    assert.equal(files.size,780+1+JSON.parse(new TextDecoder().decode(files.get('ambience-manifest.json'))).entries.length+1+JSON.parse(new TextDecoder().decode(files.get('startup-manifest.json'))).entries.length);
     const docs = new Map([...files].filter(([n]) => n.endsWith('.json')).map(([n, b]) => [n, JSON.parse(new TextDecoder().decode(b))]));
     for (const model of Object.values(profile.models) as string[]) {
         const source = resolveModel(model, id => docs.get('assets/minecraft/models/' + id.split(':')[1] + '.json'));

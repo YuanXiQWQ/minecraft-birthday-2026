@@ -9,6 +9,7 @@ import {NativeCrosshair} from './native-crosshair.ts';
 import {timing, gpuTiming} from '../performance.ts';
 import {
     Color,
+    Fog,
     Group,
     MeshBasicMaterial,
     PlaneGeometry,
@@ -164,6 +165,7 @@ export class SceneView {
                 this.world.add(leg);
             }
         } else {
+            this.camera.layers.enable(1);
             this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.weather=new NativeWeather();this.scene.add(this.weather.root);this.scene.background=null;
             this.authored = new AuthoredWorld(this.models, pack);
             this.scene.add(this.authored.staticRoot, this.authored.natural, this.authored.crops);
@@ -417,6 +419,7 @@ export class SceneView {
             this.updateDebris(Infinity);
             this.worldId = p.scene;
             this.authored.build(p.scene);
+            this.scene.fog = p.scene === 'plains' ? new Fog('#c0d8ff', 44, 68) : null;
             const spec = WORLD_SCENES[p.scene];
             this.scene.background = this.sky ? null : new Color(spec.sky);
             this.camera.position.set(...spec.eye);
@@ -643,11 +646,12 @@ export class SceneView {
         });
     }
 
-    /** Apply native outdoor sky-light timeline values without tinting independent GUI renderers.
+    /** Apply native outdoor sky-light and plains horizon fog without tinting independent GUI renderers.
      * Cave lighting retains the approved authored presentation; this is not a voxel-light propagation engine.
      */
     applySkyLighting():void{
         if(!this.sky)return;
+        if(this.scene.fog && this.sky.scene.background instanceof Color) this.scene.fog.color.copy(this.sky.scene.background);
         const factor=this.worldId==='cave'?1:Number(this.sky.report.skyLightFactor??1),rgb=this.worldId==='cave'?[1,1,1]:this.sky.report.skyLightColor as number[]??[1,1,1],tint=new Color().setRGB(rgb[0],rgb[1],rgb[2],'srgb');
         for(const material of this.models.materials.values()){
             let base=this.skyBaseColors.get(material);if(!base){base=material.color.clone();this.skyBaseColors.set(material,base);}

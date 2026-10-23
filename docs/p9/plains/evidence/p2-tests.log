@@ -1,0 +1,60 @@
+
+> minecraft-birthday-p2-scene3d@0.1.0 test
+> node --test tests/*.test.ts
+
+✔ C01 injected WebGL2 absence rejects real 3D initialization without a 2D fallback (3.501ms)
+✔ C02 injected Web Audio absence has explicit capability state and safe cleanup (4.0017ms)
+✔ F01 small_ball original primary count and genuinely three-dimensional velocity (4.5764ms)
+✔ F01 large_ball original primary count and genuinely three-dimensional velocity (1.4943ms)
+✔ F01 star original primary count and genuinely three-dimensional velocity (0.7871ms)
+✔ F01 creeper original primary count and genuinely three-dimensional velocity (1.0335ms)
+✔ F01 burst original primary count and genuinely three-dimensional velocity (0.8569ms)
+✔ F02 all shape and Trail/Twinkle combinations terminate with bounded children (250.7519ms)
+✔ F03 same seed and elapsed time produce identical state across 30/60/144 Hz refresh sequences (108.4766ms)
+✔ F04 gravity precedes motion, drag follows it, color approaches fade after half life (1.8055ms)
+✔ F05 original reverse frame age formula, twinkle gate and trail birth age (2.9501ms)
+✔ F06 near/far boundary, blast/twinkle pitch ranges and integer-tick sound delay (1.3116ms)
+✔ F07 committed original particle/audio cohort has all required dependencies (370.7886ms)
+✔ F08 Starter final tick includes the base lifetime before its fifteen extra twinkle ticks (0.2234ms)
+✔ C01 resize preserves eye position and central composition across desktop and portrait (10.9889ms)
+✔ D01 authored bounds, occupied and protected cells reject without mutation (1.4914ms)
+✔ D02 placement allocates independent stable instances (1.891ms)
+✔ D03 hopper has five possible outlet directions, no upward or downward furnace (0.4764ms)
+✔ D04 furnace ports and hopper collector use independent coordinate adjacency (0.8535ms)
+✔ D05 rotation and removal cannot retain stale graph edges (1.0662ms)
+✔ D06 restore retains IDs, positions, orientation and derived edges (1.3115ms)
+✔ D07 rejects corrupted schema (0.5326ms)
+✔ D07 rejects corrupted overlap (0.5222ms)
+✔ D07 rejects corrupted direction (0.8013ms)
+✔ D07 rejects corrupted ID (0.6392ms)
+✔ D07 rejects corrupted next ID (0.5601ms)
+✔ D07 rejects corrupted kind (0.6152ms)
+✔ P01 face selection respects negative cell coordinates and epsilon (0.5645ms)
+✔ M01 inherited textures override parents without appending replaced elements (2.4625ms)
+✔ M02 model-parent, texture-variable cycles and missing references fail explicitly (0.9561ms)
+✔ M03 rotated north face has east normal in Y-up render coordinates (0.6441ms)
+✔ M04 UV-lock and element rotations are rejected, not silently approximated (0.3086ms)
+✔ M05 original debug hopper is hollow and its outlet rotates toward east (7.9481ms)
+✔ R01 repeated model creation/release balances owned geometry and shared materials (15.8132ms)
+✔ T01 frame summary uses actual intervals and rejects empty or invalid samples (0.6593ms)
+✔ Q10 right split, single placement, finite merge and unlock invariance (4.4623ms)
+✔ Q11 drag snapshots stay bounded with duplicate, full and unsupported slots (0.9825ms)
+✔ Q12 clone, Shift research transfer, number swap and finite double collect (0.9818ms)
+✔ Q13 menu slot origins retain same-version menu topology, not a universal web card grid (0.5944ms)
+✔ Q14 child display contexts merge without dropping the inherited GUI transform (1.3081ms)
+✔ Q15 committed GUI cohort hashes, image dimensions and distinct item source routes (393.288ms)
+✔ S01 render-only stone sample cannot occupy a legal build cell (1.6942ms)
+✔ U01 explicit asymmetric UVs rotate with their quad and remain texture-relative (3.4084ms)
+✔ U02 model state loader rejects multipart and missing originals rather than substituting debug (0.7372ms)
+✔ A01 original-style animation duration, explicit frames and wrap are deterministic (1.2962ms)
+✔ A02 nearest alpha sampling flips vertical UVs and clamps edge coordinates (0.6778ms)
+✔ L01 resource reader rejects missing files, tampering and path escapes (55.6084ms)
+✔ L02 committed originals are complete without an external environment variable (304.3576ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1714.3209

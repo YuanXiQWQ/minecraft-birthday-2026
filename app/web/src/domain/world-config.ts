@@ -1,5 +1,6 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
 import {caveSolid} from './cave-shape.ts';
+import {retainedPlainsSupports} from './plains-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
 export interface NaturalNode {
@@ -103,10 +104,7 @@ export function sameCell(a: Cell, b: Cell): boolean {
  */
 export function fixedSolid(scene: SceneId, cell: Cell): boolean {
     const [x, y, z] = cell;
-    if (scene === 'plains') {
-        const trees = [[-6, -3], [-3, -6], [0, -9], [-10, -13], [7, -14], [12, -8]];
-        return trees.some(([a, b]) => y >= 3 && y <= 5 && Math.abs(x - a) <= 2 && Math.abs(z - b) <= 2 && Math.abs(x - a) + Math.abs(z - b) < (y === 5 ? 3 : 5) || (b < -10 || a > 5) && x === a && z === b && y < 4);
-    }
+    if (scene === 'plains') return false;
     if (scene === 'cave') return caveSolid(cell);
     if (scene === 'home') return z === -9 && x >= -11 && x <= 11 && y < 6 && !(Math.abs(x) < 4 && y > 1 && y < 5) || Math.abs(x) === 11 && z >= -8 && z <= 5 && y < 6;
     if (scene === 'farm') return z === -12 && x >= -10 && x <= -7 && y < 4 || [-11, -6].includes(x) && z >= -12 && z <= -8 && y < 4 || y === 4 && x >= -11 && x <= -6 && z >= -12 && z <= -8;
@@ -121,14 +119,14 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
 export function supported(p: Progress, cell: Cell): boolean {
     if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
-    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || fixedSolid(scene, below) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id));
+    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id));
 }
 
-/** Keep live resource/crop occupancy separate from the right to use its cleared terrain.
+/** Keep live resource/crop and retained support occupancy separate from cleared terrain.
  * @param {Progress} p Latest scene facts.
  * @param {Cell} cell Candidate cell.
- * @return {boolean} Whether an actual resource or crop occupies it.
+ * @return {boolean} Whether an actual resource, crop or retained support occupies it.
  */
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
-    return p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id));
+    return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id));
 }

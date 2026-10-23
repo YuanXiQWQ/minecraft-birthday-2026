@@ -38,7 +38,7 @@ export class NativePrecipitation {
         const heights=this.heights=new Map<string,number>();
         /** Register a blocking block top. @param {number[]} cell Original logical block coordinates. */
         const block=(cell:number[])=>{const key=cell[0]+':'+cell[2];heights.set(key,Math.max(heights.get(key)??-64,cell[1]+1));};
-        scenery.traverse(object=>{for(const cell of object.userData.cells??[])block(cell);});
+        scenery.traverse(object=>{if(object.userData.blocksRain===false)return;for(const cell of object.userData.cells??[])block(cell);});
         for(const n of WORLD_SCENES[progress.scene].nodes)if(!n.kind&&!['short_grass','sugar_cane','wheat'].includes(n.block)&&!progress.world.visits[progress.scene].removed.includes(n.id))block(n.cell);
         for(const station of progress.scenes[progress.scene].stations)block(station.cell);
         const p:number[]=[],uv:number[]=[],motion:number[]=[],opacity:number[]=[],hash:number[]=[],indices:number[]=[],ex=Math.floor(camera.position.x),ey=Math.floor(camera.position.y),ez=Math.floor(camera.position.z),radius=10;

@@ -9,6 +9,9 @@ import animals from '../data/animal-models.json' with {type: 'json'};
 import {playerCube} from '../ui/player-model.ts';
 import {PlayerItems} from '../ui/player-items.ts';
 import type {CatalogueArt} from '../ui/icons.ts';
+import {DISTANT_OAKS, PLAINS_OAKS, oakCrown, plainsHeight, plainsPlants, retainedPlainsSupports} from '../domain/plains-shape.ts';
+import {plainsTerrain, exposedModel} from './plains-terrain.ts';
+import type {Sample} from './resources.ts';
 
 /** Build bounded authored geometry; scenery is never implicitly registered as a harvest source. */
 export class AuthoredWorld {
@@ -18,6 +21,7 @@ export class AuthoredWorld {
     signature = '';
     caveRoot: Group | null = null;
     caveSignature = '[]';
+    plainsDecor: Group | null = null;
 
     /** Retain the shared native material factory. @param {VanillaModels} models Native model ownership. @param {Resources} resources Verified pixels and documents. */
     constructor(public models: VanillaModels, public resources: Resources) {
@@ -30,15 +34,79 @@ export class AuthoredWorld {
         return this.models.sample(sample);
     }
 
-    /** Instance a repeated original block without stretching its UVs. @param {string} block Native model. @param {Cell[]} cells World coordinates. @param {Group} parent Owner. @param {string} id Ray identity. */
-    batch(block: string, cells: Cell[], parent = this.staticRoot, id = 'scenery'): void {
+    /** Instance every mesh part with original transforms, UVs and shared materials.
+     * @param {string} block Native model.
+     * @param {Cell[]} cells World coordinates.
+     * @param {Group} parent Owner.
+     * @param {string} id Ray identity; decoration uses render-only layer 1.
+     * @param {string} state Native blockstate fragment.
+     * @param {Sample} sample Optional exposed-face native model.
+     */
+    batch(block: string, cells: Cell[], parent = this.staticRoot, id = 'scenery', state = '', sample?: Sample): void {
         if (!cells.length) return;
-        const root = this.block(block), source = root.children[0] as Mesh,
-            mesh = new InstancedMesh(source.geometry, source.material, cells.length);
-        cells.forEach((c, i) => mesh.setMatrixAt(i, new Matrix4().makeTranslation(...c)));
-        mesh.userData.id = id;
-        mesh.userData.cells = structuredClone(cells);
-        parent.add(mesh);
+        const root = sample ? this.models.sample(sample) : this.block(block, state);
+        root.updateMatrixWorld(true);
+        root.traverse(source => {
+            if (!(source instanceof Mesh)) return;
+            const mesh = new InstancedMesh(source.geometry, source.material, cells.length);
+            cells.forEach((c, i) => mesh.setMatrixAt(i, new Matrix4().makeTranslation(...c).multiply(source.matrixWorld)));
+            mesh.userData.id = id;
+            mesh.userData.block = block;
+            mesh.userData.cells = structuredClone(cells);
+            mesh.userData.blocksRain = !['short_grass', 'tall_grass', 'dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet'].includes(block);
+            if (id === 'decoration') mesh.layers.set(1);
+            parent.add(mesh);
+        });
+    }
+
+    /** Build native grass and exposed dirt terraces without submitting buried cube faces. */
+    plainsGround(): void {
+        for (const batch of plainsTerrain()) {
+            const source = this.resources.samples.find(s => s.block === batch.block)!;
+            const sample = {...source, compiled: exposedModel(source.compiled, batch.faces)};
+            /** Keep rays bounded to the unchanged build region; surrounding terrain remains render-only.
+             * @param {Cell} c Native block coordinate.
+             * @return {boolean} Whether this surface can support a legal device.
+             */
+            const reachable = (c: Cell) => c[0] >= -18 && c[0] <= 18 && c[2] >= -22 && c[2] <= 10;
+            this.batch(batch.block, batch.cells.filter(reachable), this.staticRoot, 'ground', '', sample);
+            this.batch(batch.block, batch.cells.filter(c => !reachable(c)), this.staticRoot, 'decoration', '', sample);
+        }
+        const leaves: Cell[] = [], trunks: Cell[] = [];
+        DISTANT_OAKS.forEach(([x, z, height], i) => {
+            const y = plainsHeight(x, z);
+            for (let dy = 0; dy < height; dy++) trunks.push([x, y + dy, z]);
+            leaves.push(...oakCrown([x, y, z], height - 1, i + 3).filter(c => c[0] !== x || c[2] !== z || c[1] >= y + height));
+        });
+        this.batch('oak_log', trunks, this.staticRoot, 'decoration');
+        this.batch('oak_leaves', leaves, this.staticRoot, 'decoration');
+        this.plainsDecor = new Group();
+        this.staticRoot.add(this.plainsDecor);
+    }
+
+    /** Project source-linked crowns and decorative plants around persisted workstation footprints.
+     * @param {Progress} p Current authoritative source and station facts.
+     */
+    plainsDecoration(p: Progress): void {
+        if (!this.plainsDecor) return;
+        this.clear(this.plainsDecor);
+        const stations = p.scenes.plains.stations, removed = p.world.visits.plains.removed;
+        /** Exclude complete device cells from the decorative canopy.
+         * @param {Cell} c Candidate leaf coordinate.
+         * @return {boolean} Whether a saved device occupies this cell.
+         */
+        const occupied = (c: Cell) => stations.some(s => s.cell.every((n, i) => n === c[i]));
+        const leaves = PLAINS_OAKS.flatMap((base, i) => [0, 1, 2].every(dy => removed.includes('oak_log:' + (i * 3 + dy))) ? [] : oakCrown(base, 3, i)).filter(c => !occupied(c));
+        this.batch('oak_leaves', leaves, this.plainsDecor, 'decoration');
+        this.batch('oak_log', retainedPlainsSupports(stations.map(s => s.cell)), this.plainsDecor, 'scenery');
+        const plants = plainsPlants([...WORLD_SCENES.plains.nodes.map(n => n.cell), ...stations.map(s => s.cell)]);
+        const groups = new Map<string, {block: string; state: string; cells: Cell[]}>();
+        for (const plant of plants) {
+            const key = plant.block + plant.state;
+            if (!groups.has(key)) groups.set(key, {...plant, cells: []});
+            groups.get(key)!.cells.push(plant.cell);
+        }
+        for (const group of groups.values()) this.batch(group.block, group.cells, this.plainsDecor, 'decoration', group.state);
     }
 
     /** Assemble the native animal hierarchy with downward-Y Java model coordinates. @param {'cow'|'chicken'} kind Adult entity. @return {Group} Native UV-mapped cuboids. */
@@ -78,6 +146,7 @@ export class AuthoredWorld {
         this.clear(this.natural);
         this.clear(this.crops);
         this.signature = '';
+        this.plainsDecor = null;
         this.caveRoot = null; this.caveSignature = '[]';
         const spec = WORLD_SCENES[id], floor: Cell[] = [], pad: Cell[] = [];
         for (let x = -18; x <= 18; x++) for (let z = -22; z <= 10; z++) {
@@ -85,17 +154,9 @@ export class AuthoredWorld {
                 floor.push([x, -1, z]);
             }
         }
-        this.batch(spec.floor, floor, this.staticRoot, 'ground');
+        if (id === 'plains') this.plainsGround();
+        else this.batch(spec.floor, floor, this.staticRoot, 'ground');
         this.batch(id === 'cave' ? 'oak_planks' : 'cobblestone', pad, this.staticRoot, 'ground');
-        if (id === 'plains') {
-            const leaves: Cell[] = [], trunks: Cell[] = [];
-            for (const [x, z] of [[-6, -3], [-3, -6], [0, -9], [-10, -13], [7, -14], [12, -8]]) {
-                for (let y = 3; y <= 5; y++) for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) if (Math.abs(dx) + Math.abs(dz) < (y === 5 ? 3 : 5)) leaves.push([x + dx, y, z + dz]);
-                if (z < -10 || x > 5) for (let y = 0; y < 4; y++) trunks.push([x, y, z]);
-            }
-            this.batch('oak_leaves', leaves);
-            this.batch('oak_log', trunks);
-        }
         if (id === 'cave') {
             this.caveRoot = new Group(); this.staticRoot.add(this.caveRoot);
             this.batch('stone', caveRockCells([], spec.eye), this.caveRoot);
@@ -165,6 +226,7 @@ export class AuthoredWorld {
         }
         if (signature === this.signature) return;
         this.signature = signature;
+        if (id === 'plains') this.plainsDecoration(p);
         this.clear(this.natural);
         this.clear(this.crops);
         for (const n of spec.nodes) {
@@ -188,6 +250,7 @@ export class AuthoredWorld {
         for (const child of [...group.children]) {
             child.removeFromParent();
             child.traverse(o => {
+                if (o instanceof InstancedMesh) o.dispose();
                 if (o instanceof Mesh) o.geometry.dispose();
             });
         }

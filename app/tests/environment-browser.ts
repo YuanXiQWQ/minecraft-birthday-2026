@@ -23,6 +23,20 @@ const output=document.createElement('pre');output.id='environment-evidence';outp
 const timer=setInterval(()=>{output.textContent=JSON.stringify({at:performance.now(),size:[innerWidth,innerHeight],dpr:devicePixelRatio,sample,environment:actual?.sky?.report,columns:actual?.precipitation?.columns,geometry:actual?.renderer.info.memory.geometries,drawCalls:actual?.renderer.info.render.calls,panel:document.querySelector('.world-navigation')?.getAttribute('data-expanded')});},100);
 window.addEventListener('pagehide',()=>clearInterval(timer),{once:true});
 
+/** Exercise the existing plains look limits through labelled display controls, not synthetic mouse claims. */
+for (const [label, yaw] of [['Default', 0], ['Left limit', 1], ['Right limit', -1]] as const) {
+    const button = document.createElement('button'); button.textContent = 'TEST Plains ' + label;
+    /** Set a bounded fixture pose without moving the eye or modifying the save. */
+    button.onclick = () => {
+        if (!actual || actual.worldId !== 'plains') return;
+        actual.look.yaw = yaw * actual.look.maxYaw; actual.look.pitch = 0;
+        actual.camera.rotation.set(actual.basePitch, actual.look.yaw, 0, 'YXZ');
+        actual.camera.updateMatrixWorld(true); actual.requestRender();
+        output.dataset.pose = JSON.stringify({fixture: true, label, eye: actual.camera.position.toArray(), yaw: actual.look.yaw, pitch: actual.basePitch});
+    };
+    controls.append(button);
+}
+
 /** VERIFICATION_ONLY: collect browser cadence and existing phase timings, without changing game simulation. */
 let measuring=false,previous=0,started=0,raf=0,intervals:number[]=[],spans:Timing[]=[];
 const performanceButton=document.createElement('button');performanceButton.textContent='TEST measure 60 seconds';controls.append(performanceButton);
