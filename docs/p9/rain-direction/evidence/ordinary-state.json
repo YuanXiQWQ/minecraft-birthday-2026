@@ -1,0 +1,17 @@
+{
+  "note": "Ordinary /game/ on verification server; existing isolated test save, trusted slash/weather input, no material grants",
+  "app": {
+    "boot": "ready",
+    "build": "5beabff71dbf",
+    "catalogueIcons": "113",
+    "completed": "false",
+    "generation": "p7-performance-dense",
+    "hasCake": "false",
+    "inventoryReady": "true",
+    "resources": "26.3",
+    "revision": "2816",
+    "saveStatus": "ready"
+  },
+  "audioLoad": "{\"voices\":0,\"decoding\":0}",
+  "observerText": false
+}

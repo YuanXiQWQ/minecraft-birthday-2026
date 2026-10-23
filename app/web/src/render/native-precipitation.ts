@@ -13,8 +13,8 @@ export class NativePrecipitation {
      * @param {Resources} pack Original same-version resources.
      */
     constructor(pack:Resources){
-        /** Bind one original repeating texture. @param {string} name Native environment PNG name. @return {CanvasTexture} Owned texture. */
-        const texture=(name:string)=>{const image=pack.guiImages.get('assets/minecraft/textures/environment/'+name+'.png');if(!image)throw Error('native-precipitation-unavailable');const t=new CanvasTexture(image);t.wrapS=t.wrapT=RepeatWrapping;t.magFilter=t.minFilter=NearestFilter;t.colorSpace=SRGBColorSpace;return t;};
+        /** Bind original top-origin pixels to native UV coordinates without a second vertical flip. @param {string} name Native environment PNG name. @return {CanvasTexture} Owned texture. */
+        const texture=(name:string)=>{const image=pack.guiImages.get('assets/minecraft/textures/environment/'+name+'.png');if(!image)throw Error('native-precipitation-unavailable');const t=new CanvasTexture(image);t.flipY=false;t.wrapS=t.wrapT=RepeatWrapping;t.magFilter=t.minFilter=NearestFilter;t.colorSpace=SRGBColorSpace;return t;};
         this.rain=texture('rain');this.snow=texture('snow');
         const material=new ShaderMaterial({transparent:true,depthWrite:false,uniforms:{map:{value:this.rain},tick:{value:0},intensity:{value:0},snowing:{value:0}},
             vertexShader:`attribute vec4 motion; attribute float opacity; attribute float columnHash; varying vec2 vUv; varying float vOpacity; uniform float tick; uniform float snowing;
@@ -28,7 +28,7 @@ export class NativePrecipitation {
         material.side=2;this.mesh=new Mesh(new BufferGeometry(),material);this.mesh.renderOrder=3;this.root.add(this.mesh);this.root.visible=false;
     }
 
-    /** Compile native heightmap-clipped camera-facing columns after a real layout/source change.
+    /** Compile heightmap-clipped columns with native top/bottom UV endpoint pairing after layout/source changes.
      * @param {PerspectiveCamera} camera Stationary authored eye.
      * @param {Progress} progress Current committed world.
      * @param {Object3D} scenery Actual authored batches with logical block cells.
@@ -48,7 +48,7 @@ export class NativePrecipitation {
             const a=(Math.imul(Math.imul(x,x),3121)+Math.imul(x,45238971))|0,b=(Math.imul(Math.imul(z,z),418711)+Math.imul(z,13761))|0,random=new GaussianRandom(a^b),hashValue=(a+b)&255;
             const m=snow?[random.double(),random.gaussian(),random.double(),random.gaussian()]:[3+random.float(),0,0,0],nx=-dz/length*.5,nz=dx/length*.5,base=p.length/3;
             const distance=Math.min(1,((x+.5-camera.position.x)**2+(z+.5-camera.position.z)**2)/100),alpha=(snow?.8:1)+(.5-(snow?.8:1))*distance;
-            for(const [sx,y,u] of [[-1,bottom,0],[-1,top,0],[1,top,1],[1,bottom,1]]){p.push(x+.5+sx*nx,y,z+.5+sx*nz);uv.push(u,y*.25);motion.push(...m);hash.push(hashValue);opacity.push(alpha);}
+            for(const [sx,y,u] of [[-1,bottom,0],[-1,top,0],[1,top,1],[1,bottom,1]]){p.push(x+.5+sx*nx,y,z+.5+sx*nz);uv.push(u,(top+bottom-y)*.25);motion.push(...m);hash.push(hashValue);opacity.push(alpha);}
             indices.push(base,base+1,base+2,base,base+2,base+3);
         }
         this.mesh.geometry.dispose();this.mesh.geometry=new BufferGeometry().setAttribute('position',new Float32BufferAttribute(p,3)).setAttribute('uv',new Float32BufferAttribute(uv,2)).setAttribute('motion',new Float32BufferAttribute(motion,4)).setAttribute('columnHash',new Float32BufferAttribute(hash,1)).setAttribute('opacity',new Float32BufferAttribute(opacity,1)).setIndex(indices);this.columns=p.length/12;

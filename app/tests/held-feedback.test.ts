@@ -34,7 +34,9 @@ async function mining() {
     return {s,use,scene,inventory,messages,target:(next:string|null)=>{id=next;},block:(p:Promise<void>|null)=>{barrier=p;},deny:()=>{reject=true;},raw:()=>raw,settle:async()=>{await Promise.all(jobs);await new Promise(r=>setImmediate(r));},restore:()=>{use.dispose();if(oldWindow)Object.defineProperty(globalThis,'window',oldWindow);else delete(globalThis as any).window;if(oldDocument)Object.defineProperty(globalThis,'document',oldDocument);else delete(globalThis as any).document;}};
 }
 
-test('one held press settles two successive real nodes, waiting five ticks before the exposed target',async()=>{
+test('one held press settles two successive real nodes, waiting five ticks before the exposed target',async t=>{
+ // Share the explicit synthetic time origin with the asynchronous completion clock.
+ t.mock.method(performance,'now',()=>0);
  const h=await mining();try{h.use.beginMining(h.scene.refreshHover()!,0);h.use.advanceMining(3000);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0']);h.target('node:oak_log:1');h.use.advanceMining(3249);assert.equal(h.use.mining,null);h.use.advanceMining(3250);assert.equal((h.use.mining as WorldUse['mining'])?.id,'node:oak_log:1');h.use.advanceMining(6250);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:0','oak_log:1']);assert.equal(h.s.view.envelope!.state.progress.player.data.backpack[0]?.count,2);assert.equal(h.use.holding,true);}finally{h.restore();}
 });
 
