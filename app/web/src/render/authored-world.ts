@@ -1,6 +1,7 @@
 /** Authored native block scenery and Java-derived animal cuboids, independent from persistent simulation. */
 import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
 import type {SceneId, Progress, Cell} from '../domain/types.ts';
+import {caveRockCells} from '../domain/cave-shape.ts';
 import {WORLD_SCENES, cropAge} from '../domain/world-config.ts';
 import type {VanillaModels} from './vanilla-models.ts';
 import type {Resources} from './resources.ts';
@@ -15,6 +16,8 @@ export class AuthoredWorld {
     natural = new Group();
     crops = new Group();
     signature = '';
+    caveRoot: Group | null = null;
+    caveSignature = '[]';
 
     /** Retain the shared native material factory. @param {VanillaModels} models Native model ownership. @param {Resources} resources Verified pixels and documents. */
     constructor(public models: VanillaModels, public resources: Resources) {
@@ -75,6 +78,7 @@ export class AuthoredWorld {
         this.clear(this.natural);
         this.clear(this.crops);
         this.signature = '';
+        this.caveRoot = null; this.caveSignature = '[]';
         const spec = WORLD_SCENES[id], floor: Cell[] = [], pad: Cell[] = [];
         for (let x = -18; x <= 18; x++) for (let z = -22; z <= 10; z++) {
             if (id !== 'farm' || !spec.plots.some(c => c[0] === x && c[2] === z) && !(x === 8 && z >= -5 && z <= 0)) {
@@ -93,14 +97,8 @@ export class AuthoredWorld {
             this.batch('oak_log', trunks);
         }
         if (id === 'cave') {
-            const rock: Cell[] = [];
-            for (let z = -20; z <= 6; z++) for (let y = 0; y < 8; y++) for (const x of [-10, 11]) rock.push([x, y, z]);
-            for (let x = -10; x <= 11; x++) for (let y = 0; y < 8; y++) rock.push([x, y, -15]);
-            for (let x = -10; x <= 11; x++) for (let z = -15; z <= 6; z++) rock.push([x, 7, z]);
-            for (let x = -9; x <= 0; x++) for (let y = 0; y < 3; y++) rock.push([x, y, -10]);
-            for (const x of [-9, -8, 8, 9]) for (let z = -14; z <= -5; z++) for (let y = 4 + (Math.abs(x) === 9 ? 0 : 1); y < 7; y++) rock.push([x, y, z]);
-            for (const [x, z, h] of [[-8, -6, 5], [-7, -11, 4], [8, -9, 4], [-9, -3, 3]]) for (let y = 0; y < h; y++) rock.push([x, y, z]);
-            this.batch('stone', rock);
+            this.caveRoot = new Group(); this.staticRoot.add(this.caveRoot);
+            this.batch('stone', caveRockCells([], spec.eye), this.caveRoot);
         }
         if (id === 'farm') {
             const barn: Cell[] = [];
@@ -161,6 +159,10 @@ export class AuthoredWorld {
         const id = p.scene, spec = WORLD_SCENES[id], removed = p.world.visits[id].removed, crops = p.scenes[id].crops,
             stations = p.scenes[id].stations,
             signature = JSON.stringify([removed, stations.map(s => s.cell), crops.map(c => [c.id, cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0)])]);
+        if (id === 'cave' && this.caveRoot) {
+            const layout = JSON.stringify(stations.map(s=>s.cell));
+            if (layout !== this.caveSignature) {this.caveSignature = layout; this.clear(this.caveRoot); this.batch('stone', caveRockCells(stations.map(s=>s.cell), spec.eye), this.caveRoot);}
+        }
         if (signature === this.signature) return;
         this.signature = signature;
         this.clear(this.natural);

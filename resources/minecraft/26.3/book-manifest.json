@@ -37,9 +37,71 @@
     "assets/minecraft/textures/gui/sprites/toast/recipe.png": "270ae5ee13fff15d8973f33cc6564c9572c2420080a52b15b1fe2921d883545e",
     "assets/minecraft/textures/gui/sprites/toast/recipe_book.png": "c6bd85133131c999c0222336c41510ef7975bd3282e73d1292a4f18cfb268b92",
     "assets/minecraft/items/compass.json": "16ec7eefe2acbc9ebab9ff2f652c4d2fd5076ed37abcc67fb74bba229841e307",
-    "assets/minecraft/models/item/compass_12.json": "66377186b32e6fe8b6dd7e4d20791b3f7cc26015412c7def924adf338169bbfc",
+    "assets/minecraft/models/item/compass_16.json": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb",
     "assets/minecraft/models/item/generated.json": "63190611202e75ad7b812bc9a4b31bd53f3e186895d7b53e5e280b0d1e30a67a",
+    "assets/minecraft/textures/item/compass_16.png": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8",
+    "assets/minecraft/models/item/compass_17.json": "331e73cc42f6b0be062cf8061f43a233f405a36b87020bde44c39093bc7f2ed2",
+    "assets/minecraft/textures/item/compass_17.png": "57baab9b6927a12b84b03147c49a8f68d39fb8dd3d7f1b74770a2a4b4dc0290a",
+    "assets/minecraft/models/item/compass_18.json": "b7e6350dc152fd61121eaa0aaa991205000170a92b59b554cb9a2202edf10632",
+    "assets/minecraft/textures/item/compass_18.png": "5de98aca53119baa855fa246e11685861c644b60a303b9df766f6dbd10963caa",
+    "assets/minecraft/models/item/compass_19.json": "0e70cf30de6e0600c0c809766bdabe1def3147a32b0ce201154d0134ebfa29c8",
+    "assets/minecraft/textures/item/compass_19.png": "3b49fae3af56d09269a27e292e1157218c866811990bf51ea8593bd87a932d65",
+    "assets/minecraft/models/item/compass_20.json": "eb12f6dc11c306139fb818adaa2f8400a3304b8e7a4e2dcaf8d03a73135e4294",
+    "assets/minecraft/textures/item/compass_20.png": "9a2ad792a01478de547a4bb5206b633b003ba9438fed53c239033e806a65b33f",
+    "assets/minecraft/models/item/compass_21.json": "1ddd7797b02bee416fa1a008ec7d0dbcc896032a393b21d15c4aa63526857c68",
+    "assets/minecraft/textures/item/compass_21.png": "fc70e15e825b99025fb86352020e0136170ca171eb4018903160f6ba8777f37a",
+    "assets/minecraft/models/item/compass_22.json": "60a4b0cbfe2cb243d15a8c2a291e3ffda85a5aff30fbb00fe26b6acdf4320a74",
+    "assets/minecraft/textures/item/compass_22.png": "671512734f0e7b434158405369d30d53c83bc94d56544f26b06a96fea4b8dbea",
+    "assets/minecraft/models/item/compass_23.json": "44da71b07f8398db90460896be47d1a3611a6dcda9e352a1244212835689f31d",
+    "assets/minecraft/textures/item/compass_23.png": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5",
+    "assets/minecraft/models/item/compass_24.json": "1185966f5b6d2b8596a9e24c6bed022fa582cbf18af2c8fecd410bc14aa6eaca",
+    "assets/minecraft/textures/item/compass_24.png": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5",
+    "assets/minecraft/models/item/compass_25.json": "65c5b2ea9598532495fb5a9295562e3db5326395c79960758fe865245a18edc2",
+    "assets/minecraft/textures/item/compass_25.png": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5",
+    "assets/minecraft/models/item/compass_26.json": "a0a7c2f47c406a0d475cbb551336d3b19eed9b0fb98185edf050388f42d229be",
+    "assets/minecraft/textures/item/compass_26.png": "8e9ab3949b5d52741e235b506a941164510c09a0883e49b4490f37e74fe85645",
+    "assets/minecraft/models/item/compass_27.json": "7bbb7bf1a009b0448f3b0e95da1b644c1f5f12f4c17fbc4f1c8e74e020111b49",
+    "assets/minecraft/textures/item/compass_27.png": "0bb536a62d143e01603c332cf2076b12a8d21b16313c24ad90e1f8a592846dca",
+    "assets/minecraft/models/item/compass_28.json": "27a5dad7e7a973bec1e7d14da6dd782701fdad49522da4ce5bf62afdb46a2088",
+    "assets/minecraft/textures/item/compass_28.png": "0bb536a62d143e01603c332cf2076b12a8d21b16313c24ad90e1f8a592846dca",
+    "assets/minecraft/models/item/compass_29.json": "c3aa8fd6cb42779e5b940c77d26a0e8f11e82ebccaa9a3b7e07ada3e23a21a29",
+    "assets/minecraft/textures/item/compass_29.png": "004a3515130af7ca1f4bc27a457e6f7135e244f05c96a0671f9beac6a4c3c312",
+    "assets/minecraft/models/item/compass_30.json": "76e8037d8fb9c37bb7984737bdb2d4e8f5462c94e705f9212a9c1d5b40ea2961",
+    "assets/minecraft/textures/item/compass_30.png": "b8cf34f39ce4b64f14db8f807ae1117c0e1a15163d81fe831645086d5ba859fe",
+    "assets/minecraft/models/item/compass_31.json": "22ccc328b9cd82969b2d53f8a1645d2b3abe7f29916d70eeb3984df8746dcf0a",
+    "assets/minecraft/textures/item/compass_31.png": "b2d60f5e4ff7d7185061ccb9077d6826c656c8d198d5fd6da7e3b2f47a5adcf4",
+    "assets/minecraft/models/item/compass_00.json": "75badc664d9e289a8db0905320faf6343c1d0a4e960d981ac51eb256e481b724",
+    "assets/minecraft/textures/item/compass_00.png": "4b1899c7d50f377d75297120dfbb66f2699cc8dfc8b1ad8d8ed9d075c1a9b402",
+    "assets/minecraft/models/item/compass_01.json": "f237eaec0f04a4c355c63b10dca1687be761e7bd368302fcbf768fd7e2191d05",
+    "assets/minecraft/textures/item/compass_01.png": "d0e1a0bb2f652699ad1b9f918373393cfdae684f4a94098b3a8945ae02adfeeb",
+    "assets/minecraft/models/item/compass_02.json": "645443c2b5092b4f1b2f08225c72f563b5031d951d5b8e7f749078dbd5a80084",
+    "assets/minecraft/textures/item/compass_02.png": "70f7fbb07645eccb87c7a9b38b3cf4b49b2db5421db46b4edd741800b12c92d2",
+    "assets/minecraft/models/item/compass_03.json": "c73a61df3eb2eef235dd2184a1a08bcf9f8b4d99bec47770039268cb3572073c",
+    "assets/minecraft/textures/item/compass_03.png": "1a306708a67075f4cd84dd269144168183c8038c2a8b8fba9ff0ae97a2f79203",
+    "assets/minecraft/models/item/compass_04.json": "a0d88c9ac99ad4978ede77d86569b237b82f44024647dc328f8d7293496d2662",
+    "assets/minecraft/textures/item/compass_04.png": "a67c92bdbbc1907002cacda2d06f623814681943128a9213eccb60ee93497255",
+    "assets/minecraft/models/item/compass_05.json": "b961d5215e64ed97fa15e292eacebc02ff5275596f5415f7841e2f956efcd841",
+    "assets/minecraft/textures/item/compass_05.png": "68a8a965cad7076fa935df5952a157902a2458777b3c5bd69bb0232a07e0f329",
+    "assets/minecraft/models/item/compass_06.json": "c0afdb49fc8dd369f9810e19f36bc8aba7760cb2bfc4fbc3d403ed610f74430a",
+    "assets/minecraft/textures/item/compass_06.png": "c3bf1c7fd5486691156b88bd000fd8555c5bc03e75334ef4f3e0425319f46b3e",
+    "assets/minecraft/models/item/compass_07.json": "0f454ef9608f5d14c37dee108a6e2fe9a643e68c1e1809af81c96426a4c55300",
+    "assets/minecraft/textures/item/compass_07.png": "7b188d5fa08a73f9e8d7b390029236489ed7e377c603e70221fe2de4474547de",
+    "assets/minecraft/models/item/compass_08.json": "ffe0fc946391df910e3ba0860b1cbe67d260b81179125d37b3d7be50dd9df682",
+    "assets/minecraft/textures/item/compass_08.png": "40b603d3084e9b8900ca060ef4089b0f8e072d31bf51e56922ff6b9f55537206",
+    "assets/minecraft/models/item/compass_09.json": "a45f25654646ca32eb24ef9629383d460ed020285bb936e5474fa29764a0e773",
+    "assets/minecraft/textures/item/compass_09.png": "7b188d5fa08a73f9e8d7b390029236489ed7e377c603e70221fe2de4474547de",
+    "assets/minecraft/models/item/compass_10.json": "b5ef8f541270acfe6312b5c45a3374438df9ef4ec5ac4d71cd21a36e720e538c",
+    "assets/minecraft/textures/item/compass_10.png": "c4001b8aa508ba914f4f9d9ee7498569172d3dc68dae5bebd927eb212efe8ea2",
+    "assets/minecraft/models/item/compass_11.json": "4aa9836bfc4456abcee98efcf5143e6ebc35c3cdcba0b1ee4d327fae3dbcaf73",
+    "assets/minecraft/textures/item/compass_11.png": "8450a704b1cff6c4b6f390fe2d6e3162709be8f970b968ad4dd56561cb9366b4",
+    "assets/minecraft/models/item/compass_12.json": "66377186b32e6fe8b6dd7e4d20791b3f7cc26015412c7def924adf338169bbfc",
     "assets/minecraft/textures/item/compass_12.png": "b513404a2d8c886b97ea9d5bfa07ea00b4f7d631e5a616bc166c72e54e290ee2",
+    "assets/minecraft/models/item/compass_13.json": "e6e5f83285b07827d2c9490f4ef6c5951ae128feeaba8a4ed503dfaec615d76d",
+    "assets/minecraft/textures/item/compass_13.png": "db2062cfe7613ec164560773b02305b2b58f3f1b8b39d8acef8b444752e5bbda",
+    "assets/minecraft/models/item/compass_14.json": "0bd427aad24f3a29a92a77799927d343d964619d840d5138beb09d04b5344c71",
+    "assets/minecraft/textures/item/compass_14.png": "a76e20d3d288d900ae10e8f1fa9e0635f229bc2cce960fb69e0273ab774a9c67",
+    "assets/minecraft/models/item/compass_15.json": "92770c8f174c9b7445eb1e181b1f68eb8fe89d09600bb642468b53800afe5ee8",
+    "assets/minecraft/textures/item/compass_15.png": "b8e4daa89dad5d692b4c68b94533ffaf5e702ebc50940126bdcf9aedb8d26401",
     "assets/minecraft/items/golden_sword.json": "51d1129fc91ac0c7de4b4d7108d9b49643f2c140e0afac408537ef4d10e268f8",
     "assets/minecraft/models/item/golden_sword.json": "fc65c5018630966e7aab4012b7c88f4ea80f61644dc02f85d32a6f11e8df8506",
     "assets/minecraft/models/item/handheld.json": "8fe990d1c011429e27df2d49d35cf8571946370eac8d0fb7497aacede4ff20f5",
@@ -110,9 +172,164 @@
       "sha256": "e1bdbabd59ead8c6b2c0420c5c0a16adcc3ebeda65e5d4a46c7cde7de9f2ed03"
     },
     {
+      "entry": "assets/minecraft/models/item/compass_00.json",
+      "size": 105,
+      "sha256": "75badc664d9e289a8db0905320faf6343c1d0a4e960d981ac51eb256e481b724"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_01.json",
+      "size": 105,
+      "sha256": "f237eaec0f04a4c355c63b10dca1687be761e7bd368302fcbf768fd7e2191d05"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_02.json",
+      "size": 105,
+      "sha256": "645443c2b5092b4f1b2f08225c72f563b5031d951d5b8e7f749078dbd5a80084"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_03.json",
+      "size": 105,
+      "sha256": "c73a61df3eb2eef235dd2184a1a08bcf9f8b4d99bec47770039268cb3572073c"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_04.json",
+      "size": 105,
+      "sha256": "a0d88c9ac99ad4978ede77d86569b237b82f44024647dc328f8d7293496d2662"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_05.json",
+      "size": 105,
+      "sha256": "b961d5215e64ed97fa15e292eacebc02ff5275596f5415f7841e2f956efcd841"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_06.json",
+      "size": 105,
+      "sha256": "c0afdb49fc8dd369f9810e19f36bc8aba7760cb2bfc4fbc3d403ed610f74430a"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_07.json",
+      "size": 105,
+      "sha256": "0f454ef9608f5d14c37dee108a6e2fe9a643e68c1e1809af81c96426a4c55300"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_08.json",
+      "size": 105,
+      "sha256": "ffe0fc946391df910e3ba0860b1cbe67d260b81179125d37b3d7be50dd9df682"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_09.json",
+      "size": 105,
+      "sha256": "a45f25654646ca32eb24ef9629383d460ed020285bb936e5474fa29764a0e773"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_10.json",
+      "size": 105,
+      "sha256": "b5ef8f541270acfe6312b5c45a3374438df9ef4ec5ac4d71cd21a36e720e538c"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_11.json",
+      "size": 105,
+      "sha256": "4aa9836bfc4456abcee98efcf5143e6ebc35c3cdcba0b1ee4d327fae3dbcaf73"
+    },
+    {
       "entry": "assets/minecraft/models/item/compass_12.json",
       "size": 105,
       "sha256": "66377186b32e6fe8b6dd7e4d20791b3f7cc26015412c7def924adf338169bbfc"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_13.json",
+      "size": 105,
+      "sha256": "e6e5f83285b07827d2c9490f4ef6c5951ae128feeaba8a4ed503dfaec615d76d"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_14.json",
+      "size": 105,
+      "sha256": "0bd427aad24f3a29a92a77799927d343d964619d840d5138beb09d04b5344c71"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_15.json",
+      "size": 105,
+      "sha256": "92770c8f174c9b7445eb1e181b1f68eb8fe89d09600bb642468b53800afe5ee8"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_16.json",
+      "size": 105,
+      "sha256": "f429445890459c750a022f62fccb93a28dd92bda22fabf1ca9511769fcd004bb"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_17.json",
+      "size": 105,
+      "sha256": "331e73cc42f6b0be062cf8061f43a233f405a36b87020bde44c39093bc7f2ed2"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_18.json",
+      "size": 105,
+      "sha256": "b7e6350dc152fd61121eaa0aaa991205000170a92b59b554cb9a2202edf10632"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_19.json",
+      "size": 105,
+      "sha256": "0e70cf30de6e0600c0c809766bdabe1def3147a32b0ce201154d0134ebfa29c8"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_20.json",
+      "size": 105,
+      "sha256": "eb12f6dc11c306139fb818adaa2f8400a3304b8e7a4e2dcaf8d03a73135e4294"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_21.json",
+      "size": 105,
+      "sha256": "1ddd7797b02bee416fa1a008ec7d0dbcc896032a393b21d15c4aa63526857c68"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_22.json",
+      "size": 105,
+      "sha256": "60a4b0cbfe2cb243d15a8c2a291e3ffda85a5aff30fbb00fe26b6acdf4320a74"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_23.json",
+      "size": 105,
+      "sha256": "44da71b07f8398db90460896be47d1a3611a6dcda9e352a1244212835689f31d"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_24.json",
+      "size": 105,
+      "sha256": "1185966f5b6d2b8596a9e24c6bed022fa582cbf18af2c8fecd410bc14aa6eaca"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_25.json",
+      "size": 105,
+      "sha256": "65c5b2ea9598532495fb5a9295562e3db5326395c79960758fe865245a18edc2"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_26.json",
+      "size": 105,
+      "sha256": "a0a7c2f47c406a0d475cbb551336d3b19eed9b0fb98185edf050388f42d229be"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_27.json",
+      "size": 105,
+      "sha256": "7bbb7bf1a009b0448f3b0e95da1b644c1f5f12f4c17fbc4f1c8e74e020111b49"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_28.json",
+      "size": 105,
+      "sha256": "27a5dad7e7a973bec1e7d14da6dd782701fdad49522da4ce5bf62afdb46a2088"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_29.json",
+      "size": 105,
+      "sha256": "c3aa8fd6cb42779e5b940c77d26a0e8f11e82ebccaa9a3b7e07ada3e23a21a29"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_30.json",
+      "size": 105,
+      "sha256": "76e8037d8fb9c37bb7984737bdb2d4e8f5462c94e705f9212a9c1d5b40ea2961"
+    },
+    {
+      "entry": "assets/minecraft/models/item/compass_31.json",
+      "size": 105,
+      "sha256": "22ccc328b9cd82969b2d53f8a1645d2b3abe7f29916d70eeb3984df8746dcf0a"
     },
     {
       "entry": "assets/minecraft/models/item/cooked_porkchop.json",
@@ -310,9 +527,164 @@
       "sha256": "e6a57182db6029fff6d02fc774780fcec9f506b74226985445c91e5e7df5d9bb"
     },
     {
+      "entry": "assets/minecraft/textures/item/compass_00.png",
+      "size": 208,
+      "sha256": "4b1899c7d50f377d75297120dfbb66f2699cc8dfc8b1ad8d8ed9d075c1a9b402"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_01.png",
+      "size": 209,
+      "sha256": "d0e1a0bb2f652699ad1b9f918373393cfdae684f4a94098b3a8945ae02adfeeb"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_02.png",
+      "size": 208,
+      "sha256": "70f7fbb07645eccb87c7a9b38b3cf4b49b2db5421db46b4edd741800b12c92d2"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_03.png",
+      "size": 209,
+      "sha256": "1a306708a67075f4cd84dd269144168183c8038c2a8b8fba9ff0ae97a2f79203"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_04.png",
+      "size": 211,
+      "sha256": "a67c92bdbbc1907002cacda2d06f623814681943128a9213eccb60ee93497255"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_05.png",
+      "size": 212,
+      "sha256": "68a8a965cad7076fa935df5952a157902a2458777b3c5bd69bb0232a07e0f329"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_06.png",
+      "size": 211,
+      "sha256": "c3bf1c7fd5486691156b88bd000fd8555c5bc03e75334ef4f3e0425319f46b3e"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_07.png",
+      "size": 210,
+      "sha256": "7b188d5fa08a73f9e8d7b390029236489ed7e377c603e70221fe2de4474547de"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_08.png",
+      "size": 205,
+      "sha256": "40b603d3084e9b8900ca060ef4089b0f8e072d31bf51e56922ff6b9f55537206"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_09.png",
+      "size": 210,
+      "sha256": "7b188d5fa08a73f9e8d7b390029236489ed7e377c603e70221fe2de4474547de"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_10.png",
+      "size": 213,
+      "sha256": "c4001b8aa508ba914f4f9d9ee7498569172d3dc68dae5bebd927eb212efe8ea2"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_11.png",
+      "size": 210,
+      "sha256": "8450a704b1cff6c4b6f390fe2d6e3162709be8f970b968ad4dd56561cb9366b4"
+    },
+    {
       "entry": "assets/minecraft/textures/item/compass_12.png",
       "size": 211,
       "sha256": "b513404a2d8c886b97ea9d5bfa07ea00b4f7d631e5a616bc166c72e54e290ee2"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_13.png",
+      "size": 210,
+      "sha256": "db2062cfe7613ec164560773b02305b2b58f3f1b8b39d8acef8b444752e5bbda"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_14.png",
+      "size": 204,
+      "sha256": "a76e20d3d288d900ae10e8f1fa9e0635f229bc2cce960fb69e0273ab774a9c67"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_15.png",
+      "size": 204,
+      "sha256": "b8e4daa89dad5d692b4c68b94533ffaf5e702ebc50940126bdcf9aedb8d26401"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_16.png",
+      "size": 205,
+      "sha256": "f0c1a41cc50cf5e2a3e2bc0477ab063c682cc8498e41ab0b643b4719e8d80ea8"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_17.png",
+      "size": 204,
+      "sha256": "57baab9b6927a12b84b03147c49a8f68d39fb8dd3d7f1b74770a2a4b4dc0290a"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_18.png",
+      "size": 205,
+      "sha256": "5de98aca53119baa855fa246e11685861c644b60a303b9df766f6dbd10963caa"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_19.png",
+      "size": 210,
+      "sha256": "3b49fae3af56d09269a27e292e1157218c866811990bf51ea8593bd87a932d65"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_20.png",
+      "size": 210,
+      "sha256": "9a2ad792a01478de547a4bb5206b633b003ba9438fed53c239033e806a65b33f"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_21.png",
+      "size": 212,
+      "sha256": "fc70e15e825b99025fb86352020e0136170ca171eb4018903160f6ba8777f37a"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_22.png",
+      "size": 213,
+      "sha256": "671512734f0e7b434158405369d30d53c83bc94d56544f26b06a96fea4b8dbea"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_23.png",
+      "size": 206,
+      "sha256": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_24.png",
+      "size": 206,
+      "sha256": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_25.png",
+      "size": 206,
+      "sha256": "689dfeea5499602c36558cceeeb21c9fa01e8d3d292d4cc09a73de53089a3cd5"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_26.png",
+      "size": 211,
+      "sha256": "8e9ab3949b5d52741e235b506a941164510c09a0883e49b4490f37e74fe85645"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_27.png",
+      "size": 210,
+      "sha256": "0bb536a62d143e01603c332cf2076b12a8d21b16313c24ad90e1f8a592846dca"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_28.png",
+      "size": 210,
+      "sha256": "0bb536a62d143e01603c332cf2076b12a8d21b16313c24ad90e1f8a592846dca"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_29.png",
+      "size": 207,
+      "sha256": "004a3515130af7ca1f4bc27a457e6f7135e244f05c96a0671f9beac6a4c3c312"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_30.png",
+      "size": 207,
+      "sha256": "b8cf34f39ce4b64f14db8f807ae1117c0e1a15163d81fe831645086d5ba859fe"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/compass_31.png",
+      "size": 208,
+      "sha256": "b2d60f5e4ff7d7185061ccb9077d6826c656c8d198d5fd6da7e3b2f47a5adcf4"
     },
     {
       "entry": "assets/minecraft/textures/item/cooked_porkchop.png",
@@ -338,7 +710,7 @@
   "uiDefinitions": {
     "minecraft:compass": {
       "type": "minecraft:model",
-      "model": "minecraft:item/compass_12"
+      "model": "minecraft:item/compass_16"
     },
     "minecraft:golden_sword": {
       "type": "minecraft:model",
@@ -365,12 +737,41 @@
       "model": "minecraft:item/cooked_porkchop"
     }
   },
-  "uiCompass": {
-    "model": "minecraft:item/compass_12",
-    "direction": "northwest",
-    "purpose": "fixed UI symbol matching the user reference; not world navigation"
-  },
+  "compassModels": [
+    "minecraft:item/compass_16",
+    "minecraft:item/compass_17",
+    "minecraft:item/compass_18",
+    "minecraft:item/compass_19",
+    "minecraft:item/compass_20",
+    "minecraft:item/compass_21",
+    "minecraft:item/compass_22",
+    "minecraft:item/compass_23",
+    "minecraft:item/compass_24",
+    "minecraft:item/compass_25",
+    "minecraft:item/compass_26",
+    "minecraft:item/compass_27",
+    "minecraft:item/compass_28",
+    "minecraft:item/compass_29",
+    "minecraft:item/compass_30",
+    "minecraft:item/compass_31",
+    "minecraft:item/compass_00",
+    "minecraft:item/compass_01",
+    "minecraft:item/compass_02",
+    "minecraft:item/compass_03",
+    "minecraft:item/compass_04",
+    "minecraft:item/compass_05",
+    "minecraft:item/compass_06",
+    "minecraft:item/compass_07",
+    "minecraft:item/compass_08",
+    "minecraft:item/compass_09",
+    "minecraft:item/compass_10",
+    "minecraft:item/compass_11",
+    "minecraft:item/compass_12",
+    "minecraft:item/compass_13",
+    "minecraft:item/compass_14",
+    "minecraft:item/compass_15"
+  ],
   "limitations": [
-    "Fixed UI compass uses an original frame; Minecraft world spawn/owner compass calculation is not simulated"
+    "Compass uses a shared authored world reference and the actual camera owner; no additional world generation"
   ]
 }

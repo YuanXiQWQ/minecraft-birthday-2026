@@ -3,9 +3,9 @@ import {Box3, Mesh, Vector3} from 'three';
 import type {Object3D} from 'three';
 import type {SceneView} from '../web/src/render/scene.ts';
 import {initialState} from '../web/src/domain/state.ts';
-import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
+import {WORLD_SCENES, WORLD_REGION} from '../web/src/domain/world-config.ts';
 import {emptyFurnace} from '../web/src/domain/furnace.ts';
-import type {SceneId} from '../web/src/domain/types.ts';
+import type {SceneId, Station} from '../web/src/domain/types.ts';
 
 /** Sample actual triangle interiors and geometry bounds, retaining native alpha/depth filtering in SceneView.pick.
  * @param {Object3D} root Native object.
@@ -32,7 +32,7 @@ function surfaces(root: Object3D): Vector3[] {
  * @param {Object3D} object Expected native object.
  * @return {object|null} Actual visible ray and camera observation.
  */
-function reachable(view: SceneView, object: Object3D): object | null {
+export function reachable(view: SceneView, object: Object3D): object | null {
     const rect = view.renderer.domElement.getBoundingClientRect(), id = String(object.userData.id);
     for (const point of surfaces(object)) {
         const d = point.clone().sub(view.camera.position),
@@ -81,14 +81,17 @@ export function auditSpace(view: SceneView): object[] {
             if (result) found.push(result); else failed.push(String(object.userData.id));
         }
         const box = spec.build;
-        for (let x = box.min[0]; x <= box.max[0]; x++) for (let z = box.min[2]; z <= box.max[2]; z++) for (let y = box.min[1]; y <= box.max[1]; y++) state.progress.scenes[id].stations.push({
-            id: 'peel-' + x + '-' + y + '-' + (z + 10),
-            kind: 'furnace',
-            cell: [x, y, z],
-            facing: 'south',
-            contents: emptyFurnace()
-        });
-        view.sync(state.progress.scenes[id]);
+        for (let x = box.min[0]; x <= box.max[0]; x++) for (let z = box.min[2]; z <= box.max[2]; z++) for (let y = box.min[1]; y <= box.max[1]; y++) {
+            const station: Station = {
+                id: 'peel-' + x + '-' + y + '-' + (z + 10),
+                kind: 'furnace',
+                cell: [x, y, z],
+                facing: 'south',
+                contents: emptyFurnace()
+            };
+            if (WORLD_REGION.allows(id, station)) state.progress.scenes[id].stations.push(station);
+        }
+        view.syncWorld(state.progress);
         let remaining = [...view.persistent.children], peeled = 0;
         const unreachable: string[] = [];
         while (remaining.length) {

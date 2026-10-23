@@ -1,4 +1,5 @@
 /** Harvest chat reports capacity shortfalls while normal pickup stays silent. */
+import {FAILURE_COLOR} from './system-feedback.ts';
 import type {DomainEvent} from '../domain/types.ts';
 import {itemName} from '../i18n/items.ts';
 import type {TextRun} from './item-style.ts';
@@ -11,6 +12,6 @@ import type {TextRun} from './item-style.ts';
 export function harvestFeedback(event: DomainEvent, text: (key: string, values: Record<string, string | number>) => string): TextRun[][] {
     if (event.type !== 'items-acquired') return [];
     return [
-        ...(event.overflow ?? []).map(stack => [{text: text('game.harvestOverflow', {count: stack.count, item: itemName(stack.id)})}])
+        ...(event.overflow ?? []).map(stack => [{text: text('game.harvestOverflow', {count: stack.count, item: itemName(stack.id)}), color: FAILURE_COLOR}])
     ];
 }

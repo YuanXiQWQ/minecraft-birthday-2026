@@ -1,4 +1,5 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
+import {caveSolid} from './cave-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
 export interface NaturalNode {
@@ -22,6 +23,9 @@ export interface WorldScene {
 function nodes(block: string, cells: Cell[]): NaturalNode[] {
     return cells.map((cell, i) => ({id: block + ':' + i, block, cell}));
 }
+
+/** Shared world-origin spawn reference; every authored view uses the same compass target. */
+export const WORLD_COMPASS_TARGET: Cell = [0, 0, 0];
 
 /** The implementation profile remains exactly P4 oak logs, regular eggs and the approved source kinds. */
 export const WORLD_SCENES: Record<SceneId, WorldScene> = {
@@ -103,7 +107,7 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
         const trees = [[-6, -3], [-3, -6], [0, -9], [-10, -13], [7, -14], [12, -8]];
         return trees.some(([a, b]) => y >= 3 && y <= 5 && Math.abs(x - a) <= 2 && Math.abs(z - b) <= 2 && Math.abs(x - a) + Math.abs(z - b) < (y === 5 ? 3 : 5) || (b < -10 || a > 5) && x === a && z === b && y < 4);
     }
-    if (scene === 'cave') return (x === -10 || x === 11) && z >= -20 && z <= 6 && y < 8 || z === -15 && x >= -10 && x <= 11 && y < 8 || y === 7 && x >= -10 && x <= 11 && z >= -15 && z <= 6 || z === -10 && x >= -9 && x <= 0 && y < 3 || [-9, -8, 8, 9].includes(x) && z >= -14 && z <= -5 && y >= 4 + (Math.abs(x) === 9 ? 0 : 1) && y < 7 || [[-8, -6, 5], [-7, -11, 4], [8, -9, 4], [-9, -3, 3]].some(([a, b, h]) => x === a && z === b && y < h);
+    if (scene === 'cave') return caveSolid(cell);
     if (scene === 'home') return z === -9 && x >= -11 && x <= 11 && y < 6 && !(Math.abs(x) < 4 && y > 1 && y < 5) || Math.abs(x) === 11 && z >= -8 && z <= 5 && y < 6;
     if (scene === 'farm') return z === -12 && x >= -10 && x <= -7 && y < 4 || [-11, -6].includes(x) && z >= -12 && z <= -8 && y < 4 || y === 4 && x >= -11 && x <= -6 && z >= -12 && z <= -8;
     return false;

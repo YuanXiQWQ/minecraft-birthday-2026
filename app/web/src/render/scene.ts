@@ -24,7 +24,8 @@ import type {SceneState} from '../domain/types.ts';
 import type {Resources} from './resources.ts';
 import {VanillaModels} from './vanilla-models.ts';
 import {AuthoredWorld} from './authored-world.ts';
-import {WORLD_SCENES} from '../domain/world-config.ts';
+import {WORLD_SCENES, WORLD_COMPASS_TARGET} from '../domain/world-config.ts';
+import type {CompassView} from '../ui/compass.ts';
 import type {Progress, SceneId, Kind, Facing, Cell} from '../domain/types.ts';
 import {Look} from './look.ts';
 import {PointerMode} from './pointer-mode.ts';
@@ -41,6 +42,13 @@ export interface Pick {
 
 /** Own one event-driven WebGL2 view and its original-resource model instances. */
 export class SceneView {
+    /** Project the actual stationary camera into the native compass owner's position and yaw.
+     * @param {string} scope Current save generation.
+     * @return {CompassView} World reference shared by every authored scene.
+     */
+    compassView(scope: string): CompassView {
+        return {position: this.camera.position.toArray(), yaw: 180 - this.camera.rotation.y * 180 / Math.PI, target: WORLD_COMPASS_TARGET, scope};
+    }
     renderer: WebGLRenderer;
     scene = new Scene();
     camera = new PerspectiveCamera(70, 1, .1, 90);

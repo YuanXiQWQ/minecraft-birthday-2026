@@ -45,7 +45,11 @@ const icons = ['compass', 'golden_sword', 'bricks', 'lava_bucket', 'apple', 'red
     uiDefinitions: Record<string, any> = {};
 for (const id of icons) {
     const definition = JSON.parse(take('assets/minecraft/items/' + id + '.json').toString());
-    const node = id === 'compass' ? definition.model.on_false.entries.find((entry: any) => entry.model.model === 'minecraft:item/compass_12')?.model : definition.model;
+    const node = id === 'compass' ? definition.model.on_false.entries[0].model : definition.model;
+    if (id === 'compass') for (const entry of definition.model.on_false.entries) {
+        const native = model(entry.model.model);
+        for (const ref of Object.values(native.textures) as string[]) texture(resolveTexture(ref, native.textures));
+    }
     if (!node) throw Error('missing-native-ui-compass');
     uiDefinitions['minecraft:' + id] = node;
     for (const part of iconParts(node, '10-21')) {
@@ -80,8 +84,8 @@ writeJSON(resolve(out, 'book-manifest.json'), {
     inputs: Object.fromEntries(Object.entries(inputs).filter(([p]) => p.startsWith('assets/'))),
     entries,
     uiDefinitions,
-    uiCompass: {model: 'minecraft:item/compass_12', direction: 'northwest', purpose: 'fixed UI symbol matching the user reference; not world navigation'},
-    limitations: ['Fixed UI compass uses an original frame; Minecraft world spawn/owner compass calculation is not simulated']
+    compassModels: [...new Set(JSON.parse(jar.get('assets/minecraft/items/compass.json')!.toString()).model.on_false.entries.map((entry: any) => entry.model.model))],
+    limitations: ['Compass uses a shared authored world reference and the actual camera owner; no additional world generation']
 });
 const classes = Object.fromEntries([...jar].filter(([p]) => /(RecipeBookComponent|RecipeBookPage|RecipeButton|RecipeCraftingHolder|HopperMenu|HopperScreen|RecipeToast|GhostSlots|ServerPlaceRecipe|PlaceRecipeHelper)\.class$/.test(p)).map(([p, b]) => [p, createHash('sha256').update(b).digest('hex')]));
 writeJSON(resolve(root, 'data/minecraft/26.3/book-evidence.json'), {

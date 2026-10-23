@@ -1,4 +1,5 @@
 /** Screen-space native catalogue and hotbar share one temporary command model and never send inventory gestures to Three.js. */
+import type {CompassView} from './compass.ts';
 import {nativeField} from './native-field.ts';
 import {itemColor} from './item-style.ts';
 import {matchesItem} from '../i18n/items.ts';
@@ -62,6 +63,7 @@ export class GameInventory {
     preview: CraftingPreview = {status: 'empty', result: null};
     permanent: State | null = null;
     writable = false;
+    compassView: () => CompassView | null = () => null;
     generation = '';
     factSignature = '';
     sideOffset = 0;
@@ -285,7 +287,7 @@ export class GameInventory {
             if (document.hidden) return;
             const caret = Math.floor(performance.now() / 50);
             const editing = this.modal.open && (document.activeElement === this.search || document.activeElement === this.book?.search);
-            if (this.art.update(performance.now()) || editing && caret !== this.caretFrame) {this.caretFrame = caret; this.draw(false);}
+            if (this.art.update(performance.now(), this.compassView()) || editing && caret !== this.caretFrame) {this.caretFrame = caret; this.draw(false);}
         }, 50);
     }
 
@@ -730,6 +732,7 @@ export class GameInventory {
         this.modal.dataset.equipment = JSON.stringify(this.value.equipment);
         this.modal.dataset.crafting = JSON.stringify(this.value.crafting);
         this.modal.dataset.tab = this.tab;
+        this.modal.dataset.compass = JSON.stringify(this.art.documents.get('$compass-state') ?? null);
         this.pixels.text(this.hint, this.notice, 1);
         this.hint.hidden = !this.notice;
         this.modal.dataset.stationId = this.station?.id ?? '';

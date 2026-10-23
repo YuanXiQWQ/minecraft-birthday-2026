@@ -1,4 +1,5 @@
 /** P7_TEST_ONLY: deterministic renderer load fixture; never used as an ordinary-game mainline walkthrough. */
+import {loadCatalogueArt} from '../web/src/ui/icons.ts';
 import {auditSpace} from './spatial-access.ts';
 import {observeTimings} from '../web/src/performance.ts';
 import type {Timing} from '../web/src/performance.ts';
@@ -270,3 +271,21 @@ action('Original continuous driver 65s DPR1', () => {
 });
 paint();
 window.addEventListener('pagehide', () => view.dispose());
+
+/** TEST ONLY: expose the same native compass art and actual camera bridge used by the formal inventory. */
+const compassArt = await loadCatalogueArt(), compassCanvas = document.createElement('canvas');
+compassCanvas.width = compassCanvas.height = 256; compassCanvas.style.width = compassCanvas.style.height = '128px';
+compassCanvas.id = 'test-compass'; nav.append(compassCanvas);
+for (const dx of [-180, 0, 180]) action('TEST compass camera ' + dx, () => {
+    view.look.yaw = 0; view.look.pitch = 0;
+    view.look.begin(991, 640, 350);
+    view.movePointer({pointerId: 991, clientX: 640 + dx, clientY: 350, buttons: 2} as PointerEvent, true);
+    if (dx === 0) {view.camera.rotation.set(view.basePitch, 0, 0, 'YXZ');view.camera.updateMatrixWorld(true);}
+    view.look.cancel(); view.requestRender();
+    const owner = view.compassView('fixture');
+    for (let t = 0; t < 250; t++) compassArt.update((++cycle) * 50, owner);
+    const ctx = compassCanvas.getContext('2d')!;ctx.clearRect(0,0,256,256);ctx.drawImage(compassArt.icons.get('minecraft:compass')!,0,0,256,256);
+    output.dataset.compass = JSON.stringify({testOnlyControlledPose:true, viewport:[innerWidth,innerHeight],dpr:devicePixelRatio, ...compassArt.documents.get('$compass-state')});
+    output.textContent = output.dataset.compass;
+});
+window.addEventListener('pagehide',()=>compassArt.dispose(),{once:true});

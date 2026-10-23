@@ -1,6 +1,7 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
+import {systemFeedback, FAILURE_COLOR} from './ui/system-feedback.ts';
 import {harvestFeedback} from './ui/harvest-feedback.ts';
 import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
@@ -86,10 +87,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
      * @param {string} boundary Optional state-transition deduplication boundary.
      */
     function feedback(key: string, values: Record<string,string|number> = {}, boundary = ''): void {
+        const disposition = systemFeedback(key);
+        if (disposition === 'omit') return;
         const signature = JSON.stringify([key,values]);
         if (boundary && feedbackStates.get(boundary) === signature) return;
         if (boundary) feedbackStates.set(boundary, signature);
-        if (chat) chat.append([{text: t(key,values)}]);
+        if (chat) chat.append([{text: t(key,values), ...(disposition === 'failure' ? {color: FAILURE_COLOR} : {})}], 'system');
         else {pendingMessages.push({key,values}); if (pendingMessages.length > 20) pendingMessages.shift();}
     }
 
@@ -376,7 +379,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (inventory) await inventory.queue;
         dialog.close(); menu?.close(); chat?.hide();
         scene?.mode?.suspend(); scene?.cancel();
-        if (!session.view.writable) {chat?.append([{text: t('game.actionFailed')}]); return;}
+        if (!session.view.writable) {feedback('game.actionFailed'); return;}
         location.assign(base);
     }
     link.addEventListener('click', e => {if (page === 'game') {e.preventDefault(); void quitToTitle();}});
@@ -457,7 +460,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 void session.dispatch({
                     type: 'select-scene',
                     scene: id
-                }).catch(() => chat?.append([{text: t('game.actionFailed')}]));
+                }).catch(() => feedback('game.actionFailed'));
     }
     const unsubscribe = session.subscribe(reflect);
     await session.refresh();
@@ -485,7 +488,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         showOptions('options');
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
         scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
-        scene.onPointerFailure = () => chat?.append([{text: t('game.pointerFailed')}]);
+        scene.onPointerFailure = () => feedback('game.pointerFailed');
         scene.setInputEnabled(page === 'home' && !dialog.open);
         scene.onPick = hit => {
             if (hit.id === 'birthday-table') setText(selection, 'table.selected');
@@ -514,13 +517,14 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 updateGate(open);
             }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
             host.append(inventory.hud, inventory.modal);
+            inventory.compassView = () => scene && session.view.envelope ? scene.compassView(session.view.envelope.generation) : null;
             inventory.viewport = host; if (inventory.book) host.append(inventory.book.toast); inventory.resize();
             inventory.returnWorkbench = (scene, id) => session.dispatch({type: 'close-workbench', scene, id});
             inventory.acquireOutput = (take, cursor, expected, station) => session.takeOutput(take, cursor, expected, station);
             inventory.fill = (...args) => session.fillRecipe(...args);
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
-            for (const message of pendingMessages.splice(0)) chat.append([{text: t(message.key,message.values)}]);
+            for (const message of pendingMessages.splice(0)) feedback(message.key,message.values);
             host.dataset.chatReady = 'true';
             session.eventListeners.add(events => {
                 for (const event of events) {
@@ -537,7 +541,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
-            worldUse = new WorldUse(scene!, inventory, session, key => chat?.append([{text: t(key)}]), id => void worldAudio?.play(id));
+            worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), id => void worldAudio?.play(id));
             scene.setInputEnabled(!dialog.open && !inventory.modal.open);
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
                 state: session.view.envelope.state,

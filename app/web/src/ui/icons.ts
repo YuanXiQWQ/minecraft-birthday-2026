@@ -16,6 +16,8 @@ import {
     Quaternion,
     Vector3
 } from 'three';
+import {NativeCompass, compassModel} from './compass.ts';
+import type {CompassView} from './compass.ts';
 import {guiLights} from './icon-light.ts';
 import {RESOURCE_BASE} from '../render/resources.ts';
 import {resourceId, resolveTexture} from '../render/model-format.ts';
@@ -29,7 +31,7 @@ export interface CatalogueArt {
     documents: Map<string, any>;
     coverage: object[];
     kinds?: Map<string, 'sprite' | 'model'>;
-    update: (time: number) => boolean;
+    update: (time: number, compass?: CompassView | null) => boolean;
     dispose: () => void;
 }
 
@@ -220,12 +222,15 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
         return root;
     }
 
+    const compassFrames = new Map<string, HTMLCanvasElement>(), compass = new NativeCompass();
+    let compassFrame = '';
     try {
         const now = new Date(),
             date = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-        for (const id of [...manifest.items, ...Object.keys(book.uiDefinitions)] as string[]) {
-            const definition = documents.get('assets/minecraft/items/' + id.split(':')[1] + '.json'),
-                parts = iconParts(book.uiDefinitions[id] ?? definition.model, date), group = new Group();
+        const tasks = [...manifest.items, ...Object.keys(book.uiDefinitions)].map((id: string) => ({id, node: book.uiDefinitions[id] ?? documents.get('assets/minecraft/items/' + id.split(':')[1] + '.json').model}));
+        for (const model of book.compassModels) tasks.push({id: model, node: {type: 'minecraft:model', model}});
+        for (const {id, node} of tasks) {
+            const parts = iconParts(node, date), group = new Group();
             try {
                 for (const p of parts) group.add(partGroup(p));
                 scene.add(group);
@@ -237,6 +242,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
                 context.drawImage(renderer.domElement, 0, 0);
                 const count = context.getImageData(0, 0, 256, 256).data.filter((v, i) => i % 4 === 3 && v > 0).length;
                 if (!count) throw Error('empty-native-icon:' + id);
+                if (book.compassModels.includes(id)) {compassFrames.set(id, canvas); continue;}
                 icons.set(id, canvas);
                 const usedMaps = new Set<CanvasTexture>();
                 group.traverse(o => {
@@ -289,8 +295,14 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
         renderer.forceContextLoss();
     }
     return {
-        icons, images, documents, coverage, kinds, update: (time: number) => {
+        icons, images, documents, coverage, kinds, update: (time: number, view?: CompassView | null) => {
             let changed = false;
+            const model = compassModel(documents.get('assets/minecraft/items/compass.json'), view ? compass.angle(view, Math.floor(time / 50)) : 0);
+            if (model !== compassFrame) {
+                const icon = compassFrames.get(model); if (!icon) throw Error('missing-native-compass-frame');
+                compassFrame = model; icons.set('minecraft:compass', icon); changed = true;
+            }
+            documents.set('$compass-state', {model, target: view?.target ?? null, position: view?.position ?? null, yaw: view?.yaw ?? null, rotation: compass.rotation});
             for (const [id, a] of animations) {
                 let tick = Math.floor(time / 50) % a.sequence.reduce((n, f) => n + f.time, 0), frame = 0;
                 for (const f of a.sequence) {
@@ -308,6 +320,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
             }
             return changed;
         }, dispose: () => {
+            compassFrames.clear();
             animations.clear();
             icons.clear();
             kinds.clear();

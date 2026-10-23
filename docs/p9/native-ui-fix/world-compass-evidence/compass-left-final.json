@@ -1,0 +1,21 @@
+{
+  "dpr": 1.25,
+  "model": "minecraft:item/compass_19",
+  "position": [
+    0,
+    1.62,
+    7
+  ],
+  "rotation": 0.33594369888305664,
+  "target": [
+    0,
+    0,
+    0
+  ],
+  "testOnlyControlledPose": true,
+  "viewport": [
+    1580,
+    884
+  ],
+  "yaw": 149.06027906293554
+}

@@ -55,12 +55,13 @@ test('creative search text captures letters while hovered numeric copies and Esc
     assert.equal(actions.at(-1), 'close');
 });
 
-test('fixed compass UI uses the original northwest model and texture, not a rotation or generated image', () => {
+test('native compass exports all original range models without a hardcoded UI direction', () => {
     const files = resources(), manifest = JSON.parse(new TextDecoder().decode(files.get('book-manifest.json')));
-    assert.equal(manifest.uiDefinitions['minecraft:compass'].model, 'minecraft:item/compass_12');
-    assert.equal(manifest.uiCompass.direction, 'northwest');
-    const model = JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/models/item/compass_12.json')));
-    assert.equal(model.textures.layer0, 'minecraft:item/compass_12');
+    assert.equal(manifest.compassModels.length,32);
+    assert.equal(manifest.uiCompass,undefined);
+    const definition=JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/items/compass.json')));
+    assert.deepEqual(manifest.compassModels,[...new Set(definition.model.on_false.entries.map((e:any)=>e.model.model))]);
+    for(const id of manifest.compassModels){const model=JSON.parse(new TextDecoder().decode(files.get('assets/minecraft/models/'+id.split(':')[1]+'.json')));assert.ok(files.has('assets/minecraft/textures/'+model.textures.layer0.split(':')[1]+'.png'));}
     assert.deepEqual(files.get('assets/minecraft/textures/item/compass_12.png'), readFileSync(new URL('../../resources/minecraft/26.3/assets/minecraft/textures/item/compass_12.png', import.meta.url)));
     assert.equal(createHash('sha256').update(files.get('assets/minecraft/textures/item/compass_12.png')!).digest('hex'), 'b513404a2d8c886b97ea9d5bfa07ea00b4f7d631e5a616bc166c72e54e290ee2');
 });
