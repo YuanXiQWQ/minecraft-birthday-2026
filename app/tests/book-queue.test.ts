@@ -584,13 +584,14 @@ for (const take of [false, true]) test('cross-session reset fences a real ' + (t
     assert.equal((book.ghost as Recipe | null)?.id, torch.id);
 });
 
-test('stale book preference failures and notification timeouts cannot mutate a new generation display', async () => {
+test('stale book preference failures and notification animation callbacks cannot mutate a new generation display', async () => {
     const h = await harness(), {u, book} = attachLifecycleBook(h);
     await h.s.dispatch({type: 'unlock', item: 'minecraft:stone_pickaxe'});
     let reject!: (e: Error) => void;
     u.bookCommand = () => new Promise((_resolve, r) => reject = r);
     book.change({open: true});
     const callbacks: (() => void)[] = [];
+    Object.defineProperty(globalThis, 'requestAnimationFrame', {value: (f: () => void) => {callbacks.push(f);return callbacks.length;}, configurable:true});
     Object.defineProperty(globalThis, 'window', {
         value: {
             setTimeout: (f: () => void) => {
@@ -621,8 +622,11 @@ test('stale book preference failures and notification timeouts cannot mutate a n
     assert.equal(book.toastEpoch, epoch);
     callbacks[1]();
     assert.equal(book.toast.hidden, false);
-    callbacks.at(-1)!();
-    assert.equal(book.toast.hidden, true);
+    const originalPerformance = Object.getOwnPropertyDescriptor(globalThis, 'performance'), start = book.toastClock.started;
+    let now = start + 600;
+    Object.defineProperty(globalThis, 'performance', {value: {now: () => now}, configurable: true});
+    try {book.paintToast(); now = start + 5600; book.paintToast(); now = start + 6201; callbacks.at(-1)!(); assert.equal(book.toast.hidden, true);}
+    finally {if (originalPerformance) Object.defineProperty(globalThis, 'performance', originalPerformance);}
 });
 
 test('page disposal clears ghosts and toasts and prevents later book rendering or notification', async () => {

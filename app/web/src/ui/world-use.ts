@@ -126,15 +126,24 @@ export class WorldUse {
         block: string;
         point: Cell
     }): Promise<void> {
-        const scope = this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene;
+        const scope = this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene, serial = this.session.serial;
         return this.session.dispatch(command).then(events => {
-            if (scope !== this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene) return;
+            if (!this.current(scope, serial)) return;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
             if (effect) this.scene.breakEffect(effect.block, effect.point);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound) this.sound(sound);
             this.preview();
-        }).catch(error => this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'));
+        }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed');});
+    }
+
+    /** Fence both successful and failed acknowledgements to their live scene and save owner.
+     * @param {string} scope Issuing save generation and scene.
+     * @param {number} serial Issuing page lifecycle serial.
+     * @return {boolean} Whether feedback still belongs to this active adapter.
+     */
+    current(scope: string, serial: number): boolean {
+        return !this.abort.signal.aborted && !this.scene.disposed && !this.session.disposed && !this.session.suspended && serial === this.session.serial && scope === this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene;
     }
 
     /** Begin one active pointer hold against a real visible block, not an item or animal.

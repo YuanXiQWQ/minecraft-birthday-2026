@@ -1,0 +1,59 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "inspection": "read-only javap -c -p; no Minecraft client launched",
+  "classes": [
+    {
+      "path": "net/minecraft/client/gui/Gui.class",
+      "sha256": "1dd30c3234e6e2eee2b5f72dab3711a8f2db395b793fcde519b338979291e32c"
+    },
+    {
+      "path": "net/minecraft/client/gui/GuiGraphicsExtractor.class",
+      "sha256": "4b49c34ba52d81b14376cc10876759a52a86ce21d40b7528cad4439626b28819"
+    },
+    {
+      "path": "net/minecraft/client/gui/Hud.class",
+      "sha256": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716"
+    },
+    {
+      "path": "net/minecraft/client/gui/components/toasts/RecipeToast.class",
+      "sha256": "10f459ebaa7d6ff5362b4dcf757aafeee9793b02af8036350b6f9cfbf94321ee"
+    },
+    {
+      "path": "net/minecraft/client/gui/components/toasts/Toast$Visibility.class",
+      "sha256": "6ddb0f4d0651c3237cde4eb6f59e8994092fc975b9659e1d3f21e53793e2146b"
+    },
+    {
+      "path": "net/minecraft/client/gui/components/toasts/ToastManager$ToastInstance.class",
+      "sha256": "51d753d59c6fa8399ba68d5d3b8674af27af3fea84ee173cda99013206c68e48"
+    },
+    {
+      "path": "net/minecraft/client/gui/components/toasts/ToastManager.class",
+      "sha256": "13bc6e3daf74ba7d66e357de4aa1425d8f89e41cf589f3d11f69e13641741df2"
+    },
+    {
+      "path": "net/minecraft/client/gui/screens/ChatScreen.class",
+      "sha256": "ca22b95744a654d445900339567d77c2f8fd781738514394af98a4a4f5e3738a"
+    },
+    {
+      "path": "net/minecraft/client/gui/screens/Screen.class",
+      "sha256": "1bb77a99dfe406ec28de6e4833731af29b82d3d843cd56fd2a9171e20b684e35"
+    },
+    {
+      "path": "net/minecraft/client/gui/screens/recipebook/RecipeBookTabButton.class",
+      "sha256": "cbe6a621701b7a2c3024b217601e7e4460550e9aaa4278b101d5ec0d7ff9f380"
+    }
+  ],
+  "nativeBranches": {
+    "stratum": "Gui.extractRenderState: Hud.extractRenderState before Screen.extractRenderStateWithTooltipAndSubtitles; Screen.extractBlurredBackground calls GuiGraphicsExtractor.blurBeforeThisStratum; Toasts extracted after Screen",
+    "toastUpdate": [
+      "ToastInstance calculates current visiblePortion before RecipeToast.update",
+      "RecipeToast changed flag records fullyVisibleFor only during update",
+      "visibility change: animationStartTime = now - (int)((1-visiblePortion)*600); not sqrt",
+      "SHOW within <=600ms updates becameFullyVisibleAt; fullyVisibleFor stays a separate clock",
+      "HIDE is removed only when elapsed >600ms",
+      "ToastManager compares visibility before/after update and invokes Visibility.playSound",
+      "RecipeToast icon index = (int)(fullyVisibleFor / max(1,5000/count) % count)"
+    ]
+  }
+}

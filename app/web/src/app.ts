@@ -1,7 +1,7 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
-import {systemFeedback, FAILURE_COLOR} from './ui/system-feedback.ts';
+import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
 import {harvestFeedback} from './ui/harvest-feedback.ts';
 import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
@@ -50,7 +50,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
     const inputBlocked = () => dialog.open || !!menu?.open || !!chat?.open;
-    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
+    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
     let runtimeGeneration: string | null = null, inventory: GameInventory | null = null,
         stopProcessing: (() => void) | null = null;
@@ -87,11 +87,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
      * @param {string} boundary Optional state-transition deduplication boundary.
      */
     function feedback(key: string, values: Record<string,string|number> = {}, boundary = ''): void {
-        const disposition = systemFeedback(key);
+        const disposition = feedbackTransition(feedbackStates, key, values, boundary);
         if (disposition === 'omit') return;
-        const signature = JSON.stringify([key,values]);
-        if (boundary && feedbackStates.get(boundary) === signature) return;
-        if (boundary) feedbackStates.set(boundary, signature);
         if (chat) chat.append([{text: t(key,values), ...(disposition === 'failure' ? {color: FAILURE_COLOR} : {})}], 'system');
         else {pendingMessages.push({key,values}); if (pendingMessages.length > 20) pendingMessages.shift();}
     }
@@ -453,14 +450,16 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
 
     /** Finish visible carrier return before selecting another authored scene. @param {SceneId} id Target scene. */
     async function navigateScene(id: SceneId): Promise<void> {
-                if (inventory && !await inventory.close()) return;
+        const owner = session.view.envelope?.generation, from = session.view.envelope?.state.progress.scene;
+        if (inventory && !await inventory.close()) return;
         if (inventory) await inventory.queue;
-                dialog.close(); menu?.close(); chat?.hide();
-                scene?.mode?.suspend(); scene?.cancel(); worldAudio?.cancel(); inventory?.book?.clearToast();
-                void session.dispatch({
-                    type: 'select-scene',
-                    scene: id
-                }).catch(() => feedback('game.actionFailed'));
+        if (disposed || owner !== session.view.envelope?.generation || from !== session.view.envelope?.state.progress.scene) return;
+        dialog.close(); menu?.close(); chat?.hide();
+        scene?.mode?.suspend(); scene?.cancel(); worldAudio?.cancel(); inventory?.book?.clearToast();
+        const serial = session.serial;
+        void session.dispatch({type: 'select-scene', scene: id}).catch(() => {
+            if (!disposed && !session.suspended && !session.disposed && serial === session.serial && owner === session.view.envelope?.generation && from === session.view.envelope?.state.progress.scene) feedback('game.actionFailed');
+        });
     }
     const unsubscribe = session.subscribe(reflect);
     await session.refresh();
@@ -498,6 +497,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             if (hit) scene?.onPick?.(hit);
         };
         scene.onGraphics = ready => {
+            if (!ready) delete host.dataset.menuComposited;
             setText(selection, ready ? 'error.contextRestored' : 'error.contextLost');
             if (ready) void celebration?.resume(); else celebration?.pause();
         };
@@ -517,6 +517,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 updateGate(open);
             }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
             host.append(inventory.hud, inventory.modal);
+            inventory.onHudPaint = () => scene?.backgroundChanged();
             inventory.compassView = () => scene && session.view.envelope ? scene.compassView(session.view.envelope.generation) : null;
             inventory.viewport = host; if (inventory.book) host.append(inventory.book.toast); inventory.resize();
             inventory.returnWorkbench = (scene, id) => session.dispatch({type: 'close-workbench', scene, id});
@@ -524,6 +525,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             inventory.fill = (...args) => session.fillRecipe(...args);
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
+            chat.onPaint = () => scene?.backgroundChanged();
             for (const message of pendingMessages.splice(0)) feedback(message.key,message.values);
             host.dataset.chatReady = 'true';
             session.eventListeners.add(events => {

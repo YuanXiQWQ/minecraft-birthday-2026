@@ -1,0 +1,45 @@
+(node:27436) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ formal RecipeBook notify and paint schedule IN, OUT, IN on the native exit interruption, with silent cancellation (3.9654ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 769.6846
+
+✖ failing tests:
+
+test at app\tests\ui-lifecycle-repair.test.ts:55:1
+✖ formal RecipeBook notify and paint schedule IN, OUT, IN on the native exit interruption, with silent cancellation (3.9654ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        at: 0,
+        id: 'ui.toast.in'
+      },
+  ...
+      },
+  -   {
+  -     at: 5900,
+  -     id: 'ui.toast.in'
+  -   }
+    ]
+  
+      at TestContext.<anonymous> (<repository>\app\tests\ui-lifecycle-repair.test.ts:62:16)
+      at Test.runInAsyncScope (node:async_hooks:213:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { id: 'ui.toast.in', at: 0 }, { id: 'ui.toast.out', at: 5600 } ],
+    expected: [ { id: 'ui.toast.in', at: 0 }, { id: 'ui.toast.out', at: 5600 }, { id: 'ui.toast.in', at: 5900 } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

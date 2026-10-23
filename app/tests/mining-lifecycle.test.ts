@@ -28,7 +28,7 @@ for (const boundary of ['complete', 'release', 'target', 'tool', 'gui', 'look', 
             point: [-5.5, .5, -2.5] as [number, number, number],
             normal: [0, 0, 1] as [number, number, number]
         }, ui = Object.create(WorldUse.prototype) as WorldUse;
-        Object.assign(ui, {
+        Object.assign(ui, {abort: new AbortController(),
             session,
             inventory: {
                 rules,

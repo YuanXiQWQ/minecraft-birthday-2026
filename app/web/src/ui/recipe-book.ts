@@ -49,6 +49,7 @@ export class RecipeBookView {
   pulses = new Map<string, number>();
   pulseStarted = new Set<string>();
   animationFrame = 0;
+  animationEpoch = 0;
   seenRequests = new Set<string>();
   toastClock = new RecipeToastClock();
   toastPhase = '';
@@ -139,9 +140,11 @@ export class RecipeBookView {
     });
   }
 
-  /** Clear a notification and fence its timeout without touching permanent discovery. */
+  /** Clear a notification and fence its pending animation without touching permanent discovery. */
   clearToast(): void {
     this.toastEpoch++;
+    this.animationEpoch = (this.animationEpoch ?? 0) + 1;
+    cancelAnimationFrame(this.animationFrame); this.animationFrame = 0;
     this.toastClock?.clear(); this.toastPhase = '';
     clearTimeout(this.toastTimer); clearTimeout(this.toastExitTimer);
     this.toastTimer = 0;
@@ -451,13 +454,13 @@ export class RecipeBookView {
       if (!b) continue;
       let tile = b.querySelector('canvas');
       if (!tile) {tile = document.createElement('canvas'); b.append(tile);}
-      const tc = scaledCanvas(tile, 37, 27, u.scale);
-      tc.clearRect(0, 0, 37, 27);
+      const tc = scaledCanvas(tile, 37, 33, u.scale);
+      tc.clearRect(0, 0, 37, 33);
       tile.style.position = 'absolute'; tile.style.left = -2 * u.scale + 'px';
-      tile.style.width = 37 * u.scale + 'px'; tile.style.height = '100%'; tile.style.pointerEvents = 'none';
+      tile.style.top = -3 * u.scale + 'px'; tile.style.width = 37 * u.scale + 'px'; tile.style.height = 33 * u.scale + 'px'; tile.style.pointerEvents = 'none';
       tc.imageSmoothingEnabled = false;
       const pulse = recipePulse(performance.now() - (this.pulses?.get('tab:' + category) ?? -Infinity));
-      tc.save(); tc.translate(8, 12); tc.scale(1, pulse); tc.translate(-8, -12);
+      tc.save(); tc.translate(0, 3); tc.translate(8, 12); tc.scale(1, pulse); tc.translate(-8, -12);
       tc.drawImage(this.image('sprites/recipe_book/tab' + (category === this.category ? '_selected' : '')), category === this.category ? 0 : 2, 0);
       const icons: Record<string, string[]> = {
         all: ['compass'],
@@ -596,7 +599,9 @@ export class RecipeBookView {
     if (this.animationFrame || this.disposed || document.hidden) return;
     const pending = this.toastClock?.active || !this.root.hidden && [...(this.pulses?.values() ?? [])].some(start => performance.now() - start < 750);
     if (!pending) return;
+    const owner = this.animationEpoch;
     this.animationFrame = requestAnimationFrame(() => {
+      if (owner !== this.animationEpoch) return;
       this.animationFrame = 0;
       if (this.disposed || document.hidden) return;
       this.paint(); this.paintToast(); this.animate();
@@ -612,16 +617,10 @@ export class RecipeBookView {
     this.syncScope(); recipes = recipes.filter(id => this.ui.permanent?.progress.recipeBook.data.known.includes(id));
     if (!recipes.length) return;
     this.toastClock ??= new RecipeToastClock();
-    const entering = !this.toastClock.active;
     this.toastClock.add(recipes, performance.now());
     this.toast.dataset.recipes = JSON.stringify(this.toastClock.entries);
     this.toast.setAttribute('aria-label', this.ui.text('book.newTitle') + ' ' + this.ui.text('book.newDescription'));
-    if (entering) {this.toastPhase = 'show'; this.sound?.('ui.toast.in');}
-    const ticket = ++this.toastEpoch; clearTimeout(this.toastTimer);
-    const remaining = Math.max(0, this.toastClock.started + 600 + this.toastClock.changed + 5000 - performance.now());
-    clearTimeout(this.toastExitTimer);
-    this.toastExitTimer = window.setTimeout(() => {if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation && !document.hidden) {this.paintToast(); this.animate();}}, remaining);
-    this.toastTimer = window.setTimeout(() => {if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation) {this.paintToast(); this.clearToast();}}, remaining + 600);
+    this.toastEpoch++; clearTimeout(this.toastTimer); clearTimeout(this.toastExitTimer);
     this.paintToast(); this.animate(); this.render(); this.publish();
   }
 
@@ -629,7 +628,7 @@ export class RecipeBookView {
   paintToast(): void {
     if (!this.toastClock?.active || this.disposed) return;
     const sample = this.toastClock.sample(performance.now());
-    if ((sample.phase === 'hide' || sample.phase === 'done') && this.toastPhase !== 'hide' && this.toastPhase !== 'done') this.sound?.('ui.toast.out');
+    if (sample.transition) this.sound?.(sample.transition === 'show' ? 'ui.toast.in' : 'ui.toast.out');
     this.toastPhase = sample.phase;
     if (sample.phase === 'done') {this.clearToast(); return;}
     const scale = this.ui.scale, c = scaledCanvas(this.toast, 160, 32, scale), r = BOOK_RECIPES.find(r => r.id === this.toastClock.entries[sample.index]);

@@ -1,11 +1,27 @@
 /** Java 26.3 menu blur ports post_effect/blur.json and post/box_blur.fsh into the shared WebGL2 renderer. */
-import {WebGLRenderTarget,LinearFilter,NoColorSpace,ShaderMaterial,NoBlending,Scene,OrthographicCamera,Mesh,PlaneGeometry,Vector2,Vector4} from 'three';
+import {WebGLRenderTarget,LinearFilter,NoColorSpace,ShaderMaterial,NoBlending,Scene,OrthographicCamera,Mesh,PlaneGeometry,Vector2,Vector4,CanvasTexture,NearestFilter} from 'three';
 import type {WebGLRenderer,Camera} from 'three';
 /** Native menu post-effect performs three horizontal/vertical pairs with the configured five-pixel radius. */
 export const MENU_BLUR_DIRECTIONS=[[1,0],[0,1],[1,0],[0,1],[1,0],[0,1]] as const;
+/** Native HUD surfaces belong to the stratum before menu blur, in viewport CSS coordinates. */
+export interface MenuLayer {canvas: HTMLCanvasElement; key: string; x: number; y: number; width: number; height: number; viewportWidth: number; viewportHeight: number}
+/** Locate only the pre-menu hotbar, offhand and recent chat canvases; controls and navigation are excluded.
+ * @param {HTMLElement} host Local game viewport.
+ * @return {MenuLayer[]} Ordered source pixels and positions, independent of the DOM replacement's opacity.
+ */
+export function menuLayers(host: HTMLElement): MenuLayer[] {
+    const r = host.getBoundingClientRect();
+    if (!r.width || !r.height) return [];
+    return [...host.querySelectorAll<HTMLCanvasElement>(':scope > .hotbar canvas, :scope > .game-chat > canvas')].filter(c => !c.closest('[hidden]') && c.width && c.height).map(canvas => {
+        const b = canvas.getBoundingClientRect();
+        return {canvas, key: canvas.closest('.hotbar') ? canvas.classList.contains('offhand-hud') ? 'offhand' : 'hotbar' : 'recent-chat', x: b.left-r.left, y: b.top-r.top, width:b.width, height:b.height, viewportWidth:r.width, viewportHeight:r.height};
+    }).filter(l => l.width>0 && l.height>0);
+}
 /** Share two targets; an encoding pass bridges Three's linear scene to the native byte-color blur pipeline. */
 export class NativeMenuBlur {
     targets=[new WebGLRenderTarget(1,1,{minFilter:LinearFilter,magFilter:LinearFilter}),new WebGLRenderTarget(1,1,{minFilter:LinearFilter,magFilter:LinearFilter})];
+    hud = new Scene();
+    layers = new Map<HTMLCanvasElement, {texture: CanvasTexture; mesh: Mesh; material: ShaderMaterial}>();
     scene=new Scene();camera=new OrthographicCamera(-1,1,1,-1,0,1);
     material=new ShaderMaterial({depthTest:false,depthWrite:false,blending:NoBlending,toneMapped:false,uniforms:{map:{value:null},size:{value:new Vector2(1,1)},direction:{value:new Vector2(1,0)},encode:{value:true}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.,1.);}',fragmentShader:`
         varying vec2 vUv;uniform sampler2D map;uniform vec2 size;uniform vec2 direction;uniform bool encode;
@@ -18,17 +34,19 @@ export class NativeMenuBlur {
     quad=new Mesh(new PlaneGeometry(2,2),this.material);
     /** Allocate only bounded reusable native post-effect objects. */
     constructor(){this.targets.forEach(t=>t.texture.colorSpace=NoColorSpace);this.scene.add(this.quad);}
-    /** Draw the scene followed by the six native separable box passes, restoring renderer ownership.
+    /** Draw the world and pre-menu HUD followed by the six native separable box passes, restoring renderer ownership.
      * @param {WebGLRenderer} renderer Existing scene renderer.
      * @param {Scene} world Main world including actual particles and devices.
      * @param {Camera} camera Approved scene camera.
+     * @param {MenuLayer[]} layers Native pre-menu screen planes.
      */
-    render(renderer:WebGLRenderer,world:Scene,camera:Camera):void{
+    render(renderer:WebGLRenderer,world:Scene,camera:Camera,layers:MenuLayer[]=[]):void{
         const size=renderer.getDrawingBufferSize(new Vector2()),previous=renderer.getRenderTarget(),viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),test=renderer.getScissorTest(),clear=renderer.autoClear;
         for(const target of this.targets)if(target.width!==size.x||target.height!==size.y)target.setSize(size.x,size.y);
         try{
             renderer.setScissorTest(false);renderer.autoClear=true;renderer.setRenderTarget(this.targets[0]);renderer.render(world,camera);
             this.material.uniforms.map.value=this.targets[0].texture;this.material.uniforms.encode.value=true;renderer.setRenderTarget(this.targets[1]);renderer.render(this.scene,this.camera);
+            this.composite(renderer, layers);
             this.material.uniforms.encode.value=false;this.material.uniforms.size.value.copy(size);
             for(const [i,dir] of MENU_BLUR_DIRECTIONS.entries()){
                 this.material.uniforms.map.value=this.targets[(i+1)%2].texture;this.material.uniforms.direction.value.set(...dir);
@@ -36,6 +54,26 @@ export class NativeMenuBlur {
             }
         }finally{renderer.setRenderTarget(previous);renderer.setViewport(viewport);renderer.setScissor(scissor);renderer.setScissorTest(test);renderer.autoClear=clear;}
     }
+    /** Composite native sRGB HUD pixels onto the encoded world before any blur pass.
+     * @param {WebGLRenderer} renderer Shared renderer currently targeting the encoded world.
+     * @param {MenuLayer[]} sources Current pre-menu HUD planes.
+     */
+    composite(renderer: WebGLRenderer, sources: MenuLayer[]): void {
+        const live = new Set(sources.map(l => l.canvas));
+        for (const [canvas, layer] of this.layers) if (!live.has(canvas)) {layer.mesh.removeFromParent(); layer.mesh.geometry.dispose(); layer.material.dispose(); layer.texture.dispose(); this.layers.delete(canvas);}
+        for (const [index, source] of sources.entries()) {
+            let layer = this.layers.get(source.canvas);
+            if (!layer) {
+                const texture = new CanvasTexture(source.canvas); texture.colorSpace=NoColorSpace; texture.minFilter=texture.magFilter=NearestFilter;
+                const material = new ShaderMaterial({transparent:true,depthTest:false,depthWrite:false,toneMapped:false,uniforms:{map:{value:texture}},vertexShader:'varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec2 vUv;uniform sampler2D map;void main(){gl_FragColor=texture2D(map,vUv);}'});
+                layer={texture,material,mesh:new Mesh(new PlaneGeometry(1,1),material)}; this.layers.set(source.canvas,layer);this.hud.add(layer.mesh);
+            }
+            layer.texture.needsUpdate=true;layer.mesh.renderOrder=index;
+            layer.mesh.position.set((source.x+source.width/2)/source.viewportWidth*2-1,1-(source.y+source.height/2)/source.viewportHeight*2,0);
+            layer.mesh.scale.set(source.width/source.viewportWidth*2,source.height/source.viewportHeight*2,1);
+        }
+        renderer.autoClear=false; renderer.render(this.hud,this.camera); renderer.autoClear=true;
+    }
     /** Release the bounded framebuffer pair and fullscreen quad. */
-    dispose():void{this.targets.forEach(t=>t.dispose());this.quad.geometry.dispose();this.material.dispose();}
+    dispose():void{for(const l of this.layers.values()){l.texture.dispose();l.material.dispose();l.mesh.geometry.dispose();}this.layers.clear();this.hud.clear();this.targets.forEach(t=>t.dispose());this.quad.geometry.dispose();this.material.dispose();}
 }

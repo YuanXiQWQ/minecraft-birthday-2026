@@ -14,3 +14,17 @@ export function systemFeedback(key: string): 'information'|'failure'|'omit' {
     if (key.startsWith('error.') || key.startsWith('audio.') || ACTION_FAILURES.has(key)) return 'failure';
     return INFORMATION.has(key) || /^scene\.(plains|cave|farm|home)$/.test(key) ? 'information' : 'omit';
 }
+
+/** Record the whole status transition before deciding whether it produces chat.
+ * @param {Map<string,string>} states Current generation's boundary signatures.
+ * @param {string} key Localized status identity, including silent recovery.
+ * @param {Record<string,string|number>} values Message parameters.
+ * @param {string} boundary Optional deduplication interval.
+ * @return {'information'|'failure'|'omit'} Actual chat decision for this transition.
+ */
+export function feedbackTransition(states: Map<string,string>, key: string, values: Record<string,string|number> = {}, boundary = ''): 'information'|'failure'|'omit' {
+    const signature = JSON.stringify([key,values]);
+    if (boundary && states.get(boundary) === signature) return 'omit';
+    if (boundary) states.set(boundary,signature);
+    return systemFeedback(key);
+}

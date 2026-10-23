@@ -106,3 +106,6 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .native-screen .mc-button:disabled{opacity:1}
 /* Menu blurring is the native six-pass WebGL effect; chat and containers do not enable it. */
 .scene-panel[data-effect=menu]>canvas[role=img]{filter:none}
+
+/* The shared framebuffer displays these source canvases before menu blur; keep the DOM pixels from drawing twice. */
+.scene-panel[data-effect=menu][data-menu-composited=true]>.hotbar,.scene-panel[data-effect=menu][data-menu-composited=true]>.game-chat{opacity:0}

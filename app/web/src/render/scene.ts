@@ -1,5 +1,5 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
-import {NativeMenuBlur} from './native-menu-blur.ts';
+import {NativeMenuBlur, menuLayers} from './native-menu-blur.ts';
 import {NativeCrosshair} from './native-crosshair.ts';
 import {timing, gpuTiming} from '../performance.ts';
 import {
@@ -588,8 +588,11 @@ export class SceneView {
             const resetInfo = this.renderer.info.autoReset;
             this.renderer.info.autoReset = false; this.renderer.info.reset();
             try {
-                if (this.renderer.domElement.parentElement?.dataset.effect === 'menu') this.menuBlur.render(this.renderer, this.scene, this.camera);
-                else this.renderer.render(this.scene, this.camera);
+                const host = this.renderer.domElement.parentElement;
+                if (host?.dataset.effect === 'menu') {
+                    const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, this.camera, layers);
+                    host.dataset.menuComposited='true';this.renderer.domElement.dataset.menuComposite=JSON.stringify(layers.map(({canvas,...layout})=>layout));
+                } else {if(host)delete host.dataset.menuComposited;this.renderer.render(this.scene, this.camera);}
                 this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden, lost: this.lost, disposed: this.disposed});
             } finally {this.renderer.info.autoReset = resetInfo;}
             gpuEnd();
@@ -605,6 +608,9 @@ export class SceneView {
             if (continuing || this.debris.length) this.requestRender();
         });
     }
+
+    /** Refresh the menu's pre-blur HUD only when its native source canvas has changed. */
+    backgroundChanged(): void {if (this.renderer.domElement.parentElement?.dataset.effect === 'menu') this.requestRender();}
 
     /** Release owned per-instance geometry; shared original materials belong to the model factory.
      * @param {Object3D} object Scene instance.

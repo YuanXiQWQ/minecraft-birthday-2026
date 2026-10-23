@@ -63,6 +63,7 @@ export class GameInventory {
     preview: CraftingPreview = {status: 'empty', result: null};
     permanent: State | null = null;
     writable = false;
+    onHudPaint: (() => void) | null = null;
     compassView: () => CompassView | null = () => null;
     generation = '';
     factSignature = '';
@@ -567,6 +568,7 @@ export class GameInventory {
         this.hudCanvas.style.width = 184 * this.scale + 'px';
         this.hudCanvas.style.height = 24 * this.scale + 'px';
         this.host.dataset.catalogueIcons = String(Object.keys(this.rules.items).length);
+        this.onHudPaint?.();
         if (!this.modal.open || !this.permanent) {
             this.playerPreview?.hide();
             this.book?.render();

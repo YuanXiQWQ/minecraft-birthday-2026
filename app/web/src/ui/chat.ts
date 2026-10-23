@@ -21,6 +21,7 @@ export class GameChat {
     root = document.createElement('section');
     canvas = document.createElement('canvas');
     input = document.createElement('input');
+    onPaint: (() => void) | null = null;
     messages: ChatMessage[] = [];
     history: string[] = [];
     historyIndex = 0;
@@ -120,6 +121,7 @@ export class GameChat {
             lines.forEach((line,i)=>this.pixels.font.draw(c,line,tx+12,ty+12+i*12,'#FFFFFF',true));
         }
         this.root.dataset.open=String(this.open);this.root.dataset.layout=JSON.stringify({scale,width,base,height,input:[4,h-12,w-4,12],lines:bounded.map(r=>r.text),offset:this.offset});
+        this.onPaint?.();
     }
     /** Cancel the single bounded update timer and all owned listeners. */
     dispose(): void {clearInterval(this.timer);this.abort.abort();this.root.remove();}

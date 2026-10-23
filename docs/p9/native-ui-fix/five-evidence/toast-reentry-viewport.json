@@ -1,0 +1,316 @@
+{
+  "sourceStart": 383801,
+  "frames": [
+    {
+      "name": "toast-reentry-viewport-00.jpg",
+      "before": {
+        "at": 389148.8000000119,
+        "changed": 0,
+        "fullyVisibleFor": 4997,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 383801,
+        "transition": null,
+        "visible": 1
+      },
+      "after": {
+        "at": 389234.39999997616,
+        "changed": 0,
+        "fullyVisibleFor": 5083,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.982663869857788
+      },
+      "elapsed": 5433.399999976158
+    },
+    {
+      "name": "toast-reentry-viewport-01.jpg",
+      "before": {
+        "at": 389256.39999997616,
+        "changed": 0,
+        "fullyVisibleFor": 5105,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.9716638922691344
+      },
+      "after": {
+        "at": 389338.59999996424,
+        "changed": 0,
+        "fullyVisibleFor": 5187,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.9069749712944032
+      },
+      "elapsed": 5537.599999964237
+    },
+    {
+      "name": "toast-reentry-viewport-02.jpg",
+      "before": {
+        "at": 389386.89999997616,
+        "changed": 0,
+        "fullyVisibleFor": 5235,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.8517749905586243
+      },
+      "after": {
+        "at": 389487.5,
+        "changed": 0,
+        "fullyVisibleFor": 5336,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.6938222050666809
+      },
+      "elapsed": 5686.5
+    },
+    {
+      "name": "toast-reentry-viewport-03.jpg",
+      "before": {
+        "at": 389525.5,
+        "changed": 0,
+        "fullyVisibleFor": 5374,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.6197222471237183
+      },
+      "after": {
+        "at": 389645.59999996424,
+        "changed": 0,
+        "fullyVisibleFor": 5494,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.3330555558204651
+      },
+      "elapsed": 5844.599999964237
+    },
+    {
+      "name": "toast-reentry-viewport-04.jpg",
+      "before": {
+        "at": 389672.1999999881,
+        "changed": 0,
+        "fullyVisibleFor": 5521,
+        "index": 0,
+        "phase": "hide",
+        "recipes": [
+          "minecraft:barrel"
+        ],
+        "started": 389155,
+        "transition": null,
+        "visible": 0.2575305104255676
+      },
+      "after": {
+        "at": 389748.6999999881,
+        "changed": 5556,
+        "fullyVisibleFor": 0,
+        "index": 0,
+        "phase": "show",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 0.8341777920722961
+      },
+      "elapsed": 5947.699999988079
+    },
+    {
+      "name": "toast-reentry-viewport-05.jpg",
+      "before": {
+        "at": 389790.6999999881,
+        "changed": 5556,
+        "fullyVisibleFor": 0,
+        "index": 0,
+        "phase": "show",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 0.966944456100464
+      },
+      "after": {
+        "at": 389883.1999999881,
+        "changed": 5556,
+        "fullyVisibleFor": 88,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "elapsed": 6082.199999988079
+    },
+    {
+      "name": "toast-reentry-viewport-06.jpg",
+      "before": {
+        "at": 389890.5,
+        "changed": 5556,
+        "fullyVisibleFor": 95,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "after": {
+        "at": 389994.09999996424,
+        "changed": 5556,
+        "fullyVisibleFor": 199,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "elapsed": 6193.099999964237
+    },
+    {
+      "name": "toast-reentry-viewport-07.jpg",
+      "before": {
+        "at": 390027.59999996424,
+        "changed": 5556,
+        "fullyVisibleFor": 232,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "after": {
+        "at": 390135.3000000119,
+        "changed": 5556,
+        "fullyVisibleFor": 340,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "elapsed": 6334.300000011921
+    },
+    {
+      "name": "toast-reentry-viewport-08.jpg",
+      "before": {
+        "at": 390186.6999999881,
+        "changed": 5556,
+        "fullyVisibleFor": 391,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "after": {
+        "at": 390321.59999996424,
+        "changed": 5556,
+        "fullyVisibleFor": 526,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "elapsed": 6520.599999964237
+    },
+    {
+      "name": "toast-reentry-viewport-09.jpg",
+      "before": {
+        "at": 390338.5,
+        "changed": 5556,
+        "fullyVisibleFor": 543,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "after": {
+        "at": 390450.8000000119,
+        "changed": 5556,
+        "fullyVisibleFor": 655,
+        "index": 0,
+        "phase": "hold",
+        "recipes": [
+          "minecraft:barrel",
+          "minecraft:campfire"
+        ],
+        "started": 389200,
+        "transition": null,
+        "visible": 1
+      },
+      "elapsed": 6649.800000011921
+    }
+  ]
+}

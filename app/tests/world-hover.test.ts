@@ -158,7 +158,7 @@ test('explicit upper attachment uses the same valid neighbor for preview and fin
     const scene = view(), use = Object.create(WorldUse.prototype) as WorldUse;
     let preview: unknown = null;
     scene.showPreview = value => preview = value;
-    Object.assign(use, {
+    Object.assign(use, {abort: new AbortController(),
         scene,
         session,
         inventory: {value: {...structuredClone(state.progress.player.data), cursor: null}},

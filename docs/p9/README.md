@@ -1,6 +1,8 @@
 # P9交付候选索引
 
-当前执行：基于4eade6d的八组原版界面定向整改，见[用户授权](native-ui-fix/authorization.md)、[交付报告与八组矩阵](native-ui-fix/report.md)、[原版证据](native-ui-fix/native-evidence.json)。既有P9工程结果保留；本次不新增玩法。
+当前基于8f80bd9执行已授权的五项界面定向修复，当前矩阵/证据见[五项修复交付](native-ui-fix/five-review.md)；保留聊天七类、指南针、自动聚焦和狭小矿洞，历史阶段成果不重做。
+
+既有基线：基于4eade6d的八组原版界面定向整改，见[用户授权](native-ui-fix/authorization.md)、[交付报告与八组矩阵](native-ui-fix/report.md)、[原版证据](native-ui-fix/native-evidence.json)。既有P9工程结果保留；本次不新增玩法。
 
 - [有效行为合同](../p8/current-contract.md)
 - [十九项覆盖矩阵](../p8/experience-19/matrix.md)
@@ -10,7 +12,7 @@
 - [兼容与恢复](recovery.md)：无历史改写、无清档的恢复步骤。
 - [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部9份profile及依赖。
 
-工程命令入口：app/package.json；正式428项（保留原389项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
+工程命令入口：app/package.json；正式440项（保留原389项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
 
 - [当前聊天七类、狭小矿洞及世界方位指南针](native-ui-fix/chat-cave-compass-review.md)。
 - [物品搜索自动聚焦及固定帧历史记录](native-ui-fix/catalogue-review.md)（固定左上已纠正）。

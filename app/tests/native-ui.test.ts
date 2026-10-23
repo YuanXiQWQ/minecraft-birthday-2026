@@ -12,10 +12,10 @@ for(const [ms,expected] of [[0,1],[187.5,1.0707106781186548],[375,1.1],[562.5,1.
 
 test('native toast square entrance, five-second fully-visible hold and square exit use independent boundaries',()=>{
     const clock=new RecipeToastClock();clock.add(['planks','sticks'],1000);
-    for(const [at,visible,phase,index] of [[1000,0,'show',0],[1300,.25,'show',0],[1600,1,'hold',0],[4100,1,'hold',1],[6599,1,'hold',1],[6600,1,'hide',0],[6900,.75,'hide',0],[7200,0,'done',0]] as const){const value=clock.sample(at);assert.equal(value.phase,phase);assert.equal(value.visible,visible);assert.equal(value.index,index);}
+    for(const [at,visible,phase,index] of [[1000,0,'show',0],[1300,.25,'show',0],[1600,1,'hold',0],[4100,1,'hold',1],[6599,1,'hold',1],[6600,1,'hide',0],[6900,.75,'hide',0],[7200,0,'hide',0],[7201,0,'done',0]] as const){const value=clock.sample(at);assert.equal(value.phase,phase);assert.equal(value.visible,visible);assert.equal(value.index,index);}
 });
 test('native toast merges while showing, cycles all entries and extends hold without another entrance',()=>{
-    const clock=new RecipeToastClock();clock.add(['a'],0);clock.add(['b','a'],2000);assert.equal(clock.started,0);assert.deepEqual(clock.entries,['a','b']);assert.equal(clock.sample(5600).phase,'hold');assert.equal(clock.sample(7000).phase,'hide');clock.clear();assert.equal(clock.sample(7001).phase,'done');clock.add(['c'],8000);assert.equal(clock.sample(8000).visible,0);
+    const clock=new RecipeToastClock();clock.add(['a'],0);clock.sample(0);clock.sample(600);clock.add(['b','a'],2000);clock.sample(2000);assert.equal(clock.started,0);assert.deepEqual(clock.entries,['a','b']);assert.equal(clock.sample(5600).phase,'hold');assert.equal(clock.sample(7000).phase,'hide');clock.clear();assert.equal(clock.sample(7001).phase,'done');clock.add(['c'],8000);assert.equal(clock.sample(8000).visible,0);
 });
 for(const [elapsed,visible] of [[0,true],[299,true],[300,false],[599,false],[600,true]])test('focus-relative native cursor blink '+elapsed,()=>assert.equal(caretState(1000+Number(elapsed),1000,0,0,50).visible,visible));
 test('EditBox append, insert, maximum and backwards active cursor branches',()=>{
@@ -91,7 +91,7 @@ test('formal HUD renderer uses one original quad, the native invert factors and 
 test('formal menu renderer reuses two targets, executes encoding plus six native passes and restores GPU state',async()=>{
     const {NativeMenuBlur}=await import('../web/src/render/native-menu-blur.ts'),three=await import('three'),blur=new NativeMenuBlur(),target={name:'prior'},calls:any[]=[];
     let current:any=target,scissor=true;const renderer={autoClear:false,getDrawingBufferSize:(v:any)=>v.set(640,360),getRenderTarget:()=>current,getViewport:(v:any)=>v.set(1,2,300,200),getScissor:(v:any)=>v.set(3,4,200,100),getScissorTest:()=>scissor,setScissorTest:(v:boolean)=>scissor=v,setRenderTarget:(v:any)=>current=v,setViewport(){},setScissor(){},render:(s:any)=>calls.push([current,s])};
-    blur.render(renderer as any,new three.Scene(),new three.PerspectiveCamera());assert.equal(calls.length,8);assert.equal(current,target);assert.equal(scissor,true);assert.equal(renderer.autoClear,false);assert.equal(blur.targets[0].width,640);
+    blur.render(renderer as any,new three.Scene(),new three.PerspectiveCamera());assert.equal(calls.length,9);assert.equal(current,target);assert.equal(scissor,true);assert.equal(renderer.autoClear,false);assert.equal(blur.targets[0].width,640);
     const owned=[...blur.targets];blur.render(renderer as any,new three.Scene(),new three.PerspectiveCamera());assert.equal(blur.targets[0],owned[0]);assert.equal(blur.targets[1],owned[1]);blur.dispose();
 });
 test('formal UI sound decode cannot replay after a generation cancellation or swallow a decoding failure',async()=>{
@@ -113,7 +113,7 @@ function matrixCanvas(){
         translate:(x:number,y:number)=>{matrix[4]+=matrix[0]*x+matrix[2]*y;matrix[5]+=matrix[1]*x+matrix[3]*y;},scale:(x:number,y:number)=>{matrix[0]*=x;matrix[1]*=x;matrix[2]*=y;matrix[3]*=y;},
         transform:(a:number,b:number,c:number,d:number,e:number,f:number)=>{const [A,B,C,D,E,F]=matrix;matrix=[A*a+C*b,B*a+D*b,A*c+C*d,B*c+D*d,A*e+C*f+E,B*e+D*f+F];},
         drawImage:(image:any,...bounds:number[])=>images.push({id:image.id,matrix:[...matrix],bounds}),imageSmoothingEnabled:false};
-    return{ctx,images,canvas:{dataset:{},style:{},getContext:()=>ctx},matrix:()=>[...matrix]};
+    return{ctx,images,canvas:{width:0,height:0,dataset:{},style:{},getContext:()=>ctx},matrix:()=>[...matrix]};
 }
 test('actual RecipeBookView.paint transforms button and icon together, tab vertically, and stops its bounded RAF',async()=>{
     const {RecipeBookView}=await import('../web/src/ui/recipe-book.ts'),original=Object.getOwnPropertyDescriptor(globalThis,'performance');let now=1187.5;
@@ -128,7 +128,15 @@ test('actual RecipeBookView.paint transforms button and icon together, tab verti
         book.paint();const expected=1.0707106781186548,buttonDraw=main.images.find(i=>i.id.includes('slot_')),tabDraw=tab.images[0];
         assert.ok(Math.abs(buttonDraw.matrix[0]-expected)<1e-12);assert.ok(Math.abs(buttonDraw.matrix[3]-expected)<1e-12);
         assert.ok(Math.abs(buttonDraw.matrix[4]-19*(1-expected))<1e-12);assert.ok(Math.abs(buttonDraw.matrix[5]-43*(1-expected))<1e-12);assert.deepEqual(icons[0],buttonDraw.matrix);
-        assert.equal(tabDraw.matrix[0],1);assert.ok(Math.abs(tabDraw.matrix[3]-expected)<1e-12);assert.equal(tabDraw.matrix[4],0);assert.ok(Math.abs(tabDraw.matrix[5]-12*(1-expected))<1e-12);
+        assert.equal(tabDraw.matrix[0],1);assert.ok(Math.abs(tabDraw.matrix[3]-expected)<1e-12);assert.equal(tabDraw.matrix[4],0);assert.ok(Math.abs(tabDraw.matrix[5]-(3+12*(1-expected)))<1e-12);
+        now=1375;
+        for(const selected of [true,false]){
+            book.category=selected?'all':'equipment';tab.images.length=0;book.paint();
+            const m=tab.images[0].matrix, top=m[5],bottom=m[5]+27*m[3];
+            assert.equal(tab.canvas.height,33);assert.ok(top>0);assert.ok(bottom<tab.canvas.height);
+            assert.ok(bottom-top>27);assert.equal(parseFloat((tab.canvas as any).style.top),-3);
+            assert.ok(Math.abs(parseFloat((tab.canvas as any).style.top)+top-12*(1-1.1))<1e-12);
+        }
         book.animate();assert.equal(callbacks.length,1);now=1900;callbacks.shift()!(1900);assert.equal(callbacks.length,0);assert.equal(book.animationFrame,0);
     }finally{if(original)Object.defineProperty(globalThis,'performance',original);}
 });
