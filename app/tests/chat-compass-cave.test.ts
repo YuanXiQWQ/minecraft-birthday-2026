@@ -69,7 +69,10 @@ test('real original stone shell leaves every ore type reachable using production
     const manifest=docs.get('world-manifest.json'), samples=[...manifest.states,{id:'legacy-furnace',block:'furnace',state:'facing=south,lit=false',variant:docs.get('assets/minecraft/blockstates/furnace.json').variants['facing=south,lit=false']}].map((s:any)=>({...s,compiled:compileModel(resolveModel(s.variant.model,id=>docs.get('assets/minecraft/models/'+id.split(':')[1]+'.json')),s.variant)}));
     const models=Object.create(VanillaModels.prototype) as VanillaModels;
     Object.assign(models,{pack:{samples,images:new Map(),loading:{}},materials:new Map(samples.flatMap((s:any)=>s.compiled.textures).map((t:string)=>[t,new MeshBasicMaterial()])),created:0,released:0});
-    const authored=new AuthoredWorld(models,models.pack as any),state=initialState();state.progress.scene='cave';authored.build('cave');authored.sync(state.progress);
+    const authored=new AuthoredWorld(models,models.pack as any),state=initialState();state.progress.scene='cave';
+    const errors: unknown[][]=[],originalError=console.error;console.error=(...args)=>{errors.push(args);};
+    try {authored.build('cave');authored.sync(state.progress);} finally {console.error=originalError;}
+    assert.deepEqual(errors,[],'initial source projection does not add an undefined retained object');
     const view=Object.create(SceneView.prototype) as SceneView;
     Object.assign(view,{scene:new Scene(),world:new Group(),persistent:new Group(),authored,models,camera:new PerspectiveCamera(70,16/9,.1,90),ray:new Raycaster(),look:new Look(),input:true,lost:false,disposed:false,basePitch:0,renderer:{domElement:{getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})}}});
     view.camera.position.set(...WORLD_SCENES.cave.eye);view.camera.lookAt(...WORLD_SCENES.cave.target);view.camera.rotation.order='YXZ';view.basePitch=view.camera.rotation.x;view.scene.add(authored.staticRoot,authored.natural,authored.crops,view.persistent,view.world);

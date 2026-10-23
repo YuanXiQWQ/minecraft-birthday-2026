@@ -254,7 +254,7 @@ export class AuthoredWorld {
         const retained = id === 'cave' ? this.natural.children.filter(o=>wanted.has(o.userData.id)) : [];
         for (const root of retained) root.removeFromParent();
         this.clear(this.natural);
-        this.natural.add(...retained);
+        if (retained.length) this.natural.add(...retained);
         this.clear(this.crops);
         const existing = new Set(retained.map(o=>o.userData.id));
         for (const n of visible) {
