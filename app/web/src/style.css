@@ -131,3 +131,8 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .game:not([data-boot=ready]) .scene-panel{visibility:hidden}
 .game:not([data-boot=ready])>.world-navigation{visibility:hidden;pointer-events:none}
 .game>.startup-error{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,calc(100% - 32px));padding:16px;background:#171615;color:#ff5555;text-align:center;z-index:12}
+
+/* A reset confirmation owns its screen; underlying category controls cannot overlap its text or hit targets. */
+.native-screen[data-confirming=true] .native-screen-plane> :not(#reset-confirmation):not(#reset-feedback){visibility:hidden;pointer-events:none}
+.native-screen[data-confirming=true] #reset-confirmation{background:transparent;border:0;padding:0;overflow:visible}
+.native-screen .weather-attribution{font-size:10px;text-align:right;opacity:.75}

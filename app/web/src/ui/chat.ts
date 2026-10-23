@@ -1,6 +1,6 @@
 /** Native local chat keeps message identity, wrapped-line history and screen input separate from world effects. */
 import {completeCommand,parseCommand,type CommandFeedback} from '../domain/console.ts';
-import {drawSprite} from './vanilla.ts';
+import {type BitmapFont,drawSprite} from './vanilla.ts';
 import {tooltipBox} from './inventory-state.ts';
 import type {PixelUI} from './pixels.ts';
 import {wrap} from './pixels.ts';
@@ -17,6 +17,31 @@ export function chatScale(w: number, h: number, dpr=1): number {let s=1; while(s
 export function nativeScale(viewport: HTMLElement): number {const configured=typeof getComputedStyle === 'function'?parseFloat(getComputedStyle(viewport).getPropertyValue('--gui-scale')):0;return configured>0?configured:chatScale(viewport.clientWidth,viewport.clientHeight,globalThis.devicePixelRatio??1);}
 /** ChatComponent's age alpha is squared after the final twenty-tick fade. @param {number} age Age in ticks. @return {number} Opacity. */
 export function chatFade(age: number): number {return Math.min(1,Math.max(0,(1-age/200)*10))**2;}
+/** Build Brigadier's client exception context before submission, retaining the slash cursor offset.
+ * @param {string} source Complete editor text.
+ * @param {CommandFeedback} error Parsed exception.
+ * @param {Function} text Localized message lookup.
+ * @return {string} White usage-box text including native position and preceding context.
+ */
+export function commandHint(source:string,error:CommandFeedback,text:(key:string,values?:Record<string,string|number>)=>string):string{
+    const raw=text(error.key,error.values);if(error.cursor===undefined)return raw;
+    const at=Math.min(source.length,error.cursor),context=(at>10?'...':'')+source.slice(Math.max(0,at-10),at)+'<--[HERE]';
+    return text('command.context.parse_error',{v0:raw,v1:error.cursor,v2:context});
+}
+/** Draw native styled chat glyphs without changing their advance or surrounding run styles.
+ * @param {CanvasRenderingContext2D} c Chat drawing plane.
+ * @param {BitmapFont} font Original bitmap font.
+ * @param {string} ch One Unicode codepoint.
+ * @param {number} x Logical left.
+ * @param {number} y Logical top.
+ * @param {TextRun} run Native style inherited by this glyph.
+ */
+export function chatGlyph(c:CanvasRenderingContext2D,font:BitmapFont,ch:string,x:number,y:number,run:TextRun):void{
+    const color=run.color??'#FFFFFF';c.save();
+    if(run.italic){c.translate(x+1,y);c.transform(1,0,-.25,1,0,0);font.draw(c,ch,0,0,color,true);}else font.draw(c,ch,x,y,color,true);
+    c.restore();
+    if(run.underline){const hex=parseInt(color.slice(1),16);c.fillStyle='#'+[hex>>16&255,hex>>8&255,hex&255].map(v=>(v>>2).toString(16).padStart(2,'0')).join('');c.fillRect(x+1,y+9,font.width(ch),1);c.fillStyle=color;c.fillRect(x,y+8,font.width(ch),1);}
+}
 /** Own one local single-player chat surface without persistent message history or networking. */
 export class GameChat {
     root = document.createElement('section');
@@ -116,9 +141,9 @@ export class GameChat {
      */
     commandMessage(message:CommandFeedback,source=''):void{
         for(const line of this.text(message.key,message.values).split('\n'))this.append([{text:line,color:message.error?'#FF5555':'#FFFFFF'}]);
-        if(message.cursor!==undefined){const at=message.cursor,start=Math.max(0,at-10);this.append([
-            {text:(start?'...':'')+source.slice(start,at),color:'#AAAAAA'},
-            {text:source.slice(at),color:'#FF5555'}, {text:this.text('command.context.here'),color:'#FF5555'}
+        if(message.cursor!==undefined){const offset=source.startsWith('/')?1:0,input=source.slice(offset),at=Math.min(input.length,Math.max(0,message.cursor-offset)),start=Math.max(0,at-10);this.append([
+            {text:(start?'...':'')+input.slice(start,at),color:'#AAAAAA'},
+            {text:input.slice(at),color:'#FF5555',underline:true}, {text:this.text('command.context.here'),color:'#FF5555',italic:true}
         ]);}
     }
     /** Complete at the caret, retaining the original prefix while Tab/Shift-Tab cycles one native suggestion set.
@@ -143,7 +168,7 @@ export class GameChat {
         let y=base,tag:string|null=null;
         for(const row of bounded.slice(0,bounded.length-this.offset).reverse().slice(0,Math.floor(height/9))){
             if(row.fade){c.globalAlpha=row.fade;c.fillStyle='#00000080';c.fillRect(4,y-9,width+4,9);c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);
-                let x=4,consumed=row.start;for(const ch of row.text){let at=0,color='#FFFFFF';for(const run of row.message.runs){if(consumed<at+run.text.length){color=run.color??color;break;}at+=run.text.length;}this.pixels.font.draw(c,ch,x,y-8,color,true);x+=this.pixels.font.width(ch);consumed+=ch.length;}
+                let x=4,consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);x+=this.pixels.font.width(ch);consumed+=ch.length;}
                 if(this.open&&this.tagHover&&this.tagHover[0]/scale<4&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)tag=this.text(row.message.kind==='system'?'chat.tag.system':'chat.tag.local');
             }y-=9;
         }
@@ -152,11 +177,11 @@ export class GameChat {
             if(this.lineCount>20){const total=this.lineCount*9,visible=Math.min(180,total),bar=Math.floor(visible*visible/total),by=base-Math.floor(this.offset*visible/this.lineCount)-bar,alpha=this.offset>0?'AA':'60';c.fillStyle=(this.newWhileScrolled?'#CC3333':'#3333AA')+alpha;c.fillRect(8+width,by,2,bar);c.fillStyle='#CCCCCC'+alpha;c.fillRect(9+width,by,1,bar);}
             const source=this.input.value,parsed=source.startsWith('/')?parseCommand(source):null,offered=source.startsWith('/')?completeCommand(source.slice(0,this.input.selectionStart??source.length)):null,
                 suggestion=this.completion??(offered?.values.length?{...offered,index:0,source}:null),error=parsed&&'key'in parsed&&!suggestion?parsed:null;
-            c.fillStyle='#00000080';c.fillRect(2,h-14,w-4,12);nativeField(c,this.pixels.font,this.input,[4,h-12,w-4,12],{shadow:true,invalidFrom:error?.cursor});
+            c.fillStyle='#00000080';c.fillRect(2,h-14,w-4,12);nativeField(c,this.pixels.font,this.input,[4,h-12,w-4,12],{shadow:true,color:source.startsWith('/')?'#AAAAAA':'#FFFFFF',invalidFrom:error?.cursor});
             if(suggestion){const list=suggestion.values,from=Math.max(0,suggestion.index-9),shown=list.slice(from,from+10),sw=Math.max(...shown.map(v=>this.pixels.font.width(v)))+2,sx=Math.max(0,Math.min(w-sw,4+this.pixels.font.width(suggestion.source.slice(0,suggestion.start)))),sy=h-15-shown.length*12;
                 c.fillStyle='#000000E0';c.fillRect(sx,sy,sw,shown.length*12);shown.forEach((v,i)=>this.pixels.font.draw(c,v,sx+1,sy+i*12+2,from+i===suggestion.index?'#FFFF00':'#AAAAAA',false));}
-            else if(error){const lines=wrap(this.text(error.key,error.values),w-8,v=>this.pixels.font.width(v)),sy=h-15-lines.length*12;c.fillStyle='#000000E0';c.fillRect(2,sy,w-4,lines.length*12);lines.forEach((line,i)=>this.pixels.font.draw(c,line,4,sy+i*12+2,'#FF5555',false));}
-            this.root.dataset.commandHint=JSON.stringify({suggestions:suggestion?.values??[],error});
+            else if(error){const hint=commandHint(source,error,this.text),sy=h-27;c.fillStyle='#000000E0';c.fillRect(2,sy,this.pixels.font.width(hint)+2,12);this.pixels.font.draw(c,hint,3,sy+2,'#FFFFFF',true);}
+            this.root.dataset.commandHint=JSON.stringify({suggestions:suggestion?.values??[],error,hint:error?commandHint(source,error,this.text):null});
             this.root.dataset.completion=JSON.stringify(this.completion);
             this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
         }

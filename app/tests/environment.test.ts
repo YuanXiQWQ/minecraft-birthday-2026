@@ -130,7 +130,7 @@ test('native rain/thunder light and sunrise tint preserve layer order and origin
 
 test('four options fit a narrow native logical plane without warning intercepting the weather button',()=>{
  const narrow=optionFlow(196,4);assert.equal(narrow.buttonWidth,180);assert.equal(narrow.resetY,67+4*24);assert.ok(narrow.resetY>=67+3*24+24);
- const desktop=optionFlow(400,4);assert.equal(desktop.buttonWidth,200);assert.equal(desktop.resetY,163);
+ const desktop=optionFlow(400,4);assert.equal(desktop.columns,2);assert.equal(desktop.buttonWidth,150);assert.equal(desktop.resetY,115);
 });
 
 

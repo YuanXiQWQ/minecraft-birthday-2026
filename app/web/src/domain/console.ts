@@ -78,7 +78,7 @@ export function parseCommand(source:string):ParsedCommand|CommandFeedback{
   best=Math.max(best,at);
   if(at===tokens.length&&at===path.length)return{op,args};
  }
- const messages=failures.filter(f=>f.at===best),cursor=words[best]?.index??source.length;
+ const messages=failures.filter(f=>f.at===best),cursor=Math.max(best===0&&source.startsWith('/')?1:0,words[best]?.index??source.length);
  if(messages.length&&messages.every(f=>f.message&&JSON.stringify(f.message)===JSON.stringify(messages[0].message)))return{...messages[0].message!,cursor};
  return{key:best===0||best===tokens.length?'command.unknown.command':'command.unknown.argument',error:true,cursor};
 }

@@ -193,6 +193,7 @@
   "weather.modeReal": "Weather: Local",
   "weather.locate": "Use browser location",
   "weather.privacy": "Location is requested only when you click. Approximate coordinates go to Open-Meteo, never into your save.",
+  "weather.credit": "Open-Meteo",
   "weather.attribution": "Weather data: Open-Meteo (CC BY 4.0)",
   "weather.locating": "Waiting for browser location permission...",
   "weather.locationNeeded": "No location selected; game weather applies.",

@@ -202,6 +202,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const cancelReset = button('settings.cancel', () => {
         confirmation = null;
         confirmSection.hidden = true;
+        nativeScreens.forEach(view => view.layout());
         reset.focus();
     });
     confirmSection.append(confirmReset, cancelReset);
@@ -413,13 +414,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         edits.stage('username', username.value); preferences('username');
     }), button('menu.cancel', () => showOptions('options')));
     const weatherSection=document.createElement('section');weatherSection.className='weather-section';
-    const weatherStatus=document.createElement('p');weatherStatus.className='weather-status';weatherStatus.setAttribute('role','status');
-    localWeather=new LocalWeather(value=>{if(scene?.sky){scene.sky.weatherOverride=value;scene.requestRender();}},key=>{setText(weatherStatus,key);if(['weather.locationDenied','weather.locationUnavailable','weather.fetchFailed'].includes(key))feedback('error.'+key);});
+    localWeather=new LocalWeather(value=>{if(scene?.sky){scene.sky.weatherOverride=value;scene.requestRender();}},key=>{weatherLocationControl!.title=t('weather.privacy')+' '+t(key);if(['weather.locationDenied','weather.locationUnavailable','weather.fetchFailed'].includes(key))feedback('error.'+key);});
     weatherTimeControl=button('weather.timeGame',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const};const time=current.time==='game'?'real':'game';edits.stage('sky',{...current,time});preferences('sky',{time});paintSettings();});
     weatherModeControl=button('weather.modeGame',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const},mode=current.weather==='game'?'real':'game';edits.stage('sky',{...current,weather:mode});preferences('sky',{weather:mode});if(mode==='real')localWeather!.request();else localWeather!.stop();paintSettings();});
     weatherLocationControl=button('weather.locate',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const};edits.stage('sky',{...current,weather:'real'});preferences('sky',{weather:'real'});localWeather!.request();paintSettings();});
-    const weatherNote=node('p','weather.privacy','weather-privacy'),attribution=node('a','weather.attribution','weather-attribution') as HTMLAnchorElement;attribution.href='https://open-meteo.com/';attribution.target='_blank';attribution.rel='noopener noreferrer';
-    weatherSection.append(weatherTimeControl,weatherModeControl,weatherLocationControl,weatherNote,attribution,weatherStatus);setText(weatherStatus,'weather.locationNeeded');
+    const attribution=node('a','weather.credit','weather-attribution') as HTMLAnchorElement;attribution.href='https://open-meteo.com/';attribution.target='_blank';attribution.rel='noopener noreferrer';
+    weatherLocationControl.title=t('weather.privacy');attribution.title=t('weather.attribution');weatherSection.append(weatherTimeControl,weatherModeControl,weatherLocationControl,attribution);
     optionSections.set('weather',weatherSection);
     optionSections.set('language', languageSection); optionSections.set('sound', soundSection); optionSections.set('player', playerSection);
     for (const id of ['language', 'sound', 'player', 'weather']) optionNavigation.append(button('menu.' + id, () => showOptions(id)));

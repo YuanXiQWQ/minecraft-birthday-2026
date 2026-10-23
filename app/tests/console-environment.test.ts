@@ -135,5 +135,5 @@ test('formal chat completion cycles without rebuilding prefixes or passing game 
 });
 
 test('supported native option buttons share a center and leave space for reset and footer at narrow widths',()=>{
- for(const width of [196,320,480]){const flow=optionFlow(width,4);assert.ok(flow.buttonWidth<=width-16);assert.equal(flow.resetY,67+4*24);assert.ok(flow.resetY+20<207);}
+ for(const width of [196,320,480]){const flow=optionFlow(width,4);assert.ok(flow.buttonWidth<=width-16);assert.equal(flow.resetY,67+Math.ceil(4/flow.columns)*24);assert.ok(flow.resetY+20<207);}
 });

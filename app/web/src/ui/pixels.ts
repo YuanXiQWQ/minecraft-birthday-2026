@@ -44,6 +44,7 @@ export class PixelUI {
     observers: ResizeObserver[] = [];
     mutations: MutationObserver[] = [];
     updates = new Map<HTMLElement, () => void>();
+    buttonPaints = new Map<HTMLElement, () => void>();
     texts = new Map<HTMLElement, { text: string; scale: number; color: string }>();
     pending = new Set<() => void>();
     frame = 0;
@@ -111,6 +112,7 @@ export class PixelUI {
      * @param {HTMLButtonElement|HTMLAnchorElement} button Interactive DOM control.
      */
     button(button: HTMLButtonElement | HTMLAnchorElement): void {
+        if(this.buttonPaints.has(button)){this.refreshButton(button);return;}
         button.classList.add('mc-button');
         const canvas = document.createElement('canvas');
         canvas.className = 'button-sprite';
@@ -130,6 +132,7 @@ export class PixelUI {
             context.imageSmoothingEnabled = false;
             drawSprite(context, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, canvas.width, canvas.height);
         };
+        this.buttonPaints.set(button,draw);
         for (const type of ['pointerenter', 'focus']) button.addEventListener(type, () => {
             highlighted = true;
             draw();
@@ -144,6 +147,11 @@ export class PixelUI {
         this.observers.push(observer);
         draw();
     }
+
+    /** Paint both text and sprite at committed widget bounds before the screen is exposed.
+     * @param {HTMLElement} button Existing sprite-backed control.
+     */
+    refreshButton(button:HTMLElement):void{this.updates.get(button)?.();this.buttonPaints.get(button)?.();}
 
     /** Preserve browser editing semantics under the original text-field sprites and bitmap text.
      * @param {HTMLInputElement} input Existing semantic text field.
@@ -237,6 +245,7 @@ export class PixelUI {
         cancelAnimationFrame(this.frame);
         this.frame = 0;
         this.pending.clear();
+        this.buttonPaints.clear();
         for (const o of this.observers) o.disconnect();
         this.observers = [];
         for (const observer of this.mutations) observer.disconnect();
