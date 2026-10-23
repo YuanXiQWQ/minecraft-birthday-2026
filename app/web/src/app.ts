@@ -349,6 +349,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             }
             scene?.mode?.suspend();
             scene?.cancel();
+            if(scene)scene.worldId=null;
             scene?.showPreview(null);
             runtime.natural = {};
             runtime.celebration = 'idle';
@@ -615,6 +616,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
+            scene!.enableHands(art);
             worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), (id, options) => void worldAudio?.play(id, options));
             updateGate();
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {

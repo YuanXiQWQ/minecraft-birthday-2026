@@ -21,7 +21,7 @@ function view(): SceneView {
     Object.assign(v, {
         scene: new Scene(),
         world: new Group(),
-        persistent: new Group(),
+        persistent: new Group(),placed:new Group(),keys:new Set(),playerIntersects:()=>false,
         camera: new PerspectiveCamera(70, 1000 / 600, .1, 90),
         ray: new Raycaster(),
         look: new Look(),

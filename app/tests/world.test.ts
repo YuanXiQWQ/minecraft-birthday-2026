@@ -438,7 +438,7 @@ test('network write failure rolls back both endpoints and unlock, then retry com
     await h.a.dispatch({type: 'processing-tick', ticks: 1});
     assert.ok(progress(h.a).unlocked.includes('minecraft:charcoal'));
 });
-test('cleared resource terrain admits placement while live sources and unsupported air reject it', async () => {
+test('cleared resource terrain and face-anchored floating devices admit placement while live sources reject it', async () => {
     assert.equal(WORLD_REGION.allows('plains', hopper('preview', [-6, 0, -3])), true);
     assert.equal(WORLD_REGION.allows('plains', hopper('preview', [-19, 0, -3])), false);
     const {a} = await harness(network([]));
@@ -455,14 +455,10 @@ test('cleared resource terrain admits placement while live sources and unsupport
         expected: progress(a).player.data
     });
     await a.dispatch({type: 'put-station', scene: 'plains', station: hopper('cleared', [-6, 0, -3])});
-    await assert.rejects(() => a.dispatch({
-        type: 'put-station',
-        scene: 'plains',
-        station: hopper('floating', [3, 1, 0])
-    }), /unsupported/);
+    await a.dispatch({type:'put-station',scene:'plains',station:hopper('floating',[3,1,1])});
     await a.dispatch({type: 'put-station', scene: 'plains', station: hopper('base', [3, 0, 0])});
     await a.dispatch({type: 'put-station', scene: 'plains', station: hopper('upper', [3, 1, 0])});
-    assert.equal(progress(a).scenes.plains.stations.length, 3);
+    assert.equal(progress(a).scenes.plains.stations.length, 4);
 });
 test('empty formal save reaches cake through native sources, approved fill/take, real producer and crops without any unlock command', async () => {
     const {a} = await harness();

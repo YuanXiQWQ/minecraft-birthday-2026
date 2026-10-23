@@ -2,7 +2,7 @@
   "version": "26.3",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
   "profile": "steve-wide-reachable-iron-held-v1",
-  "exporterSha256": "b09b357f494355b7ffd0ae1694c340e8b7ec0ed3a687e5667d6a4c962ad752da",
+  "exporterSha256": "b5d0a93c01be632ce0b2e86f0ba9609c5a38e73df0501f3ab7fead62ce82b569",
   "inputs": {
     "assets/minecraft/textures/entity/player/wide/steve.png": "06628f9cef88520da742ab280a01677ce17c99717f964ed89ed791673121094c",
     "assets/minecraft/equipment/iron.json": "5cfe7fde94c594374838416af22d06600d6c195d1eb94411b4690a74f456fd01",

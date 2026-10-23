@@ -1,4 +1,5 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {placementBlocks,PLACEABLE,placedDrops,connectBlocks,survives} from './placed-blocks.ts';
 import {SOUND_CHANNELS} from './audio-settings.ts';
 import {emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
@@ -18,7 +19,7 @@ import type {
     Station
 } from './types.ts';
 import {emptyWorld, validateWorld, harvestNode, plantCrop, harvestCrop} from './world-state.ts';
-import {WORLD_SCENES, sameCell, supported, sourceOccupied} from './world-config.ts';
+import {WORLD_SCENES, sameCell, sourceOccupied} from './world-config.ts';
 import {tickHoppers, adjacentTransfer} from './hopper-network.ts';
 import {initialBook, validateBook, discover, BOOK_RECIPES, bookApplicable, fillOwnedRecipe} from './recipe-book.ts';
 import type {BookMode} from './recipe-book.ts';
@@ -217,12 +218,16 @@ export function validateState(value: unknown): asserts value is State {
     const ids = new Set<string>();
     for (const id of SCENES) {
         const scene = p.scenes[id];
-        fields(scene, ['layoutVersion', 'stations', 'crops']);
+        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[])]);
+        ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
+        if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
+        const blockCells=new Set<string>();
+        for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));ids.add(b.id);blockCells.add(b.cell.join(','));}
         ensure(scene.layoutVersion === 1 && Array.isArray(scene.stations) && scene.stations.length <= 512 && Array.isArray(scene.crops) && scene.crops.length <= 512);
         const occupied = new Set<string>();
         for (const v of scene.stations) {
             station(v, p.unlocked);
-            ensure(!ids.has(v.id) && !occupied.has(v.cell.join(',')));
+            ensure(!ids.has(v.id) && !occupied.has(v.cell.join(','))&&!blockCells.has(v.cell.join(',')));
             ids.add(v.id);
             occupied.add(v.cell.join(','));
         }
@@ -232,6 +237,7 @@ export function validateState(value: unknown): asserts value is State {
             ids.add(c.id);
             item(c.item);
             cell(c.cell);
+            ensure(!blockCells.has(c.cell.join(',')));
             if (c.growth?.version === 1) {
                 fields(c.growth, ['version', 'data']);
                 fields(c.growth.data, ['ticks']);
@@ -269,6 +275,29 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
+        case 'save-pose':ensure(command.scene===p.scene,'wrong-scene');p.scenes[p.scene].pose=structuredClone(command.pose);break;
+        case 'place-block': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id==='minecraft:'+command.item,'inventory-conflict');
+            const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
+            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>sameCell(n.cell,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
+            p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
+        }
+        case 'use-block': {
+            ensure(command.scene===p.scene,'wrong-scene');const blocks=p.scenes[p.scene].blocks??[],b=blocks.find(b=>b.id===command.id);ensure(b,'block-unavailable');
+            if(['oak_door','oak_trapdoor','oak_fence_gate'].includes(b!.block)){const root=b!.pair??b!.id,value=String(b!.state.open!=='true');for(const part of blocks.filter(v=>v.id===root||v.pair===root))part.state.open=value;}
+            else if(b!.block==='lever')b!.state.powered=String(b!.state.powered!=='true');
+            else if(b!.block.endsWith('_button')){b!.state.powered='true';b!.state.releaseTick=String(p.world.tick+(b!.block==='oak_button'?30:20));}
+            break;
+        }
+        case 'break-block': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            const scene=p.scenes[p.scene],block=scene.blocks?.find(b=>b.id===command.id);ensure(block,'block-unavailable');
+            const primary=block!.pair?scene.blocks!.find(b=>b.id===block!.pair)??block!:block!;
+            if(rules)depositHarvest(p,placedDrops(primary,p.player.data.hotbar[p.player.data.selected],rules),rules,events);
+            scene.blocks=scene.blocks!.filter(b=>b.id!==primary.id&&b.pair!==primary.id);break;
+        }
+
         case 'console': console=executeCommand(next,command.source); break;
         case 'book-settings': {
             ensure(['crafting', 'furnace', 'blast_furnace'].includes(command.mode), 'invalid-recipe-book');
@@ -493,7 +522,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if (command.station.kind === 'hopper') ensure(identity(command.station.contents) === identity(emptyHopper()), 'nonempty-new-device');
                 if (command.station.kind === 'furnace' || command.station.kind === 'blast_furnace') ensure(identity(command.station.contents) === identity(emptyFurnace()), 'nonempty-new-device');
                 if (policy?.network) {
-                    ensure(supported({...p, scene: command.scene}, command.station.cell), 'unsupported-placement');
+
                     ensure(!sourceOccupied({...p, scene: command.scene}, command.station.cell), 'occupied-resource');
                 }
                 if (command.expected) {
@@ -547,9 +576,17 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     p.advancements??=emptyAdvancements();
     const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop');
     if(completed.length)events.push({type:'advancements-completed',advancements:completed});
-    if (command.type !== 'processing-tick' && command.type !== 'settings' && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
+    if (!['processing-tick','settings','save-pose'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});
+    for(const scene of Object.values(p.scenes))for(const b of scene.blocks??[])if(b.state.releaseTick&&p.world.tick>=Number(b.state.releaseTick)){b.state.powered='false';delete b.state.releaseTick;}
+    if(['place-block','break-block','harvest-node','remove-station','put-station'].includes(command.type)){
+        let removed=true;while(removed){removed=false;for(const b of [...(p.scenes[p.scene].blocks??[])])if(!b.pair&&!survives(p,b)){
+            if(rules)depositHarvest(p,placedDrops(b,null,rules,false),rules,events);
+            p.scenes[p.scene].blocks=p.scenes[p.scene].blocks!.filter(v=>v.id!==b.id&&v.pair!==b.id);removed=true;
+        }}
+    }
+    connectBlocks(p);
     validateState(next);
     return {state: freeze(next), events, inventory, receipt, transferred, console};
 }

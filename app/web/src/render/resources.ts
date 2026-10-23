@@ -10,6 +10,7 @@ export interface Pixels {
     rgba: Uint8ClampedArray;
     static?: boolean;
     blend?: boolean;
+    cutout?: boolean;
     animation?: { frametime?: number; interpolate?: boolean; frames?: (number | { index: number; time?: number })[] };
     sha256: string;
 }
@@ -42,7 +43,7 @@ export interface Resources extends VanillaPack {
  */
 export async function loadResources(world = false, progress?: (done: number, total: number) => void): Promise<Resources> {
     const start = performance.now(),
-        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
+        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json', 'controls-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
             const r = await fetchManifest(name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
@@ -61,6 +62,8 @@ export async function loadResources(world = false, progress?: (done: number, tot
     const wanted = new Set<string>([...base.entries, ...home.entries, ...(manifests.find(m => m.derivedFont)?.entries ?? []), ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : []), ...(manifests.find(m => m.source?.includes('bounded native UI'))?.entries ?? []), ...(manifests.find(m => m.source?.includes('bounded native environment'))?.entries ?? []),...(manifests.find(m => m.source?.includes('bounded native ambience'))?.entries ?? [])].map(e => e.entry));
     for (const p of Object.keys(worldPack?.inputs ?? {})) if (p.startsWith('assets/')) wanted.add(p);
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native advancements'))?.entries??[])wanted.add(entry.entry);
+    if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native controls'))?.entries??[])wanted.add(entry.entry);
+    if(world)for(const path of Object.keys(manifests.find(m=>m.source?.includes('bounded native controls'))?.inputs??{}))wanted.add(path);
     const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || e.entry.startsWith('assets/minecraft/textures/gui/') || e.entry === 'assets/minecraft/ambience-sounds.json' || world && wanted.has(e.entry)));
     let completed = 0;
     progress?.(0, entries.length);
@@ -80,11 +83,12 @@ export async function loadResources(world = false, progress?: (done: number, tot
             c.getContext('2d', {willReadFrequently: true})!.drawImage(bitmap, 0, 0);
             bitmap.close();
             canvases.set(e.entry, c);
-            if (e.entry.includes('/textures/block/') || world && /textures\/(entity\/(cow|chicken)|item\/egg)/.test(e.entry)) images.set('minecraft:' + e.entry.split('/textures/')[1].slice(0, -4), {
+            if (e.entry.includes('/textures/block/') || world && /textures\/(entity\/(cow|chicken|chest)|item\/egg)/.test(e.entry)) images.set('minecraft:' + e.entry.split('/textures/')[1].slice(0, -4), {
                 width: c.width,
                 height: c.height,
                 rgba: c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data,
                 static: e.entry.includes('/entity/') || e.entry.includes('/item/'),
+                cutout:e.entry.endsWith('/tripwire.png'),
                 blend: e.entry.includes('/water_') || e.entry.includes('/destroy_stage_'),
                 sha256: hash
             });
@@ -97,8 +101,9 @@ export async function loadResources(world = false, progress?: (done: number, tot
     }
     const samples: Sample[] = [];
     for (const [path, doc] of documents) if (path.includes('/blockstates/')) {
-        if (!doc.variants || doc.multipart) throw new Error('unsupported-blockstate');
+        if (!doc.variants || doc.multipart) continue;
         const authored = worldPack?.states.filter((v: any) => path.endsWith('/' + v.block + '.json'));
+        if(!authored?.length&&!base.entries.some((e:any)=>e.entry===path)&&!home.entries.some((e:any)=>e.entry===path))continue;
         for (const [state, raw] of (authored?.length ? authored.map((v: any) => [v.state, v.variant]) : Object.entries(doc.variants))) for (const [i, variant] of (Array.isArray(raw) ? raw : [raw]).entries()) {
             const v = variant as Variant;
             const compiled = compileModel(resolveModel(v.model, id => {

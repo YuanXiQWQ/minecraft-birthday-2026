@@ -9,9 +9,9 @@ import {resources} from '../tools/resources.ts';
 import {fetchAsset, fetchManifest, RESOURCE_BASE} from '../web/src/render/resource-fetch.ts';
 
 test('every authored mining material uses the native Blocks/SoundType family and pitch',()=>{
- for(const block of ['oak_log','crafting_table'])assert.deepEqual(blockSounds(block),{hit:'block.wood.hit',break:'block.wood.break',volume:1,pitch:1});
- for(const block of ['stone','coal_ore','iron_ore','furnace','blast_furnace'])assert.deepEqual(blockSounds(block),{hit:'block.stone.hit',break:'block.stone.break',volume:1,pitch:1});
- assert.deepEqual(blockSounds('hopper'),{hit:'block.metal.hit',break:'block.metal.break',volume:1,pitch:1.5});
+ for(const block of ['oak_log','crafting_table'])assert.deepEqual(blockSounds(block),{hit:'block.wood.hit',break:'block.wood.break',place:'block.wood.place',step:'block.wood.step',volume:1,pitch:1});
+ for(const block of ['stone','coal_ore','iron_ore','furnace','blast_furnace'])assert.deepEqual(blockSounds(block),{hit:'block.stone.hit',break:'block.stone.break',place:'block.stone.place',step:'block.stone.step',volume:1,pitch:1});
+ assert.deepEqual(blockSounds('hopper'),{hit:'block.metal.hit',break:'block.metal.break',place:'block.metal.place',step:'block.metal.step',volume:1,pitch:1.5});
  assert.equal(blockSounds('wheat').hit,'block.grass.hit');assert.equal(blockSounds('wheat').break,'block.crop.break');assert.throws(()=>blockSounds('cow'));
 });
 

@@ -1,0 +1,2690 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "bounded native controls and reachable block placement",
+  "blocks": [
+    "anvil",
+    "barrel",
+    "blast_furnace",
+    "cake",
+    "campfire",
+    "cartography_table",
+    "cauldron",
+    "chest",
+    "chiseled_bookshelf",
+    "chiseled_stone_bricks",
+    "coal_block",
+    "cobblestone",
+    "cobblestone_slab",
+    "cobblestone_stairs",
+    "cobblestone_wall",
+    "composter",
+    "cracked_stone_bricks",
+    "crafting_table",
+    "furnace",
+    "grindstone",
+    "hay_block",
+    "heavy_weighted_pressure_plate",
+    "hopper",
+    "iron_bars",
+    "iron_block",
+    "iron_chain",
+    "iron_door",
+    "iron_trapdoor",
+    "ladder",
+    "lantern",
+    "lever",
+    "lodestone",
+    "oak_button",
+    "oak_door",
+    "oak_fence",
+    "oak_fence_gate",
+    "oak_log",
+    "oak_planks",
+    "oak_pressure_plate",
+    "oak_sign",
+    "oak_slab",
+    "oak_stairs",
+    "oak_trapdoor",
+    "oak_wood",
+    "rail",
+    "raw_iron_block",
+    "short_grass",
+    "smithing_table",
+    "smoker",
+    "smooth_stone",
+    "smooth_stone_slab",
+    "stone",
+    "stone_brick_slab",
+    "stone_brick_stairs",
+    "stone_brick_wall",
+    "stone_bricks",
+    "stone_button",
+    "stone_pressure_plate",
+    "stone_slab",
+    "stone_stairs",
+    "stonecutter",
+    "straw_bed",
+    "sugar_cane",
+    "torch",
+    "trapped_chest",
+    "tripwire_hook"
+  ],
+  "assetIndex": {
+    "id": "34",
+    "sha1": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
+    "size": 597035,
+    "totalSize": 484894038,
+    "url": "https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json"
+  },
+  "soundsSha256": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099",
+  "propertiesSha256": "bc8768d97b9ab0cab5d21d3979a2da21fe0834df78bc164a959c8ffbe4744f3a",
+  "inputs": {
+    "assets/minecraft/blockstates/anvil.json": "eb86aa591e4f07cd3bf7bd56d43b88b4e8c5ba054d75489cfc57cc630ac5ebd2",
+    "assets/minecraft/models/block/anvil.json": "9a58a547d9e8266669b49316c892c18fc4fcfa836f534d1e68bc2e916b57235b",
+    "assets/minecraft/models/block/template_anvil.json": "54af369757ce75280ee991ca688509deb5c7abdd154eb3bd7784f6d77ba40c83",
+    "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+    "assets/minecraft/textures/block/anvil.png": "2266db251b99f5df98d8f049e3f7dd6cd85e8146b46011f6918995f392721e48",
+    "assets/minecraft/textures/block/anvil_top.png": "757d6f79099583c159e3f95e9981efe0b16b524bed90739ae213142ad40fad26",
+    "data/minecraft/loot_table/blocks/anvil.json": "4d74e0534933a8094f1b5bca1c479ed79aced073f27567ac22b89426a170b129",
+    "assets/minecraft/blockstates/barrel.json": "d8e00576b5f85f83a42b7b31dc177e0add02cf2204fa441c0fe31cbd6d70dcca",
+    "assets/minecraft/models/block/barrel.json": "e4c191bd192361dcdb36c8f98af43a1ee1435f676409a6d0465641e4a5830cc5",
+    "assets/minecraft/models/block/cube_bottom_top.json": "14f8400761cfc0c5664d165a3602bd2bb25953ade361c77c43511147bfdd2a15",
+    "assets/minecraft/models/block/cube.json": "3e4aacd02e816aeba38f83076596e18ded4cf49c01e17c62d1fce79850ffb84e",
+    "assets/minecraft/textures/block/barrel_side.png": "30f31d8cecfbd44412af13983eee56220bcffbf7ce8dd5a948f1ab73c98d8dc8",
+    "assets/minecraft/textures/block/barrel_bottom.png": "1addc57c6221210107b7e64db8d2756983458a14828d8eb85b61f13bbf5a1028",
+    "assets/minecraft/textures/block/barrel_top.png": "6b4cb64b1c34bd87225147479100bec9889ac69c7dcdb5694003248e3004fe1e",
+    "assets/minecraft/models/block/barrel_open.json": "3ed1731df8d5ae77d8a2ad3b6afb43dc2efdc28b28a97d581b2ba1df4a6d9cbf",
+    "assets/minecraft/textures/block/barrel_top_open.png": "ca852462e7131d5410ca8ae65932f4b5a5452f80a428e7c0570fdb8c020e7326",
+    "data/minecraft/loot_table/blocks/barrel.json": "1d97c7459ad572ec694130ff2dcf95c5d0042af2ec1675f82e09122c48681061",
+    "assets/minecraft/blockstates/blast_furnace.json": "265ec5f30fa65bdaff6867bbad8de73e0a1b21ea12a33da5b771f889e4ac7dcc",
+    "assets/minecraft/models/block/blast_furnace.json": "9ad81be0a1639b2b1acb4459dc0e9d6f399c093a7d83f96485f95ed7db685cdd",
+    "assets/minecraft/models/block/orientable.json": "f3da11f14343fd2cb38fe196dc775d1f4c21284b0dfcf09314659da8f4b6fc79",
+    "assets/minecraft/models/block/orientable_with_bottom.json": "8da2928f84a31c6986dc31a916b8be736e5b0afdce7b3fbe651ec42771dd7255",
+    "assets/minecraft/textures/block/blast_furnace_front.png": "df580828cf9079059e167dc13b51713d8029cdcf0f0b20374367c71a805d7f62",
+    "assets/minecraft/textures/block/blast_furnace_top.png": "003c4e4c615a20a7f0ba48baf0e9cf3bae55b6a2a387d34e0cff9958aa2420c0",
+    "assets/minecraft/textures/block/blast_furnace_side.png": "2254b141bca1943258f66bca2ce34d4c7fb5f777d27cb2d5d8d9a4f0ad6f3ab7",
+    "assets/minecraft/models/block/blast_furnace_on.json": "ac8f3a35104a8fcee5794959dc30826d780e3ffd9b80835506e9b758f1107395",
+    "assets/minecraft/textures/block/blast_furnace_front_on.png": "5363eaaf29c6cfed922c05fd4df9eaa7ef52b2d78ca56affda9ebf45ba33215d",
+    "assets/minecraft/textures/block/blast_furnace_front_on.png.mcmeta": "a1d4171d971c3a7b3202d9aa67062f643f579443a71cc92efe38f1acd8990f03",
+    "data/minecraft/loot_table/blocks/blast_furnace.json": "90d714e716bfa32603f93b61e050a3955c9c1f5295b156e529f849128e0b7f83",
+    "assets/minecraft/blockstates/cake.json": "0d12d5836a687b5bea25f452807a1d5bc6a6e1d03df1b3c8c24291b58e90d919",
+    "assets/minecraft/models/block/cake.json": "58d8c1cb2450f8a0c3d218dcdb68c64a24321e01a11da6e670e34f8892221698",
+    "assets/minecraft/textures/block/cake_side.png": "33010b11cde4d784153cbc0c1092d4a68857f80a4ca5bb01783f888f5aba5ea2",
+    "assets/minecraft/textures/block/cake_bottom.png": "39fdb08fa21fa2583498ff3ebfe310d4c7fd1e4313b78429ed885c4bf77d47cc",
+    "assets/minecraft/textures/block/cake_top.png": "2d2866b25e4b3b32d9f36cd703a8a0f0e3a5d9559789db4a14fd3e7365e519ee",
+    "assets/minecraft/models/block/cake_slice1.json": "cfb0a40cb2e3d9cc1af4a1b2e17dc6008610028c34248e264593b0bc6acd1ef6",
+    "assets/minecraft/textures/block/cake_inner.png": "7d72db3cd690ae4525f22e95ec255c3e85e55279ba3d1c6a3377576e6e85f9d1",
+    "assets/minecraft/models/block/cake_slice2.json": "84993f7cdb3acc72c2a2d15f9f904f39c1d51740f1ee0a0f836d5b0337ba4c70",
+    "assets/minecraft/models/block/cake_slice3.json": "42febcd3b719d3518de9d4bbb289e4bf2c48fae7aba307e627cdaf5d67b92a53",
+    "assets/minecraft/models/block/cake_slice4.json": "0d2f1c718d3b55a8dcfb8dadba23b3aecc6d5f32307984ceb382bf371d51c361",
+    "assets/minecraft/models/block/cake_slice5.json": "75e5a6d0ad9b60f0d7f852728f9d03e5e9f1475370268d15a37ff4209042c25e",
+    "assets/minecraft/models/block/cake_slice6.json": "3fe39e6f1b8d603e96fbbc750e1d716b96c8120a771ef1ca935a69cc5004d0e2",
+    "data/minecraft/loot_table/blocks/cake.json": "f22d6e65099ea072527202fc6224d00e444bd772224402a02d7b6233473dbb9c",
+    "assets/minecraft/blockstates/campfire.json": "b894dd6c012946255d27fa52f5fc9faf94991e89eecfc4bf65aa1abb1a458c7d",
+    "assets/minecraft/models/block/campfire_off.json": "514618dfa744a2ac7849cd68c8e77d6caac34c8544c4a1efc10c45a61223ea77",
+    "assets/minecraft/textures/block/campfire_log.png": "f4975ec634736b79a21088c1f2b4cadd62d091a8f41b9c4fab309f7e8d5b2acc",
+    "assets/minecraft/models/block/campfire.json": "c426e97ea0884dc323b1ee529e67b5c8dcf153c4420b7ec1f5c9117caf7ba2d3",
+    "assets/minecraft/models/block/template_campfire.json": "6617a00ceb673bec94247def7aa9d66abec1d06c6d9a7fec16905aaadd2b32ad",
+    "assets/minecraft/textures/block/campfire_fire.png": "7ffc0f0108876a0182e975cf268c389495bbcec13f0bb0608366c78c67c44b67",
+    "assets/minecraft/textures/block/campfire_fire.png.mcmeta": "e9b8025fde1b09b0a4d2a38427b04f98f28a593045be6d177eb2b29164c872b0",
+    "assets/minecraft/textures/block/campfire_log_lit.png": "a870a5a9cb003ae390a6bb8121e8e183c2d6d703cefe120e74bfaac3029d993d",
+    "assets/minecraft/textures/block/campfire_log_lit.png.mcmeta": "4df0a0cf1fbc9319ebe93ad90d934f50e997a99216340d41ea95c175ec26bcba",
+    "data/minecraft/loot_table/blocks/campfire.json": "238a40c41808de3d7b96cea1ce14d1389b1d19df11161c3ca6a69f13cac55413",
+    "assets/minecraft/blockstates/cartography_table.json": "a70259d04595ebc751c88da6d72e6377677bfc78d3d5e3d208657d32e6fa9605",
+    "assets/minecraft/models/block/cartography_table.json": "23e7596d8af392ea9779c352233950f72c52f03b565cfbdf50b4a5482d1b4deb",
+    "assets/minecraft/textures/block/dark_oak_planks.png": "665f44b119f5a21711c4cb83749d871635134c001cb0c14761c4f02a40dd8645",
+    "assets/minecraft/textures/block/cartography_table_side3.png": "4b814b5b8c69b856ec4a0223a81976c41c104366d1f635f708666b254dc0d001",
+    "assets/minecraft/textures/block/cartography_table_side1.png": "225ada9b2a86ffd3d261179170a9533498c503f43c4fa537fde14a3f425aa0b5",
+    "assets/minecraft/textures/block/cartography_table_top.png": "5273a61b0f07d0c6f60937ebe3e1489836b1b4d0ecaace95a2e22fa243f6f3f0",
+    "assets/minecraft/textures/block/cartography_table_side2.png": "684f86d2f816031385d95591176004f8cc8fee94fe547b0c404e2d5e724aaca5",
+    "data/minecraft/loot_table/blocks/cartography_table.json": "31b8b6aa434443ddee4229488903da5b3f3030afa1ca5fc8aca67bef95d4bf1c",
+    "assets/minecraft/blockstates/cauldron.json": "c1c30c3beb7d5a9ce6f7bf04a9a662ac7fccfb7ca62b7b31739429c54e2a692f",
+    "assets/minecraft/models/block/cauldron.json": "0311a114c9ec6ec58064949bf811eeec7f7f0b3077c12d2ef20276288ef44891",
+    "assets/minecraft/textures/block/cauldron_side.png": "242bbae92fffcc53261ce31777d5bd1c800e31834ffc2fefd5a75330287890ec",
+    "assets/minecraft/textures/block/cauldron_top.png": "ca88e285e0903f6df2532975aafea261be19c638a6c5049bbc57b331ce8a7a9d",
+    "assets/minecraft/textures/block/cauldron_bottom.png": "42b6a5e3db3eaabd522c1e8a596573d0ba02d69b5618d9fe55b64536ab94f114",
+    "assets/minecraft/textures/block/cauldron_inner.png": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb",
+    "data/minecraft/loot_table/blocks/cauldron.json": "988e110d0ed141309f240b056beeb6b974d483b32185cbbc4f696fecbeda8ee6",
+    "assets/minecraft/blockstates/chest.json": "31abc90fd209dd33ba4fcb30e9b8616883cba29605fcfe0fe829496baa47435a",
+    "assets/minecraft/models/block/chest.json": "d53a018f22937faa93d8810cbc784069589949cffa2859076fe0a92d95bb465c",
+    "assets/minecraft/textures/block/oak_planks.png": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3",
+    "data/minecraft/loot_table/blocks/chest.json": "00955d1aaff5afd0ccafd5930c2c3126a27befb337a776ebedf4a080bb348917",
+    "assets/minecraft/blockstates/chiseled_bookshelf.json": "a8d7ec995543c63d8debfa4dfb265e6f0b6244ce855c91e3468908f82fb94e8a",
+    "assets/minecraft/models/block/chiseled_bookshelf.json": "3350cfc24fb1cf09e8ee4b98755f255ec7d6e3d2dd677e612461f3954e5ca1d9",
+    "assets/minecraft/textures/block/chiseled_bookshelf_top.png": "59f74e2c723f21f37ec0965975169aaf1d9c3e4f712c52e616c9064017b5ad0a",
+    "assets/minecraft/textures/block/chiseled_bookshelf_side.png": "254ffa60a5ed6bd0adb2e89dc09e8de2345c6c786ea58d92e1c400f168d2002d",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_left.json": "f886c9ef976048112094cb08edafb3b578a21edf66b8eea638ebfa4bd63e0bf3",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_left.json": "1dab92e6ce18d63130bf927c79039ba565494dc042220235972e5c0cdb49f5e6",
+    "assets/minecraft/textures/block/chiseled_bookshelf_occupied.png": "a314c81a2dd8c3f14bec2428a0252322e6b37e95810d56316ac23c938540fb4e",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_left.json": "f9c3ab4cc56b61494176629e73e528b34b221bbfa0635873a60d38892d152baa",
+    "assets/minecraft/textures/block/chiseled_bookshelf_empty.png": "a756e5f993f698a566b73b24c0610b9832781d4a5f20358f38442b77d028841d",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_mid.json": "16be512652e769a59086b0068560e1a7d357bf3c86feb8dfa38aa5c4ac783b11",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_mid.json": "e677ab34510c2765c4885007ddf7b938527988a591e5ac3b9298d8afb1f4b0ed",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_mid.json": "e3796c05afb49208731e1124b3a010105a20394e15c8febfdc4328b15849c155",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_right.json": "04dff9b9df9d71cf1e1596c5a6d971d27d55e4adb0f005171ff6bec04e53c2c7",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_right.json": "bd56bffcf5cea7fd5c7ad088db0ab5cf0db0e03a50c760c6dbe3f5d8aa3dc26e",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_right.json": "79eb6ddbb5a164bf9f23f14b7e61beca7eb1c2402c6b77ee38d7d01d091e4eab",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_left.json": "a4d64001fc107fba5693baf131c5d58adb1c19c426765982c863a60b8e248760",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_left.json": "45f375ebc60e6721d1ffaedd7b32402d3d540fb26b395b51f0d2c53ec12a3ed5",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_left.json": "6381b5c909d7241b3dea9db6e10c609eb04d2d4d37424017145a791997348091",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_mid.json": "ce1e46c3b382f9e8c84f64104cdeacd3ec865d9418da8811d24510cc551bd8d7",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_mid.json": "950ae591d8aa1b978ccfc485cb3d579b82c4778f95a0ab4bd728382a390e3a34",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_mid.json": "83860d89cb59aa1f5081f4d1290d5d2787f1316ebe69fa0c0120671a1921d73a",
+    "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_right.json": "547b7dc6cec72df895344a417de7f893a1b04f4e972bbf3e89507538fb59e0b2",
+    "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_right.json": "bb5c1902a4810432a87daf5fe29bab9c87c70359dba9df27ecfbadecaeecabd3",
+    "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_right.json": "2e6f39ab624db59d136aa69078327a8e0d866c436322944ecf509230c8de138d",
+    "data/minecraft/loot_table/blocks/chiseled_bookshelf.json": "0d1e7b1c05d35b7d515d9f5e08c848fdd236608e4145206645e1807272760fd5",
+    "assets/minecraft/blockstates/chiseled_stone_bricks.json": "fa756d8dfd1336a53d4310cf79508be2086d528e40913bb3c4b3c1537af2dfc9",
+    "assets/minecraft/models/block/chiseled_stone_bricks.json": "16f3a19ad2648d82502071688e0a03befcbab24cdbbcfee6b6ec1b3a76d3bc94",
+    "assets/minecraft/models/block/cube_all.json": "be3205d629ffb9e03834c3d1d083f8a2c62e9f9ae80820755129408634e9144a",
+    "assets/minecraft/textures/block/chiseled_stone_bricks.png": "fbd59c309a861f63cfbb1f0f2348316d16bafa3bdd1ef81550357e1b5778df8f",
+    "data/minecraft/loot_table/blocks/chiseled_stone_bricks.json": "f3d7f25fd856c41559699ade151785e622b363f01288df6dbcb898d21e9767cd",
+    "assets/minecraft/blockstates/coal_block.json": "a4840144f991168911b67337031f92511fb09867e9b9c46c0442b3ebe2b490db",
+    "assets/minecraft/models/block/coal_block.json": "3bd19995d838c1bfe42e485211e962dbb840b8e8668ce6b14c613e84581b5508",
+    "assets/minecraft/textures/block/coal_block.png": "4987dbd954475908df08f13e8114510285825fb8c189263317d4a0c1bf78b030",
+    "data/minecraft/loot_table/blocks/coal_block.json": "259f7b48e631731293274ace84c7bb2a8997d57701f3ac14fda62405689a3eb2",
+    "assets/minecraft/blockstates/cobblestone.json": "2f97205b9cd9cc167bd2f2ad8036237707a48ee1deb032273bd96565aff64c77",
+    "assets/minecraft/models/block/cobblestone.json": "dee026b80b7b77c5d540d75b91cfaec770245a2e7affb53555e9e4ad3ddb551f",
+    "assets/minecraft/textures/block/cobblestone.png": "bcda95fdf5afa91747657aa198fc0b69ebf44141de30a718075f74045e9a5def",
+    "data/minecraft/loot_table/blocks/cobblestone.json": "2d7bd94dacf3c69c0808b0e1838b793cf93b1fa366f2202c80b5968bbba90b2f",
+    "assets/minecraft/blockstates/cobblestone_slab.json": "85e782a5a8fd651b784d4dde51e66d8195615292f0777195f340dabd848ee593",
+    "assets/minecraft/models/block/cobblestone_slab.json": "c9821d4c898031ed89eb3b0e8efd5b1c1f986848d6de29726352840c889e30ed",
+    "assets/minecraft/models/block/slab.json": "bd869ebe3ba380d46349e5c6e988b9b1ccf1ab25212ab1de66e2fdcc067edc1d",
+    "assets/minecraft/models/block/cobblestone_slab_top.json": "e60ab58d1a52c433bdec47bf97b167548240a91435f92f7db4110b226f29a5ee",
+    "assets/minecraft/models/block/slab_top.json": "c02e81cd0b59698040db7a682d32d08ddeb0de64756e309d62ecfbda4af804f9",
+    "data/minecraft/loot_table/blocks/cobblestone_slab.json": "c7a5b74d59544df2b99d2b0520284342ffb0444008bb7e0996794697e13a8b4d",
+    "assets/minecraft/blockstates/cobblestone_stairs.json": "5c360287469e5336ecb01b39a0fadfc72e759264cd155b64d59f200f23660eb5",
+    "assets/minecraft/models/block/cobblestone_stairs_inner.json": "83e3999170d4b4f35b820c51ff4f54c643d895d10b6521b697925c815254f206",
+    "assets/minecraft/models/block/inner_stairs.json": "fcb56ce59da95e5c1a77e49149caa3c72c18195141554a2c063d24b7962648d8",
+    "assets/minecraft/models/block/cobblestone_stairs_outer.json": "7cd76fe1ffe3257fb6603edf7272033cea173f60760836f179bc5e4073412416",
+    "assets/minecraft/models/block/outer_stairs.json": "39142eb37d9e9d9ff2404404af460d85b3109bf0c59898c21c676719c3e16ef8",
+    "assets/minecraft/models/block/cobblestone_stairs.json": "41991795595e7dde6b24cffd8b35f24a75fa01d43b861608493063ae6bd21da4",
+    "assets/minecraft/models/block/stairs.json": "962dc154fd3337d6b7e165e2b734e171c4b3595c2b838a5da1e01f5bdcdcae3b",
+    "data/minecraft/loot_table/blocks/cobblestone_stairs.json": "b4a7c859f500a96ae69d1f1ff96f3c1edea0b10d5ac0d95f39267997d8d55937",
+    "assets/minecraft/blockstates/cobblestone_wall.json": "22b67b5136c7644cfc7bce2134ee73fa776b8fabdcb23c3a98434c8157ebc34c",
+    "assets/minecraft/models/block/cobblestone_wall_post.json": "759d27f2396fd42f56b3fb77c09ab3b6b31d2921672707da2b3da01b519ac257",
+    "assets/minecraft/models/block/template_wall_post.json": "2f84a4c82af1962df5020381ef6fbcd3ffe4de229a909815f77ce8fb542caab2",
+    "assets/minecraft/models/block/cobblestone_wall_side.json": "e03a4a3c6a2f243d5aa17f8a5f0082896d6475b7ab9d0c8d350c63f40fa2af2e",
+    "assets/minecraft/models/block/template_wall_side.json": "748b2ee6eadcc6771e3702afaee8f296562c60a13931dd98c1baa1390cff484e",
+    "assets/minecraft/models/block/cobblestone_wall_side_tall.json": "29c390d54fec38f2b04df72e079b08abd5c8337570ae34c13d8dbcff4346c8ef",
+    "assets/minecraft/models/block/template_wall_side_tall.json": "627d23aaa8c46099e8f08fea36bb7a7def714e2d43aad576d58795b784165149",
+    "data/minecraft/loot_table/blocks/cobblestone_wall.json": "1eb9c99672fb66976d53d99148a9ca67ea01b05e65a13b3a3927acc49958c0c2",
+    "assets/minecraft/blockstates/composter.json": "a2bd29cd334907b239a32e0cfb8f8bd31db4cf7576e0ace7266e2de5875cbbdb",
+    "assets/minecraft/models/block/composter.json": "6159db0361f9a89db487f070714f395a3bdb75308988e541e78f9b69309766f5",
+    "assets/minecraft/textures/block/composter_side.png": "de177e06f262bc3d1d2b506ec276ccf33459153ab868d55f0758736f7378038e",
+    "assets/minecraft/textures/block/composter_top.png": "9a848d0d253e0c354e6961fdb4230dff8c6db8d668d4f5206893b0fbdca6c198",
+    "assets/minecraft/textures/block/composter_bottom.png": "224b47fefd9fb9043aa351c9a9b49f2e7ef1e2884a38391b9557fef3edfb465e",
+    "assets/minecraft/models/block/composter_contents1.json": "15650c618e77cb6e8f038e84da108ff97377e5a06ef0e1ef446da4b74d5b76aa",
+    "assets/minecraft/textures/block/composter_compost.png": "0b55d9976f580c746de6691d7445a591157e430784225496134ec3bf1e795a61",
+    "assets/minecraft/models/block/composter_contents2.json": "595e7e4c2f2ffafb0145f56da6d663b6eb33355472a29bacebf073d681fdaf45",
+    "assets/minecraft/models/block/composter_contents3.json": "755678b14a2a1d362917777262745ccf692ce3bb4ad0d77a7ede5a76c7b482e6",
+    "assets/minecraft/models/block/composter_contents4.json": "b532f3be224bba502e16d1a078df290490536c7dba1d59383766b55c6986e60e",
+    "assets/minecraft/models/block/composter_contents5.json": "ec379d34eaa6d2e917611dcad3e3c7ab65db4b4ec795129b027fd7fe82128a8f",
+    "assets/minecraft/models/block/composter_contents6.json": "60acd7a636e3d8a053e41f5a4291d6e5d415fe4fe9c2927ee71c945d25ba2aef",
+    "assets/minecraft/models/block/composter_contents7.json": "cdb5fa8a9eaf7859d475400b5a760ddfb5c878b15d6aca21e7925717c0776a52",
+    "assets/minecraft/models/block/composter_contents_ready.json": "bcbc6e40b71517ac45184c841baf3941124d8d3b841af30d96ec02d2eb4fb6b1",
+    "assets/minecraft/textures/block/composter_ready.png": "472148e8399243f9d0111d6e8aaf6a1070bf2733579700fc56ad06331824195d",
+    "data/minecraft/loot_table/blocks/composter.json": "29c8abc8f5c38bd030aa109788f811a5efad1bbc6487835176646dd1df229946",
+    "assets/minecraft/blockstates/cracked_stone_bricks.json": "a95b21c7ff9b03ab3b396c7e2cb5c08c2dd316e3ef05cf45e3936a86d1846148",
+    "assets/minecraft/models/block/cracked_stone_bricks.json": "a277142ed57280096d30283eca76e6a76cff56f363161efc9b7c6bd891dd721e",
+    "assets/minecraft/textures/block/cracked_stone_bricks.png": "eb8ba94381d27de90102e3effd16fede4a78106120563b02caff4c2ee597f3a2",
+    "data/minecraft/loot_table/blocks/cracked_stone_bricks.json": "d5db8898c0f7a3c0286959ad3b3f322298cefb2befe3349004e73c17afc2d136",
+    "assets/minecraft/blockstates/crafting_table.json": "bd75337fe8f663e3c88e5f2490a7217d60925ff7f0001f98656b037441ecdb98",
+    "assets/minecraft/models/block/crafting_table.json": "98e1ff48fd72ed2a820ae4237e6d5193e0cd5ab6abd2338493c7bbbff130dea1",
+    "assets/minecraft/textures/block/crafting_table_side.png": "e9755fc6da763909b285342eae12c5f7d1cc8462fab695bb157504ea207cda8c",
+    "assets/minecraft/textures/block/crafting_table_front.png": "1659c76a33039640e8bd5584af8db04bf626486432a389bcaf1567e1a45c6464",
+    "assets/minecraft/textures/block/crafting_table_top.png": "251e8aa014e30d040261022895853db3204bba241b9b44c11762628550986f2d",
+    "data/minecraft/loot_table/blocks/crafting_table.json": "722c901f89a5c7194407ae558fa9fdd4cc2cd0433344e9555e8a061ac13f80db",
+    "assets/minecraft/blockstates/furnace.json": "aedb43571027a5dea15ba9cbfc05f0327af3048de70b72c3cd67c851839bb284",
+    "assets/minecraft/models/block/furnace.json": "f1005df7892e96ab8bc3bc513bba9e0aa1930ff901423ea726e3bad1f49614c9",
+    "assets/minecraft/textures/block/furnace_front.png": "aae808f71f1bddf4a25592f7dd3d7f6e9b3adaa739502170766424f4eb6bf9c5",
+    "assets/minecraft/textures/block/furnace_top.png": "59e26149cde8b86ea1d165c1a4ba5c44531a4b7be134b30c93120bba1cefb162",
+    "assets/minecraft/textures/block/furnace_side.png": "cada9065da8d26b3a7324a203edb42f2564975519e8504d520e10d530822bb5b",
+    "assets/minecraft/models/block/furnace_on.json": "c6cc3c51295082082a41c17fef84742207d2d8a5913b72260bb1dcda27063f72",
+    "assets/minecraft/textures/block/furnace_front_on.png": "a4ff7cbdc6502673e9a2d61472a15673f608e70cbfc7b325a9473819906c73b9",
+    "data/minecraft/loot_table/blocks/furnace.json": "2c6b02175115a4ab3eebdc9f338a5a986bee84a5945fe2b1f928694b1656d595",
+    "assets/minecraft/blockstates/grindstone.json": "b94f04095c84d58b00133dba6fd5b1f3dd83a6e71120c62b58412606b8ce25a5",
+    "assets/minecraft/models/block/grindstone.json": "ccf94b958801bfe35eaf006e275922797ecb1ac498862bbb93a24006dcbef3ac",
+    "assets/minecraft/textures/block/grindstone_pivot.png": "64b2283ea627733eea0ec669f6c983f620be8f22fcb29aa4444d012d860f430c",
+    "assets/minecraft/textures/block/grindstone_round.png": "d353bc51fe47c4b477360ef55f08632d44d6fde713a5c5177dd228119da1b373",
+    "assets/minecraft/textures/block/grindstone_side.png": "bce35de490d1c22c5937abb5264f3bc1bd1629071010787b827b9bd0ddd5ead3",
+    "assets/minecraft/textures/block/dark_oak_log.png": "b5d28ee7e1c88d8d1719468c9d798157159a82ab84209ec4236373de21496d0e",
+    "data/minecraft/loot_table/blocks/grindstone.json": "2b3cdddc488224a17a449731b4877a1d1a64bf4537404556a8d2f022a7b1725b",
+    "assets/minecraft/blockstates/hay_block.json": "c2bd73c088a833c8790ae50e6754b246621e54ed5bad6e846993f6cb33fdd1ba",
+    "assets/minecraft/models/block/hay_block_horizontal.json": "dc4525ef4aed61af455ec9f41727a52bb2988dc3738f20a3646ee9e78f29595f",
+    "assets/minecraft/models/block/cube_column_horizontal.json": "d93df085677f4003b5785206966a8cd0e2b4ed5b40930cd20278feab01f8af0c",
+    "assets/minecraft/textures/block/hay_block_side.png": "394115b283cf1a9b9d4b5bc8581d2678d476021d1a0da6829610c52e8a237027",
+    "assets/minecraft/textures/block/hay_block_top.png": "99b8063611a6816b67c652f2f847048cd798a9b8858c84b9f597363007153693",
+    "assets/minecraft/models/block/hay_block.json": "f687b0eab81581034828a43e2daabf226b19e5a33b96d7ffdc6fb91d454e874f",
+    "assets/minecraft/models/block/cube_column.json": "4cc89841e64bfb9be33aef096675291b585d05bae81cbbd14bf977f89aa81a6b",
+    "data/minecraft/loot_table/blocks/hay_block.json": "e9a4c543071b7a64509e75cdce961123e9da2143c15325e93857767a895b249d",
+    "assets/minecraft/blockstates/heavy_weighted_pressure_plate.json": "823bf65e98ed892ea9a267ce6c4b17a6454d46fb30b0f2703a2150d9bf5e686d",
+    "assets/minecraft/models/block/heavy_weighted_pressure_plate.json": "fea94a0418d4ac7ff8c707dd520e0c562dacaae7bc83958d49306e70c9958bd6",
+    "assets/minecraft/models/block/pressure_plate_up.json": "6d2c41d4d1199ed3ff98c8b67421b27c60def90a20c6a9f3becf1fda880b055d",
+    "assets/minecraft/models/block/thin_block.json": "eaf9db8960529736bda0fbfe31c439f1e87c02d48dcab9a769f2f55ba26f5e3f",
+    "assets/minecraft/textures/block/iron_block.png": "dafa9944ba49fe71958553eded50e87d7bea9c7410cfe568745989bede101c49",
+    "assets/minecraft/models/block/heavy_weighted_pressure_plate_down.json": "27c632ba466e0c75965cd5264dd93873c57388dbdda9fd9d5ac857d2b4b58bbf",
+    "assets/minecraft/models/block/pressure_plate_down.json": "f68b8a94cc2bd802dd73cda2c9c18e0dd4ea54cf3033a16ef60cb92602400388",
+    "data/minecraft/loot_table/blocks/heavy_weighted_pressure_plate.json": "922c1f14623e03a2a4a464cf8ae3cbe8b9ffbe6a6b84bb6766170198c7e1366a",
+    "assets/minecraft/blockstates/hopper.json": "de8ce32f8543898110d2cf166231058d1a5100c8c2d4a09c6c5a203101ad0d1a",
+    "assets/minecraft/models/block/hopper.json": "cffac4487f9d2186895ce39c8f2351e47ff1daa0b1d05ca2e4351f80cf31b1cc",
+    "assets/minecraft/textures/block/hopper_outside.png": "83ccaffd41564465b45997c5f171a3af354d6951e4c4472fe1d1d953c4f57685",
+    "assets/minecraft/textures/block/hopper_top.png": "b6bb8d17e0fe5fc1ddcf8a9f4584d3844015629062876243850a079d506a243a",
+    "assets/minecraft/textures/block/hopper_inside.png": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb",
+    "assets/minecraft/models/block/hopper_side.json": "ecbf1628f1768a1c0669a4f8eb5f56a379aab40ef719c863d203eebdf88b33da",
+    "data/minecraft/loot_table/blocks/hopper.json": "3992aeb23127345a3e95525d411dc31f0eb87e0ecc2c7a8d940945daaa0f0c9b",
+    "assets/minecraft/blockstates/iron_bars.json": "3cf666ffd34396284280b82d1cc2733ec6c8cd3adbe67d9007ace4f106958ef2",
+    "assets/minecraft/models/block/iron_bars_post_ends.json": "71c5d582ee3f72b292bc2039ba438d32f2544267bc0365e3b7f931cd083430c0",
+    "assets/minecraft/models/block/template_bars_post_ends.json": "85d9129ef63ace95ed8d1c9683d9ccb46152472fbe5bb5b72dc303328f2c9981",
+    "assets/minecraft/textures/block/iron_bars.png": "55c60ab25a9ef48ece153a10f6195cdc890dbb3a1c667362e323e1f8ea08bfce",
+    "assets/minecraft/models/block/iron_bars_post.json": "3d8c5f7611083936f7c554048729f7e42d489e6401891be2404491a407946d6a",
+    "assets/minecraft/models/block/template_bars_post.json": "f6f7db8a965985fc9911e8199fb8f1c97801fa554187690b2bb791c26b2b9b2c",
+    "assets/minecraft/models/block/iron_bars_cap.json": "9af0531bb8f90a47f3596f19043d6e038dab8826195bc05eb89aeed40899b93e",
+    "assets/minecraft/models/block/template_bars_cap.json": "6b2bfa3ebee241d0ce52253178729948bd075e67b97061c5751fff758ba0db1c",
+    "assets/minecraft/models/block/iron_bars_cap_alt.json": "5ffb9b4c904eb3bf98064d94e6b99469a1f88d73aff394e598eee7002db2fb11",
+    "assets/minecraft/models/block/template_bars_cap_alt.json": "74f6c3a1733e3b7cb91c160a04dc19adc2921792209dec40c7d48ab9e3fc7f7f",
+    "assets/minecraft/models/block/iron_bars_side.json": "2973b4a3cb94d4a14788997b4d5a2a429a2259f286cbcb8b5b28f04d6dc98d2d",
+    "assets/minecraft/models/block/template_bars_side.json": "86379cc5e3f7d14ea010955215a2843712ca7240f7d100f85a24e2c4ec1237f2",
+    "assets/minecraft/models/block/iron_bars_side_alt.json": "d489ebbea6180bbc39d312229532c3960c6c65f37bdff1e766c8eed6ce8d63de",
+    "assets/minecraft/models/block/template_bars_side_alt.json": "3f5c039e79e616dcf8ffb6e7a4a44b8a3621ac9f13915993b48ae5691897c6b0",
+    "data/minecraft/loot_table/blocks/iron_bars.json": "061dfc29da8674f6709d0954f8bcead686f6868cc358565bb982013ca2a39352",
+    "assets/minecraft/blockstates/iron_block.json": "8fb3f3b759013d96d933fe6302edfb77e30ddcc6f50c1fc2cd2a3f1e2237463a",
+    "assets/minecraft/models/block/iron_block.json": "b44a6439403c95f4c589f9071d7b7b04d7f08605bf69d9066ec8edcd89c5c352",
+    "data/minecraft/loot_table/blocks/iron_block.json": "f5165e324aef40ccc79209826b36823d984e542a47fee4b9c3e672336d233fb4",
+    "assets/minecraft/blockstates/iron_chain.json": "828ae1fc1e51e5f34504d0d5a229cfc84e9cb292c83fb5e0e1dfd99691a31d0f",
+    "assets/minecraft/models/block/iron_chain.json": "cd7a73bd8de9eab3524deca354c6efe8c04f892e91bf1e7631a8660e1b4d4003",
+    "assets/minecraft/models/block/template_chain.json": "4f20329262af1965dd421d174928d2db919840fe870bb0e128e3a5c4fbc3229b",
+    "assets/minecraft/textures/block/iron_chain.png": "44c712141c2914ef9d49143d5236b9f138810f947ab9c9992618e3b11d902ef4",
+    "data/minecraft/loot_table/blocks/iron_chain.json": "544d49ffacda16c37cd5959c4ea9d0d0d1121abb1e6d2bd492ca14c476b0f3ad",
+    "assets/minecraft/blockstates/iron_door.json": "4ccf4bbe66f9194b12dcf6bcb4777e0ddce16a48bcc84db84108f1fc4e9a436e",
+    "assets/minecraft/models/block/iron_door_bottom_left.json": "b7ca170aa8059aaba1369e805d2d2a75ea9b49d2fc68c2c5ea18006508bfe984",
+    "assets/minecraft/models/block/door_bottom_left.json": "f818050450f03a3d4007a8d5d2bbc191ce43fb0d2026a0f162b17f8fee93143f",
+    "assets/minecraft/textures/block/iron_door_bottom.png": "e9d6c7dc182ca275a3d455ba28a8df325d1ad0c1539aace4ee11d0359f6fc83a",
+    "assets/minecraft/textures/block/iron_door_top.png": "54930bb1139268de1855ea03ce5b95097717e25307cbfa1ecce6e665e6da8d88",
+    "assets/minecraft/models/block/iron_door_bottom_left_open.json": "110b591bda3090af4858ce1a04c231ef32c43e0f72cbacf5be71c2e1b6b316e0",
+    "assets/minecraft/models/block/door_bottom_left_open.json": "d0ce2fe5ab051b943ed6a6fad25b0fa5608e30f6f6033be78e2ca77f4fa57ff2",
+    "assets/minecraft/models/block/iron_door_bottom_right.json": "b82cd2b7ab563ccbc111c8cabb872e8692602a35a96ae63fc26a1f177ba0e838",
+    "assets/minecraft/models/block/door_bottom_right.json": "130900b4bd68f679cf266187ea93ece40d7ddaa52a986c6f0daf34443afe561c",
+    "assets/minecraft/models/block/iron_door_bottom_right_open.json": "63fbbb19ffd60b63afdf288e59c43c8bc77ba4cdee36e5702d392e3a8de12957",
+    "assets/minecraft/models/block/door_bottom_right_open.json": "61048e31cf181bb9df8e6de3127c79f208985ea676bdc48c018d6478224c7ee3",
+    "assets/minecraft/models/block/iron_door_top_left.json": "7291d24d41f44c76dc51c1e448decfd9086735c612b7a222166aa5e79bd13c84",
+    "assets/minecraft/models/block/door_top_left.json": "e19a248131949d827f31f6aefb47c3b62ee949ebc62f3072e2aa03ab399c16f2",
+    "assets/minecraft/models/block/iron_door_top_left_open.json": "6ac7dd71f1359f9fa02185f7039a7e261be1d0396224eac667dd161b3004b281",
+    "assets/minecraft/models/block/door_top_left_open.json": "63cbe25ace29d90ae6a956521ec7d4f8acc528ed1d552b4813d8efd018f0e75b",
+    "assets/minecraft/models/block/iron_door_top_right.json": "fb4a1fbc5874ee4b552ef251a43429789df68ef9a5540c5f52e570a61f1f2214",
+    "assets/minecraft/models/block/door_top_right.json": "1efdac1b254e58b377a6acf9330a17228ad5072d9059d032f65b225358e69481",
+    "assets/minecraft/models/block/iron_door_top_right_open.json": "1fc41732c110ed53812f24cdf69eb250e1b17266b2e2f14765694dc362c1390f",
+    "assets/minecraft/models/block/door_top_right_open.json": "f2c1ee24bda1b102b1f669c133a8ad22b505c231908e93849cebd111ab589e6b",
+    "data/minecraft/loot_table/blocks/iron_door.json": "3913fcb88ff1eff35b5598a3c772dff63644298b03b49fd3c562c983f2879e4c",
+    "assets/minecraft/blockstates/iron_trapdoor.json": "67c4ab830d2e9da66e093fae9eb8f3f2d1f01c0d7f7c3fbb9515d4602d1505ab",
+    "assets/minecraft/models/block/iron_trapdoor_bottom.json": "31bfd282b909b34d13e25c20b2eabb0fef9ce3659dac6bb52e2e58da285fe1c5",
+    "assets/minecraft/models/block/template_trapdoor_bottom.json": "c2418939d7d778b1cc0620edd11f12e34003d5b1667727267edb0255add972aa",
+    "assets/minecraft/textures/block/iron_trapdoor.png": "ca84a5c288bcfe8c9a53f066536175f50effa21e85cfb933094805527c5894ba",
+    "assets/minecraft/models/block/iron_trapdoor_open.json": "59cd2574ce65e5724a9d6cdcaca240efc5adbc3fcb422168e326807addd221f0",
+    "assets/minecraft/models/block/template_trapdoor_open.json": "876a8d1fbcb822b6395749d9dae3a08c5f541944360c328e2917145fc3b63150",
+    "assets/minecraft/models/block/iron_trapdoor_top.json": "b0c380e0decbe4c290e54ebef6b0b9a0da05f07ee28c9c3bb4cc726a4dd8edbf",
+    "assets/minecraft/models/block/template_trapdoor_top.json": "ed61498e04e694aa7e78516f2a171896219766b9dd7f461d111a4b54cb888202",
+    "data/minecraft/loot_table/blocks/iron_trapdoor.json": "13dd63a7b954b4d3eb2862e529476a942e30cf1347f6e98127c4ca8441531fbf",
+    "assets/minecraft/blockstates/ladder.json": "2acc68e185a7bd7eb5d1769a399f779ee71b9cdb8675ec4beb6517f9fd44ff09",
+    "assets/minecraft/models/block/ladder.json": "fef7601ae2371d606ba15761d9cca35463692e769d9d9b42eb63f5516f68daf7",
+    "assets/minecraft/textures/block/ladder.png": "04ee25413328caf2421a1f4e484b519a21c49827b18cd5fd46314ca00075f412",
+    "data/minecraft/loot_table/blocks/ladder.json": "781c7c9e975b1d6c9d3a83639a7ae624184dd1c07e5ed6539bc267d9b8f8d87d",
+    "assets/minecraft/blockstates/lantern.json": "a1740d54dad258f59e0e9862474ad9e81fcd6d7168b01ead10dcf4178cc40ec0",
+    "assets/minecraft/models/block/lantern.json": "880a9f063f1c0c3131ec05fcc8e1bde827f004f6bb58caea4ec76ea722b368dc",
+    "assets/minecraft/models/block/template_lantern.json": "3c5051f9bffd452b592b182e0203867b82eb4d596e7e909c6716498065183b04",
+    "assets/minecraft/textures/block/lantern.png": "d0820909a8de7c2736abbf184eac99f4faa536f07a58e10cff4d446291b45aaa",
+    "assets/minecraft/textures/block/lantern.png.mcmeta": "ccc2eb7492b1179c1b6400b0c58a32171aa429c86ee2aefc6cdd912f53e5b438",
+    "assets/minecraft/models/block/lantern_hanging.json": "ff097344ea76b118a25ea4c2e389d6c07933fca340775621a4860bcc92b94d28",
+    "assets/minecraft/models/block/template_hanging_lantern.json": "b42b3cbf73b8c68663405bdfd0166488c2af348c820e1a66bb3419af7cbe6119",
+    "data/minecraft/loot_table/blocks/lantern.json": "248a26fd3c17997eb33d58b59f3bb532ce3650d898d1e40c4edcdb634164e50b",
+    "assets/minecraft/blockstates/lever.json": "8f16b68bec64c1313e7c3c573787a03fb6627a3d078d1276d275427cac09a588",
+    "assets/minecraft/models/block/lever_on.json": "d14f881051cd1c8926352f66623796438c68e9ec1612b8273279b6dce94eb0ee",
+    "assets/minecraft/textures/block/lever.png": "0ee6f47a1b5b86c8277dc2248d0a717b92e656f8f8d6d9cb89e6c2cb0f39d5c7",
+    "assets/minecraft/models/block/lever.json": "c27b3258bd94a956ed72a4e2dcaddf1097f0a8d140edf7e86741d9e49fcbea6a",
+    "data/minecraft/loot_table/blocks/lever.json": "284d577685339e2b68d79801fe1ed1117f7e19c48d4bd5cd7af3c36b59e92011",
+    "assets/minecraft/blockstates/lodestone.json": "e0a78c0961bda5af346eab23624d21fb56d16a880f7e8e38e7aa16c2ccff06cd",
+    "assets/minecraft/models/block/lodestone.json": "b3b7825312eb97f5fca6363b0af3739ea61aa644bc95694dbef836cd50d69b9b",
+    "assets/minecraft/textures/block/lodestone_side.png": "62c423642a31cb509e8104e48b483564917dd8c15f0b9cb01f088c311a022cb4",
+    "assets/minecraft/textures/block/lodestone_top.png": "1ca424a8e6a6236234585387da1486dbebf9a7a1040862078959461d21ca536e",
+    "data/minecraft/loot_table/blocks/lodestone.json": "a4c4bf9fbbb70fdc19d57bce0d8536ae3e795a474caf2ceec1451dad98d6b4b4",
+    "assets/minecraft/blockstates/oak_button.json": "97bd51997ec6489f14d9aee1fbe62304586454485223f98a423dab5fe98d6efa",
+    "assets/minecraft/models/block/oak_button.json": "6bb0d803f18051b85fad7bfe793447c6d05f2a568aa482a0ef44f66c5939bf63",
+    "assets/minecraft/models/block/button.json": "e79537bb07d7ecfbb55ed2a61618ef7dc66136f04ae45f9da1c51751656fa3f3",
+    "assets/minecraft/models/block/oak_button_pressed.json": "0f1dea9a9d3353591261bbc2b31e4ac820ccc0bf5d30b2e5393fdc5856a575a1",
+    "assets/minecraft/models/block/button_pressed.json": "5d93b1b8f3708d86c7dad1fb6c15ea57e5ea916e2aeb4e71d9e3becfd97d8ddd",
+    "data/minecraft/loot_table/blocks/oak_button.json": "b713757a68cacef3aea61fb470fbd8e26767768b479a4a89dc60157ec6303e0d",
+    "assets/minecraft/blockstates/oak_door.json": "a909607ae843a76b9f4882aae7f5320a4b30b8694d855b2904b9a627aea10550",
+    "assets/minecraft/models/block/oak_door_bottom_left.json": "23a3b0fadff608936cb2c6ca6baf8736d016716b4d3e0fdde604cf78641fab0f",
+    "assets/minecraft/textures/block/oak_door_bottom.png": "a209e7e8611d56d211445d5df23a50c31185a293c51f4e03f3cb691209a49df4",
+    "assets/minecraft/textures/block/oak_door_top.png": "0cdc592715a8145d1837f551adf774227dedf7650569e7a50f6cb831c7c0a6c6",
+    "assets/minecraft/models/block/oak_door_bottom_left_open.json": "7f81a928ca320e845053fbca766c35d971cea8c4ce9398f1b28cf03b30a4744a",
+    "assets/minecraft/models/block/oak_door_bottom_right.json": "3d8ab0fadfaf7d1a27afee0146338dda16d177434c9af624dae5c351c459722c",
+    "assets/minecraft/models/block/oak_door_bottom_right_open.json": "eb675956986643b0c6bf72666a92ffb7f454ff5657e2c374d638ffd829687892",
+    "assets/minecraft/models/block/oak_door_top_left.json": "4e65929291d64411c3aa285ba9991e62d538c3ce571050e8940c11f2760e118b",
+    "assets/minecraft/models/block/oak_door_top_left_open.json": "7b269b538c11d123b053c41076839617e4591e6ef41502982676be1d57ffd940",
+    "assets/minecraft/models/block/oak_door_top_right.json": "dd6038fe912dd422ece6e4c185eb0884de55f6f219374c0d6ff87f49c8033e30",
+    "assets/minecraft/models/block/oak_door_top_right_open.json": "9c70f2b608070fc5ac0a8f4f5b3f6cbf2cbf5ced85d7a6f7f359593138cc9b1c",
+    "data/minecraft/loot_table/blocks/oak_door.json": "b8b7252d870d35c1587dec4757a283a6f4a80d119bfe4409b8eac823f8b878ec",
+    "assets/minecraft/blockstates/oak_fence.json": "8baa0ab562c6deacef56a1d26530117d9bda8104d76a4fb71e4318443968142a",
+    "assets/minecraft/models/block/oak_fence_post.json": "65b93d1705e9d287a5fe153729c6a111645300b9a5e80776e1babe824f87d8dc",
+    "assets/minecraft/models/block/fence_post.json": "f445d1cf4f8d81dffc8cddc6e237031d6e064e80a916b396e3d16aab73e7fe6b",
+    "assets/minecraft/models/block/oak_fence_side.json": "8cd3ea75337013b8c4c098471afc2331fd574310de3eb6a2f1e5749a6d80b4b4",
+    "assets/minecraft/models/block/fence_side.json": "da3a9c2ea79551badf65c4d2da9f7bc26650534cda39a98c4ceda19b367c3f85",
+    "data/minecraft/loot_table/blocks/oak_fence.json": "b99a42563e180bf839025393c61459a30cfee45f6b0f47978068c6d665994707",
+    "assets/minecraft/blockstates/oak_fence_gate.json": "04302a85e9734aede06afc070fe204504ddba26072d29054b7b86c58b730bcda",
+    "assets/minecraft/models/block/oak_fence_gate.json": "e6c444db1e33c8b0a8b3eb3ce4bbff1a23010b3efe2771337856686b8c80e7ed",
+    "assets/minecraft/models/block/template_fence_gate.json": "09017d2021bc96624b801eb9f77cece36e735f8d16ff8ca84d71482f27cae3b7",
+    "assets/minecraft/models/block/oak_fence_gate_open.json": "f0b0a305e3fc9aa57379b0dff92b9e3200d5d45de596d5a7b78faa7ea187ee75",
+    "assets/minecraft/models/block/template_fence_gate_open.json": "a90fddc0e8cd17da42d10d75bc07ae387ca78ae225d9a7e65ad2127e1b37c4af",
+    "assets/minecraft/models/block/oak_fence_gate_wall.json": "5ab91f416b555648c7815b6745c11d4815d03c6a17fd5e3b22fdd720f46bc337",
+    "assets/minecraft/models/block/template_fence_gate_wall.json": "bb3a2a825d11fe6c2d2f1f80b7ab3fc7688407aa688479ea40bf362d0558e934",
+    "assets/minecraft/models/block/oak_fence_gate_wall_open.json": "cee0669d18b404811b557f9fd05ae12ebb0a8c5dd1b19819afe1af3f25fccd26",
+    "assets/minecraft/models/block/template_fence_gate_wall_open.json": "69b51ae0e1ee940d55522b52ab4d45865b1f12a388052b738a39cd2e18c0974f",
+    "data/minecraft/loot_table/blocks/oak_fence_gate.json": "0a33269f10ded7b3668118c36988687a32a5b3f7f9771e7606c714cb31e14da0",
+    "assets/minecraft/blockstates/oak_log.json": "4856474e42cf2b94b3cef494f7ce91fe37f4098c98a56134dfc339498e1cf3a2",
+    "assets/minecraft/models/block/oak_log_horizontal.json": "7556a3837c45196dd2b7de401c51170fbb17d63fd488089faa63c3171b346ee7",
+    "assets/minecraft/textures/block/oak_log.png": "61735859c9c9ea82601191a77c6f256d93619cbaf7cad998a3ed5762877a34e6",
+    "assets/minecraft/textures/block/oak_log_top.png": "a520800a833ea0c6214481245ab40397aa0c08b4ffc909046dac266386f9fc01",
+    "assets/minecraft/models/block/oak_log.json": "e029dda3262e41fab2ffa265c36ab4db51ab79e726e6d31bd2518d74c0ef9d7e",
+    "data/minecraft/loot_table/blocks/oak_log.json": "b65d7c6b117d813212df39e92d5c8e0c33f94a9ec08cb3664e88454f5150c769",
+    "assets/minecraft/blockstates/oak_planks.json": "6f2d386f25be963313312900c1d4ec49fde45987f01e5f320c2c45cce6cec8ad",
+    "assets/minecraft/models/block/oak_planks.json": "79b1146adb4eff1b405c0a18384e3290fa171edc1347f64fef50df3df4df939d",
+    "data/minecraft/loot_table/blocks/oak_planks.json": "73914f7e1e5a2fb468809358b8c57a50ce2b05e1bff890d505c21a00cd68df26",
+    "assets/minecraft/blockstates/oak_pressure_plate.json": "159060ea17dbd1d1e3bc928c0eada9b2522534fae706846af759d6feeee9a257",
+    "assets/minecraft/models/block/oak_pressure_plate.json": "ac8d0fbf3cb4f82f8dc72b3426f7ced69ac3a3891987bba63dfcc9c6d7443e8f",
+    "assets/minecraft/models/block/oak_pressure_plate_down.json": "96546a4747d4c8b4b47dcfa41b04369a3553b45c31e55b7eb28a462e880fcb90",
+    "data/minecraft/loot_table/blocks/oak_pressure_plate.json": "0021b945d6249c6274bac3edb03ad4a997ed78e66a9b2a03801a30c1d8920fa8",
+    "assets/minecraft/blockstates/oak_sign.json": "a512f208ef4064a95120b88048b6f708b3ae1e19ab94127d29f080da0db8c2a3",
+    "assets/minecraft/models/block/oak_sign_rot_0.json": "8c7a889149e3f339f45675d70a8a217c9a9ca80a57c1869e1fa641f30861a5b3",
+    "assets/minecraft/models/block/template_sign_rot_0.json": "d1ac7e9595ab91cffb39071133786cf9b1fe72fce60ae7498e01852b053815a2",
+    "assets/minecraft/textures/block/oak_sign.png": "4d1ac2e65b0f355d4c918cb593274f135845e92383e68ea58f92414f90b106f6",
+    "assets/minecraft/models/block/oak_sign_rot_1.json": "21cb71880a733380fa140239c0796348f96b614d065610e22c3b73a892774e57",
+    "assets/minecraft/models/block/template_sign_rot_1.json": "5fb109976efe1fe83aa23a2785d53f36e828c784ff8aedeee219c5c0051e58a6",
+    "assets/minecraft/models/block/oak_sign_rot_2.json": "4cf9767336830fc8ce64e3a2967f78451fdc6ded4b508c276596608d47febc46",
+    "assets/minecraft/models/block/template_sign_rot_2.json": "2f38d01a11e6da000a30d4aa481a7329176183c5f542c07ebba481d19a209483",
+    "assets/minecraft/models/block/oak_sign_rot_3.json": "e8e492b5d90a406ece55407a1a59351de3848b59ed596a1b5d1a6c28b46d368d",
+    "assets/minecraft/models/block/template_sign_rot_3.json": "c6fa632e48d60dc048f885a64cd43c0bd7f3e104113a0fd6fa8f590b379e0033",
+    "data/minecraft/loot_table/blocks/oak_sign.json": "424d2c7f2a38cbdc04c9e26fb8d04bae3e266b771ea631e84e628d4c6ffaaf53",
+    "assets/minecraft/blockstates/oak_slab.json": "9d4c7d7d03f65734ef9846a8cf270290354cdd62cbb5e8c3ab1428a6b44d84ad",
+    "assets/minecraft/models/block/oak_slab.json": "fe614903df2f4b54c3545beaebc34441b2f2631501fbd6a11573e3eb464838af",
+    "assets/minecraft/models/block/oak_slab_top.json": "467eb662586124528c28751df0f84162f068eec0f8fb524593f0a473c646d6b9",
+    "data/minecraft/loot_table/blocks/oak_slab.json": "f58ad876881e091ddc05febb9378fd37f4287052ca98766ce64d8646b8348c0c",
+    "assets/minecraft/blockstates/oak_stairs.json": "b569dcddb0c8b1841bdb939ff4e3f6dce622bc2d08f5110797e853c2dbdd6eb8",
+    "assets/minecraft/models/block/oak_stairs_inner.json": "8bd0b0dae998b873d1a1e36eb142c5c50c008fd3ea9ee97f412ed47e7bdff6b2",
+    "assets/minecraft/models/block/oak_stairs_outer.json": "37f6124fbeea619c38fe35eda84bde9fbc00362d2cb3ffe5ea7f5d0a4c3b96f2",
+    "assets/minecraft/models/block/oak_stairs.json": "14f2486304fa974b9f0dd4eb87de5d06a868d3548fa7133ed10da1eef739bd42",
+    "data/minecraft/loot_table/blocks/oak_stairs.json": "16eda7efa16635945e71b6b1cbdc5d70bd4b3713f69d15f33945e02ed54d5950",
+    "assets/minecraft/blockstates/oak_trapdoor.json": "b272198a142dabae0939962b36bb775d9ce13382d09a911bae1d98cc4ca0e873",
+    "assets/minecraft/models/block/oak_trapdoor_bottom.json": "f572bf88b44001a252b240ded875098759c603c0628bda66bf52e80252216f22",
+    "assets/minecraft/textures/block/oak_trapdoor.png": "7f2d78c69dcfb71d4900b974d40f6e334065f4e4c72aa36fe37ce034df9a2abd",
+    "assets/minecraft/models/block/oak_trapdoor_open.json": "443d31c055f9e1688b816db4572f3c123cf12166cf5f3617fe5ac33de3e6ab35",
+    "assets/minecraft/models/block/oak_trapdoor_top.json": "b97d800615088b3f11ee457b350590908b1f881e3302e50f974eee1f4a36d461",
+    "data/minecraft/loot_table/blocks/oak_trapdoor.json": "d86581cd751c2312b6ce17972861cbf7cd6b65001fd151a145e1a367a2db441f",
+    "assets/minecraft/blockstates/oak_wood.json": "9532d91172d3caa72cd32b6c8894731f1f877b57b7340708c03a749e192b76b1",
+    "assets/minecraft/models/block/oak_wood.json": "56d18987d70a17fc5ade4a55a4718843e2c88f5bee33ee309c6100f91fb575a2",
+    "data/minecraft/loot_table/blocks/oak_wood.json": "f79b8f8ac918bb7cd9806381b2a0e7e0435a024fc0f0825fc4ea9fcd6c996670",
+    "assets/minecraft/blockstates/rail.json": "2a86e6022f7e8c08e1eeab67547e81b5828d06673e6a984bb8b49efdff7d17e5",
+    "assets/minecraft/models/block/rail_raised_ne.json": "96257958ee4251a81771f200ac348b976aca9f9e30a3ced3d0beff2cb1178f08",
+    "assets/minecraft/models/block/template_rail_raised_ne.json": "3afef39260de54eb5a01fa66a5663bd339b8dd655029b4b68304c45832e84d54",
+    "assets/minecraft/textures/block/rail.png": "db73ebf85b0f5090c232de60059b761a9a62fa8a9bb2084d121f9d08b0bde5a7",
+    "assets/minecraft/models/block/rail_raised_sw.json": "98e6bb9500d058bf8a701016deada14ded7403a97df7cc7a1c91503d74f61862",
+    "assets/minecraft/models/block/template_rail_raised_sw.json": "ddb87c38e966a57124c3e1469b327ab6a6868d89d8fe99bd70542725203a0eda",
+    "assets/minecraft/models/block/rail.json": "7bc304b7e31114ce54241b3460e916cfbc08e5b01fe4e3178ca4d263b5522ae5",
+    "assets/minecraft/models/block/rail_flat.json": "8caf083b2384530324cbf6ba0ab1e864be771564a716ab12e5046e49083f28ef",
+    "assets/minecraft/models/block/rail_corner.json": "e7592afdd9b55406cc1e78a8b4f30d5987880b5a0554a1db562ca9d506a8dee4",
+    "assets/minecraft/models/block/rail_curved.json": "8caf083b2384530324cbf6ba0ab1e864be771564a716ab12e5046e49083f28ef",
+    "assets/minecraft/textures/block/rail_corner.png": "5dadaef5909fe7af3a3251cffbd44ebecc7e7da3081ecdf92e380a0b782cdc73",
+    "data/minecraft/loot_table/blocks/rail.json": "14c9d4487ef3ff10eadb09dfc7c1a0dde28f71249ac90359068247062fee11d1",
+    "assets/minecraft/blockstates/raw_iron_block.json": "8d71baabf838ca47503c068e23ea9831c7eadbe310e4e37825e4dcbef6518e26",
+    "assets/minecraft/models/block/raw_iron_block.json": "d1f8cff6d9585fc2a27358c00df59e7161298c7dc93c3991711b827467e977a6",
+    "assets/minecraft/textures/block/raw_iron_block.png": "e2133b553079d3eb43c6b6dcecbe7f0b3feebc05766a9e28b789ca779a1159f3",
+    "data/minecraft/loot_table/blocks/raw_iron_block.json": "95e1035ad3a8fd2ca68c238b4fa6db185f61337395550497e62b97f53975fce9",
+    "assets/minecraft/blockstates/short_grass.json": "2bbc37d45a5223fdc5c2a9677bf99f00519bb5eb2301b8f83b47d233671f1b29",
+    "assets/minecraft/models/block/short_grass.json": "5ef3f5aea70d45c58f76dee483e1f40ca93be8aa362c2f5fdf8566366ca3fe8c",
+    "assets/minecraft/models/block/tinted_cross.json": "f6ace97c3b508dcd7bd81ad28358109e9a3c856ffeab09b13683d6ba5303738c",
+    "assets/minecraft/textures/block/short_grass.png": "40e2ad5d034d0ffc58b4c496c0badfa2104e0fc1888fc92c5f9bd79dcd84cb20",
+    "data/minecraft/loot_table/blocks/short_grass.json": "2f661e92e31229f85a2b50927d6c01a756cf75a1122d1fb414b85d6b3e9efba5",
+    "assets/minecraft/blockstates/smithing_table.json": "17af378c163237774cf0e98c95118f9202eebc28d982f3d06fcb30be95e505e7",
+    "assets/minecraft/models/block/smithing_table.json": "04f167bb833dd86c4b13215fdfeeec48ee4a6c3ba5ba1486cb96985d34e46d02",
+    "assets/minecraft/textures/block/smithing_table_bottom.png": "d798dfcfaf39b0cc755bb9c30721c3e20ccccde854b2417cf32a48167178d60c",
+    "assets/minecraft/textures/block/smithing_table_side.png": "de6b8a0f0da0b27b275371a4fec5f2fbb2aa473ef104a1c5abcc41db4dda5f73",
+    "assets/minecraft/textures/block/smithing_table_front.png": "f7a5479a3e1d3e3f604ec1b22634736ea952b676fef20e954a9607f15fb13ba0",
+    "assets/minecraft/textures/block/smithing_table_top.png": "eb33e51c12200f6af3095d4e039c0692568011b7f5160e35aecd81a598d5e6da",
+    "data/minecraft/loot_table/blocks/smithing_table.json": "beb91557b3d227b8d5fdc644fc5c09a8c13fe3039c735e7ca89e4875c6e16605",
+    "assets/minecraft/blockstates/smoker.json": "da41f36285c58333293efc09add8a557fdae0802f89e769c7d3e8f71a2a63120",
+    "assets/minecraft/models/block/smoker.json": "13ec27bb10e238098a5dcc9ef2028b08ed87cfa52d53644b953fcb598a675ad9",
+    "assets/minecraft/textures/block/smoker_front.png": "ce2bec2d026b954529024c4ead234a39932335cf5367ac0a71c380b055150795",
+    "assets/minecraft/textures/block/smoker_bottom.png": "870313958b7b1588bdb3d800421f1600bc5ccad6c650977ad582c753c8356773",
+    "assets/minecraft/textures/block/smoker_top.png": "73a8671ab27cbf6e25f4074e508126da16c8754ff415316787f5dd02150e6e89",
+    "assets/minecraft/textures/block/smoker_side.png": "ee07afd0ac7ffa45358d3303a870a8e4db90af1e19c4fdccdefb92890aa9747d",
+    "assets/minecraft/models/block/smoker_on.json": "b1cbd540895ce35ea3867b06c3606957d9d8d0fdc3c4e3969f924a68f8e71734",
+    "assets/minecraft/textures/block/smoker_front_on.png": "9509bf23aecb04b857c1aecc3f71dbb79f182f0a8977bba1d9129b949a4bb0d5",
+    "assets/minecraft/textures/block/smoker_front_on.png.mcmeta": "c44fcd990ddd39a46067f8a8fa3b447bca1a5136e1ff6101ca96b58e73539ed6",
+    "data/minecraft/loot_table/blocks/smoker.json": "bd1d432b06e1dc8e4d9ef39978b30ec60cd54f78254ef218790bb1b1c7f7ccc8",
+    "assets/minecraft/blockstates/smooth_stone.json": "eddc9e4990fc9b5e2e783e6d4c8f7a7fcf3cfb2370e9c3e6a1e1bc1493986fc5",
+    "assets/minecraft/models/block/smooth_stone.json": "52e6f06a0ba0ded34a0f27a157d050105a19f60b39cb53fac9ee2ba7f198f6e8",
+    "assets/minecraft/textures/block/smooth_stone.png": "95e15063a305df75491527a9bb7cbad6e4d98c9d974881f26752ee7f1ef15a9e",
+    "data/minecraft/loot_table/blocks/smooth_stone.json": "9abb26eb0281b8b3d4fea19267653b80edea0d8eeaa407bbb09298d0316ee68d",
+    "assets/minecraft/blockstates/smooth_stone_slab.json": "3ada24fbdc4bfd1ce23de8607156354ada3c1b7437c01533c432486cf308ab11",
+    "assets/minecraft/models/block/smooth_stone_slab.json": "2ac48d506a959debd9c3a279f78d9d0d9b50bf406756b2d61fe23c36889c6892",
+    "assets/minecraft/textures/block/smooth_stone_slab_side.png": "eea1c55068b287920815c1e7c5493f8a64a9213b37144c1bfece0e634a5502a7",
+    "assets/minecraft/models/block/smooth_stone_slab_double.json": "aed3d3b0a8b67bf331168cc8b7307c17dd9ac2e89dfa729fd0a75c9411bfd2c0",
+    "assets/minecraft/models/block/smooth_stone_slab_top.json": "ceb8cb3789fe117845d595819ccfd6cad0e041b5618e6b9daecb266c8fe51c7e",
+    "data/minecraft/loot_table/blocks/smooth_stone_slab.json": "1bfcd80cb7a99defb33893637ce3f2089cc5c20592b78dc18a6b2779e28ed7ab",
+    "assets/minecraft/blockstates/stone.json": "34476f2bb98e7abec029c07c3cbfd8ba3a0141c0df3f02ff255018dbec625bbc",
+    "assets/minecraft/models/block/stone.json": "c0734082e7f1e2f44809737b2fbe1136fc7304bde7232e45fbe921884a4a327e",
+    "assets/minecraft/textures/block/stone.png": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f",
+    "assets/minecraft/models/block/stone_mirrored.json": "f6127c3048b1812b664209825271553c71c2b2dae9d6a19933702b6fdbe34370",
+    "assets/minecraft/models/block/cube_mirrored_all.json": "eb0682e3126d537e8a15af343bc40e32339baa63f4f541143ed969e25e9231e0",
+    "assets/minecraft/models/block/cube_mirrored.json": "e0a7b21709196c8641177e68a0a5e2a25d1de8f82e7ece75120dd38ed5d7a0fa",
+    "data/minecraft/loot_table/blocks/stone.json": "20474f83062358256be7582bafb632a3e1cec8b824ffe6e7911c7bab94bfa8c9",
+    "assets/minecraft/blockstates/stone_brick_slab.json": "c80af078582a956da8b2f4734d0bce6a272413d44d3ec4708432e1857fc724b9",
+    "assets/minecraft/models/block/stone_brick_slab.json": "e37fccb37af74bd02ea5eb5cd1c23c38818146a5237a9db1c9760d39d540b113",
+    "assets/minecraft/textures/block/stone_bricks.png": "24415444c9e4815aad4a3a349ecbfc0e027b96be25ac5b7c273c06f16c4fdd2f",
+    "assets/minecraft/models/block/stone_bricks.json": "5200aa1494af49c0bba0f96a1a01569d6b792cf7168e0a06c21ad0db94f0a101",
+    "assets/minecraft/models/block/stone_brick_slab_top.json": "c37d246d912e4d016eb8787c8ab6b1116987a8e1d4a7610934d501f6a84cbef3",
+    "data/minecraft/loot_table/blocks/stone_brick_slab.json": "8e78cf7dfd97505f7f97d2b77338009c1287e8ed1bf680b12cf1d2a4d5466fb8",
+    "assets/minecraft/blockstates/stone_brick_stairs.json": "effb2d6acdd74ef663fb34f1638763fdce3961eaf00be59936e76fef8b615011",
+    "assets/minecraft/models/block/stone_brick_stairs_inner.json": "0fd8942f68f2ffd28efce12a9f536e5b3f5c6e591a3746dffbd143f1f0467a2b",
+    "assets/minecraft/models/block/stone_brick_stairs_outer.json": "00ac4f32420677ec3a617e972b22a17837f63710f7845048d480fe18209a68c6",
+    "assets/minecraft/models/block/stone_brick_stairs.json": "3e7bf703d8b4ac12b5394da91d471ca7b6f15e496176cf2fb2b272872601a279",
+    "data/minecraft/loot_table/blocks/stone_brick_stairs.json": "35e0b8e0504122ce84f9ec2f67e4bc4a73a44070cfe23baf208e3dfe64483057",
+    "assets/minecraft/blockstates/stone_brick_wall.json": "338859b14db65a2c96f03340ee54b35d5a679dc389e34109326362d312172129",
+    "assets/minecraft/models/block/stone_brick_wall_post.json": "907c0888d20a4214c2861fb43568e7fcf79c43c7025df11b879e7994bb9d428a",
+    "assets/minecraft/models/block/stone_brick_wall_side.json": "b7632627aa46941f3e556e4d2ec677c52ea429f1c5c56a2389770f6a3786effb",
+    "assets/minecraft/models/block/stone_brick_wall_side_tall.json": "ee31d8d2a9cfb4273f59215ac37d56544f706ec21ce6fefa1353397baa089757",
+    "data/minecraft/loot_table/blocks/stone_brick_wall.json": "308caf95139dd667850b28c52f489f7205289a8e6ef8d43c4e65e5f7eef900a1",
+    "assets/minecraft/blockstates/stone_bricks.json": "6c9819be435adc36dc054e0738e6bc9d1015ce67730ccd7058d079c2144c398a",
+    "data/minecraft/loot_table/blocks/stone_bricks.json": "2533d9df3f955433bf1a19dd4effd173b426431c84539639cc4652df3bdf5f21",
+    "assets/minecraft/blockstates/stone_button.json": "1765226cc2a23c317ea2eff8b6840bd35f9ae96738989cfaa0d42fa1a39999ad",
+    "assets/minecraft/models/block/stone_button.json": "382d1395151c49a6895a6fa8490e94283afeba084a3c16b3677154d6086302d8",
+    "assets/minecraft/models/block/stone_button_pressed.json": "48296f9fcfd1580ed324ee1f0a6ebda70337a3ba4d841f0292fadfd48b3161c0",
+    "data/minecraft/loot_table/blocks/stone_button.json": "abea9b4997c16462321a0313375f2a8809f341861541a48f6e3ba18f847d9a56",
+    "assets/minecraft/blockstates/stone_pressure_plate.json": "7e9895971f03bdbe9d108f93410fe8f7ea2ce4fc429477b7849d1737d5368b5e",
+    "assets/minecraft/models/block/stone_pressure_plate.json": "5036c49231de2466fc23f0861a6d208f6bb36c817e01863e769904763c80390a",
+    "assets/minecraft/models/block/stone_pressure_plate_down.json": "e8e9aac43a71de0749000c0f3c2fc5029c5ad7178f8a0f86d584d754a72be426",
+    "data/minecraft/loot_table/blocks/stone_pressure_plate.json": "d1b661a330b35c90d75363c3da5fdc939a1ba35fa3280a122576a9496f2ddb08",
+    "assets/minecraft/blockstates/stone_slab.json": "d5b0f239efa195efd4aa28a2ff4330a6f67f37bca460efdcf918abcd48db7618",
+    "assets/minecraft/models/block/stone_slab.json": "c697ca0609da3ebcea82583e5baeb9e6d14fe4566136ab6e539e03bc827b2415",
+    "assets/minecraft/models/block/stone_slab_top.json": "cf1f07b9c9955881f1b88ef9d7b49ce6115ed6d26f5e63bc41e22d2a994b3ef3",
+    "data/minecraft/loot_table/blocks/stone_slab.json": "a179a9af66b0b33f7e3ce05227120ef01db9bc3157fa83960a0752f5ce0b8dde",
+    "assets/minecraft/blockstates/stone_stairs.json": "b7487c962cfbc8c7a6a4a25ad7e1b11d9f44158d7606f53d476508f98839f7ac",
+    "assets/minecraft/models/block/stone_stairs_inner.json": "7873decffd38e4e88c75fb66f93815eee0c1b8aa61e01348d7b9e5011b9b6762",
+    "assets/minecraft/models/block/stone_stairs_outer.json": "b7ed99b47fca84c70e99367b126664891a9811ac8c2705060ce40886dd4d04ee",
+    "assets/minecraft/models/block/stone_stairs.json": "b2c3ec749e1a1da2d296fbc15bf8de3b9ef8cd50b93ceed7b25b3f3005398539",
+    "data/minecraft/loot_table/blocks/stone_stairs.json": "8fe18d9f4b8cda90f4a77c9edd0bc59c3dcb4f7606c0a68fe4c33cc51b64488f",
+    "assets/minecraft/blockstates/stonecutter.json": "630d5b5e8bf4d7cb1d7b3b51d63e0da14568888e74c01fde7533e7beab98e814",
+    "assets/minecraft/models/block/stonecutter.json": "79ceaec2618ed0c78d5b7e06e4e680355a47b37b5fa6874085465ae304b8aa78",
+    "assets/minecraft/textures/block/stonecutter_bottom.png": "338289c373536af5e90820c69ea8b3f6360545b6444c95b80f36579a11a96b07",
+    "assets/minecraft/textures/block/stonecutter_top.png": "43c826a5b52ef53c1c1d0d8eba01e53ffaafbf81c98a11cf408c5eba03027a65",
+    "assets/minecraft/textures/block/stonecutter_side.png": "a11cd17d695871f14c199011a94202d0308ab213e5e0c1462469b0ad1f220f2c",
+    "assets/minecraft/textures/block/stonecutter_saw.png": "9ba79c91f9cdf18b08e1ac50a657a7ecc0349d958195cb821196d5d03c4851fd",
+    "assets/minecraft/textures/block/stonecutter_saw.png.mcmeta": "11f424caedc78f9d71c69700b96142279540c87cfc7602915e9cc090aeb32548",
+    "data/minecraft/loot_table/blocks/stonecutter.json": "c5bebbbf7ad975ac06924b4cc1958c99050ffa6c0e2fee475915f756d105f01f",
+    "assets/minecraft/blockstates/straw_bed.json": "2058d7d0b0366d2c1590a56c6c8271c1c535400f431983484c80eab6f9c409be",
+    "assets/minecraft/models/block/straw_bed_foot.json": "0681c3f366b79361387079aeaa6bb02570f18bb6e8505e482a2344a7847abe1b",
+    "assets/minecraft/textures/block/straw_bed.png": "13f0290a498a901e053d0720931a0cc5202761dc951301dda64e26be5336039b",
+    "assets/minecraft/textures/block/straw_bed_particle.png": "31dd5740c695ef21b823f1837c1ee6d0e55f7a216c38af04f803bf62d6338a98",
+    "assets/minecraft/models/block/straw_bed_head.json": "07d3f02ccee5a99bfe75326f1d8c9d864e06a45ee5061e689b5ba6c68b0e8e0e",
+    "data/minecraft/loot_table/blocks/straw_bed.json": "ec904fc989b505be3098a2895195dfa1eb699a1bd5931f2d62c7f785633727ac",
+    "assets/minecraft/blockstates/sugar_cane.json": "b90d4b118371b52d660a80ca9dce4ccc5012e58f6c5a530b1a6607e20f88698a",
+    "assets/minecraft/models/block/sugar_cane.json": "0f19e92fd4a27c3f1bf45eb46acff03224c077c9ae963f2f1c7c5dd1cd2b57dd",
+    "assets/minecraft/textures/block/sugar_cane.png": "2ae5f67fddbe9484960aa1335757e1234c3ba6b41ea0ef5b0a2ec818008b4d88",
+    "data/minecraft/loot_table/blocks/sugar_cane.json": "c62b3155a249ba043367778e02804bf09992ead4003c59fc8f91c1ec824a4099",
+    "assets/minecraft/blockstates/torch.json": "6eb66f347e7de8f032f8ccc7d4f79c26bfee9f8ab27dff74bccca43b3a76c418",
+    "assets/minecraft/models/block/torch.json": "834b8a24a98d2a2c3505de5a33a734fb327cd036086abd2f9f8141c2d309ba89",
+    "assets/minecraft/models/block/template_torch.json": "4ece3c7111abca186905f15672a8fe930543ccfc8f8c3e5ba5326e573b4b2de6",
+    "assets/minecraft/textures/block/torch.png": "1e0a18d6a5f4e839f07b3a7cbe2703f98d7db1c65eb1c96e1e575eec61410e16",
+    "data/minecraft/loot_table/blocks/torch.json": "9b51525c2c41eceae89009c3d2496c81ce28b5dd2894939eb1b31a0b3c83094b",
+    "assets/minecraft/blockstates/trapped_chest.json": "36b2cad647f6efce01a7296fb937d1e53bdc24dd3cb5b7ad4e629f2400c17fee",
+    "assets/minecraft/models/block/trapped_chest.json": "d53a018f22937faa93d8810cbc784069589949cffa2859076fe0a92d95bb465c",
+    "data/minecraft/loot_table/blocks/trapped_chest.json": "8e9781260d03b306f3a60780c89cc7654662947b857bbb1ee817721e83852b89",
+    "assets/minecraft/blockstates/tripwire_hook.json": "925a8ce51e7507a34013e5f2303968a230bf75b709e22d6974bdf7333562fc42",
+    "assets/minecraft/models/block/tripwire_hook.json": "a1fd1e042b16398cbf0683b0986633c9931bcd11321846ca18432fa373e69b6c",
+    "assets/minecraft/textures/block/tripwire_hook.png": "f7d360f068deb7f63b9413e2e25c244a07e6e52510c9a7680655a402d34a5347",
+    "assets/minecraft/models/block/tripwire_hook_on.json": "d0b021da1086e9a92ec214da1db3813353335777bb1eebc14f28a46e2eef07a4",
+    "assets/minecraft/models/block/tripwire_hook_attached.json": "1ca9622cec62f10514df2e8cc0d207a0f603358bd56295dbb7506768e26bfd1b",
+    "assets/minecraft/textures/block/tripwire.png": "aa7ec035b93045fef6b5f5c72f4854e273e89e3b85b78888815bc94c484cef95",
+    "assets/minecraft/textures/block/tripwire.png.mcmeta": "03582bc22a01c58a5f9d0a8c2c6ca67c60d106313db1ee783eba9f91b9a82888",
+    "assets/minecraft/models/block/tripwire_hook_attached_on.json": "1161d001191a8e581460bf11920e5487e265ed414e5a367e50257b1b66f4d177",
+    "data/minecraft/loot_table/blocks/tripwire_hook.json": "6b632a14252541376cdf8f75123707afd9c44dd513156184b15cd6732a5b541a",
+    "assets/minecraft/blockstates/wall_torch.json": "2c1a2fd4ff28f141c1855ef9f78d4257204a3590bbe26c00ee469dae4b16503a",
+    "assets/minecraft/models/block/wall_torch.json": "e40eb7b4c4bcefec02b611007e5b1acf2c01a174c95b7082af9f8122a3c7ecaa",
+    "assets/minecraft/models/block/template_torch_wall.json": "18aae16f53bb4da7d18361ce375821422e295aee92c836574f38038a6c4e801d",
+    "assets/minecraft/blockstates/oak_wall_sign.json": "e4ef0111139bd62535d6c2894e6dd4d41c6f29d069a745a0e24263168eb5555e",
+    "assets/minecraft/models/block/oak_wall_sign.json": "0c8059fd23403f094b7e73a4839ad611bbf23e379f3b7a6aad95b764e338aebc",
+    "assets/minecraft/models/block/template_wall_sign.json": "6a2e829a04b36906bfc120fdc0d9387d21790dd70404ab1362941a2733c6824a",
+    "assets/minecraft/textures/entity/chest/normal.png": "ab478534503430192b224ea4d5e1e87b6820198925bb7a7b4bd32f2a8a55c801",
+    "assets/minecraft/textures/entity/chest/trapped.png": "795716c8c9ce5a06c10776ec20ed20642282376ebecc39699a5b5ff409b2dc64",
+    "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_background.png": "704c61c0e5da542acd9c46ee65249bf824e7e3114748b4ff594abdada3d4ca77",
+    "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_progress.png": "522a88a3a7f23dde40dbeae99f302977babfa7756eb0f185cda2a0c0eee85742",
+    "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_full.png": "cba4930bc4aaa6c965e6e3bdd1f75aea3e394229e6902c97714d0bc142983b4c",
+    "data/minecraft/tags/block/mineable/axe.json": "14cad4e01465720095785e2d83807ca9b5eff6a1e24a76d50d17eabbee327ee9",
+    "data/minecraft/tags/block/mineable/pickaxe.json": "1573d7327fd943eb1f58f81e56bf29f55140ab200f4e721773fcb10b6cdfa7fd",
+    "data/minecraft/tags/block/mineable/shovel.json": "732d8db1157516e8238ed13c85d4d85b5e49313b745007f361970a83b5f0b87e",
+    "data/minecraft/tags/block/mineable/hoe.json": "138f9a28a1ca58c362dbcff3d7487f33b5e921b60c82a155a38dc5ef3a1ca26f",
+    "assets/minecraft/sounds/step/stone2.ogg": "f1d9fbcec8ae90466640b48440700e3d75499d73bdc89297939ebc6dc84a896f",
+    "assets/minecraft/sounds/step/stone3.ogg": "3f315406c749cca0c3c1295ae45b08905a33791323157280409b84429d674848",
+    "assets/minecraft/sounds/step/stone4.ogg": "d32e85647026a4cc04352743066cdd20d79bc891eb02b0d71ea9144063192766",
+    "assets/minecraft/sounds/step/stone1.ogg": "c2df259556168a4ad44ddb739a4e952bf6594c67d2712dc3d9fcde2fbcccf840",
+    "assets/minecraft/sounds/step/stone6.ogg": "16922737da3277907d07ba6c317492ecce6f06b6dab73e20b0ffbb84111740ce",
+    "assets/minecraft/sounds/step/stone5.ogg": "e7646fba896d091eff1dc6e0f09ecb013125cefa2736144b6536fa4818e6d09f",
+    "assets/minecraft/sounds/dig/stone4.ogg": "412de07878dec702c834b815839179a026a41a1503ffde4b27a52e5ab38784be",
+    "assets/minecraft/sounds/dig/stone1.ogg": "0f066e00a6bc068038713c66075b24fd033816b5c2f5162ef6d747b87e324a14",
+    "assets/minecraft/sounds/dig/stone3.ogg": "00f983f95a68eefa04d5d51bb20c80b69247467a0f446496c349b03b0b849536",
+    "assets/minecraft/sounds/random/anvil_land.ogg": "7696f2375d33a721531415338b593540cea50e694e89aff837b704f7acb93d1f",
+    "assets/minecraft/sounds/step/wood2.ogg": "017a520c0b2e978e5a8360febd444d48075cd8fb64967ba0ce1885d6f6cec849",
+    "assets/minecraft/sounds/dig/stone2.ogg": "d1ade709625f308bbc529aa3aa6995fea009b05b2c83193855def208ad15e0b5",
+    "assets/minecraft/sounds/step/wood3.ogg": "27cdbf1b0ff78bc082717501c90a2d9a82487a7e1a25b13a62017b247b14716e",
+    "assets/minecraft/sounds/step/wood4.ogg": "feb212713083717c39dc55266ff205233f338d65765d6c4f9ed784b7b20f65bf",
+    "assets/minecraft/sounds/step/wood6.ogg": "5ae84003496c1037786cac1796426e9cb310b6375c8cb0c13189dc8abde15379",
+    "assets/minecraft/sounds/step/wood1.ogg": "d1bce3e4393f9e5e7531421c12b3f74f8ef219659997baf6d73509380b5bd40f",
+    "assets/minecraft/sounds/dig/wood1.ogg": "313dbced391ecb42a63c85bc874b7fa226215acabadf5069e223dff6c5ebad99",
+    "assets/minecraft/sounds/dig/wood2.ogg": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7",
+    "assets/minecraft/sounds/dig/wood3.ogg": "6b439a67286d392e3a7bc96f67ea51ed17aa8d22610f243249df88d4ba5aa9e7",
+    "assets/minecraft/sounds/step/wood5.ogg": "68b4abec26fd5586255275926ddd096db1ddc9ddfccb0be03bea87e42f109369",
+    "assets/minecraft/sounds/step/cloth2.ogg": "fc65ff603d0532ab5819f0f374919a2b2dbb98968d9ebf79045c6461f3cdcece",
+    "assets/minecraft/sounds/step/cloth1.ogg": "737cee2a9d1d5db85c9d47c5e36117bce3da345ce98f66d2aba2684ad4930f2b",
+    "assets/minecraft/sounds/dig/wood4.ogg": "b8a75c1b0658d0bc4e0e8e2d44585182feda102551e266fd42490034cc08c4f5",
+    "assets/minecraft/sounds/step/cloth3.ogg": "81bb34ea341bec7fbd40fcc1a2a355bd8b6c396179b9c38ceaf6af042da97170",
+    "assets/minecraft/sounds/step/cloth4.ogg": "83fe6cb56bee1c9d7ad97e5e96f6acc0a625c6e67d4c89fe6896b9ad347ac27c",
+    "assets/minecraft/sounds/dig/cloth1.ogg": "274612adfbc6478668e26a2765ded15f1ec113bde2aa6fb45950d16992ef95b6",
+    "assets/minecraft/sounds/dig/cloth3.ogg": "1e55832a3a416463cfd56981db0885419b2042b8b3a38e19bc217c6e5877f481",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/step1.ogg": "9bbc7ad53899f7d920c7e065fa372177f5846f6e35a29c98a956459acc14b6fa",
+    "assets/minecraft/sounds/dig/cloth2.ogg": "509be239eacf55fc3cc66caf5a317087249a521f774e1927a88215c94d27c557",
+    "assets/minecraft/sounds/dig/cloth4.ogg": "1aed21aa34cf5b66a4e8495a40be8463166e08327d97be04d046927c273e1bc3",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/step2.ogg": "12692345ea16be2658d2c9aa80dd8222759cc3787543c030e202ba5209d52107",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/step3.ogg": "7b0a9cb94626f484f68ced2bb962cb27f42f8748e37af1842db93c253374953c",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/step4.ogg": "3eb00821b0f38631d75ed695246033058594bbb35fe94f6c0f7a23f2d58d3707",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/step5.ogg": "354d91433b2b7570b0c8f8543e255d3a4db73f9896782d7b5e1c363f5c256aff",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break1.ogg": "dc0dbbb5dacc8bd396bcf466d4fced189e037a49f5968c1857c4ee9401c9a9f2",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break2.ogg": "49ee9c4b8ccf1d81811b651c96aef38d7afd585b98d608ccd3f9b6aa01c57131",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break4.ogg": "3c2a5f112c99bbdcc6c082567862343cdcafce228b8d7bcbd74cfe2e6a0e2e66",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break3.ogg": "cecfd97739c332780e451364fca33fba727296e97c2d5e16abf4ce37062cd414",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break5.ogg": "4deb454585129ea81a10199a45c79f684cb36b9c95613ecf05051c82460aad21",
+    "assets/minecraft/sounds/block/chiseled_bookshelf/break6.ogg": "c1cb9d2a1888ab80c6e33239f53b3a7b6884fb83c66d7cf6ddb46ea2c828972d",
+    "assets/minecraft/sounds/step/grass1.ogg": "c1b8f2bc316d7747b8bee882863a0f99c1e098a42e0bb9c845d1a26518e030e0",
+    "assets/minecraft/sounds/step/grass2.ogg": "569994e55dd74d1afd032b909e596f6a8c1f30b7fb52b51109aac0e712f7a3f7",
+    "assets/minecraft/sounds/step/grass5.ogg": "8dbca599a34e6b7450f3aaffcc05242b31df90d7c10374204e4f267d902444dd",
+    "assets/minecraft/sounds/step/grass3.ogg": "6bffe2b44871fb50cb5f4555985268237997b00bfe84f8bee229ce10403500bf",
+    "assets/minecraft/sounds/step/grass4.ogg": "5231ab247fb8662decbb82596bebd5423f4f1e6f2fcfb74f4acf35a8b2482843",
+    "assets/minecraft/sounds/step/grass6.ogg": "a005880a296487f2b8e97a9cb9ca0cf58869d89ea143d7e4d0379c90830e3817",
+    "assets/minecraft/sounds/dig/grass2.ogg": "ec562b50f052be7ad376f28474a0d70b4c09530a0cbc08e4e784f871ee128362",
+    "assets/minecraft/sounds/dig/grass1.ogg": "ce1eab05bda582df460606c6931dd87095a802de621166ea840105a428cc627a",
+    "assets/minecraft/sounds/dig/grass4.ogg": "1476d8ca66994013baee6fa1a1616312be733fd81000cd536e39f212d6bded95",
+    "assets/minecraft/sounds/dig/grass3.ogg": "d5cc2feaf2a11c45d036d370b875e0bbd52efe9c8501003b28dd85efe4e2634f",
+    "assets/minecraft/sounds/block/iron/step1.ogg": "aa603353b7e89e147478180578cd55e018d1b2f475baaf2dea95cd2b69465791",
+    "assets/minecraft/sounds/block/iron/step3.ogg": "4374bb281c8defad951f8ce4a162861e5974f127c6e63fb8630b709434692c6c",
+    "assets/minecraft/sounds/block/iron/step4.ogg": "cd4f965ee4995238101a437733f7ef91d936f1267c3c75eebee7eb08225a2d43",
+    "assets/minecraft/sounds/block/iron/step2.ogg": "d94f5cbd73e45715a8ae3f48080b0ec0340e58da0f29425e05e79fd7cbcc3c36",
+    "assets/minecraft/sounds/block/iron/break2.ogg": "e7a86572680638b6b6a5766708a8c1b402c0aa705e7413175db11ff862e74c10",
+    "assets/minecraft/sounds/block/iron/break3.ogg": "0280cc46df47b4aa9367d29620228ca34aeed8d63c72aa9efb7e3a1ba22d652a",
+    "assets/minecraft/sounds/block/iron/break1.ogg": "231cd8f0803ece6cb8bb910e40d86ab64b02ea6e8feaeaf61dd7b90a9670c9f6",
+    "assets/minecraft/sounds/block/iron/break4.ogg": "64dc190682ea4ae9bf161422014e369652d8de6d619d44387b353a0f52ebafce",
+    "assets/minecraft/sounds/block/iron/break6.ogg": "9f742092df7c71f7dfe6b1e838ea38b9e6490c73fe490aff4192f945a257019a",
+    "assets/minecraft/sounds/block/iron/break5.ogg": "c71f47f2cb313dca0840fbf5cfd292ea8843fc71a3878f79a9bc0145fae08505",
+    "assets/minecraft/sounds/block/iron/break7.ogg": "1bdc63ea70ee1eb06ebe2b5ed85ce34a614fe4a692f706a362c4033d5c4baf89",
+    "assets/minecraft/sounds/block/chain/step1.ogg": "ce0dbf9c7ca4d62608f0446dc24fe22d80a1924170896da1cb1b02ee0bad5b65",
+    "assets/minecraft/sounds/block/chain/step2.ogg": "570fb7e2b102c813fcfb24b9f726117ccb8d1add2d7d736bcf3ebc6395617f61",
+    "assets/minecraft/sounds/block/chain/step4.ogg": "b769427ebe794ea82736eb99f456f1f0f44a36c1272ad5013538cb77739531d9",
+    "assets/minecraft/sounds/block/chain/step3.ogg": "0ce5f4d23964920947f9566feec08771d2adabb943eebe400d0672ba6b3b6ba5",
+    "assets/minecraft/sounds/block/chain/step6.ogg": "42659d8357667ee86ae7eef76d208ea6a7a9ff4d0bcbddc319c78e948a59ea3f",
+    "assets/minecraft/sounds/block/chain/break1.ogg": "4ec3e48fa4acf1d4982a43216b74c963b6bf1b212739d0eb692e7a09ddc4c94e",
+    "assets/minecraft/sounds/block/chain/step5.ogg": "c3126cdec14c8785e87c1ae1a6b5911dba2a356f0c16b70106f1bcb5c5a77b2f",
+    "assets/minecraft/sounds/block/chain/break2.ogg": "59845aed06619f4dfd84eb6794d81fcaede24cb291beadff5c0bc020b245a278",
+    "assets/minecraft/sounds/step/ladder1.ogg": "f8b7f76512def3afc401ebbc4525b0e258ec8d342f69d485d176ff2dfb1f3512",
+    "assets/minecraft/sounds/block/iron/break8.ogg": "9dceb36215d2164b497742748972ef7fbcd207bbaf840f3c07326bfb947f5230",
+    "assets/minecraft/sounds/step/ladder4.ogg": "1d52510737465a17c975be518248d74c757db5cb5adb140a3e9744bcc854aef4",
+    "assets/minecraft/sounds/block/chain/break3.ogg": "fef51c1ab0c8bc68f3b4a05ef897715efd8e5bb1a0d10431ca5eafda082530ff",
+    "assets/minecraft/sounds/block/chain/break4.ogg": "605f5f52fc3ec40802994d5906e9c4b05922ead4266b29d615f3a4cdd92c3950",
+    "assets/minecraft/sounds/step/ladder2.ogg": "a96d111d0d9c07f618fe4b53086452774150c3ecf1ee029353786d2ec981266e",
+    "assets/minecraft/sounds/step/ladder3.ogg": "4fb5dffd928c906463536681f016a56436f6c6e70540c6449ccbf5684d7bd1b9",
+    "assets/minecraft/sounds/step/ladder5.ogg": "b31589665a14f004a49c42e7f3b6287fb74e46ef72d45b585d2627471730fdf1",
+    "assets/minecraft/sounds/block/lantern/place1.ogg": "9159dd42d068c20d30acde1de75689eafe3d9da3456b3b8d6e9e304f69c6a37a",
+    "assets/minecraft/sounds/block/lantern/place4.ogg": "1889931f5a239e602d3869c87aa1d5df9b5901fd7938d92b6b073927412ac438",
+    "assets/minecraft/sounds/block/lantern/place5.ogg": "fabd8b0e37676dc0b5b9041a7fb70de2f0e5c215cd82e86e91007afb432736d4",
+    "assets/minecraft/sounds/block/lantern/place6.ogg": "3f28894a425892d474fcf3751e03785b90d5e30492ca60a3d6667ed01321a412",
+    "assets/minecraft/sounds/block/lantern/break1.ogg": "7a01e7451d0f21076310e98dd01aa798916d3e48335f98af522499c6e934cb8b",
+    "assets/minecraft/sounds/block/lantern/break2.ogg": "a94b0f7b790d8f27069a9c83204a099b4ceb6d70f1168582bb260e91ef754ebb",
+    "assets/minecraft/sounds/block/lantern/break3.ogg": "9c5b673713ed59c917fe59ed476e99c649b62abe93eac8bafaae43da3d8afd70",
+    "assets/minecraft/sounds/block/lantern/break4.ogg": "f39cfc1f22af32e5629e43ad6923d46e63922efe9526628196c335695ef8eb84",
+    "assets/minecraft/sounds/block/lantern/place3.ogg": "00756dc88bbd9bc5700ac64c23e930b76f7b5b39a808ef6324e61173477b7936",
+    "assets/minecraft/sounds/block/lantern/break5.ogg": "c346d10ba6c44bea4fb73cec9ef604ac639fe9d66408b92725c31e6771454247",
+    "assets/minecraft/sounds/block/lodestone/place1.ogg": "ed5d62092c1e15d9f52a77072ef9563657c43f1f00a5aa17d06b3f228df4e36c",
+    "assets/minecraft/sounds/block/lodestone/place3.ogg": "0fa4652fcdbf4bcb637664300b1d50c70536dc1e8f2f5feb582da68cb69ac4be",
+    "assets/minecraft/sounds/block/lantern/break6.ogg": "a6a3b709ccc2eafb68e1427eb92e1d19977211da2ea5e3e48e0de6475132e253",
+    "assets/minecraft/sounds/block/lodestone/place2.ogg": "02d8ac1a15e9b4110ddc73b7c563fb14e475a057a61fb1f68806ed0c91a422a9",
+    "assets/minecraft/sounds/block/lodestone/place4.ogg": "f0b5cef234ab071dc0c6c2dbeaca422442b6a21ed705bf4817943d9550b3ab3d",
+    "assets/minecraft/sounds/block/straw_bed/hit1.ogg": "0bcf33e61311ad321ccf8c454704b97e590dc8e82b01db46728207c025d024d5",
+    "assets/minecraft/sounds/block/lantern/place2.ogg": "e4f22aaeca7d6af28572e08cd267c3ab72dabc875fdd36e15b9d41932ace0b71",
+    "assets/minecraft/sounds/block/straw_bed/hit2.ogg": "e3c8d694f9d81dbe27e8a40ed664bc46c62464bc1ade5c061c9c42dcff3e8879",
+    "assets/minecraft/sounds/block/straw_bed/hit4.ogg": "f3243e4e328eb4b5345ec842bf6198c0f2dbe593a48e82a6d69a460e203ef2e7",
+    "assets/minecraft/sounds/block/straw_bed/hit3.ogg": "5bcf99e417e7670ef1aabea592f5b2961d5ab953ddbdcdcae42e3cdf2cd0189c",
+    "assets/minecraft/sounds/block/straw_bed/hit6.ogg": "b9f98a21f47dba54c0a1bf8e2c1ebf2efb2b851f2212651874e300d26975a6d0",
+    "assets/minecraft/sounds/block/straw_bed/hit5.ogg": "92c06b9ad77f749eac79f77c86adad45af1c5bb8debe26c1b7b2e395c40d99c2",
+    "assets/minecraft/sounds/block/straw_bed/break1.ogg": "6115d2a8f69fbf5b426c1303a59e2c03e1336835ab3999a6befe26ce259d9701",
+    "assets/minecraft/sounds/block/straw_bed/break4.ogg": "292044def219989cf9843647100ab1983a9a3df9501f137a6c7a55cd00731b6c",
+    "assets/minecraft/sounds/block/straw_bed/break3.ogg": "ddfb0b3f7d1439f116e8f3ea7c8a07dd3db1a7f67659fbd8838baee421f5bbd3",
+    "assets/minecraft/sounds/block/straw_bed/place1.ogg": "37d2047dba8056a3a5d2a2c89ea64babecee3cfa565f074197ceb434a6c8f8e9",
+    "assets/minecraft/sounds/block/straw_bed/place2.ogg": "346462cbb4528b62252a12f5d1757524396adcfbb3c9e4e6f1c714485ab033ef",
+    "assets/minecraft/sounds/block/straw_bed/break2.ogg": "01a309a4267ca01058c9118efbb76918e1cc73abfaec515b5b4411615c5e9c9f",
+    "assets/minecraft/sounds/block/straw_bed/place3.ogg": "1a63b64e905881db65e0e5e4ab375f1c33a77c3768386ab4e10c0b8ab1b12efb",
+    "assets/minecraft/sounds/block/straw_bed/step1.ogg": "12f1fc8f7d1a02e78ada8f453dffb0e23a49c3c6b9da2fa61d18ad580528338e",
+    "assets/minecraft/sounds/block/straw_bed/step3.ogg": "6357b3ea517721ee9ea5aaaae33e4c6cdc2407a7123d6a87e042181abeea1d2e",
+    "assets/minecraft/sounds/block/straw_bed/place4.ogg": "1a5a003d7fe8e17c63da838e6fb81969f64c6620374fa1688e0e92e77748c082",
+    "assets/minecraft/sounds/block/straw_bed/step5.ogg": "b08f9bf7e009f295f45c05b88b8a210e96e414b8168dd1ab1ed29e33acf7a043",
+    "assets/minecraft/sounds/block/straw_bed/step4.ogg": "0f5b14716541e8cd2568e5368f5b3d6017f0e0ae3c27a1e6f5ff8bc4121d9002",
+    "assets/minecraft/sounds/block/straw_bed/step2.ogg": "0c8c5f6ba218c5c66da330021d9263eeb56917cf0f5aef5d7e757893088d49e3",
+    "assets/minecraft/sounds/block/straw_bed/step6.ogg": "c91e1f0d8b154268931e46b13a80f9b44093e6b708aecf428692ad5294512556",
+    "assets/minecraft/controls-sounds.json": "b3bdf08a595185867647c37b5fdd382ecaa64d1d823df546f8a3ed65b0b469f4"
+  },
+  "entries": [
+    {
+      "entry": "assets/minecraft/blockstates/anvil.json",
+      "size": 339,
+      "sha256": "eb86aa591e4f07cd3bf7bd56d43b88b4e8c5ba054d75489cfc57cc630ac5ebd2"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/barrel.json",
+      "size": 1240,
+      "sha256": "d8e00576b5f85f83a42b7b31dc177e0add02cf2204fa441c0fe31cbd6d70dcca"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/campfire.json",
+      "size": 772,
+      "sha256": "b894dd6c012946255d27fa52f5fc9faf94991e89eecfc4bf65aa1abb1a458c7d"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cartography_table.json",
+      "size": 90,
+      "sha256": "a70259d04595ebc751c88da6d72e6377677bfc78d3d5e3d208657d32e6fa9605"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cauldron.json",
+      "size": 81,
+      "sha256": "c1c30c3beb7d5a9ce6f7bf04a9a662ac7fccfb7ca62b7b31739429c54e2a692f"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/chest.json",
+      "size": 78,
+      "sha256": "31abc90fd209dd33ba4fcb30e9b8616883cba29605fcfe0fe829496baa47435a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/chiseled_bookshelf.json",
+      "size": 15010,
+      "sha256": "a8d7ec995543c63d8debfa4dfb265e6f0b6244ce855c91e3468908f82fb94e8a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/chiseled_stone_bricks.json",
+      "size": 94,
+      "sha256": "fa756d8dfd1336a53d4310cf79508be2086d528e40913bb3c4b3c1537af2dfc9"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/coal_block.json",
+      "size": 83,
+      "sha256": "a4840144f991168911b67337031f92511fb09867e9b9c46c0442b3ebe2b490db"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cobblestone_slab.json",
+      "size": 252,
+      "sha256": "85e782a5a8fd651b784d4dde51e66d8195615292f0777195f340dabd848ee593"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cobblestone_stairs.json",
+      "size": 6094,
+      "sha256": "5c360287469e5336ecb01b39a0fadfc72e759264cd155b64d59f200f23660eb5"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cobblestone_wall.json",
+      "size": 1626,
+      "sha256": "22b67b5136c7644cfc7bce2134ee73fa776b8fabdcb23c3a98434c8157ebc34c"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/composter.json",
+      "size": 1223,
+      "sha256": "a2bd29cd334907b239a32e0cfb8f8bd31db4cf7576e0ace7266e2de5875cbbdb"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cracked_stone_bricks.json",
+      "size": 93,
+      "sha256": "a95b21c7ff9b03ab3b396c7e2cb5c08c2dd316e3ef05cf45e3936a86d1846148"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/grindstone.json",
+      "size": 1293,
+      "sha256": "b94f04095c84d58b00133dba6fd5b1f3dd83a6e71120c62b58412606b8ce25a5"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/hay_block.json",
+      "size": 287,
+      "sha256": "c2bd73c088a833c8790ae50e6754b246621e54ed5bad6e846993f6cb33fdd1ba"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/heavy_weighted_pressure_plate.json",
+      "size": 1495,
+      "sha256": "823bf65e98ed892ea9a267ce6c4b17a6454d46fb30b0f2703a2150d9bf5e686d"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_bars.json",
+      "size": 1808,
+      "sha256": "3cf666ffd34396284280b82d1cc2733ec6c8cd3adbe67d9007ace4f106958ef2"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_block.json",
+      "size": 83,
+      "sha256": "8fb3f3b759013d96d933fe6302edfb77e30ddcc6f50c1fc2cd2a3f1e2237463a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_chain.json",
+      "size": 268,
+      "sha256": "828ae1fc1e51e5f34504d0d5a229cfc84e9cb292c83fb5e0e1dfd99691a31d0f"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_door.json",
+      "size": 4174,
+      "sha256": "4ccf4bbe66f9194b12dcf6bcb4777e0ddce16a48bcc84db84108f1fc4e9a436e"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_trapdoor.json",
+      "size": 1744,
+      "sha256": "67c4ab830d2e9da66e093fae9eb8f3f2d1f01c0d7f7c3fbb9515d4602d1505ab"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/ladder.json",
+      "size": 343,
+      "sha256": "2acc68e185a7bd7eb5d1769a399f779ee71b9cdb8675ec4beb6517f9fd44ff09"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/lantern.json",
+      "size": 171,
+      "sha256": "a1740d54dad258f59e0e9862474ad9e81fcd6d7168b01ead10dcf4178cc40ec0"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/lever.json",
+      "size": 2804,
+      "sha256": "8f16b68bec64c1313e7c3c573787a03fb6627a3d078d1276d275427cac09a588"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/lodestone.json",
+      "size": 82,
+      "sha256": "e0a78c0961bda5af346eab23624d21fb56d16a880f7e8e38e7aa16c2ccff06cd"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_button.json",
+      "size": 3160,
+      "sha256": "97bd51997ec6489f14d9aee1fbe62304586454485223f98a423dab5fe98d6efa"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_door.json",
+      "size": 4142,
+      "sha256": "a909607ae843a76b9f4882aae7f5320a4b30b8694d855b2904b9a627aea10550"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_fence_gate.json",
+      "size": 2250,
+      "sha256": "04302a85e9734aede06afc070fe204504ddba26072d29054b7b86c58b730bcda"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_fence.json",
+      "size": 806,
+      "sha256": "8baa0ab562c6deacef56a1d26530117d9bda8104d76a4fb71e4318443968142a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_pressure_plate.json",
+      "size": 190,
+      "sha256": "159060ea17dbd1d1e3bc928c0eada9b2522534fae706846af759d6feeee9a257"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_sign.json",
+      "size": 1416,
+      "sha256": "a512f208ef4064a95120b88048b6f708b3ae1e19ab94127d29f080da0db8c2a3"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_slab.json",
+      "size": 235,
+      "sha256": "9d4c7d7d03f65734ef9846a8cf270290354cdd62cbb5e8c3ab1428a6b44d84ad"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_stairs.json",
+      "size": 5774,
+      "sha256": "b569dcddb0c8b1841bdb939ff4e3f6dce622bc2d08f5110797e853c2dbdd6eb8"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_trapdoor.json",
+      "size": 1728,
+      "sha256": "b272198a142dabae0939962b36bb775d9ce13382d09a911bae1d98cc4ca0e873"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_wall_sign.json",
+      "size": 371,
+      "sha256": "e4ef0111139bd62535d6c2894e6dd4d41c6f29d069a745a0e24263168eb5555e"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_wood.json",
+      "size": 262,
+      "sha256": "9532d91172d3caa72cd32b6c8894731f1f877b57b7340708c03a749e192b76b1"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/rail.json",
+      "size": 910,
+      "sha256": "2a86e6022f7e8c08e1eeab67547e81b5828d06673e6a984bb8b49efdff7d17e5"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/raw_iron_block.json",
+      "size": 87,
+      "sha256": "8d71baabf838ca47503c068e23ea9831c7eadbe310e4e37825e4dcbef6518e26"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/smithing_table.json",
+      "size": 87,
+      "sha256": "17af378c163237774cf0e98c95118f9202eebc28d982f3d06fcb30be95e505e7"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/smoker.json",
+      "size": 752,
+      "sha256": "da41f36285c58333293efc09add8a557fdae0802f89e769c7d3e8f71a2a63120"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/smooth_stone_slab.json",
+      "size": 267,
+      "sha256": "3ada24fbdc4bfd1ce23de8607156354ada3c1b7437c01533c432486cf308ab11"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/smooth_stone.json",
+      "size": 85,
+      "sha256": "eddc9e4990fc9b5e2e783e6d4c8f7a7fcf3cfb2370e9c3e6a1e1bc1493986fc5"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_brick_slab.json",
+      "size": 253,
+      "sha256": "c80af078582a956da8b2f4734d0bce6a272413d44d3ec4708432e1857fc724b9"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_brick_stairs.json",
+      "size": 6094,
+      "sha256": "effb2d6acdd74ef663fb34f1638763fdce3961eaf00be59936e76fef8b615011"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_brick_wall.json",
+      "size": 1626,
+      "sha256": "338859b14db65a2c96f03340ee54b35d5a679dc389e34109326362d312172129"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_bricks.json",
+      "size": 85,
+      "sha256": "6c9819be435adc36dc054e0738e6bc9d1015ce67730ccd7058d079c2144c398a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_button.json",
+      "size": 3208,
+      "sha256": "1765226cc2a23c317ea2eff8b6840bd35f9ae96738989cfaa0d42fa1a39999ad"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_pressure_plate.json",
+      "size": 194,
+      "sha256": "7e9895971f03bdbe9d108f93410fe8f7ea2ce4fc429477b7849d1737d5368b5e"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_slab.json",
+      "size": 234,
+      "sha256": "d5b0f239efa195efd4aa28a2ff4330a6f67f37bca460efdcf918abcd48db7618"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stone_stairs.json",
+      "size": 5854,
+      "sha256": "b7487c962cfbc8c7a6a4a25ad7e1b11d9f44158d7606f53d476508f98839f7ac"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/stonecutter.json",
+      "size": 363,
+      "sha256": "630d5b5e8bf4d7cb1d7b3b51d63e0da14568888e74c01fde7533e7beab98e814"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/straw_bed.json",
+      "size": 808,
+      "sha256": "2058d7d0b0366d2c1590a56c6c8271c1c535400f431983484c80eab6f9c409be"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/torch.json",
+      "size": 78,
+      "sha256": "6eb66f347e7de8f032f8ccc7d4f79c26bfee9f8ab27dff74bccca43b3a76c418"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/trapped_chest.json",
+      "size": 86,
+      "sha256": "36b2cad647f6efce01a7296fb937d1e53bdc24dd3cb5b7ad4e629f2400c17fee"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/tripwire_hook.json",
+      "size": 1962,
+      "sha256": "925a8ce51e7507a34013e5f2303968a230bf75b709e22d6974bdf7333562fc42"
+    },
+    {
+      "entry": "assets/minecraft/controls-sounds.json",
+      "size": 15878,
+      "sha256": "b3bdf08a595185867647c37b5fdd382ecaa64d1d823df546f8a3ed65b0b469f4"
+    },
+    {
+      "entry": "assets/minecraft/models/block/barrel_open.json",
+      "size": 205,
+      "sha256": "3ed1731df8d5ae77d8a2ad3b6afb43dc2efdc28b28a97d581b2ba1df4a6d9cbf"
+    },
+    {
+      "entry": "assets/minecraft/models/block/button_pressed.json",
+      "size": 681,
+      "sha256": "5d93b1b8f3708d86c7dad1fb6c15ea57e5ea916e2aeb4e71d9e3becfd97d8ddd"
+    },
+    {
+      "entry": "assets/minecraft/models/block/button.json",
+      "size": 678,
+      "sha256": "e79537bb07d7ecfbb55ed2a61618ef7dc66136f04ae45f9da1c51751656fa3f3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/campfire_off.json",
+      "size": 3354,
+      "sha256": "514618dfa744a2ac7849cd68c8e77d6caac34c8544c4a1efc10c45a61223ea77"
+    },
+    {
+      "entry": "assets/minecraft/models/block/campfire.json",
+      "size": 167,
+      "sha256": "c426e97ea0884dc323b1ee529e67b5c8dcf153c4420b7ec1f5c9117caf7ba2d3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cauldron.json",
+      "size": 5349,
+      "sha256": "0311a114c9ec6ec58064949bf811eeec7f7f0b3077c12d2ef20276288ef44891"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chest.json",
+      "size": 68,
+      "sha256": "d53a018f22937faa93d8810cbc784069589949cffa2859076fe0a92d95bb465c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_left.json",
+      "size": 157,
+      "sha256": "6381b5c909d7241b3dea9db6e10c609eb04d2d4d37424017145a791997348091"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_mid.json",
+      "size": 156,
+      "sha256": "83860d89cb59aa1f5081f4d1290d5d2787f1316ebe69fa0c0120671a1921d73a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_bottom_right.json",
+      "size": 158,
+      "sha256": "2e6f39ab624db59d136aa69078327a8e0d866c436322944ecf509230c8de138d"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_left.json",
+      "size": 154,
+      "sha256": "f9c3ab4cc56b61494176629e73e528b34b221bbfa0635873a60d38892d152baa"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_mid.json",
+      "size": 153,
+      "sha256": "e3796c05afb49208731e1124b3a010105a20394e15c8febfdc4328b15849c155"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_empty_slot_top_right.json",
+      "size": 155,
+      "sha256": "79eb6ddbb5a164bf9f23f14b7e61beca7eb1c2402c6b77ee38d7d01d091e4eab"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_left.json",
+      "size": 160,
+      "sha256": "a4d64001fc107fba5693baf131c5d58adb1c19c426765982c863a60b8e248760"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_mid.json",
+      "size": 159,
+      "sha256": "ce1e46c3b382f9e8c84f64104cdeacd3ec865d9418da8811d24510cc551bd8d7"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_bottom_right.json",
+      "size": 161,
+      "sha256": "547b7dc6cec72df895344a417de7f893a1b04f4e972bbf3e89507538fb59e0b2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_left.json",
+      "size": 157,
+      "sha256": "f886c9ef976048112094cb08edafb3b578a21edf66b8eea638ebfa4bd63e0bf3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_mid.json",
+      "size": 156,
+      "sha256": "16be512652e769a59086b0068560e1a7d357bf3c86feb8dfa38aa5c4ac783b11"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf_occupied_slot_top_right.json",
+      "size": 158,
+      "sha256": "04dff9b9df9d71cf1e1596c5a6d971d27d55e4adb0f005171ff6bec04e53c2c7"
+    },
+    {
+      "entry": "assets/minecraft/models/block/chiseled_bookshelf.json",
+      "size": 807,
+      "sha256": "3350cfc24fb1cf09e8ee4b98755f255ec7d6e3d2dd677e612461f3954e5ca1d9"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_slab_top.json",
+      "size": 192,
+      "sha256": "e60ab58d1a52c433bdec47bf97b167548240a91435f92f7db4110b226f29a5ee"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_stairs_inner.json",
+      "size": 196,
+      "sha256": "83e3999170d4b4f35b820c51ff4f54c643d895d10b6521b697925c815254f206"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_stairs_outer.json",
+      "size": 196,
+      "sha256": "7cd76fe1ffe3257fb6603edf7272033cea173f60760836f179bc5e4073412416"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_wall_post.json",
+      "size": 115,
+      "sha256": "759d27f2396fd42f56b3fb77c09ab3b6b31d2921672707da2b3da01b519ac257"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_wall_side_tall.json",
+      "size": 120,
+      "sha256": "29c390d54fec38f2b04df72e079b08abd5c8337570ae34c13d8dbcff4346c8ef"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cobblestone_wall_side.json",
+      "size": 115,
+      "sha256": "e03a4a3c6a2f243d5aa17f8a5f0082896d6475b7ab9d0c8d350c63f40fa2af2e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents_ready.json",
+      "size": 303,
+      "sha256": "bcbc6e40b71517ac45184c841baf3941124d8d3b841af30d96ec02d2eb4fb6b1"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents1.json",
+      "size": 304,
+      "sha256": "15650c618e77cb6e8f038e84da108ff97377e5a06ef0e1ef446da4b74d5b76aa"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents2.json",
+      "size": 304,
+      "sha256": "595e7e4c2f2ffafb0145f56da6d663b6eb33355472a29bacebf073d681fdaf45"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents3.json",
+      "size": 304,
+      "sha256": "755678b14a2a1d362917777262745ccf692ce3bb4ad0d77a7ede5a76c7b482e6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents4.json",
+      "size": 304,
+      "sha256": "b532f3be224bba502e16d1a078df290490536c7dba1d59383766b55c6986e60e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents5.json",
+      "size": 305,
+      "sha256": "ec379d34eaa6d2e917611dcad3e3c7ab65db4b4ec795129b027fd7fe82128a8f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents6.json",
+      "size": 305,
+      "sha256": "60acd7a636e3d8a053e41f5a4291d6e5d415fe4fe9c2927ee71c945d25ba2aef"
+    },
+    {
+      "entry": "assets/minecraft/models/block/composter_contents7.json",
+      "size": 305,
+      "sha256": "cdb5fa8a9eaf7859d475400b5a760ddfb5c878b15d6aca21e7925717c0776a52"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cube_column_horizontal.json",
+      "size": 802,
+      "sha256": "d93df085677f4003b5785206966a8cd0e2b4ed5b40930cd20278feab01f8af0c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_bottom_left_open.json",
+      "size": 709,
+      "sha256": "d0ce2fe5ab051b943ed6a6fad25b0fa5608e30f6f6033be78e2ca77f4fa57ff2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_bottom_left.json",
+      "size": 709,
+      "sha256": "f818050450f03a3d4007a8d5d2bbc191ce43fb0d2026a0f162b17f8fee93143f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_bottom_right_open.json",
+      "size": 709,
+      "sha256": "61048e31cf181bb9df8e6de3127c79f208985ea676bdc48c018d6478224c7ee3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_bottom_right.json",
+      "size": 709,
+      "sha256": "130900b4bd68f679cf266187ea93ece40d7ddaa52a986c6f0daf34443afe561c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_top_left_open.json",
+      "size": 690,
+      "sha256": "63cbe25ace29d90ae6a956521ec7d4f8acc528ed1d552b4813d8efd018f0e75b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_top_left.json",
+      "size": 689,
+      "sha256": "e19a248131949d827f31f6aefb47c3b62ee949ebc62f3072e2aa03ab399c16f2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_top_right_open.json",
+      "size": 689,
+      "sha256": "f2c1ee24bda1b102b1f669c133a8ad22b505c231908e93849cebd111ab589e6b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/door_top_right.json",
+      "size": 690,
+      "sha256": "1efdac1b254e58b377a6acf9330a17228ad5072d9059d032f65b225358e69481"
+    },
+    {
+      "entry": "assets/minecraft/models/block/fence_side.json",
+      "size": 1168,
+      "sha256": "da3a9c2ea79551badf65c4d2da9f7bc26650534cda39a98c4ceda19b367c3f85"
+    },
+    {
+      "entry": "assets/minecraft/models/block/hay_block_horizontal.json",
+      "size": 166,
+      "sha256": "dc4525ef4aed61af455ec9f41727a52bb2988dc3738f20a3646ee9e78f29595f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/heavy_weighted_pressure_plate_down.json",
+      "size": 118,
+      "sha256": "27c632ba466e0c75965cd5264dd93873c57388dbdda9fd9d5ac857d2b4b58bbf"
+    },
+    {
+      "entry": "assets/minecraft/models/block/inner_stairs.json",
+      "size": 1755,
+      "sha256": "fcb56ce59da95e5c1a77e49149caa3c72c18195141554a2c063d24b7962648d8"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_cap_alt.json",
+      "size": 157,
+      "sha256": "5ffb9b4c904eb3bf98064d94e6b99469a1f88d73aff394e598eee7002db2fb11"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_cap.json",
+      "size": 153,
+      "sha256": "9af0531bb8f90a47f3596f19043d6e038dab8826195bc05eb89aeed40899b93e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_post_ends.json",
+      "size": 159,
+      "sha256": "71c5d582ee3f72b292bc2039ba438d32f2544267bc0365e3b7f931cd083430c0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_post.json",
+      "size": 154,
+      "sha256": "3d8c5f7611083936f7c554048729f7e42d489e6401891be2404491a407946d6a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_side_alt.json",
+      "size": 158,
+      "sha256": "d489ebbea6180bbc39d312229532c3960c6c65f37bdff1e766c8eed6ce8d63de"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_bars_side.json",
+      "size": 154,
+      "sha256": "2973b4a3cb94d4a14788997b4d5a2a429a2259f286cbcb8b5b28f04d6dc98d2d"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_chain.json",
+      "size": 113,
+      "sha256": "cd7a73bd8de9eab3524deca354c6efe8c04f892e91bf1e7631a8660e1b4d4003"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_bottom_left_open.json",
+      "size": 169,
+      "sha256": "110b591bda3090af4858ce1a04c231ef32c43e0f72cbacf5be71c2e1b6b316e0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_bottom_left.json",
+      "size": 164,
+      "sha256": "b7ca170aa8059aaba1369e805d2d2a75ea9b49d2fc68c2c5ea18006508bfe984"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_bottom_right_open.json",
+      "size": 170,
+      "sha256": "63fbbb19ffd60b63afdf288e59c43c8bc77ba4cdee36e5702d392e3a8de12957"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_bottom_right.json",
+      "size": 165,
+      "sha256": "b82cd2b7ab563ccbc111c8cabb872e8692602a35a96ae63fc26a1f177ba0e838"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_top_left_open.json",
+      "size": 166,
+      "sha256": "6ac7dd71f1359f9fa02185f7039a7e261be1d0396224eac667dd161b3004b281"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_top_left.json",
+      "size": 161,
+      "sha256": "7291d24d41f44c76dc51c1e448decfd9086735c612b7a222166aa5e79bd13c84"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_top_right_open.json",
+      "size": 167,
+      "sha256": "1fc41732c110ed53812f24cdf69eb250e1b17266b2e2f14765694dc362c1390f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_door_top_right.json",
+      "size": 162,
+      "sha256": "fb4a1fbc5874ee4b552ef251a43429789df68ef9a5540c5f52e570a61f1f2214"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_trapdoor_open.json",
+      "size": 124,
+      "sha256": "59cd2574ce65e5724a9d6cdcaca240efc5adbc3fcb422168e326807addd221f0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_trapdoor_top.json",
+      "size": 123,
+      "sha256": "b0c380e0decbe4c290e54ebef6b0b9a0da05f07ee28c9c3bb4cc726a4dd8edbf"
+    },
+    {
+      "entry": "assets/minecraft/models/block/ladder.json",
+      "size": 470,
+      "sha256": "fef7601ae2371d606ba15761d9cca35463692e769d9d9b42eb63f5516f68daf7"
+    },
+    {
+      "entry": "assets/minecraft/models/block/lantern_hanging.json",
+      "size": 120,
+      "sha256": "ff097344ea76b118a25ea4c2e389d6c07933fca340775621a4860bcc92b94d28"
+    },
+    {
+      "entry": "assets/minecraft/models/block/lantern.json",
+      "size": 112,
+      "sha256": "880a9f063f1c0c3131ec05fcc8e1bde827f004f6bb58caea4ec76ea722b368dc"
+    },
+    {
+      "entry": "assets/minecraft/models/block/lever_on.json",
+      "size": 1324,
+      "sha256": "d14f881051cd1c8926352f66623796438c68e9ec1612b8273279b6dce94eb0ee"
+    },
+    {
+      "entry": "assets/minecraft/models/block/lever.json",
+      "size": 1325,
+      "sha256": "c27b3258bd94a956ed72a4e2dcaddf1097f0a8d140edf7e86741d9e49fcbea6a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_button_pressed.json",
+      "size": 113,
+      "sha256": "0f1dea9a9d3353591261bbc2b31e4ac820ccc0bf5d30b2e5393fdc5856a575a1"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_button.json",
+      "size": 105,
+      "sha256": "6bb0d803f18051b85fad7bfe793447c6d05f2a568aa482a0ef44f66c5939bf63"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_bottom_left_open.json",
+      "size": 167,
+      "sha256": "7f81a928ca320e845053fbca766c35d971cea8c4ce9398f1b28cf03b30a4744a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_bottom_left.json",
+      "size": 162,
+      "sha256": "23a3b0fadff608936cb2c6ca6baf8736d016716b4d3e0fdde604cf78641fab0f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_bottom_right_open.json",
+      "size": 168,
+      "sha256": "eb675956986643b0c6bf72666a92ffb7f454ff5657e2c374d638ffd829687892"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_bottom_right.json",
+      "size": 163,
+      "sha256": "3d8ab0fadfaf7d1a27afee0146338dda16d177434c9af624dae5c351c459722c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_top_left_open.json",
+      "size": 164,
+      "sha256": "7b269b538c11d123b053c41076839617e4591e6ef41502982676be1d57ffd940"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_top_left.json",
+      "size": 159,
+      "sha256": "4e65929291d64411c3aa285ba9991e62d538c3ce571050e8940c11f2760e118b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_top_right_open.json",
+      "size": 165,
+      "sha256": "9c70f2b608070fc5ac0a8f4f5b3f6cbf2cbf5ced85d7a6f7f359593138cc9b1c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_door_top_right.json",
+      "size": 160,
+      "sha256": "dd6038fe912dd422ece6e4c185eb0884de55f6f219374c0d6ff87f49c8033e30"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_fence_gate_open.json",
+      "size": 123,
+      "sha256": "f0b0a305e3fc9aa57379b0dff92b9e3200d5d45de596d5a7b78faa7ea187ee75"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_fence_gate_wall_open.json",
+      "size": 128,
+      "sha256": "cee0669d18b404811b557f9fd05ae12ebb0a8c5dd1b19819afe1af3f25fccd26"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_fence_gate_wall.json",
+      "size": 123,
+      "sha256": "5ab91f416b555648c7815b6745c11d4815d03c6a17fd5e3b22fdd720f46bc337"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_fence_side.json",
+      "size": 109,
+      "sha256": "8cd3ea75337013b8c4c098471afc2331fd574310de3eb6a2f1e5749a6d80b4b4"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_log_horizontal.json",
+      "size": 157,
+      "sha256": "7556a3837c45196dd2b7de401c51170fbb17d63fd488089faa63c3171b346ee7"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_pressure_plate_down.json",
+      "size": 118,
+      "sha256": "96546a4747d4c8b4b47dcfa41b04369a3553b45c31e55b7eb28a462e880fcb90"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_sign_rot_0.json",
+      "size": 158,
+      "sha256": "8c7a889149e3f339f45675d70a8a217c9a9ca80a57c1869e1fa641f30861a5b3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_sign_rot_1.json",
+      "size": 158,
+      "sha256": "21cb71880a733380fa140239c0796348f96b614d065610e22c3b73a892774e57"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_sign_rot_2.json",
+      "size": 158,
+      "sha256": "4cf9767336830fc8ce64e3a2967f78451fdc6ded4b508c276596608d47febc46"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_sign_rot_3.json",
+      "size": 158,
+      "sha256": "e8e492b5d90a406ece55407a1a59351de3848b59ed596a1b5d1a6c28b46d368d"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_slab_top.json",
+      "size": 189,
+      "sha256": "467eb662586124528c28751df0f84162f068eec0f8fb524593f0a473c646d6b9"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_stairs_inner.json",
+      "size": 193,
+      "sha256": "8bd0b0dae998b873d1a1e36eb142c5c50c008fd3ea9ee97f412ed47e7bdff6b2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_stairs_outer.json",
+      "size": 193,
+      "sha256": "37f6124fbeea619c38fe35eda84bde9fbc00362d2cb3ffe5ea7f5d0a4c3b96f2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_trapdoor_open.json",
+      "size": 123,
+      "sha256": "443d31c055f9e1688b816db4572f3c123cf12166cf5f3617fe5ac33de3e6ab35"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_trapdoor_top.json",
+      "size": 122,
+      "sha256": "b97d800615088b3f11ee457b350590908b1f881e3302e50f974eee1f4a36d461"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_wall_sign.json",
+      "size": 157,
+      "sha256": "0c8059fd23403f094b7e73a4839ad611bbf23e379f3b7a6aad95b764e338aebc"
+    },
+    {
+      "entry": "assets/minecraft/models/block/outer_stairs.json",
+      "size": 1271,
+      "sha256": "39142eb37d9e9d9ff2404404af460d85b3109bf0c59898c21c676719c3e16ef8"
+    },
+    {
+      "entry": "assets/minecraft/models/block/pressure_plate_down.json",
+      "size": 692,
+      "sha256": "f68b8a94cc2bd802dd73cda2c9c18e0dd4ea54cf3033a16ef60cb92602400388"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail_corner.json",
+      "size": 108,
+      "sha256": "e7592afdd9b55406cc1e78a8b4f30d5987880b5a0554a1db562ca9d506a8dee4"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail_curved.json",
+      "size": 372,
+      "sha256": "8caf083b2384530324cbf6ba0ab1e864be771564a716ab12e5046e49083f28ef"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail_flat.json",
+      "size": 372,
+      "sha256": "8caf083b2384530324cbf6ba0ab1e864be771564a716ab12e5046e49083f28ef"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail_raised_ne.json",
+      "size": 113,
+      "sha256": "96257958ee4251a81771f200ac348b976aca9f9e30a3ced3d0beff2cb1178f08"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail_raised_sw.json",
+      "size": 113,
+      "sha256": "98e6bb9500d058bf8a701016deada14ded7403a97df7cc7a1c91503d74f61862"
+    },
+    {
+      "entry": "assets/minecraft/models/block/rail.json",
+      "size": 99,
+      "sha256": "7bc304b7e31114ce54241b3460e916cfbc08e5b01fe4e3178ca4d263b5522ae5"
+    },
+    {
+      "entry": "assets/minecraft/models/block/slab_top.json",
+      "size": 733,
+      "sha256": "c02e81cd0b59698040db7a682d32d08ddeb0de64756e309d62ecfbda4af804f9"
+    },
+    {
+      "entry": "assets/minecraft/models/block/smoker_on.json",
+      "size": 255,
+      "sha256": "b1cbd540895ce35ea3867b06c3606957d9d8d0fdc3c4e3969f924a68f8e71734"
+    },
+    {
+      "entry": "assets/minecraft/models/block/smooth_stone_slab_double.json",
+      "size": 162,
+      "sha256": "aed3d3b0a8b67bf331168cc8b7307c17dd9ac2e89dfa729fd0a75c9411bfd2c0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/smooth_stone_slab_top.json",
+      "size": 205,
+      "sha256": "ceb8cb3789fe117845d595819ccfd6cad0e041b5618e6b9daecb266c8fe51c7e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_slab_top.json",
+      "size": 195,
+      "sha256": "c37d246d912e4d016eb8787c8ab6b1116987a8e1d4a7610934d501f6a84cbef3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_stairs_inner.json",
+      "size": 199,
+      "sha256": "0fd8942f68f2ffd28efce12a9f536e5b3f5c6e591a3746dffbd143f1f0467a2b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_stairs_outer.json",
+      "size": 199,
+      "sha256": "00ac4f32420677ec3a617e972b22a17837f63710f7845048d480fe18209a68c6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_wall_post.json",
+      "size": 116,
+      "sha256": "907c0888d20a4214c2861fb43568e7fcf79c43c7025df11b879e7994bb9d428a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_wall_side_tall.json",
+      "size": 121,
+      "sha256": "ee31d8d2a9cfb4273f59215ac37d56544f706ec21ce6fefa1353397baa089757"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_brick_wall_side.json",
+      "size": 116,
+      "sha256": "b7632627aa46941f3e556e4d2ec677c52ea429f1c5c56a2389770f6a3786effb"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_button_pressed.json",
+      "size": 108,
+      "sha256": "48296f9fcfd1580ed324ee1f0a6ebda70337a3ba4d841f0292fadfd48b3161c0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_button.json",
+      "size": 100,
+      "sha256": "382d1395151c49a6895a6fa8490e94283afeba084a3c16b3677154d6086302d8"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_pressure_plate_down.json",
+      "size": 113,
+      "sha256": "e8e9aac43a71de0749000c0f3c2fc5029c5ad7178f8a0f86d584d754a72be426"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_slab_top.json",
+      "size": 174,
+      "sha256": "cf1f07b9c9955881f1b88ef9d7b49ce6115ed6d26f5e63bc41e22d2a994b3ef3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_stairs_inner.json",
+      "size": 178,
+      "sha256": "7873decffd38e4e88c75fb66f93815eee0c1b8aa61e01348d7b9e5011b9b6762"
+    },
+    {
+      "entry": "assets/minecraft/models/block/stone_stairs_outer.json",
+      "size": 178,
+      "sha256": "b7ed99b47fca84c70e99367b126664891a9811ac8c2705060ce40886dd4d04ee"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_cap_alt.json",
+      "size": 621,
+      "sha256": "74f6c3a1733e3b7cb91c160a04dc19adc2921792209dec40c7d48ab9e3fc7f7f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_cap.json",
+      "size": 621,
+      "sha256": "6b2bfa3ebee241d0ce52253178729948bd075e67b97061c5751fff758ba0db1c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_post_ends.json",
+      "size": 647,
+      "sha256": "85d9129ef63ace95ed8d1c9683d9ccb46152472fbe5bb5b72dc303328f2c9981"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_post.json",
+      "size": 621,
+      "sha256": "f6f7db8a965985fc9911e8199fb8f1c97801fa554187690b2bb791c26b2b9b2c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_side_alt.json",
+      "size": 1246,
+      "sha256": "3f5c039e79e616dcf8ffb6e7a4a44b8a3621ac9f13915993b48ae5691897c6b0"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_bars_side.json",
+      "size": 1098,
+      "sha256": "86379cc5e3f7d14ea010955215a2843712ca7240f7d100f85a24e2c4ec1237f2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_campfire.json",
+      "size": 4125,
+      "sha256": "6617a00ceb673bec94247def7aa9d66abec1d06c6d9a7fec16905aaadd2b32ad"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chain.json",
+      "size": 917,
+      "sha256": "4f20329262af1965dd421d174928d2db919840fe870bb0e128e3a5c4fbc3229b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_left.json",
+      "size": 218,
+      "sha256": "45f375ebc60e6721d1ffaedd7b32402d3d540fb26b395b51f0d2c53ec12a3ed5"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_mid.json",
+      "size": 220,
+      "sha256": "950ae591d8aa1b978ccfc485cb3d579b82c4778f95a0ab4bd728382a390e3a34"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_bottom_right.json",
+      "size": 220,
+      "sha256": "bb5c1902a4810432a87daf5fe29bab9c87c70359dba9df27ecfbadecaeecabd3"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_left.json",
+      "size": 220,
+      "sha256": "1dab92e6ce18d63130bf927c79039ba565494dc042220235972e5c0cdb49f5e6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_mid.json",
+      "size": 220,
+      "sha256": "e677ab34510c2765c4885007ddf7b938527988a591e5ac3b9298d8afb1f4b0ed"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_chiseled_bookshelf_slot_top_right.json",
+      "size": 220,
+      "sha256": "bd56bffcf5cea7fd5c7ad088db0ab5cf0db0e03a50c760c6dbe3f5d8aa3dc26e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_fence_gate_open.json",
+      "size": 4633,
+      "sha256": "a90fddc0e8cd17da42d10d75bc07ae387ca78ae225d9a7e65ad2127e1b37c4af"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_fence_gate_wall_open.json",
+      "size": 4661,
+      "sha256": "69b51ae0e1ee940d55522b52ab4d45865b1f12a388052b738a39cd2e18c0974f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_fence_gate_wall.json",
+      "size": 4600,
+      "sha256": "bb3a2a825d11fe6c2d2f1f80b7ab3fc7688407aa688479ea40bf362d0558e934"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_hanging_lantern.json",
+      "size": 2049,
+      "sha256": "b42b3cbf73b8c68663405bdfd0166488c2af348c820e1a66bb3419af7cbe6119"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_lantern.json",
+      "size": 1992,
+      "sha256": "3c5051f9bffd452b592b182e0203867b82eb4d596e7e909c6716498065183b04"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_rail_raised_ne.json",
+      "size": 542,
+      "sha256": "3afef39260de54eb5a01fa66a5663bd339b8dd655029b4b68304c45832e84d54"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_rail_raised_sw.json",
+      "size": 543,
+      "sha256": "ddb87c38e966a57124c3e1469b327ab6a6868d89d8fe99bd70542725203a0eda"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_sign_rot_0.json",
+      "size": 1051,
+      "sha256": "d1ac7e9595ab91cffb39071133786cf9b1fe72fce60ae7498e01852b053815a2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_sign_rot_1.json",
+      "size": 1035,
+      "sha256": "5fb109976efe1fe83aa23a2785d53f36e828c784ff8aedeee219c5c0051e58a6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_sign_rot_2.json",
+      "size": 1031,
+      "sha256": "2f38d01a11e6da000a30d4aa481a7329176183c5f542c07ebba481d19a209483"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_sign_rot_3.json",
+      "size": 1041,
+      "sha256": "c6fa632e48d60dc048f885a64cd43c0bd7f3e104113a0fd6fa8f590b379e0033"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_torch.json",
+      "size": 734,
+      "sha256": "4ece3c7111abca186905f15672a8fe930543ccfc8f8c3e5ba5326e573b4b2de6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_trapdoor_open.json",
+      "size": 765,
+      "sha256": "876a8d1fbcb822b6395749d9dae3a08c5f541944360c328e2917145fc3b63150"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_trapdoor_top.json",
+      "size": 760,
+      "sha256": "ed61498e04e694aa7e78516f2a171896219766b9dd7f461d111a4b54cb888202"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_wall_post.json",
+      "size": 566,
+      "sha256": "2f84a4c82af1962df5020381ef6fbcd3ffe4de229a909815f77ce8fb542caab2"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_wall_side_tall.json",
+      "size": 496,
+      "sha256": "627d23aaa8c46099e8f08fea36bb7a7def714e2d43aad576d58795b784165149"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_wall_side.json",
+      "size": 512,
+      "sha256": "748b2ee6eadcc6771e3702afaee8f296562c60a13931dd98c1baa1390cff484e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_wall_sign.json",
+      "size": 584,
+      "sha256": "6a2e829a04b36906bfc120fdc0d9387d21790dd70404ab1362941a2733c6824a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/torch.json",
+      "size": 106,
+      "sha256": "834b8a24a98d2a2c3505de5a33a734fb327cd036086abd2f9f8141c2d309ba89"
+    },
+    {
+      "entry": "assets/minecraft/models/block/trapped_chest.json",
+      "size": 68,
+      "sha256": "d53a018f22937faa93d8810cbc784069589949cffa2859076fe0a92d95bb465c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tripwire_hook_attached_on.json",
+      "size": 3163,
+      "sha256": "1161d001191a8e581460bf11920e5487e265ed414e5a367e50257b1b66f4d177"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tripwire_hook_attached.json",
+      "size": 3509,
+      "sha256": "1ca9622cec62f10514df2e8cc0d207a0f603358bd56295dbb7506768e26bfd1b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tripwire_hook_on.json",
+      "size": 2711,
+      "sha256": "d0b021da1086e9a92ec214da1db3813353335777bb1eebc14f28a46e2eef07a4"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tripwire_hook.json",
+      "size": 3122,
+      "sha256": "a1fd1e042b16398cbf0683b0986633c9931bcd11321846ca18432fa373e69b6c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/break1.ogg",
+      "size": 7419,
+      "sha256": "4ec3e48fa4acf1d4982a43216b74c963b6bf1b212739d0eb692e7a09ddc4c94e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/break2.ogg",
+      "size": 8025,
+      "sha256": "59845aed06619f4dfd84eb6794d81fcaede24cb291beadff5c0bc020b245a278"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/break3.ogg",
+      "size": 7705,
+      "sha256": "fef51c1ab0c8bc68f3b4a05ef897715efd8e5bb1a0d10431ca5eafda082530ff"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/break4.ogg",
+      "size": 8043,
+      "sha256": "605f5f52fc3ec40802994d5906e9c4b05922ead4266b29d615f3a4cdd92c3950"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step1.ogg",
+      "size": 8805,
+      "sha256": "ce0dbf9c7ca4d62608f0446dc24fe22d80a1924170896da1cb1b02ee0bad5b65"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step2.ogg",
+      "size": 7624,
+      "sha256": "570fb7e2b102c813fcfb24b9f726117ccb8d1add2d7d736bcf3ebc6395617f61"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step3.ogg",
+      "size": 7602,
+      "sha256": "0ce5f4d23964920947f9566feec08771d2adabb943eebe400d0672ba6b3b6ba5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step4.ogg",
+      "size": 8135,
+      "sha256": "b769427ebe794ea82736eb99f456f1f0f44a36c1272ad5013538cb77739531d9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step5.ogg",
+      "size": 8620,
+      "sha256": "c3126cdec14c8785e87c1ae1a6b5911dba2a356f0c16b70106f1bcb5c5a77b2f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chain/step6.ogg",
+      "size": 8725,
+      "sha256": "42659d8357667ee86ae7eef76d208ea6a7a9ff4d0bcbddc319c78e948a59ea3f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break1.ogg",
+      "size": 8001,
+      "sha256": "dc0dbbb5dacc8bd396bcf466d4fced189e037a49f5968c1857c4ee9401c9a9f2"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break2.ogg",
+      "size": 7840,
+      "sha256": "49ee9c4b8ccf1d81811b651c96aef38d7afd585b98d608ccd3f9b6aa01c57131"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break3.ogg",
+      "size": 7953,
+      "sha256": "cecfd97739c332780e451364fca33fba727296e97c2d5e16abf4ce37062cd414"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break4.ogg",
+      "size": 7848,
+      "sha256": "3c2a5f112c99bbdcc6c082567862343cdcafce228b8d7bcbd74cfe2e6a0e2e66"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break5.ogg",
+      "size": 7654,
+      "sha256": "4deb454585129ea81a10199a45c79f684cb36b9c95613ecf05051c82460aad21"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/break6.ogg",
+      "size": 7830,
+      "sha256": "c1cb9d2a1888ab80c6e33239f53b3a7b6884fb83c66d7cf6ddb46ea2c828972d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/step1.ogg",
+      "size": 7753,
+      "sha256": "9bbc7ad53899f7d920c7e065fa372177f5846f6e35a29c98a956459acc14b6fa"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/step2.ogg",
+      "size": 8365,
+      "sha256": "12692345ea16be2658d2c9aa80dd8222759cc3787543c030e202ba5209d52107"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/step3.ogg",
+      "size": 8416,
+      "sha256": "7b0a9cb94626f484f68ced2bb962cb27f42f8748e37af1842db93c253374953c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/step4.ogg",
+      "size": 8958,
+      "sha256": "3eb00821b0f38631d75ed695246033058594bbb35fe94f6c0f7a23f2d58d3707"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/chiseled_bookshelf/step5.ogg",
+      "size": 9951,
+      "sha256": "354d91433b2b7570b0c8f8543e255d3a4db73f9896782d7b5e1c363f5c256aff"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break1.ogg",
+      "size": 6853,
+      "sha256": "231cd8f0803ece6cb8bb910e40d86ab64b02ea6e8feaeaf61dd7b90a9670c9f6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break2.ogg",
+      "size": 6859,
+      "sha256": "e7a86572680638b6b6a5766708a8c1b402c0aa705e7413175db11ff862e74c10"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break3.ogg",
+      "size": 7096,
+      "sha256": "0280cc46df47b4aa9367d29620228ca34aeed8d63c72aa9efb7e3a1ba22d652a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break4.ogg",
+      "size": 7435,
+      "sha256": "64dc190682ea4ae9bf161422014e369652d8de6d619d44387b353a0f52ebafce"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break5.ogg",
+      "size": 6970,
+      "sha256": "c71f47f2cb313dca0840fbf5cfd292ea8843fc71a3878f79a9bc0145fae08505"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break6.ogg",
+      "size": 7153,
+      "sha256": "9f742092df7c71f7dfe6b1e838ea38b9e6490c73fe490aff4192f945a257019a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break7.ogg",
+      "size": 7144,
+      "sha256": "1bdc63ea70ee1eb06ebe2b5ed85ce34a614fe4a692f706a362c4033d5c4baf89"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/break8.ogg",
+      "size": 7076,
+      "sha256": "9dceb36215d2164b497742748972ef7fbcd207bbaf840f3c07326bfb947f5230"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/step1.ogg",
+      "size": 7648,
+      "sha256": "aa603353b7e89e147478180578cd55e018d1b2f475baaf2dea95cd2b69465791"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/step2.ogg",
+      "size": 6826,
+      "sha256": "d94f5cbd73e45715a8ae3f48080b0ec0340e58da0f29425e05e79fd7cbcc3c36"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/step3.ogg",
+      "size": 7128,
+      "sha256": "4374bb281c8defad951f8ce4a162861e5974f127c6e63fb8630b709434692c6c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/iron/step4.ogg",
+      "size": 8064,
+      "sha256": "cd4f965ee4995238101a437733f7ef91d936f1267c3c75eebee7eb08225a2d43"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break1.ogg",
+      "size": 6660,
+      "sha256": "7a01e7451d0f21076310e98dd01aa798916d3e48335f98af522499c6e934cb8b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break2.ogg",
+      "size": 7047,
+      "sha256": "a94b0f7b790d8f27069a9c83204a099b4ceb6d70f1168582bb260e91ef754ebb"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break3.ogg",
+      "size": 6822,
+      "sha256": "9c5b673713ed59c917fe59ed476e99c649b62abe93eac8bafaae43da3d8afd70"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break4.ogg",
+      "size": 7047,
+      "sha256": "f39cfc1f22af32e5629e43ad6923d46e63922efe9526628196c335695ef8eb84"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break5.ogg",
+      "size": 6766,
+      "sha256": "c346d10ba6c44bea4fb73cec9ef604ac639fe9d66408b92725c31e6771454247"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/break6.ogg",
+      "size": 7058,
+      "sha256": "a6a3b709ccc2eafb68e1427eb92e1d19977211da2ea5e3e48e0de6475132e253"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place1.ogg",
+      "size": 7636,
+      "sha256": "9159dd42d068c20d30acde1de75689eafe3d9da3456b3b8d6e9e304f69c6a37a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place2.ogg",
+      "size": 7363,
+      "sha256": "e4f22aaeca7d6af28572e08cd267c3ab72dabc875fdd36e15b9d41932ace0b71"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place3.ogg",
+      "size": 7563,
+      "sha256": "00756dc88bbd9bc5700ac64c23e930b76f7b5b39a808ef6324e61173477b7936"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place4.ogg",
+      "size": 7157,
+      "sha256": "1889931f5a239e602d3869c87aa1d5df9b5901fd7938d92b6b073927412ac438"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place5.ogg",
+      "size": 8629,
+      "sha256": "fabd8b0e37676dc0b5b9041a7fb70de2f0e5c215cd82e86e91007afb432736d4"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lantern/place6.ogg",
+      "size": 7301,
+      "sha256": "3f28894a425892d474fcf3751e03785b90d5e30492ca60a3d6667ed01321a412"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lodestone/place1.ogg",
+      "size": 13925,
+      "sha256": "ed5d62092c1e15d9f52a77072ef9563657c43f1f00a5aa17d06b3f228df4e36c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lodestone/place2.ogg",
+      "size": 10297,
+      "sha256": "02d8ac1a15e9b4110ddc73b7c563fb14e475a057a61fb1f68806ed0c91a422a9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lodestone/place3.ogg",
+      "size": 10991,
+      "sha256": "0fa4652fcdbf4bcb637664300b1d50c70536dc1e8f2f5feb582da68cb69ac4be"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/lodestone/place4.ogg",
+      "size": 14860,
+      "sha256": "f0b5cef234ab071dc0c6c2dbeaca422442b6a21ed705bf4817943d9550b3ab3d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/break1.ogg",
+      "size": 8909,
+      "sha256": "6115d2a8f69fbf5b426c1303a59e2c03e1336835ab3999a6befe26ce259d9701"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/break2.ogg",
+      "size": 9310,
+      "sha256": "01a309a4267ca01058c9118efbb76918e1cc73abfaec515b5b4411615c5e9c9f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/break3.ogg",
+      "size": 9722,
+      "sha256": "ddfb0b3f7d1439f116e8f3ea7c8a07dd3db1a7f67659fbd8838baee421f5bbd3"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/break4.ogg",
+      "size": 9305,
+      "sha256": "292044def219989cf9843647100ab1983a9a3df9501f137a6c7a55cd00731b6c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit1.ogg",
+      "size": 8261,
+      "sha256": "0bcf33e61311ad321ccf8c454704b97e590dc8e82b01db46728207c025d024d5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit2.ogg",
+      "size": 7468,
+      "sha256": "e3c8d694f9d81dbe27e8a40ed664bc46c62464bc1ade5c061c9c42dcff3e8879"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit3.ogg",
+      "size": 8371,
+      "sha256": "5bcf99e417e7670ef1aabea592f5b2961d5ab953ddbdcdcae42e3cdf2cd0189c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit4.ogg",
+      "size": 8376,
+      "sha256": "f3243e4e328eb4b5345ec842bf6198c0f2dbe593a48e82a6d69a460e203ef2e7"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit5.ogg",
+      "size": 8163,
+      "sha256": "92c06b9ad77f749eac79f77c86adad45af1c5bb8debe26c1b7b2e395c40d99c2"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/hit6.ogg",
+      "size": 6917,
+      "sha256": "b9f98a21f47dba54c0a1bf8e2c1ebf2efb2b851f2212651874e300d26975a6d0"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/place1.ogg",
+      "size": 8824,
+      "sha256": "37d2047dba8056a3a5d2a2c89ea64babecee3cfa565f074197ceb434a6c8f8e9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/place2.ogg",
+      "size": 7993,
+      "sha256": "346462cbb4528b62252a12f5d1757524396adcfbb3c9e4e6f1c714485ab033ef"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/place3.ogg",
+      "size": 8539,
+      "sha256": "1a63b64e905881db65e0e5e4ab375f1c33a77c3768386ab4e10c0b8ab1b12efb"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/place4.ogg",
+      "size": 7875,
+      "sha256": "1a5a003d7fe8e17c63da838e6fb81969f64c6620374fa1688e0e92e77748c082"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step1.ogg",
+      "size": 9751,
+      "sha256": "12f1fc8f7d1a02e78ada8f453dffb0e23a49c3c6b9da2fa61d18ad580528338e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step2.ogg",
+      "size": 8967,
+      "sha256": "0c8c5f6ba218c5c66da330021d9263eeb56917cf0f5aef5d7e757893088d49e3"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step3.ogg",
+      "size": 9134,
+      "sha256": "6357b3ea517721ee9ea5aaaae33e4c6cdc2407a7123d6a87e042181abeea1d2e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step4.ogg",
+      "size": 8680,
+      "sha256": "0f5b14716541e8cd2568e5368f5b3d6017f0e0ae3c27a1e6f5ff8bc4121d9002"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step5.ogg",
+      "size": 8508,
+      "sha256": "b08f9bf7e009f295f45c05b88b8a210e96e414b8168dd1ab1ed29e33acf7a043"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/straw_bed/step6.ogg",
+      "size": 9189,
+      "sha256": "c91e1f0d8b154268931e46b13a80f9b44093e6b708aecf428692ad5294512556"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/cloth1.ogg",
+      "size": 5289,
+      "sha256": "274612adfbc6478668e26a2765ded15f1ec113bde2aa6fb45950d16992ef95b6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/cloth2.ogg",
+      "size": 5640,
+      "sha256": "509be239eacf55fc3cc66caf5a317087249a521f774e1927a88215c94d27c557"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/cloth3.ogg",
+      "size": 5472,
+      "sha256": "1e55832a3a416463cfd56981db0885419b2042b8b3a38e19bc217c6e5877f481"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/cloth4.ogg",
+      "size": 5607,
+      "sha256": "1aed21aa34cf5b66a4e8495a40be8463166e08327d97be04d046927c273e1bc3"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/anvil_land.ogg",
+      "size": 11646,
+      "sha256": "7696f2375d33a721531415338b593540cea50e694e89aff837b704f7acb93d1f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/cloth1.ogg",
+      "size": 5289,
+      "sha256": "737cee2a9d1d5db85c9d47c5e36117bce3da345ce98f66d2aba2684ad4930f2b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/cloth2.ogg",
+      "size": 5640,
+      "sha256": "fc65ff603d0532ab5819f0f374919a2b2dbb98968d9ebf79045c6461f3cdcece"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/cloth3.ogg",
+      "size": 5472,
+      "sha256": "81bb34ea341bec7fbd40fcc1a2a355bd8b6c396179b9c38ceaf6af042da97170"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/cloth4.ogg",
+      "size": 5607,
+      "sha256": "83fe6cb56bee1c9d7ad97e5e96f6acc0a625c6e67d4c89fe6896b9ad347ac27c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/ladder1.ogg",
+      "size": 6571,
+      "sha256": "f8b7f76512def3afc401ebbc4525b0e258ec8d342f69d485d176ff2dfb1f3512"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/ladder2.ogg",
+      "size": 6692,
+      "sha256": "a96d111d0d9c07f618fe4b53086452774150c3ecf1ee029353786d2ec981266e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/ladder3.ogg",
+      "size": 6879,
+      "sha256": "4fb5dffd928c906463536681f016a56436f6c6e70540c6449ccbf5684d7bd1b9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/ladder4.ogg",
+      "size": 6885,
+      "sha256": "1d52510737465a17c975be518248d74c757db5cb5adb140a3e9744bcc854aef4"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/ladder5.ogg",
+      "size": 6923,
+      "sha256": "b31589665a14f004a49c42e7f3b6287fb74e46ef72d45b585d2627471730fdf1"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/barrel_top_open.png",
+      "size": 181,
+      "sha256": "ca852462e7131d5410ca8ae65932f4b5a5452f80a428e7c0570fdb8c020e7326"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/campfire_fire.png",
+      "size": 611,
+      "sha256": "7ffc0f0108876a0182e975cf268c389495bbcec13f0bb0608366c78c67c44b67"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/campfire_fire.png.mcmeta",
+      "size": 44,
+      "sha256": "e9b8025fde1b09b0a4d2a38427b04f98f28a593045be6d177eb2b29164c872b0"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/campfire_log_lit.png",
+      "size": 518,
+      "sha256": "a870a5a9cb003ae390a6bb8121e8e183c2d6d703cefe120e74bfaac3029d993d"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/campfire_log_lit.png.mcmeta",
+      "size": 82,
+      "sha256": "4df0a0cf1fbc9319ebe93ad90d934f50e997a99216340d41ea95c175ec26bcba"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/campfire_log.png",
+      "size": 244,
+      "sha256": "f4975ec634736b79a21088c1f2b4cadd62d091a8f41b9c4fab309f7e8d5b2acc"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cauldron_bottom.png",
+      "size": 136,
+      "sha256": "42b6a5e3db3eaabd522c1e8a596573d0ba02d69b5618d9fe55b64536ab94f114"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cauldron_inner.png",
+      "size": 154,
+      "sha256": "28bc729c234075ad5c375bd2bf9681f9a6f217119223a8910fd7b2b20e4a07eb"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cauldron_side.png",
+      "size": 189,
+      "sha256": "242bbae92fffcc53261ce31777d5bd1c800e31834ffc2fefd5a75330287890ec"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cauldron_top.png",
+      "size": 184,
+      "sha256": "ca88e285e0903f6df2532975aafea261be19c638a6c5049bbc57b331ce8a7a9d"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/chiseled_bookshelf_occupied.png",
+      "size": 357,
+      "sha256": "a314c81a2dd8c3f14bec2428a0252322e6b37e95810d56316ac23c938540fb4e"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/composter_compost.png",
+      "size": 189,
+      "sha256": "0b55d9976f580c746de6691d7445a591157e430784225496134ec3bf1e795a61"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/composter_ready.png",
+      "size": 220,
+      "sha256": "472148e8399243f9d0111d6e8aaf6a1070bf2733579700fc56ad06331824195d"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/iron_chain.png",
+      "size": 122,
+      "sha256": "44c712141c2914ef9d49143d5236b9f138810f947ab9c9992618e3b11d902ef4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/iron_door_bottom.png",
+      "size": 190,
+      "sha256": "e9d6c7dc182ca275a3d455ba28a8df325d1ad0c1539aace4ee11d0359f6fc83a"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/iron_door_top.png",
+      "size": 202,
+      "sha256": "54930bb1139268de1855ea03ce5b95097717e25307cbfa1ecce6e665e6da8d88"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/lantern.png",
+      "size": 286,
+      "sha256": "d0820909a8de7c2736abbf184eac99f4faa536f07a58e10cff4d446291b45aaa"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/lantern.png.mcmeta",
+      "size": 43,
+      "sha256": "ccc2eb7492b1179c1b6400b0c58a32171aa429c86ee2aefc6cdd912f53e5b438"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_door_bottom.png",
+      "size": 191,
+      "sha256": "a209e7e8611d56d211445d5df23a50c31185a293c51f4e03f3cb691209a49df4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_door_top.png",
+      "size": 209,
+      "sha256": "0cdc592715a8145d1837f551adf774227dedf7650569e7a50f6cb831c7c0a6c6"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_sign.png",
+      "size": 444,
+      "sha256": "4d1ac2e65b0f355d4c918cb593274f135845e92383e68ea58f92414f90b106f6"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/rail_corner.png",
+      "size": 216,
+      "sha256": "5dadaef5909fe7af3a3251cffbd44ebecc7e7da3081ecdf92e380a0b782cdc73"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/smoker_front_on.png",
+      "size": 380,
+      "sha256": "9509bf23aecb04b857c1aecc3f71dbb79f182f0a8977bba1d9129b949a4bb0d5"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/smoker_front_on.png.mcmeta",
+      "size": 70,
+      "sha256": "c44fcd990ddd39a46067f8a8fa3b447bca1a5136e1ff6101ca96b58e73539ed6"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/tripwire.png",
+      "size": 159,
+      "sha256": "aa7ec035b93045fef6b5f5c72f4854e273e89e3b85b78888815bc94c484cef95"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/tripwire.png.mcmeta",
+      "size": 52,
+      "sha256": "03582bc22a01c58a5f9d0a8c2c6ca67c60d106313db1ee783eba9f91b9a82888"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_background.png",
+      "size": 86,
+      "sha256": "704c61c0e5da542acd9c46ee65249bf824e7e3114748b4ff594abdada3d4ca77"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_full.png",
+      "size": 120,
+      "sha256": "cba4930bc4aaa6c965e6e3bdd1f75aea3e394229e6902c97714d0bc142983b4c"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/crosshair_attack_indicator_progress.png",
+      "size": 103,
+      "sha256": "522a88a3a7f23dde40dbeae99f302977babfa7756eb0f185cda2a0c0eee85742"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/anvil.json",
+      "size": 322,
+      "sha256": "4d74e0534933a8094f1b5bca1c479ed79aced073f27567ac22b89426a170b129"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/barrel.json",
+      "size": 525,
+      "sha256": "1d97c7459ad572ec694130ff2dcf95c5d0042af2ec1675f82e09122c48681061"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/blast_furnace.json",
+      "size": 539,
+      "sha256": "90d714e716bfa32603f93b61e050a3955c9c1f5295b156e529f849128e0b7f83"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cake.json",
+      "size": 77,
+      "sha256": "f22d6e65099ea072527202fc6224d00e444bd772224402a02d7b6233473dbb9c"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/campfire.json",
+      "size": 759,
+      "sha256": "238a40c41808de3d7b96cea1ce14d1389b1d19df11161c3ca6a69f13cac55413"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cartography_table.json",
+      "size": 346,
+      "sha256": "31b8b6aa434443ddee4229488903da5b3f3030afa1ca5fc8aca67bef95d4bf1c"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cauldron.json",
+      "size": 328,
+      "sha256": "988e110d0ed141309f240b056beeb6b974d483b32185cbbc4f696fecbeda8ee6"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/chest.json",
+      "size": 523,
+      "sha256": "00955d1aaff5afd0ccafd5930c2c3126a27befb337a776ebedf4a080bb348917"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/chiseled_bookshelf.json",
+      "size": 323,
+      "sha256": "0d1e7b1c05d35b7d515d9f5e08c848fdd236608e4145206645e1807272760fd5"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/chiseled_stone_bricks.json",
+      "size": 354,
+      "sha256": "f3d7f25fd856c41559699ade151785e622b363f01288df6dbcb898d21e9767cd"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/coal_block.json",
+      "size": 332,
+      "sha256": "259f7b48e631731293274ace84c7bb2a8997d57701f3ac14fda62405689a3eb2"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cobblestone_slab.json",
+      "size": 712,
+      "sha256": "c7a5b74d59544df2b99d2b0520284342ffb0444008bb7e0996794697e13a8b4d"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cobblestone_stairs.json",
+      "size": 348,
+      "sha256": "b4a7c859f500a96ae69d1f1ff96f3c1edea0b10d5ac0d95f39267997d8d55937"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cobblestone_wall.json",
+      "size": 344,
+      "sha256": "1eb9c99672fb66976d53d99148a9ca67ea01b05e65a13b3a3927acc49958c0c2"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cobblestone.json",
+      "size": 334,
+      "sha256": "2d7bd94dacf3c69c0808b0e1838b793cf93b1fa366f2202c80b5968bbba90b2f"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/composter.json",
+      "size": 656,
+      "sha256": "29c8abc8f5c38bd030aa109788f811a5efad1bbc6487835176646dd1df229946"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/cracked_stone_bricks.json",
+      "size": 352,
+      "sha256": "d5db8898c0f7a3c0286959ad3b3f322298cefb2befe3349004e73c17afc2d136"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/crafting_table.json",
+      "size": 340,
+      "sha256": "722c901f89a5c7194407ae558fa9fdd4cc2cd0433344e9555e8a061ac13f80db"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/furnace.json",
+      "size": 527,
+      "sha256": "2c6b02175115a4ab3eebdc9f338a5a986bee84a5945fe2b1f928694b1656d595"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/grindstone.json",
+      "size": 332,
+      "sha256": "2b3cdddc488224a17a449731b4877a1d1a64bf4537404556a8d2f022a7b1725b"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/hay_block.json",
+      "size": 330,
+      "sha256": "e9a4c543071b7a64509e75cdce961123e9da2143c15325e93857767a895b249d"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/heavy_weighted_pressure_plate.json",
+      "size": 370,
+      "sha256": "922c1f14623e03a2a4a464cf8ae3cbe8b9ffbe6a6b84bb6766170198c7e1366a"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/hopper.json",
+      "size": 525,
+      "sha256": "3992aeb23127345a3e95525d411dc31f0eb87e0ecc2c7a8d940945daaa0f0c9b"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/iron_bars.json",
+      "size": 330,
+      "sha256": "061dfc29da8674f6709d0954f8bcead686f6868cc358565bb982013ca2a39352"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/iron_block.json",
+      "size": 332,
+      "sha256": "f5165e324aef40ccc79209826b36823d984e542a47fee4b9c3e672336d233fb4"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/iron_chain.json",
+      "size": 332,
+      "sha256": "544d49ffacda16c37cd5959c4ea9d0d0d1121abb1e6d2bd492ca14c476b0f3ad"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/iron_door.json",
+      "size": 525,
+      "sha256": "3913fcb88ff1eff35b5598a3c772dff63644298b03b49fd3c562c983f2879e4c"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/iron_trapdoor.json",
+      "size": 338,
+      "sha256": "13dd63a7b954b4d3eb2862e529476a942e30cf1347f6e98127c4ca8441531fbf"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/ladder.json",
+      "size": 324,
+      "sha256": "781c7c9e975b1d6c9d3a83639a7ae624184dd1c07e5ed6539bc267d9b8f8d87d"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/lantern.json",
+      "size": 326,
+      "sha256": "248a26fd3c17997eb33d58b59f3bb532ce3650d898d1e40c4edcdb634164e50b"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/lever.json",
+      "size": 322,
+      "sha256": "284d577685339e2b68d79801fe1ed1117f7e19c48d4bd5cd7af3c36b59e92011"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/lodestone.json",
+      "size": 330,
+      "sha256": "a4c4bf9fbbb70fdc19d57bce0d8536ae3e795a474caf2ceec1451dad98d6b4b4"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_button.json",
+      "size": 332,
+      "sha256": "b713757a68cacef3aea61fb470fbd8e26767768b479a4a89dc60157ec6303e0d"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_door.json",
+      "size": 522,
+      "sha256": "b8b7252d870d35c1587dec4757a283a6f4a80d119bfe4409b8eac823f8b878ec"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_fence_gate.json",
+      "size": 340,
+      "sha256": "0a33269f10ded7b3668118c36988687a32a5b3f7f9771e7606c714cb31e14da0"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_fence.json",
+      "size": 330,
+      "sha256": "b99a42563e180bf839025393c61459a30cfee45f6b0f47978068c6d665994707"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_log.json",
+      "size": 326,
+      "sha256": "b65d7c6b117d813212df39e92d5c8e0c33f94a9ec08cb3664e88454f5150c769"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_planks.json",
+      "size": 332,
+      "sha256": "73914f7e1e5a2fb468809358b8c57a50ce2b05e1bff890d505c21a00cd68df26"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_pressure_plate.json",
+      "size": 348,
+      "sha256": "0021b945d6249c6274bac3edb03ad4a997ed78e66a9b2a03801a30c1d8920fa8"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_sign.json",
+      "size": 328,
+      "sha256": "424d2c7f2a38cbdc04c9e26fb8d04bae3e266b771ea631e84e628d4c6ffaaf53"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_slab.json",
+      "size": 688,
+      "sha256": "f58ad876881e091ddc05febb9378fd37f4287052ca98766ce64d8646b8348c0c"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_stairs.json",
+      "size": 332,
+      "sha256": "16eda7efa16635945e71b6b1cbdc5d70bd4b3713f69d15f33945e02ed54d5950"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_trapdoor.json",
+      "size": 336,
+      "sha256": "d86581cd751c2312b6ce17972861cbf7cd6b65001fd151a145e1a367a2db441f"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/oak_wood.json",
+      "size": 328,
+      "sha256": "f79b8f8ac918bb7cd9806381b2a0e7e0435a024fc0f0825fc4ea9fcd6c996670"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/rail.json",
+      "size": 320,
+      "sha256": "14c9d4487ef3ff10eadb09dfc7c1a0dde28f71249ac90359068247062fee11d1"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/raw_iron_block.json",
+      "size": 340,
+      "sha256": "95e1035ad3a8fd2ca68c238b4fa6db185f61337395550497e62b97f53975fce9"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/short_grass.json",
+      "size": 1106,
+      "sha256": "2f661e92e31229f85a2b50927d6c01a756cf75a1122d1fb414b85d6b3e9efba5"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/smithing_table.json",
+      "size": 340,
+      "sha256": "beb91557b3d227b8d5fdc644fc5c09a8c13fe3039c735e7ca89e4875c6e16605"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/smoker.json",
+      "size": 525,
+      "sha256": "bd1d432b06e1dc8e4d9ef39978b30ec60cd54f78254ef218790bb1b1c7f7ccc8"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/smooth_stone_slab.json",
+      "size": 715,
+      "sha256": "1bfcd80cb7a99defb33893637ce3f2089cc5c20592b78dc18a6b2779e28ed7ab"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/smooth_stone.json",
+      "size": 336,
+      "sha256": "9abb26eb0281b8b3d4fea19267653b80edea0d8eeaa407bbb09298d0316ee68d"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_brick_slab.json",
+      "size": 712,
+      "sha256": "8e78cf7dfd97505f7f97d2b77338009c1287e8ed1bf680b12cf1d2a4d5466fb8"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_brick_stairs.json",
+      "size": 348,
+      "sha256": "35e0b8e0504122ce84f9ec2f67e4bc4a73a44070cfe23baf208e3dfe64483057"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_brick_wall.json",
+      "size": 344,
+      "sha256": "308caf95139dd667850b28c52f489f7205289a8e6ef8d43c4e65e5f7eef900a1"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_bricks.json",
+      "size": 336,
+      "sha256": "2533d9df3f955433bf1a19dd4effd173b426431c84539639cc4652df3bdf5f21"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_button.json",
+      "size": 336,
+      "sha256": "abea9b4997c16462321a0313375f2a8809f341861541a48f6e3ba18f847d9a56"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_pressure_plate.json",
+      "size": 352,
+      "sha256": "d1b661a330b35c90d75363c3da5fdc939a1ba35fa3280a122576a9496f2ddb08"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_slab.json",
+      "size": 694,
+      "sha256": "a179a9af66b0b33f7e3ce05227120ef01db9bc3157fa83960a0752f5ce0b8dde"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone_stairs.json",
+      "size": 336,
+      "sha256": "8fe18d9f4b8cda90f4a77c9edd0bc59c3dcb4f7606c0a68fe4c33cc51b64488f"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stone.json",
+      "size": 637,
+      "sha256": "20474f83062358256be7582bafb632a3e1cec8b824ffe6e7911c7bab94bfa8c9"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/stonecutter.json",
+      "size": 334,
+      "sha256": "c5bebbbf7ad975ac06924b4cc1958c99050ffa6c0e2fee475915f756d105f01f"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/straw_bed.json",
+      "size": 524,
+      "sha256": "ec904fc989b505be3098a2895195dfa1eb699a1bd5931f2d62c7f785633727ac"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/sugar_cane.json",
+      "size": 332,
+      "sha256": "c62b3155a249ba043367778e02804bf09992ead4003c59fc8f91c1ec824a4099"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/torch.json",
+      "size": 322,
+      "sha256": "9b51525c2c41eceae89009c3d2496c81ce28b5dd2894939eb1b31a0b3c83094b"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/trapped_chest.json",
+      "size": 539,
+      "sha256": "8e9781260d03b306f3a60780c89cc7654662947b857bbb1ee817721e83852b89"
+    },
+    {
+      "entry": "data/minecraft/loot_table/blocks/tripwire_hook.json",
+      "size": 338,
+      "sha256": "6b632a14252541376cdf8f75123707afd9c44dd513156184b15cd6732a5b541a"
+    },
+    {
+      "entry": "data/minecraft/tags/block/mineable/axe.json",
+      "size": 1661,
+      "sha256": "14cad4e01465720095785e2d83807ca9b5eff6a1e24a76d50d17eabbee327ee9"
+    },
+    {
+      "entry": "data/minecraft/tags/block/mineable/hoe.json",
+      "size": 618,
+      "sha256": "138f9a28a1ca58c362dbcff3d7487f33b5e921b60c82a155a38dc5ef3a1ca26f"
+    },
+    {
+      "entry": "data/minecraft/tags/block/mineable/pickaxe.json",
+      "size": 15972,
+      "sha256": "1573d7327fd943eb1f58f81e56bf29f55140ab200f4e721773fcb10b6cdfa7fd"
+    },
+    {
+      "entry": "data/minecraft/tags/block/mineable/shovel.json",
+      "size": 592,
+      "sha256": "732d8db1157516e8238ed13c85d4d85b5e49313b745007f361970a83b5f0b87e"
+    }
+  ],
+  "classes": {
+    "net/minecraft/client/player/FirstPersonHandsAndItems.class": "eefcd4b95373619529da048b309155e6db2deb813892ea14c273e7bc69b2cfaf",
+    "net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer.class": "998eb2f49842fd7b3444381c88a19e102e70fd25947a4ab710ea365890a7eccc",
+    "net/minecraft/client/model/effects/SpearAnimations.class": "c63f462ac8bd3d96efef151941790d355fa18ec1bf34f7636f8fafd457408c90",
+    "net/minecraft/client/multiplayer/ClientLevel.class": "7d69f81d39e64a679b51f745211619204073167d59b149d9de683e10eb2d97ba",
+    "net/minecraft/world/entity/player/Player.class": "28ad0c7756a5cbdfde6c22772f585da9177d6f9eb418ea5ff2dd85657d81dfb2",
+    "net/minecraft/world/entity/LivingEntity.class": "6eaecd529ba26174652f3bb71e7c86262e54ac6f5e1e70944fb0e629b3b9948a",
+    "net/minecraft/world/entity/ai/attributes/Attributes.class": "be2df0501e26e0416d5248f64f3cda081ab12839e7091ae3321d15f6cb380678",
+    "net/minecraft/world/item/Items.class": "cf7c261ee18d6bb55af7da16adc51fbbb7994fa09f9f8f13bec2d159bb9c9a37",
+    "net/minecraft/world/item/Item$Properties.class": "da3706f036ed1d53ebf16c3dc1bb926092c57d68c6a1a6cf5565db58804dab8d",
+    "net/minecraft/world/item/BlockItem.class": "cc93868ce96a2b8c0e477fe5deb0e79c78caf45be3d78e2b71d31ada0d738f39",
+    "net/minecraft/world/level/block/Blocks.class": "2208668d8b07b2de44870cd557bb0e01625d451f55cac20c6b299f54f20638b7",
+    "net/minecraft/world/level/block/BarrierBlock.class": "afb69ad95f5ef137beb7392c69d51708666dbcccbbbe33a02b1972d049bfbed0",
+    "net/minecraft/world/level/block/SlabBlock.class": "82d73c22546568f5c9fbde749e9e789ce6caf8df2db0b52cc8f75235f12bc3d4",
+    "net/minecraft/world/level/block/StairBlock.class": "99ee9095a523cbb9f02a9059a247bed01153bbc4be00d5ba8f9ad4fd76e5978d",
+    "net/minecraft/world/level/block/DoorBlock.class": "76f5b3ff71c45ee80330a91332f72dfce3abaa07ca3594bb2132723e73ebeb77",
+    "net/minecraft/world/level/block/TrapDoorBlock.class": "fba614cb7e8dacc55321a14a20fdd05886d247c85e1e20072b74178e8766b408",
+    "net/minecraft/world/level/block/AbstractBedBlock.class": "b862f4bd533b2b06e44ecfbca4ef8bc0094c97ee3203776871aab8d8e0fd5f86",
+    "net/minecraft/world/level/block/LadderBlock.class": "8962532d10742a23761b62aa398c1da164bb83fa6301a0995441a1c81cb5c9bd",
+    "net/minecraft/world/level/block/LanternBlock.class": "018ff209177b7942dfd863d996f5f794e4443c990f0f35cf1c7531b52c1537ad",
+    "net/minecraft/world/level/block/HopperBlock.class": "f13ffbd946b38604fd4a38ce4097e4d69a81627cac8c73cce8ab9608890c30d9",
+    "net/minecraft/world/level/block/SoundType.class": "90552a4fe23d32ca8edd90afd61b92693c7cb39606c5e2afd1755742e9e9f6c1",
+    "net/minecraft/client/gui/Hud.class": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716",
+    "net/minecraft/client/renderer/LevelRenderer.class": "4468dbf0dcd446d08701859a9f3a7043c8df78a8ce30fa4d1305d41cf33da020"
+  },
+  "exporterSha256": "e326dd3225315ea55466b67844cf963957e32b4b9e9fe187eb833b5b2aafa30d"
+}

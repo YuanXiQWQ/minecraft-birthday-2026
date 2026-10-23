@@ -1,6 +1,7 @@
 /** Verified local sound events use one gesture-activated context and generation-fenced decode work. */
 import {soundGain,soundChannel} from '../domain/audio-settings.ts';
-import {RESOURCE_BASE} from './resources.ts';
+import {fetchManifest,fetchAsset} from './resource-fetch.ts';
+
 import type {Settings} from '../domain/types.ts';
 /** Static source ownership stays bounded; streaming game music uses its separate media node. */
 const MAX_STATIC_VOICES=256;
@@ -48,7 +49,7 @@ export class WorldAudio {
     async buffer(path:string,context:AudioContext):Promise<AudioBuffer>{
         const cached=this.buffers.get(path);if(cached)return cached;
         const pending=this.loading.get(path);if(pending)return pending;
-        const owner=this.epoch,work=(async()=>{let entry=this.documents.get('$native-entries')?.find((e:any)=>e.entry===path);if(!entry){const manifest=await(await fetch(RESOURCE_BASE+'world-manifest.json')).json();entry=manifest.entries.find((e:any)=>e.entry===path);}if(!entry)throw Error('sound-missing');const response=await fetch(RESOURCE_BASE+path);if(!response.ok)throw Error('sound-missing');const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');if(hash!==entry.sha256||bytes.byteLength!==entry.size)throw Error('sound-integrity');const value=await context.decodeAudioData(bytes);if(!this.disposed&&owner===this.epoch)this.buffers.set(path,value);return value;})();
+        const owner=this.epoch,work=(async()=>{let entry=this.documents.get('$native-entries')?.find((e:any)=>e.entry===path);if(!entry){const manifest=await(await fetchManifest('world-manifest.json')).json();entry=manifest.entries.find((e:any)=>e.entry===path);}if(!entry)throw Error('sound-missing');const response=await fetchAsset(path);if(!response.ok)throw Error('sound-missing');const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');if(hash!==entry.sha256||bytes.byteLength!==entry.size)throw Error('sound-integrity');const value=await context.decodeAudioData(bytes);if(!this.disposed&&owner===this.epoch)this.buffers.set(path,value);return value;})();
         this.loading.set(path,work);try{return await work;}finally{if(this.loading.get(path)===work)this.loading.delete(path);}
     }
     /** Share audited decodes, coalesce weather bursts by client playback time, and fence every asynchronous voice.
@@ -63,7 +64,7 @@ export class WorldAudio {
         if(!c||c.state!=='running'){this.record(id,'blocked');return 'blocked';}
         const weather=id.startsWith('weather.rain')?'rain':id.startsWith('entity.lightning_bolt.')?id:null,requested=performance.now();
         if(weather){if(requested-(this.weatherRequests.get(weather)??-Infinity)<50){this.record(id,'coalesced');return 'coalesced';}this.weatherRequests.set(weather,requested);}
-        const definition=this.definition(id),raw=definition?.sounds?.length?soundSample(definition.sounds,options.variant):null;
+        const raw=this.sample(id,options.variant);
         if(!raw){this.record(id,'missing-event');return 'missing-event';}
         const path='assets/minecraft/sounds/'+(typeof raw==='string'?raw:raw.name).replace('minecraft:','')+'.ogg';
         try{
@@ -78,11 +79,18 @@ export class WorldAudio {
             this.record(id,'scheduled',{sample:path,volume:gain.gain.value,pitch:source.playbackRate.value,duration:buffer.duration,category:soundChannel(id),sourceVolume:rawVolume,spatial:!!panner,position:options.position});return 'scheduled';
         }catch(error){if(this.disposed||epoch!==this.epoch||document.hidden){this.record(id,'cancelled',{requestEpoch:epoch});return 'cancelled';}const status=error instanceof Error?error.message:'decode-failed';this.record(id,status);return status;}
     }
+    /** Resolve original event references while retaining nested pitch and volume multipliers.
+     * @param {string} id Native event.
+     * @param {number} variant Optional deterministic choice.
+     * @param {Set<string>} seen Ancestor identities for cycle rejection.
+     * @return {any} Resolved original sound file choice.
+     */
+    sample(id:string,variant?:number,seen=new Set<string>()):any{if(seen.has(id))throw Error('sound-event-cycle');seen.add(id);const d=this.definition(id);if(!d?.sounds?.length)return null;const raw=soundSample(d.sounds,variant);if(raw.type!=='event')return raw;const child=this.sample(raw.name.replace('minecraft:',''),variant,seen);return child?{...child,volume:(child.volume??1)*(raw.volume??1),pitch:(child.pitch??1)*(raw.pitch??1)}:null;}
     /** Resolve audited world, weather and interface definitions without a network discovery fallback.
      * @param {string} id Native event identity.
      * @return {any} Original event definition when available.
      */
-    definition(id:string):any{return this.documents.get('assets/minecraft/ambience-sounds.json')?.[id]??this.documents.get('assets/minecraft/world-sounds.json')?.[id]??this.documents.get('$native-sounds')?.[id];}
+    definition(id:string):any{return this.documents.get('assets/minecraft/controls-sounds.json')?.[id]??this.documents.get('assets/minecraft/ambience-sounds.json')?.[id]??this.documents.get('assets/minecraft/world-sounds.json')?.[id]??this.documents.get('$native-sounds')?.[id];}
     /** Update the stationary listener from the real camera.
      * @param {number[]} position Current three-dimensional eye.
      * @param {number[]} forward Current camera forward direction.

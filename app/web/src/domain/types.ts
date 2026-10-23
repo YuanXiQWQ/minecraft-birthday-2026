@@ -2,6 +2,7 @@
 import type {EnvironmentState,SkySettings} from './environment.ts';
 import type {AdvancementFacts} from './advancements.ts';
 import type {WorldState} from './world-state.ts';
+import type {PlacedBlock,BlockHit} from './placed-blocks.ts';
 import type {RecipeBook, BookMode, BookSetting} from './recipe-book.ts';
 import type {TransferPlan} from './device-transfer.ts';
 import type {HopperContents} from './hopper.ts';
@@ -47,6 +48,8 @@ export interface Crop {
 }
 
 export interface SceneState {
+    pose?: {feet:Cell;yaw:number;pitch:number};
+    blocks?: PlacedBlock[];
     layoutVersion: 1;
     stations: Station[];
     crops: Crop[];
@@ -96,7 +99,11 @@ export interface RuntimeState {
 }
 
 export type Command =
-    { type: 'harvest-node'; scene: SceneId; node: string; visit: number; expected: PlayerLayout }
+    {type:'save-pose';scene:SceneId;pose:{feet:Cell;yaw:number;pitch:number}}
+    | {type:'place-block';scene:SceneId;item:string;hit:BlockHit;id:string;expected:PlayerLayout}
+    | {type:'break-block';scene:SceneId;id:string;expected:PlayerLayout}
+    | {type:'use-block';scene:SceneId;id:string}
+    | { type: 'harvest-node'; scene: SceneId; node: string; visit: number; expected: PlayerLayout }
     | {
     type: 'plant-crop';
     cell: Cell;

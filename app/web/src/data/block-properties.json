@@ -1,0 +1,464 @@
+{
+  "anvil": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.ANVIL",
+    "sound": "anvil"
+  },
+  "barrel": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.BARREL",
+    "sound": "wood"
+  },
+  "blast_furnace": {
+    "hardness": 3.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.BLAST_FURNACE",
+    "sound": "stone"
+  },
+  "cake": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CAKE",
+    "sound": "wool"
+  },
+  "campfire": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CAMPFIRE",
+    "sound": "wood"
+  },
+  "cartography_table": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CARTOGRAPHY_TABLE",
+    "sound": "wood"
+  },
+  "cauldron": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.CAULDRON",
+    "sound": "stone"
+  },
+  "chest": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CHEST",
+    "sound": "wood"
+  },
+  "chiseled_bookshelf": {
+    "hardness": 1.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CHISELED_BOOKSHELF",
+    "sound": "chiseled_bookshelf"
+  },
+  "chiseled_stone_bricks": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.CHISELED_STONE_BRICKS",
+    "sound": "stone"
+  },
+  "coal_block": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.COAL_BLOCK",
+    "sound": "stone"
+  },
+  "cobblestone": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.COBBLESTONE",
+    "sound": "stone"
+  },
+  "cobblestone_slab": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.COBBLESTONE_SLAB",
+    "sound": "stone"
+  },
+  "cobblestone_stairs": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.COBBLESTONE_STAIRS",
+    "sound": "stone"
+  },
+  "cobblestone_wall": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.COBBLESTONE_WALL",
+    "sound": "stone"
+  },
+  "composter": {
+    "hardness": 0.6,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.COMPOSTER",
+    "sound": "wood"
+  },
+  "cracked_stone_bricks": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.CRACKED_STONE_BRICKS",
+    "sound": "stone"
+  },
+  "crafting_table": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.CRAFTING_TABLE",
+    "sound": "wood"
+  },
+  "furnace": {
+    "hardness": 3.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.FURNACE",
+    "sound": "stone"
+  },
+  "grindstone": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.GRINDSTONE",
+    "sound": "stone"
+  },
+  "hay_block": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.HAY_BLOCK",
+    "sound": "grass"
+  },
+  "heavy_weighted_pressure_plate": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE",
+    "sound": "iron"
+  },
+  "hopper": {
+    "hardness": 3,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.HOPPER",
+    "sound": "metal"
+  },
+  "iron_bars": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.IRON_BARS",
+    "sound": "iron"
+  },
+  "iron_block": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.IRON_BLOCK",
+    "sound": "iron"
+  },
+  "iron_chain": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.IRON_CHAIN",
+    "sound": "chain"
+  },
+  "iron_door": {
+    "hardness": 5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.IRON_DOOR",
+    "sound": "iron"
+  },
+  "iron_trapdoor": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.IRON_TRAPDOOR",
+    "sound": "iron"
+  },
+  "ladder": {
+    "hardness": 0.4,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.LADDER",
+    "sound": "ladder"
+  },
+  "lantern": {
+    "hardness": 3.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.LANTERN",
+    "sound": "lantern"
+  },
+  "lever": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.LEVER",
+    "sound": "stone"
+  },
+  "lodestone": {
+    "hardness": 3.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.LODESTONE",
+    "sound": "lodestone"
+  },
+  "oak_button": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.OAK_BUTTON",
+    "sound": "wood"
+  },
+  "oak_door": {
+    "hardness": 3,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_DOOR",
+    "sound": "wood"
+  },
+  "oak_fence": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_FENCE",
+    "sound": "wood"
+  },
+  "oak_fence_gate": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_FENCE_GATE",
+    "sound": "wood"
+  },
+  "oak_log": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_LOG",
+    "sound": "wood"
+  },
+  "oak_planks": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_PLANKS",
+    "sound": "wood"
+  },
+  "oak_pressure_plate": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.OAK_PRESSURE_PLATE",
+    "sound": "wood"
+  },
+  "oak_sign": {
+    "hardness": 1,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.OAK_SIGN",
+    "sound": "stone"
+  },
+  "oak_slab": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_SLAB",
+    "sound": "wood"
+  },
+  "oak_stairs": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_STAIRS",
+    "sound": "wood"
+  },
+  "oak_trapdoor": {
+    "hardness": 3,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_TRAPDOOR",
+    "sound": "wood"
+  },
+  "oak_wood": {
+    "hardness": 2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.OAK_WOOD",
+    "sound": "wood"
+  },
+  "rail": {
+    "hardness": 0.7,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.RAIL",
+    "sound": "metal"
+  },
+  "raw_iron_block": {
+    "hardness": 5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.RAW_IRON_BLOCK",
+    "sound": "stone"
+  },
+  "short_grass": {
+    "hardness": 0,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.SHORT_GRASS",
+    "sound": "grass"
+  },
+  "smithing_table": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.SMITHING_TABLE",
+    "sound": "wood"
+  },
+  "smoker": {
+    "hardness": 3.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.SMOKER",
+    "sound": "stone"
+  },
+  "smooth_stone": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.SMOOTH_STONE",
+    "sound": "stone"
+  },
+  "smooth_stone_slab": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.SMOOTH_STONE_SLAB",
+    "sound": "stone"
+  },
+  "stone": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE",
+    "sound": "stone"
+  },
+  "stone_bricks": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_BRICKS",
+    "sound": "stone"
+  },
+  "stone_brick_slab": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_BRICK_SLAB",
+    "sound": "stone"
+  },
+  "stone_brick_stairs": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_BRICK_STAIRS",
+    "sound": "stone"
+  },
+  "stone_brick_wall": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_BRICK_WALL",
+    "sound": "stone"
+  },
+  "stone_button": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.STONE_BUTTON",
+    "sound": "stone"
+  },
+  "stone_pressure_plate": {
+    "hardness": 0.5,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.STONE_PRESSURE_PLATE",
+    "sound": "stone"
+  },
+  "stone_slab": {
+    "hardness": 2,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_SLAB",
+    "sound": "stone"
+  },
+  "stone_stairs": {
+    "hardness": 1.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONE_STAIRS",
+    "sound": "stone"
+  },
+  "stonecutter": {
+    "hardness": 3.5,
+    "requires": true,
+    "collision": true,
+    "source": "Blocks.STONECUTTER",
+    "sound": "stone"
+  },
+  "straw_bed": {
+    "hardness": 0.2,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.STRAW_BED",
+    "sound": "straw_bed"
+  },
+  "sugar_cane": {
+    "hardness": 0,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.SUGAR_CANE",
+    "sound": "grass"
+  },
+  "torch": {
+    "hardness": 0,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.TORCH",
+    "sound": "wood"
+  },
+  "trapped_chest": {
+    "hardness": 2.5,
+    "requires": false,
+    "collision": true,
+    "source": "Blocks.TRAPPED_CHEST",
+    "sound": "wood"
+  },
+  "tripwire_hook": {
+    "hardness": 0,
+    "requires": false,
+    "collision": false,
+    "source": "Blocks.TRIPWIRE_HOOK",
+    "sound": "wood"
+  }
+}

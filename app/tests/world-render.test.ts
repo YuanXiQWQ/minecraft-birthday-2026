@@ -28,15 +28,15 @@ test('all selected native world states compile with retained UV/texture dependen
     }
     assert.deepEqual(world.states.filter((v: any) => v.block === 'wheat').map((v: any) => v.state), ['age=0', 'age=2', 'age=5', 'age=7']);
 });
-test('rotated cross uses native 45-degree rescale and upward shade; UV-lock and unsupported rotations fail explicitly', () => {
+test('rotated cross uses native 45-degree rescale and upward shade; native UV-lock and sign rotations compile; invalid rotations fail explicitly', () => {
     const m = resolveModel('minecraft:block/short_grass', id => docs.get('assets/minecraft/models/' + id.split(':')[1] + '.json')),
         c = compileModel(m);
     assert.equal(c.faces.length, 4);
     assert.ok(c.faces.every(f => f.shadeDirection === 'up'));
     assert.ok(c.normals.some(v => Math.abs(Math.abs(v) - Math.SQRT1_2) < 1e-6));
-    assert.throws(() => compileModel(m, {model: 'minecraft:block/short_grass', uvlock: true}), /unsupported/);
+    assert.ok(compileModel(m, {model: 'minecraft:block/short_grass', uvlock: true}).uvs.every(Number.isFinite));
     const bad = structuredClone(m);
-    bad.elements![0].rotation = {origin: [8, 8, 8], axis: 'y', angle: 10};
+    bad.elements![0].rotation = {origin: [8, 8, 8], axis: 'y', angle: NaN};
     assert.throws(() => compileModel(bad), /unsupported/);
 });
 test('world profile agrees with P4 oak/regular-egg closure, decorative leaves/dirt/water are not sources', () => {
@@ -76,7 +76,7 @@ test('placement derives adjacent cells from actual top/side face, checks occupan
         const hit: Pick = {id: 'ground', point: [...point], normal: [...normal]},
             p = placement(hit, s, 'hopper', 'down');
         assert.deepEqual(p.cell, cell);
-        assert.equal(p.valid, cell[1] === 0);
+        assert.equal(p.valid, true);
     }
     assert.equal(placement({
         id: 'node:oak_log:0',

@@ -1,4 +1,15 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {blockAt} from '../domain/placed-blocks.ts';
+import {attackProfile} from '../domain/attack.ts';
+import {nativeShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
+import {placedModel} from './placed-world.ts';
+import {FirstPersonHand} from './first-person-hand.ts';
+import type {CatalogueArt} from '../ui/icons.ts';
+import {PlayerMotion,playerBounds,overlaps,PLAYER_PHYSICS} from '../domain/player-motion.ts';
+import type {Bounds} from '../domain/player-motion.ts';
+import {LineSegments2} from 'three/addons/lines/LineSegments2.js';
+import {LineSegmentsGeometry} from 'three/addons/lines/LineSegmentsGeometry.js';
+import {LineMaterial} from 'three/addons/lines/LineMaterial.js';
 import {NativeWeather} from './native-weather.ts';
 import {NativePrecipitation} from './native-precipitation.ts';
 import {NativeSky} from './native-sky.ts';
@@ -45,6 +56,7 @@ export interface Pick {
     normal: [number, number, number];
     cell?: Cell;
     support?: boolean;
+    block?: string;
 }
 
 /** Own one event-driven WebGL2 view and its original-resource model instances. */
@@ -56,6 +68,13 @@ export class SceneView {
     compassView(scope: string): CompassView {
         return {position: this.camera.position.toArray(), yaw: 180 - this.camera.rotation.y * 180 / Math.PI, target: WORLD_COMPASS_TARGET, scope};
     }
+    motion=new PlayerMotion();
+    keys=new Set<string>();
+    controlsAbort=new AbortController();
+    motionClock=0; motionRemainder=0;previousFeet:Cell=[0,0,7];
+    collision:Bounds[]=[]; collisionSignature='';
+    hand:FirstPersonHand|null=null;
+    outline:LineSegments2|null=null;
     renderer: WebGLRenderer;
     scene = new Scene();
     camera = new PerspectiveCamera(70, 1, .1, 512);
@@ -70,6 +89,7 @@ export class SceneView {
     ray = new Raycaster();
     world = new Group();
     persistent = new Group();
+    placed=new Group();placedSignature='';
     cake: Group | null = null;
     look = new Look();
     mode: PointerMode | null = null;
@@ -128,19 +148,23 @@ export class SceneView {
      */
     constructor(host: HTMLElement, pack: Resources, label: string, game = false, config: PresentationSpec = PRESENTATION) {
         this.config = config;
+        if(game){
+            window.addEventListener('keydown',e=>{if(!this.input||document.hidden||e.metaKey||e.altKey||e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;if(['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','ControlLeft','ControlRight'].includes(e.code)){e.preventDefault();this.keys.add(e.code);this.requestRender();}},{signal:this.controlsAbort.signal});
+            window.addEventListener('keyup',e=>this.keys.delete(e.code),{signal:this.controlsAbort.signal});
+        }
         this.crackImages = pack.guiImages;
         const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2', {antialias: true});
         if (!gl) throw new Error('webgl-unavailable');
         this.renderer = new WebGLRenderer({canvas, context: gl, antialias: true});
         this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-        if (game) this.crosshair = new NativeCrosshair(pack.guiImages.get('assets/minecraft/textures/gui/sprites/hud/crosshair.png')!);
+        if (game) this.crosshair = new NativeCrosshair(pack.guiImages.get('assets/minecraft/textures/gui/sprites/hud/crosshair.png')!,pack.guiImages);
         canvas.setAttribute('aria-label', label);
         canvas.setAttribute('role', 'img');
         canvas.dataset.resourceVersion = '26.3';
         host.append(canvas);
         this.models = new VanillaModels(pack);
         this.scene.background = new Color(game ? '#617C7B' : '#9BAFA0');
-        this.scene.add(this.world, this.persistent);
+        this.scene.add(this.world, this.persistent,this.placed);
         if (!game) {
             const floorSource = this.model('floor').children[0] as Mesh, wood: Matrix4[] = [], stone: Matrix4[] = [];
             for (let x = config.xMin; x <= config.xMax; x++) for (let z = config.zMin; z <= config.zMax; z++) {
@@ -259,6 +283,7 @@ export class SceneView {
         const hit = position && !this.look.active && position[0] >= r.left && position[0] < r.right && position[1] >= r.top && position[1] < r.bottom ? this.pick(position[0], position[1]) : null;
         this.renderer.domElement.dataset.hover = JSON.stringify(hit);
         this.onHover?.(hit);
+        this.showOutline(hit);
         return hit;
     }
 
@@ -272,6 +297,8 @@ export class SceneView {
 
     /** Invalidate gestures and ray identity on GUI, lifecycle and capture boundaries. */
     cancelInput(): void {
+        this.keys.clear();
+        this.motionRemainder=0;
         const left = this.pointer;
         this.onMineCancel?.();
         this.pointer = null;
@@ -299,7 +326,7 @@ export class SceneView {
         if (this.mode?.actual) {
             if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
             this.look.relative(e.movementX, e.movementY);
-            this.camera.rotation.set(this.basePitch + this.look.pitch, this.look.yaw, 0, 'YXZ');
+            this.camera.rotation.set(this.look.pitch, this.look.yaw, 0, 'YXZ');
             this.camera.updateMatrixWorld(true); this.refreshHover(); this.requestRender(); return;
         }
         this.pointerPosition = [e.clientX, e.clientY];
@@ -313,7 +340,7 @@ export class SceneView {
             return;
         }
         if (this.look.move(e.pointerId, e.clientX, e.clientY) && game) {
-            this.camera.rotation.set(this.basePitch + this.look.pitch, this.look.yaw, 0, 'YXZ');
+            this.camera.rotation.set(this.look.pitch, this.look.yaw, 0, 'YXZ');
             this.renderer.domElement.dataset.look = JSON.stringify({
                 yaw: this.look.yaw,
                 pitch: this.look.pitch,
@@ -400,7 +427,7 @@ export class SceneView {
         for (const station of value.stations) {
             const mesh = this.models.device(station.kind, station.facing, station.contents.version === 2 && station.contents.data.burn > 0);
             mesh.position.set(...station.cell);
-            mesh.userData.id = station.id;
+            mesh.userData.id = station.id;mesh.userData.cell=station.cell;mesh.userData.block=station.kind;mesh.userData.shapes=nativeShapes(station.kind,{facing:station.facing});mesh.userData.collisionShapes=mesh.userData.shapes;
             this.persistent.add(mesh);
         }
         this.requestRender();
@@ -415,7 +442,8 @@ export class SceneView {
             scene: p.scene,
             crops: p.scenes.farm.crops
         });
-        if (this.worldId !== p.scene) {
+        const entering=this.worldId!==p.scene;
+        if (entering) {
             this.mode?.suspend();
             this.updateDebris(Infinity);
             this.worldId = p.scene;
@@ -428,7 +456,8 @@ export class SceneView {
             this.camera.rotation.order = 'YXZ';
             this.basePitch = this.camera.rotation.x;
             this.look.yaw = 0;
-            this.look.pitch = 0;
+            this.look.pitch = this.basePitch;
+            this.motion.reset(spec.eye);const pose=p.scenes[p.scene].pose;if(pose){this.motion.feet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');}this.previousFeet=[...this.motion.feet];
             this.cancel();
             this.showPreview(null);
             this.stationSignature = '';
@@ -441,28 +470,73 @@ export class SceneView {
         this.authored.sync(p);
         this.setCake(p.scene === 'home' && p.cakePlacement !== null);
         this.sync(p.scenes[p.scene]);
+        const placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks]);
+        if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models));}
         if (p.scene === 'cave') lightCave(this.persistent, this.authored.caveLights);
+        this.rebuildCollision();
+        if(entering&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
+        this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);
         this.refreshHover();
         this.requestRender();
         end();
     }
 
-    /** Render an original device as a validity-tinted preview excluded from ray hits. @param {object|null} value Candidate state or no preview. */
-    showPreview(value: { kind: Kind; facing: Facing; cell: Cell; valid: boolean } | null): void {
-        const signature = JSON.stringify(value);
-        this.renderer.domElement.dataset.placementPreview = signature;
-        if (this.preview?.userData.signature === signature) return;
-        if (this.preview) {
-            this.release(this.preview);
-            this.preview = null;
-        }
-        if (value) {
-            this.preview = this.models.device(value.kind, value.facing, false, value.valid ? 0x80ff80 : 0xff5555);
-            this.preview.position.set(...value.cell);
-            this.preview.userData.signature = signature;
-            this.scene.add(this.preview);
-        }
-        this.requestRender();
+    /** Keep placement admission available to diagnostics without drawing a ghost model.
+     * @param {object|null} value Candidate placement.
+     */
+    showPreview(value:{kind:Kind;facing:Facing;cell:Cell;valid:boolean}|null):void{this.renderer.domElement.dataset.placementPreview=JSON.stringify(value);}
+
+    /** Attach verified native first-person item and skin resources.
+     * @param {CatalogueArt} art Shared catalogue artwork.
+     */
+    enableHands(art:CatalogueArt):void{this.hand=new FirstPersonHand(art);this.hand.select(this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id??null);}
+
+    /** Build nearby block collision boxes from authored native geometry, excluding non-solid vegetation and entities. */
+    rebuildCollision():void{
+        if(!this.authored)return;const signature=JSON.stringify([this.worldId,this.authored.signature,this.stationSignature,this.placedSignature]);if(signature===this.collisionSignature)return;this.collisionSignature=signature;
+        this.scene.updateMatrixWorld(true);const result:Bounds[]=[],matrix=new Matrix4(),seen=new Set<Object3D>();
+        for(const owner of [this.authored.staticRoot,this.authored.natural,this.persistent,this.placed])owner.traverse(o=>{
+            if(!(o instanceof Mesh))return;let root:Object3D|null=o;while(root&&!root.userData.id)root=root.parent;
+            if(root?.userData.collision===false)return;
+            if(root?.userData.collisionShapes){if(seen.has(root))return;seen.add(root);for(const b of root.userData.collisionShapes as Bounds[])result.push(b.map((n,i)=>n+root!.position.getComponent(i%3)) as Bounds);return;}
+            const id=String(root?.userData.id??''),block=String(root?.userData.block??'');
+            if(/cow|chicken|egg|crop:|^water$/.test(id)||/grass|flower|poppy|dandelion|daisy|bluet|torch|sugar_cane|water/.test(block)&&!['grass_block'].includes(block)||/short_grass|sugar_cane/.test(id))return;
+            o.geometry.computeBoundingBox();const box=o.geometry.boundingBox!;
+            if(o instanceof InstancedMesh){for(let i=0;i<o.count;i++){o.getMatrixAt(i,matrix);const b=box.clone().applyMatrix4(new Matrix4().multiplyMatrices(o.matrixWorld,matrix));result.push([...b.min.toArray(),...b.max.toArray()] as Bounds);}}
+            else {const b=box.clone().applyMatrix4(o.matrixWorld);result.push([...b.min.toArray(),...b.max.toArray()] as Bounds);}
+        });
+        // Invisible full collision barriers bound the authored finite region in survival.
+        result.push([-19,-8,-23,-18,32,12],[19,-8,-23,20,32,12],[-19,-8,-23,20,32,-22],[-19,-8,11,20,32,12],[-19,16,-23,20,17,12],[-19,-5,-23,20,-4,12]);if(this.worldId==='farm')result.push([8,-2,-5,9,-1,1]);this.collision=result;
+    }
+
+    /** Reject placement intersecting the player's current physical body.
+     * @param {Cell} cell Candidate full block.
+     * @return {boolean} Whether the player would be enclosed.
+     */
+    playerIntersects(cell:Cell):boolean{return overlaps(playerBounds(this.motion.feet,this.motion.crouching),[...cell,cell[0]+1,cell[1]+1,cell[2]+1]);}
+
+    /** Advance native physics on the visible render loop and keep the ray tied to the moving eye.
+     * @param {number} now Monotonic frame time.
+     */
+    advancePlayer(now:number):void{
+        const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
+        if(!this.authored||!this.input||document.hidden||this.lost){this.motionRemainder=0;return;}
+        this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
+        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&f[0]+.3>8&&f[0]-.3<9&&f[2]+.3>-5&&f[2]-.3<1&&f[1]<-.001,climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.keys,this.camera.rotation.y,near,{water:fluid,climb});changed=true;}
+        const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(changed||this.keys.size)this.refreshHover();
+        this.renderer.domElement.dataset.player=JSON.stringify({feet:this.motion.feet,velocity:this.motion.velocity,grounded:this.motion.grounded,crouching:this.motion.crouching,eye:this.camera.position.toArray(),yaw:this.camera.rotation.y});
+    }
+
+    /** Draw a black selection outline around the targeted native block shape.
+     * @param {Pick|null} hit Current in-range target.
+     */
+    showOutline(hit:Pick|null):void{
+        const key=JSON.stringify(hit?[hit.id,hit.cell,this.placedSignature,this.stationSignature]:null);if(this.outline?.userData.key===key)return;
+        if(this.outline){this.outline.removeFromParent();this.outline.geometry.dispose();this.outline.material.dispose();this.outline=null;}
+        if(!hit||!hit.cell||/cow|chicken|egg/.test(hit.id))return;
+        const root=[...this.placed.children,...this.persistent.children,...(this.authored?.natural.children??[]),...(this.authored?.crops.children??[])].find(o=>o.userData.id===hit.id),shapes:Bounds[]=root?.userData.shapes??nativeShapes(hit.block??'',root?.userData.state??{})??[FULL_BLOCK];
+        const geometry=new LineSegmentsGeometry();geometry.setPositions(shapeEdges(shapes));
+        this.outline=new LineSegments2(geometry,new LineMaterial({color:0,transparent:true,opacity:.4,depthWrite:false,linewidth:2.5}));this.outline.position.set(...hit.cell);this.outline.userData.key=key;this.scene.add(this.outline);
     }
 
     /** Emit small native-texture fragments after a successful break without creating collectible world entities.
@@ -534,7 +608,7 @@ export class SceneView {
         this.crackTexture?.dispose();
         this.crackTexture = null;
         if (id) {
-            const candidates = [...this.persistent.children, ...(this.authored ? [...this.authored.natural.children, ...this.authored.crops.children] : [])],
+            const candidates = [...this.persistent.children,...this.placed.children, ...(this.authored ? [...this.authored.natural.children, ...this.authored.crops.children] : [])],
                 target = candidates.find(o => o.userData.id === id),
                 image = this.crackImages.get('assets/minecraft/textures/block/destroy_stage_' + Math.max(0, Math.min(9, stage)) + '.png');
             if (target && image) {
@@ -585,9 +659,10 @@ export class SceneView {
         const r = this.renderer.domElement.getBoundingClientRect();
         this.scene.updateMatrixWorld(true);
         this.camera.updateMatrixWorld(true);
+        this.ray.far=this.authored?PLAYER_PHYSICS.blockReach:Infinity;
         this.ray.setFromCamera(new Vector2((x - r.left) / r.width * 2 - 1, 1 - (y - r.top) / r.height * 2), this.camera);
-        const hit = this.ray.intersectObjects([this.world, this.persistent, ...(this.authored ? [this.authored.staticRoot, this.authored.natural, this.authored.crops] : [])], true).find(h => this.models.accepts(h));
-        return hit ? this.hit(hit) : null;
+        const hit = this.ray.intersectObjects([this.world, this.persistent,this.placed, ...(this.authored ? [this.authored.staticRoot, this.authored.natural, this.authored.crops] : [])], true).find(h => this.models.accepts(h));
+        return hit && (!/cow|chicken/.test(this.hit(hit).id)||hit.distance<=PLAYER_PHYSICS.entityReach) ? this.hit(hit) : null;
     }
 
     /** Resolve an original mesh's domain identity and world-space face.
@@ -603,6 +678,7 @@ export class SceneView {
             point: hit.point.toArray() as [number, number, number],
             normal: normal.toArray() as [number, number, number],
             cell: root?.userData.cells?.[hit.instanceId ?? -1] ?? root?.userData.cell,
+            block: root?.userData.block,
             support: root?.userData.support
         };
     }
@@ -613,7 +689,7 @@ export class SceneView {
         this.queued = requestAnimationFrame(() => {
             this.queued = 0;
             if (this.disposed || this.lost) return;
-            const start = performance.now(), continuing = this.onFrame?.(start) ?? false;
+            const start = performance.now();this.advancePlayer(start);const continuing = this.onFrame?.(start) ?? false;
             this.models.animate(start);
             if(this.sky&&this.precipitation&&this.environmentProgress&&this.authored){
                 const p=this.environmentProgress,weather=this.sky.weatherAt(start);
@@ -631,6 +707,9 @@ export class SceneView {
                     const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, this.camera, layers,this.sky?()=>{this.sky!.render(this.renderer,this.camera,start);this.applySkyLighting();}:undefined);
                     host.dataset.menuComposited='true';this.renderer.domElement.dataset.menuComposite=JSON.stringify(layers.map(({canvas,...layout})=>layout));
                 } else {if(host)delete host.dataset.menuComposited;const clear=this.renderer.autoClear;try{if(this.sky){this.sky.render(this.renderer,this.camera,start);this.applySkyLighting();this.renderer.autoClear=false;}this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=clear;}}
+                if(this.outline){const w=this.renderer.domElement.width,ratio=this.renderer.getPixelRatio();this.outline.material.linewidth=Math.max(2.5,w/1920*2.5)/ratio;}
+                if(this.input)this.hand?.render(this.renderer);
+                if(this.crosshair&&this.hand){this.crosshair.attackProgress=this.hand.charge();const target=JSON.parse(this.renderer.domElement.dataset.hover??'null');this.crosshair.attackFull=this.hand.charge()>=1&&20/attackProfile(this.hand.pending).speed>5&&/cow|chicken/.test(target?.id??'');}
                 this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden, lost: this.lost, disposed: this.disposed});
             } finally {this.renderer.info.autoReset = resetInfo;}
             gpuEnd();
@@ -677,6 +756,7 @@ export class SceneView {
     /** Remove renderer callbacks, resize observation, input listeners and all owned GPU resources. */
     dispose(): void {
         if (this.disposed) return;
+        this.controlsAbort.abort();this.hand?.dispose();this.showOutline(null);
         this.mode?.dispose();
         this.sky?.dispose(); this.precipitation?.dispose();this.weather?.dispose();this.onEnvironmentFrame=null;
         this.disposed = true;
@@ -697,7 +777,7 @@ export class SceneView {
         document.removeEventListener('visibilitychange', this.visibility);
         c.removeEventListener('webglcontextlost', this.lostHandler);
         c.removeEventListener('webglcontextrestored', this.restoredHandler);
-        for (const child of [...this.world.children, ...this.persistent.children]) this.release(child);
+        for (const child of [...this.world.children, ...this.persistent.children,...this.placed.children]) this.release(child);
         this.showPreview(null);
         this.showCrack(null);
         this.updateDebris(Infinity);

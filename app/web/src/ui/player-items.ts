@@ -136,15 +136,16 @@ export class PlayerItems {
         return c;
     }
 
-    /** Build the selected default item in its original third-person hand context and native special model.
+    /** Build the selected default item in its original hand display context and native special model.
      * @param {string} id Held stack item identity.
      * @param {boolean} left Left-hand context and mirroring.
+     * @param {boolean} first First-person display transforms.
      * @return {Group} Held model centered for ItemInHandLayer attachment.
      */
-    held(id: string, left = false): Group {
+    held(id: string, left = false, first = false): Group {
         const out = new Group(), date = new Date(),
             stamp = String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0'),
-            context = left ? 'thirdperson_lefthand' : 'thirdperson_righthand',
+            context = (first ? 'firstperson_' : 'thirdperson_') + (left ? 'lefthand' : 'righthand'),
             definition = this.art.documents.get('assets/minecraft/items/' + id.split(':')[1] + '.json');
         for (const part of iconParts(definition.model, stamp, [], context)) {
             const model = iconModel(part.model, id => this.art.documents.get('assets/minecraft/models/' + id.split(':')[1] + '.json')),
@@ -166,7 +167,7 @@ export class PlayerItems {
                 body.add(this.mesh(iconGeometry(model), part.tints));
                 body.position.set(-.5, -.5, -.5);
             }
-            const t = model.display?.[context] ?? (left ? model.display?.thirdperson_righthand : undefined) ?? {},
+            const t = model.display?.[context] ?? (left ? model.display?.[first ? 'firstperson_righthand' : 'thirdperson_righthand'] : undefined) ?? {},
                 rotation = t.rotation ?? [0, 0, 0], translation = t.translation ?? [0, 0, 0], sign = left ? -1 : 1;
             root.rotation.set(rotation[0] * Math.PI / 180, rotation[1] * sign * Math.PI / 180, rotation[2] * sign * Math.PI / 180);
             root.scale.set(...(t.scale ?? [1, 1, 1]) as [number, number, number]);

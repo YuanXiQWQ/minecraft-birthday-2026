@@ -110,7 +110,7 @@ export class AuthoredWorld {
     plainsDecoration(p: Progress): void {
         if (!this.plainsDecor) return;
         this.clear(this.plainsDecor);
-        const stations = p.scenes.plains.stations, removed = p.world.visits.plains.removed;
+        const stations = [...p.scenes.plains.stations,...(p.scenes.plains.blocks??[])], removed = p.world.visits.plains.removed;
         /** Exclude complete device cells from the decorative canopy.
          * @param {Cell} c Candidate leaf coordinate.
          * @return {boolean} Whether a saved device occupies this cell.
@@ -239,7 +239,7 @@ export class AuthoredWorld {
     sync(p: Progress): void {
         const id = p.scene, spec = WORLD_SCENES[id], removed = p.world.visits[id].removed, crops = p.scenes[id].crops,
             stations = p.scenes[id].stations,
-            signature = JSON.stringify([removed, stations.map(s => s.cell), crops.map(c => [c.id, cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0)])]);
+            signature = JSON.stringify([removed, stations.map(s => s.cell),p.scenes[id].blocks, crops.map(c => [c.id, cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0)])]);
         if (id === 'cave' && this.caveRoot) {
             const layout = JSON.stringify([stations.map(s=>s.cell), removed]);
             if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
@@ -249,7 +249,7 @@ export class AuthoredWorld {
         if (id === 'plains') this.plainsDecoration(p);
         const caveVisible = id === 'cave' ? new Set(caveLayout(stations.map(s=>s.cell), spec.eye, caveExcavated(p)).stone.map(c=>c.join(','))) : null;
         const carved = id === 'cave' ? caveCleared(p) : null;
-        const visible = spec.nodes.filter(n=>!removed.includes(n.id) && !stations.some(s=>s.cell.every((v,i)=>v===n.cell[i])) && !carved?.has(n.cell.join(',')) && (!n.id.startsWith('rock:') || caveVisible?.has(n.cell.join(','))));
+        const visible = spec.nodes.filter(n=>!p.scenes[id].blocks?.some(b=>b.cell.every((v,i)=>v===n.cell[i])) && !removed.includes(n.id) && !stations.some(s=>s.cell.every((v,i)=>v===n.cell[i])) && !carved?.has(n.cell.join(',')) && (!n.id.startsWith('rock:') || caveVisible?.has(n.cell.join(','))));
         const wanted = new Set(visible.map(n=>'node:'+n.id));
         const retained = id === 'cave' ? this.natural.children.filter(o=>wanted.has(o.userData.id)) : [];
         for (const root of retained) root.removeFromParent();
@@ -261,14 +261,14 @@ export class AuthoredWorld {
             if (existing.has('node:'+n.id)) continue;
             const root = n.kind === 'cow' ? this.animal('cow') : n.kind === 'egg' ? this.egg() : this.block(n.block);
             root.position.add(new Vector3(...n.cell));
-            root.userData.id = 'node:' + n.id;
+            root.userData.id = 'node:' + n.id;root.userData.block=n.block;
             root.userData.cell = [...n.cell];
             this.natural.add(root);
         }
         for (const c of crops) {
             const root = this.block('wheat', 'age=' + cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0));
             root.position.set(c.cell[0], -.0625, c.cell[2]);
-            root.userData.id = 'crop:' + c.id;
+            root.userData.id = 'crop:' + c.id;root.userData.cell=[c.cell[0],0,c.cell[2]];root.userData.block='wheat';
             this.crops.add(root);
         }
         if (id === 'cave') {

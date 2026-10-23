@@ -53,7 +53,7 @@ function nativeRay(block = 'farmland', cell: Cell = [-5, -1, -2]) {
     Object.assign(v, {
         scene: new Scene(),
         world: new Group(),
-        persistent: new Group(),
+        persistent: new Group(),placed:new Group(),keys:new Set(),playerIntersects:()=>false,
         authored,
         camera: new PerspectiveCamera(60, 1, .1, 90),
         ray: new Raycaster(),
@@ -232,7 +232,7 @@ test('plot Use without seeds sends no planting command, and remote occupancy/res
 test('actual authored water geometry rejects placement even when its rendered top is hit', async () => {
     const h = await harness();
     try {
-        h.v.camera.position.set(8.5, 2, 1);
+        h.v.camera.position.set(8.5, 2, 0);
         h.v.camera.lookAt(8.5, -.35, -3.5);
         const hit = h.v.pick(300, 300)!;
         assert.equal(hit.id, 'water');

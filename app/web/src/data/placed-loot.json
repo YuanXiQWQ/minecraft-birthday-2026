@@ -1,0 +1,1373 @@
+{
+  "anvil": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:anvil"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/anvil"
+  },
+  "barrel": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:barrel"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/barrel"
+  },
+  "blast_furnace": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:blast_furnace"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/blast_furnace"
+  },
+  "cake": {
+    "type": "minecraft:block",
+    "random_sequence": "minecraft:blocks/cake"
+  },
+  "campfire": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:alternatives",
+            "children": [
+              {
+                "type": "minecraft:item",
+                "condition": "minecraft:tool/can_silk_touch",
+                "name": "minecraft:campfire"
+              },
+              {
+                "type": "minecraft:item",
+                "condition": {
+                  "type": "minecraft:survives_explosion"
+                },
+                "modifier": {
+                  "type": "minecraft:set_count",
+                  "count": 2
+                },
+                "name": "minecraft:charcoal"
+              }
+            ]
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/campfire"
+  },
+  "cartography_table": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cartography_table"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cartography_table"
+  },
+  "cauldron": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cauldron"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cauldron"
+  },
+  "chest": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:chest"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/chest"
+  },
+  "chiseled_bookshelf": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": "minecraft:tool/can_silk_touch",
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:chiseled_bookshelf"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/chiseled_bookshelf"
+  },
+  "chiseled_stone_bricks": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:chiseled_stone_bricks"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/chiseled_stone_bricks"
+  },
+  "coal_block": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:coal_block"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/coal_block"
+  },
+  "cobblestone": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cobblestone"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cobblestone"
+  },
+  "cobblestone_slab": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": [
+              {
+                "type": "minecraft:set_count",
+                "condition": {
+                  "type": "minecraft:match_block",
+                  "blocks": "minecraft:cobblestone_slab",
+                  "state": {
+                    "type": "double"
+                  }
+                },
+                "count": 2
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ],
+            "name": "minecraft:cobblestone_slab"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cobblestone_slab"
+  },
+  "cobblestone_stairs": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cobblestone_stairs"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cobblestone_stairs"
+  },
+  "cobblestone_wall": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cobblestone_wall"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cobblestone_wall"
+  },
+  "composter": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:explosion_decay"
+            },
+            "name": "minecraft:composter"
+          }
+        ],
+        "rolls": 1
+      },
+      {
+        "condition": {
+          "type": "minecraft:match_block",
+          "blocks": "minecraft:composter",
+          "state": {
+            "level": "8"
+          }
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:bone_meal"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/composter"
+  },
+  "cracked_stone_bricks": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:cracked_stone_bricks"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/cracked_stone_bricks"
+  },
+  "crafting_table": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:crafting_table"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/crafting_table"
+  },
+  "furnace": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:furnace"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/furnace"
+  },
+  "grindstone": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:grindstone"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/grindstone"
+  },
+  "hay_block": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:hay_block"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/hay_block"
+  },
+  "heavy_weighted_pressure_plate": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:heavy_weighted_pressure_plate"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/heavy_weighted_pressure_plate"
+  },
+  "hopper": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:hopper"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/hopper"
+  },
+  "iron_bars": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:iron_bars"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/iron_bars"
+  },
+  "iron_block": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:iron_block"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/iron_block"
+  },
+  "iron_chain": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:iron_chain"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/iron_chain"
+  },
+  "iron_door": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "condition": {
+              "type": "minecraft:match_block",
+              "blocks": "minecraft:iron_door",
+              "state": {
+                "half": "lower"
+              }
+            },
+            "name": "minecraft:iron_door"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/iron_door"
+  },
+  "iron_trapdoor": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:iron_trapdoor"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/iron_trapdoor"
+  },
+  "ladder": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:ladder"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/ladder"
+  },
+  "lantern": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:lantern"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/lantern"
+  },
+  "lever": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:lever"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/lever"
+  },
+  "lodestone": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:lodestone"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/lodestone"
+  },
+  "oak_button": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_button"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_button"
+  },
+  "oak_door": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "condition": {
+              "type": "minecraft:match_block",
+              "blocks": "minecraft:oak_door",
+              "state": {
+                "half": "lower"
+              }
+            },
+            "name": "minecraft:oak_door"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_door"
+  },
+  "oak_fence": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_fence"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_fence"
+  },
+  "oak_fence_gate": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_fence_gate"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_fence_gate"
+  },
+  "oak_log": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_log"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_log"
+  },
+  "oak_planks": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_planks"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_planks"
+  },
+  "oak_pressure_plate": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_pressure_plate"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_pressure_plate"
+  },
+  "oak_sign": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_sign"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_sign"
+  },
+  "oak_slab": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": [
+              {
+                "type": "minecraft:set_count",
+                "condition": {
+                  "type": "minecraft:match_block",
+                  "blocks": "minecraft:oak_slab",
+                  "state": {
+                    "type": "double"
+                  }
+                },
+                "count": 2
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ],
+            "name": "minecraft:oak_slab"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_slab"
+  },
+  "oak_stairs": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_stairs"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_stairs"
+  },
+  "oak_trapdoor": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_trapdoor"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_trapdoor"
+  },
+  "oak_wood": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:oak_wood"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/oak_wood"
+  },
+  "rail": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:rail"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/rail"
+  },
+  "raw_iron_block": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:raw_iron_block"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/raw_iron_block"
+  },
+  "short_grass": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:alternatives",
+            "children": [
+              {
+                "type": "minecraft:item",
+                "condition": "minecraft:tool/can_shear",
+                "name": "minecraft:short_grass"
+              },
+              {
+                "type": "minecraft:item",
+                "condition": {
+                  "type": "minecraft:random_chance",
+                  "chance": 0.125
+                },
+                "modifier": [
+                  {
+                    "type": "minecraft:apply_bonus",
+                    "enchantment": "minecraft:fortune",
+                    "formula": "minecraft:uniform_bonus_count",
+                    "parameters": {
+                      "bonusMultiplier": 2
+                    }
+                  },
+                  {
+                    "type": "minecraft:explosion_decay"
+                  }
+                ],
+                "name": "minecraft:wheat_seeds"
+              }
+            ]
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/short_grass"
+  },
+  "smithing_table": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:smithing_table"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/smithing_table"
+  },
+  "smoker": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:smoker"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/smoker"
+  },
+  "smooth_stone": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:smooth_stone"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/smooth_stone"
+  },
+  "smooth_stone_slab": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": [
+              {
+                "type": "minecraft:set_count",
+                "condition": {
+                  "type": "minecraft:match_block",
+                  "blocks": "minecraft:smooth_stone_slab",
+                  "state": {
+                    "type": "double"
+                  }
+                },
+                "count": 2
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ],
+            "name": "minecraft:smooth_stone_slab"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/smooth_stone_slab"
+  },
+  "stone": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:alternatives",
+            "children": [
+              {
+                "type": "minecraft:item",
+                "condition": "minecraft:tool/can_silk_touch",
+                "name": "minecraft:stone"
+              },
+              {
+                "type": "minecraft:item",
+                "condition": {
+                  "type": "minecraft:survives_explosion"
+                },
+                "name": "minecraft:cobblestone"
+              }
+            ]
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone"
+  },
+  "stone_brick_slab": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": [
+              {
+                "type": "minecraft:set_count",
+                "condition": {
+                  "type": "minecraft:match_block",
+                  "blocks": "minecraft:stone_brick_slab",
+                  "state": {
+                    "type": "double"
+                  }
+                },
+                "count": 2
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ],
+            "name": "minecraft:stone_brick_slab"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_brick_slab"
+  },
+  "stone_brick_stairs": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_brick_stairs"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_brick_stairs"
+  },
+  "stone_brick_wall": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_brick_wall"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_brick_wall"
+  },
+  "stone_bricks": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_bricks"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_bricks"
+  },
+  "stone_button": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_button"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_button"
+  },
+  "stone_pressure_plate": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_pressure_plate"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_pressure_plate"
+  },
+  "stone_slab": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": [
+              {
+                "type": "minecraft:set_count",
+                "condition": {
+                  "type": "minecraft:match_block",
+                  "blocks": "minecraft:stone_slab",
+                  "state": {
+                    "type": "double"
+                  }
+                },
+                "count": 2
+              },
+              {
+                "type": "minecraft:explosion_decay"
+              }
+            ],
+            "name": "minecraft:stone_slab"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_slab"
+  },
+  "stone_stairs": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stone_stairs"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stone_stairs"
+  },
+  "stonecutter": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:stonecutter"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/stonecutter"
+  },
+  "straw_bed": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "condition": {
+              "type": "minecraft:match_block",
+              "blocks": "minecraft:straw_bed",
+              "state": {
+                "part": "head"
+              }
+            },
+            "name": "minecraft:straw_bed"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/straw_bed"
+  },
+  "sugar_cane": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:sugar_cane"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/sugar_cane"
+  },
+  "torch": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:torch"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/torch"
+  },
+  "trapped_chest": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "modifier": {
+              "type": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name"
+              ],
+              "source": "block_entity"
+            },
+            "name": "minecraft:trapped_chest"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/trapped_chest"
+  },
+  "tripwire_hook": {
+    "type": "minecraft:block",
+    "pools": [
+      {
+        "condition": {
+          "type": "minecraft:survives_explosion"
+        },
+        "entries": [
+          {
+            "type": "minecraft:item",
+            "name": "minecraft:tripwire_hook"
+          }
+        ],
+        "rolls": 1
+      }
+    ],
+    "random_sequence": "minecraft:blocks/tripwire_hook"
+  }
+}

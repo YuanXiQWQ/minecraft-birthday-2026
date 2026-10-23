@@ -118,11 +118,11 @@ function defaultUV(e: ModelElement, face: Face): number[] {
 
 /** Convert supported element quads and blockstate rotations into unit-sized indexed geometry.
  * @param {ModelSource} model Inherited model.
- * @param {Variant} variant Blockstate rotation; UV-lock remains explicitly unsupported.
+ * @param {Variant} variant Native blockstate rotation and face UV locking.
  * @return {CompiledModel} Geometry data plus resolved material dependencies.
  */
 export function compileModel(model: ModelSource, variant: Variant = {model: 'debug:fixture'}): CompiledModel {
-    if (!model.elements || model.elements.length > 512 || variant.uvlock) throw new Error('unsupported-model-or-uvlock');
+    if (!model.elements || model.elements.length > 512) throw new Error('unsupported-model-or-uvlock');
     if (![0, 90, 180, 270].includes(variant.x ?? 0) || ![0, 90, 180, 270].includes(variant.y ?? 0)) throw new Error('unsupported-blockstate-rotation');
     const result: CompiledModel = {positions: [], normals: [], uvs: [], indices: [], faces: [], textures: []};
     const rotate = new Matrix4().makeRotationY(-(variant.y ?? 0) * Math.PI / 180)
@@ -131,7 +131,7 @@ export function compileModel(model: ModelSource, variant: Variant = {model: 'deb
         let element = new Matrix4();
         if (e.rotation) {
             const r = e.rotation as { origin: Cell; axis: string; angle: number; rescale?: boolean };
-            if (!Array.isArray(r.origin) || r.origin.length !== 3 || !r.origin.every(Number.isFinite) || !['x', 'y', 'z'].includes(r.axis) || ![-45, -22.5, 0, 22.5, 45].includes(r.angle)) throw new Error('unsupported-element-rotation');
+            if (!Array.isArray(r.origin) || r.origin.length !== 3 || !r.origin.every(Number.isFinite) || !['x', 'y', 'z'].includes(r.axis) || !Number.isFinite(r.angle)||Math.abs(r.angle)>360) throw new Error('unsupported-element-rotation');
             const axis = new Vector3(r.axis === 'x' ? 1 : 0, r.axis === 'y' ? 1 : 0, r.axis === 'z' ? 1 : 0),
                 origin = new Vector3(...r.origin).multiplyScalar(1 / 16), scale = new Vector3(1, 1, 1);
             if (r.rescale) {
@@ -148,6 +148,10 @@ export function compileModel(model: ModelSource, variant: Variant = {model: 'deb
             const [u, v, U, V] = f.uv ?? defaultUV(e, name), turn = (f.rotation ?? 0) / 90;
             if (!Number.isInteger(turn) || turn < 0 || turn > 3) throw new Error('unsupported-face-rotation');
             const uv = [[u, V], [U, V], [U, v], [u, v]];
+            if(variant.uvlock){
+                const unit=corners([0,0,0],[1,1,1],name).map(p=>new Vector3(...p)),a=unit[1].clone().sub(unit[0]).transformDirection(rotate),b=unit[0].clone().sub(unit[3]).transformDirection(rotate),n=new Vector3(...({up:[0,1,0],down:[0,-1,0],east:[1,0,0],west:[-1,0,0],north:[0,0,-1],south:[0,0,1]} as Record<Face,Cell>)[name]).transformDirection(rotate),face:Face=Math.abs(n.y)>.5?(n.y>0?'up':'down'):Math.abs(n.x)>.5?(n.x>0?'east':'west'):(n.z>0?'south':'north'),target=corners([0,0,0],[1,1,1],face).map(p=>new Vector3(...p)),uAxis=target[1].clone().sub(target[0]),vAxis=target[0].clone().sub(target[3]);
+                for(const pair of uv){const du=pair[0]-8,dv=pair[1]-8;pair[0]=8+du*a.dot(uAxis)+dv*b.dot(uAxis);pair[1]=8+du*a.dot(vAxis)+dv*b.dot(vAxis);}
+            }
             const start = result.positions.length / 3;
             points.forEach((p, i) => {
                 result.positions.push(...p.toArray());

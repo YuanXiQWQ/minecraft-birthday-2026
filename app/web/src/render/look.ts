@@ -1,4 +1,4 @@
-/** Right-button click/drag arbitration keeps free-pointer use separate from bounded in-place camera rotation. */
+/** Right-button click/drag arbitration keeps free-pointer use separate from first-person camera rotation. */
 export interface Gesture {
     pointer: number;
     x: number;
@@ -8,15 +8,15 @@ export interface Gesture {
     dragging: boolean;
 }
 
-/** User-selected gesture has tunable engineering bounds; both pointer modes share the same fixed eye and angular bounds. */
+/** Both pointer modes share unrestricted yaw and native vertical look limits. */
 export class Look {
     active: Gesture | null = null;
     yaw = 0;
     pitch = 0;
     threshold = 6;
     sensitivity = .003;
-    maxYaw = Math.PI / 5;
-    maxPitch = Math.PI / 12;
+    maxYaw = Infinity;
+    maxPitch = Math.PI / 2;
 
     /** Begin an exclusive scene right-button gesture.
      * @param {number} pointer Pointer identity.
@@ -27,7 +27,7 @@ export class Look {
         this.active = {pointer, x, y, lastX: x, lastY: y, dragging: false};
     }
 
-    /** Consume movement after a CSS-pixel threshold, clamping angular offsets without moving the eye.
+    /** Consume movement after a CSS-pixel threshold, clamping pitch while leaving yaw unrestricted.
      * @param {number} pointer Pointer identity.
      * @param {number} x Client X.
      * @param {number} y Client Y.

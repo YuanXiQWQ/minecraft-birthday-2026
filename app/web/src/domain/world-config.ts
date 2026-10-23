@@ -82,8 +82,8 @@ export const WORLD_REGION: PlacementPolicy = {
     network: true,
     /** Test finite world bounds and real structure/eye collision; support and occupancy belong to domain commands. @param {SceneId} scene Scene identity. @param {Station} station Device candidate. @return {boolean} Region admission. */
     allows: (scene, station) => {
-        const [x, y, z] = station.cell, eye = WORLD_SCENES[scene].eye;
-        return x >= -18 && x <= 18 && z >= -22 && z <= 10 && y >= 0 && y <= 6 && !(x < eye[0] + .3 && x + 1 > eye[0] - .3 && z < eye[2] + .3 && z + 1 > eye[2] - .3 && y < 2) && !fixedSolid(scene, station.cell) && !(scene === 'home' && x >= -2 && x <= 1 && z >= -4 && z <= -2 && y <= 1);
+        const [x, y, z] = station.cell;
+        return x >= -18 && x <= 18 && z >= -22 && z <= 10 && y >= 0 && y <= 6 && !fixedSolid(scene, station.cell) && !(scene === 'home' && x >= -2 && x <= 1 && z >= -4 && z <= -2 && y <= 1);
     }
 };
 
@@ -117,6 +117,7 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
  * @return {boolean} Whether an actual solid supports the bottom face.
  */
 export function supported(p: Progress, cell: Cell): boolean {
+    if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,[cell[0],cell[1]-1,cell[2]])))return true;
     if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
     return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveCleared(p).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id) && !(scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
@@ -128,6 +129,7 @@ export function supported(p: Progress, cell: Cell): boolean {
  * @return {boolean} Whether a resource, crop, supported decoration or retained support occupies it.
  */
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
+    if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,cell)))return true;
     if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell), WORLD_SCENES.cave.eye, caveExcavated(p)).torches.some(t => sameCell(t.cell, cell))) return true;
     return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id) && !(p.scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
 }

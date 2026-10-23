@@ -9,7 +9,7 @@ import {resources, RESOURCE_PREFIX} from '../tools/resources.ts';
 import {ruleData, RULE_PREFIX} from '../tools/rule-data.ts';
 
 for (const [folder, base] of [['dist', '/'], ['dist-pages', '/minecraft-birthday-2026/']]) test('formal HTTP ' + base + ' has both entries, original bytes and no internal/test routes', async () => {
-  const root = resolve(import.meta.dirname, '..'), server = await preview({
+  const originals=resources(),generated=ruleData(),root = resolve(import.meta.dirname, '..'), server = await preview({
     configFile: resolve(root, 'vite.config.ts'),
     base,
     build: {outDir: resolve(root, folder)},
@@ -44,7 +44,7 @@ for (const [folder, base] of [['dist', '/'], ['dist-pages', '/minecraft-birthday
         assert.equal((await fetch(url)).status, 200);
       }
     }
-    for (const [name, body] of resources()) {
+    for (const [name, body] of originals) {
       const r = await fetch(origin + base + RESOURCE_PREFIX + name);
       assert.equal(r.status, 200, name);
       if (name.endsWith('.png')) assert.match(r.headers.get('content-type') ?? '', /image\/png/, name);
@@ -52,7 +52,7 @@ for (const [folder, base] of [['dist', '/'], ['dist-pages', '/minecraft-birthday
       if (name.endsWith('.json')) assert.match(r.headers.get('content-type') ?? '', /application\/json/, name);
       assert.deepEqual(Buffer.from(await r.arrayBuffer()), Buffer.from(body));
     }
-    for (const [name, body] of ruleData()) {
+    for (const [name, body] of generated) {
       const r = await fetch(origin + base + RULE_PREFIX + name);
       assert.equal(r.status, 200, name);
       assert.match(r.headers.get('content-type') ?? '', /application\/json/, name);

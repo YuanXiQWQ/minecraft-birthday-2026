@@ -34,6 +34,7 @@ function surfaces(root: Object3D): Vector3[] {
  */
 export function reachable(view: SceneView, object: Object3D): object | null {
     const rect = view.renderer.domElement.getBoundingClientRect(), id = String(object.userData.id);
+    if(view.authored&&new Box3().setFromObject(object).distanceToPoint(view.camera.position)>4.5)return null;
     for (const point of surfaces(object)) {
         const d = point.clone().sub(view.camera.position),
             yaw = Math.max(-view.look.maxYaw, Math.min(view.look.maxYaw, Math.atan2(-d.x, -d.z))),

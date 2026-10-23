@@ -1,5 +1,7 @@
 /** Java 26.3 strength and tool timing for the finite authored harvest/device profile. */
 import type {Rules, Stack} from '../rules/types.ts';
+import {BLOCK_PROPERTIES} from './placed-blocks.ts';
+import tags from '../data/mining-tags.json' with {type:'json'};
 
 /** Verified Blocks registration strengths, independent from blast resistance and drop qualification. */
 export const STRENGTH: Record<string, number> = {
@@ -23,13 +25,14 @@ export const STRENGTH: Record<string, number> = {
  * @return {number} Required active 20Hz ticks, including the native final discrete tick.
  */
 export function miningTicks(block: string, held: Stack | null, rules: Rules): number {
-    const hardness = STRENGTH[block];
+    block=block==='wall_torch'?'torch':block==='oak_wall_sign'?'oak_sign':block;
+    const hardness = STRENGTH[block]??BLOCK_PROPERTIES[block]?.hardness;
     if (hardness === undefined) throw Error('unsupported-mining-block');
     if (!hardness) return 0;
     const id = 'minecraft:' + block, tool = held && rules.items[held.id]?.tool,
-        requires = ['stone', 'coal_ore', 'iron_ore', 'furnace', 'blast_furnace', 'hopper'].includes(block),
+        requires = BLOCK_PROPERTIES[block]?.requires??['stone', 'coal_ore', 'iron_ore', 'furnace', 'blast_furnace', 'hopper'].includes(block),
         correct = !requires || !!tool && tool.role === 'pickaxe' && !rules.blockTags[tool.incorrect]?.includes(id),
-        effective = !!tool && rules.blockTags['minecraft:mineable/' + tool.role]?.includes(id),
+        effective = !!tool && (tags as Record<string,string[]>)[tool.role]?.includes(id),
         speed = effective ? tool!.speed : 1;
     return Math.ceil(hardness * (correct ? 30 : 100) / speed);
 }

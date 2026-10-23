@@ -1,4 +1,6 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {PLACEABLE,placementBlocks,lookFacing,opposite} from '../domain/placed-blocks.ts';
+import type {BlockHit} from '../domain/placed-blocks.ts';
 import {miningTicks} from '../domain/mining.ts';
 import {blockSounds} from '../domain/block-sounds.ts';
 import type {SoundOptions} from '../render/world-audio.ts';
@@ -6,7 +8,7 @@ import type {SaveSession} from '../persistence/session.ts';
 import type {GameInventory} from './inventory.ts';
 import type {SceneView, Pick} from '../render/scene.ts';
 import type {Station, Cell, Facing, Kind} from '../domain/types.ts';
-import {WORLD_REGION, WORLD_SCENES, sameCell, supported, sourceOccupied} from '../domain/world-config.ts';
+import {WORLD_REGION, WORLD_SCENES, sameCell, sourceOccupied} from '../domain/world-config.ts';
 import {emptyFurnace} from '../domain/furnace.ts';
 import {emptyHopper} from '../domain/hopper.ts';
 import {layout} from '../domain/inventory.ts';
@@ -27,7 +29,7 @@ export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: F
         }, list = p.scenes[p.scene].stations;
     return {
         ...station,
-        valid: hit.support !== false && WORLD_REGION.allows(p.scene, station) && !list.some(s => sameCell(s.cell, cell)) && supported(p, cell) && !sourceOccupied(p, cell)
+        valid: hit.support !== false && WORLD_REGION.allows(p.scene, station) && !list.some(s => sameCell(s.cell, cell)) && !sourceOccupied(p, cell)
     };
 }
 
@@ -35,6 +37,7 @@ export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: F
 export class WorldUse {
     mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; nextSound: number } | null = null;
     miningTimer = 0;
+    poseTimer=0; poseSignature=''; posePending=false;
     holding = false;
     miningEpoch = 0;
     miningTicket: object | null = null;
@@ -49,6 +52,7 @@ export class WorldUse {
 
     /** Connect actual ray actions and a scoped rotation shortcut. @param {SceneView} scene True camera view. @param {GameInventory} inventory GUI/carrier authority. @param {SaveSession} session Shared transaction owner. @param {Function} notify Localized feedback consumer. @param {Function} sound Native interaction audio. */
     constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string, options?: SoundOptions) => void) {
+        if(scene.motion)this.poseTimer=window.setInterval(()=>this.savePose(),500);
         this.scope = session.view.envelope?.generation + ':' + session.view.envelope?.state.progress.scene;
         scene.onHover = hit => {
             if (this.mining && hit?.id !== this.mining.id) this.clearMiningProgress();
@@ -59,7 +63,7 @@ export class WorldUse {
         scene.canUse = hit => {
             const p = session.view.envelope?.state.progress, held = p?.player.data.hotbar[p.player.data.selected], equip = held && inventory.rules.items[held.id]?.equipment;
             if (!hit) return !!equip;
-            return !!p && (!!equip || (hit.id === 'birthday-table' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldKind() || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
+            return !!p && (!!equip || (hit.id === 'birthday-table' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
         };
         scene.onMineStart = hit => this.beginMining(hit);
         scene.onMineCancel = () => this.cancelMining();
@@ -94,6 +98,19 @@ export class WorldUse {
             }
         }, {signal: this.abort.signal});
     }
+
+    /** Persist settled movement through the shared save lock, without replaying animation or resetting other progress. */
+    savePose():void{const p=this.session.view.envelope?.state.progress;if(!p||!this.scene.input||document.hidden||this.posePending||!this.session.view.writable)return;const pose={feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look.yaw,pitch:this.scene.look.pitch},signature=JSON.stringify([p.scene,pose]);if(signature===this.poseSignature)return;this.posePending=true;void this.session.dispatch({type:'save-pose',scene:p.scene,pose}).then(()=>{this.poseSignature=signature;}).catch(()=>this.notify('game.actionFailed')).finally(()=>{this.posePending=false;});}
+
+    /** Read the selected native BlockItem without treating arbitrary inventory items as blocks.
+     * @return {string|null} Placeable block identity.
+     */
+    heldBlock():string|null{const p=this.session.view.envelope?.state.progress,id=p?.player.data.hotbar[p.player.data.selected]?.id.split(':')[1];return id&&PLACEABLE.has(id)?id:null;}
+    /** Capture a current block ray and actual player pose for transactional placement.
+     * @param {Pick} hit In-range target.
+     * @return {BlockHit} Native placement context.
+     */
+    blockHit(hit:Pick):BlockHit{return {cell:hit.cell??hit.point.map((n,i)=>Math.floor(n-hit.normal[i]*.001)) as Cell,normal:hit.normal.map(Math.round) as Cell,point:hit.point,eye:this.scene.camera.position.toArray(),yaw:this.scene.camera.rotation.y,crouch:this.scene.motion.crouching};}
 
     /** Read only the selected actual temporary group. @return {Kind|null} Placeable selected device, if any. */
     heldKind(): Kind | null {
@@ -138,6 +155,7 @@ export class WorldUse {
         return this.session.dispatch(command).then(events => {
             if (!this.current(scope, serial)) return false;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
+            if(command.type==='put-station'||command.type==='plant-crop'||command.type==='record-cake-placement')this.scene.hand?.swing();
             if (effect) this.scene.breakEffect(effect.block, effect.point);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound) this.sound(sound, {...options, valid: () => this.current(scope, serial)});
@@ -163,6 +181,7 @@ export class WorldUse {
         this.cancelMining();
         const e = this.session.view.envelope;
         if (!e || !this.scene.input || !this.session.view.writable) return;
+        this.scene.hand?.swing(!hit||/cow|chicken/.test(hit.id));
         this.holding = true;
         this.holdScope = e.generation + ':' + e.state.progress.scene;
         this.holdSerial = this.session.serial;
@@ -196,7 +215,7 @@ export class WorldUse {
         const e = this.session.view.envelope!;
         const p = e.state.progress, station = p.scenes[p.scene].stations.find(s => s.id === hit.id),
             node = WORLD_SCENES[p.scene].nodes.find(n => 'node:' + n.id === hit.id),
-            block = station?.kind ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
+            block = station?.kind ?? p.scenes[p.scene].blocks?.find(b=>b.id===hit.id)?.block ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
         if (!block || node?.kind === 'cow') return;
         const held = p.player.data.hotbar[p.player.data.selected], ticks = node?.kind === 'egg' ? 0 : miningTicks(block, held, this.inventory.rules);
         this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit, block, nextSound: now + 200};
@@ -228,6 +247,7 @@ export class WorldUse {
         if (m && (m.id !== hit?.id || m.tool !== JSON.stringify([p.player.data.selected, p.player.data.hotbar[p.player.data.selected]]))) this.clearMiningProgress();
         if (!hit || now < this.miningAfter) return;
         if (!this.mining) {this.selectMining(hit, now); return;}
+        this.scene.hand?.swing();
         const fraction = (now - this.mining.start) / (this.mining.ticks * 50);
         if (fraction < 1) {
             this.scene.showCrack(this.mining.id, Math.floor(fraction * 10));
@@ -249,8 +269,9 @@ export class WorldUse {
         this.miningTicket = ticket;
         this.clearMiningProgress();
         const station = p.scenes[p.scene].stations.find(s => s.id === m.id);
-        const material = station ? blockSounds(station.kind) : null;
-        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, material!.break, {block: station.kind, point: m.hit.point}, {volume: material!.volume, pitch: material!.pitch}) : this.harvest(m.hit);
+        const placed=p.scenes[p.scene].blocks?.find(b=>b.id===m.id);
+        const material = placed?blockSounds(placed.block):station ? blockSounds(station.kind) : null;
+        const work = placed?this.run({type:'break-block',scene:p.scene,id:placed.id,expected:layout(this.inventory.value)},null,material!.break,{block:placed.block,point:m.hit.point},{volume:material!.volume,pitch:material!.pitch}):station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, material!.break, {block: station.kind, point: m.hit.point}, {volume: material!.volume, pitch: material!.pitch}) : this.harvest(m.hit);
         void work.then(success => {
             if (this.miningTicket !== ticket || epoch !== this.miningEpoch || !this.holding) return;
             this.miningTicket = null;
@@ -297,6 +318,8 @@ export class WorldUse {
             }, 'game.cakePlaced'); else this.notify('game.tableNeedsCake');
             return;
         }
+        const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
+        if(placed&&!shift&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);
         if (found && attach && this.heldKind()) {
             this.place(this.attachHit(hit, above));
@@ -306,7 +329,7 @@ export class WorldUse {
             this.inventory.openWorkbench(found.id);
             return;
         }
-        if (found && shift) return;
+        if (found && shift && this.heldBlock()) {this.place(hit);return;}
         if (hit.id === 'node:cow:0') {
             this.run({
                 type: 'harvest-node',
@@ -326,7 +349,7 @@ export class WorldUse {
             }, 'game.planted', 'item.crop.plant');
             return;
         }
-        if (this.heldKind()) {
+        if (this.heldBlock()) {
             this.place(hit);
             return;
         }
@@ -335,10 +358,12 @@ export class WorldUse {
 
     /** Place against a visible face with finite authored support, without consuming permanent eligibility. @param {Pick} hit Real face. */
     place(hit: Pick): void {
-        const p = this.session.view.envelope?.state.progress, kind = this.heldKind();
-        if (!p || !kind) return;
+        const p = this.session.view.envelope?.state.progress, kind = this.heldKind(),block=this.heldBlock();
+        if (!p || !block) return;
+        if(!kind){const material=blockSounds(block),context=this.blockHit(hit);try{placementBlocks(p,block,context,'preview');}catch{return;}void this.run({type:'place-block',scene:p.scene,item:block,hit:context,id:crypto.randomUUID(),expected:layout(this.inventory.value)},null,material.place,undefined,{volume:(material.volume+1)/2,pitch:material.pitch*.8}).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
+        this.facing=kind==='hopper'?(hit.normal[1]?'down':hit.normal[0]>0?'west':hit.normal[0]<0?'east':hit.normal[2]>0?'north':'south' as Facing):opposite(lookFacing(this.scene.camera.rotation.y)) as Facing;
         const candidate = placement(hit, this.session, kind, this.facing === 'down' && kind !== 'hopper' ? 'south' : this.facing);
-        if (candidate.valid) {
+        if (candidate.valid && !this.scene.playerIntersects(candidate.cell)) {
             const {valid, ...station} = candidate;
             station.id = crypto.randomUUID();
             this.run({
@@ -346,7 +371,7 @@ export class WorldUse {
                 scene: p.scene,
                 station,
                 expected: layout(this.inventory.value)
-            }, 'game.workbenchPlaced', 'block.stone.break');
+            }, 'game.workbenchPlaced', blockSounds(kind).place,undefined,{volume:(blockSounds(kind).volume+1)/2,pitch:blockSounds(kind).pitch*.8});
         } else this.notify('game.invalidPosition');
     }
 
@@ -355,6 +380,7 @@ export class WorldUse {
         this.cancelMining();
         this.scene.onMineStart = null;
         this.scene.onMineCancel = null;
+        clearInterval(this.poseTimer);
         this.abort.abort();
         this.scene.showPreview(null);
         this.scene.onHover = null;

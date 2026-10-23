@@ -65,7 +65,7 @@ test('narrow carver envelope keeps the eye, source cells and workable pocket whi
     assert.ok(caveRockCells().some(c=>c.join(',')===old.join(',')));assert.ok(!shell.some(c=>c.join(',')===old.join(',')));
 });
 
-test('real original stone shell leaves every ore type reachable using production ray picking and bounded fixed-eye turns',()=>{
+test('real original stone shell leaves every ore type reachable using survival-range production rays from sampled cave corridor positions',()=>{
     const manifest=docs.get('world-manifest.json'), samples=[...manifest.states,{id:'legacy-furnace',block:'furnace',state:'facing=south,lit=false',variant:docs.get('assets/minecraft/blockstates/furnace.json').variants['facing=south,lit=false']}].map((s:any)=>({...s,compiled:compileModel(resolveModel(s.variant.model,id=>docs.get('assets/minecraft/models/'+id.split(':')[1]+'.json')),s.variant)}));
     const models=Object.create(VanillaModels.prototype) as VanillaModels;
     Object.assign(models,{pack:{samples,images:new Map(),loading:{}},materials:new Map(samples.flatMap((s:any)=>s.compiled.textures).map((t:string)=>[t,new MeshBasicMaterial()])),created:0,released:0});
@@ -74,16 +74,17 @@ test('real original stone shell leaves every ore type reachable using production
     try {authored.build('cave');authored.sync(state.progress);} finally {console.error=originalError;}
     assert.deepEqual(errors,[],'initial source projection does not add an undefined retained object');
     const view=Object.create(SceneView.prototype) as SceneView;
-    Object.assign(view,{scene:new Scene(),world:new Group(),persistent:new Group(),authored,models,camera:new PerspectiveCamera(70,16/9,.1,90),ray:new Raycaster(),look:new Look(),input:true,lost:false,disposed:false,basePitch:0,renderer:{domElement:{getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})}}});
+    Object.assign(view,{scene:new Scene(),world:new Group(),persistent:new Group(),placed:new Group(),authored,models,camera:new PerspectiveCamera(70,16/9,.1,90),ray:new Raycaster(),look:new Look(),input:true,lost:false,disposed:false,basePitch:0,renderer:{domElement:{getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})}}});
     view.camera.position.set(...WORLD_SCENES.cave.eye);view.camera.lookAt(...WORLD_SCENES.cave.target);view.camera.rotation.order='YXZ';view.basePitch=view.camera.rotation.x;view.scene.add(authored.staticRoot,authored.natural,authored.crops,view.persistent,view.world);
     const remaining=[...authored.natural.children],found:string[]=[];
-    while(remaining.length){const i=remaining.findIndex(o=>reachable(view,o));if(i<0)break;const [o]=remaining.splice(i,1);found.push(String(o.userData.id));o.removeFromParent();o.traverse((child:any)=>{if(child.geometry)child.geometry.dispose();});}
+    while(remaining.length&&found.length<48){const i=remaining.findIndex(o=>[[0,1.62,7],[0,1.62,3],[0,1.62,-1],[-2,1.62,-3],[2,1.62,-4]].some(eye=>{view.camera.position.set(...eye as [number,number,number]);return reachable(view,o);}));if(i<0)break;const [o]=remaining.splice(i,1);found.push(String(o.userData.id));o.removeFromParent();o.traverse((child:any)=>{if(child.geometry)child.geometry.dispose();});}
     for(const block of ['stone','coal_ore','iron_ore'])assert.ok(found.some(id=>WORLD_SCENES.cave.nodes.find(n=>'node:'+n.id===id)?.block===block), block);
     assert.ok(found.length>30,'walls provide many real mining targets within bounded turns');
     const legacy={id:'legacy-cave-furnace',kind:'furnace' as const,facing:'south' as const,cell:[-5,0,1] as [number,number,number],contents:emptyFurnace()};
     legacy.contents.data.input={id:'minecraft:oak_log',count:3};state.progress.scenes.cave.stations=[legacy];
     const saved=JSON.stringify(legacy);authored.sync(state.progress);
     const device=models.device(legacy.kind,legacy.facing,false);device.position.set(...legacy.cell);device.userData.id=legacy.id;view.persistent.add(device);
+    view.camera.position.set(-2,1.62,2);
     assert.ok(reachable(view,device),'existing persistent device retains a visible native surface');assert.equal(JSON.stringify(state.progress.scenes.cave.stations[0]),saved);
     device.traverse((child:any)=>{if(child.geometry)child.geometry.dispose();});
     authored.dispose();for(const m of models.materials.values())m.dispose();

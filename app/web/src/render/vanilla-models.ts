@@ -95,7 +95,7 @@ export class VanillaModels {
         this.pack = pack;
         try {
             for (const [id, source] of pack.images) {
-                if (!source.blend && source.rgba.some((v, i) => i % 4 === 3 && v !== 0 && v !== 255)) throw new Error('translucent-texture-not-supported');
+                if (!source.blend && !source.cutout && source.rgba.some((v, i) => i % 4 === 3 && v !== 0 && v !== 255)) throw new Error('translucent-texture-not-supported');
                 const frames = textureFrames(source), canvas = document.createElement('canvas');
                 canvas.width = source.width;
                 canvas.height = source.static ? source.height : source.width;
