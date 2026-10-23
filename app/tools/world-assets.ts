@@ -122,7 +122,7 @@ const soundsRaw = await object('minecraft/sounds.json'), sounds = JSON.parse(sou
     events: Record<string, unknown> = {};
 inputs['asset-index:' + lock.url] = lock.sha1;
 inputs['minecraft/sounds.json'] = hash(soundsRaw);
-for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup']) {
+for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break', 'block.metal.break', 'block.stone.hit', 'block.wood.hit', 'block.metal.hit', 'block.grass.hit', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup']) {
     if (!sounds[name]) throw Error('missing-native-sound:' + name);
     events[name] = sounds[name];
     for (const raw of sounds[name].sounds) {

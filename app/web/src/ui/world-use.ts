@@ -1,5 +1,7 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
 import {miningTicks} from '../domain/mining.ts';
+import {blockSounds} from '../domain/block-sounds.ts';
+import type {SoundOptions} from '../render/world-audio.ts';
 import type {SaveSession} from '../persistence/session.ts';
 import type {GameInventory} from './inventory.ts';
 import type {SceneView, Pick} from '../render/scene.ts';
@@ -31,7 +33,7 @@ export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: F
 
 /** Own bounded device orientation and actions; no carrier contents or natural facts live here. */
 export class WorldUse {
-    mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick } | null = null;
+    mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; cell: Cell; nextSound: number } | null = null;
     miningTimer = 0;
     holding = false;
     miningEpoch = 0;
@@ -46,7 +48,7 @@ export class WorldUse {
     abort = new AbortController();
 
     /** Connect actual ray actions and a scoped rotation shortcut. @param {SceneView} scene True camera view. @param {GameInventory} inventory GUI/carrier authority. @param {SaveSession} session Shared transaction owner. @param {Function} notify Localized feedback consumer. @param {Function} sound Native interaction audio. */
-    constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string) => void) {
+    constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string, options?: SoundOptions) => void) {
         this.scope = session.view.envelope?.generation + ':' + session.view.envelope?.state.progress.scene;
         scene.onHover = hit => {
             if (this.mining && hit?.id !== this.mining.id) this.clearMiningProgress();
@@ -127,18 +129,18 @@ export class WorldUse {
         this.scene.showPreview(placement(this.attachHit(this.hover, this.above), this.session, kind, facing));
     }
 
-    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string|null} message Significant success key, or null for silent routine actions. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @return {Promise<boolean>} Whether the live transaction committed successfully. */
+    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string|null} message Significant success key, or null for silent routine actions. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @param {SoundOptions} options Native audio parameters. @return {Promise<boolean>} Whether the live transaction committed successfully. */
     run(command: Parameters<SaveSession['dispatch']>[0], message: string | null, sound?: string, effect?: {
         block: string;
         point: Cell
-    }): Promise<boolean> {
+    }, options?: SoundOptions): Promise<boolean> {
         const scope = this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene, serial = this.session.serial;
         return this.session.dispatch(command).then(events => {
             if (!this.current(scope, serial)) return false;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
             if (effect) this.scene.breakEffect(effect.block, effect.point);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
-            if (sound) this.sound(sound);
+            if (sound) this.sound(sound, {...options, valid: () => this.current(scope, serial)});
             this.preview();
             return true;
         }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'); return false;});
@@ -186,7 +188,7 @@ export class WorldUse {
         this.clearMiningProgress();
     }
 
-    /** Start progress for the live visible block using the actual main-hand tool.
+    /** Start progress and initial native hit feedback for the live visible block using the actual main-hand tool.
      * @param {Pick} hit Fresh nearest ray target.
      * @param {number} now Active monotonic time.
      */
@@ -197,12 +199,22 @@ export class WorldUse {
             block = station?.kind ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
         if (!block || node?.kind === 'cow') return;
         const held = p.player.data.hotbar[p.player.data.selected], ticks = node?.kind === 'egg' ? 0 : miningTicks(block, held, this.inventory.rules);
-        this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit};
+        this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit, block, cell: station?.cell ?? node?.cell ?? hit.cell ?? hit.point.map(Math.floor) as Cell, nextSound: now + 200};
         if (!ticks || node?.kind === 'egg') this.finishMining(now);
-        else {this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining); this.scene.showCrack(hit.id, 0);}
+        else {this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining); this.scene.showCrack(hit.id, 0); this.miningSound();}
     }
 
-    /** Re-pick during a held attack, reset changed target/tool progress and honor the native five-tick break delay.
+    /** Play the native initial or four-tick block hit at its cell center, fencing unfinished decoding to this held target. */
+    miningSound(): void {
+        const m = this.mining, serial = this.holdSerial, epoch = this.miningEpoch;
+        if (!m) return;
+        const material = blockSounds(m.block);
+        this.sound(material.hit, {volume: (material.volume + 1) / 8, pitch: material.pitch * .5,
+            position: m.cell.map(n => n + .5) as Cell,
+            valid: () => this.mining === m && this.miningEpoch === epoch && this.holding && !document.hidden && this.scene.input && !this.inventory.modal.open && this.current(m.scope, serial)});
+    }
+
+    /** Re-pick during a held attack, reset changed target/tool progress, play four-tick hits and honor the native five-tick break delay.
      * @param {number} now Injectable monotonic active time.
      */
     advanceMining(now = performance.now()): void {
@@ -218,7 +230,13 @@ export class WorldUse {
         if (!hit || now < this.miningAfter) return;
         if (!this.mining) {this.selectMining(hit, now); return;}
         const fraction = (now - this.mining.start) / (this.mining.ticks * 50);
-        if (fraction < 1) this.scene.showCrack(this.mining.id, Math.floor(fraction * 10));
+        if (fraction < 1) {
+            this.scene.showCrack(this.mining.id, Math.floor(fraction * 10));
+            if (now >= this.mining.nextSound) {
+                this.mining.nextSound = this.mining.start + (Math.floor((now - this.mining.start) / 200) + 1) * 200;
+                this.miningSound();
+            }
+        }
         else this.finishMining(now);
     }
 
@@ -232,7 +250,8 @@ export class WorldUse {
         this.miningTicket = ticket;
         this.clearMiningProgress();
         const station = p.scenes[p.scene].stations.find(s => s.id === m.id);
-        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, 'block.stone.break', {block: station.kind, point: m.hit.point}) : this.harvest(m.hit);
+        const material = station ? blockSounds(station.kind) : null;
+        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, material!.break, {block: station.kind, point: m.hit.point}, {volume: material!.volume, pitch: material!.pitch, position: m.cell.map(n => n + .5) as Cell}) : this.harvest(m.hit);
         void work.then(success => {
             if (this.miningTicket !== ticket || epoch !== this.miningEpoch || !this.holding) return;
             this.miningTicket = null;

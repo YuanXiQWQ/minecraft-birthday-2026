@@ -1,7 +1,7 @@
 /** Browser resource loader verifies original bytes before decoding shared model, texture and GUI primitives. */
 import {compileModel, resolveModel} from './model-format.ts';
 import type {CompiledModel, ModelSource, Variant} from './model-format.ts';
-import {RESOURCE_BASE, fetchManifest} from './resource-fetch.ts';
+import {fetchAsset, fetchManifest} from './resource-fetch.ts';
 export {RESOURCE_BASE} from './resource-fetch.ts';
 
 export interface Pixels {
@@ -65,7 +65,7 @@ export async function loadResources(world = false, progress?: (done: number, tot
     progress?.(0, entries.length);
     await Promise.all(entries.map(async e => {
         if (e.entry.includes('..') || !/^(?:assets|data)\/minecraft\/[a-z0-9_/.\/-]+$/.test(e.entry)) throw new Error('resource-path');
-        const response = await fetch(RESOURCE_BASE + e.entry);
+        const response = await fetchAsset(e.entry);
         if (!response.ok) throw new Error('resource-unavailable');
         const bytes = await response.arrayBuffer(),
             hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), v => v.toString(16).padStart(2, '0')).join('');

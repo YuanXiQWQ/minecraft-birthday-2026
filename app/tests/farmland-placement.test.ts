@@ -272,7 +272,7 @@ test('completed device mining keeps break effects and finite pickup without a re
         const station=h.s.view.envelope!.state.progress.scenes.farm.stations[0],hit={...h.hit,id:station.id};
         let effects=0;h.v.breakEffect=()=>{effects++;};h.v.refreshHover=()=>hit;
         h.use.beginMining(hit,1000);assert.ok(h.use.mining);h.use.advanceMining(1000+h.use.mining.ticks*50);await Promise.all(h.jobs);
-        assert.deepEqual(h.messages,[]);assert.deepEqual(h.sounds,['block.stone.break']);assert.equal(effects,1);
+        assert.deepEqual(h.messages,[]);assert.deepEqual(h.sounds,['block.wood.hit','block.wood.break']);assert.equal(effects,1);
         assert.equal(h.s.view.envelope!.state.progress.scenes.farm.stations.length,0);assert.ok(h.s.view.envelope!.state.progress.player.data.hotbar.some(s=>s?.id==='minecraft:crafting_table'&&s.count===1));
         await h.use.run({type:'remove-station',scene:'farm',id:station.id},null);assert.deepEqual(h.messages,['game.actionFailed']);
     }finally{h.dispose();if(previous)Object.defineProperty(globalThis,'document',previous);else Reflect.deleteProperty(globalThis,'document');}

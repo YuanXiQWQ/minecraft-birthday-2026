@@ -26,6 +26,59 @@
     ],
     "subtitle": "subtitles.block.generic.break"
   },
+  "block.metal.break": {
+    "sounds": [
+      "dig/stone1",
+      "dig/stone2",
+      "dig/stone3",
+      "dig/stone4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.stone.hit": {
+    "sounds": [
+      "step/stone1",
+      "step/stone2",
+      "step/stone3",
+      "step/stone4",
+      "step/stone5",
+      "step/stone6"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.wood.hit": {
+    "sounds": [
+      "step/wood1",
+      "step/wood2",
+      "step/wood3",
+      "step/wood4",
+      "step/wood5",
+      "step/wood6"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.metal.hit": {
+    "sounds": [
+      "step/stone1",
+      "step/stone2",
+      "step/stone3",
+      "step/stone4",
+      "step/stone5",
+      "step/stone6"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
+  "block.grass.hit": {
+    "sounds": [
+      "step/grass1",
+      "step/grass2",
+      "step/grass3",
+      "step/grass4",
+      "step/grass5",
+      "step/grass6"
+    ],
+    "subtitle": "subtitles.block.generic.hit"
+  },
   "item.crop.plant": {
     "sounds": [
       {

@@ -1,0 +1,658 @@
+{
+  "method": "Normal built /game/, native timed left clicks, no grants; IAB Pointer Lock unavailable, used normal visible-pointer fallback. Build base6f9ce81 plus working source; tests and final CI establish candidate provenance.",
+  "during": {
+    "app": {
+      "boot": "ready",
+      "build": "6f9ce8143e99",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "73cea01c-bb0f-4c9f-9bb5-90ce424a5ea7",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "105",
+      "saveStatus": "ready"
+    },
+    "audio": [
+      {
+        "at": 37056.30000001192,
+        "audioTime": 0,
+        "epoch": 0,
+        "event": "activation",
+        "status": "running"
+      },
+      {
+        "at": 42608.39999997616,
+        "audioTime": 5.520544217687075,
+        "category": "musicVolume",
+        "epoch": 0,
+        "event": "music.game",
+        "sample": "assets/minecraft/sounds/music/game/dry_hands.ogg",
+        "status": "scheduled",
+        "stream": true,
+        "volume": 0.20000000298023224
+      },
+      {
+        "at": 44599.5,
+        "audioTime": 7.520362811791383,
+        "epoch": 0,
+        "event": "activation",
+        "status": "running"
+      },
+      {
+        "at": 44673.39999997616,
+        "audioTime": 7.590022675736962,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood3.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 44849.30000001192,
+        "audioTime": 7.772879818594104,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45024.39999997616,
+        "audioTime": 7.9412244897959186,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45226.80000001192,
+        "audioTime": 8.141496598639456,
+        "category": "blocksVolume",
+        "duration": 0.4895238095238095,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood1.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45473.69999998808,
+        "audioTime": 8.391111111111112,
+        "category": "blocksVolume",
+        "duration": 0.5158956916099773,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood6.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      }
+    ],
+    "canvas": {
+      "cake": "false",
+      "crops": "[]",
+      "crosshair": "{\"visible\":false,\"bounds\":[192,105,15,15],\"scale\":3.2,\"logical\":[400,225],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+      "drawCalls": "102",
+      "engine": "three.js r186",
+      "environment": "{\"dayTicks\":1511.157999999523,\"sunAngle\":304.9955173710209,\"moonAngle\":484.9955173710209,\"moonPhase\":\"full_moon\",\"starAngle\":304.9955173710209,\"starOpacity\":0,\"cloudWind\":15.334739657227546,\"cloudPosition\":[-15.334739657227546,190.71,-10.960000038146973],\"gameTick\":509,\"partial\":2.157999999523156,\"dayPartial\":2.1579999995231627,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":511.15799999952316,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+      "frames": "70",
+      "geometry": "66",
+      "hover": "{\"id\":\"node:oak_log:2\",\"point\":[-5.406680002016923,2.028208323939671,-2],\"normal\":[0,0,1],\"cell\":[-6,2,-3]}",
+      "instances": "[]",
+      "natural": "{\"epoch\":0,\"removed\":[],\"roll\":0}",
+      "placementPreview": "null",
+      "pointerMode": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":4}",
+      "recoveredWorld": "{\"tick\":0,\"scene\":\"plains\",\"crops\":[]}",
+      "renderedScene": "plains",
+      "resourceVersion": "26.3",
+      "scene": "plains",
+      "triangles": "790154"
+    }
+  },
+  "complete": {
+    "app": {
+      "boot": "ready",
+      "build": "6f9ce8143e99",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "73cea01c-bb0f-4c9f-9bb5-90ce424a5ea7",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "290",
+      "saveStatus": "ready"
+    },
+    "audio": [
+      {
+        "at": 37056.30000001192,
+        "audioTime": 0,
+        "epoch": 0,
+        "event": "activation",
+        "status": "running"
+      },
+      {
+        "at": 42608.39999997616,
+        "audioTime": 5.520544217687075,
+        "category": "musicVolume",
+        "epoch": 0,
+        "event": "music.game",
+        "sample": "assets/minecraft/sounds/music/game/dry_hands.ogg",
+        "status": "scheduled",
+        "stream": true,
+        "volume": 0.20000000298023224
+      },
+      {
+        "at": 44599.5,
+        "audioTime": 7.520362811791383,
+        "epoch": 0,
+        "event": "activation",
+        "status": "running"
+      },
+      {
+        "at": 44673.39999997616,
+        "audioTime": 7.590022675736962,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood3.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 44849.30000001192,
+        "audioTime": 7.772879818594104,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45024.39999997616,
+        "audioTime": 7.9412244897959186,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45226.80000001192,
+        "audioTime": 8.141496598639456,
+        "category": "blocksVolume",
+        "duration": 0.4895238095238095,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood1.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45473.69999998808,
+        "audioTime": 8.391111111111112,
+        "category": "blocksVolume",
+        "duration": 0.5158956916099773,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood6.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45617.80000001192,
+        "audioTime": 8.530430839002268,
+        "category": "blocksVolume",
+        "duration": 0.5422675736961451,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood4.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 45805.10000002384,
+        "audioTime": 8.721995464852608,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 61187,
+        "audioTime": 24.102312925170068,
+        "epoch": 0,
+        "event": "activation",
+        "status": "running"
+      },
+      {
+        "at": 61187.89999997616,
+        "audioTime": 24.102312925170068,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood3.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 61401.69999998808,
+        "audioTime": 24.32,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 61588.60000002384,
+        "audioTime": 24.502857142857145,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 61790.30000001192,
+        "audioTime": 24.71183673469388,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 61993.19999998808,
+        "audioTime": 24.912108843537418,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 62194.30000001192,
+        "audioTime": 25.112380952380953,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 62397.69999998808,
+        "audioTime": 25.31265306122449,
+        "category": "blocksVolume",
+        "duration": 0.4895238095238095,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood1.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 62599.19999998808,
+        "audioTime": 25.521632653061225,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 62799.69999998808,
+        "audioTime": 25.721904761904764,
+        "category": "blocksVolume",
+        "duration": 0.5422675736961451,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood4.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 62989.30000001192,
+        "audioTime": 25.910566893424036,
+        "category": "blocksVolume",
+        "duration": 0.6893197278911565,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood5.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 63190.5,
+        "audioTime": 26.110839002267575,
+        "category": "blocksVolume",
+        "duration": 0.5158956916099773,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood6.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 63393.80000001192,
+        "audioTime": 26.31111111111111,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood2.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 63594.80000001192,
+        "audioTime": 26.51138321995465,
+        "category": "blocksVolume",
+        "duration": 0.5158956916099773,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood6.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 63797.30000001192,
+        "audioTime": 26.711655328798187,
+        "category": "blocksVolume",
+        "duration": 0.5598412698412698,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood3.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 64000.60000002384,
+        "audioTime": 26.92063492063492,
+        "category": "blocksVolume",
+        "duration": 0.5422675736961451,
+        "epoch": 0,
+        "event": "block.wood.hit",
+        "pitch": 0.5,
+        "position": [
+          -5.5,
+          2.5,
+          -2.5
+        ],
+        "sample": "assets/minecraft/sounds/step/wood4.ogg",
+        "sourceVolume": 0.25,
+        "status": "scheduled",
+        "volume": 0.05000000074505806
+      },
+      {
+        "at": 64258.89999997616,
+        "audioTime": 27.17895691609977,
+        "category": "blocksVolume",
+        "duration": 0.4941950113378685,
+        "epoch": 0,
+        "event": "block.wood.break",
+        "pitch": 1,
+        "sample": "assets/minecraft/sounds/dig/wood2.ogg",
+        "sourceVolume": 1,
+        "status": "scheduled",
+        "volume": 0.20000000298023224
+      },
+      {
+        "at": 64264.80000001192,
+        "audioTime": 27.18185941043084,
+        "category": "uiVolume",
+        "duration": 1.5459863945578232,
+        "epoch": 0,
+        "event": "ui.toast.in",
+        "pitch": 1,
+        "sample": "assets/minecraft/sounds/ui/toast/in.ogg",
+        "sourceVolume": 0.4,
+        "status": "scheduled",
+        "volume": 0.07999999821186066
+      },
+      {
+        "at": 70026.69999998808,
+        "audioTime": 32.9404081632653,
+        "category": "uiVolume",
+        "duration": 1.5546485260770977,
+        "epoch": 0,
+        "event": "ui.toast.out",
+        "pitch": 1,
+        "sample": "assets/minecraft/sounds/ui/toast/out.ogg",
+        "sourceVolume": 0.4,
+        "status": "scheduled",
+        "volume": 0.07999999821186066
+      }
+    ],
+    "canvas": {
+      "cake": "false",
+      "crops": "[]",
+      "crosshair": "{\"visible\":false,\"bounds\":[192,105,15,15],\"scale\":3.2,\"logical\":[400,225],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+      "drawCalls": "99",
+      "engine": "three.js r186",
+      "environment": "{\"dayTicks\":2421.297999999523,\"sunAngle\":317.7058599223519,\"moonAngle\":497.7058599223519,\"moonPhase\":\"full_moon\",\"starAngle\":317.7058599223519,\"starOpacity\":0,\"cloudWind\":42.63893904693112,\"cloudPosition\":[-42.63893904693112,190.71,-10.960000038146973],\"gameTick\":1419,\"partial\":2.297999999523199,\"dayPartial\":2.297999999523163,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":1421.2979999995232,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+      "frames": "145",
+      "geometry": "65",
+      "harvestResult": "{\"command\":{\"type\":\"harvest-node\",\"scene\":\"plains\",\"node\":\"oak_log:2\",\"visit\":0,\"expected\":{\"backpack\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,null,null,null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"events\":[{\"type\":\"item-unlocked\",\"item\":\"minecraft:oak_log\"},{\"type\":\"items-acquired\",\"stacks\":[{\"id\":\"minecraft:oak_log\",\"count\":1}],\"deposited\":[{\"id\":\"minecraft:oak_log\",\"count\":1}],\"overflow\":[]},{\"type\":\"recipes-discovered\",\"recipes\":[\"minecraft:oak_planks\",\"minecraft:oak_wood\",\"minecraft:charcoal\"]}],\"selected\":0,\"backpack\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"unlocked\":[\"minecraft:oak_log\"]}",
+      "hover": "null",
+      "instances": "[]",
+      "natural": "{\"epoch\":0,\"removed\":[\"oak_log:2\"],\"roll\":0}",
+      "placementPreview": "null",
+      "pointerMode": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":4}",
+      "recoveredWorld": "{\"tick\":0,\"scene\":\"plains\",\"crops\":[]}",
+      "renderedScene": "plains",
+      "resourceVersion": "26.3",
+      "scene": "plains",
+      "triangles": "790130"
+    }
+  }
+}

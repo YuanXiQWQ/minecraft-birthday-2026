@@ -1,0 +1,37 @@
+{
+  "method": "Same one-year prior sound cache primed under Pages prefix; native link to audited ordinary Pages build; no clearing storage or cache.",
+  "state": {
+    "app": {
+      "boot": "ready",
+      "build": "6f9ce8143e99",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "d284a2e2-4cf9-4e9b-8a0e-53dfc20a1dd2",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "497",
+      "saveStatus": "ready"
+    },
+    "canvas": {
+      "cake": "false",
+      "crops": "[]",
+      "crosshair": "{\"visible\":false,\"bounds\":[192,105,15,15],\"scale\":3.2,\"logical\":[400,225],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+      "drawCalls": "101",
+      "engine": "three.js r186",
+      "environment": "{\"dayTicks\":3220.7260000002384,\"sunAngle\":328.2499305173792,\"moonAngle\":508.2499305173792,\"moonPhase\":\"full_moon\",\"starAngle\":328.2499305173792,\"starOpacity\":0,\"cloudWind\":66.62177851089433,\"cloudPosition\":[-66.62177851089433,190.71,-10.960000038146973],\"gameTick\":2219,\"partial\":1.7260000002384004,\"dayPartial\":1.7260000002384186,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":2220.7260000002384,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+      "frames": "103",
+      "geometry": "66",
+      "hover": "null",
+      "instances": "[]",
+      "natural": "{\"epoch\":0,\"removed\":[],\"roll\":0}",
+      "placementPreview": "null",
+      "pointerMode": "{\"desired\":\"hidden\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":3}",
+      "recoveredWorld": "{\"tick\":680,\"scene\":\"plains\",\"crops\":[]}",
+      "renderedScene": "plains",
+      "resourceVersion": "26.3",
+      "scene": "plains",
+      "triangles": "790142"
+    }
+  }
+}

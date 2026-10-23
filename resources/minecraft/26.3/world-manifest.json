@@ -114,6 +114,24 @@
     "assets/minecraft/sounds/dig/wood2.ogg": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7",
     "assets/minecraft/sounds/dig/wood3.ogg": "6b439a67286d392e3a7bc96f67ea51ed17aa8d22610f243249df88d4ba5aa9e7",
     "assets/minecraft/sounds/dig/wood4.ogg": "b8a75c1b0658d0bc4e0e8e2d44585182feda102551e266fd42490034cc08c4f5",
+    "assets/minecraft/sounds/step/stone1.ogg": "c2df259556168a4ad44ddb739a4e952bf6594c67d2712dc3d9fcde2fbcccf840",
+    "assets/minecraft/sounds/step/stone2.ogg": "f1d9fbcec8ae90466640b48440700e3d75499d73bdc89297939ebc6dc84a896f",
+    "assets/minecraft/sounds/step/stone3.ogg": "3f315406c749cca0c3c1295ae45b08905a33791323157280409b84429d674848",
+    "assets/minecraft/sounds/step/stone4.ogg": "d32e85647026a4cc04352743066cdd20d79bc891eb02b0d71ea9144063192766",
+    "assets/minecraft/sounds/step/stone5.ogg": "e7646fba896d091eff1dc6e0f09ecb013125cefa2736144b6536fa4818e6d09f",
+    "assets/minecraft/sounds/step/stone6.ogg": "16922737da3277907d07ba6c317492ecce6f06b6dab73e20b0ffbb84111740ce",
+    "assets/minecraft/sounds/step/wood1.ogg": "d1bce3e4393f9e5e7531421c12b3f74f8ef219659997baf6d73509380b5bd40f",
+    "assets/minecraft/sounds/step/wood2.ogg": "017a520c0b2e978e5a8360febd444d48075cd8fb64967ba0ce1885d6f6cec849",
+    "assets/minecraft/sounds/step/wood3.ogg": "27cdbf1b0ff78bc082717501c90a2d9a82487a7e1a25b13a62017b247b14716e",
+    "assets/minecraft/sounds/step/wood4.ogg": "feb212713083717c39dc55266ff205233f338d65765d6c4f9ed784b7b20f65bf",
+    "assets/minecraft/sounds/step/wood5.ogg": "68b4abec26fd5586255275926ddd096db1ddc9ddfccb0be03bea87e42f109369",
+    "assets/minecraft/sounds/step/wood6.ogg": "5ae84003496c1037786cac1796426e9cb310b6375c8cb0c13189dc8abde15379",
+    "assets/minecraft/sounds/step/grass1.ogg": "c1b8f2bc316d7747b8bee882863a0f99c1e098a42e0bb9c845d1a26518e030e0",
+    "assets/minecraft/sounds/step/grass2.ogg": "569994e55dd74d1afd032b909e596f6a8c1f30b7fb52b51109aac0e712f7a3f7",
+    "assets/minecraft/sounds/step/grass3.ogg": "6bffe2b44871fb50cb5f4555985268237997b00bfe84f8bee229ce10403500bf",
+    "assets/minecraft/sounds/step/grass4.ogg": "5231ab247fb8662decbb82596bebd5423f4f1e6f2fcfb74f4acf35a8b2482843",
+    "assets/minecraft/sounds/step/grass5.ogg": "8dbca599a34e6b7450f3aaffcc05242b31df90d7c10374204e4f267d902444dd",
+    "assets/minecraft/sounds/step/grass6.ogg": "a005880a296487f2b8e97a9cb9ca0cf58869d89ea143d7e4d0379c90830e3817",
     "assets/minecraft/sounds/item/plant/crop1.ogg": "39e80ca9dfe41982e0f2f8ea3df3a7c54ba0515d95980644fac6c4f62cc9087d",
     "assets/minecraft/sounds/item/plant/crop2.ogg": "b8b0f71edf7f904c18935d157101cfd6339be4289f3254dd48881d31d6e9ac89",
     "assets/minecraft/sounds/item/plant/crop3.ogg": "e0cbcf0451a7cad208b976be74526bbc7071ebb604032b34eca120e531d3cabc",
@@ -714,6 +732,96 @@
       "sha256": "4ddf491e1b736a9711cd76590ba70b203136d7ea1d5134a42088e58daccf3951"
     },
     {
+      "entry": "assets/minecraft/sounds/step/grass1.ogg",
+      "size": 8002,
+      "sha256": "c1b8f2bc316d7747b8bee882863a0f99c1e098a42e0bb9c845d1a26518e030e0"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/grass2.ogg",
+      "size": 8763,
+      "sha256": "569994e55dd74d1afd032b909e596f6a8c1f30b7fb52b51109aac0e712f7a3f7"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/grass3.ogg",
+      "size": 7687,
+      "sha256": "6bffe2b44871fb50cb5f4555985268237997b00bfe84f8bee229ce10403500bf"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/grass4.ogg",
+      "size": 8063,
+      "sha256": "5231ab247fb8662decbb82596bebd5423f4f1e6f2fcfb74f4acf35a8b2482843"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/grass5.ogg",
+      "size": 8709,
+      "sha256": "8dbca599a34e6b7450f3aaffcc05242b31df90d7c10374204e4f267d902444dd"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/grass6.ogg",
+      "size": 8336,
+      "sha256": "a005880a296487f2b8e97a9cb9ca0cf58869d89ea143d7e4d0379c90830e3817"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone1.ogg",
+      "size": 8657,
+      "sha256": "c2df259556168a4ad44ddb739a4e952bf6594c67d2712dc3d9fcde2fbcccf840"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone2.ogg",
+      "size": 7689,
+      "sha256": "f1d9fbcec8ae90466640b48440700e3d75499d73bdc89297939ebc6dc84a896f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone3.ogg",
+      "size": 7428,
+      "sha256": "3f315406c749cca0c3c1295ae45b08905a33791323157280409b84429d674848"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone4.ogg",
+      "size": 8062,
+      "sha256": "d32e85647026a4cc04352743066cdd20d79bc891eb02b0d71ea9144063192766"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone5.ogg",
+      "size": 8414,
+      "sha256": "e7646fba896d091eff1dc6e0f09ecb013125cefa2736144b6536fa4818e6d09f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/stone6.ogg",
+      "size": 8895,
+      "sha256": "16922737da3277907d07ba6c317492ecce6f06b6dab73e20b0ffbb84111740ce"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood1.ogg",
+      "size": 8202,
+      "sha256": "d1bce3e4393f9e5e7531421c12b3f74f8ef219659997baf6d73509380b5bd40f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood2.ogg",
+      "size": 8578,
+      "sha256": "017a520c0b2e978e5a8360febd444d48075cd8fb64967ba0ce1885d6f6cec849"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood3.ogg",
+      "size": 8597,
+      "sha256": "27cdbf1b0ff78bc082717501c90a2d9a82487a7e1a25b13a62017b247b14716e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood4.ogg",
+      "size": 8929,
+      "sha256": "feb212713083717c39dc55266ff205233f338d65765d6c4f9ed784b7b20f65bf"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood5.ogg",
+      "size": 10428,
+      "sha256": "68b4abec26fd5586255275926ddd096db1ddc9ddfccb0be03bea87e42f109369"
+    },
+    {
+      "entry": "assets/minecraft/sounds/step/wood6.ogg",
+      "size": 8389,
+      "sha256": "5ae84003496c1037786cac1796426e9cb310b6375c8cb0c13189dc8abde15379"
+    },
+    {
       "entry": "assets/minecraft/textures/block/azure_bluet.png",
       "size": 161,
       "sha256": "c7a05524e62b5b27b919270c64a8e3523d8dd01ae29f14863d721ed6807ff5ee"
@@ -880,11 +988,11 @@
     },
     {
       "entry": "assets/minecraft/world-sounds.json",
-      "size": 2587,
-      "sha256": "b8b1e9f248d149b494e3e165802c59e7d5459200c8f48f8fc156e6fba743988d"
+      "size": 3648,
+      "sha256": "384bb5a05214e10aa5fc8dc1dd27a6841cf1e1cfee0a3a5e608eca1d7f8059ee"
     }
   ],
   "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "b3a4157fefda728685befa57bc5a79217cc8a8779e525bbbcdb9a2ad19d3fb5a",
+  "exporterSha256": "ad4baab143419b83b4523c98f46bc4800d68c7baab22e85ee8ffb1bbc7882ba3",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; static animal pose, no navigation/AI"
 }

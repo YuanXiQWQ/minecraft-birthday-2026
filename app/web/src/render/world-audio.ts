@@ -4,7 +4,7 @@ import {RESOURCE_BASE} from './resources.ts';
 import type {Settings} from '../domain/types.ts';
 /** Static source ownership stays bounded; streaming game music uses its separate media node. */
 const MAX_STATIC_VOICES=256;
-export interface SoundOptions {volume?:number;pitch?:number;variant?:number;position?:[number,number,number]}
+export interface SoundOptions {volume?:number;pitch?:number;variant?:number;position?:[number,number,number];valid?:()=>boolean}
 /** Select an original weighted sample without replacing its definition parameters.
  * @param {any[]} sounds Native event choices.
  * @param {number} value Uniform zero-to-one random value.
@@ -53,11 +53,12 @@ export class WorldAudio {
     }
     /** Share audited decodes, coalesce weather bursts by client playback time, and fence every asynchronous voice.
      * @param {string} id Native sound event identity.
-     * @param {SoundOptions} options Native caller parameters and optional world position.
+     * @param {SoundOptions} options Native caller parameters, optional world position and issuing-effect lifecycle predicate.
      * @return {Promise<string>} Scheduling outcome; human audibility is not inferred.
      */
     async play(id:string,options:SoundOptions={}):Promise<string>{
         const c=this.context,s=this.settings(),epoch=this.epoch;
+        if(options.valid&&!options.valid()){this.record(id,'cancelled');return 'cancelled';}
         if(this.disposed||document.hidden||!soundGain(s,id)){this.record(id,'suppressed');return 'suppressed';}
         if(!c||c.state!=='running'){this.record(id,'blocked');return 'blocked';}
         const weather=id.startsWith('weather.rain')?'rain':id.startsWith('entity.lightning_bolt.')?id:null,requested=performance.now();
@@ -67,7 +68,7 @@ export class WorldAudio {
         const path='assets/minecraft/sounds/'+(typeof raw==='string'?raw:raw.name).replace('minecraft:','')+'.ogg';
         try{
             const buffer=await this.buffer(path,c);
-            if(this.disposed||epoch!==this.epoch||document.hidden||this.settings().muted){this.record(id,'cancelled');return 'cancelled';}
+            if(this.disposed||epoch!==this.epoch||document.hidden||this.settings().muted||options.valid&&!options.valid()){this.record(id,'cancelled');return 'cancelled';}
             if(weather){const now=performance.now();if(now-(this.weatherStarts.get(weather)??-Infinity)<50){this.record(id,'coalesced');return 'coalesced';}this.weatherStarts.set(weather,now);}
             if(this.voices.size>=MAX_STATIC_VOICES){this.record(id,'channel-full');return 'channel-full';}
             const current=this.settings(),source=c.createBufferSource(),gain=c.createGain(),rawVolume=(raw.volume??1)*(options.volume??1),volume=Math.min(1,rawVolume);

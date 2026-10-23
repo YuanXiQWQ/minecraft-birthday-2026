@@ -12,3 +12,11 @@ export function fetchManifest(name: string): Promise<Response> {
     const build = import.meta.env?.BUILD_ID ?? 'development';
     return fetch(RESOURCE_BASE + name + '?build=' + encodeURIComponent(build), {cache: 'no-cache'});
 }
+
+/** Revalidate mutable derived documents while retaining ordinary caching for immutable original pixels and audio.
+ * @param {string} path Audited relative asset path.
+ * @return {Promise<Response>} Response whose bytes still require the manifest's integrity check.
+ */
+export function fetchAsset(path: string): Promise<Response> {
+    return fetch(RESOURCE_BASE + path, path.endsWith('.json') ? {cache: 'no-cache'} : undefined);
+}

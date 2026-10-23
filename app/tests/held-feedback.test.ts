@@ -8,31 +8,76 @@ import {GameInventory} from '../web/src/ui/inventory.ts';
 import {systemFeedback, FAILURE_COLOR} from '../web/src/ui/system-feedback.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {WORLD_REGION} from '../web/src/domain/world-config.ts';
-import {token} from '../web/src/persistence/codec.ts';
+import {token,seal} from '../web/src/persistence/codec.ts';
+import {initialState} from '../web/src/domain/state.ts';
+import {emptyFurnace} from '../web/src/domain/furnace.ts';
+import {emptyHopper} from '../web/src/domain/hopper.ts';
+import type {State} from '../web/src/domain/types.ts';
+import type {SoundOptions} from '../web/src/render/world-audio.ts';
 import type {Rules} from '../web/src/rules/types.ts';
 
 /** Same-version item and mining predicates. */
 const rules = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json', import.meta.url), 'utf8')) as Rules;
 
 /** Connect the real WorldUse constructor and SceneView ray refresh to a real session with controlled ray geometry and lock latency.
+ * @param {State} state Optional explicit valid saved-world fixture.
  * @return {Promise<object>} Gesture owner, persisted observations and deterministic controls.
  */
-async function mining() {
+async function mining(state?:State) {
     const oldWindow=Object.getOwnPropertyDescriptor(globalThis,'window'),oldDocument=Object.getOwnPropertyDescriptor(globalThis,'document');
     const events=new EventTarget();
     Object.defineProperty(globalThis,'window',{value:Object.assign(events,{setInterval:()=>1}),configurable:true});
     Object.defineProperty(globalThis,'document',{value:{hidden:false},configurable:true});
-    let raw:string|null=null, barrier:Promise<void>|null=null, reject=false;
+    let raw:string|null=state?JSON.stringify(await seal(state,'mining-audio',0)):null, barrier:Promise<void>|null=null, reject=false;
     const s=new SaveSession({getItem:()=>raw,setItem:(_k,v)=>{if(reject)throw Error('write-failed');raw=v;}},{exclusive:async work=>{if(barrier)await barrier;return work();}},WORLD_REGION);s.rules=rules;await s.refresh();
     let id:string|null='node:oak_log:0';
     const scene=Object.create(SceneView.prototype) as SceneView;
-    Object.assign(scene,{renderer:{domElement:{dataset:{},style:{},getBoundingClientRect:()=>({left:0,top:0,right:100,bottom:100,width:100,height:100}),hasPointerCapture:()=>false}},input:true,lost:false,disposed:false,pointer:7,pointerPosition:[50,50],mode:null,look:{active:null,cancel(){}},showPreview(){},showCrack(){},breakEffect(){},pick:()=>id?{id,point:[-5,.5,-2],normal:[0,0,1]}:null});
+    Object.assign(scene,{renderer:{domElement:{dataset:{},style:{},getBoundingClientRect:()=>({left:0,top:0,right:100,bottom:100,width:100,height:100}),hasPointerCapture:()=>false}},input:true,lost:false,disposed:false,pointer:7,pointerPosition:[50,50],mode:null,look:{active:null,cancel(){}},/** Relay production cancellation within the geometry fixture. */cancel:()=>scene.onMineCancel?.(),showPreview(){},showCrack(){},breakEffect(){},pick:()=>id?{id,point:[-5,.5,-2],normal:[0,0,1]}:null});
     const inventory={rules,value:{...structuredClone(s.view.envelope!.state.progress.player.data),cursor:null},modal:{open:false}};
-    const messages:string[]=[],use=new WorldUse(scene,inventory as any,s,k=>messages.push(k),()=>{}),jobs:Promise<unknown>[]=[];
+    const messages:string[]=[],sounds:{id:string;options?:SoundOptions}[]=[],use=new WorldUse(scene,inventory as any,s,k=>messages.push(k),(id,options)=>sounds.push({id,options})),jobs:Promise<unknown>[]=[];
     const run=use.run.bind(use);use.run=(...args)=>{const job=run(...args);jobs.push(job);return job;};
     s.subscribe(v=>{if(v.envelope)inventory.value={...structuredClone(v.envelope.state.progress.player.data),cursor:null};});
-    return {s,use,scene,inventory,messages,target:(next:string|null)=>{id=next;},block:(p:Promise<void>|null)=>{barrier=p;},deny:()=>{reject=true;},raw:()=>raw,settle:async()=>{await Promise.all(jobs);await new Promise(r=>setImmediate(r));},restore:()=>{use.dispose();if(oldWindow)Object.defineProperty(globalThis,'window',oldWindow);else delete(globalThis as any).window;if(oldDocument)Object.defineProperty(globalThis,'document',oldDocument);else delete(globalThis as any).document;}};
+    return {s,use,scene,inventory,messages,sounds,target:(next:string|null)=>{id=next;},block:(p:Promise<void>|null)=>{barrier=p;},deny:()=>{reject=true;},raw:()=>raw,settle:async()=>{await Promise.all(jobs);await new Promise(r=>setImmediate(r));},restore:()=>{use.dispose();s.dispose();if(oldWindow)Object.defineProperty(globalThis,'window',oldWindow);else delete(globalThis as any).window;if(oldDocument)Object.defineProperty(globalThis,'document',oldDocument);else delete(globalThis as any).document;}};
 }
+
+test('formal held mining plays the native initial hit and four-tick cadence before a separate committed break',async()=>{
+ const h=await mining();try{
+ h.use.beginMining(h.scene.refreshHover()!,0);assert.deepEqual(h.sounds.map(s=>s.id),['block.wood.hit']);
+ const first=h.sounds[0].options!;assert.equal(first.volume,.25);assert.equal(first.pitch,.5);assert.deepEqual(first.position,[-5.5,.5,-2.5]);assert.equal(first.valid!(),true);
+ for(const now of [25,50,100,199])h.use.advanceMining(now);assert.equal(h.sounds.length,1);
+ h.use.advanceMining(200);h.use.advanceMining(225);h.use.advanceMining(399);assert.equal(h.sounds.length,2);
+ h.use.advanceMining(400);assert.equal(h.sounds.length,3);assert.deepEqual(h.s.view.envelope!.state.progress.unlocked,[]);
+ h.use.advanceMining(3000);await h.settle();assert.deepEqual(h.sounds.map(s=>s.id),['block.wood.hit','block.wood.hit','block.wood.hit','block.wood.break']);assert.equal(first.valid!(),false);
+ }finally{h.restore();}
+});
+
+test('changing the real target starts its native material sound and invalidates pending audio from the previous target',async()=>{
+ const h=await mining();try{
+ h.use.beginMining(h.scene.refreshHover()!,0);const old=h.sounds[0].options!;h.target('node:oak_log:1');h.use.advanceMining(75);assert.equal(old.valid!(),false);assert.equal(h.sounds.length,2);assert.equal(h.sounds[1].options!.valid!(),true);h.use.advanceMining(274);assert.equal(h.sounds.length,2);h.use.advanceMining(275);assert.equal(h.sounds.length,3);
+ h.use.cancelMining();await h.s.dispatch({type:'select-scene',scene:'cave'});h.target('node:stone:0');h.use.beginMining(h.scene.refreshHover()!,400);assert.equal(h.sounds.at(-1)!.id,'block.stone.hit');assert.equal(h.sounds.at(-1)!.options!.pitch,.5);
+ }finally{h.restore();}
+});
+
+for(const boundary of ['release','gui','hidden','reset','scene','dispose'] as const)test('unfinished hit decode is no longer valid after '+boundary,async()=>{
+ const h=await mining();try{h.use.beginMining(h.scene.refreshHover()!,0);const pending=h.sounds[0].options!;
+ if(boundary==='release')h.use.cancelMining();
+ if(boundary==='gui')h.inventory.modal.open=true;
+ if(boundary==='hidden')(document as any).hidden=true;
+ if(boundary==='reset')await h.s.reset(token(h.s.view.envelope!));
+ if(boundary==='scene')await h.s.dispatch({type:'select-scene',scene:'cave'});
+ if(boundary==='dispose')h.use.dispose();
+ assert.equal(pending.valid!(),false);h.use.advanceMining(200);assert.equal(h.sounds.length,1);assert.deepEqual(h.s.view.envelope!.state.progress.unlocked,[]);
+ }finally{h.restore();}
+});
+
+test('a stalled callback does not burst missed hit sounds and instant grass has no sustained mining sound',async()=>{
+ const h=await mining();try{h.use.beginMining(h.scene.refreshHover()!,0);h.use.advanceMining(2050);assert.equal(h.sounds.length,2);h.use.advanceMining(2075);assert.equal(h.sounds.length,2);h.use.advanceMining(2200);assert.equal(h.sounds.length,3);h.use.cancelMining();h.sounds.length=0;h.target('node:short_grass:0');h.use.beginMining(h.scene.refreshHover()!,10000);await h.settle();assert.deepEqual(h.sounds.map(s=>s.id),['block.grass.break']);}finally{h.restore();}
+});
+
+for(const [kind,material,pitch] of [['crafting_table','wood',1],['furnace','stone',1],['blast_furnace','stone',1],['hopper','metal',1.5]] as const)test('real persisted '+kind+' plays its hit family and commits a separate break',async()=>{
+ const state=initialState();state.progress.unlocked=['minecraft:'+kind];state.progress.scenes.plains.stations=[{id:'audio-device',kind,cell:[2,0,0],facing:'south',contents:kind==='crafting_table'?{version:1,data:{grid:Array(9).fill(null)}}:kind==='hopper'?emptyHopper():emptyFurnace()}];
+ const h=await mining(state);try{h.target('audio-device');h.use.beginMining(h.scene.refreshHover()!,0);assert.equal(h.sounds[0].id,'block.'+material+'.hit');assert.equal(h.sounds[0].options!.pitch,pitch*.5);assert.deepEqual(h.sounds[0].options!.position,[2.5,.5,.5]);h.use.advanceMining(200);assert.equal(h.sounds[1].id,h.sounds[0].id);h.use.advanceMining(50000);await h.settle();assert.equal(h.sounds.at(-1)!.id,'block.'+material+'.break');assert.equal(h.sounds.at(-1)!.options!.pitch,pitch);assert.deepEqual(h.s.view.envelope!.state.progress.scenes.plains.stations,[]);}finally{h.restore();}
+});
 
 test('one held press settles two successive real nodes, waiting five ticks before the exposed target',async t=>{
  // Share the explicit synthetic time origin with the asynchronous completion clock.
