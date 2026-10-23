@@ -20,6 +20,7 @@ import {NativeCompass, compassModel} from './compass.ts';
 import type {CompassView} from './compass.ts';
 import {guiLights} from './icon-light.ts';
 import {RESOURCE_BASE} from '../render/resources.ts';
+import {fetchManifest} from '../render/resource-fetch.ts';
 import {resourceId, resolveTexture} from '../render/model-format.ts';
 import {iconParts, iconModel, iconGeometry} from './icon-model.ts';
 import type {IconPart} from './icon-model.ts';
@@ -67,22 +68,22 @@ export function entityCube(box: number[], texture: string): CompiledModel {
  * @return {Promise<CatalogueArt>} CPU caches with bounded GPU resources already released.
  */
 export async function loadCatalogueArt(progress?: (done: number, total: number) => void): Promise<CatalogueArt> {
-    const response = await fetch(RESOURCE_BASE + 'catalogue-manifest.json');
+    const response = await fetchManifest('catalogue-manifest.json');
     if (!response.ok) throw Error('catalogue-manifest-unavailable');
     const manifest = await response.json();
     if (manifest.version !== '26.3' || manifest.clientSha1 !== 'e877b6a07acd633fb3bb475002175cec036e7b87') throw Error('catalogue-version');
-    const playerResponse = await fetch(RESOURCE_BASE + 'player-manifest.json');
+    const playerResponse = await fetchManifest('player-manifest.json');
     if (!playerResponse.ok) throw Error('player-manifest-unavailable');
     const player = await playerResponse.json();
     if (player.version !== '26.3' || player.clientSha1 !== manifest.clientSha1) throw Error('player-version');
-    const bookResponse = await fetch(RESOURCE_BASE + 'book-manifest.json');
+    const bookResponse = await fetchManifest('book-manifest.json');
     if (!bookResponse.ok) throw Error('book-resource-unavailable');
     const book = await bookResponse.json();
     if (book.version !== '26.3' || book.clientSha1 !== manifest.clientSha1) throw Error('book-version');
-    const extraResponse = await fetch(RESOURCE_BASE + 'interaction-manifest.json');
+    const extraResponse = await fetchManifest('interaction-manifest.json');
     if (!extraResponse.ok) throw Error('interaction-resource-unavailable');
     const extra = await extraResponse.json();
-    const experience = await (await fetch(RESOURCE_BASE + 'experience-manifest.json')).json();
+    const experience = await (await fetchManifest('experience-manifest.json')).json();
     if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();
     documents.set('player-equipment-bindings', player.equipment);

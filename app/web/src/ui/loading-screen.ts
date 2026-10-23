@@ -4,6 +4,7 @@ import {NativeMenuBlur} from '../render/native-menu-blur.ts';
 import {BitmapFont} from './vanilla.ts';
 import {LoadingProgress, loadingCell, loadingLayout, LOADING_RADIUS, PANORAMA_FACES} from './loading-progress.ts';
 import type {LoadingStage} from './loading-progress.ts';
+import {RESOURCE_BASE as BASE, fetchManifest} from '../render/resource-fetch.ts';
 
 /** The formal mount reports real work; the screen owns only temporary presentation. */
 export interface LoadingPort {
@@ -12,8 +13,6 @@ export interface LoadingPort {
     fail(message: string): void;
     dispose(): void;
 }
-/** Runtime prefix follows the same Vite base as every original resource. */
-const BASE = (import.meta.env?.BASE_URL ?? '/') + 'minecraft/26.3/';
 /** Every bootstrap byte is verified before it can become a font or panorama texture. */
 interface Entry {entry: string; size: number; sha256: string}
 
@@ -48,7 +47,7 @@ export class LoadingScreen implements LoadingPort {
      * @return {Promise<void>} Panorama and native text readiness.
      */
     async initialize(): Promise<void> {
-        const response = await fetch(BASE + 'startup-manifest.json');
+        const response = await fetchManifest('startup-manifest.json');
         if (!response.ok) throw Error('startup-resource-unavailable');
         const manifest = await response.json();
         if (manifest.version !== '26.3' || manifest.clientSha1 !== 'e877b6a07acd633fb3bb475002175cec036e7b87') throw Error('startup-resource-version');

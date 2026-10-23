@@ -1,0 +1,270 @@
+{
+  "fixture": {
+    "animationSamples": [
+      {
+        "error": "",
+        "frames": 37,
+        "smoothed": 0.3068616986274719,
+        "spin": 0.6583998799324036,
+        "target": 0.42857142857142855,
+        "time": 3978.699999988079
+      },
+      {
+        "error": "",
+        "frames": 72,
+        "smoothed": 0.3886895775794983,
+        "spin": 1.1581997871398926,
+        "target": 0.42857142857142855,
+        "time": 4230.400000035763
+      },
+      {
+        "error": "",
+        "frames": 106,
+        "smoothed": 0.4262726306915283,
+        "spin": 1.650200128555298,
+        "target": 0.4545980335454019,
+        "time": 4478.900000035763
+      },
+      {
+        "error": "",
+        "frames": 143,
+        "smoothed": 0.4522427320480346,
+        "spin": 2.1499993801116943,
+        "target": 0.4719491035280509,
+        "time": 4732.5
+      },
+      {
+        "error": "",
+        "frames": 175,
+        "smoothed": 0.4831661581993103,
+        "spin": 2.65819787979126,
+        "target": 0.5118565644881434,
+        "time": 4980.100000023842
+      },
+      {
+        "error": "",
+        "frames": 213,
+        "smoothed": 0.5120683908462524,
+        "spin": 3.158395767211914,
+        "target": 0.5367264314632736,
+        "time": 5230.600000023842
+      },
+      {
+        "error": "",
+        "frames": 239,
+        "smoothed": 0.5386815667152405,
+        "spin": 3.5331945419311523,
+        "target": 0.5679583574320416,
+        "time": 5513.199999988079
+      },
+      {
+        "error": "",
+        "frames": 243,
+        "smoothed": 0.5492212176322937,
+        "spin": 3.7581944465637207,
+        "target": 0.5714285714285714,
+        "time": 6265.5
+      },
+      {
+        "error": "",
+        "frames": 262,
+        "smoothed": 0.6408228278160095,
+        "spin": 5.641594886779785,
+        "target": 0.7142857142857143,
+        "time": 6559.100000023842
+      },
+      {
+        "error": "",
+        "frames": 284,
+        "smoothed": 0.6902133822441101,
+        "spin": 6.149795055389404,
+        "target": 0.7152736613317526,
+        "time": 6729.400000035763
+      },
+      {
+        "error": "",
+        "frames": 313,
+        "smoothed": 0.7076404690742493,
+        "spin": 6.64999532699585,
+        "target": 0.7170519660146216,
+        "time": 6980.400000035763
+      },
+      {
+        "error": "",
+        "frames": 343,
+        "smoothed": 0.7213984131813049,
+        "spin": 7.1497955322265625,
+        "target": 0.7356253704801423,
+        "time": 7230.699999988079
+      },
+      {
+        "error": "",
+        "frames": 375,
+        "smoothed": 0.7344291806221008,
+        "spin": 7.658196449279785,
+        "target": 0.7470855562141869,
+        "time": 7487.699999988079
+      },
+      {
+        "error": "",
+        "frames": 404,
+        "smoothed": 0.7514719367027283,
+        "spin": 8.158196449279785,
+        "target": 0.7680300335901996,
+        "time": 7733.400000035763
+      },
+      {
+        "error": "",
+        "frames": 436,
+        "smoothed": 0.7689319849014282,
+        "spin": 8.658391952514648,
+        "target": 0.7862082592373049,
+        "time": 7985.199999988079
+      },
+      {
+        "error": "",
+        "frames": 463,
+        "smoothed": 0.7864958643913269,
+        "spin": 9.141589164733888,
+        "target": 0.8028057696107488,
+        "time": 8239.900000035763
+      },
+      {
+        "error": "",
+        "frames": 490,
+        "smoothed": 0.804646909236908,
+        "spin": 9.649784088134766,
+        "target": 0.8184153329381545,
+        "time": 8478.699999988079
+      },
+      {
+        "error": "",
+        "frames": 507,
+        "smoothed": 0.8143455386161804,
+        "spin": 9.916583061218262,
+        "target": 0.8296779292629914,
+        "time": 8956.600000023842
+      },
+      {
+        "error": "",
+        "frames": 509,
+        "smoothed": 0.8288030624389648,
+        "spin": 10.908183097839355,
+        "target": 0.8328393598103141,
+        "time": 9279.100000023842
+      },
+      {
+        "error": "",
+        "frames": 512,
+        "smoothed": 0.8342353701591492,
+        "spin": 11.874982833862305,
+        "target": 0.8375815056312982,
+        "time": 9723.400000035765
+      },
+      {
+        "error": "",
+        "frames": 515,
+        "smoothed": 0.8390701413154602,
+        "spin": 12.74978256225586,
+        "target": 0.8423236514522822,
+        "time": 10173.5
+      },
+      {
+        "error": "",
+        "frames": 517,
+        "smoothed": 0.8422421813011169,
+        "spin": 13.374982833862305,
+        "target": 0.8454850819996048,
+        "time": 10470.100000023842
+      },
+      {
+        "error": "",
+        "frames": 520,
+        "smoothed": 0.8473193049430847,
+        "spin": 14.358383178710938,
+        "target": 0.8502272278205888,
+        "time": 10974.69999998808
+      },
+      {
+        "error": "",
+        "frames": 523,
+        "smoothed": 0.8517746925354004,
+        "spin": 15.241382598876951,
+        "target": 0.8549693736415728,
+        "time": 11417
+      },
+      {
+        "error": "",
+        "frames": 525,
+        "smoothed": 0.8549032807350159,
+        "spin": 15.833182334899902,
+        "target": 0.8571428571428571,
+        "time": 11848.19999998808
+      }
+    ],
+    "assertions": {
+      "loadingRetiredOrFailed": true,
+      "noGameCaptions": true,
+      "pendingNeverShowsNavigation": true,
+      "pendingNeverShowsWorld": true,
+      "realWorkCompleted": true,
+      "releasedGpuAfterReady": true,
+      "settled": true
+    },
+    "cleanup": {
+      "ended": true,
+      "frames": 526,
+      "images": 0,
+      "memory": {
+        "geometries": 0,
+        "textures": 0
+      },
+      "scene": 0,
+      "stages": {
+        "bootstrap": 1,
+        "code": 1,
+        "frame": 1,
+        "icons": 1,
+        "resources": 1,
+        "rules": 1,
+        "save": 1
+      },
+      "target": 1
+    },
+    "failure": false,
+    "page": "game",
+    "passed": true,
+    "records": [
+      {
+        "boot": "ready",
+        "caption": null,
+        "chatReady": "true",
+        "copy": false,
+        "error": null,
+        "frames": 284,
+        "inventory": "true",
+        "label": "settled",
+        "loading": null,
+        "nativeButtons": true,
+        "navVisible": true,
+        "status": null,
+        "worldVisible": true
+      }
+    ],
+    "resourceError": null,
+    "stage": "none",
+    "staleHits": 0
+  },
+  "root": {
+    "boot": "ready",
+    "build": "5beabff71dbf",
+    "catalogueIcons": "113",
+    "completed": "false",
+    "generation": "6a7b6b92-ff45-4837-a007-39bcd20731c9",
+    "hasCake": "false",
+    "inventoryReady": "true",
+    "resources": "26.3",
+    "revision": "104",
+    "saveStatus": "ready"
+  }
+}

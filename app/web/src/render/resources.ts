@@ -1,9 +1,8 @@
 /** Browser resource loader verifies original bytes before decoding shared model, texture and GUI primitives. */
 import {compileModel, resolveModel} from './model-format.ts';
 import type {CompiledModel, ModelSource, Variant} from './model-format.ts';
-
-/** Vite owns all deployment-prefix resolution, including repository Pages paths. */
-export const RESOURCE_BASE = (import.meta.env?.BASE_URL ?? '/') + 'minecraft/26.3/';
+import {RESOURCE_BASE, fetchManifest} from './resource-fetch.ts';
+export {RESOURCE_BASE} from './resource-fetch.ts';
 
 export interface Pixels {
     width: number;
@@ -44,7 +43,7 @@ export interface Resources extends VanillaPack {
 export async function loadResources(world = false, progress?: (done: number, total: number) => void): Promise<Resources> {
     const start = performance.now(),
         manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
-            const r = await fetch(RESOURCE_BASE + name);
+            const r = await fetchManifest(name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
             if (m.version !== '26.3' || m.clientSha1 !== 'e877b6a07acd633fb3bb475002175cec036e7b87') throw new Error('resource-version');
