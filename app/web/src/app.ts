@@ -132,7 +132,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     root.className = page;
     root.dataset.build = import.meta.env.BUILD_ID;
     const header = document.createElement('header'),
-        brand = page === 'home' ? node('p', 'home.eyebrow', 'brand') : null,
         main = document.createElement('main'), copy = document.createElement('article'),
         host = document.createElement('section'), startupError = document.createElement('p');
     main.className = page + '-layout';
@@ -140,7 +139,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     host.className = 'scene-panel';
     host.id = 'scene';
     if (page === 'home') copy.append(node('h1', 'home.title'), node('p', 'home.story', 'story'));
-    if (brand) header.append(brand);
     const link = node('a', page === 'home' ? 'home.invite' : 'game.back', 'invite') as HTMLAnchorElement;
     link.href = page === 'home' ? base + 'game/' : base;
     link.id = 'invitation';
@@ -371,7 +369,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             inventory?.sync(s, value.writable, value.envelope.generation);
             advancements?.sync(s.progress.advancements,value.envelope.generation);
             if (page === 'home') scene?.setCake(placed);
-            if (page === 'home') setText(link, placed ? 'home.return' : 'home.invite');
             if (edits.generation && edits.generation !== value.envelope.generation) clearText(preferenceFeedback);
             if(weatherGeneration&&weatherGeneration!==value.envelope.generation){localWeather?.stop();localWeather?.status('weather.locationNeeded');}
             weatherGeneration=value.envelope.generation;

@@ -5,19 +5,19 @@
 .pixel-text{position:relative;display:block;min-width:0;margin:0}.pixel-text>canvas:not(.button-sprite){display:block;max-width:100%;pointer-events:none}
 .mc-button{position:relative;display:block;min-height:44px;min-width:130px;padding:12px 18px;border:0;background:#707778;color:#fff;text-decoration:none;cursor:pointer;text-align:center;overflow:hidden}
 .button-sprite{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}.mc-button>canvas:not(.button-sprite){position:relative;z-index:1}.mc-button:focus-visible{outline:3px solid #ffffff;outline-offset:4px}.mc-button:disabled{opacity:.55;cursor:default}
-header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-between;align-items:center;padding:20px 32px;background:#1c2925}header .brand{flex:1}header button{width:180px}
+header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:flex-end;padding:20px 32px;pointer-events:none}header button{width:180px;pointer-events:auto}
 #app{min-height:100svh;display:flex;flex-direction:column}.home-layout,.game-layout{position:relative;display:flow-root;flex:1 0 auto;min-height:500px}
 .scene-panel{position:absolute;inset:0;min-width:0;overflow:hidden}.scene-panel>canvas[role=img]{position:absolute;inset:0;width:100%;height:100%;image-rendering:auto;touch-action:none}
 .copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;min-width:0;padding:22px 28px;background:#17251bd9;pointer-events:none}
-.home-layout .copy{margin:20px auto 0;width:min(1000px,calc(100% - 48px));text-align:center;background:linear-gradient(#13251aef,#13251ac9);border:1px solid #91a58b55}
+.home-layout .copy{margin:96px auto 0;width:min(1000px,calc(100% - 48px));text-align:center;background:linear-gradient(#13251aef,#13251ac9);border:1px solid #91a58b55}
 .copy h1{color:#ffffff}.copy .invite{pointer-events:auto;align-self:center;width:min(390px,100%);margin-top:2px}
 .game-layout .copy{width:min(520px,calc(100% - 48px));margin:20px 24px 0;gap:12px}
 
 #retry-save{margin:0 32px 20px;max-width:420px}
 .settings{max-width:min(650px,calc(100vw - 32px));width:650px;max-height:calc(100svh - 36px);padding:28px;background:#323934;border:4px solid #121713;box-shadow:inset 3px 3px #6d786b,inset -3px -3px #1a211c;overflow:auto}.settings::backdrop{background:#07120ca8}.settings>*{margin-bottom:20px}.settings h2{margin-bottom:28px}.settings select{width:100%;padding:8px;color:inherit;background:#1c2925}.settings input[type=range]{width:100%;accent-color:#c3b27c}.settings input[type=checkbox]{width:20px;height:20px;accent-color:#c3b27c}.settings button{width:100%;margin-top:14px}.settings .reset-note{margin-top:24px}#preference-feedback{min-height:44px}#reset-confirmation{padding:18px;border:2px solid #aab7a4}[hidden]{display:none!important}
-@media(max-width:700px){header{padding:16px;gap:12px}header button{width:140px}.home-layout,.game-layout{min-height:920px}.home-layout .copy{margin-top:14px;width:calc(100% - 24px);padding:18px;gap:14px}.game-layout .copy{margin:14px 12px 0;width:calc(100% - 24px);padding:18px}.settings{padding:22px}.settings>*{max-width:100%}}
+@media(max-width:700px){header{padding:16px}header button{width:140px}.home-layout,.game-layout{min-height:920px}.home-layout .copy{margin-top:82px;width:calc(100% - 24px);padding:18px;gap:14px}.game-layout .copy{margin:14px 12px 0;width:calc(100% - 24px);padding:18px}.settings{padding:22px}.settings>*{max-width:100%}}
 
-@media(min-width:701px) and (max-height:800px){.home-layout .copy{margin-top:12px;padding:14px 22px;gap:10px}}
+@media(min-width:701px) and (max-height:800px){.home-layout .copy{padding:14px 22px;gap:10px}}
 
 /* Screen GUI pixels and semantic hit surfaces have one integer scale independent of the 3D camera. */
 .hotbar{position:fixed;z-index:4;left:50%;bottom:56px;transform:translateX(-50%);image-rendering:pixelated}.hotbar canvas{position:absolute;inset:0;pointer-events:none}.hotbar button{position:absolute;top:0;background:transparent;border:0;padding:0;cursor:pointer;min-width:0}.hotbar button:focus-visible{outline:2px solid #fff;outline-offset:-3px}

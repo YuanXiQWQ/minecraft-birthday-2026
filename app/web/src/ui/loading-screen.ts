@@ -97,7 +97,7 @@ export class LoadingScreen implements LoadingPort {
      * @param {number} total Planned units for this owner.
      */
     update(stage: LoadingStage, done: number, total = 1): void {this.progress.update(stage, done, total);}
-    /** Paint native panorama, overlay, menu texture, status pixels and progress at current DPR.
+    /** Paint native panorama and progress at current DPR, keeping wrapped labels above the bar.
      * @param {number} now RAF realtime milliseconds.
      */
     render(now: number): void {
@@ -120,7 +120,7 @@ export class LoadingScreen implements LoadingPort {
                 if (line && this.font.width(candidate) > layout.w - 16) {lines.push(line); line = word;} else line = candidate;
             }
             if (line) lines.push(line);
-            lines.forEach((value, index) => this.font!.draw(c, value, layout.cx - Math.floor(this.font!.width(value) / 2), layout.textY + index * 12, '#FFFFFF', true));
+            lines.forEach((value, index) => this.font!.draw(c, value, layout.cx - Math.floor(this.font!.width(value) / 2), layout.textY - (lines.length - 1 - index) * 12, '#FFFFFF', true));
             if (!this.error) {
                 c.fillStyle = '#000000'; c.fillRect(layout.barX, layout.barY, 200, 2);
                 c.fillStyle = '#00FF00'; c.fillRect(layout.barX, layout.barY, Math.round(this.progress.smoothed * 200), 2);
