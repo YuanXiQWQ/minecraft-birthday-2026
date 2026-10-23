@@ -1,0 +1,42 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Official Java 26.3 client.jar; bounded native UI dependencies",
+  "entries": [
+    {
+      "entry": "assets/minecraft/textures/gui/header_separator.png",
+      "size": 75,
+      "sha256": "5f7074d9a35e6a06b3cbba879532ac92b2a66ef6a15888e59dae9c5ae0795931"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/footer_separator.png",
+      "size": 74,
+      "sha256": "31d9ea715f2974218ae0a1ded741edb0889b4515933754c54912c9f275ba6ff3"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/inworld_header_separator.png",
+      "size": 75,
+      "sha256": "5f7074d9a35e6a06b3cbba879532ac92b2a66ef6a15888e59dae9c5ae0795931"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/inworld_footer_separator.png",
+      "size": 74,
+      "sha256": "31d9ea715f2974218ae0a1ded741edb0889b4515933754c54912c9f275ba6ff3"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/menu_list_background.png",
+      "size": 74,
+      "sha256": "3fda6347ee8ba0508ba2a83a0cb6c8f02a34403e91713d6881338b4399782110"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/inworld_menu_list_background.png",
+      "size": 74,
+      "sha256": "3fda6347ee8ba0508ba2a83a0cb6c8f02a34403e91713d6881338b4399782110"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/hud/crosshair.png",
+      "size": 81,
+      "sha256": "5dc5e55cd66df2f27fefbd98bb97770844b0d2c24aaada16fe271b35b071e65e"
+    }
+  ]
+}

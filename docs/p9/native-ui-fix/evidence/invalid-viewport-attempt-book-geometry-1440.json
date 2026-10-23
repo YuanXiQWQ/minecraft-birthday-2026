@@ -1,0 +1,28 @@
+{
+  "book": {
+    "bottom": 633.8000030517578,
+    "height": 398.3999938964844,
+    "left": 280.8000183105469,
+    "right": 633.6000366210938,
+    "top": 235.40000915527344,
+    "width": 352.8000183105469,
+    "x": 280.8000183105469,
+    "y": 235.40000915527344
+  },
+  "canvas": {
+    "h": 498,
+    "w": 441
+  },
+  "field": "{\"cursor\":3,\"start\":3,\"end\":3,\"scroll\":0,\"focusedAt\":43077.69999998808}",
+  "menu": "{\"generation\":\"267583ef-8d53-4e61-a881-ac7d7baa46d6\",\"identity\":\"[\\\"267583ef-8d53-4e61-a881-ac7d7baa46d6\\\",1,\\\"plains\\\",[\\\"personal\\\",\\\"crafting\\\",2]]\",\"mode\":\"crafting\",\"width\":2,\"open\":true,\"query\":\"oak\",\"category\":\"all\",\"page\":0,\"groups\":4,\"recipes\":[\"minecraft:oak_button\",\"minecraft:oak_planks\",\"minecraft:oak_pressure_plate\",\"minecraft:oak_wood\"],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+  "search": {
+    "bottom": 300.200008392334,
+    "height": 33.60000228881836,
+    "left": 340.8000183105469,
+    "right": 535.2000274658203,
+    "top": 266.6000061035156,
+    "width": 194.40000915527344,
+    "x": 340.8000183105469,
+    "y": 266.6000061035156
+  }
+}

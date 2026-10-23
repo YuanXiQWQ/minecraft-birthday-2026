@@ -41,7 +41,7 @@ const files = walk(root).map(p => {
   } else {
     assert.ok(['index.html', 'game/index.html', '.vite/manifest.json', 'THIRD_PARTY_LICENSES.md'].includes(file) || /^assets\/[a-zA-Z0-9_.-]+\.(js|css)$/.test(file), file);
     const text = bytes.toString();
-    for (const denied of ['experiments/', 'AGENTS.md', 'docs/context/', 'client.jar', 'SlotExperiment', 'Fixture: place cake', 'P3_TEST_ONLY', 'P7_TEST_ONLY', 'P8_TEST_ONLY', '__verify__/', 'MC_LOCAL_SAMPLES', 'F:/JerryCode/', 'AppData/Local/Temp']) assert.ok(!text.includes(denied), denied + ' in ' + file);
+    for (const denied of ['experiments/', 'AGENTS.md', 'docs/context/', 'client.jar', 'SlotExperiment', 'Fixture: place cake', 'P3_TEST_ONLY', 'P7_TEST_ONLY', 'P8_TEST_ONLY', 'Observe native UI for 12 seconds', 'Fixture: finite oak log', 'native-evidence', '__verify__/', 'MC_LOCAL_SAMPLES', 'F:/JerryCode/', 'AppData/Local/Temp']) assert.ok(!text.includes(denied), denied + ' in ' + file);
     assert.ok(!/(?:ghp_[a-zA-Z0-9]{30,}|github_pat_[a-zA-Z0-9_]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)/.test(text), 'credential-shaped content in ' + file);
   }
   return {file, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex')};

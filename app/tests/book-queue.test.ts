@@ -314,6 +314,10 @@ test('native ghost drawing never paints over a real finite input or a genuine ma
  * @return {object} Original book methods and observable draw calls.
  */
 function attachLifecycleBook(h: Awaited<ReturnType<typeof harness>>) {
+    Object.defineProperty(globalThis, 'devicePixelRatio', {value: 1, configurable: true});
+    Object.defineProperty(globalThis, 'document', {value: {hidden: false}, configurable: true});
+    Object.defineProperty(globalThis, 'requestAnimationFrame', {value: () => 1, configurable: true});
+    Object.defineProperty(globalThis, 'cancelAnimationFrame', {value: () => {}, configurable: true});
     Object.defineProperty(globalThis, 'innerWidth', {value: 1280, writable: true, configurable: true});
     Object.defineProperty(globalThis, 'window', {value: {setTimeout, clearTimeout}, configurable: true});
     const classes = new Set<string>();
@@ -328,6 +332,8 @@ function attachLifecycleBook(h: Awaited<ReturnType<typeof harness>>) {
         generation: u.generation,
         displayEpoch: 0,
         toastEpoch: 0,
+        animationFrame: 0,
+        pulses: new Map(), pulseStarted: new Set(),
         disposed: false,
         signature: '',
         query: '',
@@ -362,7 +368,7 @@ function attachLifecycleBook(h: Awaited<ReturnType<typeof harness>>) {
             }, getContext: () => ({
                 clearRect() {
                 }, drawImage() {
-                }
+                }, setTransform() {}, save() {}, restore() {}, scale() {}
             })
         },
         toastTimer: 0,
@@ -614,6 +620,8 @@ test('stale book preference failures and notification timeouts cannot mutate a n
     book.notify([torch.id], old);
     assert.equal(book.toastEpoch, epoch);
     callbacks[1]();
+    assert.equal(book.toast.hidden, false);
+    callbacks.at(-1)!();
     assert.equal(book.toast.hidden, true);
 });
 
@@ -779,4 +787,21 @@ test('actual book reports input conflict separately from complete finite materia
     assert.ok(!display.missing.some(Boolean));
     assert.equal(h.raw(), before);
     assert.equal(u.value.crafting![0]?.id, 'minecraft:oak_log');
+});
+
+test('native pulse survives the real book-seen receipt and unrelated snapshots without restarting', async () => {
+    const h = await harness(), {book} = attachLifecycleBook(h);
+    await h.s.dispatch({type: 'unlock', item: 'minecraft:stone_pickaxe'});
+    const recipe = BOOK_RECIPES.find(r => r.id === 'minecraft:torch')!;
+    book.root.hidden = false; book.groups = [{key: 'torch', recipes: [recipe]}];
+    book.startPulses(); const started = book.pulses.get('recipe:torch');
+    assert.equal(typeof started, 'number');
+    await h.s.dispatch({type: 'book-seen', recipes: [recipe.id]});
+    book.root.hidden = false; book.groups = [{key: 'torch', recipes: [recipe]}]; book.startPulses();
+    assert.equal(book.pulses.get('recipe:torch'), started);
+    await h.s.dispatch({type: 'settings', patch: {volume: .35}});
+    book.root.hidden = false; book.groups = [{key: 'torch', recipes: [recipe]}]; book.startPulses();
+    assert.equal(book.pulses.get('recipe:torch'), started);
+    const other = await h.other(); await other.reset(token(other.view.envelope!)); await h.s.refresh();
+    assert.equal(book.pulses.size, 0); assert.equal(book.pulseStarted.size, 0);
 });

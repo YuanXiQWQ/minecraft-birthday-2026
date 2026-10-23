@@ -1,0 +1,2820 @@
+{
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "width": 1280,
+    "height": 720,
+    "dpr": 1.25
+  },
+  "records": [
+    {
+      "at": 45671.10000002384,
+      "elapsed": 951,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45812.60000002384,
+      "elapsed": 1092.5,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45887.30000001192,
+      "elapsed": 1167.199999988079,
+      "toast": {
+        "visible": 0.000014694444596767425,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45845.10000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45926.5,
+      "elapsed": 1206.3999999761581,
+      "toast": {
+        "visible": 0.014600694444444444,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45913.90000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45938.40000003576,
+      "elapsed": 1218.300000011921,
+      "toast": {
+        "visible": 0.021025,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45928.40000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45943.80000001192,
+      "elapsed": 1223.699999988079,
+      "toast": {
+        "visible": 0.027115111117654373,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45940.10000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45949.30000001192,
+      "elapsed": 1229.199999988079,
+      "toast": {
+        "visible": 0.030218027784685297,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45945.60000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 45954.200000047684,
+      "elapsed": 1234.1000000238419,
+      "toast": {
+        "visible": 0.03373344443714619,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45951.60000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": null,
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46000.5,
+      "elapsed": 1280.3999999761581,
+      "toast": {
+        "visible": 0.036544694436848164,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45956.10000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46007.40000003576,
+      "elapsed": 1287.300000011921,
+      "toast": {
+        "visible": 0.07200277777777776,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46002.40000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46042.10000002384,
+      "elapsed": 1322,
+      "toast": {
+        "visible": 0.10573336113695303,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46036.5,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46064.80000001192,
+      "elapsed": 1344.699999988079,
+      "toast": {
+        "visible": 0.1146951110976537,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46044.700000047684,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46088.700000047684,
+      "elapsed": 1368.6000000238419,
+      "toast": {
+        "visible": 0.14150136109616357,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46067.10000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46098.60000002384,
+      "elapsed": 1378.5,
+      "toast": {
+        "visible": 0.17333344446098806,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46091.200000047684,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46106.10000002384,
+      "elapsed": 1386,
+      "toast": {
+        "visible": 0.18792225003445148,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46101.5,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 46119.200000047684,
+      "elapsed": 1399.1000000238419,
+      "toast": {
+        "visible": 0.19832177776008184,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46108.60000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 47117.40000003576,
+      "elapsed": 2397.300000011921,
+      "toast": {
+        "visible": 0.21793336114821169,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46121.5,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 48121.10000002384,
+      "elapsed": 3401,
+      "toast": {
+        "visible": 1,
+        "index": 1,
+        "phase": "hold",
+        "fullyVisibleFor": 678.6999999880791,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 47120.40000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 49125.700000047684,
+      "elapsed": 4405.600000023842,
+      "toast": {
+        "visible": 1,
+        "index": 2,
+        "phase": "hold",
+        "fullyVisibleFor": 1685.199999988079,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 48126.60000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 50125.90000003576,
+      "elapsed": 5405.800000011921,
+      "toast": {
+        "visible": 1,
+        "index": 4,
+        "phase": "hold",
+        "fullyVisibleFor": 2689.800000011921,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 49131.200000047684,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 51129.60000002384,
+      "elapsed": 6409.5,
+      "toast": {
+        "visible": 1,
+        "index": 5,
+        "phase": "hold",
+        "fullyVisibleFor": 3700.5,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 50141.90000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      },
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 52134.5,
+      "elapsed": 7414.399999976158,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 53137.700000047684,
+      "elapsed": 8417.600000023842,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 54138.30000001192,
+      "elapsed": 9418.199999988079,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 55142.60000002384,
+      "elapsed": 10422.5,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 56142.90000003576,
+      "elapsed": 11422.800000011921,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    },
+    {
+      "at": 57146.5,
+      "elapsed": 12426.399999976158,
+      "toast": null,
+      "pulses": [
+        {
+          "key": "minecraft:crafting_shaped:misc:minecraft:crafting_table",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:redstone:wooden_button",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shapeless:building:planks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:redstone:wooden_pressure_plate",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:building:bark",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        },
+        {
+          "key": "minecraft:crafting_shaped:misc:sticks",
+          "scale": 1,
+          "started": null,
+          "pivot": [
+            8,
+            12
+          ]
+        }
+      ],
+      "chat": "{\"scale\":2,\"width\":320,\"base\":279,\"height\":90,\"input\":[4,307,629,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"First acquired: Stick\"],\"offset\":0}",
+      "audio": "[{\"event\":\"activation\",\"status\":\"running\",\"at\":11478.100000023842,\"audioTime\":0,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":12442.400000035763,\"audioTime\":0.9404081632653061,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":18112,\"audioTime\":6.6118820861678005,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":19114.600000023842,\"audioTime\":7.610340136054422,\"epoch\":0},{\"event\":\"activation\",\"status\":\"running\",\"at\":45733.200000047684,\"audioTime\":32.74013605442177,\"epoch\":0},{\"event\":\"ui.toast.in\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/in.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5459863945578232,\"at\":45959.60000002384,\"audioTime\":32.88235827664399,\"epoch\":0},{\"event\":\"ui.toast.out\",\"status\":\"scheduled\",\"sample\":\"assets/minecraft/sounds/ui/toast/out.ogg\",\"volume\":0.07999999821186066,\"pitch\":1,\"duration\":1.5546485260770975,\"at\":51485.200000047684,\"audioTime\":38.4,\"epoch\":0}]",
+      "effect": "container",
+      "tabs": [
+        {
+          "key": "tab:all",
+          "scale": "1"
+        },
+        {
+          "key": "tab:equipment",
+          "scale": "1"
+        },
+        {
+          "key": "tab:building",
+          "scale": "1"
+        },
+        {
+          "key": "tab:misc",
+          "scale": "1"
+        },
+        {
+          "key": "tab:redstone",
+          "scale": "1"
+        }
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "kind": "toast",
+      "at": 45845.10000002384,
+      "elapsed": 4,
+      "timeline": {
+        "visible": 0.000014694444596767425,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 45845.10000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    },
+    {
+      "kind": "toast",
+      "at": 46002.40000003576,
+      "elapsed": 161.30000001192093,
+      "timeline": {
+        "visible": 0.07200277777777776,
+        "index": 0,
+        "phase": "show",
+        "fullyVisibleFor": 0,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 46002.40000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    },
+    {
+      "kind": "toast",
+      "at": 47120.40000003576,
+      "elapsed": 1279.300000011921,
+      "timeline": {
+        "visible": 1,
+        "index": 1,
+        "phase": "hold",
+        "fullyVisibleFor": 678.6999999880791,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 47120.40000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    },
+    {
+      "kind": "toast",
+      "at": 48126.60000002384,
+      "elapsed": 2285.5,
+      "timeline": {
+        "visible": 1,
+        "index": 2,
+        "phase": "hold",
+        "fullyVisibleFor": 1685.199999988079,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 48126.60000002384,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    },
+    {
+      "kind": "toast",
+      "at": 49131.200000047684,
+      "elapsed": 3290.100000023842,
+      "timeline": {
+        "visible": 1,
+        "index": 4,
+        "phase": "hold",
+        "fullyVisibleFor": 2689.800000011921,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 49131.200000047684,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    },
+    {
+      "kind": "toast",
+      "at": 50141.90000003576,
+      "elapsed": 4300.800000011921,
+      "timeline": {
+        "visible": 1,
+        "index": 5,
+        "phase": "hold",
+        "fullyVisibleFor": 3700.5,
+        "started": 45841.10000002384,
+        "changed": 0,
+        "at": 50141.90000003576,
+        "recipes": [
+          "minecraft:wooden_spear",
+          "minecraft:wooden_sword",
+          "minecraft:campfire",
+          "minecraft:ladder",
+          "minecraft:wooden_axe",
+          "minecraft:wooden_hoe",
+          "minecraft:wooden_pickaxe",
+          "minecraft:wooden_shovel"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "source": "final-book-1280x720.jpg",
+    "file": "final-book-search-crop.png",
+    "bounds": [
+      280,
+      235,
+      634,
+      309
+    ],
+    "operation": "pixel crop only; no resampling, retouching or model/text changes"
+  },
+  {
+    "source": "final-chat-messages-1280x720.jpg",
+    "file": "final-chat-crop.png",
+    "bounds": [
+      0,
+      500,
+      1280,
+      720
+    ],
+    "operation": "pixel crop only; no resampling, retouching or model/text changes"
+  }
+]

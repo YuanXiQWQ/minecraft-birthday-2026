@@ -176,5 +176,13 @@
   "game.inventoryFull": "Inventory full. Make room, then collect again.",
   "settings.soundOn": "Sound: ON",
   "settings.soundOff": "Sound: OFF",
-  "game.harvestOverflow": "{count} {item} did not fit in your inventory. You can take it from the Items catalogue."
+  "game.harvestOverflow": "{count} {item} did not fit in your inventory. You can take it from the Items catalogue.",
+  "chat.tag.system": "Server message.",
+  "chat.tag.local": "A local single-player message; no server signature.",
+  "settings.englishNative": "English (US)",
+  "menu.languageSearch": "Search languages",
+  "menu.volumeNative": "Master Volume: {percent}%",
+  "audio.uiBlocked": "Sound is blocked by the browser. Interact with the game to enable audio.",
+  "audio.uiFailed": "A sound sample could not be played. Gameplay and saved progress are unaffected.",
+  "menu.volumeOff": "Master Volume: OFF"
 }

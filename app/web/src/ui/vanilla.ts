@@ -69,7 +69,11 @@ export class BitmapFont {
    * @param {boolean} shadow Enable text shadow.
    */
   draw(context: CanvasRenderingContext2D, text: string, x: number, y: number, color = '#FFF', shadow = false): void {
-    if (shadow) this.draw(context, text, x + 1, y + 1, '#3F3F3F');
+    if (shadow) {
+      const hex = color.replace('#',''), rgb = parseInt(hex.length === 3 ? [...hex].map(c => c+c).join('') : hex.slice(0,6), 16),
+          shade = Number.isFinite(rgb) ? '#' + [rgb >> 16 & 255, rgb >> 8 & 255, rgb & 255].map(c => (c >> 2).toString(16).padStart(2,'0')).join('') : '#3F3F3F';
+      this.draw(context, text, x + 1, y + 1, shade);
+    }
     let tint = this.tints.get(color);
     if (!tint) {
       tint = document.createElement('canvas');

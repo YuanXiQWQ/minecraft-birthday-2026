@@ -1,4 +1,5 @@
 /** Native screen-plane recipe book renders original sprites, grouped recipes, search and display-only ghosts. */
+import {recipePulse, RecipeToastClock} from './native-animation.ts';
 import {nativeField} from './native-field.ts';
 import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
@@ -40,10 +41,18 @@ export class RecipeBookView {
   groups: RecipeGroup[] = [];
   clock = 0;
   toastTimer = 0;
+  toastExitTimer = 0;
   displayEpoch = 0;
   toastEpoch = 0;
   generation = '';
   disposed = false;
+  pulses = new Map<string, number>();
+  pulseStarted = new Set<string>();
+  animationFrame = 0;
+  seenRequests = new Set<string>();
+  toastClock = new RecipeToastClock();
+  toastPhase = '';
+  sound: ((id: string) => void) | null = null;
   abort = new AbortController();
 
   /** Attach original pixel surfaces without adding a WebGL context or taking ownership of slot events.
@@ -87,6 +96,7 @@ export class RecipeBookView {
     this.toast.className = 'recipe-toast';
     this.toast.setAttribute('role', 'status');
     this.toast.hidden = true;
+    document.addEventListener('visibilitychange', () => {if (document.hidden) this.clearToast();}, {signal: this.abort.signal});
     ui.host.append(this.toast);
     this.root.addEventListener('pointerenter', () => {
       ui.hover = null;
@@ -132,7 +142,8 @@ export class RecipeBookView {
   /** Clear a notification and fence its timeout without touching permanent discovery. */
   clearToast(): void {
     this.toastEpoch++;
-    clearTimeout(this.toastTimer);
+    this.toastClock?.clear(); this.toastPhase = '';
+    clearTimeout(this.toastTimer); clearTimeout(this.toastExitTimer);
     this.toastTimer = 0;
     this.toast.hidden = true;
     this.toast.getContext('2d')!.clearRect(0, 0, 160, 32);
@@ -165,7 +176,7 @@ export class RecipeBookView {
     this.canvas.getContext('2d')!.clearRect(0, 0, 147, 166);
     this.ui.notice = '';
     this.ui.hideTooltip();
-    if (notification) this.clearToast();
+    if (notification) {this.clearToast(); this.pulseStarted?.clear(); this.pulses?.clear(); this.seenRequests?.clear();}
     this.publish();
   }
 
@@ -288,6 +299,8 @@ export class RecipeBookView {
       this.signature = signature;
       this.buildControls();
     }
+    this.startPulses();
+    this.acknowledgeVisible();
     this.paint();
     this.publish();
   }
@@ -399,9 +412,8 @@ export class RecipeBookView {
       const cols = Math.min(4, this.popup.recipes.length);
       this.popup.recipes.forEach((recipe, i) => this.hit(itemName(recipe.result!.id!), [7 + i % cols * 25, 37 + Math.floor(i / cols) * 25, 24, 24], 'variant:' + i, e => this.choose(recipe, e.shiftKey)));
     }
-    const viewed = pageGroups.flatMap(g => g.recipes.map(r => r.id)).filter(id => this.ui.permanent!.progress.recipeBook.data.unseen.includes(id));
-    if (viewed.length) void this.ui.bookCommand?.({type: 'book-seen', recipes: viewed}).catch(() => {
-    });
+    this.startPulses();
+
   }
 
   /** Draw original layout, result icons and small native ingredient overlays without changing any slot. */
@@ -415,16 +427,19 @@ export class RecipeBookView {
     c.drawImage(this.image('recipe_book'), 0, 0, 147, 166, 0, 0, 147, 166);
     const filter = u.permanent!.progress.recipeBook.data.views[this.mode()].filter;
     this.sprite(c, (this.mode() === 'crafting' ? 'filter' : 'furnace_filter') + '_' + (filter ? 'enabled' : 'disabled') + (this.hover === 'filter' ? '_highlighted' : ''), 110, 12, 26, 16);
-    nativeField(c, u.pixels.font, this.search, [25, 16, 80, 9], u.text('book.searchHint'));
+    const fieldPath = 'assets/minecraft/textures/gui/sprites/widget/text_field' + (document.activeElement === this.search ? '_highlighted' : '') + '.png';
+    drawSprite(c, this.image('sprites/widget/text_field' + (document.activeElement === this.search ? '_highlighted' : '')), u.art.documents.get(fieldPath + '.mcmeta')?.gui?.scaling, 25, 13, 81, 14);
+    nativeField(c, u.pixels.font, this.search, [29, 16, 73, 9], {hint: u.text('book.searchHint'), italicHint: true, inset: 4});
     this.groups.slice(this.page * 20, this.page * 20 + 20).forEach((group, i) => {
-      const r = group.recipes[frame % group.recipes.length], x = 11 + i % 5 * 25, y = 31 + Math.floor(i / 5) * 25;
+      const r = group.recipes[frame % group.recipes.length], x = 11 + i % 5 * 25, y = 31 + Math.floor(i / 5) * 25,
+          pulse = recipePulse(performance.now() - (this.pulses?.get('recipe:' + group.key) ?? -Infinity));
+      c.save(); c.translate(x + 8, y + 12); c.scale(pulse, pulse); c.translate(-x - 8, -y - 12);
       this.sprite(c, 'slot_' + (group.recipes.length > 1 ? 'many_' : '') + (this.craftable(r) ? 'craftable' : 'uncraftable'), x, y, 25, 25);
-      u.stack(c, {id: r.result!.id!, count: r.result!.count ?? 1}, x + 4, y + 4);
-      if (u.permanent!.progress.recipeBook.data.unseen.includes(r.id)) {
-        c.fillStyle = '#FF5';
-        c.fillRect(x + 21, y + 1, 2, 2);
-      }
+      if (group.recipes.length > 1) u.stack(c, {id: r.result!.id!, count: 1}, x + 5, y + 5);
+      u.stack(c, {id: r.result!.id!, count: 1}, x + 4, y + 4);
+      c.restore();
     });
+    this.canvas.dataset.pulses = JSON.stringify(this.groups.slice(this.page * 20, this.page * 20 + 20).map(group => ({key: group.key, scale: recipePulse(performance.now() - (this.pulses?.get('recipe:' + group.key) ?? -Infinity)), started: this.pulses?.get('recipe:' + group.key) ?? null, pivot: [8,12]})));
     const pages = Math.max(1, Math.ceil(this.groups.length / 20)),
         counter = u.text('book.page', {page: this.page + 1, pages});
     u.pixels.font.draw(c, counter, 73 - u.pixels.font.width(counter) / 2, 141, '#FFF', false);
@@ -441,6 +456,8 @@ export class RecipeBookView {
       tile.style.position = 'absolute'; tile.style.left = -2 * u.scale + 'px';
       tile.style.width = 37 * u.scale + 'px'; tile.style.height = '100%'; tile.style.pointerEvents = 'none';
       tc.imageSmoothingEnabled = false;
+      const pulse = recipePulse(performance.now() - (this.pulses?.get('tab:' + category) ?? -Infinity));
+      tc.save(); tc.translate(8, 12); tc.scale(1, pulse); tc.translate(-8, -12);
       tc.drawImage(this.image('sprites/recipe_book/tab' + (category === this.category ? '_selected' : '')), category === this.category ? 0 : 2, 0);
       const icons: Record<string, string[]> = {
         all: ['compass'],
@@ -456,6 +473,8 @@ export class RecipeBookView {
         count: 1
       }, icons[category].length > 1 ? 5 + k * 12 : 11, 5));
 
+      tc.restore();
+      b.dataset.pulse = String(pulse);
       b.dataset.tabIndex = String(i);
     }
     if (this.popup) {
@@ -547,35 +566,82 @@ export class RecipeBookView {
     }
   }
 
-  /** Present a single original-style discovery toast only for newly committed local events.
-   * @param {string[]} recipes Newly discovered IDs, never hydration events.
+  /** Acknowledge highlighted variants once they have actually entered the visible native page. */
+  acknowledgeVisible(): void {
+    if (!this.seenRequests || this.root.hidden) return;
+    const viewed = this.groups.slice(this.page * 20, this.page * 20 + 20).flatMap(g => g.recipes.map(r => r.id)).filter(id => this.ui.permanent!.progress.recipeBook.data.unseen.includes(id) && !this.seenRequests.has(id));
+    if (!viewed.length) return;
+    viewed.forEach(id => this.seenRequests.add(id));
+    const epoch = this.displayEpoch, scope = this.identity;
+    void this.ui.bookCommand?.({type: 'book-seen', recipes: viewed}).catch(() => {if (this.current(epoch, scope)) viewed.forEach(id => this.seenRequests.delete(id));});
+  }
+
+  /** Start native pulses once per newly highlighted recipe, independently of the seen acknowledgement. */
+  startPulses(): void {
+    if (!this.pulses || this.root.hidden) return;
+    const unseen = new Set(this.ui.permanent!.progress.recipeBook.data.unseen), now = performance.now(), recipes = BOOK_RECIPES.filter(r => unseen.has(r.id) && bookApplicable(r, this.mode(), this.width()));
+    for (const category of this.categories()) {
+      const fresh = recipes.filter(r => (category === 'all' || r.category === category) && !this.pulseStarted.has('tab:' + category + ':' + r.id));
+      if (fresh.length) {this.pulses.set('tab:' + category, now); for (const r of fresh) this.pulseStarted.add('tab:' + category + ':' + r.id);}
+    }
+    for (const group of this.groups.slice(this.page * 20, this.page * 20 + 20)) {
+      const fresh = group.recipes.filter(r => unseen.has(r.id) && !this.pulseStarted.has('recipe:' + r.id));
+      if (fresh.length) {this.pulses.set('recipe:' + group.key, now); for (const r of fresh) this.pulseStarted.add('recipe:' + r.id);}
+    }
+    this.animate();
+  }
+
+  /** Coalesce bounded native control and toast animation; idle screens own no animation RAF. */
+  animate(): void {
+    if (this.animationFrame || this.disposed || document.hidden) return;
+    const pending = this.toastClock?.active || !this.root.hidden && [...(this.pulses?.values() ?? [])].some(start => performance.now() - start < 750);
+    if (!pending) return;
+    this.animationFrame = requestAnimationFrame(() => {
+      this.animationFrame = 0;
+      if (this.disposed || document.hidden) return;
+      this.paint(); this.paintToast(); this.animate();
+    });
+  }
+
+  /** Merge newly committed discoveries into RecipeToast's single native notification.
+   * @param {string[]} recipes Actual newly discovered recipe IDs.
    * @param {string} generation Source save generation.
    */
   notify(recipes: string[], generation = this.ui.generation): void {
-    if (this.disposed || this.ui.disposed || generation !== this.ui.generation) return;
-    this.syncScope();
-    recipes = recipes.filter(id => this.ui.permanent?.progress.recipeBook.data.known.includes(id));
+    if (this.disposed || this.ui.disposed || generation !== this.ui.generation || document.hidden) return;
+    this.syncScope(); recipes = recipes.filter(id => this.ui.permanent?.progress.recipeBook.data.known.includes(id));
     if (!recipes.length) return;
-    const c = this.toast.getContext('2d')!;
-    c.clearRect(0, 0, 160, 32);
-    c.imageSmoothingEnabled = false;
-    c.drawImage(this.image('sprites/toast/recipe'), 0, 0);
-    this.ui.pixels.font.draw(c, this.ui.text('book.newTitle'), 30, 7, '#500050', false);
-    this.ui.pixels.font.draw(c, this.ui.text('book.newDescription'), 30, 18, '#000', false);
-    const r = BOOK_RECIPES.find(r => recipes.includes(r.id));
-    if (r) this.ui.stack(c, {id: r.result!.id!, count: 1}, 8, 8);
+    this.toastClock ??= new RecipeToastClock();
+    const entering = !this.toastClock.active;
+    this.toastClock.add(recipes, performance.now());
+    this.toast.dataset.recipes = JSON.stringify(this.toastClock.entries);
     this.toast.setAttribute('aria-label', this.ui.text('book.newTitle') + ' ' + this.ui.text('book.newDescription'));
-    this.toast.dataset.recipes = JSON.stringify(recipes);
-    const scale = Math.max(1, Math.min(2, Math.floor((innerWidth - 16) / 160)));
-    this.toast.style.width = 160 * scale + 'px';
-    this.toast.style.height = 32 * scale + 'px';
+    if (entering) {this.toastPhase = 'show'; this.sound?.('ui.toast.in');}
+    const ticket = ++this.toastEpoch; clearTimeout(this.toastTimer);
+    const remaining = Math.max(0, this.toastClock.started + 600 + this.toastClock.changed + 5000 - performance.now());
+    clearTimeout(this.toastExitTimer);
+    this.toastExitTimer = window.setTimeout(() => {if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation && !document.hidden) {this.paintToast(); this.animate();}}, remaining);
+    this.toastTimer = window.setTimeout(() => {if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation) {this.paintToast(); this.clearToast();}}, remaining + 600);
+    this.paintToast(); this.animate(); this.render(); this.publish();
+  }
+
+  /** Draw RecipeToast at ToastInstance's squared slide offset and native icon-cycle time. */
+  paintToast(): void {
+    if (!this.toastClock?.active || this.disposed) return;
+    const sample = this.toastClock.sample(performance.now());
+    if ((sample.phase === 'hide' || sample.phase === 'done') && this.toastPhase !== 'hide' && this.toastPhase !== 'done') this.sound?.('ui.toast.out');
+    this.toastPhase = sample.phase;
+    if (sample.phase === 'done') {this.clearToast(); return;}
+    const scale = this.ui.scale, c = scaledCanvas(this.toast, 160, 32, scale), r = BOOK_RECIPES.find(r => r.id === this.toastClock.entries[sample.index]);
+    c.clearRect(0, 0, 160, 32); c.drawImage(this.image('sprites/toast/recipe'), 0, 0);
+    this.ui.pixels.font.draw(c, this.ui.text('book.newTitle'), 30, 7, '#500050', false);
+    this.ui.pixels.font.draw(c, this.ui.text('book.newDescription'), 30, 18, '#000000', false);
+    c.save(); c.scale(.6, .6); this.ui.stack(c, {id: r?.type === 'minecraft:blasting' ? 'minecraft:blast_furnace' : r?.type === 'minecraft:smelting' ? 'minecraft:furnace' : 'minecraft:crafting_table', count: 1}, 3, 3); c.restore();
+    if (r) this.ui.stack(c, {id: r.result!.id!, count: 1}, 8, 8);
+    this.toast.style.width = 160 * scale + 'px'; this.toast.style.height = 32 * scale + 'px';
+    this.toast.style.transform = `translateX(${160 * scale * (1 - sample.visible)}px)`;
+    this.toast.dataset.timeline = JSON.stringify({...sample, started: this.toastClock.started, changed: this.toastClock.changed, at: performance.now(), recipes: this.toastClock.entries});
     this.toast.hidden = false;
-    clearTimeout(this.toastTimer);
-    const ticket = ++this.toastEpoch;
-    this.toastTimer = window.setTimeout(() => {
-      if (!this.disposed && ticket === this.toastEpoch && generation === this.ui.generation) this.clearToast();
-    }, 5000);
-    this.publish();
   }
 
   /** Release book-only timers, hit targets and notifications with the owning formal screen. */
@@ -584,6 +650,7 @@ export class RecipeBookView {
     this.resetTransient(true);
     this.abort.abort();
     clearInterval(this.clock);
+    cancelAnimationFrame(this.animationFrame); this.animationFrame = 0;
     this.root.remove();
     this.toggle.remove();
     this.toast.remove();

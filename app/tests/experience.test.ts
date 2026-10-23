@@ -247,7 +247,7 @@ test('native-texture break fragments keep the existing RAF alive only until thei
                 },
                 getContext: () => ({}),
                 domElement: {dataset: {}},
-                info: {render: {calls: 1, triangles: 24}, memory: {geometries: 12}}
+                info: {autoReset: true, reset() {}, render: {calls: 1, triangles: 24}, memory: {geometries: 12}}
             }
         });
         v.breakEffect('oak_log', [0, 1, 0]);

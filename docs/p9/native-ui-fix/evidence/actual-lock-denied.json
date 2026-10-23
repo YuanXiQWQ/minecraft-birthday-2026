@@ -1,0 +1,5 @@
+{
+  "crosshair": "{\"visible\":false,\"bounds\":[259,125,15,15],\"scale\":2.4,\"logical\":[534,266],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+  "messages": "[{\"runs\":[{\"text\":\"Hold left: mine. Right: use / place. Right drag: look. Alt + right: attach. Ctrl + Alt + right: above device. R: rotate. E: items.\"}],\"time\":5980.100000023842,\"kind\":\"system\"},{\"runs\":[{\"text\":\"Progress is saved on this browser.\"}],\"time\":5982.600000023842,\"kind\":\"system\"},{\"runs\":[{\"text\":\"Plains\"}],\"time\":5984.900000035763,\"kind\":\"system\"},{\"runs\":[{\"text\":\"<NativeTester> \"},{\"text\":\"Happy birthday, Vincent!\"}],\"time\":195428.5,\"kind\":\"player\",\"identity\":\"NativeTester\"},{\"runs\":[{\"text\":\"Pointer lock is unavailable. Use the visible pointer and hold right-click to look.\"}],\"time\":205348.30000001192,\"kind\":\"system\"}]",
+  "mode": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":6}"
+}

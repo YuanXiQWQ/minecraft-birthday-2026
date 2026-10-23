@@ -168,7 +168,7 @@ export class GameInventory {
             this.draw();
         }, {signal: this.abort.signal});
         this.search = document.createElement('input');
-        this.search.type = 'search';
+        this.search.type = 'search'; this.search.maxLength = 50;
         this.search.className = 'catalogue-search';
         this.search.setAttribute('aria-label', text('inventory.nativeSearch'));
         this.search.addEventListener('input', () => {
@@ -275,7 +275,7 @@ export class GameInventory {
         this.resize();
         this.animation = window.setInterval(() => {
             if (document.hidden) return;
-            const caret = Math.floor(performance.now() / 500);
+            const caret = Math.floor(performance.now() / 50);
             const editing = this.modal.open && (document.activeElement === this.search || document.activeElement === this.book?.search);
             if (this.art.update(performance.now()) || editing && caret !== this.caretFrame) {this.caretFrame = caret; this.draw(false);}
         }, 50);
@@ -561,7 +561,7 @@ export class GameInventory {
         const nav = this.modal.querySelector<HTMLElement>('.inventory-tabs');
         if (nav) nav.hidden = !!this.station;
         this.search.hidden = this.tab !== 'catalogue';
-        this.search.style.cssText = 'left:' + 82 * this.scale + 'px;top:' + 5 * this.scale + 'px;width:' + 85 * this.scale + 'px;height:' + 10 * this.scale + 'px;font-size:' + 9 * this.scale + 'px';
+        this.search.style.cssText = 'left:' + 82 * this.scale + 'px;top:' + 6 * this.scale + 'px;width:' + 80 * this.scale + 'px;height:' + 9 * this.scale + 'px;font-size:' + 9 * this.scale + 'px';
         for (const b of this.modal.querySelectorAll<HTMLElement>('.inventory-tab')) {
             b.hidden = !!this.station;
             const selected = b.dataset.tab === this.tab;
@@ -594,7 +594,7 @@ export class GameInventory {
         this.slots = [];
         if (!personal) this.pixels.font.draw(ctx, this.text('inventory.nativeSearch'), 8, 6, '#404040', false);
         this.menuSlots(ctx);
-        if (this.tab === 'catalogue') nativeField(ctx, this.pixels.font, this.search, [82, 6, 85, 8]);
+        if (this.tab === 'catalogue') nativeField(ctx, this.pixels.font, this.search, [82, 6, 80, 9]);
         if (machine) this.drawFurnace(ctx);
         if (personal && bench) this.pixels.font.draw(ctx, this.text('inventory.nativeInventory'), 8, hopper ? 39 : 72, '#404040', false);
         this.scrollbar.hidden = !['presets', 'catalogue'].includes(this.tab);

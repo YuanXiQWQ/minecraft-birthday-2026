@@ -47,6 +47,7 @@ export class PixelUI {
     texts = new Map<HTMLElement, { text: string; scale: number; color: string }>();
     pending = new Set<() => void>();
     frame = 0;
+    editingTimer = 0;
 
     /** Bind already verified original GUI and font bytes.
      * @param {Resources} resources Shared resource owner.
@@ -122,6 +123,7 @@ export class PixelUI {
                 path = 'assets/minecraft/textures/gui/sprites/widget/' + name,
                 image = this.resources.guiImages.get(path);
             if (!image) return;
+            const label = this.texts.get(button); if (label) {label.color = disabled ? '#A0A0A0' : '#FFFFFF'; this.updates.get(button)?.();}
             canvas.width = Math.max(16, Math.ceil(button.clientWidth / 2));
             canvas.height = Math.max(20, Math.ceil(button.clientHeight / 2));
             const context = canvas.getContext('2d')!;
@@ -151,35 +153,66 @@ export class PixelUI {
         input.replaceWith(host); host.append(canvas, input);
         const draw = () => {
             const logical = Math.max(40, Math.floor(host.clientWidth / 2));
-            canvas.width = logical; canvas.height = 20;
+            const height = Number(input.dataset.nativeHeight) || 20;
+            canvas.width = logical; canvas.height = height; canvas.style.height = '100%';
             const ctx = canvas.getContext('2d')!, path = 'assets/minecraft/textures/gui/sprites/widget/text_field' + (document.activeElement === input ? '_highlighted' : '') + '.png', image = this.resources.guiImages.get(path);
             ctx.imageSmoothingEnabled = false;
-            if (image) drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, logical, 20);
-            nativeField(ctx, this.font, input, [4, 6, logical - 8, 8]);
+            if (image) drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, logical, height);
+            nativeField(ctx, this.font, input, [4, Math.floor((height - 8) / 2), logical - 8, 8], {hint: input.dataset.nativeHint, italicHint: input.dataset.italicHint === 'true', inset: 4});
         };
         for (const type of ['input', 'select', 'keyup', 'pointerup', 'focus', 'blur']) input.addEventListener(type, draw);
-        this.updates.set(input, draw); draw();
+        const observer = new ResizeObserver(() => this.queue(draw)); observer.observe(host); this.observers.push(observer);
+        this.updates.set(input, draw);
+        if (!this.editingTimer) this.editingTimer = window.setInterval(() => {if (!document.hidden && document.activeElement instanceof HTMLInputElement) this.updates.get(document.activeElement)?.();}, 50);
+        draw();
     }
 
-    /** Paint a native slider while retaining browser range semantics and the existing settings edit lifecycle.
+    /** Map native Java slider coordinates and key steps onto HTML range accessibility and the existing settings edit lifecycle.
      * @param {HTMLInputElement} input Real bounded range control.
      */
     slider(input: HTMLInputElement): void {
         const host = document.createElement('div'), canvas = document.createElement('canvas');
         host.className = 'native-slider'; input.replaceWith(host); host.append(canvas, input);
-        let highlighted = false;
+        let highlighted = false, changing = true, pointer: number | null = null;
+        input.step = 'any';
         const draw = () => {
-            canvas.width = 200; canvas.height = 20;
+            const width = Math.max(40, Math.floor(host.clientWidth / 2));
+            canvas.width = width; canvas.height = 20;
             const ctx = canvas.getContext('2d')!; ctx.imageSmoothingEnabled = false;
             for (const handle of [false, true]) {
                 const name = 'slider' + (handle ? '_handle' : '') + (highlighted ? '_highlighted' : ''), path = 'assets/minecraft/textures/gui/sprites/widget/' + name + '.png', image = this.resources.guiImages.get(path);
                 if (!image) continue;
                 const fraction = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
-                drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.round(192 * fraction) : 0, 0, handle ? 8 : 200, 20);
+                drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.floor((width - 8) * fraction) : 0, 0, handle ? 8 : width, 20);
             }
+            const label = input.dataset.nativeLabel ?? '';
+            this.font.draw(ctx, label, Math.floor((width - this.font.width(label)) / 2), 6, '#FFFFFF', true);
         };
+        /** Apply the native bounded slider value through the existing semantic input/change contract.
+         * @param {number} fraction Native zero-to-one position.
+         * @param {boolean} commit Whether this completed interaction submits its preference draft.
+         */
+        function setValue(fraction: number, commit = false): void {
+            input.value = String(Math.max(0, Math.min(1, fraction)));
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            if (commit) input.dispatchEvent(new Event('change', {bubbles: true}));
+        }
+        /** Map an actual pointer to AbstractSliderButton's four-pixel inset and width-minus-eight range.
+         * @param {number} x Pointer client position.
+         * @return {number} Native clamped interval coordinate.
+         */
+        function fraction(x: number): number {const r = host.getBoundingClientRect(), width = Math.max(40, Math.floor(host.clientWidth / 2)); return ((x - r.left) * width / r.width - 4) / (width - 8);}
+        input.addEventListener('pointerdown', e => {if (e.button !== 0 || input.disabled) return; e.preventDefault(); changing = true; input.focus(); pointer = e.pointerId; input.setPointerCapture(e.pointerId); setValue(fraction(e.clientX));});
+        input.addEventListener('pointermove', e => {if (pointer === e.pointerId && e.buttons & 1) setValue(fraction(e.clientX));});
+        input.addEventListener('pointerup', e => {if (pointer !== e.pointerId) return; pointer = null; input.dispatchEvent(new Event('change', {bubbles: true}));});
+        for (const type of ['pointercancel','lostpointercapture','blur']) input.addEventListener(type, () => {pointer = null;});
+        input.addEventListener('keydown', e => {
+            if (e.code === 'Space' || e.code === 'Enter') {e.preventDefault(); changing = !changing; draw();}
+            else if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {e.preventDefault(); if (changing) setValue(Number(input.value) + (e.code === 'ArrowLeft' ? -1 : 1) / (Math.max(40, Math.floor(host.clientWidth / 2)) - 8), true);}
+        });
+        const observer = new ResizeObserver(() => this.queue(draw)); observer.observe(host); this.observers.push(observer);
         for (const type of ['input', 'change']) input.addEventListener(type, draw);
-        for (const type of ['pointerenter', 'focus']) input.addEventListener(type, () => {highlighted = true; draw();});
+        for (const type of ['pointerenter', 'focus']) input.addEventListener(type, () => {highlighted = true; changing = true; draw();});
         for (const type of ['pointerleave', 'blur']) input.addEventListener(type, () => {highlighted = false; draw();});
         this.updates.set(input, draw); draw();
     }
@@ -200,6 +233,7 @@ export class PixelUI {
 
     /** Disconnect observers and release runtime font tints when the document is discarded. */
     dispose(): void {
+        clearInterval(this.editingTimer); this.editingTimer = 0;
         cancelAnimationFrame(this.frame);
         this.frame = 0;
         this.pending.clear();

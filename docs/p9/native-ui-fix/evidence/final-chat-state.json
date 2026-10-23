@@ -1,0 +1,11 @@
+{
+  "caret": "{\"cursor\":36,\"start\":36,\"end\":36,\"scroll\":0,\"focusedAt\":195456.60000002384}",
+  "effect": "none",
+  "filter": "none",
+  "layout": "{\"scale\":2.4,\"width\":320,\"base\":226,\"height\":180,\"input\":[4,254,530,12],\"lines\":[\"Hold left: mine. Right: use / place. Right drag: look. Alt + right:\",\"attach. Ctrl + Alt + right: above device. R: rotate. E: items.\",\"Progress is saved on this browser.\",\"Plains\",\"<NativeTester> Happy birthday, Vincent!\"],\"offset\":0}",
+  "messages": "[{\"runs\":[{\"text\":\"Hold left: mine. Right: use / place. Right drag: look. Alt + right: attach. Ctrl + Alt + right: above device. R: rotate. E: items.\"}],\"time\":5980.100000023842,\"kind\":\"system\"},{\"runs\":[{\"text\":\"Progress is saved on this browser.\"}],\"time\":5982.600000023842,\"kind\":\"system\"},{\"runs\":[{\"text\":\"Plains\"}],\"time\":5984.900000035763,\"kind\":\"system\"},{\"runs\":[{\"text\":\"<NativeTester> \"},{\"text\":\"Happy birthday, Vincent!\"}],\"time\":195428.5,\"kind\":\"player\",\"identity\":\"NativeTester\"}]",
+  "viewport": [
+    1280,
+    720
+  ]
+}

@@ -1,4 +1,6 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {NativeMenuBlur} from './native-menu-blur.ts';
+import {NativeCrosshair} from './native-crosshair.ts';
 import {timing, gpuTiming} from '../performance.ts';
 import {
     Color,
@@ -49,6 +51,8 @@ export class SceneView {
     cake: Group | null = null;
     look = new Look();
     mode: PointerMode | null = null;
+    crosshair: NativeCrosshair | null = null;
+    menuBlur = new NativeMenuBlur();
     onEscape: (() => void) | null = null;
     onPointerFailure: (() => void) | null = null;
     canUse: ((hit: Pick | null) => boolean) | null = null;
@@ -107,6 +111,7 @@ export class SceneView {
         if (!gl) throw new Error('webgl-unavailable');
         this.renderer = new WebGLRenderer({canvas, context: gl, antialias: true});
         this.renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        if (game) this.crosshair = new NativeCrosshair(pack.guiImages.get('assets/minecraft/textures/gui/sprites/hud/crosshair.png')!);
         canvas.setAttribute('aria-label', label);
         canvas.setAttribute('role', 'img');
         canvas.dataset.resourceVersion = '26.3';
@@ -148,7 +153,7 @@ export class SceneView {
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
         this.cancel = () => this.cancelInput();
-        if (game) this.mode = new PointerMode(canvas, () => {this.cancelInput(); this.refreshHover();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
+        if (game) this.mode = new PointerMode(canvas, () => {this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
         this.down = e => {
             if (!this.input || this.lost) return;
             if (this.mode?.enter()) {e.preventDefault(); return;}
@@ -526,6 +531,7 @@ export class SceneView {
         this.input = enabled;
         this.cancel();
         if (!enabled) this.showPreview(null);
+        this.requestRender();
     }
 
     /** Ray-pick actual geometry, respecting depth, opaque scenery and original alpha cutouts.
@@ -571,7 +577,13 @@ export class SceneView {
             this.updateDebris(start);
             const end = timing('cpu-render-submit'),
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
-            this.renderer.render(this.scene, this.camera);
+            const resetInfo = this.renderer.info.autoReset;
+            this.renderer.info.autoReset = false; this.renderer.info.reset();
+            try {
+                if (this.renderer.domElement.parentElement?.dataset.effect === 'menu') this.menuBlur.render(this.renderer, this.scene, this.camera);
+                else this.renderer.render(this.scene, this.camera);
+                this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden, lost: this.lost, disposed: this.disposed});
+            } finally {this.renderer.info.autoReset = resetInfo;}
             gpuEnd();
             end();
             this.frames++;
@@ -624,6 +636,7 @@ export class SceneView {
         this.updateDebris(Infinity);
         this.authored?.dispose();
         this.models.dispose();
+        this.crosshair?.dispose(); this.menuBlur.dispose();
         this.renderer.dispose();
         this.renderer.forceContextLoss();
         c.remove();

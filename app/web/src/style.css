@@ -79,3 +79,30 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .world-navigation button[aria-current=true]{outline:none}
 
 .scene-panel .item-cursor,.scene-panel .item-tooltip{position:absolute}.scene-panel .inventory-dialog{overflow:hidden}
+/* ChatScreen owns input without changing the world's post-processing or moving history above the hotbar. */
+.scene-panel .game-chat{inset:0;bottom:0;left:0;max-width:none;pointer-events:none}
+.game-chat>canvas{position:absolute;inset:0;pointer-events:none}.game-chat[data-open=true]{pointer-events:auto}
+.scene-panel .game-chat>input{position:absolute;max-width:none;margin:0;padding:0;opacity:0;border:0;background:transparent;caret-color:transparent}
+.scene-panel[data-overlay=true]>canvas[role=img],.scene-panel[data-overlay=true]>.hotbar{filter:none}
+.scene-panel[data-effect=menu]>canvas[role=img]{filter:blur(5px)}
+.scene-panel .inventory-dialog[open]{background:linear-gradient(#101010c0,#101010d0)}
+/* Native menu coordinates are logical pixels within the game viewport, with supported controls only. */
+.settings.native-screen,.game-menu.native-screen{position:absolute;inset:0;width:100%;height:100%;max-width:100%;max-height:100%;margin:0;padding:0;border:0;box-shadow:none;background:transparent;overflow:hidden}
+.home .settings.native-screen{position:fixed;max-width:100vw;max-height:100svh}
+.native-screen-background{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.native-screen-plane{position:absolute;left:0;top:0;isolation:isolate}
+.native-screen-plane>*{margin:0}.native-screen .mc-button{padding:0;min-width:0;min-height:0;overflow:hidden;text-align:center}
+.native-screen .mc-button>canvas:not(.button-sprite){position:absolute;top:12px;left:0;max-width:none;pointer-events:none}
+.native-screen h2{text-align:center;color:white}.native-screen .native-text-field,.native-screen .native-slider{height:40px}
+.native-screen section{pointer-events:none}.native-screen section>*,.native-screen section input{pointer-events:auto}
+.native-language-list{overflow-y:auto;pointer-events:auto}.native-language-row{position:relative;display:block;width:100%;height:36px;background:#000000aa;border:2px solid #808080;padding:0;outline:2px solid #000;outline-offset:-4px;color:white;text-align:center}
+.native-language-row:focus,.native-language-row:hover{border-color:white}.native-language-row>canvas{margin:8px auto 0;pointer-events:none}
+.native-screen #reset-confirmation{background:#161616f5;border:2px solid #888;padding:8px;overflow:auto;z-index:3;pointer-events:auto}
+.native-screen #reset-confirmation h3,.native-screen #reset-confirmation p{margin:0 0 8px}.native-screen #reset-confirmation button{position:relative;height:40px;margin:4px 0;width:100%}
+.native-screen .volume-label{display:none}.native-screen .native-text-field>input{opacity:0}.native-screen p[role=status]{pointer-events:none}
+.scene-panel .recipe-toast{position:absolute;top:0;right:0;image-rendering:pixelated}
+.game[data-resources=failed] .table-caption,.game .scene-panel:not([data-chat-ready=true]) .table-caption{display:block}
+.native-screen .native-text-field>input{height:100%}.native-screen-plane>section>p[role=status]{position:absolute;left:10px;top:156px;width:600px}
+.native-screen .mc-button:disabled{opacity:1}
+/* Menu blurring is the native six-pass WebGL effect; chat and containers do not enable it. */
+.scene-panel[data-effect=menu]>canvas[role=img]{filter:none}
