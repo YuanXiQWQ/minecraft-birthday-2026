@@ -1,4 +1,5 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
 import {quickMove} from './slots.ts';
 import {correctTool} from '../rules/process.ts';
 import type {
@@ -85,6 +86,7 @@ function depositHarvest(p: Progress, drops: Stack[], rules: Rules, events: Domai
 export function initialProgress(): Progress {
     return {
         world: emptyWorld(),
+        environment: emptyEnvironment(),
         unlocked: [],
         scene: 'plains',
         scenes: Object.fromEntries(SCENES.map(id => [id, {
@@ -186,9 +188,11 @@ function station(value: unknown, unlocked: string[]): void {
 export function validateState(value: unknown): asserts value is State {
     fields(value, ['progress', 'settings']);
     const p = value.progress, s = value.settings;
-    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement']);
+    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'environment')?['environment']:[])]);
+    if(p.environment!==undefined)validateEnvironment(p.environment);
     validateWorld(p.world);
-    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : [])]);
+    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[])]);
+    if(s.sky!==undefined)validateSkySettings(s.sky);
     ensure(s.username === undefined || typeof s.username === 'string' && /^[A-Za-z0-9_]{3,16}$/.test(s.username), 'invalid-username');
     ensure(typeof s.locale === 'string' && /^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$/.test(s.locale));
     ensure(typeof s.volume === 'number' && Number.isFinite(s.volume) && s.volume >= 0 && s.volume <= 1);
@@ -338,6 +342,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             if (ready.length) events.push({type: 'recipes-discovered', recipes: ready});
             for (let t = 0; t < command.ticks; t++) {
                 p.world.tick++;
+                p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
                 for (const scene of Object.values(p.scenes)) {
                     for (const crop of scene.crops) if (crop.growth.version === 1) crop.growth.data.ticks = Math.min(240, crop.growth.data.ticks + 1);
                     for (const device of scene.stations) if (device.kind === 'furnace' || device.kind === 'blast_furnace') {
@@ -498,8 +503,12 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(SCENES.includes(command.scene));
             p.scenes[command.scene].stations = p.scenes[command.scene].stations.filter(s => s.id !== command.id);
             break;
+        case 'sky-settings': {
+            ensure(Object.keys(command.patch).length>0&&Object.entries(command.patch).every(([key,v])=>['time','weather'].includes(key)&&['game','real'].includes(v!)),'invalid-sky-settings');
+            next.settings.sky={time:'game',weather:'game',...next.settings.sky,...command.patch};break;
+        }
         case 'settings':
-            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username'].includes(k)));
+            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username', 'sky'].includes(k)));
             next.settings = {...next.settings, ...command.patch};
             break;
         case 'record-cake-placement':

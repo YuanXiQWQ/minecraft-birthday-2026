@@ -1,4 +1,5 @@
 /** Persistent facts and versioned carrier contracts have no DOM or renderer dependency. */
+import type {EnvironmentState,SkySettings} from './environment.ts';
 import type {WorldState} from './world-state.ts';
 import type {RecipeBook, BookMode, BookSetting} from './recipe-book.ts';
 import type {TransferPlan} from './device-transfer.ts';
@@ -51,6 +52,7 @@ export interface SceneState {
 }
 
 export interface Settings {
+    sky?: SkySettings;
     username?: string;
     locale: string;
     volume: number;
@@ -63,6 +65,7 @@ export interface Player {
 }
 
 export interface Progress {
+    environment?: EnvironmentState;
     world: WorldState;
     unlocked: string[];
     scene: SceneId;
@@ -123,6 +126,7 @@ export type Command =
     | { type: 'select-scene'; scene: SceneId }
     | { type: 'put-station'; scene: SceneId; station: Station; expected?: PlayerLayout }
     | { type: 'remove-station'; scene: SceneId; id: string; expected?: PlayerLayout }
+    | { type: 'sky-settings'; patch: Partial<SkySettings> }
     | { type: 'settings'; patch: Partial<Settings> }
     | { type: 'record-cake-placement'; scene: 'home'; table: 'birthday-table'; expected?: PlayerLayout }
     | {

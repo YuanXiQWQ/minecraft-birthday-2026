@@ -1,0 +1,128 @@
+[
+  {
+    "file": "built-rounded-panel-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "dawn-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "invalid-resize-other-tab-1440-request.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "invalid-resize-other-tab-390-request.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "moonrise-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "night-sky-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "noon-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "panel-edge-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "panel-rounded-expanded-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "rain-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "rain-gui-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "snow-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "sun-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "thunder-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  },
+  {
+    "file": "weather-css1440x900-final.jpg",
+    "raster": [
+      1331,
+      900
+    ]
+  },
+  {
+    "file": "weather-css390x844-final.jpg",
+    "raster": [
+      390,
+      843
+    ]
+  },
+  {
+    "file": "weather-css390x844-raster390x843.jpg",
+    "raster": [
+      390,
+      843
+    ]
+  },
+  {
+    "file": "weather-settings-1280.jpg",
+    "raster": [
+      1280,
+      720
+    ]
+  }
+]

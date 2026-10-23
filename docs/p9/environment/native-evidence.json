@@ -1,0 +1,117 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "inspection": "read-only javap; no Minecraft client launch",
+  "classes": [
+    {
+      "entry": "net/minecraft/client/renderer/SkyRenderer.class",
+      "sha256": "d22d4f2e5cba0e51c6bf15f15da79d8e23b5dd4a1faff9752ad69051c94ef9fb"
+    },
+    {
+      "entry": "net/minecraft/client/renderer/CloudRenderer.class",
+      "sha256": "881d905a0dca4440beb830bc758505eb7e4c12d75e762509e7bc1ed63b13fc6e"
+    },
+    {
+      "entry": "net/minecraft/client/renderer/WeatherEffectRenderer.class",
+      "sha256": "d6abf59cf9fa4c2e654a1fcb06d4689934df382724c4c6b71d73add7b36caaa7"
+    },
+    {
+      "entry": "net/minecraft/world/attribute/WeatherAttributes.class",
+      "sha256": "ff64c153c7afc6a174941dda89f6e6d46e528b30cd69041b1c47a7352f1e20c6"
+    },
+    {
+      "entry": "net/minecraft/server/level/ServerLevel.class",
+      "sha256": "bd703a5b7085fd0caad8f4ed23603197c2f2d8010176ad971d7572064397d5f8"
+    },
+    {
+      "entry": "net/minecraft/client/renderer/fog/environment/AtmosphericFogEnvironment.class",
+      "sha256": "e6d13949ba60dbcf20f9333ba7ac6de5e8fe8212abf1a7324621e9b3bc4a65db"
+    },
+    {
+      "entry": "net/minecraft/client/Options.class",
+      "sha256": "4cf1c5dd3ef42b2cd9fea835cc0be18c3dfb4691ee7315cd7993ebb6a1504629"
+    },
+    {
+      "entry": "net/minecraft/world/attribute/EnvironmentAttributes.class",
+      "sha256": "3aa2d416dada54cdc2da7c02bbd2ddd6d8f0c5e30100422bee9ed89c834efd23"
+    },
+    {
+      "entry": "net/minecraft/world/timeline/Timelines.class",
+      "sha256": "33e3eb29f80d71afc4459d215200f95eeb50152741cac89622add2624dbb80c6"
+    },
+    {
+      "entry": "net/minecraft/client/multiplayer/ClientLevel.class",
+      "sha256": "7d69f81d39e64a679b51f745211619204073167d59b149d9de683e10eb2d97ba"
+    }
+  ],
+  "shaders": [
+    {
+      "entry": "assets/minecraft/shaders/core/clouds.vsh",
+      "sha256": "8bdfe295d20d11c9c8136ecc4b0269ddf28e8ce2423b019b4f121feb9704f234"
+    },
+    {
+      "entry": "assets/minecraft/shaders/core/clouds.fsh",
+      "sha256": "98ed038991d16691b4fda45a82436025fa54d90f11840dd6ce42b8359bf76588"
+    },
+    {
+      "entry": "assets/minecraft/shaders/core/sky.fsh",
+      "sha256": "e677b2df88e9e697a6aa33800d865e456cf8ea05e16f513628d8e702092d8501"
+    },
+    {
+      "entry": "assets/minecraft/shaders/include/fog.glsl",
+      "sha256": "c96edf62b3dca66b2dc314516b0cd74f2e12fbe7514342e28a5440ad8dfc49be"
+    }
+  ],
+  "facts": {
+    "dayPeriod": 24000,
+    "moonPeriod": 192000,
+    "cloudHeight": 192.33,
+    "cloudCell": [
+      12,
+      4,
+      12
+    ],
+    "cloudTravelPerTick": 0.030000001,
+    "cloudZOffset": 3.9600000381469727,
+    "starAttempts": 1500,
+    "starSeed": 10842,
+    "sunHalfSize": 30,
+    "moonHalfSize": 20,
+    "celestialHeight": 100,
+    "rainDelay": [
+      12000,
+      180000
+    ],
+    "rainDuration": [
+      12000,
+      24000
+    ],
+    "thunderDelay": [
+      12000,
+      180000
+    ],
+    "thunderDuration": [
+      3600,
+      15600
+    ],
+    "weatherRampPerTick": 0.01,
+    "defaultRenderDistanceChunks": 12,
+    "defaultCloudRangeChunks": 128,
+    "skyFogEndDefault": 512,
+    "cloudFogEndDefault": 2048,
+    "nativeRainLightAlpha": 0.3125,
+    "nativeThunderLightAlpha": 0.52734375,
+    "referenceJava": {
+      "weatherSeed60426Inclusive12000to180000": [
+        135568,
+        128552,
+        107872,
+        98085,
+        25303,
+        83764
+      ],
+      "acceptedStars": 780,
+      "method": "isolated java.util.Random reference, no Minecraft classes/client launch"
+    }
+  }
+}

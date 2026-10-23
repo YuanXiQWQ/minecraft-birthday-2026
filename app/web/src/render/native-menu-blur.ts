@@ -38,13 +38,14 @@ export class NativeMenuBlur {
      * @param {WebGLRenderer} renderer Existing scene renderer.
      * @param {Scene} world Main world including actual particles and devices.
      * @param {Camera} camera Approved scene camera.
+     * @param {Function} backdrop Optional native sky pass into the same world target.
      * @param {MenuLayer[]} layers Native pre-menu screen planes.
      */
-    render(renderer:WebGLRenderer,world:Scene,camera:Camera,layers:MenuLayer[]=[]):void{
+    render(renderer:WebGLRenderer,world:Scene,camera:Camera,layers:MenuLayer[]=[],backdrop?:()=>void):void{
         const size=renderer.getDrawingBufferSize(new Vector2()),previous=renderer.getRenderTarget(),viewport=renderer.getViewport(new Vector4()),scissor=renderer.getScissor(new Vector4()),test=renderer.getScissorTest(),clear=renderer.autoClear;
         for(const target of this.targets)if(target.width!==size.x||target.height!==size.y)target.setSize(size.x,size.y);
         try{
-            renderer.setScissorTest(false);renderer.autoClear=true;renderer.setRenderTarget(this.targets[0]);renderer.render(world,camera);
+            renderer.setScissorTest(false);renderer.autoClear=true;renderer.setRenderTarget(this.targets[0]);if(backdrop){backdrop();renderer.autoClear=false;}renderer.render(world,camera);renderer.autoClear=true;
             this.material.uniforms.map.value=this.targets[0].texture;this.material.uniforms.encode.value=true;renderer.setRenderTarget(this.targets[1]);renderer.render(this.scene,this.camera);
             this.composite(renderer, layers);
             this.material.uniforms.encode.value=false;this.material.uniforms.size.value.copy(size);

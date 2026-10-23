@@ -131,7 +131,7 @@ test('p7 migration preserves saved counts and facts without stocking the new bac
     body.contentVersion = 'p7-world-1';
     delete body.state.progress.player.data.backpack;
     const raw = JSON.stringify({...body, checksum: await checksum(body)}), n = await decode(raw);
-    assert.equal(n.envelope.contentVersion, 'p8-experience-2');
+    assert.equal(n.envelope.contentVersion, 'p9-environment-1');
     assert.deepEqual(n.envelope.state.progress.player.data.hotbar, state.progress.player.data.hotbar);
     assert.ok(n.envelope.state.progress.player.data.backpack.every(v => v === null));
     assert.deepEqual(n.envelope.state.progress.unlocked, state.progress.unlocked);

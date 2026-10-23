@@ -1,0 +1,87 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Official Java 26.3 client.jar; bounded native environment dependencies",
+  "entries": [
+    {
+      "entry": "data/minecraft/timeline/day.json",
+      "size": 9260,
+      "sha256": "f2de538299fa91948e8aa85d34ed063d0eb20726ca0657310f21a615e6e3051d"
+    },
+    {
+      "entry": "data/minecraft/timeline/moon.json",
+      "size": 1518,
+      "sha256": "ff3cab6f69e8c35fcc0c2691b7224f9266bcdc01dcbe43ffee854d4491ac60d7"
+    },
+    {
+      "entry": "data/minecraft/dimension_type/overworld.json",
+      "size": 1786,
+      "sha256": "d1fc489f93934f77d855e721bd822595aa1e44460342f0e5ce9de7e2dfc9e10e"
+    },
+    {
+      "entry": "data/minecraft/worldgen/biome/plains.json",
+      "size": 5070,
+      "sha256": "72ee54bca8e7202664ffa804a81106b2bcfa67dba3ce4472df54deb31f3be69b"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/clouds.png",
+      "size": 3976,
+      "sha256": "b325500d7272b79136aa3626ad181ff204db14ef2c712a7b29cd18187105db71"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/rain.png",
+      "size": 1745,
+      "sha256": "9e41305a96bf5ca6c092abd490ec697488189a7bca7c9d9eda00c49ddc1da2c7"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/snow.png",
+      "size": 256,
+      "sha256": "7d1215c25ee937f3298a4c96265494253bd86c8a55a4a21719ed438449a08d8b"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/sun.png",
+      "size": 458,
+      "sha256": "c7188d5685ec66b0200d716e53161803c119f609d9b2a67f6a86b30bd96043eb"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/first_quarter.png",
+      "size": 496,
+      "sha256": "19c18579d421520444118a7e45c1ba66420e5f239c76a72a166b1e1d50f7e3c5"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/full_moon.png",
+      "size": 497,
+      "sha256": "46e8a21f0045ceeba2cea48e5457a2fe8130ec9cdecb729a64a74a8acf771d61"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/new_moon.png",
+      "size": 451,
+      "sha256": "2abe081af29b67708ee32aa46560e24084fc7bc89bad22cdcd835c5c641215b6"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/third_quarter.png",
+      "size": 492,
+      "sha256": "1313962d00b7e2dc2666bef8c7fe95df0761e5b76c22b3b35986b39864d573d8"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/waning_crescent.png",
+      "size": 466,
+      "sha256": "afece7904b3637143712a2a03f88e2d280f0c760e230537bb5bac2fc5c0506ee"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/waning_gibbous.png",
+      "size": 499,
+      "sha256": "94acef9f6a620c907de58f3e31a87cf1d5830891e4325ff381cc11ea42961b8c"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/waxing_crescent.png",
+      "size": 472,
+      "sha256": "29412ef1fe5d7ad056d616163be824bae08208114eb5935da81c95517f933b02"
+    },
+    {
+      "entry": "assets/minecraft/textures/environment/celestial/moon/waxing_gibbous.png",
+      "size": 500,
+      "sha256": "4e147710da120c85442cd7429d1d5aacc1fc4a29e0cad54a110de5c8857d12d0"
+    }
+  ]
+}

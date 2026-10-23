@@ -1,5 +1,7 @@
 # P9交付候选索引
 
+当前新增：[圆角面板、天空与天气](environment/report.md)，原版数据/类证据及资源清单单独可审计，保留此前原始报告。
+
 最新显示层修正见[文字颜色与悬浮导航](native-ui-fix/navigation-review.md)，此前五项行为回归与历史证据保持。
 
 当前基于8f80bd9执行已授权的五项界面定向修复，当前矩阵/证据见[五项修复交付](native-ui-fix/five-review.md)；保留聊天七类、指南针、自动聚焦和狭小矿洞，历史阶段成果不重做。
@@ -12,9 +14,9 @@
 - [P9交付报告](report.md)：本次/历史证据边界、构建、上线、风险与候选状态。
 - [集中人工验收](manual-checklist.md)：仅需用户实体/感官/目标环境判断的项目。
 - [兼容与恢复](recovery.md)：无历史改写、无清档的恢复步骤。
-- [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部9份profile及依赖。
+- [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部10份profile及依赖。
 
-工程命令入口：app/package.json；正式440项（保留原389项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
+工程命令入口：app/package.json；正式459项（保留原441项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
 
 - [当前聊天七类、狭小矿洞及世界方位指南针](native-ui-fix/chat-cave-compass-review.md)。
 - [物品搜索自动聚焦及固定帧历史记录](native-ui-fix/catalogue-review.md)（固定左上已纠正）。

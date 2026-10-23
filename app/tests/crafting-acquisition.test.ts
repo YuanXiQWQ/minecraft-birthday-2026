@@ -354,7 +354,7 @@ test('P5 migration preserves durable layout/settings/cake and upgrades empty wor
         })
     }), decoded = await decode(raw);
     assert.equal(decoded.migrated, true);
-    assert.equal(decoded.envelope.contentVersion, 'p8-experience-2');
+    assert.equal(decoded.envelope.contentVersion, 'p9-environment-1');
     assert.equal(decoded.envelope.state.progress.player.data.hotbar[3]?.id, 'minecraft:crafting_table');
     assert.equal(decoded.envelope.state.settings.volume, .75);
     assert.equal(decoded.envelope.state.progress.cakePlacement?.table, 'birthday-table');
@@ -364,7 +364,7 @@ test('P5 migration preserves durable layout/settings/cake and upgrades empty wor
     await m.session.refresh();
     assert.equal(m.read(), raw);
     await m.session.dispatch({type: 'settings', patch: {volume: .5}});
-    assert.equal(JSON.parse(m.read()!).contentVersion, 'p8-experience-2');
+    assert.equal(JSON.parse(m.read()!).contentVersion, 'p9-environment-1');
 });
 test('D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products', async () => {
     const m = storage(), s = m.session;

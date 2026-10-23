@@ -1,0 +1,33 @@
+[
+  {
+    "at": 1792761288853,
+    "stage": "departure",
+    "edgeHidden": true,
+    "expanded": "true"
+  },
+  {
+    "at": 1792761306888,
+    "stage": "after-departure",
+    "edgeHidden": false,
+    "expanded": "false"
+  },
+  {
+    "at": 1792761307211,
+    "stage": "edge-arrival",
+    "chat": "Hold left: mine. Right: use / place. Right drag: look. Alt + right: attach. Ctrl + Alt + right: above device. R: rotate. E: items.Progress is saved on this browser.PlainsPointer lock is unavailable. Use the visible pointer and hold right-click to look.",
+    "edgeHidden": true,
+    "expanded": "true"
+  },
+  {
+    "at": 1792761320729,
+    "stage": "second-departure",
+    "edgeHidden": true,
+    "expanded": "true"
+  },
+  {
+    "at": 1792761353729,
+    "stage": "retracted-again",
+    "edgeHidden": false,
+    "expanded": "false"
+  }
+]

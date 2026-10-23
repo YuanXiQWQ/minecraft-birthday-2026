@@ -417,7 +417,7 @@ test('P6 book save migrates without clearing existing carriers, devices, discove
             })
         }), m = await decode(raw);
     assert.equal(m.migrated, true);
-    assert.equal(m.envelope.contentVersion, 'p8-experience-2');
+    assert.equal(m.envelope.contentVersion, 'p9-environment-1');
     assert.deepEqual(m.envelope.state, state);
     const h = await harness();
     h.write(raw);

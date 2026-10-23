@@ -1,4 +1,7 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
+import type {SkySettings} from './domain/environment.ts';
+import {LocalWeather} from './render/local-weather.ts';
+import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
@@ -46,6 +49,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
     let languageChoice: HTMLButtonElement | null = null;
     const nativeScreens: NativeScreens[] = [];
+    let navigationPanel: NavigationPanel | null = null;
+    let localWeather: LocalWeather | null = null, weatherTimeControl: HTMLButtonElement | null = null, weatherModeControl: HTMLButtonElement | null = null, weatherLocationControl: HTMLButtonElement | null = null, weatherGeneration='', weatherMode='game';
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
@@ -260,20 +265,25 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             setText(muteButton, value.muted ? 'settings.soundOff' : 'settings.soundOn');
             language.value = Array.from(language.options).some(option => option.value === value.locale) ? value.locale : 'en';
             setText(volumeLabel, 'settings.volume', {percent: Math.floor(value.volume * 100)});
+            if(weatherTimeControl)setText(weatherTimeControl,value.sky?.time==='real'?'weather.timeReal':'weather.timeGame');
+            if(weatherModeControl)setText(weatherModeControl,value.sky?.weather==='real'?'weather.modeReal':'weather.modeGame');
+            const nextMode=value.sky?.weather??'game';if(weatherMode==='real'&&nextMode!=='real')localWeather?.stop();weatherMode=nextMode;
         }
         language.disabled = volume.disabled = mute.disabled = muteButton.disabled = reset.disabled = !session.view.writable || resetting;
         if (languageChoice) languageChoice.disabled = language.disabled;
+        for(const control of [weatherTimeControl,weatherModeControl,weatherLocationControl])if(control)control.disabled=!session.view.writable||resetting;
         worldAudio?.sync();
     }
 
     /** Submit one field against freshly locked settings and settle only this edit's receipt.
      * @param {SettingKey} key Changed preference.
+     * @param {Partial<SkySettings>} skyPatch Only the explicitly edited environment field.
      */
-    function preferences(key: SettingKey): void {
+    function preferences(key: SettingKey, skyPatch?: Partial<SkySettings>): void {
         const draft = edits.submit(key);
         if (!draft) return;
         setText(preferenceFeedback, 'settings.saving');
-        void session.dispatch({type: 'settings', patch: {[key]: draft.value}}).then(() => {
+        void session.dispatch(skyPatch?{type:'sky-settings',patch:skyPatch}:{type: 'settings', patch: {[key]: draft.value}}).then(() => {
             if (disposed || !edits.finish(key, draft.ticket)) return;
             paintSettings();
             setText(preferenceFeedback, 'settings.saved');
@@ -344,9 +354,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             setText(caption, placed ? 'home.complete' : 'home.empty');
             if (page === 'home') setText(link, placed ? 'home.return' : 'home.invite');
             if (edits.generation && edits.generation !== value.envelope.generation) clearText(preferenceFeedback);
+            if(weatherGeneration&&weatherGeneration!==value.envelope.generation){localWeather?.stop();localWeather?.status('weather.locationNeeded');}
+            weatherGeneration=value.envelope.generation;
             edits.sync(s.settings, value.envelope.generation);
             paintSettings(); worldAudio?.sync();
             if (page === 'game' && scene) {
+                scene.skySettings=s.settings.sky??{time:'game',weather:'game'};
                 scene.syncWorld(s.progress);
                 scene.refreshHover();
                 worldUse?.preview();
@@ -393,8 +406,17 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (!/^[A-Za-z0-9_]{3,16}$/.test(username.value)) {setText(usernameFeedback, 'menu.usernameInvalid'); return;}
         edits.stage('username', username.value); preferences('username');
     }), button('menu.cancel', () => showOptions('options')));
+    const weatherSection=document.createElement('section');weatherSection.className='weather-section';
+    const weatherStatus=document.createElement('p');weatherStatus.className='weather-status';weatherStatus.setAttribute('role','status');
+    localWeather=new LocalWeather(value=>{if(scene?.sky){scene.sky.weatherOverride=value;scene.requestRender();}},key=>{setText(weatherStatus,key);if(['weather.locationDenied','weather.locationUnavailable','weather.fetchFailed'].includes(key))feedback('error.'+key);});
+    weatherTimeControl=button('weather.timeGame',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const};const time=current.time==='game'?'real':'game';edits.stage('sky',{...current,time});preferences('sky',{time});paintSettings();});
+    weatherModeControl=button('weather.modeGame',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const},mode=current.weather==='game'?'real':'game';edits.stage('sky',{...current,weather:mode});preferences('sky',{weather:mode});if(mode==='real')localWeather!.request();else localWeather!.stop();paintSettings();});
+    weatherLocationControl=button('weather.locate',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const};edits.stage('sky',{...current,weather:'real'});preferences('sky',{weather:'real'});localWeather!.request();paintSettings();});
+    const weatherNote=node('p','weather.privacy','weather-privacy'),attribution=node('a','weather.attribution','weather-attribution') as HTMLAnchorElement;attribution.href='https://open-meteo.com/';attribution.target='_blank';attribution.rel='noopener noreferrer';
+    weatherSection.append(weatherTimeControl,weatherModeControl,weatherLocationControl,weatherNote,attribution,weatherStatus);setText(weatherStatus,'weather.locationNeeded');
+    optionSections.set('weather',weatherSection);
     optionSections.set('language', languageSection); optionSections.set('sound', soundSection); optionSections.set('player', playerSection);
-    for (const id of ['language', 'sound', 'player']) optionNavigation.append(button('menu.' + id, () => showOptions(id)));
+    for (const id of ['language', 'sound', 'player', 'weather']) optionNavigation.append(button('menu.' + id, () => showOptions(id)));
     /** Show only supported preference categories, preserving the existing settings draft and reset transactions.
      * @param {string} id Native option hierarchy node.
      */
@@ -407,9 +429,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         nativeScreens.forEach(view => view.layout());
         updateGate();
     }
-    if (page === 'home') dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
+    if (page === 'home') dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
     if (page === 'game') {
-        dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
+        dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
 
         menu = document.createElement('dialog'); menu.className = 'game-menu'; menu.id = 'game-menu';
         menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
@@ -436,7 +458,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     function openMenu(): void {if (page !== 'game' || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
 
     const navigation = document.createElement('nav');
-    navigation.className = 'world-navigation';
+    navigation.className = 'world-navigation'; navigation.id='world-navigation';
     if (page === 'game') {
         for (const id of Object.keys(WORLD_SCENES) as SceneId[]) {
             const b = button('scene.' + id, () => {
@@ -504,6 +526,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         };
         reflect(session.view);
         root.dataset.resources = '26.3';
+        if(page==='game') navigationPanel=new NavigationPanel(navigation,t('a11y.showScenes'));
         if (page === 'game') {
             const [art, rules] = await Promise.all([loadCatalogueArt(), loadRules()]);
             if (disposed) {
@@ -578,7 +601,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         clearText(preferenceFeedback);
         if (event.persisted) return;
         disposed = true;
-        appAbort.abort();
+        appAbort.abort(); navigationPanel?.dispose(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
         chat?.dispose();

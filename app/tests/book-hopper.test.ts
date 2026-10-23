@@ -471,7 +471,7 @@ test('p6-processing migration preserves nonempty furnace, workbench, carriers/se
     delete old.state.progress.player.data.backpack;
     const raw = JSON.stringify({...old, checksum: await checksum(old)}), decoded = await decode(raw);
     assert.equal(decoded.migrated, true);
-    assert.equal(decoded.envelope.contentVersion, 'p8-experience-2');
+    assert.equal(decoded.envelope.contentVersion, 'p9-environment-1');
     assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations.slice(0, 3), s.view.envelope!.state.progress.scenes.plains.stations.slice(0, 3));
     assert.deepEqual(decoded.envelope.state.progress.scenes.plains.stations[3].contents, emptyHopper());
     assert.ok(decoded.envelope.state.progress.recipeBook.data.known.includes('minecraft:cake'));

@@ -1,4 +1,8 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {NativePrecipitation} from './native-precipitation.ts';
+import {NativeSky} from './native-sky.ts';
+import {emptyEnvironment} from '../domain/environment.ts';
+import type {SkySettings} from '../domain/environment.ts';
 import {NativeMenuBlur, menuLayers} from './native-menu-blur.ts';
 import {NativeCrosshair} from './native-crosshair.ts';
 import {timing, gpuTiming} from '../performance.ts';
@@ -53,6 +57,11 @@ export class SceneView {
     scene = new Scene();
     camera = new PerspectiveCamera(70, 1, .1, 90);
     models: VanillaModels;
+    sky: NativeSky | null = null;
+    precipitation: NativePrecipitation | null = null;
+    environmentProgress: Progress | null = null;
+    skyBaseColors = new WeakMap<object, Color>();
+    skySettings: SkySettings = {time:'game',weather:'game'};
     ray = new Raycaster();
     world = new Group();
     persistent = new Group();
@@ -152,6 +161,7 @@ export class SceneView {
                 this.world.add(leg);
             }
         } else {
+            this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.scene.background=null;
             this.authored = new AuthoredWorld(this.models, pack);
             this.scene.add(this.authored.staticRoot, this.authored.natural, this.authored.crops);
         }
@@ -379,6 +389,7 @@ export class SceneView {
     /** Project the selected authored scene and durable natural/crop layers. @param {Progress} p Current authoritative progress. */
     syncWorld(p: Progress): void {
         if (!this.authored) return;
+        this.sky?.sync(p.environment??emptyEnvironment(),this.skySettings,p.world.tick);this.environmentProgress=p;
         if (this.worldId === null) this.renderer.domElement.dataset.recoveredWorld = JSON.stringify({
             tick: p.world.tick,
             scene: p.scene,
@@ -390,7 +401,7 @@ export class SceneView {
             this.worldId = p.scene;
             this.authored.build(p.scene);
             const spec = WORLD_SCENES[p.scene];
-            this.scene.background = new Color(spec.sky);
+            this.scene.background = this.sky ? null : new Color(spec.sky);
             this.camera.position.set(...spec.eye);
             this.camera.lookAt(...spec.target);
             this.camera.rotation.order = 'YXZ';
@@ -582,6 +593,10 @@ export class SceneView {
             if (this.disposed || this.lost) return;
             const start = performance.now(), continuing = this.onFrame?.(start) ?? false;
             this.models.animate(start);
+            if(this.sky&&this.precipitation&&this.environmentProgress&&this.authored){
+                const p=this.environmentProgress,weather=this.sky.weatherAt(start);
+                this.precipitation.update(this.camera,p,this.authored.staticRoot,p.world.tick,weather.rain,weather.snow);
+            }
             this.updateDebris(start);
             const end = timing('cpu-render-submit'),
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
@@ -590,9 +605,9 @@ export class SceneView {
             try {
                 const host = this.renderer.domElement.parentElement;
                 if (host?.dataset.effect === 'menu') {
-                    const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, this.camera, layers);
+                    const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, this.camera, layers,this.sky?()=>{this.sky!.render(this.renderer,this.camera,start);this.applySkyLighting();}:undefined);
                     host.dataset.menuComposited='true';this.renderer.domElement.dataset.menuComposite=JSON.stringify(layers.map(({canvas,...layout})=>layout));
-                } else {if(host)delete host.dataset.menuComposited;this.renderer.render(this.scene, this.camera);}
+                } else {if(host)delete host.dataset.menuComposited;const clear=this.renderer.autoClear;try{if(this.sky){this.sky.render(this.renderer,this.camera,start);this.applySkyLighting();this.renderer.autoClear=false;}this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=clear;}}
                 this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden, lost: this.lost, disposed: this.disposed});
             } finally {this.renderer.info.autoReset = resetInfo;}
             gpuEnd();
@@ -602,11 +617,24 @@ export class SceneView {
             this.renderer.domElement.dataset.frames = String(this.frames);
             this.renderMs.push(performance.now() - start);
             if (this.renderMs.length > 240) this.renderMs.shift();
+            if(this.sky)this.renderer.domElement.dataset.environment=JSON.stringify(this.sky.report);
             this.renderer.domElement.dataset.drawCalls = String(this.renderer.info.render.calls);
             this.renderer.domElement.dataset.geometry = String(this.renderer.info.memory.geometries);
             this.renderer.domElement.dataset.triangles = String(this.renderer.info.render.triangles);
             if (continuing || this.debris.length) this.requestRender();
         });
+    }
+
+    /** Apply native outdoor sky-light timeline values without tinting independent GUI renderers.
+     * Cave lighting retains the approved authored presentation; this is not a voxel-light propagation engine.
+     */
+    applySkyLighting():void{
+        if(!this.sky)return;
+        const factor=this.worldId==='cave'?1:Number(this.sky.report.skyLightFactor??1),rgb=this.worldId==='cave'?[1,1,1]:this.sky.report.skyLightColor as number[]??[1,1,1],tint=new Color().setRGB(rgb[0],rgb[1],rgb[2],'srgb');
+        for(const material of this.models.materials.values()){
+            let base=this.skyBaseColors.get(material);if(!base){base=material.color.clone();this.skyBaseColors.set(material,base);}
+            material.color.copy(base).multiply(tint).multiplyScalar(factor);
+        }
     }
 
     /** Refresh the menu's pre-blur HUD only when its native source canvas has changed. */
@@ -626,6 +654,7 @@ export class SceneView {
     dispose(): void {
         if (this.disposed) return;
         this.mode?.dispose();
+        this.sky?.dispose(); this.precipitation?.dispose();
         this.disposed = true;
         clearInterval(this.animation);
         this.cancel();
