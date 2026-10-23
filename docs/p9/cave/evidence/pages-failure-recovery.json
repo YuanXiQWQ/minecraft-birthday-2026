@@ -1,0 +1,440 @@
+{
+  "failure": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "app": {
+      "build": "4a05e461981a",
+      "boot": "failed",
+      "saveStatus": "ready",
+      "hasCake": "false",
+      "generation": "cave-production-partial",
+      "revision": "0",
+      "completed": "false",
+      "resourceError": "world-model:wall_torchfacing=east",
+      "resources": "failed"
+    },
+    "canvas": {},
+    "save": {
+      "format": 1,
+      "contentVersion": "p9-commands-1",
+      "vanillaVersion": "26.3",
+      "generation": "cave-production-partial",
+      "revision": 0,
+      "state": {
+        "progress": {
+          "world": {
+            "version": 1,
+            "tick": 0,
+            "manual": 0,
+            "visits": {
+              "plains": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              },
+              "cave": {
+                "epoch": 0,
+                "removed": [
+                  "stone:0",
+                  "stone:1",
+                  "stone:2",
+                  "stone:3",
+                  "stone:4",
+                  "coal_ore:0"
+                ],
+                "roll": 0
+              },
+              "farm": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              },
+              "home": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              }
+            },
+            "hoppers": {}
+          },
+          "environment": {
+            "version": 2,
+            "clearWeatherTime": 0,
+            "control": {
+              "epoch": 0,
+              "tickRate": 20,
+              "frozen": false,
+              "stepTicks": 0,
+              "sprintTicks": 0,
+              "sprintRestore": false,
+              "advanceTime": true,
+              "advanceWeather": true,
+              "clockPaused": false,
+              "clockRate": 1,
+              "clockFraction": 0
+            },
+            "dayTicks": 1000,
+            "random": 25214847591,
+            "rainTime": 0,
+            "thunderTime": 0,
+            "raining": false,
+            "thundering": false,
+            "rainLevel": 0,
+            "thunderLevel": 0
+          },
+          "unlocked": [],
+          "scene": "cave",
+          "scenes": {
+            "plains": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "cave": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "farm": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "home": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            }
+          },
+          "player": {
+            "version": 1,
+            "data": {
+              "backpack": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "selected": 0,
+              "hotbar": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "equipment": {
+                "head": null,
+                "chest": null,
+                "legs": null,
+                "feet": null,
+                "offhand": null
+              },
+              "presets": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          },
+          "recipeBook": {
+            "version": 1,
+            "data": {
+              "known": [
+                "minecraft:crafting_table"
+              ],
+              "unseen": [],
+              "views": {
+                "crafting": {
+                  "open": false,
+                  "filter": false
+                },
+                "furnace": {
+                  "open": false,
+                  "filter": false
+                },
+                "blast_furnace": {
+                  "open": false,
+                  "filter": false
+                }
+              }
+            }
+          },
+          "cakePlacement": null
+        },
+        "settings": {
+          "locale": "en",
+          "volume": 0.2,
+          "muted": false,
+          "username": "sireoh"
+        }
+      },
+      "checksum": "c78b1678a7b7ae86435a72dec9e575133170db58bd3844312ac16081e9a517fc"
+    }
+  },
+  "repaired": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "app": {
+      "build": "4a05e461981a",
+      "boot": "ready",
+      "saveStatus": "ready",
+      "hasCake": "false",
+      "generation": "cave-production-partial",
+      "revision": "0",
+      "completed": "false",
+      "resources": "26.3",
+      "catalogueIcons": "113",
+      "inventoryReady": "true"
+    },
+    "canvas": {
+      "engine": "three.js r186",
+      "resourceVersion": "26.3",
+      "pointerMode": "{\"desired\":\"hidden\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":3}",
+      "hover": "null",
+      "placementPreview": "null",
+      "recoveredWorld": "{\"tick\":0,\"scene\":\"cave\",\"crops\":[]}",
+      "scene": "cave",
+      "natural": "{\"epoch\":0,\"removed\":[\"stone:0\",\"stone:1\",\"stone:2\",\"stone:3\",\"stone:4\",\"coal_ore:0\"],\"roll\":0}",
+      "crops": "[]",
+      "cake": "false",
+      "instances": "[]",
+      "crosshair": "{\"visible\":false,\"bounds\":[206,112,15,15],\"scale\":3,\"logical\":[427,240],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+      "renderedScene": "cave",
+      "frames": "176",
+      "environment": "{\"dayTicks\":1005,\"sunAngle\":297.61959364054843,\"moonAngle\":477.61959364054843,\"moonPhase\":\"full_moon\",\"starAngle\":297.61959364054843,\"starOpacity\":0,\"cloudWind\":0.14999999664723873,\"cloudPosition\":[-0.14999999664723873,190.71,-10.960000038146973],\"gameTick\":0,\"partial\":5,\"dayPartial\":5,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":5,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+      "drawCalls": "17",
+      "geometry": "15",
+      "triangles": "649286"
+    },
+    "save": {
+      "format": 1,
+      "contentVersion": "p9-commands-1",
+      "vanillaVersion": "26.3",
+      "generation": "cave-production-partial",
+      "revision": 0,
+      "state": {
+        "progress": {
+          "world": {
+            "version": 1,
+            "tick": 0,
+            "manual": 0,
+            "visits": {
+              "plains": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              },
+              "cave": {
+                "epoch": 0,
+                "removed": [
+                  "stone:0",
+                  "stone:1",
+                  "stone:2",
+                  "stone:3",
+                  "stone:4",
+                  "coal_ore:0"
+                ],
+                "roll": 0
+              },
+              "farm": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              },
+              "home": {
+                "epoch": 0,
+                "removed": [],
+                "roll": 0
+              }
+            },
+            "hoppers": {}
+          },
+          "environment": {
+            "version": 2,
+            "clearWeatherTime": 0,
+            "control": {
+              "epoch": 0,
+              "tickRate": 20,
+              "frozen": false,
+              "stepTicks": 0,
+              "sprintTicks": 0,
+              "sprintRestore": false,
+              "advanceTime": true,
+              "advanceWeather": true,
+              "clockPaused": false,
+              "clockRate": 1,
+              "clockFraction": 0
+            },
+            "dayTicks": 1000,
+            "random": 25214847591,
+            "rainTime": 0,
+            "thunderTime": 0,
+            "raining": false,
+            "thundering": false,
+            "rainLevel": 0,
+            "thunderLevel": 0
+          },
+          "unlocked": [],
+          "scene": "cave",
+          "scenes": {
+            "plains": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "cave": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "farm": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            },
+            "home": {
+              "layoutVersion": 1,
+              "stations": [],
+              "crops": []
+            }
+          },
+          "player": {
+            "version": 1,
+            "data": {
+              "backpack": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "selected": 0,
+              "hotbar": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "equipment": {
+                "head": null,
+                "chest": null,
+                "legs": null,
+                "feet": null,
+                "offhand": null
+              },
+              "presets": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          },
+          "recipeBook": {
+            "version": 1,
+            "data": {
+              "known": [
+                "minecraft:crafting_table"
+              ],
+              "unseen": [],
+              "views": {
+                "crafting": {
+                  "open": false,
+                  "filter": false
+                },
+                "furnace": {
+                  "open": false,
+                  "filter": false
+                },
+                "blast_furnace": {
+                  "open": false,
+                  "filter": false
+                }
+              }
+            }
+          },
+          "cakePlacement": null
+        },
+        "settings": {
+          "locale": "en",
+          "volume": 0.2,
+          "muted": false,
+          "username": "sireoh"
+        }
+      },
+      "checksum": "c78b1678a7b7ae86435a72dec9e575133170db58bd3844312ac16081e9a517fc"
+    }
+  }
+}

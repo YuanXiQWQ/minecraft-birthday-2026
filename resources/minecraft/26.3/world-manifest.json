@@ -89,6 +89,10 @@
     "assets/minecraft/blockstates/oak_planks.json": "6f2d386f25be963313312900c1d4ec49fde45987f01e5f320c2c45cce6cec8ad",
     "assets/minecraft/models/block/oak_planks.json": "79b1146adb4eff1b405c0a18384e3290fa171edc1347f64fef50df3df4df939d",
     "assets/minecraft/textures/block/oak_planks.png": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3",
+    "assets/minecraft/blockstates/wall_torch.json": "2c1a2fd4ff28f141c1855ef9f78d4257204a3590bbe26c00ee469dae4b16503a",
+    "assets/minecraft/models/block/wall_torch.json": "e40eb7b4c4bcefec02b611007e5b1acf2c01a174c95b7082af9f8122a3c7ecaa",
+    "assets/minecraft/models/block/template_torch_wall.json": "18aae16f53bb4da7d18361ce375821422e295aee92c836574f38038a6c4e801d",
+    "assets/minecraft/textures/block/torch.png": "1e0a18d6a5f4e839f07b3a7cbe2703f98d7db1c65eb1c96e1e575eec61410e16",
     "assets/minecraft/textures/entity/cow/cow_temperate.png": "5106c2676c70d64b2af4bc0792cb4adfa75cf587d05cc370ee7c6ca01465efdc",
     "assets/minecraft/textures/entity/chicken/chicken_temperate.png": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b",
     "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486",
@@ -300,6 +304,37 @@
       "variant": {
         "model": "minecraft:block/oak_planks"
       }
+    },
+    {
+      "block": "wall_torch",
+      "state": "facing=east",
+      "variant": {
+        "model": "minecraft:block/wall_torch"
+      }
+    },
+    {
+      "block": "wall_torch",
+      "state": "facing=north",
+      "variant": {
+        "model": "minecraft:block/wall_torch",
+        "y": 270
+      }
+    },
+    {
+      "block": "wall_torch",
+      "state": "facing=south",
+      "variant": {
+        "model": "minecraft:block/wall_torch",
+        "y": 90
+      }
+    },
+    {
+      "block": "wall_torch",
+      "state": "facing=west",
+      "variant": {
+        "model": "minecraft:block/wall_torch",
+        "y": 180
+      }
     }
   ],
   "entries": [
@@ -392,6 +427,11 @@
       "entry": "assets/minecraft/blockstates/tall_grass.json",
       "size": 175,
       "sha256": "f2436182fbd84fa982b8acb440598ac68bbc51d15eebd897712b3a8c3562d17b"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/wall_torch.json",
+      "size": 359,
+      "sha256": "2c1a2fd4ff28f141c1855ef9f78d4257204a3590bbe26c00ee469dae4b16503a"
     },
     {
       "entry": "assets/minecraft/blockstates/wheat.json",
@@ -499,9 +539,19 @@
       "sha256": "3bbcc0d4090c4ee4f62bddf2679c5ff101f342d70c0440453488cc3d7cccd78a"
     },
     {
+      "entry": "assets/minecraft/models/block/template_torch_wall.json",
+      "size": 801,
+      "sha256": "18aae16f53bb4da7d18361ce375821422e295aee92c836574f38038a6c4e801d"
+    },
+    {
       "entry": "assets/minecraft/models/block/tinted_cross.json",
       "size": 984,
       "sha256": "f6ace97c3b508dcd7bd81ad28358109e9a3c856ffeab09b13683d6ba5303738c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/wall_torch.json",
+      "size": 111,
+      "sha256": "e40eb7b4c4bcefec02b611007e5b1acf2c01a174c95b7082af9f8122a3c7ecaa"
     },
     {
       "entry": "assets/minecraft/models/block/wheat_stage0.json",
@@ -835,6 +885,6 @@
     }
   ],
   "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "ee87eff69ec04b6d905c94ca304b93d25a79006e76d5a15412b85ddd67f4ba94",
+  "exporterSha256": "b3a4157fefda728685befa57bc5a79217cc8a8779e525bbbcdb9a2ad19d3fb5a",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; static animal pose, no navigation/AI"
 }

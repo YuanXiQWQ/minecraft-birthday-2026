@@ -1,0 +1,332 @@
+[
+  {
+    "target": "node:stone:1",
+    "hit": {
+      "id": "node:stone:1",
+      "point": [
+        -4.2631577491289345,
+        0.5589473963629277,
+        -2
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -5,
+        0,
+        -3
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1"
+    ]
+  },
+  {
+    "target": "node:stone:2",
+    "hit": {
+      "id": "node:stone:2",
+      "point": [
+        -3.315789539351632,
+        0.5589473963629277,
+        -2
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -4,
+        0,
+        -3
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2"
+    ]
+  },
+  {
+    "target": "node:stone:3",
+    "hit": {
+      "id": "node:stone:3",
+      "point": [
+        -5.2380954728941225,
+        1.5057143155741533,
+        -3.0000000000000018
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -6,
+        1,
+        -4
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3"
+    ]
+  },
+  {
+    "target": "node:stone:4",
+    "hit": {
+      "id": "node:stone:4",
+      "point": [
+        -4.285714262137869,
+        1.5057143155741533,
+        -3
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -5,
+        1,
+        -4
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4"
+    ]
+  },
+  {
+    "target": "node:coal_ore:0",
+    "hit": {
+      "id": "node:coal_ore:0",
+      "point": [
+        -3.3478262761255477,
+        1.505217277349027,
+        -4
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -4,
+        1,
+        -5
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0"
+    ]
+  },
+  {
+    "target": "node:coal_ore:1",
+    "hit": {
+      "id": "node:coal_ore:1",
+      "point": [
+        -2.3809519254711025,
+        0.5533333371359421,
+        -2.9999999999999982
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -3,
+        0,
+        -4
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1"
+    ]
+  },
+  {
+    "target": "node:coal_ore:2",
+    "hit": {
+      "id": "node:coal_ore:2",
+      "point": [
+        -2.391304203341498,
+        1.505217277349027,
+        -4.000000000000002
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -3,
+        1,
+        -5
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1",
+      "coal_ore:2"
+    ]
+  },
+  {
+    "target": "node:iron_ore:0",
+    "hit": {
+      "id": "node:iron_ore:0",
+      "point": [
+        -1.4285709168628604,
+        0.5533333371359417,
+        -3.0000000000000018
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -2,
+        0,
+        -4
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1",
+      "coal_ore:2",
+      "iron_ore:0"
+    ]
+  },
+  {
+    "target": "node:iron_ore:1",
+    "hit": {
+      "id": "node:iron_ore:1",
+      "point": [
+        -0.4761899082546185,
+        0.5533333371359417,
+        -3.0000000000000018
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -1,
+        0,
+        -4
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1",
+      "coal_ore:2",
+      "iron_ore:0",
+      "iron_ore:1"
+    ]
+  },
+  {
+    "target": "node:iron_ore:2",
+    "hit": {
+      "id": "node:iron_ore:2",
+      "point": [
+        -1.434782782969867,
+        1.505217277349027,
+        -4
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -2,
+        1,
+        -5
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1",
+      "coal_ore:2",
+      "iron_ore:0",
+      "iron_ore:1",
+      "iron_ore:2"
+    ]
+  },
+  {
+    "target": "node:iron_ore:3",
+    "hit": {
+      "id": "node:iron_ore:3",
+      "point": [
+        -0.4782613625982357,
+        1.505217277349027,
+        -4.000000000000002
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "cell": [
+        -1,
+        1,
+        -5
+      ]
+    },
+    "removed": [
+      "stone:0",
+      "stone:1",
+      "stone:2",
+      "stone:3",
+      "stone:4",
+      "coal_ore:0",
+      "coal_ore:1",
+      "coal_ore:2",
+      "iron_ore:0",
+      "iron_ore:1",
+      "iron_ore:2",
+      "iron_ore:3"
+    ]
+  }
+]

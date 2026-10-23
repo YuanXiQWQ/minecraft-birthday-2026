@@ -1,7 +1,8 @@
 /** Authored native block scenery and Java-derived animal cuboids, independent from persistent simulation. */
 import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
 import type {SceneId, Progress, Cell} from '../domain/types.ts';
-import {caveRockCells} from '../domain/cave-shape.ts';
+import {caveLayout} from '../domain/cave-shape.ts';
+import {lightCave} from './cave-lighting.ts';
 import {WORLD_SCENES, cropAge} from '../domain/world-config.ts';
 import type {VanillaModels} from './vanilla-models.ts';
 import type {Resources} from './resources.ts';
@@ -21,6 +22,7 @@ export class AuthoredWorld {
     signature = '';
     caveRoot: Group | null = null;
     caveSignature = '[]';
+    caveLights: Cell[] = [];
     plainsDecor: Group | null = null;
 
     /** Retain the shared native material factory. @param {VanillaModels} models Native model ownership. @param {Resources} resources Verified pixels and documents. */
@@ -82,6 +84,23 @@ export class AuthoredWorld {
         this.batch('oak_leaves', leaves, this.staticRoot, 'decoration');
         this.plainsDecor = new Group();
         this.staticRoot.add(this.plainsDecor);
+    }
+
+    /** Rebuild the cave shell, supported decoration and local light anchors as one layout.
+     * @param {Cell[]} stations Saved device cells protected by the cave compatibility envelope.
+     */
+    caveScenery(stations: Cell[]): void {
+        if (!this.caveRoot) return;
+        this.clear(this.caveRoot);
+        const layout = caveLayout(stations, WORLD_SCENES.cave.eye);
+        this.batch('stone', layout.stone, this.caveRoot);
+        this.batch('oak_log', layout.wood.filter(c => c[1] < 3), this.caveRoot);
+        this.batch('oak_planks', layout.wood.filter(c => c[1] === 3), this.caveRoot);
+        for (const torch of layout.torches) {
+            this.batch('wall_torch', [torch.cell], this.caveRoot, 'scenery', 'facing=' + torch.facing);
+            this.caveRoot.children.at(-1)!.userData.support = false;
+        }
+        this.caveLights = layout.torches.map(t => t.light);
     }
 
     /** Project source-linked crowns and decorative plants around persisted workstation footprints.
@@ -159,7 +178,7 @@ export class AuthoredWorld {
         this.batch(id === 'cave' ? 'oak_planks' : 'cobblestone', pad, this.staticRoot, 'ground');
         if (id === 'cave') {
             this.caveRoot = new Group(); this.staticRoot.add(this.caveRoot);
-            this.batch('stone', caveRockCells([], spec.eye), this.caveRoot);
+            this.caveScenery([]);
         }
         if (id === 'farm') {
             const barn: Cell[] = [];
@@ -222,7 +241,7 @@ export class AuthoredWorld {
             signature = JSON.stringify([removed, stations.map(s => s.cell), crops.map(c => [c.id, cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0)])]);
         if (id === 'cave' && this.caveRoot) {
             const layout = JSON.stringify(stations.map(s=>s.cell));
-            if (layout !== this.caveSignature) {this.caveSignature = layout; this.clear(this.caveRoot); this.batch('stone', caveRockCells(stations.map(s=>s.cell), spec.eye), this.caveRoot);}
+            if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell));}
         }
         if (signature === this.signature) return;
         this.signature = signature;
@@ -242,6 +261,10 @@ export class AuthoredWorld {
             root.position.set(c.cell[0], -.0625, c.cell[2]);
             root.userData.id = 'crop:' + c.id;
             this.crops.add(root);
+        }
+        if (id === 'cave') {
+            lightCave(this.staticRoot, this.caveLights);
+            lightCave(this.natural, this.caveLights);
         }
     }
 

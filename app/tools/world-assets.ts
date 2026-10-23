@@ -40,7 +40,7 @@ function texture(id: string): void {
 
 /** Authoring chooses exact native states, not unsupported arbitrary weighted rotations. */
 const states: { block: string; state: string; variant: any }[] = [];
-for (const block of ['grass_block', 'dirt', 'dirt_path', 'oak_log', 'oak_leaves', 'short_grass', 'tall_grass', 'dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet', 'sugar_cane', 'coal_ore', 'iron_ore', 'stone', 'cobblestone', 'farmland', 'wheat', 'oak_planks']) {
+for (const block of ['grass_block', 'dirt', 'dirt_path', 'oak_log', 'oak_leaves', 'short_grass', 'tall_grass', 'dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet', 'sugar_cane', 'coal_ore', 'iron_ore', 'stone', 'cobblestone', 'farmland', 'wheat', 'oak_planks', 'wall_torch']) {
     const doc = JSON.parse(take('assets/minecraft/blockstates/' + block + '.json').toString());
     for (const [state, value] of Object.entries(doc.variants)) {
         if (block === 'grass_block' && state !== 'snowy=false' || block === 'oak_log' && state !== 'axis=y' || block === 'farmland' && state !== 'moisture=7' || block === 'wheat' && !['age=0', 'age=2', 'age=5', 'age=7'].includes(state)) continue;

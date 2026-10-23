@@ -1,5 +1,5 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
-import {caveSolid} from './cave-shape.ts';
+import {caveSolid, caveLayout, caveClearCells, CAVE_TORCHES} from './cave-shape.ts';
 import {retainedPlainsSupports} from './plains-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
@@ -119,14 +119,15 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
 export function supported(p: Progress, cell: Cell): boolean {
     if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
-    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id));
+    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveClearCells(p.scenes.cave.stations.map(s => s.cell)).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id));
 }
 
-/** Keep live resource/crop and retained support occupancy separate from cleared terrain.
+/** Keep live resource/crop, supported cave decoration and retained support occupancy separate from cleared terrain.
  * @param {Progress} p Latest scene facts.
  * @param {Cell} cell Candidate cell.
- * @return {boolean} Whether an actual resource, crop or retained support occupies it.
+ * @return {boolean} Whether a resource, crop, supported decoration or retained support occupies it.
  */
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
+    if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell)).torches.some(t => sameCell(t.cell, cell))) return true;
     return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id));
 }

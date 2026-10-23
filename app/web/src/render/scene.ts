@@ -30,6 +30,7 @@ import type {SceneState} from '../domain/types.ts';
 import type {Resources} from './resources.ts';
 import {VanillaModels} from './vanilla-models.ts';
 import {AuthoredWorld} from './authored-world.ts';
+import {lightCave} from './cave-lighting.ts';
 import {WORLD_SCENES, WORLD_COMPASS_TARGET} from '../domain/world-config.ts';
 import type {CompassView} from '../ui/compass.ts';
 import type {Progress, SceneId, Kind, Facing, Cell} from '../domain/types.ts';
@@ -440,6 +441,7 @@ export class SceneView {
         this.authored.sync(p);
         this.setCake(p.scene === 'home' && p.cakePlacement !== null);
         this.sync(p.scenes[p.scene]);
+        if (p.scene === 'cave') lightCave(this.persistent, this.authored.caveLights);
         this.refreshHover();
         this.requestRender();
         end();

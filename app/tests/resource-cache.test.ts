@@ -40,3 +40,12 @@ test('manifest HTTP and transport failures remain failures instead of falling ba
         await assert.rejects(fetchManifest('world-manifest.json'), /offline/);
     } finally {globalThis.fetch = original;}
 });
+
+test('pre-cave manifest cannot instantiate wall torches; current version includes both actual anchors and their native dependencies', () => {
+    const previous = JSON.parse(readFileSync(new URL('./fixtures/world-manifest-before-cave.json', import.meta.url), 'utf8'));
+    const world = new AuthoredWorld({} as any, {samples: previous.states} as any);
+    assert.throws(() => world.block('wall_torch', 'facing=east'), {message:'world-model:wall_torchfacing=east'});
+    const current = JSON.parse(readFileSync(new URL('../../resources/minecraft/26.3/world-manifest.json', import.meta.url), 'utf8'));
+    for(const facing of ['east','west'])assert.ok(current.states.some((s:any)=>s.block==='wall_torch'&&s.state==='facing='+facing));
+    for(const path of ['blockstates/wall_torch.json','models/block/wall_torch.json','models/block/template_torch_wall.json','textures/block/torch.png'])assert.ok(current.inputs['assets/minecraft/'+path]);
+});

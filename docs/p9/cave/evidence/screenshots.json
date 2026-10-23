@@ -1,0 +1,112 @@
+[
+  {
+    "file": "default-1280.png",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "initial empty cave save"
+  },
+  {
+    "file": "empty-1280.png",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled empty saved sample"
+  },
+  {
+    "file": "devices-1280.png",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled devices saved sample"
+  },
+  {
+    "file": "default-1920.png",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "initial empty cave save"
+  },
+  {
+    "file": "empty-1920.png",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled empty saved sample"
+  },
+  {
+    "file": "devices-1920.png",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled devices saved sample"
+  },
+  {
+    "file": "default-390.png",
+    "viewport": [
+      390,
+      844
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "initial empty cave save"
+  },
+  {
+    "file": "pan-left-390.png",
+    "viewport": [
+      390,
+      844
+    ],
+    "dpr": 1,
+    "look": "{\"yaw\":0.6283185307179586,\"pitch\":0,\"eye\":[0,1.62,7]}",
+    "setup": "native right mouse drag"
+  },
+  {
+    "file": "pan-right-390.png",
+    "viewport": [
+      390,
+      844
+    ],
+    "dpr": 1,
+    "look": "{\"yaw\":-0.6283185307179586,\"pitch\":0,\"eye\":[0,1.62,7]}",
+    "setup": "native right mouse drag"
+  },
+  {
+    "file": "empty-390.png",
+    "viewport": [
+      390,
+      844
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled empty saved sample"
+  },
+  {
+    "file": "devices-390.png",
+    "viewport": [
+      390,
+      844
+    ],
+    "dpr": 1,
+    "build": "4a05e461981a",
+    "setup": "controlled devices saved sample"
+  }
+]

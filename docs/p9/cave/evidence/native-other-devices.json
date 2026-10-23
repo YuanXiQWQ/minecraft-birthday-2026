@@ -1,0 +1,190 @@
+[
+  {
+    "kind": "crafting_table",
+    "preview": {
+      "id": "preview",
+      "kind": "crafting_table",
+      "cell": [
+        3,
+        0,
+        0
+      ],
+      "facing": "south",
+      "contents": {
+        "version": 1,
+        "data": {
+          "grid": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "valid": true
+    },
+    "placed": [
+      {
+        "id": "3fb28cd3-aef9-4f53-a94e-78e3cd13de8b",
+        "kind": "crafting_table",
+        "cell": [
+          3,
+          0,
+          0
+        ],
+        "facing": "west",
+        "contents": {
+          "version": 1,
+          "data": {
+            "grid": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "mode": {
+      "desired": "visible",
+      "actual": false,
+      "pending": false,
+      "paused": true,
+      "epoch": 6
+    },
+    "after": []
+  },
+  {
+    "kind": "blast_furnace",
+    "preview": {
+      "id": "preview",
+      "kind": "blast_furnace",
+      "cell": [
+        3,
+        0,
+        0
+      ],
+      "facing": "south",
+      "contents": {
+        "version": 2,
+        "data": {
+          "input": null,
+          "fuel": null,
+          "output": null,
+          "burn": 0,
+          "burnTotal": 0,
+          "cook": 0,
+          "cookTotal": 200,
+          "recipe": null,
+          "speed": 1,
+          "outputRecipe": null
+        }
+      },
+      "valid": true
+    },
+    "placed": [
+      {
+        "id": "b3b9765c-8b08-4580-9496-6de9795f7605",
+        "kind": "blast_furnace",
+        "cell": [
+          3,
+          0,
+          0
+        ],
+        "facing": "west",
+        "contents": {
+          "version": 2,
+          "data": {
+            "input": null,
+            "fuel": null,
+            "output": null,
+            "burn": 0,
+            "burnTotal": 0,
+            "cook": 0,
+            "cookTotal": 200,
+            "recipe": null,
+            "speed": 1,
+            "outputRecipe": null
+          }
+        }
+      }
+    ],
+    "mode": {
+      "desired": "visible",
+      "actual": false,
+      "pending": false,
+      "paused": true,
+      "epoch": 7
+    },
+    "after": []
+  },
+  {
+    "kind": "hopper",
+    "preview": {
+      "id": "preview",
+      "kind": "hopper",
+      "cell": [
+        3,
+        0,
+        0
+      ],
+      "facing": "down",
+      "contents": {
+        "version": 3,
+        "data": {
+          "slots": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "valid": true
+    },
+    "placed": [
+      {
+        "id": "40e4b16a-18ab-4424-943f-8c1ed484850d",
+        "kind": "hopper",
+        "cell": [
+          3,
+          0,
+          0
+        ],
+        "facing": "north",
+        "contents": {
+          "version": 3,
+          "data": {
+            "slots": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        }
+      }
+    ],
+    "mode": {
+      "desired": "visible",
+      "actual": false,
+      "pending": false,
+      "paused": true,
+      "epoch": 8
+    },
+    "after": []
+  }
+]

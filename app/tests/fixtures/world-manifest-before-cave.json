@@ -1,0 +1,840 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "inputs": {
+    "assets/minecraft/blockstates/grass_block.json": "f428a88833a320ceae681bd4ce88dee75307b2517864c4b1a72e5f995071d1cb",
+    "assets/minecraft/models/block/grass_block.json": "fdea6afda5fa7d47241f181b56879e6807efc2b18a119133e3a871c411bf661a",
+    "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+    "assets/minecraft/textures/block/dirt.png": "67197d5371efc3ca1638217c38349665dbd5a977b47bfb20075c858dff87d510",
+    "assets/minecraft/textures/block/grass_block_top.png": "52f44b64ce884a13dfe35e4b4da2e35898b790dd4d7a5ea536f1b0c0d56d29b4",
+    "assets/minecraft/textures/block/grass_block_side.png": "76a677640eb91d6a9aed844bc66e329b1894f89e241a0071333b6678c0854580",
+    "assets/minecraft/textures/block/grass_block_side_overlay.png": "872056682c3b059c04aba88f8b4e706f2526b907e1acef12626a9f912f573a85",
+    "assets/minecraft/blockstates/dirt.json": "e7002d2f66d4aef1385ba52663de4878d2dfc0dd6193641ad9908ba746e85a1d",
+    "assets/minecraft/models/block/dirt.json": "c7a496ef02d69788d589fac7d2d2465e36eeb8a187cb8b23612310f3945c4868",
+    "assets/minecraft/models/block/cube_all.json": "be3205d629ffb9e03834c3d1d083f8a2c62e9f9ae80820755129408634e9144a",
+    "assets/minecraft/models/block/cube.json": "3e4aacd02e816aeba38f83076596e18ded4cf49c01e17c62d1fce79850ffb84e",
+    "assets/minecraft/blockstates/dirt_path.json": "92bf99ab5751d418e629e692231d16903f383ec5624d7519bfa1c184b5fa2514",
+    "assets/minecraft/models/block/dirt_path.json": "9fee8e603c5b41107d6e9d52f7cfe1f68a54e01a8cdbec17f4d1fa75f939fe0e",
+    "assets/minecraft/models/block/template_cube_bottom_top_indented.json": "3bbcc0d4090c4ee4f62bddf2679c5ff101f342d70c0440453488cc3d7cccd78a",
+    "assets/minecraft/textures/block/dirt_path_side.png": "10a6c00835541537a0254f4210acc944b603ff7239dc1b458ddc5fae00686830",
+    "assets/minecraft/textures/block/dirt_path_top.png": "653ab9be45372827da221f787435e2ad5adddc6257c29d45fe56947963784ac3",
+    "assets/minecraft/blockstates/oak_log.json": "4856474e42cf2b94b3cef494f7ce91fe37f4098c98a56134dfc339498e1cf3a2",
+    "assets/minecraft/models/block/oak_log.json": "e029dda3262e41fab2ffa265c36ab4db51ab79e726e6d31bd2518d74c0ef9d7e",
+    "assets/minecraft/models/block/cube_column.json": "4cc89841e64bfb9be33aef096675291b585d05bae81cbbd14bf977f89aa81a6b",
+    "assets/minecraft/textures/block/oak_log.png": "61735859c9c9ea82601191a77c6f256d93619cbaf7cad998a3ed5762877a34e6",
+    "assets/minecraft/textures/block/oak_log_top.png": "a520800a833ea0c6214481245ab40397aa0c08b4ffc909046dac266386f9fc01",
+    "assets/minecraft/blockstates/oak_leaves.json": "f2075a4ff4ca1aee85eb8c921695421951c6f6eb4aa86e579c19d0d150ef6afa",
+    "assets/minecraft/models/block/oak_leaves.json": "204bc27cdfedd3922394c3ed42d7e9ec8cb3091aaa72f9f141920b98f35e9e42",
+    "assets/minecraft/models/block/leaves.json": "fc181ca88dee45f7f3c606f2cc5158466538fe26f3a9fe40554b3c83093d1d42",
+    "assets/minecraft/textures/block/oak_leaves.png": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f",
+    "assets/minecraft/textures/block/oak_leaves.png.mcmeta": "dcb7170e9e198519bfd6865e85cfe17b2fb29e8a0ad2c57c69bde2f513da7c43",
+    "assets/minecraft/blockstates/short_grass.json": "2bbc37d45a5223fdc5c2a9677bf99f00519bb5eb2301b8f83b47d233671f1b29",
+    "assets/minecraft/models/block/short_grass.json": "5ef3f5aea70d45c58f76dee483e1f40ca93be8aa362c2f5fdf8566366ca3fe8c",
+    "assets/minecraft/models/block/tinted_cross.json": "f6ace97c3b508dcd7bd81ad28358109e9a3c856ffeab09b13683d6ba5303738c",
+    "assets/minecraft/textures/block/short_grass.png": "40e2ad5d034d0ffc58b4c496c0badfa2104e0fc1888fc92c5f9bd79dcd84cb20",
+    "assets/minecraft/blockstates/tall_grass.json": "f2436182fbd84fa982b8acb440598ac68bbc51d15eebd897712b3a8c3562d17b",
+    "assets/minecraft/models/block/tall_grass_bottom.json": "e1bb1d63fd4bd73525b861eb51be921208f8ded46ec5082ab166d64cc98eacb6",
+    "assets/minecraft/textures/block/tall_grass_bottom.png": "30d9b656f406ab5231bc39dfb1c08e6f4b1d275cf242e699a750e358eeed4194",
+    "assets/minecraft/models/block/tall_grass_top.json": "d93856cff3c00d4cd3213fece8848e1ca6af418afcfe48220dbd48d4a446e59b",
+    "assets/minecraft/textures/block/tall_grass_top.png": "16cfd90e32fb04756fd0cfbd652ae358d545a069a9ed22cbb390ec5bf3f17f1a",
+    "assets/minecraft/blockstates/dandelion.json": "43288054d2eb1f2632d334b94f5ed761962cc2d1f1e559faef9d62f281afaf6a",
+    "assets/minecraft/models/block/dandelion.json": "b1a3623bcf716de85804d0d48e871e1ea3404b4595b64a4ed11207ce13fcec73",
+    "assets/minecraft/models/block/cross.json": "ef3a9123a82574044e5b4b881135bbed50cb808365f9cc599756aa2f31bab257",
+    "assets/minecraft/textures/block/dandelion.png": "eb0cdf11d96f9b0aef8201c05c51f2c6cf1fc00d8a09d26c50530aff2b05ae33",
+    "assets/minecraft/textures/block/dandelion.png.mcmeta": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4",
+    "assets/minecraft/blockstates/poppy.json": "2fdfbf18c01e73e315c6678f6f941dff2375e929bcbdc1d1d28219810eb15594",
+    "assets/minecraft/models/block/poppy.json": "ae39ac1b736eeb4662408400355e6bb3740f4f7cc79ee5331db5759b86f4c54f",
+    "assets/minecraft/textures/block/poppy.png": "9678d89814d640f88305add21ee6d157f52007aac60bbc363b30054bb3388561",
+    "assets/minecraft/textures/block/poppy.png.mcmeta": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4",
+    "assets/minecraft/blockstates/oxeye_daisy.json": "a0bdaede11d3c3ba2554fdd7895511e0764de7b30e3bfd5a432148da8fea99ce",
+    "assets/minecraft/models/block/oxeye_daisy.json": "d2f21f5208b7e07634480d299197127bbcfff25a5169a4e61cdc54222b3840c5",
+    "assets/minecraft/textures/block/oxeye_daisy.png": "f4356fbcc3921433e150356384ccd739166d248a07d9edb7baaf187d03766372",
+    "assets/minecraft/textures/block/oxeye_daisy.png.mcmeta": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4",
+    "assets/minecraft/blockstates/cornflower.json": "ccf26b53ba9eff46a2d2d12a6f9ed4100503d943e83befc0c0d81501b52665a1",
+    "assets/minecraft/models/block/cornflower.json": "00322f51dd9cc1309784b9195091d2595615d4fb1c9ca8d8851ea6fde03136bc",
+    "assets/minecraft/textures/block/cornflower.png": "df8624ca57077469654576faab3424aceb0bdc512102ec2056a17a0ff890c52d",
+    "assets/minecraft/textures/block/cornflower.png.mcmeta": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4",
+    "assets/minecraft/blockstates/azure_bluet.json": "087fcb45250ba7f6d35c92013da9cc502563f07661fcccfdc56f7882a64555f3",
+    "assets/minecraft/models/block/azure_bluet.json": "022105dca8f5d0253a34494005fa27bef3b11f591008df639a4aa9118629898d",
+    "assets/minecraft/textures/block/azure_bluet.png": "c7a05524e62b5b27b919270c64a8e3523d8dd01ae29f14863d721ed6807ff5ee",
+    "assets/minecraft/textures/block/azure_bluet.png.mcmeta": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4",
+    "assets/minecraft/blockstates/sugar_cane.json": "b90d4b118371b52d660a80ca9dce4ccc5012e58f6c5a530b1a6607e20f88698a",
+    "assets/minecraft/models/block/sugar_cane.json": "0f19e92fd4a27c3f1bf45eb46acff03224c077c9ae963f2f1c7c5dd1cd2b57dd",
+    "assets/minecraft/textures/block/sugar_cane.png": "2ae5f67fddbe9484960aa1335757e1234c3ba6b41ea0ef5b0a2ec818008b4d88",
+    "assets/minecraft/blockstates/coal_ore.json": "e8f782cece59f2289f6874fd4b5be9a6bf3f604a0d845b6a7b17640e83e8b7ea",
+    "assets/minecraft/models/block/coal_ore.json": "3812038e648290f74b5cdcbcdad9cdb74785c45f4ca865cc3d70f3177ea0f37c",
+    "assets/minecraft/textures/block/coal_ore.png": "a24553e4cb9cfe70aae48fdb19d8205736135551301dc9c16ecca842d8dd3ae3",
+    "assets/minecraft/blockstates/iron_ore.json": "252ffc2fbd790eb52ea3c54bcb5a35e4bf3c08ed022bd65f4de5c0fa00d0514a",
+    "assets/minecraft/models/block/iron_ore.json": "46979c8a4e8da0eef0c6f44f2dc2c5d0b473d02d7aeb7f94eb9819387c56edb1",
+    "assets/minecraft/textures/block/iron_ore.png": "72fb64f5a1c7ef0c356b1510b84174576d8cca5ae1de3bb9fa41e3dd1a7a2719",
+    "assets/minecraft/blockstates/stone.json": "34476f2bb98e7abec029c07c3cbfd8ba3a0141c0df3f02ff255018dbec625bbc",
+    "assets/minecraft/models/block/stone.json": "c0734082e7f1e2f44809737b2fbe1136fc7304bde7232e45fbe921884a4a327e",
+    "assets/minecraft/textures/block/stone.png": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f",
+    "assets/minecraft/blockstates/cobblestone.json": "2f97205b9cd9cc167bd2f2ad8036237707a48ee1deb032273bd96565aff64c77",
+    "assets/minecraft/models/block/cobblestone.json": "dee026b80b7b77c5d540d75b91cfaec770245a2e7affb53555e9e4ad3ddb551f",
+    "assets/minecraft/textures/block/cobblestone.png": "bcda95fdf5afa91747657aa198fc0b69ebf44141de30a718075f74045e9a5def",
+    "assets/minecraft/blockstates/farmland.json": "687e967014b2e153d148603fa4f6bd6f068ca2f33dd0c81535e02f22483a4476",
+    "assets/minecraft/models/block/farmland_moist.json": "5c2edb703864f4a8f30b2a87f7006deb49976a52731a4db7c601f1b1d67d4f0e",
+    "assets/minecraft/textures/block/farmland_moist.png": "28d754ebc6e3aa0c7c8680dc8f3ce18304152cd2d2374a574a66237f4b5b9ecf",
+    "assets/minecraft/blockstates/wheat.json": "787dc13c2149a133ebe4d4626b33396ec804ebf293a150dd8dab3eea65e02d57",
+    "assets/minecraft/models/block/wheat_stage0.json": "0392a48dd5af33d9ec5d3ecb218ea563ab6619a274312e227319c869ac888b85",
+    "assets/minecraft/models/block/crop.json": "318da58028e5718788486e958cbc2050f599eda451bf76d4a668c3cafc0c84e4",
+    "assets/minecraft/textures/block/wheat_stage0.png": "bd7aaf9666e414ca277c1aa33f491e48b0c2a0031a095bb7838a6ac3a0fd69cf",
+    "assets/minecraft/models/block/wheat_stage2.json": "ba8d5e4d0e9af61a7bb4799745d6c0d8286286337467c7544c4223bb591afdff",
+    "assets/minecraft/textures/block/wheat_stage2.png": "921141204c89497a95a5536d8f9a93b25982e071ef1d21bef201700b95bdc0b5",
+    "assets/minecraft/models/block/wheat_stage5.json": "2cb8f32a7ce58e080d736a918d20f82d58e272e9cbde882c9acb36e09b69e4df",
+    "assets/minecraft/textures/block/wheat_stage5.png": "5e787055f2026ed89824f05c298fcc60ea4601cc956fa2d36855938e8d56f967",
+    "assets/minecraft/models/block/wheat_stage7.json": "06f1a84cc9bfd1505ea2fc2c96090f46279c3c79845bbd0e0e41245109cae8b9",
+    "assets/minecraft/textures/block/wheat_stage7.png": "4227ffd999af30ace7264ae92e50e396a4ecac5479d3c62b5647213acf9c9de6",
+    "assets/minecraft/blockstates/oak_planks.json": "6f2d386f25be963313312900c1d4ec49fde45987f01e5f320c2c45cce6cec8ad",
+    "assets/minecraft/models/block/oak_planks.json": "79b1146adb4eff1b405c0a18384e3290fa171edc1347f64fef50df3df4df939d",
+    "assets/minecraft/textures/block/oak_planks.png": "65665943ef9c8bcf63fc67d2083ed0c50243f724106d0e4bb1abea5d921b16d3",
+    "assets/minecraft/textures/entity/cow/cow_temperate.png": "5106c2676c70d64b2af4bc0792cb4adfa75cf587d05cc370ee7c6ca01465efdc",
+    "assets/minecraft/textures/entity/chicken/chicken_temperate.png": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b",
+    "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486",
+    "assets/minecraft/textures/colormap/foliage.png": "e5b7f81b3fbebe6a94bc665dd9df01a14a3ce30430d66a2e84e201d87a2e62d1",
+    "assets/minecraft/textures/block/water_still.png": "683df6ad9c23a50b7ce9323a5fe231aa79f94a63c6d750f3cf87a1fd44422551",
+    "assets/minecraft/textures/block/water_still.png.mcmeta": "e9b8025fde1b09b0a4d2a38427b04f98f28a593045be6d177eb2b29164c872b0",
+    "assets/minecraft/textures/item/egg.png": "3bfccf5fcfe66933d591e944f6b08456c8083f5c3898b924da52bfebc41e6322",
+    "asset-index:https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
+    "minecraft/sounds.json": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099",
+    "assets/minecraft/sounds/dig/stone1.ogg": "0f066e00a6bc068038713c66075b24fd033816b5c2f5162ef6d747b87e324a14",
+    "assets/minecraft/sounds/dig/stone2.ogg": "d1ade709625f308bbc529aa3aa6995fea009b05b2c83193855def208ad15e0b5",
+    "assets/minecraft/sounds/dig/stone3.ogg": "00f983f95a68eefa04d5d51bb20c80b69247467a0f446496c349b03b0b849536",
+    "assets/minecraft/sounds/dig/stone4.ogg": "412de07878dec702c834b815839179a026a41a1503ffde4b27a52e5ab38784be",
+    "assets/minecraft/sounds/dig/grass1.ogg": "ce1eab05bda582df460606c6931dd87095a802de621166ea840105a428cc627a",
+    "assets/minecraft/sounds/dig/grass2.ogg": "ec562b50f052be7ad376f28474a0d70b4c09530a0cbc08e4e784f871ee128362",
+    "assets/minecraft/sounds/dig/grass3.ogg": "d5cc2feaf2a11c45d036d370b875e0bbd52efe9c8501003b28dd85efe4e2634f",
+    "assets/minecraft/sounds/dig/grass4.ogg": "1476d8ca66994013baee6fa1a1616312be733fd81000cd536e39f212d6bded95",
+    "assets/minecraft/sounds/dig/wood1.ogg": "313dbced391ecb42a63c85bc874b7fa226215acabadf5069e223dff6c5ebad99",
+    "assets/minecraft/sounds/dig/wood2.ogg": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7",
+    "assets/minecraft/sounds/dig/wood3.ogg": "6b439a67286d392e3a7bc96f67ea51ed17aa8d22610f243249df88d4ba5aa9e7",
+    "assets/minecraft/sounds/dig/wood4.ogg": "b8a75c1b0658d0bc4e0e8e2d44585182feda102551e266fd42490034cc08c4f5",
+    "assets/minecraft/sounds/item/plant/crop1.ogg": "39e80ca9dfe41982e0f2f8ea3df3a7c54ba0515d95980644fac6c4f62cc9087d",
+    "assets/minecraft/sounds/item/plant/crop2.ogg": "b8b0f71edf7f904c18935d157101cfd6339be4289f3254dd48881d31d6e9ac89",
+    "assets/minecraft/sounds/item/plant/crop3.ogg": "e0cbcf0451a7cad208b976be74526bbc7071ebb604032b34eca120e531d3cabc",
+    "assets/minecraft/sounds/item/plant/crop4.ogg": "d38196f634188215a0d6e334b8f5f5562c02217af461a080efcbed4ff34e677e",
+    "assets/minecraft/sounds/item/plant/crop5.ogg": "d3b89aba7f533da1ffe8df6628efb2c1236b86cc4dc7a437bd2b8186105a038b",
+    "assets/minecraft/sounds/item/plant/crop6.ogg": "f7b2aba3853426deb3b8cd98c523081c6bfd9deee428b409aa29271140b3989b",
+    "assets/minecraft/sounds/block/bamboo/sapling_place1.ogg": "4c175b414da9074145994db41e233a9b3beaa4ff19a5672f10778d95a1f8748d",
+    "assets/minecraft/sounds/block/bamboo/sapling_place2.ogg": "4fe81e7e256e9b14da051f091dac016091bf9a9e68069c34cd5f03e2acb10391",
+    "assets/minecraft/sounds/block/bamboo/sapling_place3.ogg": "f830b1b9c0bf430e95a87b628e82cc4a503b82b61e8542fcd9f753724e5d3e2b",
+    "assets/minecraft/sounds/block/bamboo/sapling_place4.ogg": "f6f24698bd6b96ae60efcd59ebc809b21f65a4a80eed33fc73c727506c140783",
+    "assets/minecraft/sounds/block/bamboo/sapling_place5.ogg": "4e414c7229e7adda2c31fb8bb93a6f279c174c7f535d5d870ff64ca18af72ea4",
+    "assets/minecraft/sounds/block/bamboo/sapling_place6.ogg": "654961662eb968640932f652d0768602daa4d2a09a51b214a44f0444db62c073",
+    "assets/minecraft/sounds/entity/cow/milk1.ogg": "d02b1d0c7ecce72866113296ef874ccee1e54de43ffad8fec3462586d86c4956",
+    "assets/minecraft/sounds/entity/cow/milk2.ogg": "4e8334a89ec9a9531b205551594c6608d6ff5d626038997306558ab9132d6c7a",
+    "assets/minecraft/sounds/entity/cow/milk3.ogg": "985a2a7c47377bc8d3cb762bee56f6db7c5a349db87e03fd18e7d22f5a718599",
+    "assets/minecraft/sounds/random/pop.ogg": "4ddf491e1b736a9711cd76590ba70b203136d7ea1d5134a42088e58daccf3951"
+  },
+  "classes": {
+    "net/minecraft/client/model/animal/cow/CowModel.class": "2bc0ed7732daff146b275f49ad5360bb9cd03ea8853f663c3a458ce5a04ec334",
+    "net/minecraft/client/model/animal/chicken/AdultChickenModel.class": "b82673d40f01b9621eef2a415769cd4e6c12752717ce14a15103fa0428c6275f",
+    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2"
+  },
+  "states": [
+    {
+      "block": "grass_block",
+      "state": "snowy=false",
+      "variant": {
+        "model": "minecraft:block/grass_block"
+      }
+    },
+    {
+      "block": "dirt",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/dirt"
+      }
+    },
+    {
+      "block": "dirt_path",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/dirt_path"
+      }
+    },
+    {
+      "block": "oak_log",
+      "state": "axis=y",
+      "variant": {
+        "model": "minecraft:block/oak_log"
+      }
+    },
+    {
+      "block": "oak_leaves",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/oak_leaves"
+      }
+    },
+    {
+      "block": "short_grass",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/short_grass"
+      }
+    },
+    {
+      "block": "tall_grass",
+      "state": "half=lower",
+      "variant": {
+        "model": "minecraft:block/tall_grass_bottom"
+      }
+    },
+    {
+      "block": "tall_grass",
+      "state": "half=upper",
+      "variant": {
+        "model": "minecraft:block/tall_grass_top"
+      }
+    },
+    {
+      "block": "dandelion",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/dandelion"
+      }
+    },
+    {
+      "block": "poppy",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/poppy"
+      }
+    },
+    {
+      "block": "oxeye_daisy",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/oxeye_daisy"
+      }
+    },
+    {
+      "block": "cornflower",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/cornflower"
+      }
+    },
+    {
+      "block": "azure_bluet",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/azure_bluet"
+      }
+    },
+    {
+      "block": "sugar_cane",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/sugar_cane"
+      }
+    },
+    {
+      "block": "coal_ore",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/coal_ore"
+      }
+    },
+    {
+      "block": "iron_ore",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/iron_ore"
+      }
+    },
+    {
+      "block": "stone",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/stone"
+      }
+    },
+    {
+      "block": "cobblestone",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/cobblestone"
+      }
+    },
+    {
+      "block": "farmland",
+      "state": "moisture=7",
+      "variant": {
+        "model": "minecraft:block/farmland_moist"
+      }
+    },
+    {
+      "block": "wheat",
+      "state": "age=0",
+      "variant": {
+        "model": "minecraft:block/wheat_stage0"
+      }
+    },
+    {
+      "block": "wheat",
+      "state": "age=2",
+      "variant": {
+        "model": "minecraft:block/wheat_stage2"
+      }
+    },
+    {
+      "block": "wheat",
+      "state": "age=5",
+      "variant": {
+        "model": "minecraft:block/wheat_stage5"
+      }
+    },
+    {
+      "block": "wheat",
+      "state": "age=7",
+      "variant": {
+        "model": "minecraft:block/wheat_stage7"
+      }
+    },
+    {
+      "block": "oak_planks",
+      "state": "",
+      "variant": {
+        "model": "minecraft:block/oak_planks"
+      }
+    }
+  ],
+  "entries": [
+    {
+      "entry": "assets/minecraft/blockstates/azure_bluet.json",
+      "size": 84,
+      "sha256": "087fcb45250ba7f6d35c92013da9cc502563f07661fcccfdc56f7882a64555f3"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/coal_ore.json",
+      "size": 81,
+      "sha256": "e8f782cece59f2289f6874fd4b5be9a6bf3f604a0d845b6a7b17640e83e8b7ea"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cobblestone.json",
+      "size": 84,
+      "sha256": "2f97205b9cd9cc167bd2f2ad8036237707a48ee1deb032273bd96565aff64c77"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/cornflower.json",
+      "size": 83,
+      "sha256": "ccf26b53ba9eff46a2d2d12a6f9ed4100503d943e83befc0c0d81501b52665a1"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/dandelion.json",
+      "size": 82,
+      "sha256": "43288054d2eb1f2632d334b94f5ed761962cc2d1f1e559faef9d62f281afaf6a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/dirt_path.json",
+      "size": 339,
+      "sha256": "92bf99ab5751d418e629e692231d16903f383ec5624d7519bfa1c184b5fa2514"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/dirt.json",
+      "size": 319,
+      "sha256": "e7002d2f66d4aef1385ba52663de4878d2dfc0dd6193641ad9908ba746e85a1d"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/farmland.json",
+      "size": 580,
+      "sha256": "687e967014b2e153d148603fa4f6bd6f068ca2f33dd0c81535e02f22483a4476"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/grass_block.json",
+      "size": 435,
+      "sha256": "f428a88833a320ceae681bd4ce88dee75307b2517864c4b1a72e5f995071d1cb"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/iron_ore.json",
+      "size": 81,
+      "sha256": "252ffc2fbd790eb52ea3c54bcb5a35e4bf3c08ed022bd65f4de5c0fa00d0514a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_leaves.json",
+      "size": 83,
+      "sha256": "f2075a4ff4ca1aee85eb8c921695421951c6f6eb4aa86e579c19d0d150ef6afa"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_log.json",
+      "size": 281,
+      "sha256": "4856474e42cf2b94b3cef494f7ce91fe37f4098c98a56134dfc339498e1cf3a2"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oak_planks.json",
+      "size": 83,
+      "sha256": "6f2d386f25be963313312900c1d4ec49fde45987f01e5f320c2c45cce6cec8ad"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/oxeye_daisy.json",
+      "size": 84,
+      "sha256": "a0bdaede11d3c3ba2554fdd7895511e0764de7b30e3bfd5a432148da8fea99ce"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/poppy.json",
+      "size": 78,
+      "sha256": "2fdfbf18c01e73e315c6678f6f941dff2375e929bcbdc1d1d28219810eb15594"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/short_grass.json",
+      "size": 84,
+      "sha256": "2bbc37d45a5223fdc5c2a9677bf99f00519bb5eb2301b8f83b47d233671f1b29"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/sugar_cane.json",
+      "size": 83,
+      "sha256": "b90d4b118371b52d660a80ca9dce4ccc5012e58f6c5a530b1a6607e20f88698a"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/tall_grass.json",
+      "size": 175,
+      "sha256": "f2436182fbd84fa982b8acb440598ac68bbc51d15eebd897712b3a8c3562d17b"
+    },
+    {
+      "entry": "assets/minecraft/blockstates/wheat.json",
+      "size": 566,
+      "sha256": "787dc13c2149a133ebe4d4626b33396ec804ebf293a150dd8dab3eea65e02d57"
+    },
+    {
+      "entry": "assets/minecraft/models/block/azure_bluet.json",
+      "size": 103,
+      "sha256": "022105dca8f5d0253a34494005fa27bef3b11f591008df639a4aa9118629898d"
+    },
+    {
+      "entry": "assets/minecraft/models/block/coal_ore.json",
+      "size": 101,
+      "sha256": "3812038e648290f74b5cdcbcdad9cdb74785c45f4ca865cc3d70f3177ea0f37c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cornflower.json",
+      "size": 102,
+      "sha256": "00322f51dd9cc1309784b9195091d2595615d4fb1c9ca8d8851ea6fde03136bc"
+    },
+    {
+      "entry": "assets/minecraft/models/block/crop.json",
+      "size": 1335,
+      "sha256": "318da58028e5718788486e958cbc2050f599eda451bf76d4a668c3cafc0c84e4"
+    },
+    {
+      "entry": "assets/minecraft/models/block/cross.json",
+      "size": 920,
+      "sha256": "ef3a9123a82574044e5b4b881135bbed50cb808365f9cc599756aa2f31bab257"
+    },
+    {
+      "entry": "assets/minecraft/models/block/dandelion.json",
+      "size": 101,
+      "sha256": "b1a3623bcf716de85804d0d48e871e1ea3404b4595b64a4ed11207ce13fcec73"
+    },
+    {
+      "entry": "assets/minecraft/models/block/dirt_path.json",
+      "size": 215,
+      "sha256": "9fee8e603c5b41107d6e9d52f7cfe1f68a54e01a8cdbec17f4d1fa75f939fe0e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/dirt.json",
+      "size": 97,
+      "sha256": "c7a496ef02d69788d589fac7d2d2465e36eeb8a187cb8b23612310f3945c4868"
+    },
+    {
+      "entry": "assets/minecraft/models/block/farmland_moist.json",
+      "size": 206,
+      "sha256": "5c2edb703864f4a8f30b2a87f7006deb49976a52731a4db7c601f1b1d67d4f0e"
+    },
+    {
+      "entry": "assets/minecraft/models/block/grass_block.json",
+      "size": 1543,
+      "sha256": "fdea6afda5fa7d47241f181b56879e6807efc2b18a119133e3a871c411bf661a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/iron_ore.json",
+      "size": 101,
+      "sha256": "46979c8a4e8da0eef0c6f44f2dc2c5d0b473d02d7aeb7f94eb9819387c56edb1"
+    },
+    {
+      "entry": "assets/minecraft/models/block/leaves.json",
+      "size": 868,
+      "sha256": "fc181ca88dee45f7f3c606f2cc5158466538fe26f3a9fe40554b3c83093d1d42"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oak_leaves.json",
+      "size": 101,
+      "sha256": "204bc27cdfedd3922394c3ed42d7e9ec8cb3091aaa72f9f141920b98f35e9e42"
+    },
+    {
+      "entry": "assets/minecraft/models/block/oxeye_daisy.json",
+      "size": 103,
+      "sha256": "d2f21f5208b7e07634480d299197127bbcfff25a5169a4e61cdc54222b3840c5"
+    },
+    {
+      "entry": "assets/minecraft/models/block/poppy.json",
+      "size": 97,
+      "sha256": "ae39ac1b736eeb4662408400355e6bb3740f4f7cc79ee5331db5759b86f4c54f"
+    },
+    {
+      "entry": "assets/minecraft/models/block/short_grass.json",
+      "size": 110,
+      "sha256": "5ef3f5aea70d45c58f76dee483e1f40ca93be8aa362c2f5fdf8566366ca3fe8c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/sugar_cane.json",
+      "size": 109,
+      "sha256": "0f19e92fd4a27c3f1bf45eb46acff03224c077c9ae963f2f1c7c5dd1cd2b57dd"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tall_grass_bottom.json",
+      "size": 116,
+      "sha256": "e1bb1d63fd4bd73525b861eb51be921208f8ded46ec5082ab166d64cc98eacb6"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tall_grass_top.json",
+      "size": 113,
+      "sha256": "d93856cff3c00d4cd3213fece8848e1ca6af418afcfe48220dbd48d4a446e59b"
+    },
+    {
+      "entry": "assets/minecraft/models/block/template_cube_bottom_top_indented.json",
+      "size": 764,
+      "sha256": "3bbcc0d4090c4ee4f62bddf2679c5ff101f342d70c0440453488cc3d7cccd78a"
+    },
+    {
+      "entry": "assets/minecraft/models/block/tinted_cross.json",
+      "size": 984,
+      "sha256": "f6ace97c3b508dcd7bd81ad28358109e9a3c856ffeab09b13683d6ba5303738c"
+    },
+    {
+      "entry": "assets/minecraft/models/block/wheat_stage0.json",
+      "size": 102,
+      "sha256": "0392a48dd5af33d9ec5d3ecb218ea563ab6619a274312e227319c869ac888b85"
+    },
+    {
+      "entry": "assets/minecraft/models/block/wheat_stage2.json",
+      "size": 102,
+      "sha256": "ba8d5e4d0e9af61a7bb4799745d6c0d8286286337467c7544c4223bb591afdff"
+    },
+    {
+      "entry": "assets/minecraft/models/block/wheat_stage5.json",
+      "size": 102,
+      "sha256": "2cb8f32a7ce58e080d736a918d20f82d58e272e9cbde882c9acb36e09b69e4df"
+    },
+    {
+      "entry": "assets/minecraft/models/block/wheat_stage7.json",
+      "size": 102,
+      "sha256": "06f1a84cc9bfd1505ea2fc2c96090f46279c3c79845bbd0e0e41245109cae8b9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place1.ogg",
+      "size": 6905,
+      "sha256": "4c175b414da9074145994db41e233a9b3beaa4ff19a5672f10778d95a1f8748d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place2.ogg",
+      "size": 6918,
+      "sha256": "4fe81e7e256e9b14da051f091dac016091bf9a9e68069c34cd5f03e2acb10391"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place3.ogg",
+      "size": 7532,
+      "sha256": "f830b1b9c0bf430e95a87b628e82cc4a503b82b61e8542fcd9f753724e5d3e2b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place4.ogg",
+      "size": 6954,
+      "sha256": "f6f24698bd6b96ae60efcd59ebc809b21f65a4a80eed33fc73c727506c140783"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place5.ogg",
+      "size": 7526,
+      "sha256": "4e414c7229e7adda2c31fb8bb93a6f279c174c7f535d5d870ff64ca18af72ea4"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/bamboo/sapling_place6.ogg",
+      "size": 6903,
+      "sha256": "654961662eb968640932f652d0768602daa4d2a09a51b214a44f0444db62c073"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/grass1.ogg",
+      "size": 7706,
+      "sha256": "ce1eab05bda582df460606c6931dd87095a802de621166ea840105a428cc627a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/grass2.ogg",
+      "size": 8146,
+      "sha256": "ec562b50f052be7ad376f28474a0d70b4c09530a0cbc08e4e784f871ee128362"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/grass3.ogg",
+      "size": 7744,
+      "sha256": "d5cc2feaf2a11c45d036d370b875e0bbd52efe9c8501003b28dd85efe4e2634f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/grass4.ogg",
+      "size": 7716,
+      "sha256": "1476d8ca66994013baee6fa1a1616312be733fd81000cd536e39f212d6bded95"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/stone1.ogg",
+      "size": 7434,
+      "sha256": "0f066e00a6bc068038713c66075b24fd033816b5c2f5162ef6d747b87e324a14"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/stone2.ogg",
+      "size": 7635,
+      "sha256": "d1ade709625f308bbc529aa3aa6995fea009b05b2c83193855def208ad15e0b5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/stone3.ogg",
+      "size": 7381,
+      "sha256": "00f983f95a68eefa04d5d51bb20c80b69247467a0f446496c349b03b0b849536"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/stone4.ogg",
+      "size": 7288,
+      "sha256": "412de07878dec702c834b815839179a026a41a1503ffde4b27a52e5ab38784be"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/wood1.ogg",
+      "size": 7283,
+      "sha256": "313dbced391ecb42a63c85bc874b7fa226215acabadf5069e223dff6c5ebad99"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/wood2.ogg",
+      "size": 7110,
+      "sha256": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/wood3.ogg",
+      "size": 7371,
+      "sha256": "6b439a67286d392e3a7bc96f67ea51ed17aa8d22610f243249df88d4ba5aa9e7"
+    },
+    {
+      "entry": "assets/minecraft/sounds/dig/wood4.ogg",
+      "size": 7497,
+      "sha256": "b8a75c1b0658d0bc4e0e8e2d44585182feda102551e266fd42490034cc08c4f5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/entity/cow/milk1.ogg",
+      "size": 14836,
+      "sha256": "d02b1d0c7ecce72866113296ef874ccee1e54de43ffad8fec3462586d86c4956"
+    },
+    {
+      "entry": "assets/minecraft/sounds/entity/cow/milk2.ogg",
+      "size": 13266,
+      "sha256": "4e8334a89ec9a9531b205551594c6608d6ff5d626038997306558ab9132d6c7a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/entity/cow/milk3.ogg",
+      "size": 13719,
+      "sha256": "985a2a7c47377bc8d3cb762bee56f6db7c5a349db87e03fd18e7d22f5a718599"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop1.ogg",
+      "size": 8337,
+      "sha256": "39e80ca9dfe41982e0f2f8ea3df3a7c54ba0515d95980644fac6c4f62cc9087d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop2.ogg",
+      "size": 9512,
+      "sha256": "b8b0f71edf7f904c18935d157101cfd6339be4289f3254dd48881d31d6e9ac89"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop3.ogg",
+      "size": 8026,
+      "sha256": "e0cbcf0451a7cad208b976be74526bbc7071ebb604032b34eca120e531d3cabc"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop4.ogg",
+      "size": 9046,
+      "sha256": "d38196f634188215a0d6e334b8f5f5562c02217af461a080efcbed4ff34e677e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop5.ogg",
+      "size": 9438,
+      "sha256": "d3b89aba7f533da1ffe8df6628efb2c1236b86cc4dc7a437bd2b8186105a038b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/plant/crop6.ogg",
+      "size": 9751,
+      "sha256": "f7b2aba3853426deb3b8cd98c523081c6bfd9deee428b409aa29271140b3989b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/pop.ogg",
+      "size": 4487,
+      "sha256": "4ddf491e1b736a9711cd76590ba70b203136d7ea1d5134a42088e58daccf3951"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/azure_bluet.png",
+      "size": 161,
+      "sha256": "c7a05524e62b5b27b919270c64a8e3523d8dd01ae29f14863d721ed6807ff5ee"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/azure_bluet.png.mcmeta",
+      "size": 70,
+      "sha256": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/coal_ore.png",
+      "size": 217,
+      "sha256": "a24553e4cb9cfe70aae48fdb19d8205736135551301dc9c16ecca842d8dd3ae3"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cornflower.png",
+      "size": 173,
+      "sha256": "df8624ca57077469654576faab3424aceb0bdc512102ec2056a17a0ff890c52d"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/cornflower.png.mcmeta",
+      "size": 70,
+      "sha256": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/dandelion.png",
+      "size": 138,
+      "sha256": "eb0cdf11d96f9b0aef8201c05c51f2c6cf1fc00d8a09d26c50530aff2b05ae33"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/dandelion.png.mcmeta",
+      "size": 70,
+      "sha256": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/dirt_path_side.png",
+      "size": 241,
+      "sha256": "10a6c00835541537a0254f4210acc944b603ff7239dc1b458ddc5fae00686830"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/dirt_path_top.png",
+      "size": 170,
+      "sha256": "653ab9be45372827da221f787435e2ad5adddc6257c29d45fe56947963784ac3"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/dirt.png",
+      "size": 197,
+      "sha256": "67197d5371efc3ca1638217c38349665dbd5a977b47bfb20075c858dff87d510"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/farmland_moist.png",
+      "size": 185,
+      "sha256": "28d754ebc6e3aa0c7c8680dc8f3ce18304152cd2d2374a574a66237f4b5b9ecf"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/grass_block_side_overlay.png",
+      "size": 135,
+      "sha256": "872056682c3b059c04aba88f8b4e706f2526b907e1acef12626a9f912f573a85"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/grass_block_side.png",
+      "size": 329,
+      "sha256": "76a677640eb91d6a9aed844bc66e329b1894f89e241a0071333b6678c0854580"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/grass_block_top.png",
+      "size": 298,
+      "sha256": "52f44b64ce884a13dfe35e4b4da2e35898b790dd4d7a5ea536f1b0c0d56d29b4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/iron_ore.png",
+      "size": 212,
+      "sha256": "72fb64f5a1c7ef0c356b1510b84174576d8cca5ae1de3bb9fa41e3dd1a7a2719"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_leaves.png",
+      "size": 202,
+      "sha256": "69c9c7048695e014aee6b8a2c4cb080607bd7a2a5291c06218b8134cbfcdc04f"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oak_leaves.png.mcmeta",
+      "size": 62,
+      "sha256": "dcb7170e9e198519bfd6865e85cfe17b2fb29e8a0ad2c57c69bde2f513da7c43"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oxeye_daisy.png",
+      "size": 179,
+      "sha256": "f4356fbcc3921433e150356384ccd739166d248a07d9edb7baaf187d03766372"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/oxeye_daisy.png.mcmeta",
+      "size": 70,
+      "sha256": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/poppy.png",
+      "size": 143,
+      "sha256": "9678d89814d640f88305add21ee6d157f52007aac60bbc363b30054bb3388561"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/poppy.png.mcmeta",
+      "size": 70,
+      "sha256": "afca6a34e44b86e6a02b7acf062960ed0ebc3f2dab815d86b831dc9e251ad6f4"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/sugar_cane.png",
+      "size": 184,
+      "sha256": "2ae5f67fddbe9484960aa1335757e1234c3ba6b41ea0ef5b0a2ec818008b4d88"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/tall_grass_bottom.png",
+      "size": 194,
+      "sha256": "30d9b656f406ab5231bc39dfb1c08e6f4b1d275cf242e699a750e358eeed4194"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/tall_grass_top.png",
+      "size": 184,
+      "sha256": "16cfd90e32fb04756fd0cfbd652ae358d545a069a9ed22cbb390ec5bf3f17f1a"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/water_still.png",
+      "size": 1481,
+      "sha256": "683df6ad9c23a50b7ce9323a5fe231aa79f94a63c6d750f3cf87a1fd44422551"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/water_still.png.mcmeta",
+      "size": 44,
+      "sha256": "e9b8025fde1b09b0a4d2a38427b04f98f28a593045be6d177eb2b29164c872b0"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/wheat_stage0.png",
+      "size": 99,
+      "sha256": "bd7aaf9666e414ca277c1aa33f491e48b0c2a0031a095bb7838a6ac3a0fd69cf"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/wheat_stage2.png",
+      "size": 146,
+      "sha256": "921141204c89497a95a5536d8f9a93b25982e071ef1d21bef201700b95bdc0b5"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/wheat_stage5.png",
+      "size": 208,
+      "sha256": "5e787055f2026ed89824f05c298fcc60ea4601cc956fa2d36855938e8d56f967"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/wheat_stage7.png",
+      "size": 202,
+      "sha256": "4227ffd999af30ace7264ae92e50e396a4ecac5479d3c62b5647213acf9c9de6"
+    },
+    {
+      "entry": "assets/minecraft/textures/colormap/foliage.png",
+      "size": 14154,
+      "sha256": "e5b7f81b3fbebe6a94bc665dd9df01a14a3ce30430d66a2e84e201d87a2e62d1"
+    },
+    {
+      "entry": "assets/minecraft/textures/entity/chicken/chicken_temperate.png",
+      "size": 366,
+      "sha256": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b"
+    },
+    {
+      "entry": "assets/minecraft/textures/entity/cow/cow_temperate.png",
+      "size": 793,
+      "sha256": "5106c2676c70d64b2af4bc0792cb4adfa75cf587d05cc370ee7c6ca01465efdc"
+    },
+    {
+      "entry": "assets/minecraft/world-sounds.json",
+      "size": 2587,
+      "sha256": "b8b1e9f248d149b494e3e165802c59e7d5459200c8f48f8fc156e6fba743988d"
+    }
+  ],
+  "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
+  "exporterSha256": "ee87eff69ec04b6d905c94ca304b93d25a79006e76d5a15412b85ddd67f4ba94",
+  "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; static animal pose, no navigation/AI"
+}
