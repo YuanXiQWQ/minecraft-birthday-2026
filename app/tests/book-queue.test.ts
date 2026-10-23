@@ -614,7 +614,7 @@ test('stale book preference failures and notification animation callbacks cannot
     reject(Error('stale-session'));
     await new Promise(r => setTimeout(r, 0));
     callbacks[0]();
-    assert.equal(u.notice, 'book.missing');
+    assert.equal(u.notice, '');
     assert.equal((book.ghost as Recipe | null)?.id, torch.id);
     assert.equal(book.toast.hidden, false);
     const epoch = book.toastEpoch;
@@ -785,7 +785,7 @@ test('actual book reports input conflict separately from complete finite materia
     await u.queue;
     const before = h.raw();
     book.choose(BOOK_RECIPES.find(r => r.id === 'minecraft:crafting_table')!, false);
-    assert.equal(u.notice, 'book.conflict');
+    assert.equal(u.notice, '');
     const display = JSON.parse(u.modal.dataset.ghostAvailability!);
     assert.equal(display.conflicts[0], true);
     assert.ok(!display.missing.some(Boolean));

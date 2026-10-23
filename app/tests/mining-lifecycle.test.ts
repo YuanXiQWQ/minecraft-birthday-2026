@@ -15,7 +15,7 @@ for (const boundary of ['complete', 'release', 'target', 'tool', 'gui', 'look', 
         oldDocument = Object.getOwnPropertyDescriptor(globalThis, 'document');
     Object.defineProperty(globalThis, 'window', {value: {setInterval: () => 1}, configurable: true});
     Object.defineProperty(globalThis, 'document', {value: {hidden: false}, configurable: true});
-    let raw: string | null = null, pending = Promise.resolve();
+    let raw: string | null = null, pending: Promise<unknown> = Promise.resolve();
     try {
         const session = new SaveSession({
             getItem: () => raw,
@@ -66,7 +66,7 @@ for (const boundary of ['complete', 'release', 'target', 'tool', 'gui', 'look', 
         ui.advanceMining(4000);
         await pending;
         assert.equal(session.view.envelope!.state.progress.world.visits.plains.removed.includes('oak_log:0'), boundary === 'complete');
-        assert.equal(ui.mining, null);
+        if (boundary === 'target' || boundary === 'tool') {assert.equal(ui.mining?.id, boundary === 'target' ? 'node:oak_log:1' : hit.id); assert.equal(ui.mining?.start, 4000);} else assert.equal(ui.mining, null);
         if (boundary === 'complete') assert.ok(session.view.envelope!.state.progress.unlocked.includes('minecraft:oak_log'));
     } finally {
         if (oldWindow) Object.defineProperty(globalThis, 'window', oldWindow); else delete (globalThis as any).window;

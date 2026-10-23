@@ -33,6 +33,12 @@ export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: F
 export class WorldUse {
     mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick } | null = null;
     miningTimer = 0;
+    holding = false;
+    miningEpoch = 0;
+    miningTicket: object | null = null;
+    miningAfter = 0;
+    holdScope = '';
+    holdSerial = 0;
     scope = '';
     hover: Pick | null = null;
     facing: Facing = 'down';
@@ -43,7 +49,7 @@ export class WorldUse {
     constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string) => void) {
         this.scope = session.view.envelope?.generation + ':' + session.view.envelope?.state.progress.scene;
         scene.onHover = hit => {
-            if (this.mining && hit?.id !== this.mining.id) this.cancelMining();
+            if (this.mining && hit?.id !== this.mining.id) this.clearMiningProgress();
             this.hover = hit;
             scene.renderer.domElement.style.cursor = hit && (hit.id.startsWith('node:') || hit.id.startsWith('crop:') || !!session.view.envelope?.state.progress.scenes[session.view.envelope.state.progress.scene].stations.some(s => s.id === hit.id)) ? 'pointer' : 'default';
             this.preview();
@@ -121,20 +127,21 @@ export class WorldUse {
         this.scene.showPreview(placement(this.attachHit(this.hover, this.above), this.session, kind, facing));
     }
 
-    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string|null} message Significant success key, or null for silent routine actions. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @return {Promise<void>} Settled transaction feedback. */
+    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string|null} message Significant success key, or null for silent routine actions. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @return {Promise<boolean>} Whether the live transaction committed successfully. */
     run(command: Parameters<SaveSession['dispatch']>[0], message: string | null, sound?: string, effect?: {
         block: string;
         point: Cell
-    }): Promise<void> {
+    }): Promise<boolean> {
         const scope = this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene, serial = this.session.serial;
         return this.session.dispatch(command).then(events => {
-            if (!this.current(scope, serial)) return;
+            if (!this.current(scope, serial)) return false;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
             if (effect) this.scene.breakEffect(effect.block, effect.point);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound) this.sound(sound);
             this.preview();
-        }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed');});
+            return true;
+        }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'); return false;});
     }
 
     /** Fence both successful and failed acknowledgements to their live scene and save owner.
@@ -146,82 +153,102 @@ export class WorldUse {
         return !this.abort.signal.aborted && !this.scene.disposed && !this.session.disposed && !this.session.suspended && serial === this.session.serial && scope === this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene;
     }
 
-    /** Begin one active pointer hold against a real visible block, not an item or animal.
-     * @param {Pick} hit Current nearest ray target.
+    /** Begin a cancellable held attack; target progress can change without requiring another press.
+     * @param {Pick|null} hit Current nearest ray target, including a press that starts over empty space.
      * @param {number} now Injectable monotonic start time.
      */
-    beginMining(hit: Pick, now = performance.now()): void {
+    beginMining(hit: Pick | null, now = performance.now()): void {
         this.cancelMining();
         const e = this.session.view.envelope;
-        if (!e || !this.scene.input) return;
+        if (!e || !this.scene.input || !this.session.view.writable) return;
+        this.holding = true;
+        this.holdScope = e.generation + ':' + e.state.progress.scene;
+        this.holdSerial = this.session.serial;
+        this.miningAfter = now;
+        this.miningTimer = window.setInterval(() => this.advanceMining(), 25);
+        if (hit) this.selectMining(hit, now);
+    }
+
+    /** Clear only the current block's progress, retaining an active left-button hold. */
+    clearMiningProgress(): void {
+        this.mining = null;
+        this.scene.showCrack(null);
+        delete this.scene.renderer.domElement.dataset.mining;
+    }
+
+    /** Cancel the gesture and fence late completion from restarting another held attack. */
+    cancelMining(): void {
+        this.holding = false;
+        this.miningEpoch = (this.miningEpoch ?? 0) + 1;
+        this.miningTicket = null;
+        clearInterval(this.miningTimer);
+        this.miningTimer = 0;
+        this.clearMiningProgress();
+    }
+
+    /** Start progress for the live visible block using the actual main-hand tool.
+     * @param {Pick} hit Fresh nearest ray target.
+     * @param {number} now Active monotonic time.
+     */
+    selectMining(hit: Pick, now: number): void {
+        const e = this.session.view.envelope!;
         const p = e.state.progress, station = p.scenes[p.scene].stations.find(s => s.id === hit.id),
             node = WORLD_SCENES[p.scene].nodes.find(n => 'node:' + n.id === hit.id),
             block = station?.kind ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
-        if (node?.kind === 'egg') {
-            this.harvest(hit);
-            return;
-        }
         if (!block || node?.kind === 'cow') return;
-        const held = p.player.data.hotbar[p.player.data.selected],
-            ticks = miningTicks(block, held, this.inventory.rules);
-        if (!ticks) {
-            this.harvest(hit);
-            return;
-        }
-        this.mining = {
-            id: hit.id,
-            scope: e.generation + ':' + p.scene,
-            tool: JSON.stringify([p.player.data.selected, held]),
-            start: now,
-            ticks,
-            hit
-        };
-        this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining);
-        this.scene.showCrack(hit.id, 0);
-        this.miningTimer = window.setInterval(() => this.advanceMining(), 25);
+        const held = p.player.data.hotbar[p.player.data.selected], ticks = node?.kind === 'egg' ? 0 : miningTicks(block, held, this.inventory.rules);
+        this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit};
+        if (!ticks || node?.kind === 'egg') this.finishMining(now);
+        else {this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining); this.scene.showCrack(hit.id, 0);}
     }
 
-    /** Cancel only uncommitted work and its native overlay. */
-    cancelMining(): void {
-        this.mining = null;
-        clearInterval(this.miningTimer);
-        this.miningTimer = 0;
-        this.scene.showCrack(null);
-    }
-
-    /** Recheck identity, visibility, tool and nearest ray before committing a completed hold. @param {number} now Injectable monotonic active time. */
+    /** Re-pick during a held attack, reset changed target/tool progress and honor the native five-tick break delay.
+     * @param {number} now Injectable monotonic active time.
+     */
     advanceMining(now = performance.now()): void {
-        const m = this.mining, e = this.session.view.envelope;
-        if (!m || !e) return;
-        const p = e.state.progress;
-        if (document.hidden || !this.scene.input || this.inventory.modal.open || this.scene.look.active || m.scope !== e.generation + ':' + p.scene || m.tool !== JSON.stringify([p.player.data.selected, p.player.data.hotbar[p.player.data.selected]]) || this.scene.refreshHover()?.id !== m.id) {
-            this.cancelMining();
-            return;
+        if (!this.holding) return;
+        const e = this.session.view.envelope;
+        if (!e || document.hidden || !this.scene.input || !this.session.view.writable || this.inventory.modal.open || this.scene.look.active || !this.current(this.holdScope, this.holdSerial)) {
+            this.cancelMining(); return;
         }
-        const fraction = (now - m.start) / (m.ticks * 50);
-        if (fraction < 1) {
-            this.scene.showCrack(m.id, Math.floor(fraction * 10));
-            return;
-        }
-        this.cancelMining();
-        const station = p.scenes[p.scene].stations.find(s => s.id === m.id);
-        if (station) {
-            this.run({
-                type: 'remove-station',
-                scene: p.scene,
-                id: station.id,
-                expected: layout(this.inventory.value)
-            }, null, 'block.stone.break', {block: station.kind, point: m.hit.point});
-        } else this.harvest(m.hit);
+        if (this.miningTicket) return;
+        const hit = this.scene.refreshHover(), p = e.state.progress;
+        const m = this.mining;
+        if (m && (m.id !== hit?.id || m.tool !== JSON.stringify([p.player.data.selected, p.player.data.hotbar[p.player.data.selected]]))) this.clearMiningProgress();
+        if (!hit || now < this.miningAfter) return;
+        if (!this.mining) {this.selectMining(hit, now); return;}
+        const fraction = (now - this.mining.start) / (this.mining.ticks * 50);
+        if (fraction < 1) this.scene.showCrack(this.mining.id, Math.floor(fraction * 10));
+        else this.finishMining(now);
     }
 
-    /** Left-click harvests only declared nodes or an observed crop lifetime. @param {Pick} hit Actual visible object. */
-    harvest(hit: Pick): void {
+    /** Commit one break at a time; continued destruction waits five ticks for progressed blocks and one attack tick for instant blocks.
+     * @param {number} now Completion time for the next eligible held attack.
+     */
+    finishMining(now: number): void {
+        const m = this.mining, e = this.session.view.envelope;
+        if (!m || !e || this.miningTicket) return;
+        const ticket = {}, epoch = this.miningEpoch, p = e.state.progress;
+        this.miningTicket = ticket;
+        this.clearMiningProgress();
+        const station = p.scenes[p.scene].stations.find(s => s.id === m.id);
+        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, 'block.stone.break', {block: station.kind, point: m.hit.point}) : this.harvest(m.hit);
+        void work.then(success => {
+            if (this.miningTicket !== ticket || epoch !== this.miningEpoch || !this.holding) return;
+            this.miningTicket = null;
+            if (!success || !this.current(this.holdScope, this.holdSerial)) {this.cancelMining(); return;}
+            this.miningAfter = Math.max(now, performance.now()) + (m.ticks ? 5 : 1) * 50;
+            this.scene.refreshHover();
+        });
+    }
+
+    /** Commit only declared nodes or an observed crop lifetime. @param {Pick} hit Actual visible object. @return {Promise<boolean>} Successful finite resource settlement. */
+    harvest(hit: Pick): Promise<boolean> {
         const p = this.session.view.envelope?.state.progress;
-        if (!p || !this.session.view.writable) return;
+        if (!p || !this.session.view.writable) return Promise.resolve(false);
         if (hit.id.startsWith('node:') && !hit.id.includes('cow:')) {
             const node = hit.id.slice(5), block = WORLD_SCENES[p.scene].nodes.find(n => n.id === node)?.block;
-            this.run({
+            return this.run({
                 type: 'harvest-node',
                 scene: p.scene,
                 node,
@@ -231,11 +258,12 @@ export class WorldUse {
                 block,
                 point: hit.point
             } : undefined);
-        } else if (hit.id.startsWith('crop:')) this.run({
+        } else if (hit.id.startsWith('crop:')) return this.run({
             type: 'harvest-crop',
             id: hit.id.slice(5),
             expected: layout(this.inventory.value)
         }, 'game.harvested', 'block.crop.break');
+        return Promise.resolve(false);
     }
 
     /** Short right Use opens stations, plants, milks or places against actual faces. @param {Pick} hit Real ray. @param {boolean} shift Suppress opening a device. @param {boolean} attach Place against an existing device face. @param {boolean} above Explicit upper neighbor of the visible device. */

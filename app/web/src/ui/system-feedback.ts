@@ -1,10 +1,10 @@
-/** Automatic system chat is allowlisted separately from Toasts, tooltips and container feedback. */
+/** Automatic system chat is allowlisted independently from native Toasts, item tooltips and widget labels. */
 /** Java ChatFormatting.RED is the native failure-message color. */
 export const FAILURE_COLOR = '#FF5555';
 /** Nonfailure chat permitted by the current user contract. */
-const INFORMATION = new Set(['game.worldHint', 'chat.tutorial', 'game.acquired', 'game.cakePlaced', 'status.ready', 'status.migrated']);
+const INFORMATION = new Set(['game.worldHint', 'chat.tutorial', 'game.acquired', 'game.cakePlaced', 'status.ready', 'status.migrated', 'settings.resetDone']);
 /** Project action failures that do not use the general error namespace. */
-const ACTION_FAILURES = new Set(['game.actionFailed', 'game.inventoryFull', 'game.invalidPosition', 'game.pointerFailed', 'game.tableNeedsCake', 'game.harvestOverflow', 'status.unknown']);
+const ACTION_FAILURES = new Set(['game.actionFailed', 'game.inventoryFull', 'game.invalidPosition', 'game.pointerFailed', 'game.tableNeedsCake', 'game.harvestOverflow', 'status.unknown', 'inventory.locked', 'inventory.conflict', 'inventory.returnFull', 'inventory.outputFailed', 'inventory.craftFailed', 'book.failed', 'settings.saveFailed', 'settings.resetFailed']);
 /** Classify only automatic chat; other presentation channels do not pass this policy.
  * @param {string} key Localized message identity.
  * @return {'information'|'failure'|'omit'} Chat disposition.

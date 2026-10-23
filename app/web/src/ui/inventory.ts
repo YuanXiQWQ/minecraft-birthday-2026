@@ -83,7 +83,7 @@ export class GameInventory {
     offhandCanvas: HTMLCanvasElement;
     tooltip: HTMLDivElement;
     cursor: HTMLCanvasElement;
-    hint: HTMLParagraphElement;
+    feedback: ((key: string) => void) | null = null;
     input: InventoryInput;
     queue: Promise<void> = Promise.resolve();
     queueEpoch = 0;
@@ -182,13 +182,10 @@ export class GameInventory {
         }, {signal: this.abort.signal});
         for (const event of ['select', 'keyup', 'pointerup', 'focus', 'blur']) this.search.addEventListener(event, () => this.draw(false), {signal: this.abort.signal});
         this.panel.append(this.canvas, this.controls, this.scrollbar, this.search);
-        this.hint = document.createElement('p');
-        this.hint.className = 'inventory-hint';
-        this.pixels.text(this.hint, text('inventory.temporary') + ' ' + text('inventory.shortcuts'), 1);
         const body = document.createElement('div');
         body.className = 'inventory-body';
         body.append(this.panel);
-        this.modal.append(tabs, body, this.hint);
+        this.modal.append(tabs, body);
         this.hud = document.createElement('div');
         this.hud.className = 'hotbar';
         this.hud.setAttribute('aria-label', text('inventory.hotbar'));
@@ -378,7 +375,7 @@ export class GameInventory {
                 data: {grid: structuredClone(this.value.workbench!)}
             };
         } catch (error) {
-            this.pixels.text(this.hint, this.text(error instanceof Error && error.message === 'locked-item' ? 'inventory.locked' : 'error.generic'), 1);
+            this.reportFailure(error instanceof Error && error.message === 'locked-item' ? 'inventory.locked' : 'error.generic');
             return;
         }
         this.pending++;
@@ -392,7 +389,7 @@ export class GameInventory {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.queueEpoch++;
             this.input.cancel();
-            this.pixels.text(this.hint, this.text(error instanceof Error && error.message === 'inventory-conflict' ? 'inventory.conflict' : 'error.generic'), 1);
+            if (cursorEpoch === this.personal.epoch) this.reportFailure(error instanceof Error && error.message === 'inventory-conflict' ? 'inventory.conflict' : 'error.generic');
         }).finally(() => {
             this.pending--;
             if (!this.pending && !this.disposed && this.permanent) {
@@ -474,7 +471,7 @@ export class GameInventory {
         if (!invalidated && station?.expected.version === 1 && this.returnWorkbench) {
             const ticket = this.queue.then(() => this.returnWorkbench!(station.scene, station.id)).then(() => true).catch(() => {
                 if (this.generation === generation && this.modal.open && this.station?.id === station.id) {
-                    this.notice = this.text('inventory.returnFull'); this.draw(false);
+                    this.reportFailure('inventory.returnFull'); this.draw(false);
                 }
                 return false;
             });
@@ -735,13 +732,20 @@ export class GameInventory {
         this.modal.dataset.crafting = JSON.stringify(this.value.crafting);
         this.modal.dataset.tab = this.tab;
         this.modal.dataset.compass = JSON.stringify(this.art.documents.get('$compass-state') ?? null);
-        this.pixels.text(this.hint, this.notice, 1);
-        this.hint.hidden = !this.notice;
         this.modal.dataset.stationId = this.station?.id ?? '';
         this.modal.dataset.workbench = JSON.stringify(this.value.workbench ?? null);
         this.modal.dataset.hopper = JSON.stringify(this.value.hopper ?? null);
         this.modal.dataset.sideOffset = String(this.sideOffset);
         this.modal.dataset.furnace = JSON.stringify(this.station?.expected.version === 2 ? this.station.expected.data : null);
+    }
+
+    /** Route genuine operation failures through system chat; slot/ghost/Toast presentation stays independent.
+     * @param {string} key Localized failure identity.
+     */
+    reportFailure(key: string): void {
+        if (this.disposed) return;
+        this.notice = this.text(key);
+        this.feedback?.(key);
     }
 
     /** Keep carried-item pixels inside their viewport-owned GUI without restricting external page navigation. */
@@ -771,7 +775,7 @@ export class GameInventory {
         if (slot.kind === 'preview') return stack ? this.text('inventory.previewResult', {
             item: itemName(stack.id),
             count: stack.count
-        }) : this.text(this.station?.expected.version === 2 ? 'inventory.outputEmpty' : this.preview.status === 'unavailable' ? 'inventory.previewUnavailable' : 'inventory.previewEmpty');
+        }) : this.text('inventory.empty');
         if (slot.kind === 'preset-info') return this.text('inventory.presetInfo', {number: slot.preset! + 1});
         const name = stack ? itemName(stack.id) : this.text('inventory.empty');
         return slot.kind === 'equipment' ? this.text('inventory.gear.' + slot.equipment, {item: name}) : stack ? (slot.kind === 'source' && slot.preset === undefined ? name : name + (stack.count > 1 ? ' ' + stack.count : '')) + (slot.locked ? ' - ' + this.text('inventory.locked') : '') : name;
@@ -969,12 +973,12 @@ export class GameInventory {
             this.hideTooltip();
             return;
         }
-        const stack = this.slotStack(slot);
-        if (!stack && slot.kind !== 'preview') {
+        const stack = this.slotStack(slot) ?? (slot.kind === 'preview' ? this.book?.ghost?.result : null);
+        if (!stack && slot.kind !== 'preset-info') {
             this.hideTooltip();
             return;
         }
-        const lines = slot.kind === 'preview' ? stack ? [itemName(stack.id)] : [this.text(this.preview.status === 'unavailable' ? 'inventory.previewUnavailable' : 'inventory.previewEmpty')] : slot.kind === 'preset-info' ? [this.text('inventory.presetInfo', {number: slot.preset! + 1})] : [itemName(stack!.id), ...(slot.locked ? [this.text('inventory.locked')] : [])];
+        const lines = slot.kind === 'preset-info' ? [this.text('inventory.presetInfo', {number: slot.preset! + 1})] : [itemName(stack!.id!), ...(slot.locked ? [this.text('inventory.locked')] : [])];
         this.showTooltipText(lines, x, y);
     }
 
@@ -1109,11 +1113,11 @@ export class GameInventory {
             const receipt = workbench?.expected.version === 2 ? await this.acquireOutput!(take, cursor, expected, workbench) : await this.acquire!(take, cursor, crafting, expected, workbench);
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.personal.commit(personalEpoch, receipt.inventory.cursor, receipt.inventory.crafting);
-            if (personalEpoch === this.personal.epoch) this.notice = receipt.returned.length ? this.text('inventory.returned', {items: receipt.returned.map(s => itemName(s.id) + ' x' + s.count).join(', ')}) : '';
+            this.notice = '';
         }).catch(error => {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.modal.dataset.craftError = error instanceof Error ? error.message : 'craft-failed';
-            this.notice = this.text(this.station?.expected.version === 2 ? 'inventory.outputFailed' : error instanceof Error && error.message === 'craft-target-full' ? 'inventory.resultFull' : 'inventory.craftFailed');
+            if (personalEpoch === this.personal.epoch && !(error instanceof Error && ['craft-target-full', 'craft-remainder-full', 'furnace-output-empty', 'craft-no-match'].includes(error.message))) this.reportFailure(this.station?.expected.version === 2 ? 'inventory.outputFailed' : 'inventory.craftFailed');
         }).finally(() => {
             if (this.acquisition === ticket) {
                 this.input.cancelGesture();
@@ -1155,7 +1159,7 @@ export class GameInventory {
         }).catch(error => {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.modal.dataset.fillError = error instanceof Error ? error.message : 'recipe-fill-failed';
-            this.notice = this.text(error instanceof Error && error.message === 'recipe-input-conflict' ? 'book.inputConflict' : 'book.failed');
+            if (personalEpoch === this.personal.epoch && !(error instanceof Error && ['recipe-input-conflict', 'recipe-materials-missing'].includes(error.message))) this.reportFailure('book.failed');
         }).finally(() => {
             if (this.acquisition === ticket) {
                 this.input.cancelGesture();

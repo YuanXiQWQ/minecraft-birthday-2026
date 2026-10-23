@@ -85,7 +85,7 @@ export class SceneView {
     renderMs: number[] = [];
     preview: Group | null = null;
     onFrame: ((now: number) => boolean) | null = null;
-    onMineStart: ((hit: Pick) => void) | null = null;
+    onMineStart: ((hit: Pick | null) => void) | null = null;
     onMineCancel: (() => void) | null = null;
     debris: { mesh: Mesh; velocity: Vector3; start: number; origin: Vector3 }[] = [];
     crackSignature = '';
@@ -187,14 +187,15 @@ export class SceneView {
                 canvas.setPointerCapture(e.pointerId);
             } else if (e.button === 0 && !this.look.active) {
                 this.pointer = e.pointerId;
+                canvas.setPointerCapture(e.pointerId);
                 const hit = this.refreshHover();
-                if (hit) this.onMineStart?.(hit);
+                this.onMineStart?.(hit);
             }
         };
         this.move = e => this.movePointer(e, game);
         this.up = e => this.releasePointer(e);
         this.captureLost = () => {
-            if (this.look.active) this.cancel(); else this.refreshHover();
+            if (this.look.active || this.pointer !== null) this.cancel(); else this.refreshHover();
         };
         this.leave = () => {
             if (!this.look.active) this.cancel();
@@ -259,6 +260,7 @@ export class SceneView {
 
     /** Invalidate gestures and ray identity on GUI, lifecycle and capture boundaries. */
     cancelInput(): void {
+        const left = this.pointer;
         this.onMineCancel?.();
         this.pointer = null;
         this.pointerPosition = null;
@@ -267,6 +269,7 @@ export class SceneView {
         this.look.cancel();
         this.renderer.domElement.dataset.hover = 'null';
         this.onHover?.(null);
+        if (left !== null && this.renderer.domElement.hasPointerCapture(left)) this.renderer.domElement.releasePointerCapture(left);
         if (id !== undefined && this.renderer.domElement.hasPointerCapture(id)) this.renderer.domElement.releasePointerCapture(id);
     }
 
@@ -276,6 +279,11 @@ export class SceneView {
      */
     movePointer(e: PointerEvent, game: boolean): void {
         if (!this.input || this.lost) return;
+        if (this.pointer !== null && !(e.buttons & 1)) {this.cancel(); return;}
+        if (this.pointer !== null && !this.mode?.actual) {
+            const bounds = this.renderer.domElement.getBoundingClientRect();
+            if (e.clientX < bounds.left || e.clientX >= bounds.right || e.clientY < bounds.top || e.clientY >= bounds.bottom) {this.cancel(); return;}
+        }
         if (this.mode?.actual) {
             if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
             this.look.relative(e.movementX, e.movementY);

@@ -1,0 +1,21 @@
+{
+  "feedback": [
+    {
+      "hidden": true,
+      "id": "",
+      "text": ""
+    },
+    {
+      "hidden": true,
+      "id": "preference-feedback",
+      "text": ""
+    },
+    {
+      "hidden": false,
+      "id": "reset-feedback",
+      "text": ""
+    }
+  ],
+  "hints": 0,
+  "volume": "0.503311258278146"
+}

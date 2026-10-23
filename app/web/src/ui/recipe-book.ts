@@ -239,7 +239,7 @@ export class RecipeBookView {
     this.popup = null;
     void this.ui.bookCommand?.({type: 'book-settings', mode: this.mode(), patch}).catch(() => {
       if (!this.current(epoch, scope)) return;
-      this.ui.notice = this.ui.text('book.failed');
+      this.ui.reportFailure('book.failed');
       this.ui.draw(false);
     });
   }
@@ -519,7 +519,7 @@ export class RecipeBookView {
     if (!this.craftable(recipe)) {
       this.ghost = recipe;
       this.ghostInputs = this.inputsSignature();
-      this.ui.notice = this.ui.text(analyzeOwnedRecipe(recipe, this.mode(), this.width(), this.ui.value.workbench ?? this.ui.value.crafting ?? Array(4).fill(null), [...this.ui.value.backpack, ...this.ui.value.hotbar], this.ui.rules).conflicts.some(Boolean) ? 'book.conflict' : 'book.missing');
+      this.ui.notice = '';
       this.ui.draw();
     } else {
       this.ghost = null;

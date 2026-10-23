@@ -313,7 +313,7 @@ export class InventoryInput {
      * @return {boolean} Whether an outside click may own the point.
      */
     isOutside(x: number, y: number): boolean {
-        const u = this.ui, areas = [...u.modal.querySelectorAll<HTMLElement>('.inventory-body,.inventory-tabs,.inventory-hint')].filter(e => !e.hidden && e.getBoundingClientRect().width > 0).map(e => e.getBoundingClientRect());
+        const u = this.ui, areas = [...u.modal.querySelectorAll<HTMLElement>('.inventory-body,.inventory-tabs')].filter(e => !e.hidden && e.getBoundingClientRect().width > 0).map(e => e.getBoundingClientRect());
         if (!u.tooltip.hidden) areas.push(u.tooltip.getBoundingClientRect());
         return outsideMenu(x, y, areas);
     }

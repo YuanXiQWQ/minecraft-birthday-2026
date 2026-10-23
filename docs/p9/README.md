@@ -1,5 +1,7 @@
 # P9交付候选索引
 
+当前修正：[连续挖掘及原版反馈边界](held-feedback-fix/report.md)。缺料/无配方不额外提示，操作消息统一聊天；正常物品Tooltip、成就及配方Toast保持独立。
+
 当前显示修正：[游戏启动残留与占位导航清理](startup-fix/report.md)。只在完整游戏就绪后呈现原版按钮与HUD，保留实际错误和聊天。
 
 当前新增：[圆角面板、天空与天气](environment/report.md)，原版数据/类证据及资源清单单独可审计，保留此前原始报告。
@@ -18,7 +20,7 @@
 - [兼容与恢复](recovery.md)：无历史改写、无清档的恢复步骤。
 - [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部10份profile及依赖。
 
-工程命令入口：app/package.json；正式463项（保留原459项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
+工程命令入口：app/package.json；正式477项（保留原463项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
 
 - [当前聊天七类、狭小矿洞及世界方位指南针](native-ui-fix/chat-cave-compass-review.md)。
 - [物品搜索自动聚焦及固定帧历史记录](native-ui-fix/catalogue-review.md)（固定左上已纠正）。

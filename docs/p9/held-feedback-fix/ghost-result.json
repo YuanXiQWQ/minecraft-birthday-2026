@@ -1,0 +1,7 @@
+{
+  "ghost": "{\"missing\":[false,true,true,true],\"conflicts\":[false,false,false,false],\"complete\":false,\"grid\":[{\"id\":\"minecraft:oak_planks\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":1},{\"id\":\"minecraft:oak_planks\",\"count\":1}]}",
+  "hints": 0,
+  "preview": "{\"status\":\"empty\",\"result\":null}",
+  "tooltip": "Crafting Table",
+  "tooltipHidden": true
+}

@@ -505,3 +505,9 @@ test('identity-checked cleanup cannot release ownership established by a differe
     h.u.clearAcquisition(current);
     assert.equal(h.u.carrierBusy(), false);
 });
+
+
+test('capacity-denied result acquisition stays silent while a real write failure uses the formal feedback port',async()=>{
+ const full=await harness({known:true,merge:63}),denied:string[]=[];full.u.feedback=key=>denied.push(key);const before=full.raw();full.u.takeResult({mode:'cursor'});await full.u.queue;assert.deepEqual(denied,[]);assert.equal(full.raw(),before);assert.equal(full.u.value.cursor?.count,63);
+ const fault=await harness(),failures:string[]=[];fault.u.feedback=key=>failures.push(key);fault.deny(true);fault.u.takeResult({mode:'cursor'});await fault.u.queue;assert.deepEqual(failures,['inventory.craftFailed']);assert.equal(fault.u.value.cursor,null);assert.equal(fault.s.view.envelope!.state.progress.unlocked.includes('minecraft:oak_planks'),false);
+});

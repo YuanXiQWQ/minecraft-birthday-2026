@@ -76,13 +76,17 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         return n;
     }
 
-    /** Update text through the localization boundary, never accepting business strings as visible copy.
+    /** Localize interface labels and route game operation messages through the shared chat policy.
      * @param {HTMLElement} target Semantic element.
      * @param {string} key Locale key.
      * @param {Record<string,string|number>} values Interpolation values.
      */
     function setText(target: HTMLElement, key: string, values: Record<string, string | number> = {}): void {
-        if (page === 'game' && target.classList.contains('selection')) feedback(key, values, 'selection');
+        if (page === 'game' && (target.classList.contains('selection') || ['preference-feedback', 'reset-feedback'].includes(target.id) || target.classList.contains('weather-status'))) {
+            clearText(target); target.hidden = true;
+            feedback(key, values, target.id || 'selection');
+            return;
+        }
         bindings.set(target, {key, values});
         if (pixels) pixels.text(target, t(key, values), target.tagName === 'H1' ? 3 : 2, target.classList.contains('startup-error') ? FAILURE_COLOR : '#FFFFFF'); else target.textContent = t(key, values);
     }
@@ -549,6 +553,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 runtime.screen = open ? 'inventory' : dialog.open ? 'settings' : 'scene';
                 updateGate(open);
             }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
+            inventory.feedback = key => feedback(key);
             host.append(inventory.hud, inventory.modal);
             inventory.onHudPaint = () => scene?.backgroundChanged();
             inventory.compassView = () => scene && session.view.envelope ? scene.compassView(session.view.envelope.generation) : null;

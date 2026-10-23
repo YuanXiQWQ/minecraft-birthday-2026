@@ -126,7 +126,7 @@ async function harness(kind: Kind = 'crafting_table') {
     });
     const messages: string[] = [], sounds: string[] = [];
     const use = new WorldUse(v, inventory, s, key => messages.push(key), id => sounds.push(id));
-    const jobs: Promise<void>[] = [];
+    const jobs: Promise<unknown>[] = [];
     const run = use.run.bind(use);
     use.run = (...args) => {
         const job = run(...args);
