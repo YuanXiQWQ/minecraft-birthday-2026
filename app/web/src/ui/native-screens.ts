@@ -92,7 +92,7 @@ export class NativeScreens {
         [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+40+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         const weather=u.sections.get('weather');
         if(weather){
-            [...weather.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow||i>=2?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+(narrow?i*24:i>=2?24:0),narrow||i>=2?flow.groupWidth:flow.buttonWidth));
+            [...weather.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+(narrow?i*24:0),narrow?flow.groupWidth:flow.buttonWidth));
             const credit=weather.querySelector<HTMLElement>('.weather-attribution');
             if(credit)this.place(credit,Math.max(4,w-70),h-13,66,9);
         }

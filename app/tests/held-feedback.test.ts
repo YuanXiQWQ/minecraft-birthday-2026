@@ -120,8 +120,7 @@ test('native instant resources continue on the next attack tick instead of the p
 
 test('game settings operation feedback follows chat policy without moving notifications or normal save acknowledgements to chat',()=>{
  for(const key of ['settings.saveFailed','settings.resetFailed','inventory.returnFull','book.failed'])assert.equal(systemFeedback(key),'failure');
- assert.equal(systemFeedback('settings.resetDone'),'information');
- for(const key of ['settings.saved','settings.saving','book.newTitle','book.newDescription','inventory.previewEmpty','book.missing'])assert.equal(systemFeedback(key),'omit');
+ for(const key of ['settings.resetDone','settings.saved','settings.saving','book.newTitle','book.newDescription','inventory.previewEmpty','book.missing'])assert.equal(systemFeedback(key),'omit');
 });
 
 test('a hold begun over empty space can acquire a later real target without another press',async()=>{

@@ -12,16 +12,16 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .home-layout .copy{margin:20px auto 0;width:min(1000px,calc(100% - 48px));text-align:center;background:linear-gradient(#13251aef,#13251ac9);border:1px solid #91a58b55}
 .copy h1{color:#ffffff}.copy .invite{pointer-events:auto;align-self:center;width:min(390px,100%);margin-top:2px}
 .game-layout .copy{width:min(520px,calc(100% - 48px));margin:20px 24px 0;gap:12px}
-.table-caption{position:absolute;z-index:1;bottom:22px;left:50%;transform:translateX(-50%);width:min(650px,calc(100% - 48px));background:#14251de3;padding:12px 18px;text-align:center;pointer-events:none}
-.save-status{position:relative;z-index:2;padding:12px 32px;min-height:44px;background:#1c2925}.selection{position:absolute;left:24px;bottom:80px;z-index:2;max-width:440px;background:#14251de3;padding:10px}.selection:empty{display:none}#retry-save{margin:0 32px 20px;max-width:420px}
+
+#retry-save{margin:0 32px 20px;max-width:420px}
 .settings{max-width:min(650px,calc(100vw - 32px));width:650px;max-height:calc(100svh - 36px);padding:28px;background:#323934;border:4px solid #121713;box-shadow:inset 3px 3px #6d786b,inset -3px -3px #1a211c;overflow:auto}.settings::backdrop{background:#07120ca8}.settings>*{margin-bottom:20px}.settings h2{margin-bottom:28px}.settings select{width:100%;padding:8px;color:inherit;background:#1c2925}.settings input[type=range]{width:100%;accent-color:#c3b27c}.settings input[type=checkbox]{width:20px;height:20px;accent-color:#c3b27c}.settings button{width:100%;margin-top:14px}.settings .reset-note{margin-top:24px}#preference-feedback{min-height:44px}#reset-confirmation{padding:18px;border:2px solid #aab7a4}[hidden]{display:none!important}
-@media(max-width:700px){header{padding:16px;gap:12px}header button{width:140px}.home-layout,.game-layout{min-height:920px}.home-layout .copy{margin-top:14px;width:calc(100% - 24px);padding:18px;gap:14px}.game-layout .copy{margin:14px 12px 0;width:calc(100% - 24px);padding:18px}.table-caption{width:calc(100% - 24px)}.save-status{padding:12px 18px}.settings{padding:22px}.settings>*{max-width:100%}}
+@media(max-width:700px){header{padding:16px;gap:12px}header button{width:140px}.home-layout,.game-layout{min-height:920px}.home-layout .copy{margin-top:14px;width:calc(100% - 24px);padding:18px;gap:14px}.game-layout .copy{margin:14px 12px 0;width:calc(100% - 24px);padding:18px}.settings{padding:22px}.settings>*{max-width:100%}}
 
 @media(min-width:701px) and (max-height:800px){.home-layout .copy{margin-top:12px;padding:14px 22px;gap:10px}}
 
 /* Screen GUI pixels and semantic hit surfaces have one integer scale independent of the 3D camera. */
 .hotbar{position:fixed;z-index:4;left:50%;bottom:56px;transform:translateX(-50%);image-rendering:pixelated}.hotbar canvas{position:absolute;inset:0;pointer-events:none}.hotbar button{position:absolute;top:0;background:transparent;border:0;padding:0;cursor:pointer;min-width:0}.hotbar button:focus-visible{outline:2px solid #fff;outline-offset:-3px}
-.inventory-dialog{padding:0;background:transparent;color:#fff;border:0;max-width:100vw;max-height:100svh;overflow:auto;box-shadow:none}.inventory-dialog::backdrop{background:#0009}.inventory-panel{position:relative;margin:auto;image-rendering:pixelated}.inventory-panel>canvas{width:100%;height:100%;display:block;pointer-events:none}.inventory-controls{position:absolute;inset:0}.inventory-slot{position:absolute;border:0;padding:0;background:transparent;cursor:pointer;min-width:0}.inventory-slot:hover,.inventory-slot:focus-visible{background:#ffffff50;outline:1px solid #fff8;outline-offset:-2px}.inventory-tabs{display:flex;gap:6px;align-items:center;margin-bottom:5px}.inventory-tabs button{flex:1;min-width:0;padding:8px}.item-tooltip{position:fixed;z-index:20;pointer-events:none;image-rendering:pixelated}.item-tooltip canvas{display:block;image-rendering:pixelated}.item-cursor{position:fixed;z-index:21;pointer-events:none;image-rendering:pixelated}.game-layout .table-caption{bottom:110px}.game .selection{bottom:145px}
+.inventory-dialog{padding:0;background:transparent;color:#fff;border:0;max-width:100vw;max-height:100svh;overflow:auto;box-shadow:none}.inventory-dialog::backdrop{background:#0009}.inventory-panel{position:relative;margin:auto;image-rendering:pixelated}.inventory-panel>canvas{width:100%;height:100%;display:block;pointer-events:none}.inventory-controls{position:absolute;inset:0}.inventory-slot{position:absolute;border:0;padding:0;background:transparent;cursor:pointer;min-width:0}.inventory-slot:hover,.inventory-slot:focus-visible{background:#ffffff50;outline:1px solid #fff8;outline-offset:-2px}.inventory-tabs{display:flex;gap:6px;align-items:center;margin-bottom:5px}.inventory-tabs button{flex:1;min-width:0;padding:8px}.item-tooltip{position:fixed;z-index:20;pointer-events:none;image-rendering:pixelated}.item-tooltip canvas{display:block;image-rendering:pixelated}.item-cursor{position:fixed;z-index:21;pointer-events:none;image-rendering:pixelated}
 
 /* Native-text navigation reserves whole words while keeping each menu canvas at an integer pixel scale. */
 .inventory-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;min-width:min(580px,calc(100vw - 24px))}.inventory-tabs button{padding:6px 4px}
@@ -29,18 +29,16 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 /* Only the original sprite is visible; this semantic range owns scrollbar pointer and keyboard input. */
 .inventory-scrollbar{position:absolute;opacity:0;writing-mode:vertical-lr;direction:ltr;padding:0;margin:0;min-width:0;min-height:0;cursor:pointer}
 
-/* Device feedback retains a stable text measure before its bitmap canvas is mounted. */
-.game .selection{width:min(440px,calc(100% - 48px))}
+
 /* Recipe-book surfaces retain original logical pixels; search text is painted with the shared native bitmap font. */
 .inventory-body{display:flex;align-items:flex-start;justify-content:center;gap:calc(4px * var(--gui-scale));position:relative}.recipe-book{position:relative;flex:none;overflow:visible;image-rendering:pixelated}.recipe-book>canvas{display:block;pointer-events:none;image-rendering:pixelated}.recipe-book-controls{position:absolute;inset:0;pointer-events:none}.recipe-book-hit{position:absolute;padding:0;border:0;background:transparent;min-width:0;pointer-events:auto;cursor:pointer}.recipe-book-hit:hover,.recipe-book-hit:focus-visible{outline:1px solid #fff9;outline-offset:-1px}.recipe-book-search{position:absolute;background:transparent;border:0;outline:none;padding:0;color:transparent;caret-color:#fff;appearance:none}.recipe-book-search::-webkit-search-cancel-button{display:none}.recipe-book-toggle{position:absolute;border:0;padding:0;min-width:0;cursor:pointer;background-color:transparent;background-size:100% 100%;image-rendering:pixelated}.recipe-book-toggle:hover,.recipe-book-toggle:focus-visible{outline:1px solid white}.inventory-body.book-only>.inventory-panel{display:none}.recipe-toast{position:fixed;z-index:30;top:12px;right:12px;pointer-events:none;image-rendering:pixelated}
 
 /* The authored world fills the game viewport; navigation and help remain small overlays. */
-.game header{padding:8px 18px;gap:10px}.game header button{width:auto;min-width:110px;padding:6px 10px}.game .brand{font-size:12px}.game-layout{min-height:calc(100svh - 150px)}.game-layout .copy{position:absolute;left:12px;top:8px;margin:0;padding:8px 12px;width:min(460px,40vw);gap:5px;background:#17251b99}.game-layout .copy h1{display:none}.game-layout .copy .story{font-size:12px}.game-layout .copy .invite{padding:5px;min-height:30px;width:auto;font-size:12px}.game-layout .table-caption{bottom:105px;width:auto;padding:4px 12px}.game .save-status{font-size:12px;padding:4px 16px;min-height:28px}.game .selection{bottom:110px;font-size:12px;padding:6px}.game .hotbar{bottom:32px}@media(max-width:700px){.game-layout{min-height:calc(100svh - 180px)}.game-layout .copy{width:calc(100% - 24px);max-height:82px;overflow:auto}.game-layout .copy .invite{display:none}.game .selection{bottom:100px}.game header .brand{display:none}}
+.game header{padding:8px 18px;gap:10px}.game header button{width:auto;min-width:110px;padding:6px 10px}.game .brand{font-size:12px}.game-layout{min-height:calc(100svh - 150px)}.game-layout .copy{position:absolute;left:12px;top:8px;margin:0;padding:8px 12px;width:min(460px,40vw);gap:5px;background:#17251b99}.game-layout .copy h1{display:none}.game-layout .copy .story{font-size:12px}.game-layout .copy .invite{padding:5px;min-height:30px;width:auto;font-size:12px}.game .hotbar{bottom:32px}@media(max-width:700px){.game-layout{min-height:calc(100svh - 180px)}.game-layout .copy{width:calc(100% - 24px);max-height:82px;overflow:auto}.game-layout .copy .invite{display:none}.game header .brand{display:none}}
 
-.game-layout .table-caption{width:180px;min-height:28px}.game-layout .copy .invite{display:none}.game header button{width:150px}.game-layout .copy{max-width:380px;font-size:12px}
-/* Passive feedback never owns world input; narrow layouts reserve the wrapped save-status height. */
-.game .selection{pointer-events:none}
-@media(max-width:700px){.game .hotbar{bottom:64px}.game .selection{bottom:132px}.game-layout .copy{max-height:none;overflow:visible}}
+.game-layout .copy .invite{display:none}.game header button{width:150px}.game-layout .copy{max-width:380px;font-size:12px}
+
+@media(max-width:700px){.game .hotbar{bottom:64px}.game-layout .copy{max-height:none;overflow:visible}}
 
 /* Original icon tabs stay attached to their native container. */
 .inventory-tabs{display:flex;justify-content:flex-end;gap:0;min-width:0;margin:0;height:calc(30px * var(--gui-scale));padding-right:calc(6px * var(--gui-scale))}.inventory-tabs .inventory-tab{flex:none;width:calc(28px * var(--gui-scale));height:calc(32px * var(--gui-scale));padding:0;border:0;background:transparent;image-rendering:pixelated}.inventory-tab canvas{width:100%;height:100%;image-rendering:pixelated}.inventory-tab[aria-pressed=true]{transform:translateY(2px)}.catalogue-search{position:absolute;background:#373737;color:white;border:1px solid #aaa;box-sizing:border-box;padding:0 2px}.inventory-panel{flex:none}
@@ -53,7 +51,7 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .birthday-message{width:min(880px,94vw);flex:none}.birthday-controls button{width:280px;flex:none;padding:8px 14px}.birthday-message .pixel-text{width:100%}.birthday-message h2{font-size:24px}.birthday-message p{background:#142219bb;padding:5px 10px}.birthday-controls{flex:none}@media(max-width:700px){.birthday-message{width:94vw}.birthday-message p{padding:3px}.birthday-controls button{width:min(280px,90vw)}}
 
 /* The world viewport owns its overlays; page navigation remains outside input ownership. */
-.game .copy,.game .table-caption,.game .selection{display:none}.game .save-status[data-ready=true]{display:none}
+.game .copy{display:none}
 .scene-panel[data-overlay=true]>canvas[role=img]{filter:blur(5px) brightness(.55)}
 .scene-panel .inventory-dialog[open]{position:absolute;inset:0;margin:0;width:100%;height:100%;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:auto;z-index:6;background:#0003}
 .scene-panel .hotbar{position:absolute;bottom:4px}
@@ -138,7 +136,7 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 /* Initialization retains world dimensions without exposing partial renderers or fallback navigation controls. */
 .game:not([data-boot=ready]) .scene-panel{visibility:hidden}
 .game:not([data-boot=ready])>.world-navigation{visibility:hidden;pointer-events:none}
-.game>.startup-error{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,calc(100% - 32px));padding:16px;background:#171615;color:#ff5555;text-align:center;z-index:12}
+.game>.startup-error,.home>.startup-error{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,calc(100% - 32px));padding:16px;background:#171615;color:#ff5555;text-align:center;z-index:12}
 
 /* A reset confirmation owns its screen; underlying category controls cannot overlap its text or hit targets. */
 .native-screen[data-confirming=true] .native-screen-plane> :not(#reset-confirmation):not(#reset-feedback){visibility:hidden;pointer-events:none}
