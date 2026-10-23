@@ -1,5 +1,7 @@
 # P9交付候选索引
 
+最新显示层修正见[文字颜色与悬浮导航](native-ui-fix/navigation-review.md)，此前五项行为回归与历史证据保持。
+
 当前基于8f80bd9执行已授权的五项界面定向修复，当前矩阵/证据见[五项修复交付](native-ui-fix/five-review.md)；保留聊天七类、指南针、自动聚焦和狭小矿洞，历史阶段成果不重做。
 
 既有基线：基于4eade6d的八组原版界面定向整改，见[用户授权](native-ui-fix/authorization.md)、[交付报告与八组矩阵](native-ui-fix/report.md)、[原版证据](native-ui-fix/native-evidence.json)。既有P9工程结果保留；本次不新增玩法。

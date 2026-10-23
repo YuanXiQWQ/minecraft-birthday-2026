@@ -36,7 +36,7 @@ export class NativeScreens {
      * @param {number} h Logical height.
      */
     place(element:HTMLElement,x:number,y:number,w:number,h=20):void{element.style.cssText=`position:absolute;left:${x*2}px;top:${y*2}px;width:${w*2}px;height:${h*2}px;min-width:0;min-height:0;margin:0;padding:0`;}
-    /** Render the native section textures, header separators, title and supported widget grid. */
+    /** Render the native section textures and widgets, reserving title clearance at compact logical heights. */
     layout():void{
         for (const element of this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)')) {const value=this.pixels.texts.get(element); if(value) this.pixels.text(element,value.text,value.scale,'#FFFFFF');}
         const width=this.viewport.clientWidth,height=this.viewport.clientHeight;if(!width||!height)return;
@@ -48,7 +48,7 @@ export class NativeScreens {
         if(background){const pattern=c.createPattern(background,'repeat')!;pattern.setTransform(new DOMMatrix().scale(2));c.fillStyle=pattern;c.fillRect(0,0,w,h);}
         if(page==='pause'){
             const title=this.plane.querySelector('h2')!,buttons=[...this.plane.querySelectorAll('button')];this.place(title,0,40,w,9);
-            const gridHeight=buttons.length*24,top=Math.floor((h-gridHeight)*.25)+4;
+            const gridHeight=buttons.length*24,top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+4);
             buttons.forEach((b,i)=>this.place(b,(w-204)/2,top+i*24,204));return;
         }
         if (page === 'language' || page === 'sound') {

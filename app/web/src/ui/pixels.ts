@@ -61,9 +61,9 @@ export class PixelUI {
      * @param {HTMLElement} host Existing semantic heading, paragraph, label or button.
      * @param {string} text Localized copy.
      * @param {number} scale Integer GUI pixel scale.
-     * @param {string} color Text tint.
+     * @param {string} color Text tint, defaulting to neutral native white.
      */
-    text(host: HTMLElement, text: string, scale = 2, color = '#FFF7DE'): void {
+    text(host: HTMLElement, text: string, scale = 2, color = '#FFFFFF'): void {
         if (this.texts.has(host)) {
             const value = this.texts.get(host)!;
             if (value.text === text && value.scale === scale && value.color === color) return;

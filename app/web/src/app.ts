@@ -111,7 +111,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     root.className = page;
     root.dataset.build = import.meta.env.BUILD_ID;
     const header = document.createElement('header'),
-        brand = node('p', page === 'home' ? 'home.eyebrow' : 'game.eyebrow', 'brand'),
+        brand = page === 'home' ? node('p', 'home.eyebrow', 'brand') : null,
         main = document.createElement('main'), copy = document.createElement('article'),
         host = document.createElement('section'), caption = node('p', 'common.loading', 'table-caption'),
         saveStatus = node('p', 'common.loading', 'save-status'), selection = document.createElement('p');
@@ -128,13 +128,14 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         story = node('p', page === 'home' ? 'home.story' : 'game.note', 'story');
     copy.append(title, story);
     host.append(caption);
-    header.append(brand);
+    if (brand) header.append(brand);
     const link = node('a', page === 'home' ? 'home.invite' : 'game.back', 'invite') as HTMLAnchorElement;
     link.href = page === 'home' ? base + 'game/' : base;
     link.id = 'invitation';
     copy.append(link);
     main.append(copy, host);
-    root.append(header, main, selection, saveStatus);
+    if (page === 'home') root.append(header);
+    root.append(main, selection, saveStatus);
     const dialog = document.createElement('dialog');
     dialog.className = 'settings';
     dialog.setAttribute('aria-label', t('settings.title'));

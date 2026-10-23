@@ -99,10 +99,11 @@ test('reset at a catch-up yield fences remaining commits and cannot restore old 
 test('unchanged native text skips canvas/layout work while changed copy, scale and color still redraw', () => {
     const ui = Object.create(PixelUI.prototype) as PixelUI, host = {} as HTMLElement;
     let paints = 0;
-    ui.texts = new Map([[host, {text: 'Plains', scale: 2, color: '#FFF7DE'}]]);
+    ui.texts = new Map([[host, {text: 'Plains', scale: 2, color: '#FFFFFF'}]]);
     ui.updates = new Map([[host, () => paints++]]);
     for (let i = 0; i < 100; i++) ui.text(host, 'Plains');
     assert.equal(paints, 0);
+    assert.equal(ui.texts.get(host)!.color, '#FFFFFF');
     ui.text(host, 'Farm');
     ui.text(host, 'Farm', 3);
     ui.text(host, 'Farm', 3, '#000');

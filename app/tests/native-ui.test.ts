@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {recipePulse,RecipeToastClock} from '../web/src/ui/native-animation.ts';
 import {activeCursor,caretState,nativeField} from '../web/src/ui/native-field.ts';
 import {GameChat,chatFade,chatScale} from '../web/src/ui/chat.ts';
-import {menuLayout} from '../web/src/ui/native-screens.ts';
+import {menuLayout,NativeScreens} from '../web/src/ui/native-screens.ts';
 import {crosshairVisible} from '../web/src/render/native-crosshair.ts';
 import {WorldAudio} from '../web/src/render/world-audio.ts';
 
@@ -139,4 +139,23 @@ test('actual RecipeBookView.paint transforms button and icon together, tab verti
         }
         book.animate();assert.equal(callbacks.length,1);now=1900;callbacks.shift()!(1900);assert.equal(callbacks.length,0);assert.equal(book.animationFrame,0);
     }finally{if(original)Object.defineProperty(globalThis,'performance',original);}
+});
+
+
+test('full-height scaled pause screen retains title clearance before its first button',()=>{
+    const savedStyle=Object.getOwnPropertyDescriptor(globalThis,'getComputedStyle');
+    Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '4'})});
+    try {
+        const title={style:{cssText:''}},buttons=Array.from({length:3},()=>({style:{cssText:''}}));
+        const screen=Object.create(NativeScreens.prototype);
+        Object.assign(screen,{viewport:{clientWidth:1440,clientHeight:900},page:()=> 'pause',controls:null,
+            dialog:{dataset:{}},pixels:{texts:new Map(),resources:{guiImages:new Map()}},
+            plane:{style:{},querySelector:()=>title,querySelectorAll:(selector:string)=>selector==='button'?buttons:[]},
+            background:{getContext:()=>({setTransform(){},imageSmoothingEnabled:false})}});
+        screen.layout();
+        assert.match(title.style.cssText,/top:80px/);
+        assert.match(buttons[0].style.cssText,/top:108px/);
+        assert.match(buttons[2].style.cssText,/top:204px/);
+        assert.equal(screen.dialog.dataset.nativePage,'pause');
+    } finally {if(savedStyle)Object.defineProperty(globalThis,'getComputedStyle',savedStyle);else Reflect.deleteProperty(globalThis,'getComputedStyle');}
 });
