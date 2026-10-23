@@ -127,4 +127,3 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .navigation-edge{position:absolute;top:0;left:50%;transform:translateX(-50%);width:76px;height:10px;border:0;border-radius:0 0 8px 8px;background:linear-gradient(#262423,#171615);box-shadow:inset 0 -2px #3d3938;z-index:10;cursor:pointer;padding:0}
 .navigation-edge:focus-visible{outline:2px solid white;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.game>.world-navigation::before,.game>.world-navigation button{transition:none}}
-
