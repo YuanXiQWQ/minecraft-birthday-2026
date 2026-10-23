@@ -1,4 +1,5 @@
 {
+  "loading.terrain": "Loading terrain...",
   "html.homeTitle": "Happy birthday, {recipient}",
   "html.gameTitle": "{sender}'s farm - {recipient}'s birthday",
   "html.noScript": "Please enable JavaScript to visit this little world.",

@@ -63,9 +63,10 @@ export function entityCube(box: number[], texture: string): CompiledModel {
 }
 
 /** Load audited GUI/player dependencies and cache default-stack icons; failed resources remain explicit errors.
+ * @param {Function} progress Optional actual dependency and rendered-model completion observer.
  * @return {Promise<CatalogueArt>} CPU caches with bounded GPU resources already released.
  */
-export async function loadCatalogueArt(): Promise<CatalogueArt> {
+export async function loadCatalogueArt(progress?: (done: number, total: number) => void): Promise<CatalogueArt> {
     const response = await fetch(RESOURCE_BASE + 'catalogue-manifest.json');
     if (!response.ok) throw Error('catalogue-manifest-unavailable');
     const manifest = await response.json();
@@ -85,7 +86,11 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
     if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();
     documents.set('player-equipment-bindings', player.equipment);
-    await Promise.all(Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs, ...experience.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && !p.includes('/font/') && /\.(json|png|mcmeta)$/.test(p)).map(async ([p, hash]) => {
+    const dependencies = Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs, ...experience.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && !p.includes('/font/') && /\.(json|png|mcmeta)$/.test(p));
+    const total = dependencies.length + manifest.items.length + Object.keys(book.uiDefinitions).length + book.compassModels.length;
+    let completed = 0;
+    progress?.(0, total);
+    await Promise.all(dependencies.map(async ([p, hash]) => {
         const r = await fetch(RESOURCE_BASE + p);
         if (!r.ok) throw Error('catalogue-resource-missing:' + p);
         const b = await r.arrayBuffer(),
@@ -100,6 +105,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
             bitmap.close();
             images.set(p, c);
         } else documents.set(p, JSON.parse(new TextDecoder().decode(b)));
+        progress?.(++completed, total);
     }));
     const animations = new Map<string, {
             frames: HTMLCanvasElement[];
@@ -282,6 +288,8 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
                     route: parts.some(p => p.special) ? 'native-special' : parts.length > 1 ? 'native-composite' : iconModel(parts[0].model, n => documents.get('assets/minecraft/models/' + n.split(':')[1] + '.json')).builtin ? 'native-generated' : 'native-elements'
                 });
             } finally {
+                progress?.(++completed, total);
+                if (progress && completed % 8 === 0) await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
                 group.removeFromParent();
                 group.traverse(o => {
                     if (o instanceof Mesh) o.geometry.dispose();

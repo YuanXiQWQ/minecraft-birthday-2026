@@ -1,0 +1,34 @@
+{
+  "root": {
+    "fixture": false,
+    "loading": false,
+    "root": {
+      "boot": "ready",
+      "build": "90b7c4b768be",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "ff6e3a51-106e-4a8b-b19f-96417566f47b",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "379",
+      "saveStatus": "ready"
+    }
+  },
+  "pages": {
+    "fixture": false,
+    "loading": false,
+    "root": {
+      "boot": "ready",
+      "build": "90b7c4b768be",
+      "catalogueIcons": "113",
+      "completed": "false",
+      "generation": "383262d1-5c8d-4b9e-b4a9-bc40f7529113",
+      "hasCake": "false",
+      "inventoryReady": "true",
+      "resources": "26.3",
+      "revision": "37",
+      "saveStatus": "ready"
+    }
+  }
+}

@@ -7,6 +7,13 @@
   <meta name="color-scheme" content="dark">
   <title>__EN_html.gameTitle__</title></head>
 <body>
+  <style>
+    #native-loading{position:fixed;inset:0;z-index:1000;overflow:hidden;background:#171615 url('%BASE_URL%minecraft/26.3/assets/minecraft/textures/gui/title/background/panorama_0.png') center/cover;isolation:isolate}
+    #native-loading>canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    #native-loading>.loading-fallback{position:absolute;inset:0;backdrop-filter:blur(5px);background:#0002;display:grid;place-items:center;color:#fff}
+  </style>
+  <link rel="preload" as="image" href="%BASE_URL%minecraft/26.3/assets/minecraft/textures/gui/title/background/panorama_0.png">
+  <div id="native-loading" role="status" aria-live="polite" aria-label="__EN_loading.terrain__" data-label="__EN_loading.terrain__" data-failure="__EN_error.resource__"><div class="loading-fallback"></div></div>
   <div id="app"></div>
   <noscript>__EN_html.noScript__</noscript>
   <script type="module" src="/src/game.ts"></script>

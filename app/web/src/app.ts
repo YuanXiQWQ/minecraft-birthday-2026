@@ -2,6 +2,7 @@
 import {Vector3} from 'three';
 import type {SkySettings} from './domain/environment.ts';
 import {LocalWeather} from './render/local-weather.ts';
+import type {LoadingPort} from './ui/loading-screen.ts';
 import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
@@ -40,9 +41,10 @@ import {loadRules} from './rules/load.ts';
 /** Mount one formal entry; language overrides are ordinary localization inputs, not gameplay or completion hooks.
  * @param {'home'|'game'} page Independent entry identity.
  * @param {Dictionary} locale Optional loaded locale catalogue.
+ * @param {LoadingPort} loading Optional independent native loading presentation.
  * @return {Promise<void>} Page initialization, with visible localized capability/resource failures.
  */
-export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Promise<void> {
+export async function mount(page: 'home' | 'game', locale: Dictionary = {}, loading?: LoadingPort): Promise<void> {
     const root = document.getElementById('app')!, base = import.meta.env.BASE_URL;
     let dictionary = locale, pixels: PixelUI | null = null, scene: SceneView | null = null, disposed = false,
         confirmation: string | null = null, confirmationSerial = 0, resetting = false, localeGeneration = 0;
@@ -496,7 +498,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
      * @param {PageTransitionEvent} event Browser page lifecycle event.
      */
     function abandonStartup(event: PageTransitionEvent): void {
-        if (!event.persisted && startup && !startup.ready) {disposed = true; startup.dispose();}
+        if (!event.persisted && startup && !startup.ready) {disposed = true; loading?.dispose(); startup.dispose();}
     }
     window.addEventListener('pagehide', abandonStartup, {signal: appAbort.signal});
 
@@ -515,8 +517,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     }
     const unsubscribe = session.subscribe(reflect);
     await session.refresh();
+    loading?.update('save', 1);
     try {
-        const resources = await loadResources(page === 'game');
+        const resources = await loadResources(page === 'game', (done, total) => loading?.update('resources', done, total));
         if (disposed) return;
         worldAudio = new WorldAudio(resources.documents, () => edits.view() ?? session.view.envelope!.state.settings);
         buttonSounds = new NativeButtonSounds(root,worldAudio);
@@ -559,7 +562,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         reflect(session.view);
         root.dataset.resources = '26.3';
         if (page === 'game') {
-            const [art, rules] = await Promise.all([loadCatalogueArt(), loadRules()]);
+            const [art, rules] = await Promise.all([loadCatalogueArt(loading ? (done, total) => loading.update('icons', done, total) : undefined), loadRules().then(rules => {loading?.update('rules', 1); return rules;})]);
             if (disposed) {
                 art.dispose();
                 return;
@@ -633,6 +636,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
             if (disposed) return;
             if (scene.lost) throw new Error('webgl-unavailable');
+            loading?.update('frame', 1);
+            loading?.finish();
             if (startup!.finish()) navigationPanel = new NavigationPanel(navigation, t('a11y.showScenes'));
             startupError.hidden = true;
             updateGate();
@@ -641,7 +646,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         root.dataset.resourceError = error instanceof Error ? error.message : 'unknown';
         const key = error instanceof Error && error.message === 'webgl-unavailable' ? 'error.webgl' : 'error.resource';
         if (page === 'home') setText(caption, key);
-        else {startup?.fail(); scene?.setInputEnabled(false); setText(startupError, key); startupError.hidden = false;}
+        else {loading?.fail(t(key)); startup?.fail(); scene?.setInputEnabled(false); setText(startupError, key); startupError.hidden = false;}
         root.dataset.resources = 'failed'; host.dataset.chatReady = 'failed';
     }
     const show = (event: PageTransitionEvent) => {
@@ -659,7 +664,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         clearText(preferenceFeedback);
         if (event.persisted) return;
         disposed = true;
-        appAbort.abort(); startup?.dispose(); navigationPanel?.dispose(); localWeather?.dispose();
+        appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
         chat?.dispose();
