@@ -21,7 +21,7 @@
 
 - [单次7秒长按事件及状态](chain.json)：一次isTrusted pointerdown、一次isTrusted pointerup，前炉→提交→后炉→提交→空命中→松键；2→1→0实例，实际有限背包熔炉总数64→66，主手木镐保留。按住期间没有再次点击。[前](evidence/chain-before.jpg)/[后](evidence/chain-after.jpg)。原版五tick与目标换工具重置另有固定时钟测试，不从截图推断精确时长。
 - [个人2×2](missing-materials.json)：一块木板选择工作台，缺料位false/true/true/true，真实输入/结果为空；独立说明条数量0。[画面](evidence/missing-materials.jpg)。
-- [真实3D工作台右键Use及3×3缺料](workbench-missing.json)：一块圆石、一根木棍选择石铲，第二根木棍缺失，结果只作幽灵显示，无真实结果、无长条说明。[画面](evidence/workbench-missing.jpg)。
+- [真实3D工作台右键Use及3×3缺料](workbench-missing.json)：一块圆石、一根木棍选择石铲，第二根木棍缺失，结果只作幽灵显示，无真实结果、无长条说明。[稳定帧画面](evidence/workbench-missing-settled.jpg)及[对应状态](workbench-settled.json)。先前workbench-missing.jpg捕获了点击后尚未合成幽灵的前一画面，仅保留为过渡帧，不作为幽灵视觉通过证据；后续独立截图和状态再次核对，未改写该原始文件。
 - [空结果槽实际点击](empty-result.json)：Tooltip隐藏，真实结果为空，没有No Matching Recipe。[画面](evidence/empty-result.jpg)。[幽灵结果点击](ghost-result.json)/[画面](evidence/ghost-result-click.jpg)也不授物；点击后Tooltip隐藏，不将此截图伪称持续鼠标悬停验收。正常物品名称Tooltip已在配方按钮画面可见；结果Tooltip分支另有正式方法测试。
 - [设置操作](settings.json)：菜单→Options→Music & Sounds，可信点击音量，控件继续工作，独立反馈节点无文本、inventory-hint不存在。[画面](evidence/settings.jpg)。
 - 准备样本时实际可观察到独立New Recipes Unlocked Toast；没有将通知迁入聊天。浏览器音频激活/指针锁受限仍保留真实错误记录，不宣称人工试听或Pointer Lock体验通过。

@@ -1,0 +1,6 @@
+{
+  "ghost": "{\"missing\":[false,false,false,false,false,false,false,true,false],\"conflicts\":[false,false,false,false,false,false,false,false,false],\"complete\":false,\"grid\":[null,{\"id\":\"minecraft:cobblestone\",\"count\":1},null,null,{\"id\":\"minecraft:stick\",\"count\":1},null,null,{\"id\":\"minecraft:stick\",\"count\":1},null]}",
+  "hints": 0,
+  "preview": "{\"status\":\"empty\",\"result\":null}",
+  "tooltip": "Stone Shovel"
+}
