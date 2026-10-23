@@ -121,8 +121,8 @@ export class WorldUse {
         this.scene.showPreview(placement(this.attachHit(this.hover, this.above), this.session, kind, facing));
     }
 
-    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string} message Localized success key. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @return {Promise<void>} Settled transaction feedback. */
-    run(command: Parameters<SaveSession['dispatch']>[0], message: string, sound?: string, effect?: {
+    /** Dispatch one semantic intent with visible failure feedback. @param {Parameters<SaveSession['dispatch']>[0]} command Fresh observed intent. @param {string|null} message Significant success key, or null for silent routine actions. @param {string} sound Optional native event. @param {object} effect Optional committed break feedback. @return {Promise<void>} Settled transaction feedback. */
+    run(command: Parameters<SaveSession['dispatch']>[0], message: string | null, sound?: string, effect?: {
         block: string;
         point: Cell
     }): Promise<void> {
@@ -131,7 +131,7 @@ export class WorldUse {
             if (scope !== this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene) return;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
             if (effect) this.scene.breakEffect(effect.block, effect.point);
-            if (!['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
+            if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound) this.sound(sound);
             this.preview();
         }).catch(error => this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'));
@@ -202,7 +202,7 @@ export class WorldUse {
                 scene: p.scene,
                 id: station.id,
                 expected: layout(this.inventory.value)
-            }, 'game.workbenchRemoved', 'block.stone.break', {block: station.kind, point: m.hit.point});
+            }, null, 'block.stone.break', {block: station.kind, point: m.hit.point});
         } else this.harvest(m.hit);
     }
 

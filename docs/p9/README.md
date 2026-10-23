@@ -10,4 +10,4 @@
 - [兼容与恢复](recovery.md)：无历史改写、无清档的恢复步骤。
 - [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部9份profile及依赖。
 
-工程命令入口：app/package.json；正式416项（保留原389项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
+工程命令入口：app/package.json；正式418项（保留原389项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。

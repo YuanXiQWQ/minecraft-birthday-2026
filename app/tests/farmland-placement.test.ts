@@ -124,9 +124,8 @@ async function harness(kind: Kind = 'crafting_table') {
         configurable: true,
         value: Object.assign(target, {setInterval, clearInterval})
     });
-    const use = new WorldUse(v, inventory, s, () => {
-    }, () => {
-    });
+    const messages: string[] = [], sounds: string[] = [];
+    const use = new WorldUse(v, inventory, s, key => messages.push(key), id => sounds.push(id));
     const jobs: Promise<void>[] = [];
     const run = use.run.bind(use);
     use.run = (...args) => {
@@ -138,7 +137,7 @@ async function harness(kind: Kind = 'crafting_table') {
         inventory.value = {...structuredClone(snapshot.envelope!.state.progress.player.data), cursor: null};
     });
     return {
-        s, other, use, v, hit, jobs, opened: () => opened, dispose: () => {
+        s, other, use, v, hit, jobs, messages, sounds, opened: () => opened, dispose: () => {
             use.dispose();
             dispose();
             if (previous) Object.defineProperty(globalThis, 'window', previous); else Reflect.deleteProperty(globalThis, 'window');
@@ -262,4 +261,19 @@ test('a queued farm placement cannot commit after another session changes the ac
     } finally {
         h.dispose();
     }
+});
+
+
+test('completed device mining keeps break effects and finite pickup without a removal success message',async()=>{
+    const h=await harness(),previous=Object.getOwnPropertyDescriptor(globalThis,'document');
+    Object.defineProperty(globalThis,'document',{value:{hidden:false},configurable:true});
+    try{
+        h.use.use(h.hit,false);await Promise.all(h.jobs);h.messages.length=0;h.sounds.length=0;
+        const station=h.s.view.envelope!.state.progress.scenes.farm.stations[0],hit={...h.hit,id:station.id};
+        let effects=0;h.v.breakEffect=()=>{effects++;};h.v.refreshHover=()=>hit;
+        h.use.beginMining(hit,1000);assert.ok(h.use.mining);h.use.advanceMining(1000+h.use.mining.ticks*50);await Promise.all(h.jobs);
+        assert.deepEqual(h.messages,[]);assert.deepEqual(h.sounds,['block.stone.break']);assert.equal(effects,1);
+        assert.equal(h.s.view.envelope!.state.progress.scenes.farm.stations.length,0);assert.ok(h.s.view.envelope!.state.progress.player.data.backpack.some(s=>s?.id==='minecraft:crafting_table'&&s.count===1));
+        await h.use.run({type:'remove-station',scene:'farm',id:station.id},null);assert.deepEqual(h.messages,['game.actionFailed']);
+    }finally{h.dispose();if(previous)Object.defineProperty(globalThis,'document',previous);else Reflect.deleteProperty(globalThis,'document');}
 });
