@@ -180,7 +180,7 @@
   "soundCategory.ui": "UI",
   "menu.soundVolume": "{name}: {percent}%",
   "menu.soundOff": "{name}: OFF",
-  "menu.languageAccuracy": "(Language translations may not be 100% accurate)",
+  "menu.languageAccuracy": "(Language translations are 100% inaccurate :()",
   "menu.languageSearch": "Search languages",
   "menu.volumeNative": "Master Volume: {percent}%",
   "audio.uiBlocked": "Sound is blocked by the browser. Interact with the game to enable audio.",
