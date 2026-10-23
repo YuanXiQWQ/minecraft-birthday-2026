@@ -7,7 +7,7 @@ import {emptyEnvironment,tickEnvironment} from '../web/src/domain/environment.ts
 import {initialState} from '../web/src/domain/state.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {checksum,decode,seal,token} from '../web/src/persistence/codec.ts';
-import {TickClock} from '../web/src/persistence/processing-clock.ts';
+import {TickClock,processingClock} from '../web/src/persistence/processing-clock.ts';
 import {NativeSky} from '../web/src/render/native-sky.ts';
 import {GameChat} from '../web/src/ui/chat.ts';
 import {optionFlow} from '../web/src/ui/native-screens.ts';
@@ -92,6 +92,21 @@ test('p9 environment migration preserves every original value and rejects malfor
 test('server rate changes elapsed tick sampling without rounding away fractional ownership time',()=>{
  const c=new TickClock(0);assert.equal(c.sample(125,40),5);assert.equal(c.sample(135,40),0);assert.equal(c.sample(150,40),1);
  const low=new TickClock(0);assert.equal(low.sample(999,1),0);assert.equal(low.sample(1000,1),1);
+});
+
+test('formal processing owner rebases on a committed rate change, not on its next polling turn',async()=>{
+ const h=await owners(),saved=Object.fromEntries(['performance','document','window','navigator'].map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));let now=0,poll:(()=>void)|undefined;
+ Object.defineProperty(globalThis,'performance',{configurable:true,value:{now:()=>now}});
+ Object.defineProperty(globalThis,'document',{configurable:true,value:Object.assign(new EventTarget(),{hidden:false})});
+ Object.defineProperty(globalThis,'window',{configurable:true,value:Object.assign(new EventTarget(),{setInterval(fn:()=>void){poll=fn;return 0;},setTimeout:(fn:()=>void)=>setTimeout(fn,0)})});
+ Object.defineProperty(globalThis,'navigator',{configurable:true,value:{locks:{request:(_name:string,_options:unknown,fn:(lock:object)=>Promise<void>)=>fn({})}}});
+ const stop=processingClock(h.a);
+ try{
+  now=100;await h.a.transact({type:'console',source:'/tick rate 40'});now=250;poll!();
+  for(let i=0;i<100&&h.a.view.envelope!.state.progress.world.tick<6;i++)await new Promise(resolve=>setTimeout(resolve,1));
+  assert.equal(h.a.view.envelope!.state.progress.world.tick,6);
+  assert.equal(h.a.listeners.size,1);stop();assert.equal(h.a.listeners.size,0);now=500;poll!();assert.equal(h.a.view.envelope!.state.progress.world.tick,6);
+ }finally{stop();for(const [key,descriptor]of Object.entries(saved)){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else Reflect.deleteProperty(globalThis,key);}}
 });
 
 test('original marker values and periods match the shipped native day data',()=>{

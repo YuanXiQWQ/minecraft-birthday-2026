@@ -1,5 +1,5 @@
 /** One visible game document owns processing time; home pages and offline intervals never drive production. */
-import type {SaveSession} from './session.ts';
+import type {SaveSession,Snapshot} from './session.ts';
 import type {CommandFeedback} from '../domain/console.ts';
 import {LOCK_NAME} from './session.ts';
 
@@ -52,6 +52,19 @@ export class TickClock {
 export function processingClock(session: SaveSession, feedback: (message:CommandFeedback)=>void = ()=>{}): () => void {
     let disposed = false, lease: object | null = null, release: (() => void) | null = null, busy = false,
         ticking = false, clock: TickClock | null = null, generation = '', timer = 0, schedule = '', sprintStart=0, sprintCount=0, quick=0;
+
+    /** Rebase at a committed control boundary rather than discarding the following polling interval.
+     * @param {Snapshot} value Latest committed control and generation.
+     */
+    function reconcile(value:Snapshot):void{
+        if(disposed||!lease||!clock||!value.envelope)return;
+        const c=value.envelope.state.progress.environment?.control,signature=JSON.stringify([c?.epoch,!!c?.sprintTicks,c?.frozen]);
+        if(value.envelope.generation!==generation){generation=value.envelope.generation;sprintStart=0;sprintCount=0;}
+        else if(signature===schedule)return;
+        schedule=signature;clock=new TickClock(performance.now());
+        if(c?.sprintTicks&&!ticking){clearTimeout(quick);quick=window.setTimeout(()=>void step(),0);}
+    }
+    const unobserve=session.subscribe(reconcile);
 
     /** Relinquish ownership and discard any hidden/offline/handoff interval. */
     function stop(): void {
@@ -115,6 +128,8 @@ export function processingClock(session: SaveSession, feedback: (message:Command
                 if (!lock || disposed || document.hidden) return;
                 lease = {};
                 generation = session.view.envelope?.generation ?? '';
+                const c=session.view.envelope?.state.progress.environment?.control;
+                schedule=JSON.stringify([c?.epoch,!!c?.sprintTicks,c?.frozen]);
                 clock = new TickClock(performance.now());
                 await new Promise<void>(resolve => {
                     release = resolve;
@@ -139,6 +154,7 @@ export function processingClock(session: SaveSession, feedback: (message:Command
     return () => {
         if (disposed) return;
         disposed = true;
+        unobserve();
         stop();
         clearInterval(timer);
         document.removeEventListener('visibilitychange', visibility);

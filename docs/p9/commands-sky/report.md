@@ -8,7 +8,7 @@
 
 | 依据 | 已核实的26.3行为 | 本项目接线 |
 |---|---|---|
-| TickCommand、TickRateManager、ServerTickRateManager | rate范围1–10000；step仅冻结时执行；sprint有限、结束恢复先前冻结；freeze停止步进和冲刺；步进计数也随冲刺递减 | 单一活动执行者、每笔最多5 tick、任务间让出浏览器；epoch在锁内拒绝旧调度 |
+| TickCommand、TickRateManager、ServerTickRateManager | rate范围1–10000；step仅冻结时执行；sprint有限、结束恢复先前冻结；freeze停止步进和冲刺；步进计数也随冲刺递减 | 单一活动执行者、每笔最多5 tick、任务间让出浏览器；epoch在锁内拒绝旧调度，命令提交时重锚而非延后至下一轮轮询 |
 | TimeCommand、ServerClockManager、ClockTimeMarker | set/add有d/s/t单位；add可负并钳到0；marker移到下一次；pause/resume/rate；query time/gametime/时间线及repetition；of指定时钟 | 仅既有主世界clock和day/moon时间线；set/marker清部分tick，float速率累积遵循原版 |
 | WeatherCommand、ServerLevel | clear/rain/thunder可选持续时间，默认取对应原版UniformInt；26.3单位缺省为tick；clearWeatherTime独立；停止天气递进不停止强度缓动 | 在原有Java48位流上采样，输入/存档上限支持原版32位时间 |
 | GameRuleCommand、GameRules | advance_time/advance_weather为原版布尔规则，可查询；不是旧版doDaylightCycle语法 | 控制天体时钟与天气计数，未扩展其他无关规则 |
@@ -53,7 +53,7 @@
 ## 自动化、复现和发布
 
 - `npm run check --prefix app`。
-- `npm test --prefix app`：526项，原478项保留，48项新增覆盖命令树、参数、补全、真实SaveSession、失败原子性、锁/重置/旧epoch、旧档、正式NativeSky运动与暂停、正式GameChat补全和菜单边界。旧迁移测试仅更新目标版本；菜单坐标断言对应原版布局；英文文本允许原版命令换行，聊天逐行渲染。
+- `npm test --prefix app`：527项，原478项保留，49项新增覆盖命令树、参数、补全、真实SaveSession、失败原子性、锁/重置/旧epoch、旧档、正式NativeSky运动与暂停、正式GameChat补全和菜单边界。正式processingClock连接真实SaveSession，验证100ms提交40TPS后250ms轮询正确取得6tick，不丢掉整个新轮询段；退出释放新增订阅。旧迁移测试仅更新目标版本；菜单坐标断言对应原版布局；英文文本允许原版命令换行，聊天逐行渲染。
 - `npm run data:verify --prefix app`：113物品、112可达配方、2042分类、18步蛋糕链及哈希通过。
 - `npm test --prefix experiments/scene3d`：48项关键回归通过。
 - `npm run build --prefix app`、`build:pages`、`test:built`：两条正式构建路径、实际HTTP入口、全部原版资源字节和内部资料隔离核对。测试源码/当前文档、截图不进入发布目录。
