@@ -1,0 +1,180 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Official Java 26.3 client.jar; bounded native advancements",
+  "inputs": {
+    "data/minecraft/advancement/story/root.json": "edc34899c2f765403251c355f126dbb82c27887c45cfd39e8478c48f5fae5d53",
+    "data/minecraft/advancement/story/mine_stone.json": "9c3221f3338c992148c619be0cfbb16f1202afb175f3daa39afa7cc3f85160c8",
+    "data/minecraft/advancement/story/upgrade_tools.json": "8673d89f6ca515a26bcb17fa09bd4d81628774b8529a6cf05183edf5e200fe05",
+    "data/minecraft/advancement/story/smelt_iron.json": "261363ffa631275b6cb54f2d73d42e28a7a4727dd0153fc2bcce09393d539b83",
+    "data/minecraft/advancement/story/obtain_armor.json": "c20f8740a62b683b75c4f79a32d500283b12f792a28ab4057bede5a2b66db283",
+    "data/minecraft/advancement/story/iron_tools.json": "4e66c7e7d78cfc3ffb579d9690b0de96e07c2579d621937fd3306b0b66aa91a2",
+    "data/minecraft/advancement/husbandry/root.json": "423e9ac3d0521e7d79ed42729a93d112dca0df83b4d0171ee8f2edfff7183660",
+    "data/minecraft/advancement/husbandry/plant_seed.json": "7385e875d749b8a406f681b8aa4f37cce792d23d83281c176ea41148d43bdee4",
+    "data/minecraft/tags/item/stone_tool_materials.json": "a487c80a5e1e83e4bf8bf6ae0f0ea05acd91b6ee28066648f27df1808b56fa6b",
+    "assets/minecraft/textures/gui/advancements/window.png": "77f75dd84a2e56d4cb3de5a9232e3002369e9489cc63ee3a9f2103eb3555a835",
+    "assets/minecraft/textures/gui/advancements/backgrounds/husbandry.png": "bce8e5bdaccdcb5d76e2f5a2b6b6449d7b056566bbeee7769795255b6c187b15",
+    "assets/minecraft/textures/gui/advancements/backgrounds/stone.png": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f",
+    "assets/minecraft/textures/gui/sprites/advancements/box_obtained.png": "0485f3aeeba5d55c379f67e49e0920fc05ba29cb2bfc7699cfc4c15e96feffb2",
+    "assets/minecraft/textures/gui/sprites/advancements/box_obtained.png.mcmeta": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15",
+    "assets/minecraft/textures/gui/sprites/advancements/box_unobtained.png": "78e48137ea0f3f6f544c55342c2e8213121e315ff716a69ae1db908151e502ed",
+    "assets/minecraft/textures/gui/sprites/advancements/box_unobtained.png.mcmeta": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15",
+    "assets/minecraft/textures/gui/sprites/advancements/tab_above_left.png": "7e399040c0cc6e37a8aa78bcffab94e38d089a83f2d3c6c4c1d05cecfdb931f5",
+    "assets/minecraft/textures/gui/sprites/advancements/tab_above_left_selected.png": "f9429b84c201f004d979f88e0a515fbff056aca2127ba7668473aafb7ee0ef46",
+    "assets/minecraft/textures/gui/sprites/advancements/tab_above_middle.png": "27068af7a44e8adc3bb9968fc097a72e1847e66cecd2dfb7558fc37298c3a858",
+    "assets/minecraft/textures/gui/sprites/advancements/tab_above_middle_selected.png": "c458b14af40c9b23bdf169ae4be4b973c7535aa6784d0eda9d3ee37a4fea9a14",
+    "assets/minecraft/textures/gui/sprites/advancements/task_frame_obtained.png": "0072935998b17c55d55882f0e11e8954576725bd3e3b691d4e20284ac0bbf104",
+    "assets/minecraft/textures/gui/sprites/advancements/task_frame_unobtained.png": "6b8bb754a197bd4f61811f64a5bbabf703658882d812278e43317c7769d1c4df",
+    "assets/minecraft/textures/gui/sprites/advancements/title_box.png": "58be918ba09dbb6d5ad3e0a84f2270c63c412624da64cc937a50f8669f991399",
+    "assets/minecraft/textures/gui/sprites/advancements/title_box.png.mcmeta": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15",
+    "assets/minecraft/textures/gui/sprites/toast/advancement.png": "15a959d338d8ce98c1381f95d34f7143377669bcadae1198900bea88144d6634",
+    "assets/minecraft/items/grass_block.json": "90f0396883aac33237938af6063cbead9df853db87558d8d27c00568f96822fc",
+    "assets/minecraft/models/block/grass_block.json": "fdea6afda5fa7d47241f181b56879e6807efc2b18a119133e3a871c411bf661a",
+    "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+    "assets/minecraft/textures/block/dirt.png": "67197d5371efc3ca1638217c38349665dbd5a977b47bfb20075c858dff87d510",
+    "assets/minecraft/textures/block/grass_block_top.png": "52f44b64ce884a13dfe35e4b4da2e35898b790dd4d7a5ea536f1b0c0d56d29b4",
+    "assets/minecraft/textures/block/grass_block_side.png": "76a677640eb91d6a9aed844bc66e329b1894f89e241a0071333b6678c0854580",
+    "assets/minecraft/textures/block/grass_block_side_overlay.png": "872056682c3b059c04aba88f8b4e706f2526b907e1acef12626a9f912f573a85",
+    "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486"
+  },
+  "uiDefinitions": {
+    "minecraft:grass_block": {
+      "type": "minecraft:model",
+      "model": "minecraft:block/grass_block",
+      "tints": [
+        {
+          "type": "minecraft:grass",
+          "downfall": 1,
+          "temperature": 0.5
+        }
+      ]
+    }
+  },
+  "entries": [
+    {
+      "entry": "data/minecraft/advancement/story/root.json",
+      "size": 681,
+      "sha256": "edc34899c2f765403251c355f126dbb82c27887c45cfd39e8478c48f5fae5d53"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/mine_stone.json",
+      "size": 607,
+      "sha256": "9c3221f3338c992148c619be0cfbb16f1202afb175f3daa39afa7cc3f85160c8"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/upgrade_tools.json",
+      "size": 618,
+      "sha256": "8673d89f6ca515a26bcb17fa09bd4d81628774b8529a6cf05183edf5e200fe05"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/smelt_iron.json",
+      "size": 591,
+      "sha256": "261363ffa631275b6cb54f2d73d42e28a7a4727dd0153fc2bcce09393d539b83"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/obtain_armor.json",
+      "size": 1302,
+      "sha256": "c20f8740a62b683b75c4f79a32d500283b12f792a28ab4057bede5a2b66db283"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/iron_tools.json",
+      "size": 608,
+      "sha256": "4e66c7e7d78cfc3ffb579d9690b0de96e07c2579d621937fd3306b0b66aa91a2"
+    },
+    {
+      "entry": "data/minecraft/advancement/husbandry/root.json",
+      "size": 552,
+      "sha256": "423e9ac3d0521e7d79ed42729a93d112dca0df83b4d0171ee8f2edfff7183660"
+    },
+    {
+      "entry": "data/minecraft/advancement/husbandry/plant_seed.json",
+      "size": 2048,
+      "sha256": "7385e875d749b8a406f681b8aa4f37cce792d23d83281c176ea41148d43bdee4"
+    },
+    {
+      "entry": "data/minecraft/tags/item/stone_tool_materials.json",
+      "size": 112,
+      "sha256": "a487c80a5e1e83e4bf8bf6ae0f0ea05acd91b6ee28066648f27df1808b56fa6b"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/advancements/window.png",
+      "size": 747,
+      "sha256": "77f75dd84a2e56d4cb3de5a9232e3002369e9489cc63ee3a9f2103eb3555a835"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/advancements/backgrounds/husbandry.png",
+      "size": 185,
+      "sha256": "bce8e5bdaccdcb5d76e2f5a2b6b6449d7b056566bbeee7769795255b6c187b15"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/advancements/backgrounds/stone.png",
+      "size": 151,
+      "sha256": "b5e10adc72442bfb257ce7ba0b9bbe36475a0c8cdfec89b80dc9517203ff3e9f"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/box_obtained.png",
+      "size": 157,
+      "sha256": "0485f3aeeba5d55c379f67e49e0920fc05ba29cb2bfc7699cfc4c15e96feffb2"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/box_obtained.png.mcmeta",
+      "size": 165,
+      "sha256": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/box_unobtained.png",
+      "size": 157,
+      "sha256": "78e48137ea0f3f6f544c55342c2e8213121e315ff716a69ae1db908151e502ed"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/box_unobtained.png.mcmeta",
+      "size": 165,
+      "sha256": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/tab_above_left.png",
+      "size": 112,
+      "sha256": "7e399040c0cc6e37a8aa78bcffab94e38d089a83f2d3c6c4c1d05cecfdb931f5"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/tab_above_left_selected.png",
+      "size": 114,
+      "sha256": "f9429b84c201f004d979f88e0a515fbff056aca2127ba7668473aafb7ee0ef46"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/tab_above_middle.png",
+      "size": 109,
+      "sha256": "27068af7a44e8adc3bb9968fc097a72e1847e66cecd2dfb7558fc37298c3a858"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/tab_above_middle_selected.png",
+      "size": 116,
+      "sha256": "c458b14af40c9b23bdf169ae4be4b973c7535aa6784d0eda9d3ee37a4fea9a14"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/task_frame_obtained.png",
+      "size": 125,
+      "sha256": "0072935998b17c55d55882f0e11e8954576725bd3e3b691d4e20284ac0bbf104"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/task_frame_unobtained.png",
+      "size": 106,
+      "sha256": "6b8bb754a197bd4f61811f64a5bbabf703658882d812278e43317c7769d1c4df"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/title_box.png",
+      "size": 139,
+      "sha256": "58be918ba09dbb6d5ad3e0a84f2270c63c412624da64cc937a50f8669f991399"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/title_box.png.mcmeta",
+      "size": 165,
+      "sha256": "35116d4370f3c8ba7baba990c1155e839a93441251f2fa56998a5a7f17299f15"
+    },
+    {
+      "entry": "assets/minecraft/items/grass_block.json",
+      "size": 219,
+      "sha256": "90f0396883aac33237938af6063cbead9df853db87558d8d27c00568f96822fc"
+    }
+  ]
+}

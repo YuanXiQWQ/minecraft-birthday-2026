@@ -1,5 +1,6 @@
 /** Native screen-plane recipe book renders original sprites, grouped recipes, search and display-only ghosts. */
 import {recipePulse, RecipeToastClock} from './native-animation.ts';
+import type {ToastSlots} from './toast-slots.ts';
 import {nativeField} from './native-field.ts';
 import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
@@ -23,6 +24,7 @@ interface RecipeGroup {
 
 /** Own one book per formal menu; temporary ghosts never become domain stacks. */
 export class RecipeBookView {
+  toastSlots?:ToastSlots;
   root: HTMLDivElement;
   canvas: HTMLCanvasElement;
   controls: HTMLDivElement;
@@ -142,6 +144,7 @@ export class RecipeBookView {
 
   /** Clear a notification and fence its pending animation without touching permanent discovery. */
   clearToast(): void {
+    this.toastSlots?.release(this);
     this.toastEpoch++;
     this.animationEpoch = (this.animationEpoch ?? 0) + 1;
     cancelAnimationFrame(this.animationFrame); this.animationFrame = 0;
@@ -627,6 +630,8 @@ export class RecipeBookView {
   /** Draw RecipeToast at ToastInstance's squared slide offset and native icon-cycle time. */
   paintToast(): void {
     if (!this.toastClock?.active || this.disposed) return;
+    const row=this.toastSlots?.claim(this)??0;
+    if(row<0)return;
     const sample = this.toastClock.sample(performance.now());
     if (sample.transition) this.sound?.(sample.transition === 'show' ? 'ui.toast.in' : 'ui.toast.out');
     this.toastPhase = sample.phase;
@@ -638,6 +643,7 @@ export class RecipeBookView {
     c.save(); c.scale(.6, .6); this.ui.stack(c, {id: r?.type === 'minecraft:blasting' ? 'minecraft:blast_furnace' : r?.type === 'minecraft:smelting' ? 'minecraft:furnace' : 'minecraft:crafting_table', count: 1}, 3, 3); c.restore();
     if (r) this.ui.stack(c, {id: r.result!.id!, count: 1}, 8, 8);
     this.toast.style.width = 160 * scale + 'px'; this.toast.style.height = 32 * scale + 'px';
+    this.toast.style.top = row * 32 * scale + 'px';
     this.toast.style.transform = `translateX(${160 * scale * (1 - sample.visible)}px)`;
     this.toast.dataset.timeline = JSON.stringify({...sample, started: this.toastClock.started, changed: this.toastClock.changed, at: performance.now(), recipes: this.toastClock.entries});
     this.toast.hidden = false;

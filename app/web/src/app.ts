@@ -7,6 +7,7 @@ import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
+import {AdvancementView} from './ui/advancements.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
 import {harvestFeedback} from './ui/harvest-feedback.ts';
 import {itemColor} from './ui/item-style.ts';
@@ -52,7 +53,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     const edits = new SettingsEdits(), runtime = initialRuntime(), connection = browserSession(),
         session = connection.session,
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
-    let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null;
+    let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
     let languageChoice: HTMLButtonElement | null = null;
@@ -62,8 +63,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
-    const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open;
-    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
+    const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open || !!advancements?.modal.open;
+    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open || advancements?.modal.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
     const listenerDirection=new Vector3();
     let music:GameMusic|null=null,lastAudioReport=0;
     let buttonSounds:NativeButtonSounds|null=null;
@@ -369,6 +370,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                 lastWorldScene = s.progress.scene;
             }
             inventory?.sync(s, value.writable, value.envelope.generation);
+            advancements?.sync(s.progress.advancements,value.envelope.generation);
             if (page === 'home') scene?.setCake(placed);
             if (page === 'home') setText(caption, placed ? 'home.complete' : 'home.empty');
             if (page === 'home') setText(link, placed ? 'home.return' : 'home.invite');
@@ -469,10 +471,13 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                 if (performance.now() - lastPointerEscape < 150) {e.preventDefault(); return;}
                 e.preventDefault(); e.stopImmediatePropagation();
                 if (chat?.open) chat.hide();
+                else if (advancements?.modal.open) advancements.close();
                 else if (inventory?.modal.open) void inventory.close();
                 else if (dialog.open) {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}
                 else if (menu!.open) {menu!.close(); updateGate();}
                 else openMenu();
+            } else if(e.code==='KeyL'&&!(e.target instanceof HTMLInputElement)&&!dialog.open&&!menu?.open&&!chat?.open&&!inventory?.modal.open){
+                e.preventDefault();if(advancements?.modal.open)advancements.close();else advancements?.open();
             } else if ((e.code === 'KeyT'||(e.key==='/'||e.code==='Slash'&&!e.shiftKey)&&!e.ctrlKey&&!e.altKey&&!e.metaKey) && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show(e.code==='KeyT'?'':'/');}
         }, {signal: appAbort.signal});
     }
@@ -504,6 +509,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
 
     /** Finish visible carrier return before selecting another authored scene. @param {SceneId} id Target scene. */
     async function navigateScene(id: SceneId): Promise<void> {
+        advancements?.close();
         const owner = session.view.envelope?.generation, from = session.view.envelope?.state.progress.scene;
         if (inventory && !await inventory.close()) return;
         if (inventory) await inventory.queue;
@@ -581,6 +587,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             inventory.returnWorkbench = (scene, id) => session.dispatch({type: 'close-workbench', scene, id});
             inventory.acquireOutput = (take, cursor, expected, station) => session.takeOutput(take, cursor, expected, station);
             inventory.fill = (...args) => session.fillRecipe(...args);
+            advancements=new AdvancementView(inventory,host,()=>updateGate(),id=>inventory?.book?.sound?.(id));
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
             /** Run native commands against locked facts and exclude replies from discarded game lifetimes.
@@ -603,6 +610,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             host.dataset.chatReady = 'true';
             session.eventListeners.add(events => {
                 for (const event of events) {
+                    if(event.type==='advancements-completed')advancements?.notify(event.advancements??[],runtimeGeneration??'');
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
                         for (const line of harvestFeedback(event, t)) chat?.append(line);
@@ -655,6 +663,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     };
     window.addEventListener('pageshow', show);
     window.addEventListener('pagehide', event => {
+        advancements?.close();advancements?.clearToasts();
         edits.cancel();
         music?.cancel();
         scene?.cancel();
@@ -668,6 +677,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
         chat?.dispose();
+        advancements?.dispose();
         celebration?.dispose();
         worldUse?.dispose();
         buttonSounds?.dispose();music?.dispose();worldAudio?.dispose();

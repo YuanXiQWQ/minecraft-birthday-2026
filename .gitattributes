@@ -6,3 +6,6 @@ app/web/src/data/recipe-book.json -text
 app/web/src/data/animal-models.json -text
 app/web/src/i18n/items.en.json -text
 app/web/src/i18n/items.zh_cn.json -text
+app/web/src/data/advancements.json -text
+app/web/src/i18n/advancements.en_us.json -text
+app/web/src/i18n/advancements.zh_cn.json -text

@@ -86,6 +86,12 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     const experience = await (await fetchManifest('experience-manifest.json')).json();
     if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();
+    const advancementResponse=await fetchManifest('advancement-manifest.json');
+    if(!advancementResponse.ok)throw Error('advancement-resource-unavailable');
+    const advancement=await advancementResponse.json();
+    if(advancement.version!=='26.3'||advancement.clientSha1!==manifest.clientSha1)throw Error('advancement-version');
+    Object.assign(book.uiDefinitions,advancement.uiDefinitions);
+    Object.assign(extra.inputs,advancement.inputs);
     documents.set('player-equipment-bindings', player.equipment);
     const dependencies = Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs, ...experience.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && !p.includes('/font/') && /\.(json|png|mcmeta)$/.test(p));
     const total = dependencies.length + manifest.items.length + Object.keys(book.uiDefinitions).length + book.compassModels.length;

@@ -151,7 +151,7 @@ test('P5 all 113 original item definitions resolve their default GUI dependencie
     const files = resources(), manifest = JSON.parse(new TextDecoder().decode(files.get('catalogue-manifest.json'))),
         docs = new Map([...files].filter(([p]) => p.endsWith('.json')).map(([p, b]) => [p, JSON.parse(new TextDecoder().decode(b))]));
     assert.equal(manifest.items.length, 113);
-    assert.equal(files.size,801+1+JSON.parse(new TextDecoder().decode(files.get('ambience-manifest.json'))).entries.length+1+JSON.parse(new TextDecoder().decode(files.get('startup-manifest.json'))).entries.length);
+    assert.equal(files.size,[...files].filter(([name])=>name.endsWith('manifest.json')).reduce((n,[,bytes])=>n+1+JSON.parse(new TextDecoder().decode(bytes)).entries.length,0));
     for (const [file, hash] of Object.entries(manifest.adapterSources)) assert.equal(createHash('sha256').update(readFileSync(resolve('web/src', file), 'utf8').replaceAll('\r\n', '\n')).digest('hex'), hash);
     assert.equal(manifest.entries.length, 363);
     assert.equal(createHash('sha256').update(readFileSync(resolve('web/src/i18n/items.en.json'))).digest('hex'), manifest.namesSha256);

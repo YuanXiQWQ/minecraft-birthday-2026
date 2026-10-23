@@ -1,5 +1,6 @@
 /** Persistent facts and versioned carrier contracts have no DOM or renderer dependency. */
 import type {EnvironmentState,SkySettings} from './environment.ts';
+import type {AdvancementFacts} from './advancements.ts';
 import type {WorldState} from './world-state.ts';
 import type {RecipeBook, BookMode, BookSetting} from './recipe-book.ts';
 import type {TransferPlan} from './device-transfer.ts';
@@ -72,6 +73,7 @@ export interface Player {
 }
 
 export interface Progress {
+    advancements?: AdvancementFacts;
     environment?: EnvironmentState;
     world: WorldState;
     unlocked: string[];
@@ -155,7 +157,8 @@ export type Command =
 };
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'items-acquired' | 'cake-placed' | 'recipes-discovered';
+    type: 'item-unlocked' | 'items-acquired' | 'cake-placed' | 'recipes-discovered' | 'advancements-completed';
+    advancements?: string[];
     /** Effective native drops, independent of bag capacity. */
     stacks?: Stack[];
     /** Finite groups actually delivered to visible player carriers. */

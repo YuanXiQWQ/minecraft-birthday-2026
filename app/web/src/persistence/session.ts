@@ -96,7 +96,7 @@ export class SaveSession {
         });
     }
 
-    /** Re-read under the coordinator; initialize only missing storage, never invalid or future data.
+    /** Re-read under the coordinator; initialize missing storage and atomically persist the additive advancement synchronization without replaying events.
      * @return {Promise<void>} Snapshot refresh completion.
      */
     async refresh(): Promise<void> {
@@ -114,7 +114,16 @@ export class SaveSession {
                 if (serial !== this.serial || this.disposed || this.suspended) return;
                 this.storage.setItem(SAVE_KEY, JSON.stringify(envelope));
                 value = {envelope, migrated: false};
-            } else value = await decode(raw);
+            } else {
+                const decoded=await decode(raw);
+                value={envelope:decoded.envelope,migrated:decoded.migrated};
+                if(decoded.advancementMigration&&this.locks){
+                    const envelope=await seal(decoded.envelope.state,decoded.envelope.generation,decoded.envelope.revision+1);
+                    if(serial!==this.serial||this.disposed||this.suspended)return;
+                    this.storage.setItem(SAVE_KEY,JSON.stringify(envelope));
+                    value={envelope,migrated:true};
+                }
+            }
             if (serial !== this.serial || this.disposed || this.suspended) return;
             this.publish({...value, status: this.locks ? 'ready' : 'lock-unavailable', writable: !!this.locks});
         };

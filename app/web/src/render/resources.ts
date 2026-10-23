@@ -42,7 +42,7 @@ export interface Resources extends VanillaPack {
  */
 export async function loadResources(world = false, progress?: (done: number, total: number) => void): Promise<Resources> {
     const start = performance.now(),
-        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
+        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
             const r = await fetchManifest(name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
@@ -60,6 +60,7 @@ export async function loadResources(world = false, progress?: (done: number, tot
     documents.set('$native-entries', all);
     const wanted = new Set<string>([...base.entries, ...home.entries, ...(manifests.find(m => m.derivedFont)?.entries ?? []), ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : []), ...(manifests.find(m => m.source?.includes('bounded native UI'))?.entries ?? []), ...(manifests.find(m => m.source?.includes('bounded native environment'))?.entries ?? []),...(manifests.find(m => m.source?.includes('bounded native ambience'))?.entries ?? [])].map(e => e.entry));
     for (const p of Object.keys(worldPack?.inputs ?? {})) if (p.startsWith('assets/')) wanted.add(p);
+    if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native advancements'))?.entries??[])wanted.add(entry.entry);
     const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || e.entry.startsWith('assets/minecraft/textures/gui/') || e.entry === 'assets/minecraft/ambience-sounds.json' || world && wanted.has(e.entry)));
     let completed = 0;
     progress?.(0, entries.length);

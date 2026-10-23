@@ -1,5 +1,6 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
 import {SOUND_CHANNELS} from './audio-settings.ts';
+import {emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
 import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
 import {quickMove} from './slots.ts';
@@ -87,6 +88,7 @@ function depositHarvest(p: Progress, drops: Stack[], rules: Rules, events: Domai
  */
 export function initialProgress(): Progress {
     return {
+        advancements: emptyAdvancements(),
         world: emptyWorld(),
         environment: emptyEnvironment(),
         unlocked: [],
@@ -190,7 +192,8 @@ function station(value: unknown, unlocked: string[]): void {
 export function validateState(value: unknown): asserts value is State {
     fields(value, ['progress', 'settings']);
     const p = value.progress, s = value.settings;
-    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'environment')?['environment']:[])]);
+    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'environment')?['environment']:[]), ...(Object.hasOwn(p,'advancements')?['advancements']:[])]);
+    if(p.advancements!==undefined)validateAdvancements(p.advancements);
     if(p.environment!==undefined)validateEnvironment(p.environment);
     validateWorld(p.world);
     fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[]),...(Object.hasOwn(s,'audioVersion')?['audioVersion']:[]),...SOUND_CHANNELS.map(([k])=>k).filter(k=>Object.hasOwn(s,k))]);
@@ -541,6 +544,9 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         default:
             throw new Error('unknown-command');
     }
+    p.advancements??=emptyAdvancements();
+    const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop');
+    if(completed.length)events.push({type:'advancements-completed',advancements:completed});
     if (command.type !== 'processing-tick' && command.type !== 'settings' && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});

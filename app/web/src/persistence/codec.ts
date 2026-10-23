@@ -1,5 +1,6 @@
 /** Versioned, checksum-protected durable values; failed reads retain their original bytes. */
 import {emptyEnvironment,migrateEnvironment} from '../domain/environment.ts';
+import {emptyAdvancements,updateAdvancements} from '../domain/advancements.ts';
 import {emptyWorld} from '../domain/world-state.ts';
 import {ensure, freeze, validateState} from '../domain/state.ts';
 import type {State} from '../domain/types.ts';
@@ -21,6 +22,7 @@ export interface Envelope {
 export interface Decoded {
     envelope: Envelope;
     migrated: boolean;
+    advancementMigration?: boolean;
 }
 
 /** Canonical encoding includes every own field in a stable order; arrays keep semantic acquisition order.
@@ -87,7 +89,8 @@ export async function decode(raw: string): Promise<Decoded> {
     const {checksum: stored, ...body} = value;
     ensure(typeof stored === 'string' && stored === await checksum(body), 'checksum-mismatch');
     ensure(value.vanillaVersion === '26.3' && (value.format === 0 ? value.contentVersion === 'p3-development-0' : ['p3-foundation-1', 'p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2', 'p9-environment-1', 'p9-commands-1'].includes(value.contentVersion)), 'unsupported-content');
-    const migrated = value.contentVersion !== 'p9-commands-1',
+    const missingAdvancements = !Object.hasOwn(value.state?.progress??{},'advancements');
+    const migrated = value.contentVersion !== 'p9-commands-1' || missingAdvancements,
         oldPlayer = !['p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2', 'p9-environment-1', 'p9-commands-1'].includes(value.contentVersion);
     try {
         if (!oldPlayer && !['p8-inventory-1', 'p8-experience-2', 'p9-environment-1', 'p9-commands-1'].includes(value.contentVersion)) {
@@ -126,9 +129,13 @@ export async function decode(raw: string): Promise<Decoded> {
                 }
             }
         }
+        if(missingAdvancements){
+            value.state.progress.advancements=emptyAdvancements();
+            updateAdvancements(value.state.progress.advancements,null,value.state.progress.player.data);
+        }
         validateState(value.state);
         const envelope = await seal(value.state, value.generation, value.revision);
-        return {envelope, migrated};
+        return {envelope, migrated, advancementMigration:missingAdvancements};
     } catch (error) {
         throw new Error(migrated ? 'migration-failed' : error instanceof Error ? error.message : 'invalid-save');
     }
