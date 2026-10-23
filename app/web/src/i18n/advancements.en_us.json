@@ -20,5 +20,7 @@
   "advancements.husbandry.root.description": "The world is full of friends and food",
   "advancements.husbandry.plant_seed.title": "A Seedy Place",
   "advancements.husbandry.plant_seed.description": "Plant a seed and watch it grow",
-  "gui.done": "Done"
+  "gui.done": "Done",
+  "chat.type.advancement.task": "%s has made the advancement %s",
+  "chat.square_brackets": "[%s]"
 }

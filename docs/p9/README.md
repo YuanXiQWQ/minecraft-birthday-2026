@@ -1,6 +1,6 @@
 当前主页/设置清理：[删除残留说明、重置后退出、移除重复定位按钮](home-cleanup/report.md)。实际主页/游戏页重置与双路径画面单列验证。
 
-当前进度系统：[七条 Java26.3 原版可达进度](advancements/report.md)，真实玩家槽与播种事务判定、criteria 独立持久化、旧档静默适配、L键原版页面及与配方共享的 Toast；不新增聊天类别或生日触发。
+当前进度系统：[七条 Java26.3 原版可达进度](advancements/report.md)，真实玩家槽与播种事务判定、criteria 独立持久化、旧档静默适配、L键原版页面及与配方共享的 Toast；[原版进度聊天纠正](advancement-chat/report.md)移除自定义取得消息，按真实进度公告，不触发生日演出。
 
 当前持续挖掘声音：[客户端居中、取消本地挖掘距离衰减](mining-centered/report.md)，遵循用户最新固定玩家要求；[原版材质、四tick节拍与生命周期依据](mining-audio/report.md)保留。环境音空间规则不变，人工试听仍单列。
 

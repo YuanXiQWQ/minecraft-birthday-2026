@@ -159,7 +159,7 @@ export class GameChat {
         const end=c.source.indexOf(' ',c.start),tail=end<0?'':c.source.slice(end);this.input.value=c.source.slice(0,c.start)+c.values[c.index]+tail;
         const caret=c.start+c.values[c.index].length;this.input.setSelectionRange(caret,caret);this.paint();
     }
-    /** Draw native logical margins, nine-pixel lines, message tags, fading, scrollbar and the unbordered editor. */
+    /** Draw native logical margins, styled component hovers, nine-pixel lines, message tags, fading, scrollbar and the unbordered editor. */
     paint(): void {
         const scale=nativeScale(this.viewport),w=Math.ceil(this.viewport.clientWidth/scale),h=Math.ceil(this.viewport.clientHeight/scale),dpr=Math.min(devicePixelRatio||1,4),width=Math.min(320,w-8),base=h-40,height=this.open?180:90;
         this.root.style.setProperty('--chat-scale',String(scale));
@@ -169,10 +169,12 @@ export class GameChat {
         for(const message of this.messages){const fade=this.open?1:chatFade((performance.now()-message.time)/50);const raw=message.runs.map(r=>r.text).join('');let from=0;
             for(const text of wrap(raw,width,v=>this.pixels.font.width(v))){const start=Math.max(from,raw.indexOf(text,from));rows.push({text,message,start,fade});from=start+text.length;}}
         const bounded=rows.slice(-100);this.lineCount=bounded.length;this.offset=Math.max(0,Math.min(Math.max(0,bounded.length-Math.floor(height/9)),this.offset));
-        let y=base,tag:string|null=null;
+        let y=base,tag:string|null=null,hover:TextRun['hover'];
         for(const row of bounded.slice(0,bounded.length-this.offset).reverse().slice(0,Math.floor(height/9))){
             if(row.fade){c.globalAlpha=row.fade;c.fillStyle='#00000080';c.fillRect(4,y-9,width+4,9);c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);
-                let x=4,consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);x+=this.pixels.font.width(ch);consumed+=ch.length;}
+                let x=4,consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);
+                    if(this.open&&this.tagHover&&this.tagHover[0]/scale>=x&&this.tagHover[0]/scale<x+this.pixels.font.width(ch)&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)hover=style.hover;
+                    x+=this.pixels.font.width(ch);consumed+=ch.length;}
                 if(this.open&&this.tagHover&&this.tagHover[0]/scale<4&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)tag=this.text(row.message.kind==='system'?'chat.tag.system':'chat.tag.local');
             }y-=9;
         }
@@ -189,11 +191,12 @@ export class GameChat {
             this.root.dataset.completion=JSON.stringify(this.completion);
             this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
         }
-        if(tag&&this.tagHover){
-            const lines=wrap(tag,200,v=>this.pixels.font.width(v)),box=tooltipBox(lines.map(v=>this.pixels.font.width(v))),tx=Math.max(0,Math.min(w-box.width,this.tagHover[0]/scale+12)),ty=Math.max(0,this.tagHover[1]/scale-box.height);
+        if((tag||hover)&&this.tagHover){
+            const lines=tag?wrap(tag,200,v=>this.pixels.font.width(v)).map(text=>({text,color:'#FFFFFF'})):hover!.flatMap(line=>wrap(line.text,200,v=>this.pixels.font.width(v)).map(text=>({text,color:line.color??'#FFFFFF'}))),box=tooltipBox(lines.map(v=>this.pixels.font.width(v.text))),tx=Math.max(0,Math.min(w-box.width,this.tagHover[0]/scale+12)),ty=Math.max(0,this.tagHover[1]/scale-box.height);
             for(const name of ['background','frame']){const path='assets/minecraft/textures/gui/sprites/tooltip/'+name+'.png';drawSprite(c,this.pixels.resources.guiImages.get(path)!,this.pixels.resources.documents.get(path+'.mcmeta')?.gui?.scaling,tx,ty,box.width,box.height);}
-            lines.forEach((line,i)=>this.pixels.font.draw(c,line,tx+12,ty+12+i*12,'#FFFFFF',true));
+            lines.forEach((line,i)=>this.pixels.font.draw(c,line.text,tx+12,ty+12+i*12,line.color,true));
         }
+        this.root.dataset.hover=JSON.stringify(hover??null);
         this.root.dataset.open=String(this.open);this.root.dataset.layout=JSON.stringify({scale,width,base,height,input:[4,h-12,w-4,12],lines:bounded.map(r=>r.text),offset:this.offset});
         this.onPaint?.();
     }

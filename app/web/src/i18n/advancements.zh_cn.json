@@ -20,5 +20,7 @@
   "advancements.husbandry.root.description": "这个世界充满朋友与美食",
   "advancements.husbandry.plant_seed.title": "开荒垦地",
   "advancements.husbandry.plant_seed.description": "种下种子，见证它的成长",
-  "gui.done": "完成"
+  "gui.done": "完成",
+  "chat.type.advancement.task": "%s取得了进度%s",
+  "chat.square_brackets": "[%s]"
 }

@@ -47,7 +47,7 @@ for(const part of iconParts(uiDefinitions['minecraft:grass_block'],'10-21')) {
 json(resolve(root,'app/web/src/data/advancements.json'),{definitions,tags:{'minecraft:stone_tool_materials':JSON.parse(zip.get('data/minecraft/tags/item/stone_tool_materials.json')!.toString()).values}});
 /** Official UI labels are extracted for English fallback and the project's existing item translation language. */
 const localeKeys=['gui.advancements','advancements.empty','advancements.sad_label','advancements.toast.task','key.advancements',...Object.values(definitions).flatMap((d:any)=>[d.display.title.translate,d.display.description.translate])];
-localeKeys.push('gui.done');
+localeKeys.push('gui.done','chat.type.advancement.task','chat.square_brackets');
 for(const language of ['en_us','zh_cn']) {
     const path='assets/minecraft/lang/'+language+'.json', bytes=zip.get(path)??readFileSync(resolve(target,path));
     if(language==='zh_cn'&&createHash('sha1').update(bytes).digest('hex')!==JSON.parse(readFileSync(resolve(target,'interaction-manifest.json'),'utf8')).language.sha1)throw Error('language-integrity');
@@ -56,6 +56,7 @@ for(const language of ['en_us','zh_cn']) {
 }
 /** Read-only bytecode locations permit reproducing conclusions without shipping complete decompiler output. */
 const classes=['server.level.ServerPlayer','server.level.ServerPlayer$2','world.inventory.InventoryMenu','world.inventory.AbstractContainerMenu','world.item.ItemStack','advancements.triggers.InventoryChangeTrigger$TriggerInstance','advancements.AdvancementProgress','advancements.AdvancementRequirements','server.PlayerAdvancements','server.advancements.AdvancementVisibilityEvaluator','client.multiplayer.ClientAdvancements','client.gui.screens.advancements.AdvancementsScreen','client.gui.screens.advancements.AdvancementWidget','client.gui.screens.advancements.AdvancementTab','client.gui.components.toasts.AdvancementToast','client.gui.components.toasts.ToastManager$ToastInstance','client.Options'];
+classes.push('advancements.AdvancementType','advancements.Advancement','network.chat.ComponentUtils');
 const evidence=classes.map(name=>{
     const full='net.minecraft.'+name,entry=full.replaceAll('.','/')+'.class',body=zip.get(entry)!;
     const dump=execFileSync('javap',['-classpath',client,'-c','-p','-constants',full],{encoding:'utf8',maxBuffer:8000000});

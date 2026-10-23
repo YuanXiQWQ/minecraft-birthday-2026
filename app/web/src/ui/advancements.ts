@@ -1,8 +1,7 @@
 /** Native advancement screen and commit-only task toasts share verified resources, icons, font and toast rows. */
 import {ADVANCEMENTS,advancementDone,visibleAdvancements} from '../domain/advancements.ts';
 import type {AdvancementFacts} from '../domain/advancements.ts';
-import english from '../i18n/advancements.en_us.json' with {type:'json'};
-import chinese from '../i18n/advancements.zh_cn.json' with {type:'json'};
+import {advancementText} from '../i18n/advancements.ts';
 import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
 import {wrap} from './pixels.ts';
@@ -63,7 +62,7 @@ export class AdvancementView {
         if(ui.book)ui.book.toastSlots=this.slots;
     }
     /** Resolve official translated copy with English fallback. @param {string} key Native language key. @return {string} Localized copy. */
-    text(key:string):string {return ((this.ui.permanent?.settings.locale==='zh-CN'||this.ui.permanent?.settings.locale==='zh_cn')?chinese:english)[key as keyof typeof english]??english[key as keyof typeof english]??key;}
+    text(key:string):string {return advancementText(key,this.ui.permanent?.settings.locale);}
     /** Replace projections without replaying notifications; new generations invalidate all old rows.
      * @param {AdvancementFacts|undefined} facts Authoritative criteria.
      * @param {string} generation Save epoch.

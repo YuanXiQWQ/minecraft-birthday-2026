@@ -130,7 +130,6 @@
   "game.rotated": "Device rotated.",
   "game.invalidPosition": "Choose a free, supported cell in the building area.",
   "game.actionFailed": "That action could not be saved. Check your held item and try again.",
-  "game.acquired": "First acquired: {item}",
   "inventory.player": "Player inventory",
   "game.cakePlaced": "Your birthday cake is on the table!",
   "game.tableNeedsCake": "Select your birthday cake, then use the table.",

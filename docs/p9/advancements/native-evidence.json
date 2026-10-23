@@ -3730,9 +3730,266 @@
           "method": "private static net.minecraft.network.chat.Component lambda$new$0(net.minecraft.network.chat.Component, java.lang.Double);"
         }
       ]
+    },
+    {
+      "entry": "net/minecraft/advancements/AdvancementType.class",
+      "size": 5538,
+      "sha256": "93d1b11db82a4d2634b2ea7e7f829726e3e6f6efdf63b81b4e29643f40d87688",
+      "locations": [
+        {
+          "line": 25,
+          "method": "public static net.minecraft.advancements.AdvancementType[] values();"
+        },
+        {
+          "line": 32,
+          "method": "public static net.minecraft.advancements.AdvancementType valueOf(java.lang.String);"
+        },
+        {
+          "line": 40,
+          "method": "private net.minecraft.advancements.AdvancementType(int, java.lang.String, net.minecraft.ChatFormatting);"
+        },
+        {
+          "line": 62,
+          "method": "public net.minecraft.ChatFormatting getChatColor();"
+        },
+        {
+          "line": 68,
+          "method": "public net.minecraft.network.chat.Component getDisplayName();"
+        },
+        {
+          "line": 74,
+          "method": "public java.lang.String getSerializedName();"
+        },
+        {
+          "line": 80,
+          "method": "public net.minecraft.network.chat.MutableComponent createAnnouncement(net.minecraft.advancements.AdvancementHolder, net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 100,
+          "method": "private static net.minecraft.advancements.AdvancementType[] $values();"
+        },
+        {
+          "line": 118,
+          "method": "private static int lambda$static$1(net.minecraft.advancements.AdvancementType);"
+        },
+        {
+          "line": 124,
+          "method": "private static int lambda$static$0(net.minecraft.advancements.AdvancementType);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/Advancement.class",
+      "size": 18640,
+      "sha256": "0719712bd26b1a318f13522d4270fb3434651f9c15c3fcf2399eb437379847de",
+      "locations": [
+        {
+          "line": 23,
+          "method": "public net.minecraft.advancements.Advancement(java.util.Optional<net.minecraft.resources.Identifier>, java.util.Optional<net.minecraft.advancements.DisplayInfo>, net.minecraft.advancements.AdvancementRewards, java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>>, net.minecraft.advancements.AdvancementRequirements, boolean);"
+        },
+        {
+          "line": 39,
+          "method": "public net.minecraft.advancements.Advancement(java.util.Optional<net.minecraft.resources.Identifier>, java.util.Optional<net.minecraft.advancements.DisplayInfo>, net.minecraft.advancements.AdvancementRewards, java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>>, net.minecraft.advancements.AdvancementRequirements, boolean, java.util.Optional<net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 66,
+          "method": "private static com.mojang.serialization.DataResult<net.minecraft.advancements.Advancement> validate(net.minecraft.advancements.Advancement);"
+        },
+        {
+          "line": 124,
+          "method": "private static net.minecraft.network.chat.Component decorateName(net.minecraft.advancements.DisplayInfo);"
+        },
+        {
+          "line": 157,
+          "method": "public static net.minecraft.network.chat.Component name(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 168,
+          "method": "public boolean isRoot();"
+        },
+        {
+          "line": 175,
+          "method": "public void validate(net.minecraft.util.ProblemReporter, net.minecraft.core.HolderGetter$Provider);"
+        },
+        {
+          "line": 185,
+          "method": "public final java.lang.String toString();"
+        },
+        {
+          "line": 191,
+          "method": "public final int hashCode();"
+        },
+        {
+          "line": 197,
+          "method": "public final boolean equals(java.lang.Object);"
+        },
+        {
+          "line": 204,
+          "method": "public java.util.Optional<net.minecraft.resources.Identifier> parent();"
+        },
+        {
+          "line": 210,
+          "method": "public java.util.Optional<net.minecraft.advancements.DisplayInfo> display();"
+        },
+        {
+          "line": 216,
+          "method": "public net.minecraft.advancements.AdvancementRewards rewards();"
+        },
+        {
+          "line": 222,
+          "method": "public java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>> criteria();"
+        },
+        {
+          "line": 228,
+          "method": "public net.minecraft.advancements.AdvancementRequirements requirements();"
+        },
+        {
+          "line": 234,
+          "method": "public boolean sendsTelemetryEvent();"
+        },
+        {
+          "line": 240,
+          "method": "public java.util.Optional<net.minecraft.network.chat.Component> name();"
+        },
+        {
+          "line": 246,
+          "method": "private static void lambda$validate$3(net.minecraft.util.ProblemReporter, net.minecraft.core.HolderGetter$Provider, java.lang.String, net.minecraft.advancements.triggers.Criterion);"
+        },
+        {
+          "line": 265,
+          "method": "private static net.minecraft.network.chat.Component lambda$name$0(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 273,
+          "method": "private static net.minecraft.network.chat.Style lambda$decorateName$0(net.minecraft.network.chat.Component, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 283,
+          "method": "private static net.minecraft.advancements.Advancement lambda$validate$2(net.minecraft.advancements.Advancement, net.minecraft.advancements.AdvancementRequirements);"
+        },
+        {
+          "line": 288,
+          "method": "private static java.lang.String lambda$validate$1();"
+        },
+        {
+          "line": 293,
+          "method": "private static java.lang.String lambda$validate$0();"
+        },
+        {
+          "line": 298,
+          "method": "private static net.minecraft.advancements.Advancement lambda$static$6(java.util.Optional, java.util.Optional, net.minecraft.advancements.AdvancementRequirements, java.lang.Boolean);"
+        },
+        {
+          "line": 312,
+          "method": "private static com.mojang.datafixers.kinds.App lambda$static$2(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);"
+        },
+        {
+          "line": 354,
+          "method": "private static net.minecraft.advancements.Advancement lambda$static$4(java.util.Optional, java.util.Optional, net.minecraft.advancements.AdvancementRewards, java.util.Map, java.util.Optional, java.lang.Boolean);"
+        },
+        {
+          "line": 374,
+          "method": "private static net.minecraft.advancements.AdvancementRequirements lambda$static$5(java.util.Map);"
+        },
+        {
+          "line": 381,
+          "method": "private static java.util.Optional lambda$static$3(net.minecraft.advancements.Advancement);"
+        },
+        {
+          "line": 388,
+          "method": "private static com.mojang.serialization.DataResult lambda$static$0(java.util.Map);"
+        },
+        {
+          "line": 400,
+          "method": "private static java.lang.String lambda$static$1();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/network/chat/ComponentUtils.class",
+      "size": 12842,
+      "sha256": "61fd3a4aa0e3174fa86b2c76db6141611bdfe5105099b34d4d17bc2827fca21d",
+      "locations": [
+        {
+          "line": 9,
+          "method": "public net.minecraft.network.chat.ComponentUtils();"
+        },
+        {
+          "line": 15,
+          "method": "public static net.minecraft.network.chat.MutableComponent mergeStyles(net.minecraft.network.chat.MutableComponent, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 45,
+          "method": "public static net.minecraft.network.chat.Component mergeStyles(net.minecraft.network.chat.Component, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 77,
+          "method": "public static java.util.Optional<net.minecraft.network.chat.MutableComponent> resolve(net.minecraft.network.chat.ResolutionContext, java.util.Optional<net.minecraft.network.chat.Component>, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 93,
+          "method": "public static net.minecraft.network.chat.MutableComponent resolve(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Component) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 101,
+          "method": "public static net.minecraft.network.chat.MutableComponent resolve(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Component, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 167,
+          "method": "private static net.minecraft.network.chat.Style resolveStyle(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Style, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 211,
+          "method": "public static net.minecraft.network.chat.Component formatList(java.util.Collection<java.lang.String>);"
+        },
+        {
+          "line": 218,
+          "method": "public static <T extends java.lang.Comparable<T>> net.minecraft.network.chat.Component formatAndSortList(java.util.Collection<T>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 248,
+          "method": "public static <T> net.minecraft.network.chat.Component formatList(java.util.Collection<? extends T>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 256,
+          "method": "public static <T> net.minecraft.network.chat.MutableComponent formatList(java.util.Collection<? extends T>, java.util.Optional<? extends net.minecraft.network.chat.Component>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 267,
+          "method": "public static net.minecraft.network.chat.Component formatList(java.util.Collection<? extends net.minecraft.network.chat.Component>, net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 275,
+          "method": "public static <T> net.minecraft.network.chat.MutableComponent formatList(java.util.Collection<? extends T>, net.minecraft.network.chat.Component, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 326,
+          "method": "public static net.minecraft.network.chat.MutableComponent wrapInSquareBrackets(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 338,
+          "method": "public static net.minecraft.network.chat.Component fromMessage(com.mojang.brigadier.Message);"
+        },
+        {
+          "line": 353,
+          "method": "public static boolean isTranslationResolvable(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 385,
+          "method": "public static net.minecraft.network.chat.MutableComponent copyOnClickText(java.lang.String);"
+        },
+        {
+          "line": 395,
+          "method": "private static net.minecraft.network.chat.Style lambda$copyOnClickText$0(java.lang.String, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 415,
+          "method": "private static net.minecraft.network.chat.Component lambda$formatList$0(java.lang.String);"
+        }
+      ]
     }
   ],
-  "exporterSha256": "2d6a90b3f4844643f9a9957c7b1f3d4b5c9d3434e619a12ff4a8f498d5b62d47",
+  "exporterSha256": "b0ced6db6fddb19a8595b37f12b865127d560774ed17e1a00f89556d82a2a07a",
   "derived": [
     {
       "entry": "app/web/src/data/advancements.json",
@@ -3740,11 +3997,11 @@
     },
     {
       "entry": "app/web/src/i18n/advancements.en_us.json",
-      "sha256": "71af34884906929c8158fc7355fd92dbb1552a629cea6529c1a6e74920651823"
+      "sha256": "d55c9fbb208b08ce5513a0b0813426cef881f38681a090b6deba1a101da7d3a1"
     },
     {
       "entry": "app/web/src/i18n/advancements.zh_cn.json",
-      "sha256": "8c255122dd73c3dd5f905ea67cc026e88e20307e890d54ca86b72208221a232f"
+      "sha256": "84e9d3e17e84d9000151eadc84670c9ef1f33c6656f04c123e369b8baa294119"
     }
   ]
 }

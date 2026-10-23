@@ -8,11 +8,10 @@ import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
 import {AdvancementView} from './ui/advancements.ts';
+import {advancementChat} from './ui/advancement-chat.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
 import {harvestFeedback} from './ui/harvest-feedback.ts';
-import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
-import {itemName} from './i18n/items.ts';
 import {WorldUse} from './ui/world-use.ts';
 import {SOUND_CHANNELS,type SoundKey} from './domain/audio-settings.ts';
 import {GameMusic} from './render/game-music.ts';
@@ -597,12 +596,15 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             host.dataset.chatReady = 'true';
             session.eventListeners.add(events => {
                 for (const event of events) {
-                    if(event.type==='advancements-completed')advancements?.notify(event.advancements??[],runtimeGeneration??'');
+                    if(event.type==='advancements-completed'){
+                        advancements?.notify(event.advancements??[],runtimeGeneration??'');
+                        const saved=session.view.envelope?.state;
+                        if(saved)for(const line of advancementChat(event,saved))chat?.append(line);
+                    }
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
                         for (const line of harvestFeedback(event, t)) chat?.append(line);
                     } else if (event.type === 'item-unlocked') {
-                        chat?.append([{text: t('game.acquired', {item: ''})}, {text: itemName(event.item!), color: itemColor(event.item!)}]);
                         if (!taught) {taught = true; chat?.append([{text: t('chat.tutorial')}]);}
                     }
                 }

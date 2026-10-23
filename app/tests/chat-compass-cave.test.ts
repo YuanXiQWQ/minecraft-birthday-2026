@@ -20,9 +20,9 @@ import {reachable} from './spatial-access.ts';
 /** Exact original documents used by both the runtime and independent threshold expectations. */
 const files = resources(), docs = new Map([...files].filter(([p])=>p.endsWith('.json')).map(([p,b])=>[p,JSON.parse(new TextDecoder().decode(b))]));
 
-test('automatic chat retains the seven requested classes and omits routine success without filtering other channels',()=>{
-    for(const key of ['game.worldHint','chat.tutorial','game.acquired','game.cakePlaced','status.ready','status.migrated','scene.plains','scene.cave','scene.farm','scene.home']) assert.equal(systemFeedback(key),'information',key);
-    for(const key of ['game.placed','game.rotated','game.planted','game.removed','game.harvested','game.pickedUp','error.contextRestored','inventory.returned','book.discovered']) assert.equal(systemFeedback(key),'omit',key);
+test('automatic status chat omits item acquisition and routine success without filtering other channels',()=>{
+    for(const key of ['game.worldHint','chat.tutorial','game.cakePlaced','status.ready','status.migrated','scene.plains','scene.cave','scene.farm','scene.home']) assert.equal(systemFeedback(key),'information',key);
+    for(const key of ['game.acquired','game.placed','game.rotated','game.planted','game.removed','game.harvested','game.pickedUp','error.contextRestored','inventory.returned','book.discovered']) assert.equal(systemFeedback(key),'omit',key);
     for(const key of ['game.inventoryFull','game.harvestOverflow','game.invalidPosition','game.actionFailed','game.tableNeedsCake','game.pointerFailed','error.corrupt','error.write','audio.uiBlocked','audio.uiFailed','status.unknown']) assert.equal(systemFeedback(key),'failure',key);
     assert.equal(FAILURE_COLOR,'#FF5555');
     assert.deepEqual(harvestFeedback({type:'items-acquired',overflow:[{id:'minecraft:oak_log',count:2}]} as any,()=> 'overflow'),[[{text:'overflow',color:'#FF5555'}]]);
