@@ -101,7 +101,6 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .native-screen #reset-confirmation h3,.native-screen #reset-confirmation p{margin:0 0 8px}.native-screen #reset-confirmation button{position:relative;height:40px;margin:4px 0;width:100%}
 .native-screen .volume-label{display:none}.native-screen .native-text-field>input{opacity:0}.native-screen p[role=status]{pointer-events:none}
 .scene-panel .recipe-toast{position:absolute;top:0;right:0;image-rendering:pixelated}
-.game[data-resources=failed] .table-caption,.game .scene-panel:not([data-chat-ready=true]) .table-caption{display:block}
 .native-screen .native-text-field>input{height:100%}.native-screen-plane>section>p[role=status]{position:absolute;left:10px;top:156px;width:600px}
 .native-screen .mc-button:disabled{opacity:1}
 /* Menu blurring is the native six-pass WebGL effect; chat and containers do not enable it. */
@@ -127,3 +126,8 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .navigation-edge{position:absolute;top:0;left:50%;transform:translateX(-50%);width:76px;height:10px;border:0;border-radius:0 0 8px 8px;background:linear-gradient(#262423,#171615);box-shadow:inset 0 -2px #3d3938;z-index:10;cursor:pointer;padding:0}
 .navigation-edge:focus-visible{outline:2px solid white;outline-offset:2px}
 @media(prefers-reduced-motion:reduce){.game>.world-navigation::before,.game>.world-navigation button{transition:none}}
+
+/* Initialization retains world dimensions without exposing partial renderers or fallback navigation controls. */
+.game:not([data-boot=ready]) .scene-panel{visibility:hidden}
+.game:not([data-boot=ready])>.world-navigation{visibility:hidden;pointer-events:none}
+.game>.startup-error{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(600px,calc(100% - 32px));padding:16px;background:#171615;color:#ff5555;text-align:center;z-index:12}

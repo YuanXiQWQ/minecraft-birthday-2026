@@ -1,6 +1,7 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
 import type {SkySettings} from './domain/environment.ts';
 import {LocalWeather} from './render/local-weather.ts';
+import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat} from './ui/chat.ts';
@@ -49,12 +50,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
     let languageChoice: HTMLButtonElement | null = null;
     const nativeScreens: NativeScreens[] = [];
-    let navigationPanel: NavigationPanel | null = null;
+    let navigationPanel: NavigationPanel | null = null, startup: GameStartup | null = null;
     let localWeather: LocalWeather | null = null, weatherTimeControl: HTMLButtonElement | null = null, weatherModeControl: HTMLButtonElement | null = null, weatherLocationControl: HTMLButtonElement | null = null, weatherGeneration='', weatherMode='game';
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
-    const inputBlocked = () => dialog.open || !!menu?.open || !!chat?.open;
+    const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open;
     const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
     let runtimeGeneration: string | null = null, inventory: GameInventory | null = null,
@@ -81,12 +82,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
      * @param {Record<string,string|number>} values Interpolation values.
      */
     function setText(target: HTMLElement, key: string, values: Record<string, string | number> = {}): void {
-        if (page === 'game' && (target.classList.contains('selection') || target.classList.contains('table-caption') && key.startsWith('error.'))) feedback(key, values, target.classList.contains('selection') ? 'selection' : 'graphics');
+        if (page === 'game' && target.classList.contains('selection')) feedback(key, values, 'selection');
         bindings.set(target, {key, values});
-        if (pixels) pixels.text(target, t(key, values), target.tagName === 'H1' ? 3 : 2); else target.textContent = t(key, values);
+        if (pixels) pixels.text(target, t(key, values), target.tagName === 'H1' ? 3 : 2, target.classList.contains('startup-error') ? FAILURE_COLOR : '#FFFFFF'); else target.textContent = t(key, values);
     }
 
-    /** Route actual feedback transitions to chat, retaining a visible pre-initialization fallback.
+    /** Route actual feedback transitions to chat, buffering approved messages until the native chat is ready.
      * @param {string} key Localized event message.
      * @param {Record<string,string|number>} values Message parameters.
      * @param {string} boundary Optional state-transition deduplication boundary.
@@ -118,8 +119,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const header = document.createElement('header'),
         brand = page === 'home' ? node('p', 'home.eyebrow', 'brand') : null,
         main = document.createElement('main'), copy = document.createElement('article'),
-        host = document.createElement('section'), caption = node('p', 'common.loading', 'table-caption'),
-        saveStatus = node('p', 'common.loading', 'save-status'), selection = document.createElement('p');
+        host = document.createElement('section'), caption = page === 'home' ? node('p', 'common.loading', 'table-caption') : document.createElement('p'),
+        saveStatus = page === 'home' ? node('p', 'common.loading', 'save-status') : document.createElement('p'), selection = document.createElement('p'), startupError = document.createElement('p');
     main.className = page + '-layout';
     copy.className = 'copy';
     host.className = 'scene-panel';
@@ -129,18 +130,18 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     saveStatus.setAttribute('aria-label', t('a11y.save'));
     saveStatus.setAttribute('role', 'status');
     caption.id = 'table-caption';
-    const title = node('h1', page === 'home' ? 'home.title' : 'game.title'),
-        story = node('p', page === 'home' ? 'home.story' : 'game.note', 'story');
-    copy.append(title, story);
-    host.append(caption);
+    if (page === 'home') {copy.append(node('h1', 'home.title'), node('p', 'home.story', 'story')); host.append(caption);}
     if (brand) header.append(brand);
     const link = node('a', page === 'home' ? 'home.invite' : 'game.back', 'invite') as HTMLAnchorElement;
     link.href = page === 'home' ? base + 'game/' : base;
     link.id = 'invitation';
-    copy.append(link);
-    main.append(copy, host);
+    if (page === 'home') copy.append(link);
+    if (page === 'home') main.append(copy);
+    main.append(host);
     if (page === 'home') root.append(header);
-    root.append(main, selection, saveStatus);
+    root.append(main);
+    if (page === 'home') root.append(selection, saveStatus);
+    else {startupError.className = 'startup-error'; startupError.hidden = true; startupError.setAttribute('role', 'alert'); root.append(startupError);}
     const dialog = document.createElement('dialog');
     dialog.className = 'settings';
     dialog.setAttribute('aria-label', t('settings.title'));
@@ -212,7 +213,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const close = button('menu.done', () => {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); if (page === 'game') openMenu();}}), retry = button('common.retry', () => {
         void session.refresh();
     });
-    retry.id = 'retry-save';
+    retry.id = 'retry-save'; retry.hidden = true;
     dialog.append(dialogTitle, languageLabel, language, volumeLabel, volume, mute, muteLabel, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
     (page === 'game' ? host : root).append(dialog); root.append(retry);
     const settings = button('common.settings', () => {
@@ -351,7 +352,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             }
             inventory?.sync(s, value.writable, value.envelope.generation);
             if (page === 'home') scene?.setCake(placed);
-            setText(caption, placed ? 'home.complete' : 'home.empty');
+            if (page === 'home') setText(caption, placed ? 'home.complete' : 'home.empty');
             if (page === 'home') setText(link, placed ? 'home.return' : 'home.invite');
             if (edits.generation && edits.generation !== value.envelope.generation) clearText(preferenceFeedback);
             if(weatherGeneration&&weatherGeneration!==value.envelope.generation){localWeather?.stop();localWeather?.status('weather.locationNeeded');}
@@ -365,7 +366,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 worldUse?.preview();
                 for (const b of navigation.querySelectorAll<HTMLButtonElement>('button')) b.setAttribute('aria-current', String(b.dataset.scene === s.progress.scene));
                 feedback('scene.' + s.progress.scene, {}, 'scene');
-                setText(caption, 'scene.' + s.progress.scene);
             }
             const generation = ++localeGeneration;
             void loadLocale(s.settings.locale).then(next => {
@@ -375,12 +375,14 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 document.title = t(page === 'home' ? 'html.homeTitle' : 'html.gameTitle');
                 document.documentElement.lang = s.settings.locale === 'en' ? 'en' : Object.keys(next).length ? s.settings.locale : 'en';
             });
-        } else if (value.status !== 'loading') setText(caption, 'status.unknown');
+        } else if (page === 'home' && value.status !== 'loading') setText(caption, 'status.unknown');
         paintSettings();
         saveStatus.dataset.ready = String(value.status === 'ready');
-        retry.hidden = value.status === 'ready';
+        retry.hidden = value.status === 'ready' || value.status === 'loading';
         const statusKey = value.status === 'ready' ? (value.migrated ? 'status.migrated' : 'status.ready') : value.status === 'loading' ? 'common.loading' : Object.hasOwn(ENGLISH, 'error.' + value.status) ? 'error.' + value.status : 'error.generic';
-        setText(saveStatus, statusKey);
+        if (page === 'home') setText(saveStatus, statusKey);
+        else if (!chat && value.status !== 'ready' && value.status !== 'loading') {setText(startupError, statusKey); startupError.hidden = false;}
+        else if (value.status === 'ready' && root.dataset.resources !== 'failed') startupError.hidden = true;
         if (page === 'game' && value.status !== lastSaveStatus && value.status !== 'loading') {feedback(statusKey, {}, 'storage'); lastSaveStatus = value.status;}
     }
 
@@ -442,7 +444,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             for (const type of ['pointerdown', 'pointerup', 'wheel', 'contextmenu']) view.addEventListener(type, e => {e.stopPropagation(); if (type === 'contextmenu') e.preventDefault();});
         }
         document.addEventListener('keydown', e => {
-            if (e.defaultPrevented || e.repeat) return;
+            if (e.defaultPrevented || e.repeat || !startup?.ready) return;
             if (e.code === 'Escape') {
                 if (performance.now() - lastPointerEscape < 150) {e.preventDefault(); return;}
                 e.preventDefault(); e.stopImmediatePropagation();
@@ -455,7 +457,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         }, {signal: appAbort.signal});
     }
     /** Open the local pause interface without pausing the approved active simulation. */
-    function openMenu(): void {if (page !== 'game' || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
+    function openMenu(): void {if (page !== 'game' || !startup?.ready || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
 
     const navigation = document.createElement('nav');
     navigation.className = 'world-navigation'; navigation.id='world-navigation';
@@ -470,6 +472,15 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         }
         root.insertBefore(navigation, main);
     }
+
+    if (page === 'game') startup = new GameStartup(root, host, navigation);
+    /** Fence late initialization when leaving an unfinished game document.
+     * @param {PageTransitionEvent} event Browser page lifecycle event.
+     */
+    function abandonStartup(event: PageTransitionEvent): void {
+        if (!event.persisted && startup && !startup.ready) {disposed = true; startup.dispose();}
+    }
+    window.addEventListener('pagehide', abandonStartup, {signal: appAbort.signal});
 
     /** Finish visible carrier return before selecting another authored scene. @param {SceneId} id Target scene. */
     async function navigateScene(id: SceneId): Promise<void> {
@@ -526,7 +537,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         };
         reflect(session.view);
         root.dataset.resources = '26.3';
-        if(page==='game') navigationPanel=new NavigationPanel(navigation,t('a11y.showScenes'));
         if (page === 'game') {
             const [art, rules] = await Promise.all([loadCatalogueArt(), loadRules()]);
             if (disposed) {
@@ -535,7 +545,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             }
             session.rules = freeze(rules);
             session.policy = WORLD_REGION;
-            setText(story, 'game.worldHint');
             inventory = new GameInventory(root, pixels, art, rules, t, open => {
                 runtime.screen = open ? 'inventory' : dialog.open ? 'settings' : 'scene';
                 updateGate(open);
@@ -568,7 +577,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), id => void worldAudio?.play(id));
-            scene.setInputEnabled(!dialog.open && !inventory.modal.open);
+            updateGate();
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
                 state: session.view.envelope.state,
                 generation: session.view.envelope.generation
@@ -581,10 +590,19 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             if (value.envelope) reflect(value);
 
             root.dataset.inventoryReady = 'true';
+            // The world render requested by reflect precedes this frame boundary.
+            await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+            if (disposed) return;
+            if (scene.lost) throw new Error('webgl-unavailable');
+            if (startup!.finish()) navigationPanel = new NavigationPanel(navigation, t('a11y.showScenes'));
+            startupError.hidden = true;
+            updateGate();
         }
     } catch (error) {
         root.dataset.resourceError = error instanceof Error ? error.message : 'unknown';
-        setText(caption, error instanceof Error && error.message === 'webgl-unavailable' ? 'error.webgl' : 'error.resource');
+        const key = error instanceof Error && error.message === 'webgl-unavailable' ? 'error.webgl' : 'error.resource';
+        if (page === 'home') setText(caption, key);
+        else {startup?.fail(); scene?.setInputEnabled(false); setText(startupError, key); startupError.hidden = false;}
         root.dataset.resources = 'failed'; host.dataset.chatReady = 'failed';
     }
     const show = (event: PageTransitionEvent) => {
@@ -601,7 +619,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         clearText(preferenceFeedback);
         if (event.persisted) return;
         disposed = true;
-        appAbort.abort(); navigationPanel?.dispose(); localWeather?.dispose();
+        appAbort.abort(); startup?.dispose(); navigationPanel?.dispose(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
         chat?.dispose();
