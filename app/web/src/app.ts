@@ -14,6 +14,7 @@ import {itemName} from './i18n/items.ts';
 import {WorldUse} from './ui/world-use.ts';
 import {SOUND_CHANNELS,type SoundKey} from './domain/audio-settings.ts';
 import {GameMusic} from './render/game-music.ts';
+import {NativeButtonSounds} from './ui/native-button-sounds.ts';
 import {WorldAudio} from './render/world-audio.ts';
 import {WORLD_REGION, WORLD_SCENES} from './domain/world-config.ts';
 import type {SceneId} from './domain/types.ts';
@@ -63,6 +64,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
     const listenerDirection=new Vector3();
     let music:GameMusic|null=null,lastAudioReport=0;
+    let buttonSounds:NativeButtonSounds|null=null;
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
     let runtimeGeneration: string | null = null, inventory: GameInventory | null = null,
         stopProcessing: (() => void) | null = null;
@@ -285,6 +287,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (languageChoice) languageChoice.disabled = language.disabled;
         for(const control of [weatherTimeControl,weatherModeControl,weatherLocationControl])if(control)control.disabled=!session.view.writable||resetting;
         worldAudio?.sync();
+        music?.sync();
         celebration?.sync();
     }
 
@@ -515,6 +518,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     try {
         const resources = await loadResources(page === 'game');
         if (disposed) return;
+        worldAudio = new WorldAudio(resources.documents, () => edits.view() ?? session.view.envelope!.state.settings);
+        buttonSounds = new NativeButtonSounds(root,worldAudio);
         pixels = new PixelUI(resources);
         for (const [element, binding] of bindings) {
             element.replaceChildren();
@@ -604,10 +609,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                     }
                 }
             });
-            worldAudio = new WorldAudio(resources.documents, () => edits.view() ?? session.view.envelope!.state.settings);
             music=new GameMusic(worldAudio);
             if(scene.weather)scene.weather.sound=(id,options)=>{void worldAudio?.play(id,options);};
-            scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
+            scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.audioLoad=JSON.stringify({voices:worldAudio?.voices.size,decoding:worldAudio?.loading.size});host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
@@ -647,6 +651,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     window.addEventListener('pageshow', show);
     window.addEventListener('pagehide', event => {
         edits.cancel();
+        music?.cancel();
         scene?.cancel();
         celebration?.navigation();
         confirmation = null;
@@ -660,7 +665,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         chat?.dispose();
         celebration?.dispose();
         worldUse?.dispose();
-        music?.dispose();worldAudio?.dispose();
+        buttonSounds?.dispose();music?.dispose();worldAudio?.dispose();
         nativeScreens.forEach(view => view.dispose());
         unsubscribe();
         connection.dispose();

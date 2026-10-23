@@ -1,0 +1,22 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "method": "Read-only javap -c -p; no Java client execution",
+  "entry": "net/minecraft/client/gui/screens/PauseScreen.class",
+  "sha256": "c452dca206e0739bf763a9787daf6d588b7db04380faf42731ee5208a7f44198",
+  "branches": {
+    "createPauseMenu": "GridLayout.createRowHelper(2), return/quit width 204 span 2, per-cell horizontal padding 4",
+    "openScreenButton": "width 98"
+  },
+  "projectLayout": "User explicitly requires Back/Options on the first row; Save and Quit spans the second row. Native column widths/spacing are retained; native Back span is superseded.",
+  "audioClasses": [
+    {
+      "entry": "net/minecraft/client/gui/components/AbstractWidget.class",
+      "sha256": "2ea6ee6a488fe8cd81ea5eb2ea59b87b15013f6de940a795a221c63adb2381ab"
+    },
+    {
+      "entry": "net/minecraft/client/resources/sounds/SimpleSoundInstance.class",
+      "sha256": "1550be68f4daf4e26668bb1bce72243e173cf646ec7f524162f51873ae3c05cb"
+    }
+  ]
+}

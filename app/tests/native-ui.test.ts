@@ -99,7 +99,7 @@ test('formal menu renderer reuses two targets, executes encoding plus six native
 test('formal UI sound decode cannot replay after a generation cancellation or swallow a decoding failure',async()=>{
     Object.defineProperty(globalThis,'document',{value:Object.assign(new EventTarget(),{hidden:false}),configurable:true});
     const bytes=new Uint8Array([1,2,3]),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join(''),path='assets/minecraft/sounds/ui/toast/in.ogg';
-    const docs=new Map<string,any>([['$native-sounds',{'ui.toast.in':{sounds:[{name:'ui/toast/in',volume:.4}]}}],['$native-entries',[{entry:path,sha256:hash}]]]);
+    const docs=new Map<string,any>([['$native-sounds',{'ui.toast.in':{sounds:[{name:'ui/toast/in',volume:.4}]}}],['$native-entries',[{entry:path,sha256:hash,size:bytes.length}]]]);
     Object.defineProperty(globalThis,'fetch',{value:async()=>({ok:true,arrayBuffer:async()=>bytes.buffer}),configurable:true});
     let resolve!:(v:any)=>void,started=0;
     const audio=new WorldAudio(docs,()=>({muted:false,volume:.2}) as any);audio.context={state:'running',currentTime:1,decodeAudioData:()=>new Promise(r=>resolve=r),createBufferSource:()=>{started++;},close:async()=>{}} as any;
@@ -144,20 +144,23 @@ test('actual RecipeBookView.paint transforms button and icon together, tab verti
 });
 
 
-test('full-height scaled pause screen retains title clearance before its first button',()=>{
+test('full-height pause screen pairs Back and Options, with full-span quit and retained title clearance',()=>{
     const savedStyle=Object.getOwnPropertyDescriptor(globalThis,'getComputedStyle');
     Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '4'})});
     try {
         const title={style:{cssText:''}},buttons=Array.from({length:3},()=>({style:{cssText:''}}));
         const screen=Object.create(NativeScreens.prototype);
         Object.assign(screen,{viewport:{clientWidth:1440,clientHeight:900},page:()=> 'pause',controls:null,
-            dialog:{dataset:{}},pixels:{texts:new Map(),resources:{guiImages:new Map()}},
+            dialog:{dataset:{}},pixels:{texts:new Map(),resources:{guiImages:new Map()},refreshButton(){}},
             plane:{style:{},querySelector:()=>title,querySelectorAll:(selector:string)=>selector==='button'?buttons:[]},
             background:{getContext:()=>({setTransform(){},imageSmoothingEnabled:false})}});
         screen.layout();
         assert.match(title.style.cssText,/top:80px/);
-        assert.match(buttons[0].style.cssText,/top:152px/);
-        assert.match(buttons[2].style.cssText,/top:248px/);
+        assert.match(buttons[0].style.cssText,/top:164px/);
+        assert.match(buttons[1].style.cssText,/left:368px;top:164px;width:196px/);
+        assert.match(buttons[2].style.cssText,/top:212px/);
+        assert.match(buttons[0].style.cssText,/left:156px;.*width:196px/);
+        assert.match(buttons[2].style.cssText,/left:156px;.*width:408px/);
         assert.equal(screen.dialog.dataset.nativePage,'pause');
     } finally {if(savedStyle)Object.defineProperty(globalThis,'getComputedStyle',savedStyle);else Reflect.deleteProperty(globalThis,'getComputedStyle');}
 });

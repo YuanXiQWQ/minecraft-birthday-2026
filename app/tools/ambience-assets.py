@@ -7,8 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT=Path(__file__).resolve().parents[2]
 # Ordinary runtime resources are kept inside the versioned repository directory.
 OUT=ROOT/'resources/minecraft/26.3'
-# Only actually implemented native music and weather events are extracted.
-EVENTS=['weather.rain','weather.rain.above','entity.lightning_bolt.thunder','entity.lightning_bolt.impact','music.game']
+# Only actually implemented native music, weather and button events are extracted.
+EVENTS=['weather.rain','weather.rain.above','entity.lightning_bolt.thunder','entity.lightning_bolt.impact','music.game','ui.button.click']
 
 def fetch(url,sha1):
     """Read original bytes and reject an object that does not match the official digest."""
@@ -39,6 +39,6 @@ def main():
         if file.name!='ambience-manifest.json':existing.update(e['entry'] for e in json.loads(file.read_text(encoding='utf-8'))['entries'])
     entries=[e for e in entries if e['entry'] not in existing]
     manifest={'version':'26.3','clientSha1':'e877b6a07acd633fb3bb475002175cec036e7b87','source':'Official Java 26.3 asset index; bounded native ambience and game-music events','assetIndex':lock,'soundsDefinitionSha256':hashlib.sha256(raw).hexdigest(),'events':EVENTS,'entries':sorted(entries,key=lambda e:e['entry'])}
-    (OUT/'ambience-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8');print({'samples':len(paths),'bytes':sum(e['size'] for e in entries)})
+    (OUT/'ambience-manifest.json').write_bytes((json.dumps(manifest,indent=2)+'\n').encode('utf-8'));print({'samples':len(paths),'bytes':sum(e['size'] for e in entries)})
 
 if __name__=='__main__':main()

@@ -50,7 +50,7 @@ export class NativeScreens {
      * @return {number} Actual line height for the next text block.
      */
     placeText(element:HTMLElement,x:number,y:number,width:number):number{this.place(element,x,y,width,12);this.pixels.updates.get(element)?.();const value=this.pixels.texts.get(element),canvas=element.querySelector('canvas'),height=Math.max(12,(canvas?.height??12)*(value?.scale??2)/2);this.place(element,x,y,width,height);return height;}
-    /** Render native section textures and keep compact controls within the viewport without overlapping category rows. */
+    /** Render native section textures and aligned full-span or left-column controls within the viewport. */
     layout():void{
         for (const element of this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)')) {const value=this.pixels.texts.get(element); if(value) this.pixels.text(element,value.text,value.scale,'#FFFFFF');}
         const width=this.viewport.clientWidth,height=this.viewport.clientHeight;if(!width||!height)return;
@@ -62,9 +62,10 @@ export class NativeScreens {
         if(background){const pattern=c.createPattern(background,'repeat')!;pattern.setTransform(new DOMMatrix().scale(2));c.fillStyle=pattern;c.fillRect(0,0,w,h);}
         if(page==='pause'){
             const title=this.plane.querySelector('h2')!,buttons=[...this.plane.querySelectorAll('button')];this.place(title,0,40,w,9);
-            const gridHeight=50+buttons.length*20+Math.max(0,buttons.length-1)*4,
+            const groupWidth=Math.min(204,w-16),left=(w-groupWidth)/2,columnWidth=(groupWidth-8)/2,
+                gridHeight=50+44,
                 top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+50);
-            buttons.forEach((b,i)=>this.place(b,(w-Math.min(204,w-16))/2,top+i*24,Math.min(204,w-16)));return;
+            buttons.forEach((b,i)=>{this.place(b,left+(i===1?columnWidth+8:0),top+(i<2?0:24),i<2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
         }
         if (['language','sound','player','weather'].includes(page)) {
             const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_menu_list_background.png');

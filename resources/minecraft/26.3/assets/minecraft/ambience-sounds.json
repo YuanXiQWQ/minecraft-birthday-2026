@@ -194,5 +194,10 @@
         "volume": 0.8
       }
     ]
+  },
+  "ui.button.click": {
+    "sounds": [
+      "random/click_stereo"
+    ]
   }
 }

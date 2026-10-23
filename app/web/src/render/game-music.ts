@@ -9,18 +9,22 @@ export class GameMusic {
     media:HTMLAudioElement|null=null;node:MediaElementAudioSourceNode|null=null;gain:GainNode|null=null;url:string|null=null;
     epoch=0;pending=false;disposed=false;last=0;remainder=0;delay=100;sampleVolume=1;track:string|null=null;
     random:NativeRandom;abort=new AbortController();
+    timer:ReturnType<typeof setInterval>;
     /** Use one existing context and an injectable native random stream.
      * @param {WorldAudio} audio Shared gesture-activated sound owner.
      * @param {number} seed Session music selection seed.
      */
-    constructor(public audio:WorldAudio,seed=Date.now()%2147483647){this.random=new NativeRandom(seed);document.addEventListener('visibilitychange',()=>{this.last=0;if(document.hidden)this.cancel();},{signal:this.abort.signal});}
-    /** Advance native client time only while visible and activated, retaining GUI playback.
+    constructor(public audio:WorldAudio,seed=Date.now()%2147483647){this.random=new NativeRandom(seed);document.addEventListener('visibilitychange',()=>this.update(performance.now()),{signal:this.abort.signal});this.timer=setInterval(()=>{if(document.hidden)this.update(performance.now());},250);}
+    /** Apply effective category preferences independently from the game's visibility-limited simulation.
+     * @return {boolean} Whether music is enabled.
+     */
+    sync():boolean{const gain=soundGain(this.audio.settings(),'music.game');if(this.gain)this.gain.gain.value=gain*this.sampleVolume;if(!gain&&(this.media||this.pending))this.cancel();return gain>0;}
+    /** Advance native music delays after activation, retaining playback while other tabs are selected.
      * @param {number} now Monotonic frame timestamp.
      */
     update(now:number):void{
-        if(this.disposed||document.hidden)return;
-        const gain=soundGain(this.audio.settings(),'music.game');if(this.gain)this.gain.gain.value=gain*this.sampleVolume;
-        if(!gain){if(this.media||this.pending)this.cancel();this.last=now;return;}
+        if(this.disposed)return;
+        if(!this.sync()){this.last=now;return;}
         if(this.audio.context?.state!=='running'){this.last=now;return;}
         if(this.last){const elapsed=now-this.last+this.remainder,ticks=Math.floor(elapsed/50);this.remainder=elapsed-ticks*50;if(!this.media&&!this.pending)this.delay-=ticks;}
         this.last=now;if(this.delay<=0&&!this.media&&!this.pending)void this.start();
@@ -34,7 +38,7 @@ export class GameMusic {
         try{
             if(!raw)throw Error('music-event-missing');const path='assets/minecraft/sounds/'+raw.name+'.ogg',entry=this.audio.documents.get('$native-entries')?.find((e:any)=>e.entry===path);
             if(!entry)throw Error('music-resource-missing');const response=await fetch(RESOURCE_BASE+path);if(!response.ok)throw Error('music-resource-missing');const bytes=await response.arrayBuffer(),hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),v=>v.toString(16).padStart(2,'0')).join('');
-            if(bytes.byteLength!==entry.size||hash!==entry.sha256)throw Error('music-integrity');if(owner!==this.epoch||this.disposed||document.hidden)return;
+            if(bytes.byteLength!==entry.size||hash!==entry.sha256)throw Error('music-integrity');if(owner!==this.epoch||this.disposed)return;
             const media=this.media=new Audio(),url=this.url=URL.createObjectURL(new Blob([bytes],{type:'audio/ogg'})),node=this.node=context.createMediaElementSource(media),gain=this.gain=context.createGain();
             this.track=raw.name;this.sampleVolume=raw.volume??1;gain.gain.value=soundGain(this.audio.settings(),'music.game')*this.sampleVolume;node.connect(gain).connect(context.destination);media.src=url;media.preload='auto';
             media.onended=()=>{if(owner!==this.epoch)return;this.release();this.delay=this.random.integer(12000,24000);this.audio.record('music.game','ended');};
@@ -48,5 +52,5 @@ export class GameMusic {
     /** Invalidate pending loads and wait the native initial interval before another visible playback. */
     cancel():void{this.epoch++;this.pending=false;this.release();this.delay=100;this.last=0;this.remainder=0;}
     /** Stop music and remove the visibility listener permanently. */
-    dispose():void{this.disposed=true;this.cancel();this.abort.abort();}
+    dispose():void{this.disposed=true;this.cancel();this.abort.abort();clearInterval(this.timer);}
 }

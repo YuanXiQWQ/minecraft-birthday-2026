@@ -15,13 +15,14 @@
     "weather.rain.above",
     "entity.lightning_bolt.thunder",
     "entity.lightning_bolt.impact",
-    "music.game"
+    "music.game",
+    "ui.button.click"
   ],
   "entries": [
     {
       "entry": "assets/minecraft/ambience-sounds.json",
-      "size": 4181,
-      "sha256": "ea28c733a52f73817d7b17407fcf457043ad4a378005428c8f6841d8c9e4dc9a"
+      "size": 4259,
+      "sha256": "f884e4aaa4eb54541249737c00c4acb8b85f5f15901c420323a3f9a7ae4a95cd"
     },
     {
       "entry": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
@@ -280,6 +281,12 @@
       "size": 4009698,
       "sha256": "f37394be314ca8e472cb7cd8876df648d5792ddc574faa08f65d44b49f6151a7",
       "assetSha1": "e36444071568c3273ea00627ed5462275cd6828e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/click_stereo.ogg",
+      "size": 7188,
+      "sha256": "91bc25153ad4a697335477f5ebeb9515e83fdbcafd16b1e45fb63de514391d9f",
+      "assetSha1": "f0ca66561f832bf2f60b393837297c2692367cd5"
     },
     {
       "entry": "assets/minecraft/sounds/random/explode1.ogg",

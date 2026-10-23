@@ -823,7 +823,7 @@ export class GameInventory {
         });
     }
 
-    /** Build only the current menu's native-slot projection; preset rows reference the durable nine-toolbar array.
+    /** Project native slot frames and empty directory hit targets; preset rows reference the durable nine-toolbar array.
      * @param {CanvasRenderingContext2D} ctx Native logical pixel layer.
      */
     menuSlots(ctx: CanvasRenderingContext2D): void {
@@ -839,13 +839,13 @@ export class GameInventory {
                         item: stack.id,
                         preset,
                         presetCell: col,
-                        x: 9 + col * 18,
-                        y: 18 + row * 18
+                        x: 8 + col * 18,
+                        y: 17 + row * 18
                     }); else if ((!data || data.every(s => !s)) && col === preset) this.slots.push({
                         kind: 'preset-info',
                         preset,
-                        x: 9 + col * 18,
-                        y: 18 + row * 18
+                        x: 8 + col * 18,
+                        y: 17 + row * 18
                     });
                 }
             }
@@ -901,12 +901,14 @@ export class GameInventory {
                 }
             }
             if (this.tab === 'catalogue') {
-                for (const [i, entry] of [...main, ...side.slice(this.sideOffset * 9, this.sideOffset * 9 + 27)].entries()) this.slots.push({
+                const entries = [...main, ...side.slice(this.sideOffset * 9, this.sideOffset * 9 + 27)];
+                for (let i = 0; i < 45; i++) this.slots.push({
                     kind: 'source',
-                    item: entry.item,
-                    locked: !entry.unlocked,
-                    x: 9 + i % 9 * 18,
-                    y: 18 + Math.floor(i / 9) * 18
+                    index: i,
+                    item: entries[i]?.item,
+                    locked: !!entries[i] && !entries[i].unlocked,
+                    x: 8 + i % 9 * 18,
+                    y: 17 + Math.floor(i / 9) * 18
                 });
             } else {
                 const y = this.station?.expected.version === 3 ? 50 : 83;
@@ -921,8 +923,8 @@ export class GameInventory {
         for (let i = 0; i < 9; i++) this.slots.push({
             kind: 'hotbar',
             index: i,
-            x: (this.tab === 'crafting' ? 7 : 9) + i * 18,
-            y: this.tab === 'crafting' ? (this.station?.expected.version === 3 ? 108 : 141) : 112
+            x: (this.tab === 'crafting' ? 7 : 8) + i * 18,
+            y: this.tab === 'crafting' ? (this.station?.expected.version === 3 ? 108 : 141) : 111
         });
     }
 
@@ -934,10 +936,10 @@ export class GameInventory {
         return slot.kind === 'backpack' ? value.backpack[slot.index!] ?? null : slot.kind === 'hopper' ? value.hopper?.[slot.index!] ?? null : slot.kind === 'machine' ? value.machine?.[slot.index!] ?? null : slot.kind === 'preview' ? this.preview.result : slot.kind === 'preset-info' ? {
             id: 'minecraft:paper',
             count: 1
-        } : slot.kind === 'source' ? slot.preset !== undefined ? value.presets[slot.preset]?.[slot.presetCell!] ?? null : {
+        } : slot.kind === 'source' ? slot.preset !== undefined ? value.presets[slot.preset]?.[slot.presetCell!] ?? null : slot.item ? {
             id: slot.item!,
             count: 1
-        } : slot.kind === 'workbench' ? value.workbench?.[slot.index!] ?? null : slot.kind === 'crafting' ? value.crafting?.[slot.index!] ?? null : slot.kind === 'hotbar' ? value.hotbar[slot.index!] : value.equipment[slot.equipment!];
+        } : null : slot.kind === 'workbench' ? value.workbench?.[slot.index!] ?? null : slot.kind === 'crafting' ? value.crafting?.[slot.index!] ?? null : slot.kind === 'hotbar' ? value.hotbar[slot.index!] : value.equipment[slot.equipment!];
     }
 
     /** Resolve transferable cells, excluding result previews, copy-only presets and infinite directory entries.
@@ -948,12 +950,16 @@ export class GameInventory {
         return slot?.kind === 'backpack' ? `backpack:${slot.index!}` : slot?.kind === 'hopper' ? `hopper:${slot.index!}` : slot?.kind === 'machine' ? `machine:${slot.index!}` : slot?.kind === 'workbench' ? `workbench:${slot.index!}` : slot?.kind === 'crafting' ? `crafting:${slot.index!}` : slot?.kind === 'hotbar' ? `hotbar:${slot.index!}` : slot?.kind === 'equipment' ? `equipment:${slot.equipment!}` : null;
     }
 
-    /** Copy from an authoritative infinite directory or saved-toolbar entry through the shared reducer.
+    /** Copy from a directory/preset or discard the cursor at an empty directory cell through the shared reducer.
      * @param {Slot} slot Source display identity.
      * @param {'left'|'right'|'clone'|'number'|'shift'|'offhand'} mode Native source operation.
      * @param {number} index Optional numeric-key destination.
      */
     copySource(slot: Slot, mode: 'left' | 'right' | 'clone' | 'number' | 'shift' | 'offhand', index?: number): void {
+        if (!slot.item && slot.preset === undefined) {
+            if (mode === 'left' || mode === 'right') this.command({type: 'drop', cursor: true, all: true});
+            return;
+        }
         this.command(slot.preset !== undefined ? {
             type: 'preset-source',
             preset: slot.preset,

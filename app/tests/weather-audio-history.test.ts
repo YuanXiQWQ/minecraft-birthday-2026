@@ -100,7 +100,7 @@ test('real music loader verifies bytes, streams through the existing context, ap
  audio.context={state:'running',currentTime:10,destination:{},createMediaElementSource:()=>node,createGain:()=>gain} as any;
  globalThis.fetch=async(path:any)=>{const relative=String(path).split('/minecraft/26.3/')[1];return new Response(readFileSync(new URL(relative,root)));};
  const music=new GameMusic(audio,1);
- try{await music.start();assert.equal(media.paused,false);assert.ok(music.track?.startsWith('music/game/'));assert.equal(connections,2);assert.ok(gain.gain.value>0&&gain.gain.value<=.2);assert.equal((audio.records.at(-1) as any).status,'scheduled');media.onended();assert.equal(music.media,null);assert.equal(music.url,null);assert.ok(music.delay>=12000&&music.delay<=24000);assert.equal(disconnections,2);}
+ try{(doc as any).hidden=true;await music.start();assert.equal(media.paused,false);assert.ok(music.track?.startsWith('music/game/'));assert.equal(connections,2);assert.ok(gain.gain.value>0&&gain.gain.value<=.2);assert.equal((audio.records.at(-1) as any).status,'scheduled');media.onended();assert.equal(music.media,null);assert.equal(music.url,null);assert.ok(music.delay>=12000&&music.delay<=24000);assert.equal(disconnections,2);}
  finally{music.dispose();globalThis.fetch=originalFetch;if(oldAudio)Object.defineProperty(globalThis,'Audio',oldAudio);else Reflect.deleteProperty(globalThis,'Audio');}
 });
 

@@ -1,0 +1,871 @@
+{
+  "audio": [
+    {
+      "at": 301511.10000002384,
+      "audioTime": 276.3609977324263,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 301512,
+      "audioTime": 276.3609977324263,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 301512.6999999881,
+      "audioTime": 276.3609977324263,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 301513.1999999881,
+      "audioTime": 276.3609977324263,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 301515.5,
+      "audioTime": 276.3609977324263,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -4.5,
+        -0.5,
+        1.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 302513.10000002384,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302513.3000000119,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302513.60000002384,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302513.89999997616,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302514.10000002384,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302514.5,
+      "audioTime": 277.362358276644,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 302515.8000000119,
+      "audioTime": 277.362358276644,
+      "category": "weatherVolume",
+      "duration": 2.165328798185941,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        0.5,
+        -0.5,
+        8.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain4.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 303517.6999999881,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303518.1999999881,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303518.6999999881,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303519.3000000119,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303519.89999997616,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303520.1999999881,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303520.8000000119,
+      "audioTime": 278.37242630385487,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 303521.5,
+      "audioTime": 278.37242630385487,
+      "category": "weatherVolume",
+      "duration": 2.085328798185941,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -6.5,
+        -0.5,
+        9.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain3.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 304519,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304519.39999997616,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304519.8000000119,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304520.3000000119,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304520.89999997616,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304521.5,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304522,
+      "audioTime": 279.3708843537415,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 304523.39999997616,
+      "audioTime": 279.3708843537415,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -6.5,
+        -0.5,
+        10.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 306526.10000002384,
+      "audioTime": 281.3707029478458,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306527,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306527.5,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306528,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306528.39999997616,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306528.89999997616,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306529.5,
+      "audioTime": 281.3823129251701,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 306531.10000002384,
+      "audioTime": 281.3823129251701,
+      "category": "weatherVolume",
+      "duration": 2.191995464852608,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -8.5,
+        -0.5,
+        1.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain8.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 308538.89999997616,
+      "audioTime": 283.39083900226757,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 308539.60000002384,
+      "audioTime": 283.39083900226757,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 308540.5,
+      "audioTime": 283.39083900226757,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 308541.1999999881,
+      "audioTime": 283.39083900226757,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 308541.6999999881,
+      "audioTime": 283.39083900226757,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 308543.60000002384,
+      "audioTime": 283.39083900226757,
+      "category": "weatherVolume",
+      "duration": 1.973310657596372,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        2.5,
+        -0.5,
+        -2.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain6.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 309539.3000000119,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309539.89999997616,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309540.39999997616,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309541.1999999881,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309541.6999999881,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309542.3000000119,
+      "audioTime": 284.39219954648524,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 309544,
+      "audioTime": 284.39219954648524,
+      "category": "weatherVolume",
+      "duration": 2.0586621315192746,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -5.5,
+        -0.5,
+        9.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain7.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 310539.1999999881,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310540,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310540.60000002384,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310541.10000002384,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310541.5,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310542,
+      "audioTime": 285.3906575963719,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 310543.3000000119,
+      "audioTime": 285.3906575963719,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        10.5,
+        -0.5,
+        -1.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain5.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 311543.39999997616,
+      "audioTime": 286.3920181405896,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 311544,
+      "audioTime": 286.3920181405896,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 311544.5,
+      "audioTime": 286.3920181405896,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 311544.8000000119,
+      "audioTime": 286.3920181405896,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 311545.5,
+      "audioTime": 286.3920181405896,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 311547.3000000119,
+      "audioTime": 286.4007256235828,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        0.5,
+        -0.5,
+        4.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 312547.3000000119,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312547.8000000119,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312548.39999997616,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312549,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312549.5,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312550,
+      "audioTime": 287.40208616780046,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 312551.39999997616,
+      "audioTime": 287.40208616780046,
+      "category": "weatherVolume",
+      "duration": 2.085328798185941,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        3.5,
+        -0.5,
+        4.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain3.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 313547.6999999881,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313548.1999999881,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313548.6999999881,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313549.1999999881,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313549.8000000119,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313550.1999999881,
+      "audioTime": 288.40054421768707,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 313551.60000002384,
+      "audioTime": 288.40054421768707,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        7.5,
+        -0.5,
+        9.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain5.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 314551,
+      "audioTime": 289.40190476190475,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 314551.1999999881,
+      "audioTime": 289.40190476190475,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 314551.60000002384,
+      "audioTime": 289.40190476190475,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 314552.1999999881,
+      "audioTime": 289.40190476190475,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 314553.60000002384,
+      "audioTime": 289.40190476190475,
+      "category": "weatherVolume",
+      "duration": 1.9786621315192745,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -8.5,
+        -0.5,
+        1.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain2.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 315555.8000000119,
+      "audioTime": 290.4003628117914,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315556.6999999881,
+      "audioTime": 290.4003628117914,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315557.3000000119,
+      "audioTime": 290.4119727891156,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315558,
+      "audioTime": 290.4119727891156,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315558.3000000119,
+      "audioTime": 290.4119727891156,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315559,
+      "audioTime": 290.4119727891156,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 315560.60000002384,
+      "audioTime": 290.4119727891156,
+      "category": "weatherVolume",
+      "duration": 2.0106575963718822,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        4.5,
+        -0.5,
+        5.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain5.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 316559.60000002384,
+      "audioTime": 291.4104308390023,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 316560.1999999881,
+      "audioTime": 291.4104308390023,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 316560.8000000119,
+      "audioTime": 291.4104308390023,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 316561.39999997616,
+      "audioTime": 291.4104308390023,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 316562,
+      "audioTime": 291.4104308390023,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 316563.6999999881,
+      "audioTime": 291.4104308390023,
+      "category": "weatherVolume",
+      "duration": 2.0586621315192746,
+      "epoch": 0,
+      "event": "weather.rain",
+      "pitch": 1,
+      "position": [
+        -5.5,
+        5.5,
+        -1.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/rain7.ogg",
+      "sourceVolume": 0.2,
+      "status": "scheduled",
+      "volume": 0.03999999910593033
+    },
+    {
+      "at": 317559.6999999881,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 317560.10000002384,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 317560.5,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 317561.60000002384,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 317562.3000000119,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    },
+    {
+      "at": 317563.10000002384,
+      "audioTime": 292.41179138321996,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "coalesced"
+    }
+  ],
+  "load": {
+    "decoding": 0,
+    "voices": 2
+  },
+  "music": {
+    "context": "running",
+    "delay": 0,
+    "gain": 0.07999999821186066,
+    "pending": false,
+    "playing": true,
+    "time": 287.482667,
+    "track": "music/game/ebb"
+  }
+}
