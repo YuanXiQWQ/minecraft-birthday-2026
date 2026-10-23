@@ -2,6 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {fetchManifest, RESOURCE_BASE} from '../web/src/render/resource-fetch.ts';
 import {AuthoredWorld} from '../web/src/render/authored-world.ts';
 
@@ -43,6 +44,8 @@ test('manifest HTTP and transport failures remain failures instead of falling ba
 
 test('pre-cave manifest cannot instantiate wall torches; current version includes both actual anchors and their native dependencies', () => {
     const previous = JSON.parse(readFileSync(new URL('./fixtures/world-manifest-before-cave.json', import.meta.url), 'utf8'));
+    const sounds=readFileSync(new URL('./fixtures/world-sounds-before-cave.json', import.meta.url)),entry=previous.entries.find((e:any)=>e.entry==='assets/minecraft/world-sounds.json');
+    assert.equal(sounds.byteLength,entry.size);assert.equal(createHash('sha256').update(sounds).digest('hex'),entry.sha256);
     const world = new AuthoredWorld({} as any, {samples: previous.states} as any);
     assert.throws(() => world.block('wall_torch', 'facing=east'), {message:'world-model:wall_torchfacing=east'});
     const current = JSON.parse(readFileSync(new URL('../../resources/minecraft/26.3/world-manifest.json', import.meta.url), 'utf8'));

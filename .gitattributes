@@ -9,3 +9,4 @@ app/web/src/i18n/items.zh_cn.json -text
 app/web/src/data/advancements.json -text
 app/web/src/i18n/advancements.en_us.json -text
 app/web/src/i18n/advancements.zh_cn.json -text
+app/tests/fixtures/world-sounds-before-cave.json -text
