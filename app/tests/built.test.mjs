@@ -36,7 +36,7 @@ for (const [folder, base] of [['dist', '/'], ['dist-pages', '/minecraft-birthday
       assert.equal(r.status, 200, name);
       assert.deepEqual(Buffer.from(await r.arrayBuffer()), body);
     }
-    for (const path of ['AGENTS.md', 'docs/project-proposal.md', 'experiments/scene3d/web/index.html', 'tests/browser-fixture.ts', '__verify__/index.html', '__verify__/icons.html', '__verify__/input.html', '__verify__/world.html', '__verify__/performance.html', 'tests/world-performance.ts', 'tests/ordinary-observer.ts', 'tests/spatial-access.ts', 'tests/input-browser.ts', 'client.jar', 'package.json', 'data/minecraft/26.3/catalog.json', 'rules/minecraft/26.3/catalog.json', 'rules/minecraft/26.3/coverage.json']) assert.equal((await fetch(origin + base + path)).status, 404, path);
+    for (const path of ['AGENTS.md', 'docs/project-proposal.md', 'experiments/scene3d/web/index.html', 'tests/browser-fixture.ts', '__verify__/index.html', '__verify__/icons.html', '__verify__/input.html', '__verify__/world.html', '__verify__/performance.html', 'tests/world-performance.ts', 'tests/ordinary-observer.ts', 'tests/capacity-browser.ts', 'tests/spatial-access.ts', 'tests/input-browser.ts', 'client.jar', 'package.json', 'data/minecraft/26.3/catalog.json', 'rules/minecraft/26.3/catalog.json', 'rules/minecraft/26.3/coverage.json']) assert.equal((await fetch(origin + base + path)).status, 404, path);
   } finally {
     server.httpServer.closeAllConnections();
     await new Promise((resolve, reject) => server.httpServer.close(error => error ? reject(error) : resolve()));

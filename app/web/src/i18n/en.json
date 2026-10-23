@@ -175,5 +175,6 @@
   "inventory.catalogueScroll": "Scroll items",
   "game.inventoryFull": "Inventory full. Make room, then collect again.",
   "settings.soundOn": "Sound: ON",
-  "settings.soundOff": "Sound: OFF"
+  "settings.soundOff": "Sound: OFF",
+  "game.harvestOverflow": "{count} {item} did not fit in your inventory. You can take it from the Items catalogue."
 }

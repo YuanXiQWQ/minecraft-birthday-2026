@@ -1,5 +1,6 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
 import {GameChat} from './ui/chat.ts';
+import {harvestFeedback} from './ui/harvest-feedback.ts';
 import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
 import {itemName} from './i18n/items.ts';
@@ -41,6 +42,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null;
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
+    let languageChoice: HTMLButtonElement | null = null;
     const inputBlocked = () => dialog.open || !!menu?.open || !!chat?.open;
     const updateGate = () => {const open = inputBlocked() || !!inventory?.modal.open; host.dataset.overlay = String(open); scene?.setInputEnabled(!open);};
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
@@ -237,7 +239,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             language.value = Array.from(language.options).some(option => option.value === value.locale) ? value.locale : 'en';
             setText(volumeLabel, 'settings.volume', {percent: Math.round(value.volume * 100)});
         }
-        language.disabled = volume.disabled = mute.disabled = reset.disabled = !session.view.writable || resetting;
+        language.disabled = volume.disabled = mute.disabled = muteButton.disabled = reset.disabled = !session.view.writable || resetting;
+        if (languageChoice) languageChoice.disabled = language.disabled;
     }
 
     /** Submit one field against freshly locked settings and settle only this edit's receipt.
@@ -351,7 +354,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const languageSection = document.createElement('section'), soundSection = document.createElement('section'), playerSection = document.createElement('section');
     const muteButton = button('settings.soundOn', () => {edits.stage('muted', !edits.view()?.muted); preferences('muted');});
     languageSection.append(languageLabel, language); soundSection.append(volumeLabel, volume, muteButton, mute, muteLabel);
-    if (page === 'game') {mute.hidden = muteLabel.hidden = true;}
+    language.hidden = mute.hidden = muteLabel.hidden = true;
     const usernameLabel = node('label', 'menu.username'), username = document.createElement('input');
     username.id = 'username'; username.maxLength = 16; usernameLabel.setAttribute('for', username.id);
     const usernameFeedback = document.createElement('p'); usernameFeedback.setAttribute('role', 'status');
@@ -372,6 +375,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();}
         updateGate();
     }
+    if (page === 'home') dialog.replaceChildren(dialogTitle, languageSection, soundSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
     if (page === 'game') {
         dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
         close.replaceWith(button('menu.done', () => {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}));
@@ -437,7 +441,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         for (const b of root.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('button,a.invite')) pixels.button(b);
         pixels.slider(volume);
         pixels.field(username);
-        if (page === 'game') {language.hidden = true; const english = button('settings.english', () => {language.value = 'en'; edits.stage('locale', 'en'); preferences('locale');}); languageSection.append(english);}
+        languageChoice = button('settings.english', () => {language.value = 'en'; edits.stage('locale', 'en'); preferences('locale');});
+        languageChoice.disabled = language.disabled; languageSection.append(languageChoice);
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
         scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
         scene.onPointerFailure = () => chat?.append([{text: t('game.pointerFailed')}]);
@@ -481,7 +486,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 for (const event of events) {
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
-                        for (const stack of event.stacks ?? []) chat?.append([{text: '+' + stack.count + ' '}, {text: itemName(stack.id), color: itemColor(stack.id)}]);
+                        for (const line of harvestFeedback(event, t)) chat?.append(line);
                     } else if (event.type === 'item-unlocked') {
                         chat?.append([{text: t('game.acquired', {item: ''})}, {text: itemName(event.item!), color: itemColor(event.item!)}]);
                         if (!taught) {taught = true; chat?.append([{text: t('chat.tutorial')}]);}

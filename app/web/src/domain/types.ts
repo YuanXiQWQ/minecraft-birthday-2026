@@ -144,7 +144,12 @@ export type Command =
 
 export interface DomainEvent {
     type: 'item-unlocked' | 'items-acquired' | 'cake-placed' | 'recipes-discovered';
+    /** Effective native drops, independent of bag capacity. */
     stacks?: Stack[];
+    /** Finite groups actually delivered to visible player carriers. */
+    deposited?: Stack[];
+    /** Effective drops that did not fit; no hidden carrier is created. */
+    overflow?: Stack[];
     item?: string;
     recipes?: string[];
 }

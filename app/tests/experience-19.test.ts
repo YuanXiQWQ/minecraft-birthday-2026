@@ -48,10 +48,12 @@ for (const [tool,allowed] of [['wooden_pickaxe',false],['stone_pickaxe',true]] a
     const r=transition(s,{type:'harvest-node',scene:'cave',node:'iron_ore:0',visit:0,expected:s.progress.player.data},undefined,rules);
     assert.equal(r.state.progress.unlocked.includes(stack('raw_iron').id),allowed);
 });
-test('full bag rejects entire harvest including resource mutation, facts and notification',()=>{
-    const s=facts('oak_log'); s.progress.player.data.backpack=Array.from({length:27},()=>stack('oak_log',64)); s.progress.player.data.hotbar=Array.from({length:9},()=>stack('oak_log',64)); const before=structuredClone(s);
-    assert.throws(()=>transition(s,{type:'harvest-node',scene:'plains',node:'oak_log:0',visit:0,expected:s.progress.player.data},undefined,rules),/inventory-full/); assert.deepEqual(s,before);
+test('full bag settles effective log acquisition without depositing overflow or retaining the resource',()=>{
+    const s=facts('oak_log');s.progress.player.data.backpack=Array.from({length:27},()=>stack('oak_log',64));s.progress.player.data.hotbar=Array.from({length:9},()=>stack('oak_log',64));const before=structuredClone(s.progress.player.data);
+    const r=transition(s,{type:'harvest-node',scene:'plains',node:'oak_log:0',visit:0,expected:s.progress.player.data},undefined,rules),event=r.events.find(e=>e.type==='items-acquired')!;
+    assert.deepEqual(r.state.progress.player.data,before);assert.deepEqual(event.stacks,[stack('oak_log')]);assert.deepEqual(event.deposited,[]);assert.deepEqual(event.overflow,[stack('oak_log')]);assert.ok(r.state.progress.world.visits.plains.removed.includes('oak_log:0'));assert.equal(r.events.some(e=>e.type==='item-unlocked'),false);
 });
+
 test('native mature wheat bonus uses three Bernoulli trials, not uniform one-item loot',()=>{
     const rich=rolledDrops('minecraft:wheat',null,rules,()=>0,7), lean=rolledDrops('minecraft:wheat',null,rules,()=>.999,7);
     assert.equal(rich.find(s=>s.id===stack('wheat').id)?.count,1); assert.ok(rich.find(s=>s.id===stack('wheat_seeds').id)!.count>lean.find(s=>s.id===stack('wheat_seeds').id)!.count);

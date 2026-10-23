@@ -36,7 +36,7 @@ export interface Resources extends VanillaPack {
     models: Record<string, string>;
 }
 
-/** Verify and load only models, required material pixels and the GUI/font primitives actually used by P3.
+/** Verify authored models, required material pixels and shared GUI/font widgets used by each page.
  * @param {boolean} world Whether authored game scenery and entity dependencies are required.
  * @return {Promise<Resources>} Audited resource ownership; no debug substitute is provided.
  */
@@ -58,7 +58,7 @@ export async function loadResources(world = false): Promise<Resources> {
         images = new Map<string, Pixels>(), requests: object[] = [];
     const wanted = new Set<string>([...base.entries, ...home.entries, ...(manifests.find(m => m.derivedFont)?.entries ?? []), ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : [])].map(e => e.entry));
     for (const p of Object.keys(worldPack?.inputs ?? {})) if (p.startsWith('assets/')) wanted.add(p);
-    const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/button(?:_highlighted|_disabled)?\.png(?:\.mcmeta)?$/.test(e.entry) || world && wanted.has(e.entry)));
+    const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || world && wanted.has(e.entry)));
     await Promise.all(entries.map(async e => {
         if (e.entry.includes('..') || !/^assets\/minecraft\/[a-z0-9_/.\/-]+$/.test(e.entry)) throw new Error('resource-path');
         const response = await fetch(RESOURCE_BASE + e.entry);

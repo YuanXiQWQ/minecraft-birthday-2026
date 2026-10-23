@@ -1,0 +1,10 @@
+{
+  "actualMountedPage": "home",
+  "syntheticDOMInputs": true,
+  "draft": {
+    "value": "0.8",
+    "label": "Sound volume: 80%"
+  },
+  "settledValue": "0.8",
+  "save": "{\"format\":1,\"contentVersion\":\"p8-experience-2\",\"vanillaVersion\":\"26.3\",\"generation\":\"839c73c5-6a77-4f22-8a6c-60f9bfc239f2\",\"revision\":370,\"state\":{\"progress\":{\"world\":{\"version\":1,\"tick\":1704,\"manual\":0,\"visits\":{\"plains\":{\"epoch\":0,\"removed\":[],\"roll\":0},\"cave\":{\"epoch\":0,\"removed\":[],\"roll\":0},\"farm\":{\"epoch\":0,\"removed\":[],\"roll\":0},\"home\":{\"epoch\":0,\"removed\":[],\"roll\":0}},\"hoppers\":{}},\"unlocked\":[],\"scene\":\"plains\",\"scenes\":{\"plains\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]},\"cave\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]},\"farm\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]},\"home\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]}},\"player\":{\"version\":1,\"data\":{\"backpack\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,null,null,null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"recipeBook\":{\"version\":1,\"data\":{\"known\":[\"minecraft:crafting_table\"],\"unseen\":[],\"views\":{\"crafting\":{\"open\":false,\"filter\":false},\"furnace\":{\"open\":false,\"filter\":false},\"blast_furnace\":{\"open\":false,\"filter\":false}}}},\"cakePlacement\":null},\"settings\":{\"locale\":\"en\",\"volume\":0.8,\"muted\":false,\"username\":\"capacity_user\"}},\"checksum\":\"4f3743ae6589f3c565624497bb729868e911e13281360e9b2eef87fd78235768\"}"
+}

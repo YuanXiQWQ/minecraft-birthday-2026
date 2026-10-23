@@ -47,6 +47,38 @@ export const MAINLINE = ['oak_log', 'oak_planks', 'stick', 'crafting_table', 'wo
 export const KNOWN_ITEMS = new Set(reachable);
 
 
+/** Publish one effective acquisition separately from its physical delivery and uncarried remainder.
+ * @param {Progress} p Transaction-local progress.
+ * @param {Stack[]} drops Effective native drops.
+ * @param {Stack[]} deposited Groups actually put into visible carriers.
+ * @param {Stack[]} overflow Groups available through permanent facts but not stored elsewhere.
+ * @param {DomainEvent[]} events Commit-only notifications.
+ */
+function acquisition(p: Progress, drops: Stack[], deposited: Stack[], overflow: Stack[], events: DomainEvent[]): void {
+    for (const drop of drops) if (!p.unlocked.includes(drop.id)) {
+        item(drop.id); p.unlocked.push(drop.id); events.push({type: 'item-unlocked', item: drop.id});
+    }
+    if (drops.length) events.push({type: 'items-acquired', stacks: structuredClone(drops), deposited: structuredClone(deposited), overflow: structuredClone(overflow)});
+}
+
+/** Deliver as much actual harvest as fits while settling every valid drop exactly once.
+ * @param {Progress} p Transaction-local resource and player facts.
+ * @param {Stack[]} drops Native loot already rolled for this resource lifetime.
+ * @param {Rules} rules Same-version limits and identity comparison.
+ * @param {DomainEvent[]} events Notifications published only after a successful save.
+ */
+function depositHarvest(p: Progress, drops: Stack[], rules: Rules, events: DomainEvent[]): void {
+    const deposited: Stack[] = [], overflow: Stack[] = [], carriers = {...p.player.data, cursor: null};
+    for (const drop of drops) {
+        const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
+        quickMove(source, playerTargets(carriers), rules);
+        const count = drop.count - (source.stack?.count ?? 0);
+        if (count) deposited.push({...structuredClone(drop), count});
+        if (source.stack) overflow.push(structuredClone(source.stack));
+    }
+    acquisition(p, drops, deposited, overflow, events);
+}
+
 /** Create independent empty progress, with no natural-resource visits or offline timestamps.
  * @return {Progress} Initial persistent facts.
  */
@@ -343,22 +375,19 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             if (command.type === 'harvest-node') drops = harvestNode(p, command.scene, command.node, command.visit, held, rules);
             else if (command.type === 'plant-crop') plantCrop(p, command.cell, command.id, held);
             else drops = harvestCrop(p, command.id, rules);
-            const acquired = drops.map(s => s.id);
             if (command.type === 'harvest-node' && command.node === 'cow:0') {
+                const converted = structuredClone(drops);
                 ensure(held?.id === rules.interactions.milk.input, 'milk-requires-bucket');
                 if (held.count === 1) {p.player.data.hotbar[p.player.data.selected] = structuredClone(drops[0]); drops = [];}
                 else p.player.data.hotbar[p.player.data.selected] = {...held, count: held.count - 1};
-            }
-            const carriers = {...p.player.data, cursor: null};
-            for (const drop of drops) {
-                const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
-                quickMove(source, playerTargets(carriers), rules);
-                ensure(!source.stack, 'inventory-full');
-            }
-            for (const id of acquired) if (!p.unlocked.includes(id)) {
-                item(id); p.unlocked.push(id); events.push({type: 'item-unlocked', item: id});
-            }
-            if (acquired.length) events.push({type: 'items-acquired', stacks: drops.length ? structuredClone(drops) : acquired.map(id => ({id, count: 1}))});
+                const carriers = {...p.player.data, cursor: null};
+                for (const drop of drops) {
+                    const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
+                    quickMove(source, playerTargets(carriers), rules);
+                    ensure(!source.stack, 'inventory-full');
+                }
+                acquisition(p, converted, converted, [], events);
+            } else depositHarvest(p, drops, rules, events);
             break;
         }
         case 'rotate-station': {
@@ -462,10 +491,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             if (command.expected && rules) {
                 const held = p.player.data.hotbar[p.player.data.selected];
                 if (removed.kind === 'crafting_table' || held && correctTool(held.id, 'minecraft:' + removed.kind, rules)) {
-                    const drop = {id: 'minecraft:' + removed.kind, count: 1}, source = {stack: drop as Stack | null, policy: {take: true, place: false}};
-                    quickMove(source, playerTargets({...p.player.data, cursor: null}), rules);
-                    ensure(!source.stack, 'inventory-full');
-                    events.push({type: 'items-acquired', stacks: [drop]});
+                    depositHarvest(p, [{id: 'minecraft:' + removed.kind, count: 1}], rules, events);
                 }
             }
             delete p.world.hoppers[command.id];

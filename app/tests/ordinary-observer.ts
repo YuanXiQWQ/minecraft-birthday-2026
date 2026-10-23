@@ -165,3 +165,20 @@ if (new URLSearchParams(location.search).has('pointer-evidence')) {
     }
     for (const type of ['pointerlockchange','pointerlockerror','pointermove','pointerdown','pointerup','visibilitychange']) document.addEventListener(type, record, {capture:true});
 }
+
+
+// These controls are emitted only by the verification transform, never by normal builds.
+if (new URLSearchParams(location.search).has('settings-audit')) {
+    const output=document.createElement('output'); output.id='settings-audit'; output.hidden=true;
+    document.addEventListener('DOMContentLoaded',()=>document.body.append(output),{once:true});
+    const events:object[]=[];
+    for(const type of ['input','change']) document.addEventListener(type,event=>{const target=event.target as HTMLInputElement;if(target.id==='volume'||target.id==='mute'){events.push({type,trusted:event.isTrusted,value:target.value,checked:target.checked});if(events.length>30)events.shift();}},true);
+    /** Observe actual mounted settings and durable facts without bypassing the production input route. */
+    function snapshotSettings():void {
+        const dialog=document.getElementById('settings') as HTMLDialogElement|null;
+        output.textContent=JSON.stringify({page:document.getElementById('app')?.className,open:dialog?.open,controls:['language','volume','mute'].map(id=>{const e=document.getElementById(id) as HTMLInputElement|null;return{id,connected:!!e?.isConnected,value:e?.value,checked:e?.checked,hidden:e?.hidden,rect:e?.getBoundingClientRect().toJSON(),nativeWrapper:e?.parentElement?.className};}),buttons:dialog?[...dialog.querySelectorAll('button')].filter(e=>e.getClientRects().length>0).map(e=>({text:e.innerText,disabled:e.disabled})):[],volumeLabel:dialog?.querySelector('.volume-label')?.textContent,feedback:document.getElementById('preference-feedback')?.textContent,save:localStorage.getItem(SAVE_KEY),events});
+    }
+    const timer=setInterval(snapshotSettings,200);
+    window.addEventListener('pagehide',()=>clearInterval(timer),{once:true});
+}
+if(new URLSearchParams(location.search).has('capacity-fixtures')) void import('./capacity-browser.ts');
