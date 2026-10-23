@@ -1,0 +1,206 @@
+{
+  "conditions": {
+    "engine": "IAB Chromium",
+    "viewport": [
+      1280,
+      720
+    ],
+    "dpr": 1.25,
+    "scene": "plains",
+    "rain": 1,
+    "thunder": 0,
+    "devices": 0,
+    "clock": "20TPS; advance_time false near noon",
+    "warmup": "existing loaded scene and rain ramp complete",
+    "parallelBuilds": false,
+    "parallelTests": false,
+    "HMR": false,
+    "method": "Rendered DOM frame counter differences; NOT display FPS or frame-interval/GPU distribution"
+  },
+  "before": {
+    "commit": "03f010a",
+    "start": {
+      "at": 1792773403021,
+      "data": {
+        "drawCalls": "54",
+        "environment": {
+          "cloudHeight": 192.33,
+          "cloudInstances": 9,
+          "cloudPosition": [
+            -657.573045302111,
+            190.71,
+            -10.960000038146973
+          ],
+          "cloudQuads": 34865,
+          "cloudRange": 128,
+          "cloudReady": true,
+          "cloudWind": 657.573045302111,
+          "dayPartial": 0,
+          "dayTicks": 6010,
+          "gameTick": 21918,
+          "moonAngle": 180.0999151093882,
+          "moonPhase": "full_moon",
+          "partial": 1.102000000476837,
+          "rain": 1,
+          "skyLightColor": [
+            0.8384159938485198,
+            0.8384159938485198,
+            1,
+            1
+          ],
+          "skyLightFactor": 0.7625,
+          "starAngle": 0.09991510938819274,
+          "starOpacity": 0,
+          "starQuads": 780,
+          "sunAngle": 0.09991510938819274,
+          "thunder": 0
+        },
+        "frames": 12147,
+        "triangles": "660978"
+      }
+    },
+    "end": {
+      "at": 1792773510417,
+      "data": {
+        "drawCalls": "54",
+        "environment": {
+          "cloudHeight": 192.33,
+          "cloudInstances": 9,
+          "cloudPosition": [
+            -722.041663861118,
+            190.71,
+            -10.960000038146973
+          ],
+          "cloudQuads": 34865,
+          "cloudRange": 128,
+          "cloudReady": true,
+          "cloudWind": 722.041663861118,
+          "dayPartial": 0,
+          "dayTicks": 6010,
+          "gameTick": 24068,
+          "moonAngle": 180.0999151093882,
+          "moonPhase": "full_moon",
+          "partial": 0.05600000023841858,
+          "rain": 1,
+          "skyLightColor": [
+            0.8384159938485198,
+            0.8384159938485198,
+            1,
+            1
+          ],
+          "skyLightFactor": 0.7625,
+          "starAngle": 0.09991510938819274,
+          "starOpacity": 0,
+          "starQuads": 780,
+          "sunAngle": 0.09991510938819274,
+          "thunder": 0
+        },
+        "frames": 14694,
+        "triangles": "660978"
+      }
+    }
+  },
+  "after": {
+    "source": "03f010a plus current weather/audio changes",
+    "start": {
+      "at": 1792773560392,
+      "data": {
+        "dpr": 1.25,
+        "drawCalls": "54",
+        "environment": {
+          "activeLightning": 0,
+          "cloudHeight": 192.33,
+          "cloudInstances": 9,
+          "cloudPosition": [
+            -343.72205231722756,
+            190.71,
+            -10.960000038146973
+          ],
+          "cloudQuads": 34865,
+          "cloudRange": 128,
+          "cloudReady": true,
+          "cloudWind": 343.72205231722756,
+          "dayPartial": 0,
+          "dayTicks": 6008,
+          "gameTick": 11454,
+          "lightning": [],
+          "moonAngle": 180.07992341822137,
+          "moonPhase": "full_moon",
+          "partial": 3.402000000476619,
+          "rain": 1,
+          "rainTick": 11457.402000000477,
+          "skyLightColor": [
+            0.8384159938485198,
+            0.8384159938485198,
+            1,
+            1
+          ],
+          "skyLightFactor": 0.7625,
+          "starAngle": 0.07992341822138188,
+          "starOpacity": 0,
+          "starQuads": 780,
+          "sunAngle": 0.07992341822138188,
+          "thunder": 0
+        },
+        "frames": 6622,
+        "size": [
+          1280,
+          720
+        ],
+        "triangles": "660978"
+      }
+    },
+    "end": {
+      "at": 1792773628010,
+      "data": {
+        "drawCalls": "54",
+        "environment": {
+          "activeLightning": 0,
+          "cloudHeight": 192.33,
+          "cloudInstances": 9,
+          "cloudPosition": [
+            -384.3209314097433,
+            190.71,
+            -10.960000038146973
+          ],
+          "cloudQuads": 34865,
+          "cloudRange": 128,
+          "cloudReady": true,
+          "cloudWind": 384.3209314097433,
+          "dayPartial": 0,
+          "dayTicks": 6008,
+          "gameTick": 12809,
+          "lightning": [],
+          "moonAngle": 180.07992341822137,
+          "moonPhase": "full_moon",
+          "partial": 1.697999999523745,
+          "rain": 1,
+          "rainTick": 12810.697999999524,
+          "skyLightColor": [
+            0.8384159938485198,
+            0.8384159938485198,
+            1,
+            1
+          ],
+          "skyLightFactor": 0.7625,
+          "starAngle": 0.07992341822138188,
+          "starOpacity": 0,
+          "starQuads": 780,
+          "sunAngle": 0.07992341822138188,
+          "thunder": 0
+        },
+        "frames": 22832,
+        "music": {
+          "context": "running",
+          "delay": 0,
+          "gain": 0.07999999821186066,
+          "pending": false,
+          "playing": true,
+          "time": 63.381333,
+          "track": "music/game/shores"
+        },
+        "triangles": "660978"
+      }
+    }
+  }
+}

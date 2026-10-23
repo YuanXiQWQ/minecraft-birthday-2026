@@ -7,6 +7,7 @@ import {GaussianRandom} from './native-sky.ts';
 
 /** Render one bounded native precipitation field without adding collectible entities or simulation sources. */
 export class NativePrecipitation {
+    heights=new Map<string,number>();
     root=new Group();rain:CanvasTexture;snow:CanvasTexture;mesh:Mesh;signature='';columns=0;
     /** Load only verified original precipitation textures.
      * @param {Resources} pack Original same-version resources.
@@ -34,7 +35,7 @@ export class NativePrecipitation {
      * @param {boolean} snow Whether the native snow rather than rain column mapping applies.
      */
     rebuild(camera:PerspectiveCamera,progress:Progress,scenery:Object3D,snow:boolean):void{
-        const heights=new Map<string,number>();
+        const heights=this.heights=new Map<string,number>();
         /** Register a blocking block top. @param {number[]} cell Original logical block coordinates. */
         const block=(cell:number[])=>{const key=cell[0]+':'+cell[2];heights.set(key,Math.max(heights.get(key)??-64,cell[1]+1));};
         scenery.traverse(object=>{for(const cell of object.userData.cells??[])block(cell);});

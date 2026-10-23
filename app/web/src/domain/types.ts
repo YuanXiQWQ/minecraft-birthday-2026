@@ -52,6 +52,13 @@ export interface SceneState {
 }
 
 export interface Settings {
+    audioVersion?: 1;
+    musicVolume?: number;
+    weatherVolume?: number;
+    blocksVolume?: number;
+    neutralVolume?: number;
+    playersVolume?: number;
+    uiVolume?: number;
     sky?: SkySettings;
     username?: string;
     locale: string;

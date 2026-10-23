@@ -1,4 +1,5 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {SOUND_CHANNELS} from './audio-settings.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
 import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
 import {quickMove} from './slots.ts';
@@ -192,8 +193,11 @@ export function validateState(value: unknown): asserts value is State {
     fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'environment')?['environment']:[])]);
     if(p.environment!==undefined)validateEnvironment(p.environment);
     validateWorld(p.world);
-    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[])]);
+    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[]),...(Object.hasOwn(s,'audioVersion')?['audioVersion']:[]),...SOUND_CHANNELS.map(([k])=>k).filter(k=>Object.hasOwn(s,k))]);
     if(s.sky!==undefined)validateSkySettings(s.sky);
+    if(s.audioVersion!==undefined)ensure(s.audioVersion===1);
+    if(SOUND_CHANNELS.some(([key])=>s[key]!==undefined))ensure(s.audioVersion===1);
+    for(const [key] of SOUND_CHANNELS)if(s[key]!==undefined)ensure(Number.isFinite(s[key])&&s[key]!>=0&&s[key]!<=1);
     ensure(s.username === undefined || typeof s.username === 'string' && /^[A-Za-z0-9_]{3,16}$/.test(s.username), 'invalid-username');
     ensure(typeof s.locale === 'string' && /^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$/.test(s.locale));
     ensure(typeof s.volume === 'number' && Number.isFinite(s.volume) && s.volume >= 0 && s.volume <= 1);
@@ -519,8 +523,9 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             next.settings.sky={time:'game',weather:'game',...next.settings.sky,...command.patch};break;
         }
         case 'settings':
-            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username', 'sky'].includes(k)));
+            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username', 'sky',...SOUND_CHANNELS.map(([key])=>key)].includes(k)));
             next.settings = {...next.settings, ...command.patch};
+            if(SOUND_CHANNELS.some(([key])=>Object.hasOwn(command.patch,key)))next.settings.audioVersion=1;
             break;
         case 'record-cake-placement':
             if (command.expected) ensure(identity(command.expected) === identity(p.player.data), 'inventory-conflict');

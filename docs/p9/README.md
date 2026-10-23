@@ -1,3 +1,5 @@
+最新有效补充：[语言焦点/括注、行对齐、历史输入、雨雪连续渲染、雷电及分类音乐声音](weather-audio-followup/report.md)。此前页面背景与白色命令提示修复保留。
+
 当前追加纠正：[命令提示/设置双列及子页背景](command-menu-fix/report.md)，覆盖此前错误的红色输入提示、单列设置及Player/Weather漏绘背景结论。
 
 # P9交付候选索引

@@ -1,7 +1,7 @@
 /** Birthday playback owns transient native effects; durable completion belongs exclusively to the save transaction. */
 import {timing} from '../performance.ts';
 import {Vector3} from 'three';
-import type {State} from '../domain/types.ts';
+import type {State, Settings} from '../domain/types.ts';
 import type {SceneView} from '../render/scene.ts';
 import type {PixelUI} from '../ui/pixels.ts';
 import type {CatalogueArt} from '../ui/icons.ts';
@@ -67,11 +67,12 @@ export class BirthdayCelebration {
    * @param {CatalogueArt} art Original toast and GUI resources.
    * @param {Function} text External localized text with configured names.
    * @param {Function} current Latest committed facts and save generation.
+   * @param {Function} audioSettings Effective local audio drafts over committed settings.
    */
   constructor(public host: HTMLElement, public view: SceneView, public pixels: PixelUI, public art: CatalogueArt, public text: (key: string) => string, public current: () => {
     state: State;
     generation: string
-  } | null) {
+  } | null, public audioSettings?: () => Settings | null) {
     this.root.className = 'birthday-celebration';
     this.root.setAttribute('aria-label', text('celebration.label'));
     this.message.className = 'birthday-message';
@@ -140,7 +141,7 @@ export class BirthdayCelebration {
     this.publish();
   }
 
-  /** Project only committed completion/settings; reset or leaving home invalidates every old asynchronous play request. */
+  /** Project committed completion and effective audio settings; reset or leaving home invalidates asynchronous playback. */
   sync(): void {
     const value = this.current();
     if (!value) return;
@@ -148,10 +149,11 @@ export class BirthdayCelebration {
     if (this.generation && this.generation !== scope || this.sceneId && this.sceneId !== scene) this.cancel('scope');
     this.generation = scope;
     this.sceneId = scene;
-    const signature = JSON.stringify(value.state.settings);
+    const preferences = this.audioSettings?.() ?? value.state.settings;
+    const signature = JSON.stringify(preferences);
     if (signature !== this.gainSignature) {
       this.gainSignature = signature;
-      this.audio.gain(value.state.settings.volume, value.state.settings.muted);
+      this.audio.gain(preferences.volume, preferences.muted, preferences);
     }
     if (!value.state.progress.cakePlacement && this.simulation) this.cancel('reset');
     this.replay.hidden = !value.state.progress.cakePlacement || scene !== 'home';

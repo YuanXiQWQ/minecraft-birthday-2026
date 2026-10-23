@@ -13,8 +13,8 @@ export function menuLayout(width:number,height:number,page:string){const header=
  * @param {number} count Visible option-category count.
  * @return {object} Nonoverlapping logical widget bounds.
  */
-export function optionFlow(width:number,count:number){const columns=width>=310?2:1,buttonWidth=Math.min(columns===2?150:200,width-16),warningY=67+Math.ceil(count/columns)*24;return{columns,buttonWidth,warningY,resetY:warningY};}
-export interface ScreenControls {title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;mute:HTMLButtonElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
+export function optionFlow(width:number,count:number){const columns=width>=310?2:1,buttonWidth=Math.min(columns===2?150:200,columns===2?Math.floor((width-24)/2):width-16),groupWidth=columns*buttonWidth+(columns-1)*8,warningY=67+Math.ceil(count/columns)*24;return{columns,buttonWidth,groupWidth,warningY,resetY:warningY};}
+export interface ScreenControls {title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
 /** Position one supported native screen; transaction callbacks remain owned by app/settings. */
 export class NativeScreens {
     observer:ResizeObserver;
@@ -75,22 +75,27 @@ export class NativeScreens {
         this.place(u.navigation,0,0,w,h);[...u.navigation.querySelectorAll('button')].forEach((b,i)=>this.place(b,(w-(flow.columns*flow.buttonWidth+(flow.columns-1)*8))/2+(i%flow.columns)*(flow.buttonWidth+8),67+Math.floor(i/flow.columns)*24,flow.buttonWidth));
         for(const section of u.sections.values())this.place(section,0,0,w,h);
         this.place(u.volumeLabel,0,0,0,0);u.volumeLabel.classList.add('sr-only');
-        const slider=u.volume.parentElement!;this.place(slider,(w-wide)/2,layout.contentY,wide);
-        this.place(u.mute,narrow?(w-pw)/2:w/2-154,layout.contentY+24,narrow?pw:150);
+        this.place(u.sections.get('sound')!,0,layout.header,w,h-layout.header-layout.footer);
+        const slider=u.volume.parentElement!;this.place(slider,(w-flow.groupWidth)/2,4,flow.groupWidth);
+        const channelSliders=[...u.sections.get('sound')!.querySelectorAll<HTMLInputElement>('input[type=range]')].filter(input=>input!==u.volume);
+        channelSliders.forEach((input,i)=>this.place(input.parentElement!,narrow?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+(i%2)*(flow.buttonWidth+8),28+Math.floor(i/(narrow?1:2))*24,narrow?flow.groupWidth:flow.buttonWidth));
         u.languageLabel.classList.add('sr-only');
         const list=u.sections.get('language')!.querySelector<HTMLElement>('[role=listbox]');
         if(list){this.place(list,(w-Math.min(308,w-16))/2,layout.header+4,Math.min(308,w-16),h-layout.header-layout.footer-8);}
         const search=u.sections.get('language')!.querySelector<HTMLInputElement>('.language-search');
         if(search)this.place(search.parentElement!, (w-pw)/2,17,pw,15);
+        const accuracy=u.sections.get('language')!.querySelector<HTMLElement>('.language-accuracy');
+        if(accuracy){this.place(accuracy,0,h-layout.footer+4,w,9);this.pixels.text(accuracy,this.pixels.texts.get(accuracy)?.text??'',2,'#BABABA');}
+        if(page==='language')this.place(u.done,(w-pw)/2,h-26,pw);
         this.place(u.usernameLabel,(w-pw)/2,layout.contentY,pw,9);this.place(u.username.parentElement!,(w-pw)/2,layout.contentY+12,pw);
-        [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:w/2-154+i*158,layout.contentY+40+(narrow?i*24:0),narrow?pw:150));
+        [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+40+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         const weather=u.sections.get('weather');
         if(weather){
-            [...weather.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow||i>=2?(w-pw)/2:w/2-154+i*158,layout.contentY+(narrow?i*24:i>=2?24:0),narrow||i>=2?pw:150));
+            [...weather.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow||i>=2?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+(narrow?i*24:i>=2?24:0),narrow||i>=2?flow.groupWidth:flow.buttonWidth));
             const credit=weather.querySelector<HTMLElement>('.weather-attribution');
             if(credit)this.place(credit,Math.max(4,w-70),h-13,66,9);
         }
-        this.place(u.warning,(w-wide)/2,flow.warningY,wide,narrow?36:24);this.place(u.reset,(w-pw)/2,flow.resetY,pw);
+        this.place(u.warning,(w-wide)/2,flow.warningY,wide,narrow?36:24);this.place(u.reset,(w-flow.groupWidth)/2,flow.resetY,flow.groupWidth);
         this.place(u.confirmation,(w-wide)/2,Math.min(105,h-120),wide,95);
         u.feedback.forEach((f,i)=>this.place(f,(w-wide)/2,h-layout.footer-(page==='weather'?12:28)-i*18,wide,page==='weather'?12:18));
         this.dialog.dataset.confirming=String(page==='options'&&!u.confirmation.hidden);
@@ -98,9 +103,10 @@ export class NativeScreens {
             this.place(u.confirmation,0,0,w,h);
             const title=u.confirmation.querySelector<HTMLElement>('h3')!,note=u.confirmation.querySelector<HTMLElement>('p')!,y=Math.max(20,Math.floor(h/2)-50);
             this.placeText(title,(w-wide)/2,y,wide);const textHeight=this.placeText(note,(w-wide)/2,y+20,wide);
-            [...u.confirmation.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:w/2-154+i*158,y+28+textHeight+(narrow?i*24:0),narrow?pw:150));
+            [...u.confirmation.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),y+28+textHeight+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         }
         this.dialog.querySelectorAll<HTMLElement>('.mc-button').forEach(b=>this.pixels.refreshButton(b));
+        this.dialog.querySelectorAll<HTMLInputElement>('.native-text-field>input,.native-slider>input').forEach(input=>this.pixels.updates.get(input)?.());
     }
     /** Disconnect dimension and page observers when the document ends. */
     dispose():void{this.observer.disconnect();this.mutation.disconnect();}

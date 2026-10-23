@@ -1,4 +1,5 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {NativeWeather} from './native-weather.ts';
 import {NativePrecipitation} from './native-precipitation.ts';
 import {NativeSky} from './native-sky.ts';
 import {emptyEnvironment} from '../domain/environment.ts';
@@ -55,10 +56,12 @@ export class SceneView {
     }
     renderer: WebGLRenderer;
     scene = new Scene();
-    camera = new PerspectiveCamera(70, 1, .1, 90);
+    camera = new PerspectiveCamera(70, 1, .1, 512);
     models: VanillaModels;
     sky: NativeSky | null = null;
     precipitation: NativePrecipitation | null = null;
+    weather:NativeWeather|null=null;
+    onEnvironmentFrame:((now:number)=>void)|null=null;
     environmentProgress: Progress | null = null;
     skyBaseColors = new WeakMap<object, Color>();
     skySettings: SkySettings = {time:'game',weather:'game'};
@@ -161,7 +164,7 @@ export class SceneView {
                 this.world.add(leg);
             }
         } else {
-            this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.scene.background=null;
+            this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.weather=new NativeWeather();this.scene.add(this.weather.root);this.scene.background=null;
             this.authored = new AuthoredWorld(this.models, pack);
             this.scene.add(this.authored.staticRoot, this.authored.natural, this.authored.crops);
         }
@@ -204,7 +207,7 @@ export class SceneView {
             e.preventDefault();
         };
         this.visibility = () => {
-            if (document.hidden) this.cancel();
+            if (document.hidden) this.cancel();else this.requestRender();
         };
         this.lostHandler = e => {
             e.preventDefault();
@@ -241,9 +244,7 @@ export class SceneView {
             this.requestRender();
         });
         this.observer.observe(host);
-        if (game) this.animation = window.setInterval(() => {
-            if (!document.hidden) this.requestRender();
-        }, 50);
+
         this.requestRender();
     }
 
@@ -611,7 +612,8 @@ export class SceneView {
             this.models.animate(start);
             if(this.sky&&this.precipitation&&this.environmentProgress&&this.authored){
                 const p=this.environmentProgress,weather=this.sky.weatherAt(start);
-                this.precipitation.update(this.camera,p,this.authored.staticRoot,p.world.tick,weather.rain,weather.snow);
+                const weatherEnd=timing('weather-update'),ticks=this.sky.ticksAt(start);this.precipitation.update(this.camera,p,this.authored.staticRoot,ticks,weather.rain,weather.snow);
+                this.weather?.update(ticks,p.scene,this.camera.position.toArray(),this.precipitation.heights,weather);this.sky.flash=!!this.weather&&this.weather.flashUntil>=Math.floor(ticks);this.onEnvironmentFrame?.(start);weatherEnd();
             }
             this.updateDebris(start);
             const end = timing('cpu-render-submit'),
@@ -633,11 +635,11 @@ export class SceneView {
             this.renderer.domElement.dataset.frames = String(this.frames);
             this.renderMs.push(performance.now() - start);
             if (this.renderMs.length > 240) this.renderMs.shift();
-            if(this.sky)this.renderer.domElement.dataset.environment=JSON.stringify(this.sky.report);
+            if(this.sky)this.renderer.domElement.dataset.environment=JSON.stringify({...this.sky.report,rainTick:this.sky.ticksAt(start),lightning:this.weather?.records,activeLightning:this.weather?.bolts.length,lightningChunks:this.weather?.chunks.length});
             this.renderer.domElement.dataset.drawCalls = String(this.renderer.info.render.calls);
             this.renderer.domElement.dataset.geometry = String(this.renderer.info.memory.geometries);
             this.renderer.domElement.dataset.triangles = String(this.renderer.info.render.triangles);
-            if (continuing || this.debris.length) this.requestRender();
+            if (!globalThis.document?.hidden&&(continuing || this.debris.length || this.sky)) this.requestRender();
         });
     }
 
@@ -670,7 +672,7 @@ export class SceneView {
     dispose(): void {
         if (this.disposed) return;
         this.mode?.dispose();
-        this.sky?.dispose(); this.precipitation?.dispose();
+        this.sky?.dispose(); this.precipitation?.dispose();this.weather?.dispose();this.onEnvironmentFrame=null;
         this.disposed = true;
         clearInterval(this.animation);
         this.cancel();

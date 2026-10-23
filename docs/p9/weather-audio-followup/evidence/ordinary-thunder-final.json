@@ -1,0 +1,299 @@
+{
+  "method": "Native /weather thunder 10d and /tick rate 1000; restored 20TPS; no direct strike calls in this ordinary page",
+  "env": {
+    "activeLightning": 1,
+    "cloudHeight": 192.33,
+    "cloudInstances": 9,
+    "cloudPosition": [
+      -2375.631126900477,
+      190.71,
+      -10.960000038146973
+    ],
+    "cloudQuads": 34865,
+    "cloudRange": 128,
+    "cloudReady": true,
+    "cloudWind": 2375.631126900477,
+    "dayPartial": 0,
+    "dayTicks": 6008,
+    "gameTick": 181584,
+    "lightning": [
+      {
+        "flashes": 2,
+        "kind": "lightning",
+        "position": [
+          47.5,
+          0,
+          -131.5
+        ],
+        "seed": 217997349821317,
+        "tick": 151025
+      },
+      {
+        "flashes": 1,
+        "kind": "lightning",
+        "position": [
+          166.5,
+          0,
+          169.5
+        ],
+        "seed": 29847560304136,
+        "tick": 178778
+      },
+      {
+        "flashes": 2,
+        "kind": "lightning",
+        "position": [
+          63.5,
+          0,
+          -0.5
+        ],
+        "seed": 270828941774626,
+        "tick": 178819
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          171.5,
+          0,
+          44.5
+        ],
+        "seed": 66357900374544,
+        "tick": 178981
+      },
+      {
+        "flashes": 1,
+        "kind": "lightning",
+        "position": [
+          -182.5,
+          0,
+          99.5
+        ],
+        "seed": 236216868428523,
+        "tick": 179419
+      },
+      {
+        "flashes": 2,
+        "kind": "lightning",
+        "position": [
+          183.5,
+          0,
+          2.5
+        ],
+        "seed": 163619298735507,
+        "tick": 179750
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          139.5,
+          0,
+          19.5
+        ],
+        "seed": 51092364485404,
+        "tick": 179983
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          -56.5,
+          0,
+          138.5
+        ],
+        "seed": 209608564030068,
+        "tick": 180285
+      },
+      {
+        "flashes": 1,
+        "kind": "lightning",
+        "position": [
+          -186.5,
+          0,
+          -145.5
+        ],
+        "seed": 157355201118092,
+        "tick": 180352
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          191.5,
+          0,
+          118.5
+        ],
+        "seed": 49826351418756,
+        "tick": 180465
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          82.5,
+          0,
+          36.5
+        ],
+        "seed": 247147691896419,
+        "tick": 180549
+      },
+      {
+        "flashes": 2,
+        "kind": "lightning",
+        "position": [
+          125.5,
+          0,
+          -126.5
+        ],
+        "seed": 236283929496549,
+        "tick": 180573
+      },
+      {
+        "flashes": 1,
+        "kind": "lightning",
+        "position": [
+          7.5,
+          0,
+          64.5
+        ],
+        "seed": 276898693082151,
+        "tick": 180697
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          -74.5,
+          0,
+          15.5
+        ],
+        "seed": 140702756197711,
+        "tick": 180951
+      },
+      {
+        "flashes": 2,
+        "kind": "lightning",
+        "position": [
+          -31.5,
+          0,
+          -163.5
+        ],
+        "seed": 47274250981253,
+        "tick": 181277
+      },
+      {
+        "flashes": 3,
+        "kind": "lightning",
+        "position": [
+          64.5,
+          0,
+          -172.5
+        ],
+        "seed": 55176408987720,
+        "tick": 181586
+      }
+    ],
+    "lightningChunks": 625,
+    "moonAngle": 180.07992341822137,
+    "moonPhase": "full_moon",
+    "partial": 3.7059999990451615,
+    "rain": 1,
+    "rainTick": 181587.70599999905,
+    "skyLightColor": [
+      0.725920799692426,
+      0.725920799692426,
+      1,
+      1
+    ],
+    "skyLightFactor": 1,
+    "starAngle": 0.07992341822138188,
+    "starOpacity": 0,
+    "starQuads": 780,
+    "sunAngle": 0.07992341822138188,
+    "thunder": 1
+  },
+  "music": {
+    "context": "running",
+    "delay": 100,
+    "gain": 0,
+    "pending": false,
+    "playing": false,
+    "time": 0,
+    "track": null
+  },
+  "sounds": [
+    {
+      "at": 177837.69999998808,
+      "audioTime": 131.74131519274377,
+      "category": "weatherVolume",
+      "duration": 7,
+      "epoch": 0,
+      "event": "entity.lightning_bolt.thunder",
+      "pitch": 0.945356786251068,
+      "position": [
+        -31.5,
+        0,
+        -163.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/thunder1.ogg",
+      "sourceVolume": 10000,
+      "status": "scheduled",
+      "volume": 0.20000000298023224
+    },
+    {
+      "at": 177837.80000001192,
+      "audioTime": 131.74131519274377,
+      "category": "weatherVolume",
+      "duration": 3.25,
+      "epoch": 0,
+      "event": "entity.lightning_bolt.impact",
+      "pitch": 0.6690877676010132,
+      "position": [
+        -31.5,
+        0,
+        -163.5
+      ],
+      "sample": "assets/minecraft/sounds/random/explode4.ogg",
+      "sourceVolume": 2,
+      "status": "scheduled",
+      "volume": 0.20000000298023224
+    },
+    {
+      "at": 192888,
+      "audioTime": 146.79074829931972,
+      "category": "weatherVolume",
+      "duration": 7,
+      "epoch": 0,
+      "event": "entity.lightning_bolt.thunder",
+      "pitch": 0.9067354202270508,
+      "position": [
+        64.5,
+        0,
+        -172.5
+      ],
+      "sample": "assets/minecraft/sounds/ambient/weather/thunder1.ogg",
+      "sourceVolume": 10000,
+      "status": "scheduled",
+      "volume": 0.20000000298023224
+    },
+    {
+      "at": 192888.19999998808,
+      "audioTime": 146.79074829931972,
+      "category": "weatherVolume",
+      "duration": 2.5,
+      "epoch": 0,
+      "event": "entity.lightning_bolt.impact",
+      "pitch": 0.5320348739624023,
+      "position": [
+        64.5,
+        0,
+        -172.5
+      ],
+      "sample": "assets/minecraft/sounds/random/explode1.ogg",
+      "sourceVolume": 2,
+      "status": "scheduled",
+      "volume": 0.20000000298023224
+    }
+  ]
+}

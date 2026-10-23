@@ -1,4 +1,5 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
+import {Vector3} from 'three';
 import type {SkySettings} from './domain/environment.ts';
 import {LocalWeather} from './render/local-weather.ts';
 import {GameStartup} from './ui/game-startup.ts';
@@ -11,6 +12,8 @@ import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
 import {itemName} from './i18n/items.ts';
 import {WorldUse} from './ui/world-use.ts';
+import {SOUND_CHANNELS,type SoundKey} from './domain/audio-settings.ts';
+import {GameMusic} from './render/game-music.ts';
 import {WorldAudio} from './render/world-audio.ts';
 import {WORLD_REGION, WORLD_SCENES} from './domain/world-config.ts';
 import type {SceneId} from './domain/types.ts';
@@ -47,6 +50,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         session = connection.session,
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null;
+    const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
     let languageChoice: HTMLButtonElement | null = null;
     const nativeScreens: NativeScreens[] = [];
@@ -57,6 +61,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const feedbackStates = new Map<string,string>();
     const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open;
     const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
+    const listenerDirection=new Vector3();
+    let music:GameMusic|null=null,lastAudioReport=0;
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
     let runtimeGeneration: string | null = null, inventory: GameInventory | null = null,
         stopProcessing: (() => void) | null = null;
@@ -263,22 +269,23 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     function paintSettings(): void {
         const value = edits.view();
         if (value) {
-            volume.value = String(value.volume);
-            volume.dataset.nativeLabel = value.volume === 0 ? t('menu.volumeOff') : t('menu.volumeNative', {percent: Math.floor(value.volume * 100)});
+            volume.value = String(value.muted?0:value.volume);
+            volume.dataset.nativeLabel = value.muted||value.volume === 0 ? t('menu.volumeOff') : t('menu.volumeNative', {percent: Math.floor(value.volume * 100)});
             volume.setAttribute('aria-label', volume.dataset.nativeLabel);
             pixels?.updates.get(volume)?.();
+            for(const [key,input] of soundSliders){input.value=String(value[key]??1);const name=t('soundCategory.'+SOUND_CHANNELS.find(([k])=>k===key)![1]);input.dataset.nativeLabel=(value[key]??1)===0?t('menu.soundOff',{name}):t('menu.soundVolume',{name,percent:Math.floor((value[key]??1)*100)});input.setAttribute('aria-label',input.dataset.nativeLabel);input.disabled=!session.view.writable||resetting;pixels?.updates.get(input)?.();}
             mute.checked = value.muted;
-            setText(muteButton, value.muted ? 'settings.soundOff' : 'settings.soundOn');
             language.value = Array.from(language.options).some(option => option.value === value.locale) ? value.locale : 'en';
             setText(volumeLabel, 'settings.volume', {percent: Math.floor(value.volume * 100)});
             if(weatherTimeControl)setText(weatherTimeControl,value.sky?.time==='real'?'weather.timeReal':'weather.timeGame');
             if(weatherModeControl)setText(weatherModeControl,value.sky?.weather==='real'?'weather.modeReal':'weather.modeGame');
             const nextMode=value.sky?.weather??'game';if(weatherMode==='real'&&nextMode!=='real')localWeather?.stop();weatherMode=nextMode;
         }
-        language.disabled = volume.disabled = mute.disabled = muteButton.disabled = reset.disabled = !session.view.writable || resetting;
+        language.disabled = volume.disabled = mute.disabled = reset.disabled = !session.view.writable || resetting;
         if (languageChoice) languageChoice.disabled = language.disabled;
         for(const control of [weatherTimeControl,weatherModeControl,weatherLocationControl])if(control)control.disabled=!session.view.writable||resetting;
         worldAudio?.sync();
+        celebration?.sync();
     }
 
     /** Submit one field against freshly locked settings and settle only this edit's receipt.
@@ -306,10 +313,11 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     });
     volume.addEventListener('input', () => {
         edits.stage('volume', Number(volume.value));
+        edits.stage('muted',false);
         clearText(preferenceFeedback);
         paintSettings();
     });
-    volume.addEventListener('change', () => preferences('volume'));
+    volume.addEventListener('change', () => {preferences('volume');preferences('muted');});
     mute.addEventListener('change', () => {
         edits.stage('muted', mute.checked);
         preferences('muted');
@@ -332,7 +340,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (inventory) inventory.writable = value.writable;
         if (value.envelope && runtimeGeneration !== value.envelope.generation) {
             runtimeGeneration = value.envelope.generation;
-            worldAudio?.cancel();
+            worldAudio?.cancel();music?.cancel();scene?.weather?.clear();
             if (page === 'game' && lastFeedbackGeneration !== runtimeGeneration) {
                 lastFeedbackGeneration = runtimeGeneration; taught = !!value.envelope.state.progress.unlocked.length; feedbackStates.clear();
                 feedback('game.worldHint', {}, 'tutorial-controls');
@@ -403,9 +411,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     link.addEventListener('click', e => {if (page === 'game') {e.preventDefault(); void quitToTitle();}});
     const optionNavigation = document.createElement('div'), optionSections = new Map<string, HTMLElement>();
     const languageSection = document.createElement('section'), soundSection = document.createElement('section'), playerSection = document.createElement('section');
-    const muteButton = button('settings.soundOn', () => {edits.stage('muted', !edits.view()?.muted); preferences('muted');});
-    languageSection.append(languageLabel, language); soundSection.append(volumeLabel, volume, muteButton, mute, muteLabel);
+    soundSection.className='sound-section';
+    languageSection.append(languageLabel, language); soundSection.append(volumeLabel, volume, mute, muteLabel);
     language.hidden = mute.hidden = muteLabel.hidden = true;
+    for(const [key] of SOUND_CHANNELS){const input=document.createElement('input');input.type='range';input.min='0';input.max='1';input.step='any';input.id=key;soundSliders.set(key,input);soundSection.append(input);input.addEventListener('input',()=>{edits.stage(key,Number(input.value));clearText(preferenceFeedback);paintSettings();});input.addEventListener('change',()=>preferences(key));input.addEventListener('blur',cancelSettingsGesture);}
     const usernameLabel = node('label', 'menu.username'), username = document.createElement('input');
     username.id = 'username'; username.maxLength = 16; usernameLabel.setAttribute('for', username.id);
     const usernameFeedback = document.createElement('p'); usernameFeedback.setAttribute('role', 'status');
@@ -434,6 +443,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         setText(dialogTitle, id === 'options' ? 'menu.options' : 'menu.' + id);
         if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();}
         nativeScreens.forEach(view => view.layout());
+        if(id==='language')languageSection.querySelector<HTMLInputElement>('.language-search')?.focus();
         updateGate();
     }
     if (page === 'home') dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
@@ -512,6 +522,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         }
         for (const b of root.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('button,a.invite')) pixels.button(b);
         pixels.slider(volume);
+        for(const input of soundSliders.values())pixels.slider(input);
         pixels.field(username);
         const languages = document.createElement('div'); languages.className = 'native-language-list'; languages.setAttribute('role', 'listbox'); languages.setAttribute('aria-label', t('settings.language'));
         languageChoice = document.createElement('button'); languageChoice.type = 'button'; languageChoice.setAttribute('role', 'option'); languageChoice.setAttribute('aria-selected', 'true');
@@ -519,9 +530,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         languageChoice.addEventListener('click', () => {language.value = 'en'; edits.stage('locale','en'); preferences('locale');});
         languages.append(languageChoice);
         const languageSearch = document.createElement('input'); languageSearch.type = 'text'; languageSearch.className = 'language-search'; languageSearch.maxLength = 256; languageSearch.dataset.nativeHeight = '15'; languageSearch.dataset.nativeHint = t('book.searchHint'); languageSearch.dataset.italicHint = 'true'; languageSearch.setAttribute('aria-label', t('menu.languageSearch'));
-        languageSection.append(languageSearch, languages); pixels.field(languageSearch);
+        languageSection.append(languageSearch, languages, node('p','menu.languageAccuracy','language-accuracy')); pixels.field(languageSearch);
         languageSearch.addEventListener('input', () => {languageChoice!.hidden = !t('settings.englishNative').toLowerCase().includes(languageSearch.value.toLowerCase());});
-        nativeScreens.push(new NativeScreens(dialog, page === 'game' ? host : document.documentElement, pixels, () => optionsPage, {title: dialogTitle, navigation: optionNavigation, sections: optionSections, volume, volumeLabel, mute: muteButton, languageLabel, language, username, usernameLabel, warning, reset, confirmation: confirmSection, feedback: [preferenceFeedback,resetFeedback], done: close}));
+        nativeScreens.push(new NativeScreens(dialog, page === 'game' ? host : document.documentElement, pixels, () => optionsPage, {title: dialogTitle, navigation: optionNavigation, sections: optionSections, volume, volumeLabel, languageLabel, language, username, usernameLabel, warning, reset, confirmation: confirmSection, feedback: [preferenceFeedback,resetFeedback], done: close}));
         if (menu) nativeScreens.push(new NativeScreens(menu, host, pixels, () => 'pause', null));
         showOptions('options');
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
@@ -594,6 +605,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 }
             });
             worldAudio = new WorldAudio(resources.documents, () => edits.view() ?? session.view.envelope!.state.settings);
+            music=new GameMusic(worldAudio);
+            if(scene.weather)scene.weather.sound=(id,options)=>{void worldAudio?.play(id,options);};
+            scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
@@ -602,7 +616,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
                 state: session.view.envelope.state,
                 generation: session.view.envelope.generation
-            } : null);
+            } : null, () => edits.view());
             session.eventListeners.add(events => {
                 if (events.some(e => e.type === 'cake-placed')) void celebration?.start();
             });
@@ -646,7 +660,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         chat?.dispose();
         celebration?.dispose();
         worldUse?.dispose();
-        worldAudio?.dispose();
+        music?.dispose();worldAudio?.dispose();
         nativeScreens.forEach(view => view.dispose());
         unsubscribe();
         connection.dispose();

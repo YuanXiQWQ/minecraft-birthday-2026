@@ -56,6 +56,7 @@ export class NativeSky {
     moons:CanvasTexture[]=[];
     state:EnvironmentState=emptyEnvironment();preferences:SkySettings={time:'game',weather:'game'};
     weatherOverride:{rain:number;thunder:number;snow:boolean}|null=null;
+    flash=false;
     received=0;dayReceived=0;daySignature='';tickSignature='';gameTick=0;realRain=0;realThunder=0;weatherAtTime=0;cloudSource:ImageData;report:Record<string,unknown>={};
     day:any;moonTimeline:any;dimension:any;cloudWorker:Worker|null=null;disposed=false;cloudQuads=0;
 
@@ -116,6 +117,12 @@ export class NativeSky {
         this.state=state;this.preferences=settings;this.gameTick=tick;
     }
 
+    /** Interpolate native visual ticks between authoritative clock receipts without changing durable time.
+     * @param {number} now Monotonic frame timestamp.
+     * @return {number} Native game tick plus bounded partial tick.
+     */
+    ticksAt(now:number):number{const c=this.state.control,running=!c.frozen||c.stepTicks>0||c.sprintTicks>0;return this.gameTick+(globalThis.document?.hidden||!running?0:Math.min(c.tickRate*.25,Math.max(0,now-this.received)*c.tickRate/1000));}
+
     /** Ease opt-in observation changes at the native 0.01-per-tick rate without advancing game facts.
      * @param {number} now Monotonic render time.
      * @return {object} Current native weather strengths and precipitation type.
@@ -157,7 +164,7 @@ export class NativeSky {
      */
     render(renderer:WebGLRenderer,camera:PerspectiveCamera,now:number,date=new Date()):void{
         const control=this.state.control,running=!control.frozen||control.stepTicks>0||control.sprintTicks>0,
-            partial=document.hidden||!running?0:Math.min(control.tickRate*.25,Math.max(0,now-this.received)*control.tickRate/1000),
+            partial=this.ticksAt(now)-this.gameTick,
             dayPartial=document.hidden||!running||!control.advanceTime||control.clockPaused?0:Math.min(control.tickRate*.25,Math.max(0,now-this.dayReceived)*control.tickRate/1000)*control.clockRate,
             time=this.preferences.time==='real'?realDayTicks(date):this.state.dayTicks+control.clockFraction+dayPartial,
             track=(key:string)=>trackAt(this.day.tracks['minecraft:visual/'+key],time,this.day.period_ticks),weatherValue=this.weatherAt(now),rain=weatherValue.rain,thunder=weatherValue.thunder;
@@ -167,7 +174,7 @@ export class NativeSky {
         const weather=(rgb:number[],r:number,t:number)=>{
             const a=grayWeather(rgb,r,.75*(rain-thunder)),b=grayWeather(a,t,.94);return a.map((v,i)=>v+(b[i]-v)*thunder);
         };
-        skyRGB=weather(skyRGB,.6,.24);
+        skyRGB=weather(skyRGB,.6,.24);if(this.flash)skyRGB=skyRGB.map((v,i)=>v+([.8,.8,1][i]-v)*.22);
         const rainCloud=grayWeather(cloudRGB,.24,.5);cloudRGB=cloudRGB.map((v,i)=>v+(rainCloud[i]-v)*(rain-thunder));const thunderCloud=grayWeather(cloudRGB,.095,.94);cloudRGB=cloudRGB.map((v,i)=>v+(thunderCloud[i]-v)*thunder);
         (this.disc.material as ShaderMaterial).uniforms.sky.value.setRGB(skyRGB[0],skyRGB[1],skyRGB[2],SRGBColorSpace);
         const fogBase=rgba(attrs['minecraft:visual/fog_color']),fogTrack=track('fog_color');let fog=fogBase.map((v,i)=>v*fogTrack[i]);
@@ -187,7 +194,7 @@ export class NativeSky {
         this.clouds.position.set(-wind-camera.position.x,attrs['minecraft:visual/cloud_height']-camera.position.y,-Math.fround(3.96)-camera.position.z);
         const cm=this.clouds.material as MeshBasicMaterial;cm.color.setRGB(cloudRGB[0],cloudRGB[1],cloudRGB[2],SRGBColorSpace);cm.opacity=cloudRGB[3];
         this.camera.aspect=camera.aspect;this.camera.fov=camera.fov;this.camera.quaternion.copy(camera.quaternion);this.camera.updateProjectionMatrix();
-        const skyLight=weatherLighting(track('sky_light_factor'),track('sky_light_color'),rain,thunder);
+        const skyLight=weatherLighting(track('sky_light_factor'),track('sky_light_color'),rain,thunder);if(this.flash)skyLight.factor=1;
         this.report={dayTicks:time,sunAngle:track('sun_angle'),moonAngle:track('moon_angle'),moonPhase:phase,starAngle:track('star_angle'),starOpacity:(this.stars.material as MeshBasicMaterial).opacity,cloudWind:wind,cloudPosition:this.clouds.position.toArray(),gameTick:this.gameTick,partial,dayPartial,rain,thunder,skyLightFactor:skyLight.factor,skyLightColor:skyLight.color,cloudHeight:attrs['minecraft:visual/cloud_height'],cloudQuads:this.cloudQuads,cloudInstances:9,cloudReady:this.clouds.visible,cloudRange:128,starQuads:this.stars.geometry.index!.count/6};
         renderer.render(this.scene,this.camera);
     }

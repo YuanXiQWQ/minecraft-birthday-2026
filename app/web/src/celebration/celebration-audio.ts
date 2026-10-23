@@ -1,4 +1,6 @@
 /** Minimal original-event Web Audio adapter with bounded source ownership and explicit activation/cancellation. */
+import {soundChannel} from '../domain/audio-settings.ts';
+import type {Settings} from '../domain/types.ts';
 import type {CelebrationPack} from './celebration-pack.ts';
 import type {Cue, Vec} from './firework-simulation.ts';
 
@@ -16,6 +18,7 @@ export class CelebrationAudio {
     buffers = new Map<string, AudioBuffer>();
     sources = new Set<AudioBufferSourceNode>();
     records: AudioRecord[] = [];
+    channels:Partial<Settings>={};
     volume = .2;
     muted = false;
     ready = false;
@@ -25,7 +28,7 @@ export class CelebrationAudio {
     pack: CelebrationPack | null = null;
     generation = 0;
     unavailable: string | null = null;
-    chains = new Map<AudioBufferSourceNode, { gain: GainNode; panner: PannerNode | null }>();
+    chains = new Map<AudioBufferSourceNode, { gain: GainNode; panner: PannerNode | null;event:string;volume:number }>();
 
     /** Create a silent context, preserving a readable capability failure instead of aborting 3D/GUI startup.
      * @param {Function} factory Native constructor or an explicit capability-failure test injection.
@@ -123,8 +126,11 @@ export class CelebrationAudio {
     /** Set bounded master gain while retaining active sample schedules and the simulation clock.
      * @param {number} volume Normalized experiment volume.
      * @param {boolean} muted Explicit mute state.
+     * @param {Partial<Settings>} channels Effective native channel preferences.
      */
-    gain(volume: number, muted: boolean): void {
+    gain(volume: number, muted: boolean,channels:Partial<Settings>={}): void {
+        this.channels=channels;
+        for(const chain of this.chains.values())chain.gain.gain.value=chain.volume*(channels[soundChannel(chain.event)]??1);
         this.volume = Math.max(0, Math.min(1, volume));
         this.muted = muted;
         this.master?.gain.setValueAtTime(muted ? 0 : this.volume, this.time);
@@ -171,7 +177,7 @@ export class CelebrationAudio {
         const pitch = Math.max(.5, Math.min(2, cue.pitch * (raw.pitch ?? 1))),
             rawVolume = cue.volume * (raw.volume ?? 1), volume = Math.max(0, Math.min(1, rawVolume));
         source.playbackRate.value = pitch;
-        gain.gain.value = volume;
+        gain.gain.value = volume*(this.channels[soundChannel(cue.event)]??1);
         const spatial = !cue.event.startsWith('ui.'), panner = spatial ? this.context.createPanner() : null;
         if (panner) {
             panner.panningModel = 'equalpower';
@@ -190,7 +196,7 @@ export class CelebrationAudio {
             gain.connect(this.master);
         }
         this.sources.add(source);
-        this.chains.set(source, {gain, panner});
+        this.chains.set(source, {gain, panner,event:cue.event,volume});
         const scheduled = Math.max(when, this.context.currentTime), record: AudioRecord = {
             kind: 'schedule',
             event: cue.event,

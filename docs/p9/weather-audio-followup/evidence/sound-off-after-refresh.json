@@ -1,0 +1,136 @@
+{
+  "audio": [
+    {
+      "at": 156685.60000002384,
+      "audioTime": 23.980408163265302,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 156686.19999998808,
+      "audioTime": 23.980408163265302,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 156686.60000002384,
+      "audioTime": 23.980408163265302,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 156687.39999997616,
+      "audioTime": 23.980408163265302,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 156687.89999997616,
+      "audioTime": 23.980408163265302,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157683.5,
+      "audioTime": 24.97015873015873,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157684,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157684.19999998808,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157685,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157685.39999997616,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157686.10000002384,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    },
+    {
+      "at": 157686.5,
+      "audioTime": 24.981768707482992,
+      "epoch": 0,
+      "event": "weather.rain",
+      "status": "suppressed"
+    }
+  ],
+  "music": {
+    "context": "running",
+    "delay": 100,
+    "gain": 0,
+    "pending": false,
+    "playing": false,
+    "time": 0,
+    "track": null
+  },
+  "revision": "38031",
+  "save": "ready",
+  "sliders": [
+    {
+      "id": "volume",
+      "label": "Master Volume: 20%",
+      "value": "0.2"
+    },
+    {
+      "id": "musicVolume",
+      "label": "Music: OFF",
+      "value": "0"
+    },
+    {
+      "id": "weatherVolume",
+      "label": "Weather: OFF",
+      "value": "0"
+    },
+    {
+      "id": "blocksVolume",
+      "label": "Blocks: 100%",
+      "value": "1"
+    },
+    {
+      "id": "neutralVolume",
+      "label": "Friendly Mobs: 100%",
+      "value": "1"
+    },
+    {
+      "id": "playersVolume",
+      "label": "Players: 100%",
+      "value": "1"
+    },
+    {
+      "id": "uiVolume",
+      "label": "UI: 100%",
+      "value": "1"
+    }
+  ]
+}

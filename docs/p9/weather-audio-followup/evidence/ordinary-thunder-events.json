@@ -1,0 +1,47 @@
+{
+  "env": {
+    "activeLightning": 0,
+    "cloudHeight": 192.33,
+    "cloudInstances": 9,
+    "cloudPosition": [
+      -1006.5749775012956,
+      190.71,
+      -10.960000038146973
+    ],
+    "cloudQuads": 34865,
+    "cloudRange": 128,
+    "cloudReady": true,
+    "cloudWind": 1006.5749775012956,
+    "dayPartial": 0,
+    "dayTicks": 6008,
+    "gameTick": 33543,
+    "lightning": [],
+    "moonAngle": 180.07992341822137,
+    "moonPhase": "full_moon",
+    "partial": 9.5,
+    "rain": 1,
+    "rainTick": 33552.5,
+    "skyLightColor": [
+      0.725920799692426,
+      0.725920799692426,
+      1,
+      1
+    ],
+    "skyLightFactor": 0.59921875,
+    "starAngle": 0.07992341822138188,
+    "starOpacity": 0,
+    "starQuads": 780,
+    "sunAngle": 0.07992341822138188,
+    "thunder": 1
+  },
+  "music": {
+    "context": "running",
+    "delay": 0,
+    "gain": 0.07999999821186066,
+    "pending": false,
+    "playing": true,
+    "time": 122.28,
+    "track": "music/game/shores"
+  },
+  "sound": []
+}

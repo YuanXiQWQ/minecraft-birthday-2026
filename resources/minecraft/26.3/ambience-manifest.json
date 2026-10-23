@@ -1,0 +1,309 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Official Java 26.3 asset index; bounded native ambience and game-music events",
+  "assetIndex": {
+    "id": "34",
+    "sha1": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
+    "size": 597035,
+    "totalSize": 484894038,
+    "url": "https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json"
+  },
+  "soundsDefinitionSha256": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099",
+  "events": [
+    "weather.rain",
+    "weather.rain.above",
+    "entity.lightning_bolt.thunder",
+    "entity.lightning_bolt.impact",
+    "music.game"
+  ],
+  "entries": [
+    {
+      "entry": "assets/minecraft/ambience-sounds.json",
+      "size": 4181,
+      "sha256": "ea28c733a52f73817d7b17407fcf457043ad4a378005428c8f6841d8c9e4dc9a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
+      "size": 23112,
+      "sha256": "5cad76e1f62599d1854b840ffeb887809fccb8d70d30f9976e4c1fedb793600c",
+      "assetSha1": "59d8157fa79a96eb6557e4ff440aa7482edbbd52"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain2.ogg",
+      "size": 23781,
+      "sha256": "295e4015ee54707145b7f04b65f6b21b476df6841a6c7c28e6d52eb49e2182bc",
+      "assetSha1": "87fe1be2e8238dcf66ed0072cc8115702fe6b108"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain3.ogg",
+      "size": 24455,
+      "sha256": "99357e53cb9c169a7b587acbbcf5d710601bf24b018996550d12184e853c7008",
+      "assetSha1": "c9d72edd2cd3a9f22ad5c6d900ea82dd4d64a0a5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain4.ogg",
+      "size": 24563,
+      "sha256": "42f5576cf969560743d80f401ac72b9a410f1fd2a64cd52dfcc6e1e10bc5957d",
+      "assetSha1": "0e5dc591233a89f48c54bc54dfb1b337068e3b46"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain5.ogg",
+      "size": 23185,
+      "sha256": "aadd69fc20c1fa28d4f4a6952ce81c00cab90eacf3c535b7393a0299d6a6ac50",
+      "assetSha1": "f88c75c9c2d8cee9a9678e6e92f02371ea3d754b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain6.ogg",
+      "size": 23215,
+      "sha256": "ae4ee4939b8b5bbf92ce11b750c9e46b8e86e6eb71ccf827c98d6b88a0e6f5ea",
+      "assetSha1": "7cf945b7f890ae37adc150d5724fef99aed4d4e5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain7.ogg",
+      "size": 24307,
+      "sha256": "9263e6ed7cad45112532f295b0f221fe4fcad02602443d2b53345c54068471d0",
+      "assetSha1": "e57aa22cc1f10bc8df115ced994e2de081a02237"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/rain8.ogg",
+      "size": 25510,
+      "sha256": "c40311cc02fa616ba9c3aa53f77a42041c1ad90a949197d1ff344e2ba8297f6c",
+      "assetSha1": "f22fffb4d87e6400999d1b4dd5a392a557ecd971"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/thunder1.ogg",
+      "size": 39387,
+      "sha256": "d407a7b11be826d5c3b08199861cf6a85a93707690f7878c84ec0bebe4db93ed",
+      "assetSha1": "a20f0a846d7becf5d08756207f86acf24fac1a8d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/thunder2.ogg",
+      "size": 43220,
+      "sha256": "ecfb20e38b2e682464020309c38c65c102b91cb0342b139a35c3e21d6e5fff0d",
+      "assetSha1": "9c94cf13276d60a7ce67eacdc3885f25fa0aadf5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/ambient/weather/thunder3.ogg",
+      "size": 45050,
+      "sha256": "65acefae26577d5aad581bc6659021c0b5f7228fd897d4f996bb47bb9fad6253",
+      "assetSha1": "7b96a88619a2228cf4c7d3a2b81ecfd1b3b56673"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/a_familiar_room.ogg",
+      "size": 2325765,
+      "sha256": "36155a34d09ef68ac2abea55c0a3332b6eb992240390bd82344dd066b2ee1654",
+      "assetSha1": "7f77e186063198933a7dd67eb492ae4d74839dd9"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/below_and_above.ogg",
+      "size": 2587725,
+      "sha256": "d5b354a98bca26e236eb5d97e9d8a20b500ee7b7892d0d4646b62a267e115afa",
+      "assetSha1": "29617ea7a07d4c3ed1b98b752b5740b8ca2e7cbf"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/broken_clocks.ogg",
+      "size": 2960416,
+      "sha256": "5732181de7e83b7385f42198e5c3488f2c05e0ccaa93e42d221a1b129d307a39",
+      "assetSha1": "6095be3382a6b9897a7d0caf93131436e5cea4d6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/clark.ogg",
+      "size": 2145295,
+      "sha256": "ae021dbe9039aa08bfdbe86f33826c28b03fb2f1abce8761d2c3527817c883af",
+      "assetSha1": "bbb301a6ed65e5e92eb97b601b9ea9979324bccf"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/comforting_memories.ogg",
+      "size": 3516383,
+      "sha256": "fb05d0c575857612d6a25db1b7e398079b2e951c3409252d979700b8cdb710bb",
+      "assetSha1": "1c9aa4f2710ac7025a56f99feb132a29cf5a2b64"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/danny.ogg",
+      "size": 2950673,
+      "sha256": "6cec76347bde8a8c0d74a8da2566e8fad2f87f12c14acb94e7255a9bf7111a76",
+      "assetSha1": "603fd41ebe3eac0795ebfa0b31195be1866d1e9c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/dry_hands.ogg",
+      "size": 634322,
+      "sha256": "484346d89f2a08f28e51b4ad977ed6dfe132ae6ed6d41d93e0b4d18a8bb18bbc",
+      "assetSha1": "53976ed366c97ad86c1d7ce21497c9985f33d4f1"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/ebb.ogg",
+      "size": 4113422,
+      "sha256": "d66ea2b6f50f3cf6f18a5305f9428d711018128200bfbe2ba62ef95ae29ef164",
+      "assetSha1": "5e1288786fa59686f2c000ed90c2e3b89d125460"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/featherfall.ogg",
+      "size": 4731149,
+      "sha256": "53dbef4a030108909744d16d14999868d6cb05b746f8d1c1b669adbfa84ceaf3",
+      "assetSha1": "0c62057c8a75b57a8f06e7c1bc1b21a7f88d4820"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/fireflies.ogg",
+      "size": 2030553,
+      "sha256": "eaf7116d6c183eb012108a6b0191f664058938cc5cc8c8a539af79410fd010d2",
+      "assetSha1": "154255dcccfcde8af7e3727a0ccaaa72ea359ff5"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/floating_dream.ogg",
+      "size": 2239177,
+      "sha256": "beb12b0abb511690c0454be5454481f5ac19c7d37c1dd5ed07298015ed0ba6f7",
+      "assetSha1": "dec42f5a10b6a0018594bdb868882ddccf04f52e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/haggstrom.ogg",
+      "size": 2178666,
+      "sha256": "3126d3c381a53e078c0ac597c80645d31b7d1d9fdb7851808334f5c333b3d5e2",
+      "assetSha1": "c25705e16f1d51a56a2b0a4604250b3844ceadcf"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/home.ogg",
+      "size": 4718595,
+      "sha256": "86a9366afbc5af56887ef9e175db35e315ebac5c0dd41d3eecd336fb669f03cf",
+      "assetSha1": "c00e50dc3ac0d08faf529dff0e6e620a81221f47"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/key.ogg",
+      "size": 656170,
+      "sha256": "f1e12d434b6836ab53ba86173bb0519da62d6ffb7eb4243a779ddf50444c1673",
+      "assetSha1": "8ee9d608f0bbb2d0513af7bfc1b55e591ada05ea"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/komorebi.ogg",
+      "size": 3932384,
+      "sha256": "cc41c1b164ebb19c54a83bcc3aa0ea2a19183a52682a889c9733a94d1ca30573",
+      "assetSha1": "c3e6d3f34a7221360ad11d18335edd6709df4609"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/left_to_bloom.ogg",
+      "size": 4663128,
+      "sha256": "d092c12ed7a4143d8060beca578adab3b4145690ca98a2a473800330543eb712",
+      "assetSha1": "a971ae2004798c14bc3387cfd1b89420092b3263"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/lilypad.ogg",
+      "size": 2911450,
+      "sha256": "c4cfc19e09c88913533f02121340504a86131831b7b3662d6b17782ac426bc39",
+      "assetSha1": "b023b1ddac5e027086ef04a9da7234e73a4502a6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/living_mice.ogg",
+      "size": 2008986,
+      "sha256": "c093b8a931aafd6b41822e664ee1024f62e8d7336b09d74fea91ceb6b2d4ecf4",
+      "assetSha1": "532fdae2fd43bc046f78a1b7b79f28161f25fc4c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/memories.ogg",
+      "size": 3396348,
+      "sha256": "17cf7ab8218ad9551b12a19e73d7d22fe763ae97c2828df2ea4acf0423f0dbaa",
+      "assetSha1": "8a91604916a4b53e0a3a913917f5fec0539c6a2e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/mice_on_venus.ogg",
+      "size": 2943549,
+      "sha256": "f051c7ddcb602b15669197392d70c65bc0a36f52e49da7ee80a189f080c4f348",
+      "assetSha1": "06a2f38a094573652977232abcc4f268cf6745ad"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/minecraft.ogg",
+      "size": 2860084,
+      "sha256": "6fd495666af581b3aa76a9569fa8f2b55d7876ac51d60d4eabd436d72f8da985",
+      "assetSha1": "7f7777e5d5b163c5d64201fd53e5682599548a49"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/nightly.ogg",
+      "size": 4267032,
+      "sha256": "f24fb30f7a8f6d0f79975d8650968b79c9c539e520e1e8a33a40f9a3e4fa7ee8",
+      "assetSha1": "aebe56d3016657dfeacfadb953424079c7e3d32c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/one_more_day.ogg",
+      "size": 4014339,
+      "sha256": "c74b9a2a346e2208ff9a8fee758d4440921dd10c349b7da6e4a0bea202a5e009",
+      "assetSha1": "324f58251829988ad3f4a5f7dc39b647fdcc2639"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/os_piano.ogg",
+      "size": 3454882,
+      "sha256": "961b6545b82663006e271fd4c8c869466162a57bc716285457d941c12f590f4b",
+      "assetSha1": "a32d22b74e0a451083c99b68a0119b501652ccd8"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/oxygene.ogg",
+      "size": 765694,
+      "sha256": "13c26dd754e58404b0a595e6075e58565e2d8e7e5dd7206f8cf440165d14ac70",
+      "assetSha1": "b99889832d7f9abe35725506e4cd48075e25f957"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/puzzlebox.ogg",
+      "size": 4245980,
+      "sha256": "2d234ab7cfabc4ea37aa3cf8b7228aa8f3bb7a64ab19f0f56754381901e3d469",
+      "assetSha1": "cb01089f7f2a4e84b36790efa99f3ed89ef08f5e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/shores.ogg",
+      "size": 4414349,
+      "sha256": "61be31ee053802661ab3661d5f584a17df1110198305a19ccf8c0cee14d4bca1",
+      "assetSha1": "974c6083c8de0de74185e966d664bf0a5841bc22"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/subwoofer_lullaby.ogg",
+      "size": 2196234,
+      "sha256": "0a2c7f684cbc65d5f1416e9044e5838b5b113dda61e07556fc6ca9b438a7d5cc",
+      "assetSha1": "0dbcd56e6d8a931818f0913a0e23f784106d4ad8"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/sweden.ogg",
+      "size": 2551609,
+      "sha256": "f5169a831c71ecf5079cc74ba0283b95c068c3324b976e39037faecc7f51cb04",
+      "assetSha1": "be9b14926936c4509f7fe5002cdfbba3b2752d82"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/watcher.ogg",
+      "size": 4645995,
+      "sha256": "78dedcce8686a16c9fdfca91e7378db7cba41803795f2656ca093beb1377bbca",
+      "assetSha1": "4878a57f39655fedb891c16425e55a3cd91a2d70"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/wet_hands.ogg",
+      "size": 986427,
+      "sha256": "c7b4199793701b71330f11eda2d4dc192a9edd86e4911fd2bdcd2269fdd024b8",
+      "assetSha1": "e8a73969b515a15df138a4d55b07f4ff573db25f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/music/game/yakusoku.ogg",
+      "size": 4009698,
+      "sha256": "f37394be314ca8e472cb7cd8876df648d5792ddc574faa08f65d44b49f6151a7",
+      "assetSha1": "e36444071568c3273ea00627ed5462275cd6828e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/explode1.ogg",
+      "size": 23161,
+      "sha256": "f5951a4f5ece95d595398c3519ab26044c359bc088a0f0684ee6f1b14c02ebc0",
+      "assetSha1": "fa85b9e7e54c36c9f9d0249ca739444b5e3bb66c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/explode2.ogg",
+      "size": 28696,
+      "sha256": "cb262b2af5fdfaac7b83cc64790c83cc852506444f382f06ded37e83f105b5a8",
+      "assetSha1": "e55daa373e577f611565d57ec53cd28dcf472f99"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/explode3.ogg",
+      "size": 28255,
+      "sha256": "c2a8b6821fe8a50d72605bff3410bd8c4c82bff47cbce37d99e225dbaf55f6a4",
+      "assetSha1": "3a92d0fd263265719532041f6f2ea44c7ba2f2e2"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/explode4.ogg",
+      "size": 27561,
+      "sha256": "f676d7fb3ddd9623ca931004ad380c5027846394b51b96b0ac2518159ff915c2",
+      "assetSha1": "09835e0c3138faf6047506a2b6f1da087c082d2e"
+    }
+  ]
+}

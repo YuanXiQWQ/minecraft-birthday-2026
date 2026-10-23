@@ -1,0 +1,51 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "method": "Read-only javap -c -p; no Java client execution",
+  "entries": [
+    {
+      "entry": "net/minecraft/client/gui/screens/options/LanguageSelectScreen.class",
+      "sha256": "7f9965dd898d7df88a1cd14505b6291a4f371ef303839c7c973910fd6a436af3"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/EditBox.class",
+      "sha256": "12a6b51fd45419c1fcc439f8efad9803089e7acc9eaded06a3515fcef62fc3b1"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/ChatScreen.class",
+      "sha256": "ca22b95744a654d445900339567d77c2f8fd781738514394af98a4a4f5e3738a"
+    },
+    {
+      "entry": "net/minecraft/client/renderer/WeatherEffectRenderer.class",
+      "sha256": "d6abf59cf9fa4c2e654a1fcb06d4689934df382724c4c6b71d73add7b36caaa7"
+    },
+    {
+      "entry": "net/minecraft/client/multiplayer/ClientLevel.class",
+      "sha256": "7d69f81d39e64a679b51f745211619204073167d59b149d9de683e10eb2d97ba"
+    },
+    {
+      "entry": "net/minecraft/server/level/ServerLevel.class",
+      "sha256": "bd703a5b7085fd0caad8f4ed23603197c2f2d8010176ad971d7572064397d5f8"
+    },
+    {
+      "entry": "net/minecraft/world/entity/LightningBolt.class",
+      "sha256": "8244a78bbc3e3d75635f71f34cc16da8ad8d3c85e29161e1ae01f955fe1cc8ad"
+    },
+    {
+      "entry": "net/minecraft/client/renderer/entity/LightningBoltRenderer.class",
+      "sha256": "72fc3054b3cf33dabdcc389558cd1bc42e068cf6eb3ab332bc85eb91f2465e48"
+    },
+    {
+      "entry": "net/minecraft/client/sounds/MusicManager.class",
+      "sha256": "806ebcade5f003e13678ce26fd4ab98dc898af94a39529d55afd49a63201a246"
+    },
+    {
+      "entry": "net/minecraft/sounds/Musics.class",
+      "sha256": "f26db310c61215dcc0501165855e98d27158e7e6c58384841ac2dde991376b27"
+    },
+    {
+      "entry": "net/minecraft/client/Options.class",
+      "sha256": "4cf1c5dd3ef42b2cd9fea835cc0be18c3dfb4691ee7315cd7993ebb6a1504629"
+    }
+  ]
+}

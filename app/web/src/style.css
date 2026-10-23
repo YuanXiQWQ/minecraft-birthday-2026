@@ -136,3 +136,6 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 .native-screen[data-confirming=true] .native-screen-plane> :not(#reset-confirmation):not(#reset-feedback){visibility:hidden;pointer-events:none}
 .native-screen[data-confirming=true] #reset-confirmation{background:transparent;border:0;padding:0;overflow:visible}
 .native-screen .weather-attribution{font-size:10px;text-align:right;opacity:.75}
+
+.native-screen .language-accuracy{text-align:center}
+.native-screen .sound-section{overflow-y:auto;pointer-events:auto}

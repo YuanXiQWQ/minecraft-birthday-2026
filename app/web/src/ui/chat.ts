@@ -76,24 +76,7 @@ export class GameChat {
         this.input.setAttribute('aria-label',text('chat.input')); this.input.autocomplete='off';
         this.accessible.className='sr-only';this.accessible.setAttribute('role','log');this.accessible.setAttribute('aria-live','polite');
         this.root.append(this.canvas,this.input,this.accessible);viewport.append(this.root);
-        this.input.addEventListener('keydown', e=>{
-            e.stopPropagation(); if(e.isComposing)return;
-            if(e.code==='Escape'){e.preventDefault();this.hide();}
-            else if(e.code==='Enter'){
-                e.preventDefault();const value=this.input.value.trim();
-                if(value){
-                    if(value.startsWith('/'))void this.submitCommand(value);else this.append([{text:value}],'player',username());
-                    this.history.push(value);if(this.history.length>100)this.history.shift();
-                }
-                this.hide();
-            }else if(e.code==='Tab'){e.preventDefault();if(this.input.value.startsWith('/'))this.complete(e.shiftKey);}
-            else if(e.code==='PageUp'||e.code==='PageDown'){e.preventDefault();this.scroll(e.code==='PageUp'?19:-19);}
-            else if(e.code==='ArrowUp'||e.code==='ArrowDown'){
-                e.preventDefault();if(this.completion||this.input.value.startsWith('/')&&completeCommand(this.input.value).values.length){this.complete(e.code==='ArrowUp');return;} if(this.historyIndex===this.history.length)this.historyDraft=this.input.value;
-                this.historyIndex=Math.max(0,Math.min(this.history.length,this.historyIndex+(e.code==='ArrowUp'?-1:1)));
-                this.input.value=this.historyIndex===this.history.length?this.historyDraft:this.history[this.historyIndex];this.input.setSelectionRange(this.input.value.length,this.input.value.length);this.paint();
-            }
-        },{signal:this.abort.signal});
+        this.input.addEventListener('keydown', e=>this.key(e),{signal:this.abort.signal});
         this.input.addEventListener('input',()=>{this.completion=null;},{signal:this.abort.signal});
         for(const type of ['input','select','keyup','pointerup','focus','blur'])this.input.addEventListener(type,()=>this.paint(),{signal:this.abort.signal});
         this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();this.scroll(-Math.sign(e.deltaY)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
@@ -103,6 +86,27 @@ export class GameChat {
         window.addEventListener('resize',()=>this.paint(),{signal:this.abort.signal});
         this.timer=window.setInterval(()=>{if(!document.hidden&&(this.open||this.messages.some(m=>performance.now()-m.time<10_050)))this.paint();},50);
         this.paint();
+    }
+    /** Route history independently of offered completions; Tab explicitly owns suggestion cycling.
+     * @param {KeyboardEvent} e Actual editor keyboard input.
+     */
+    key(e:KeyboardEvent):void{
+            e.stopPropagation(); if(e.isComposing)return;
+            if(e.code==='Escape'){e.preventDefault();this.hide();}
+            else if(e.code==='Enter'){
+                e.preventDefault();const value=this.input.value.trim();
+                if(value){
+                    if(value.startsWith('/'))void this.submitCommand(value);else this.append([{text:value}],'player',this.username());
+                    this.history.push(value);if(this.history.length>100)this.history.shift();
+                }
+                this.hide();
+            }else if(e.code==='Tab'){e.preventDefault();if(this.input.value.startsWith('/'))this.complete(e.shiftKey);}
+            else if(e.code==='PageUp'||e.code==='PageDown'){e.preventDefault();this.scroll(e.code==='PageUp'?19:-19);}
+            else if(e.code==='ArrowUp'||e.code==='ArrowDown'){
+                e.preventDefault();if(this.completion){this.complete(e.code==='ArrowUp');return;} if(this.historyIndex===this.history.length)this.historyDraft=this.input.value;
+                this.historyIndex=Math.max(0,Math.min(this.history.length,this.historyIndex+(e.code==='ArrowUp'?-1:1)));
+                this.input.value=this.historyIndex===this.history.length?this.historyDraft:this.history[this.historyIndex];this.input.setSelectionRange(this.input.value.length,this.input.value.length);this.paint();
+            }
     }
     /** Retain a bounded native scroll position when inspecting historical lines.
      * @param {number} lines Signed wrapped-line delta.

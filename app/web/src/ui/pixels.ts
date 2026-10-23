@@ -153,7 +153,7 @@ export class PixelUI {
      */
     refreshButton(button:HTMLElement):void{this.updates.get(button)?.();this.buttonPaints.get(button)?.();}
 
-    /** Preserve browser editing semantics under the original text-field sprites and bitmap text.
+    /** Preserve browser editing semantics with native field pixels rendered at their displayed framebuffer resolution.
      * @param {HTMLInputElement} input Existing semantic text field.
      */
     field(input: HTMLInputElement): void {
@@ -162,9 +162,10 @@ export class PixelUI {
         const draw = () => {
             const logical = Math.max(40, Math.floor(host.clientWidth / 2));
             const height = Number(input.dataset.nativeHeight) || 20;
-            canvas.width = logical; canvas.height = height; canvas.style.height = '100%';
+            const resolution=Math.max(1,host.getBoundingClientRect().width/logical*Math.min(globalThis.devicePixelRatio??1,4));
+            canvas.width = Math.ceil(logical*resolution); canvas.height = Math.ceil(height*resolution); canvas.style.width='100%';canvas.style.height = '100%';
             const ctx = canvas.getContext('2d')!, path = 'assets/minecraft/textures/gui/sprites/widget/text_field' + (document.activeElement === input ? '_highlighted' : '') + '.png', image = this.resources.guiImages.get(path);
-            ctx.imageSmoothingEnabled = false;
+            ctx.setTransform(resolution,0,0,resolution,0,0);ctx.imageSmoothingEnabled = false;
             if (image) drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, logical, height);
             nativeField(ctx, this.font, input, [4, Math.floor((height - 8) / 2), logical - 8, 8], {hint: input.dataset.nativeHint, italicHint: input.dataset.italicHint === 'true', inset: 4});
         };
