@@ -1,0 +1,131 @@
+{
+  "block.stone.break": {
+    "sounds": [
+      "dig/stone1",
+      "dig/stone2",
+      "dig/stone3",
+      "dig/stone4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.grass.break": {
+    "sounds": [
+      "dig/grass1",
+      "dig/grass2",
+      "dig/grass3",
+      "dig/grass4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "block.wood.break": {
+    "sounds": [
+      "dig/wood1",
+      "dig/wood2",
+      "dig/wood3",
+      "dig/wood4"
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "item.crop.plant": {
+    "sounds": [
+      {
+        "name": "item/plant/crop1",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop1",
+        "pitch": 1.2,
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop2",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop2",
+        "pitch": 1.2,
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop3",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop3",
+        "pitch": 1.2,
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop4",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop4",
+        "pitch": 1.2,
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop5",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop5",
+        "pitch": 1.2,
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop6",
+        "volume": 0.45
+      },
+      {
+        "name": "item/plant/crop6",
+        "pitch": 1.2,
+        "volume": 0.45
+      }
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
+  "block.crop.break": {
+    "sounds": [
+      {
+        "name": "block/bamboo/sapling_place1",
+        "volume": 0.9
+      },
+      {
+        "name": "block/bamboo/sapling_place2",
+        "volume": 0.9
+      },
+      {
+        "name": "block/bamboo/sapling_place3",
+        "volume": 0.9
+      },
+      {
+        "name": "block/bamboo/sapling_place4",
+        "volume": 0.9
+      },
+      {
+        "name": "block/bamboo/sapling_place5",
+        "volume": 0.9
+      },
+      {
+        "name": "block/bamboo/sapling_place6",
+        "volume": 0.9
+      }
+    ],
+    "subtitle": "subtitles.block.generic.break"
+  },
+  "entity.cow.milk": {
+    "sounds": [
+      "entity/cow/milk1",
+      "entity/cow/milk2",
+      "entity/cow/milk3"
+    ],
+    "subtitle": "subtitles.entity.cow.milk"
+  },
+  "entity.item.pickup": {
+    "sounds": [
+      "random/pop"
+    ],
+    "subtitle": "subtitles.entity.item.pickup"
+  }
+}

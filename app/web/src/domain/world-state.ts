@@ -2,7 +2,7 @@
 import type {Progress, SceneId, Cell} from './types.ts';
 import type {Rules, Stack} from '../rules/types.ts';
 import {rolledDrops} from '../rules/harvest.ts';
-import {WORLD_SCENES, cropAge, sameCell} from './world-config.ts';
+import {WORLD_SCENES, cropAge, sameCell, caveCleared} from './world-config.ts';
 
 export interface WorldState {
     version: 1;
@@ -43,7 +43,7 @@ export function validateWorld(w: WorldState): void {
     for (const [id, m] of Object.entries(w.hoppers)) if (!/^[a-zA-Z0-9_-]{1,80}$/.test(id) || Object.keys(m).sort().join('|') !== 'cooldown|lastTick' || !Number.isInteger(m.cooldown) || m.cooldown < 0 || m.cooldown > 8 || !Number.isSafeInteger(m.lastTick) || m.lastTick < -1 || m.lastTick > w.tick) throw Error('invalid-network-state');
 }
 
-/** Harvest the exact current authored node using the actual held tool and shared native chance, never a best-tool lookup.
+/** Harvest the current authored node with the held tool and native chance; cave device cells and compatibility air cannot yield hidden rock.
  * @param {Progress} p Latest progress.
  * @param {SceneId} scene Requested scene.
  * @param {string} node Stable node identity.
@@ -55,7 +55,7 @@ export function validateWorld(w: WorldState): void {
 export function harvestNode(p: Progress, scene: SceneId, node: string, visit: number, held: Stack | null, rules: Rules): Stack[] {
     if (scene !== p.scene || visit !== p.world.visits[scene].epoch) throw Error('resource-visit-conflict');
     const n = WORLD_SCENES[scene].nodes.find(n => n.id === node), v = p.world.visits[scene];
-    if (!n || v.removed.includes(node)) throw Error('resource-unavailable');
+    if (!n || v.removed.includes(node) || scene === 'cave' && (p.scenes.cave.stations.some(s=>sameCell(s.cell,n.cell)) || caveCleared(p).has(n.cell.join(',')))) throw Error('resource-unavailable');
     if (n.kind === 'cow') {
         if (held?.id !== rules.interactions.milk.input) throw Error('milk-requires-bucket');
         return [{id: rules.interactions.milk.output, count: 1}];

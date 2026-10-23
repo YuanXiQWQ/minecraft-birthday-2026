@@ -1,5 +1,5 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
-import {caveSolid, caveLayout, caveClearCells, CAVE_TORCHES} from './cave-shape.ts';
+import {caveFixed, caveNodes, caveLayout, caveClearCells, CAVE_TORCHES} from './cave-shape.ts';
 import {retainedPlainsSupports} from './plains-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
@@ -44,7 +44,7 @@ export const WORLD_SCENES: Record<SceneId, WorldScene> = {
         sky: '#212329',
         eye: [0, 1.62, 7],
         target: [0, 1, -5],
-        nodes: [...nodes('stone', [[-6, 0, -3], [-5, 0, -3], [-4, 0, -3], [-6, 1, -4], [-5, 1, -4]]), ...nodes('coal_ore', [[-4, 1, -5], [-3, 0, -4], [-3, 1, -5]]), ...nodes('iron_ore', [[-2, 0, -4], [-1, 0, -4], [-2, 1, -5], [-1, 1, -5]])],
+        nodes: caveNodes(),
         plots: [],
         build: {min: [1, 0, -3], max: [7, 2, 2]}
     },
@@ -105,7 +105,7 @@ export function sameCell(a: Cell, b: Cell): boolean {
 export function fixedSolid(scene: SceneId, cell: Cell): boolean {
     const [x, y, z] = cell;
     if (scene === 'plains') return false;
-    if (scene === 'cave') return caveSolid(cell);
+    if (scene === 'cave') return caveFixed(cell);
     if (scene === 'home') return z === -9 && x >= -11 && x <= 11 && y < 6 && !(Math.abs(x) < 4 && y > 1 && y < 5) || Math.abs(x) === 11 && z >= -8 && z <= 5 && y < 6;
     if (scene === 'farm') return z === -12 && x >= -10 && x <= -7 && y < 4 || [-11, -6].includes(x) && z >= -12 && z <= -8 && y < 4 || y === 4 && x >= -11 && x <= -6 && z >= -12 && z <= -8;
     return false;
@@ -119,7 +119,7 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
 export function supported(p: Progress, cell: Cell): boolean {
     if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
-    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveClearCells(p.scenes.cave.stations.map(s => s.cell)).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id));
+    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveCleared(p).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id) && !(scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
 }
 
 /** Keep live resource/crop, supported cave decoration and retained support occupancy separate from cleared terrain.
@@ -128,6 +128,22 @@ export function supported(p: Progress, cell: Cell): boolean {
  * @return {boolean} Whether a resource, crop, supported decoration or retained support occupies it.
  */
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
-    if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell)).torches.some(t => sameCell(t.cell, cell))) return true;
-    return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id));
+    if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell), WORLD_SCENES.cave.eye, caveExcavated(p)).torches.some(t => sameCell(t.cell, cell))) return true;
+    return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id) && !(p.scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
+}
+
+/** Resolve durable cave excavation without encoding geometry or resources into saves.
+ * @param {Progress} p Current shared facts.
+ * @return {Cell[]} Removed source coordinates.
+ */
+export function caveExcavated(p: Progress): Cell[] {
+    const removed=new Set(p.world.visits.cave.removed);
+    return WORLD_SCENES.cave.nodes.filter(n=>removed.has(n.id)).map(n=>n.cell);
+}
+/** Protect saved device access using the same carved cells as the renderer.
+ * @param {Progress} p Current shared facts.
+ * @return {Set<string>} Compatibility air, excluding actively excavated station placements.
+ */
+export function caveCleared(p: Progress): Set<string> {
+    return caveClearCells(p.scenes.cave.stations.map(s=>s.cell), WORLD_SCENES.cave.eye, caveExcavated(p));
 }

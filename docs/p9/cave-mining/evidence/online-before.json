@@ -1,0 +1,263 @@
+{
+  "app": {
+    "build": "f91f924cc187",
+    "boot": "ready",
+    "saveStatus": "ready",
+    "hasCake": "false",
+    "generation": "cave-browser-fixture",
+    "revision": "107",
+    "completed": "false",
+    "resources": "26.3",
+    "catalogueIcons": "113",
+    "inventoryReady": "true"
+  },
+  "canvas": {
+    "engine": "three.js r186",
+    "resourceVersion": "26.3",
+    "pointerMode": "{\"desired\":\"hidden\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":3}",
+    "hover": "null",
+    "placementPreview": "null",
+    "recoveredWorld": "{\"tick\":0,\"scene\":\"cave\",\"crops\":[]}",
+    "scene": "cave",
+    "natural": "{\"epoch\":0,\"removed\":[\"stone:0\",\"stone:1\",\"stone:2\",\"coal_ore:1\",\"iron_ore:0\",\"iron_ore:1\"],\"roll\":0}",
+    "crops": "[]",
+    "cake": "false",
+    "instances": "[]",
+    "crosshair": "{\"visible\":false,\"bounds\":[206,112,15,15],\"scale\":3,\"logical\":[427,240],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+    "renderedScene": "cave",
+    "frames": "4917",
+    "environment": "{\"dayTicks\":1525.572000000477,\"sunAngle\":305.2024290909643,\"moonAngle\":485.2024290909643,\"moonPhase\":\"full_moon\",\"starAngle\":305.2024290909643,\"starOpacity\":0,\"cloudWind\":15.767159647590814,\"cloudPosition\":[-15.767159647590814,190.71,-10.960000038146973],\"gameTick\":523,\"partial\":2.5720000004768053,\"dayPartial\":2.5720000004768373,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":525.5720000004768,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+    "drawCalls": "17",
+    "geometry": "15",
+    "triangles": "649286"
+  },
+  "save": {
+    "format": 1,
+    "contentVersion": "p9-commands-1",
+    "vanillaVersion": "26.3",
+    "generation": "cave-browser-fixture",
+    "revision": 107,
+    "state": {
+      "progress": {
+        "advancements": {
+          "version": 1,
+          "criteria": {}
+        },
+        "world": {
+          "version": 1,
+          "tick": 523,
+          "manual": 0,
+          "visits": {
+            "plains": {
+              "epoch": 0,
+              "removed": [],
+              "roll": 0
+            },
+            "cave": {
+              "epoch": 0,
+              "removed": [
+                "stone:0",
+                "stone:1",
+                "stone:2",
+                "coal_ore:1",
+                "iron_ore:0",
+                "iron_ore:1"
+              ],
+              "roll": 0
+            },
+            "farm": {
+              "epoch": 0,
+              "removed": [],
+              "roll": 0
+            },
+            "home": {
+              "epoch": 0,
+              "removed": [],
+              "roll": 0
+            }
+          },
+          "hoppers": {}
+        },
+        "environment": {
+          "version": 2,
+          "clearWeatherTime": 0,
+          "control": {
+            "epoch": 0,
+            "tickRate": 20,
+            "frozen": false,
+            "stepTicks": 0,
+            "sprintTicks": 0,
+            "sprintRestore": false,
+            "advanceTime": true,
+            "advanceWeather": true,
+            "clockPaused": false,
+            "clockRate": 1,
+            "clockFraction": 0
+          },
+          "dayTicks": 1523,
+          "random": 95737203798265,
+          "rainTime": 128030,
+          "thunderTime": 135046,
+          "raining": false,
+          "thundering": false,
+          "rainLevel": 0,
+          "thunderLevel": 0
+        },
+        "unlocked": [
+          "minecraft:iron_pickaxe",
+          "minecraft:crafting_table",
+          "minecraft:furnace",
+          "minecraft:blast_furnace",
+          "minecraft:hopper",
+          "minecraft:oak_log"
+        ],
+        "scene": "cave",
+        "scenes": {
+          "plains": {
+            "layoutVersion": 1,
+            "stations": [],
+            "crops": []
+          },
+          "cave": {
+            "layoutVersion": 1,
+            "stations": [],
+            "crops": []
+          },
+          "farm": {
+            "layoutVersion": 1,
+            "stations": [],
+            "crops": []
+          },
+          "home": {
+            "layoutVersion": 1,
+            "stations": [],
+            "crops": []
+          }
+        },
+        "player": {
+          "version": 1,
+          "data": {
+            "backpack": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "selected": 0,
+            "hotbar": [
+              {
+                "id": "minecraft:iron_pickaxe",
+                "count": 1
+              },
+              {
+                "id": "minecraft:crafting_table",
+                "count": 1
+              },
+              {
+                "id": "minecraft:furnace",
+                "count": 1
+              },
+              {
+                "id": "minecraft:blast_furnace",
+                "count": 1
+              },
+              {
+                "id": "minecraft:hopper",
+                "count": 1
+              },
+              null,
+              null,
+              null,
+              null
+            ],
+            "equipment": {
+              "head": null,
+              "chest": null,
+              "legs": null,
+              "feet": null,
+              "offhand": null
+            },
+            "presets": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
+            ]
+          }
+        },
+        "recipeBook": {
+          "version": 1,
+          "data": {
+            "known": [
+              "minecraft:crafting_table",
+              "minecraft:oak_planks",
+              "minecraft:oak_wood",
+              "minecraft:smoker",
+              "minecraft:charcoal",
+              "minecraft:iron_nugget_from_blasting",
+              "minecraft:iron_nugget_from_smelting"
+            ],
+            "unseen": [
+              "minecraft:oak_planks",
+              "minecraft:oak_wood",
+              "minecraft:smoker",
+              "minecraft:charcoal",
+              "minecraft:iron_nugget_from_blasting",
+              "minecraft:iron_nugget_from_smelting"
+            ],
+            "views": {
+              "crafting": {
+                "open": false,
+                "filter": false
+              },
+              "furnace": {
+                "open": false,
+                "filter": false
+              },
+              "blast_furnace": {
+                "open": false,
+                "filter": false
+              }
+            }
+          }
+        },
+        "cakePlacement": null
+      },
+      "settings": {
+        "locale": "en",
+        "volume": 0.2,
+        "muted": false,
+        "username": "sireoh"
+      }
+    },
+    "checksum": "19057fc500df2f53a2b6ae102ed2e450d6fcc2534798d8e0c51c3190ab28bf57"
+  }
+}

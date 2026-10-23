@@ -3,9 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {BoxGeometry, Float32BufferAttribute, Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial} from 'three';
-import {caveLayout, caveSolid, CAVE_TORCHES} from '../web/src/domain/cave-shape.ts';
+import {caveLayout, caveSolid, caveFixed, CAVE_TORCHES} from '../web/src/domain/cave-shape.ts';
 import {initialState, transition} from '../web/src/domain/state.ts';
-import {WORLD_REGION, WORLD_SCENES, sourceOccupied, supported} from '../web/src/domain/world-config.ts';
+import {WORLD_REGION, WORLD_SCENES, sourceOccupied, supported, caveExcavated, caveCleared} from '../web/src/domain/world-config.ts';
 import {emptyFurnace} from '../web/src/domain/furnace.ts';
 import {emptyHopper} from '../web/src/domain/hopper.ts';
 import {seal, decode} from '../web/src/persistence/codec.ts';
@@ -26,18 +26,18 @@ function furnace(cell: Cell): Station {
 }
 
 test('cave source identity, order and coordinates remain exact; thick rock and wood do not overlap them',()=>{
-    assert.deepEqual(WORLD_SCENES.cave.nodes.map(n=>[n.id,n.cell]),[
+    assert.deepEqual(WORLD_SCENES.cave.nodes.slice(0,12).map(n=>[n.id,n.cell]),[
         ['stone:0',[-6,0,-3]],['stone:1',[-5,0,-3]],['stone:2',[-4,0,-3]],['stone:3',[-6,1,-4]],['stone:4',[-5,1,-4]],
         ['coal_ore:0',[-4,1,-5]],['coal_ore:1',[-3,0,-4]],['coal_ore:2',[-3,1,-5]],
         ['iron_ore:0',[-2,0,-4]],['iron_ore:1',[-1,0,-4]],['iron_ore:2',[-2,1,-5]],['iron_ore:3',[-1,1,-5]]]);
     const layout=caveLayout();assert.equal(layout.torches.length,2);assert.equal(layout.wood.length,4);
-    for(const n of WORLD_SCENES.cave.nodes) assert.equal(caveSolid(n.cell),false,n.id);
+    for(const n of WORLD_SCENES.cave.nodes) assert.equal(caveFixed(n.cell),false,n.id);
     for(const c of layout.wood) assert.ok(caveSolid(c));
     assert.ok(layout.stone.some(c=>c.join(',')==='-2,1,-6'));
 });
 
 test('old devices remove conflicting wood, torch, light and support without moving their saved facts',()=>{
-    for(const cell of [[-5,0,1],...CAVE_TORCHES.flatMap(t=>[t.cell,t.wall])] as Cell[]) {
+    for(const cell of [[-5,0,1],[-1,1,-4],[-2,0,-3],...CAVE_TORCHES.flatMap(t=>[t.cell,t.wall])] as Cell[]) {
         const station=furnace(cell), saved=JSON.stringify(station), layout=caveLayout([cell]);
         assert.ok(![...layout.stone,...layout.wood,...layout.torches.map(t=>t.cell)].some(c=>c.join(',')===cell.join(',')));
         for(const t of layout.torches) assert.ok([...layout.stone,...layout.wood].some(c=>c.join(',')===t.wall.join(',')));
@@ -102,4 +102,46 @@ test('right cave work pocket admits real top/side hopper ports and finite furnac
     const next=transition(state,{type:'processing-tick',ticks:16},WORLD_REGION,rules).state.progress.scenes.cave.stations;
     const output=next.find(s=>s.kind==='furnace')!.contents;assert.equal(output.version,2);if(output.version!==2)throw Error('furnace');
     assert.equal(output.data.input?.id,'minecraft:oak_log');assert.ok(output.data.burn>0);assert.ok(output.data.cook>0);
+});
+
+test('visible walls expose deeper finite sources; mined cells accept devices without carving neighboring rock',async()=>{
+    let state=initialState();state.progress.scene='cave';state.progress.unlocked=['minecraft:iron_pickaxe','minecraft:furnace'];
+    state.progress.player.data.hotbar[0]={id:'minecraft:iron_pickaxe',count:1};
+    const cells:Cell[]=[[-4,1,6],[-5,1,6],[-6,1,6]];
+    for(const cell of cells) {
+        assert.ok(caveLayout([],WORLD_SCENES.cave.eye,caveExcavated(state.progress)).stone.some(c=>c.join(',')===cell.join(',')),'successive face exposed');
+        assert.ok(sourceOccupied(state.progress,cell));
+        state=transition(state,{type:'harvest-node',scene:'cave',node:'rock:'+cell.join(','),visit:0,expected:state.progress.player.data},WORLD_REGION,rules).state;
+        assert.equal(sourceOccupied(state.progress,cell),false);
+    }
+    assert.equal([...state.progress.player.data.hotbar,...state.progress.player.data.backpack].filter(s=>s?.id==='minecraft:cobblestone').reduce((n,s)=>n+s!.count,0),3);
+    const mined=structuredClone(state.progress.world.visits.cave);
+    state=(await decode(JSON.stringify(await seal(state,'cave-deep-rock',1)))).envelope.state;
+    assert.deepEqual(state.progress.world.visits.cave,mined);
+    state=structuredClone(state);state.progress.player.data.hotbar[0]={id:'minecraft:furnace',count:1};
+    state=transition(state,{type:'put-station',scene:'cave',station:furnace(cells[0]),expected:state.progress.player.data},WORLD_REGION,rules).state;
+    assert.equal(caveCleared(state.progress).size,0,'excavated placements do not erase adjoining live rock');
+    assert.ok(sourceOccupied(state.progress,[-4,0,6]));
+    assert.throws(()=>transition(state,{type:'harvest-node',scene:'cave',node:'rock:-4,1,6',visit:0,expected:state.progress.player.data},WORLD_REGION,rules),/resource-unavailable/);
+});
+
+test('mining torch support removes decoration, occupancy and light while preserving unrelated timber',()=>{
+    let state=initialState();state.progress.scene='cave';
+    state=transition(state,{type:'harvest-node',scene:'cave',node:'rock:-7,1,-2',visit:0,expected:state.progress.player.data},WORLD_REGION,rules).state;
+    const layout=caveLayout([],WORLD_SCENES.cave.eye,caveExcavated(state.progress));
+    assert.equal(layout.torches.length,1);assert.equal(layout.wood.length,4);
+    assert.equal(sourceOccupied(state.progress,[-6,1,-2]),false);
+    assert.equal(supported(state.progress,[-7,2,-2]),false);
+});
+
+test('all inner exposed stone is a stable mining source and ore seams include buried continuation',()=>{
+    const nodes=WORLD_SCENES.cave.nodes, keys=new Set(nodes.map(n=>n.cell.join(',')));
+    assert.equal(keys.size,nodes.length);assert.equal(new Set(nodes.map(n=>n.id)).size,nodes.length);
+    const visible=new Set(caveLayout().stone.map(c=>c.join(',')));
+    for(const c of caveLayout().stone)if(!caveFixed(c))assert.ok(keys.has(c.join(',')));
+    for(const block of ['coal_ore','iron_ore']) {
+        assert.ok(nodes.filter(n=>n.block===block).length>7);
+        assert.ok(nodes.some(n=>n.block===block&&n.id.startsWith('rock:')&&!visible.has(n.cell.join(','))));
+    }
+    assert.ok(nodes.length<2000,'finite authored volume, no world generation');
 });

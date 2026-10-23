@@ -1,9 +1,9 @@
 /** Authored native block scenery and Java-derived animal cuboids, independent from persistent simulation. */
 import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
 import type {SceneId, Progress, Cell} from '../domain/types.ts';
-import {caveLayout} from '../domain/cave-shape.ts';
+import {caveLayout, caveFixed} from '../domain/cave-shape.ts';
 import {lightCave} from './cave-lighting.ts';
-import {WORLD_SCENES, cropAge} from '../domain/world-config.ts';
+import {WORLD_SCENES, cropAge, caveExcavated, caveCleared} from '../domain/world-config.ts';
 import type {VanillaModels} from './vanilla-models.ts';
 import type {Resources} from './resources.ts';
 import animals from '../data/animal-models.json' with {type: 'json'};
@@ -88,12 +88,13 @@ export class AuthoredWorld {
 
     /** Rebuild the cave shell, supported decoration and local light anchors as one layout.
      * @param {Cell[]} stations Saved device cells protected by the cave compatibility envelope.
+     * @param {Cell[]} excavated Persisted mined cells determine exposed backing and torch support.
      */
-    caveScenery(stations: Cell[]): void {
+    caveScenery(stations: Cell[], excavated: Cell[] = []): void {
         if (!this.caveRoot) return;
         this.clear(this.caveRoot);
-        const layout = caveLayout(stations, WORLD_SCENES.cave.eye);
-        this.batch('stone', layout.stone, this.caveRoot);
+        const layout = caveLayout(stations, WORLD_SCENES.cave.eye, excavated);
+        this.batch('stone', layout.stone.filter(caveFixed), this.caveRoot);
         this.batch('oak_log', layout.wood.filter(c => c[1] < 3), this.caveRoot);
         this.batch('oak_planks', layout.wood.filter(c => c[1] === 3), this.caveRoot);
         for (const torch of layout.torches) {
@@ -240,16 +241,24 @@ export class AuthoredWorld {
             stations = p.scenes[id].stations,
             signature = JSON.stringify([removed, stations.map(s => s.cell), crops.map(c => [c.id, cropAge(c.growth.version === 1 ? c.growth.data.ticks : 0)])]);
         if (id === 'cave' && this.caveRoot) {
-            const layout = JSON.stringify(stations.map(s=>s.cell));
-            if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell));}
+            const layout = JSON.stringify([stations.map(s=>s.cell), removed]);
+            if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
         }
         if (signature === this.signature) return;
         this.signature = signature;
         if (id === 'plains') this.plainsDecoration(p);
+        const caveVisible = id === 'cave' ? new Set(caveLayout(stations.map(s=>s.cell), spec.eye, caveExcavated(p)).stone.map(c=>c.join(','))) : null;
+        const carved = id === 'cave' ? caveCleared(p) : null;
+        const visible = spec.nodes.filter(n=>!removed.includes(n.id) && !stations.some(s=>s.cell.every((v,i)=>v===n.cell[i])) && !carved?.has(n.cell.join(',')) && (!n.id.startsWith('rock:') || caveVisible?.has(n.cell.join(','))));
+        const wanted = new Set(visible.map(n=>'node:'+n.id));
+        const retained = id === 'cave' ? this.natural.children.filter(o=>wanted.has(o.userData.id)) : [];
+        for (const root of retained) root.removeFromParent();
         this.clear(this.natural);
+        this.natural.add(...retained);
         this.clear(this.crops);
-        for (const n of spec.nodes) {
-            if (removed.includes(n.id) || stations.some(s => s.cell.every((v, i) => v === n.cell[i]))) continue;
+        const existing = new Set(retained.map(o=>o.userData.id));
+        for (const n of visible) {
+            if (existing.has('node:'+n.id)) continue;
             const root = n.kind === 'cow' ? this.animal('cow') : n.kind === 'egg' ? this.egg() : this.block(n.block);
             root.position.add(new Vector3(...n.cell));
             root.userData.id = 'node:' + n.id;

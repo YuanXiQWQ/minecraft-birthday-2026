@@ -9,12 +9,14 @@ import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {initialState} from '../web/src/domain/state.ts';
 import {seal} from '../web/src/persistence/codec.ts';
+import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
 import {emptyFurnace,inputChanged} from '../web/src/domain/furnace.ts';
 
 /** Test-only origins never read or reset the user's browser profile. */
-const root=resolve(import.meta.dirname,'..'), out=resolve(root,'../docs/p9/cave/evidence'),
+const root=resolve(import.meta.dirname,'..'), out=resolve(root,process.argv[4]??'../docs/p9/cave/evidence'),
     playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),
     old=await readFile(resolve(root,'tests/fixtures/world-manifest-before-cave.json')),
+    oldSounds=await readFile(resolve(root,'tests/fixtures/world-sounds-before-cave.json')),
     previous=JSON.parse(old),rules=JSON.parse(await readFile(resolve(root,'../data/minecraft/26.3/rules.json'),'utf8'));
 let legacy=false;
 const requests=[];
@@ -24,7 +26,7 @@ const server=createServer(async(req,res)=>{
         const url=new URL(req.url,'http://localhost'),base=url.pathname.startsWith('/minecraft-birthday-2026/')?'/minecraft-birthday-2026/':'/';
         let path=url.pathname.slice(base.length);if(!path||path.endsWith('/'))path+='index.html';
         if(path==='cache-prime'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><title>TEST old HTTP cache</title>Old cache priming');return;}
-        const bytes=legacy&&path==='minecraft/26.3/world-manifest.json'?old:await readFile(resolve(root,base==='/'?'dist':'dist-pages',path));
+        const bytes=legacy&&path==='minecraft/26.3/world-manifest.json'?old:legacy&&path==='minecraft/26.3/assets/minecraft/world-sounds.json'?oldSounds:await readFile(resolve(root,base==='/'?'dist':'dist-pages',path));
         res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.ogg':'audio/ogg'})[extname(path)]??'application/octet-stream');
         res.setHeader('Cache-Control',path.startsWith('minecraft/')?'public, max-age=31536000':'no-cache');
         requests.push({url:req.url,legacy:legacy&&path.endsWith('world-manifest.json'),cacheControl:req.headers['cache-control']??null});res.end(bytes);
@@ -40,7 +42,7 @@ async function saved(name){
     const s=initialState();s.progress.scene='cave';
     const nodes=['stone:0','stone:1','stone:2','stone:3','stone:4','coal_ore:0','coal_ore:1','coal_ore:2','iron_ore:0','iron_ore:1','iron_ore:2','iron_ore:3'];
     if(name==='partial')s.progress.world.visits.cave.removed=nodes.slice(0,6);
-    if(name==='empty')s.progress.world.visits.cave.removed=nodes;
+    if(name==='empty')s.progress.world.visits.cave.removed=WORLD_SCENES.cave.nodes.map(n=>n.id);
     if(name==='devices'||name==='legacy'){
         s.progress.unlocked=['minecraft:furnace','minecraft:oak_log'];
         const contents=emptyFurnace();contents.data.input={id:'minecraft:oak_log',count:3};inputChanged(contents.data,null,'furnace',rules);

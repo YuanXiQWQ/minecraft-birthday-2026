@@ -41,9 +41,10 @@ function show(name:string):void {state=sample(name);view.syncWorld(state.progres
  */
 function audit() {
     show('default');
-    const sources=[]; const remaining=[...view.authored!.natural.children];
-    while(remaining.length){const i=remaining.findIndex(o=>reachable(view,o));if(i<0)break;const [o]=remaining.splice(i,1);sources.push(reachable(view,o));view.release(o);}
-    const failures=remaining.map(o=>o.userData.id);
+    const sources: object[]=[]; const remaining=[...view.authored!.natural.children];
+    while(remaining.length){const i=remaining.findIndex(o=>reachable(view,o));if(i<0)break;const [o]=remaining.splice(i,1);sources.push(reachable(view,o)!);view.release(o);}
+    const outsideCurrentView=remaining.map(o=>o.userData.id);
+    const failures=WORLD_SCENES.cave.nodes.slice(0,12).filter(n=>!sources.some((r:any)=>r.id==='node:'+n.id)).map(n=>n.id);
     show('partial');const partial=view.authored!.natural.children.map(o=>o.userData.id);
     show('empty');const empty=view.authored!.natural.children.length;
     const devices=[];
@@ -57,7 +58,7 @@ function audit() {
     show('default');
     const memory: {created:number;released:number;live:number}[]=[];for(let i=0;i<6;i++){for(const scene of ['home','cave'] as const){state=transition(state,{type:'select-scene',scene},WORLD_REGION,rules).state;view.syncWorld(state.progress);} memory.push({created:view.models.created,released:view.models.released,live:view.models.created-view.models.released});}
     center();
-    const result={viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,sources,failures,partial,empty,devices,memory,passed:!failures.length&&sources.length===12&&partial.length===6&&empty===0&&devices.every(d=>d.ray&&d.unchanged&&!d.overlap)&&memory.every(m=>m.live===memory[0].live)};
+    const result={viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,sources,failures,outsideCurrentView,partial,empty,devices,memory,passed:!failures.length&&sources.length>30&&partial.length>12&&!partial.some(id=>['stone:0','stone:1','stone:2','coal_ore:1','iron_ore:0','iron_ore:1'].some(n=>id==='node:'+n))&&empty===0&&devices.every(d=>d.ray&&d.unchanged&&!d.overlap)&&memory.every(m=>m.live===memory[0].live)};
     document.getElementById('evidence')!.textContent=JSON.stringify(result);return result;
 }
 /** Seed only the browser automation's isolated origin with an auditable valid fixture envelope.
