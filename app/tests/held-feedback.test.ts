@@ -43,7 +43,7 @@ async function mining(state?:State) {
 test('formal held mining plays the native initial hit and four-tick cadence before a separate committed break',async()=>{
  const h=await mining();try{
  h.use.beginMining(h.scene.refreshHover()!,0);assert.deepEqual(h.sounds.map(s=>s.id),['block.wood.hit']);
- const first=h.sounds[0].options!;assert.equal(first.volume,.25);assert.equal(first.pitch,.5);assert.deepEqual(first.position,[-5.5,.5,-2.5]);assert.equal(first.valid!(),true);
+ const first=h.sounds[0].options!;assert.equal(first.volume,.25);assert.equal(first.pitch,.5);assert.equal(first.position,undefined);assert.equal(first.valid!(),true);
  for(const now of [25,50,100,199])h.use.advanceMining(now);assert.equal(h.sounds.length,1);
  h.use.advanceMining(200);h.use.advanceMining(225);h.use.advanceMining(399);assert.equal(h.sounds.length,2);
  h.use.advanceMining(400);assert.equal(h.sounds.length,3);assert.deepEqual(h.s.view.envelope!.state.progress.unlocked,[]);
@@ -76,7 +76,7 @@ test('a stalled callback does not burst missed hit sounds and instant grass has 
 
 for(const [kind,material,pitch] of [['crafting_table','wood',1],['furnace','stone',1],['blast_furnace','stone',1],['hopper','metal',1.5]] as const)test('real persisted '+kind+' plays its hit family and commits a separate break',async()=>{
  const state=initialState();state.progress.unlocked=['minecraft:'+kind];state.progress.scenes.plains.stations=[{id:'audio-device',kind,cell:[2,0,0],facing:'south',contents:kind==='crafting_table'?{version:1,data:{grid:Array(9).fill(null)}}:kind==='hopper'?emptyHopper():emptyFurnace()}];
- const h=await mining(state);try{h.target('audio-device');h.use.beginMining(h.scene.refreshHover()!,0);assert.equal(h.sounds[0].id,'block.'+material+'.hit');assert.equal(h.sounds[0].options!.pitch,pitch*.5);assert.deepEqual(h.sounds[0].options!.position,[2.5,.5,.5]);h.use.advanceMining(200);assert.equal(h.sounds[1].id,h.sounds[0].id);h.use.advanceMining(50000);await h.settle();assert.equal(h.sounds.at(-1)!.id,'block.'+material+'.break');assert.equal(h.sounds.at(-1)!.options!.pitch,pitch);assert.deepEqual(h.s.view.envelope!.state.progress.scenes.plains.stations,[]);}finally{h.restore();}
+ const h=await mining(state);try{h.target('audio-device');h.use.beginMining(h.scene.refreshHover()!,0);assert.equal(h.sounds[0].id,'block.'+material+'.hit');assert.equal(h.sounds[0].options!.pitch,pitch*.5);assert.equal(h.sounds[0].options!.position,undefined);h.use.advanceMining(200);assert.equal(h.sounds[1].id,h.sounds[0].id);h.use.advanceMining(50000);await h.settle();assert.equal(h.sounds.at(-1)!.id,'block.'+material+'.break');assert.equal(h.sounds.at(-1)!.options!.pitch,pitch);assert.equal(h.sounds.at(-1)!.options!.position,undefined);assert.deepEqual(h.s.view.envelope!.state.progress.scenes.plains.stations,[]);}finally{h.restore();}
 });
 
 test('one held press settles two successive real nodes, waiting five ticks before the exposed target',async t=>{

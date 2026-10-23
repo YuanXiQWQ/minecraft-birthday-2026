@@ -75,7 +75,7 @@ export class WorldAudio {
             source.buffer=buffer;source.playbackRate.value=(raw.pitch??1)*(options.pitch??1);gain.gain.value=soundGain(current,id)*volume;
             const panner=options.position?c.createPanner():null;source.connect(gain);if(panner){panner.panningModel='equalpower';panner.distanceModel='linear';panner.refDistance=0;panner.maxDistance=Math.max(1,rawVolume)*16;panner.rolloffFactor=1;[panner.positionX.value,panner.positionY.value,panner.positionZ.value]=options.position!;gain.connect(panner).connect(c.destination);}else gain.connect(c.destination);this.voices.set(source,{gain,volume,event:id,panner});
             source.onended=()=>{this.voices.delete(source);source.disconnect();gain.disconnect();panner?.disconnect();};source.start();
-            this.record(id,'scheduled',{sample:path,volume:gain.gain.value,pitch:source.playbackRate.value,duration:buffer.duration,category:soundChannel(id),sourceVolume:rawVolume,position:options.position});return 'scheduled';
+            this.record(id,'scheduled',{sample:path,volume:gain.gain.value,pitch:source.playbackRate.value,duration:buffer.duration,category:soundChannel(id),sourceVolume:rawVolume,spatial:!!panner,position:options.position});return 'scheduled';
         }catch(error){if(this.disposed||epoch!==this.epoch||document.hidden){this.record(id,'cancelled',{requestEpoch:epoch});return 'cancelled';}const status=error instanceof Error?error.message:'decode-failed';this.record(id,status);return status;}
     }
     /** Resolve audited world, weather and interface definitions without a network discovery fallback.

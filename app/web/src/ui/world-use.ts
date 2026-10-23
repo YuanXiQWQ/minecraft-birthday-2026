@@ -33,7 +33,7 @@ export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: F
 
 /** Own bounded device orientation and actions; no carrier contents or natural facts live here. */
 export class WorldUse {
-    mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; cell: Cell; nextSound: number } | null = null;
+    mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; nextSound: number } | null = null;
     miningTimer = 0;
     holding = false;
     miningEpoch = 0;
@@ -199,18 +199,17 @@ export class WorldUse {
             block = station?.kind ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
         if (!block || node?.kind === 'cow') return;
         const held = p.player.data.hotbar[p.player.data.selected], ticks = node?.kind === 'egg' ? 0 : miningTicks(block, held, this.inventory.rules);
-        this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit, block, cell: station?.cell ?? node?.cell ?? hit.cell ?? hit.point.map(Math.floor) as Cell, nextSound: now + 200};
+        this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit, block, nextSound: now + 200};
         if (!ticks || node?.kind === 'egg') this.finishMining(now);
         else {this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining); this.scene.showCrack(hit.id, 0); this.miningSound();}
     }
 
-    /** Play the native initial or four-tick block hit at its cell center, fencing unfinished decoding to this held target. */
+    /** Play the native initial or four-tick hit centered on the local player, fencing unfinished decoding to this held target. */
     miningSound(): void {
         const m = this.mining, serial = this.holdSerial, epoch = this.miningEpoch;
         if (!m) return;
         const material = blockSounds(m.block);
         this.sound(material.hit, {volume: (material.volume + 1) / 8, pitch: material.pitch * .5,
-            position: m.cell.map(n => n + .5) as Cell,
             valid: () => this.mining === m && this.miningEpoch === epoch && this.holding && !document.hidden && this.scene.input && !this.inventory.modal.open && this.current(m.scope, serial)});
     }
 
@@ -251,7 +250,7 @@ export class WorldUse {
         this.clearMiningProgress();
         const station = p.scenes[p.scene].stations.find(s => s.id === m.id);
         const material = station ? blockSounds(station.kind) : null;
-        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, material!.break, {block: station.kind, point: m.hit.point}, {volume: material!.volume, pitch: material!.pitch, position: m.cell.map(n => n + .5) as Cell}) : this.harvest(m.hit);
+        const work = station ? this.run({type: 'remove-station', scene: p.scene, id: station.id, expected: layout(this.inventory.value)}, null, material!.break, {block: station.kind, point: m.hit.point}, {volume: material!.volume, pitch: material!.pitch}) : this.harvest(m.hit);
         void work.then(success => {
             if (this.miningTicket !== ticket || epoch !== this.miningEpoch || !this.holding) return;
             this.miningTicket = null;

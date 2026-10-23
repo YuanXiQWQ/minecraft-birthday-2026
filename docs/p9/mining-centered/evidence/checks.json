@@ -1,0 +1,28 @@
+{
+  "baseline": "4c3cf276307005c3108dd201b81f0b67434a2ad6",
+  "isolatedLockInstall": true,
+  "typecheck": true,
+  "formalTests": 627,
+  "rootBuild": true,
+  "pagesBuild": true,
+  "httpTests": 2,
+  "unchangedP2P4Evidence": "../mining-audio/evidence/",
+  "files": [
+    {
+      "path": "app/web/src/ui/world-use.ts",
+      "sha256": "fee7be84788bbbede2fde7c1efc1dc7dff2ba4fd7b255723a95eb14e7a52a26b"
+    },
+    {
+      "path": "app/web/src/render/world-audio.ts",
+      "sha256": "1be1dba7c793f77e805887b117ffc69bb60b6f9aea209e9b814a67aed2223c59"
+    },
+    {
+      "path": "app/tests/held-feedback.test.ts",
+      "sha256": "d7ecb64235b81bd5dc65fedae2fc2ac35fa6d0e79c6ec4af3a6b0e6c549c7459"
+    },
+    {
+      "path": "app/tests/mining-audio.test.ts",
+      "sha256": "54356d4ee3659ca084b3bef99e5f2c604064d8a695dd933841798e298404bf6b"
+    }
+  ]
+}
