@@ -1,5 +1,6 @@
 /** One visible game document owns processing time; home pages and offline intervals never drive production. */
 import type {SaveSession} from './session.ts';
+import type {CommandFeedback} from '../domain/console.ts';
 import {LOCK_NAME} from './session.ts';
 
 /** A catch-up commit covers at most one ordinary 250ms sampling interval. */
@@ -34,27 +35,29 @@ export class TickClock {
     }
 
     /** Measure active time without reference to rendering frames. @param {number} now Monotonic time. @return {number} Complete 50ms ticks. */
-    sample(now: number): number {
+    sample(now: number, rate=20): number {
         const elapsed = Math.max(0, now - this.last) + this.remainder;
         this.last = now;
-        const ticks = Math.floor(elapsed / 50);
-        this.remainder = elapsed - ticks * 50;
+        const ticks = Math.floor(elapsed / (1000/rate));
+        this.remainder = elapsed - ticks * (1000/rate);
         return ticks;
     }
 }
 
 /** Coordinate a visible-page simulation lease independently of short save transaction locks.
  * @param {SaveSession} session Shared semantic persistence port.
+ * @param {Function} feedback Native sprint completion messages.
  * @return {Function} Idempotent cleanup, including current ownership and pending intervals.
  */
-export function processingClock(session: SaveSession): () => void {
+export function processingClock(session: SaveSession, feedback: (message:CommandFeedback)=>void = ()=>{}): () => void {
     let disposed = false, lease: object | null = null, release: (() => void) | null = null, busy = false,
-        ticking = false, clock: TickClock | null = null, generation = '', timer = 0;
+        ticking = false, clock: TickClock | null = null, generation = '', timer = 0, schedule = '', sprintStart=0, sprintCount=0, quick=0;
 
     /** Relinquish ownership and discard any hidden/offline/handoff interval. */
     function stop(): void {
         lease = null;
         clock = null;
+        clearTimeout(quick);sprintStart=0;sprintCount=0;
         release?.();
         release = null;
     }
@@ -71,22 +74,33 @@ export function processingClock(session: SaveSession): () => void {
         }
         if (epoch !== generation) {
             generation = epoch ?? '';
+            sprintStart=0;sprintCount=0;schedule='';
             clock = new TickClock(performance.now());
             return;
         }
-        const ticks = clock.sample(performance.now());
+        const control=session.view.envelope?.state.progress.environment?.control;
+        const signature=JSON.stringify([control?.epoch,!!control?.sprintTicks,control?.frozen]);
+        if(signature!==schedule){schedule=signature;clock=new TickClock(performance.now());}
+        const ticks=control?.sprintTicks?Math.min(ACTIVE_BATCH_TICKS,control.sprintTicks):clock.sample(performance.now(),control?.tickRate??20);
+        if(control?.frozen&&!control.stepTicks&&!control.sprintTicks)return;
+        if(control?.sprintTicks&&!sprintStart){sprintStart=performance.now();sprintCount=0;}
         if (!ticks) return;
         ticking = true;
-        const eligible = () => !disposed && !document.hidden && lease === ticket && session.view.envelope?.generation === epoch;
+        const eligible = () => !disposed && !document.hidden && lease === ticket && session.view.envelope?.generation === epoch && session.view.envelope?.state.progress.environment?.control.epoch === control?.epoch;
         try {
             await advanceActiveTicks(ticks, n => session.transact({
                 type: 'processing-tick',
-                ticks: n
+                ticks: n, controlEpoch:control?.epoch
             }, eligible), eligible);
+            if(sprintStart&&eligible()){sprintCount+=ticks;if(!session.view.envelope?.state.progress.environment?.control.sprintTicks){
+                const elapsed=Math.max(.001,performance.now()-sprintStart);
+                feedback({key:'commands.tick.sprint.report',values:{v0:Math.floor(sprintCount*1000/elapsed),v1:(elapsed/sprintCount).toFixed(2)}});sprintStart=0;sprintCount=0;
+            }}else if(sprintStart){sprintStart=0;sprintCount=0;}
         } catch {
             if (lease === ticket) stop();
         } finally {
             ticking = false;
+            if(lease&&!disposed&&!document.hidden&&session.view.envelope?.state.progress.environment?.control.sprintTicks)quick=window.setTimeout(()=>void step(),0);
         }
     }
 

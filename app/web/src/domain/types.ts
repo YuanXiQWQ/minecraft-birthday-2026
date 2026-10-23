@@ -113,7 +113,7 @@ export type Command =
     | { type: 'book-settings'; mode: BookMode; patch: Partial<BookSetting> }
     | { type: 'book-seen'; recipes: string[] }
     | { type: 'device-transfer'; plan: TransferPlan }
-    | { type: 'processing-tick'; ticks: number }
+    | { type: 'processing-tick'; controlEpoch?:number; ticks: number }
     | {
     type: 'furnace-take';
     take: FurnaceTake;
@@ -126,6 +126,7 @@ export type Command =
     | { type: 'select-scene'; scene: SceneId }
     | { type: 'put-station'; scene: SceneId; station: Station; expected?: PlayerLayout }
     | { type: 'remove-station'; scene: SceneId; id: string; expected?: PlayerLayout }
+    | { type: 'console'; source: string }
     | { type: 'sky-settings'; patch: Partial<SkySettings> }
     | { type: 'settings'; patch: Partial<Settings> }
     | { type: 'record-cake-placement'; scene: 'home'; table: 'birthday-table'; expected?: PlayerLayout }

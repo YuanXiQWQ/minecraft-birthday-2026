@@ -49,7 +49,7 @@ test('every statically declared page key exists in external English and all Engl
     const source = readFileSync(resolve('web/src/ui/inventory.ts'), 'utf8') + readFileSync(resolve('web/src/ui/inventory-input.ts'), 'utf8') + readFileSync(resolve('web/src/app.ts'), 'utf8') + readFileSync(resolve('web/index.html'), 'utf8') + readFileSync(resolve('web/game/index.html'), 'utf8');
     for (const key of Object.keys(ENGLISH)) assert.equal(typeof ENGLISH[key as keyof typeof ENGLISH], 'string');
     for (const match of source.matchAll(/['"]((?:home|game|settings|common|error|status|html|a11y|inventory)\.[A-Za-z0-9_-]+)['"]/g)) assert.ok(Object.hasOwn(ENGLISH, match[1]), match[1]);
-    for (const value of Object.values(ENGLISH)) assert.match(value, /^[\x20-\x7e]*$/);
+    for (const value of Object.values(ENGLISH)) assert.match(value, /^[\x20-\x7e\n]*$/);
     assert.equal(readdirSync(resolve('web/src')).includes('labels.ts'), false);
 });
 test('long text wraps at words and within long tokens without deleting copy or exceeding the measured line width', () => {

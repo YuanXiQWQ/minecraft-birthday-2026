@@ -1,6 +1,8 @@
 /** Deterministic Java 26.3 weather countdowns share the existing active-game tick transaction. */
 export interface EnvironmentState {
-    version: 1;
+    version: 2;
+    clearWeatherTime: number;
+    control: SimulationControl;
     dayTicks: number;
     random: number;
     rainTime: number;
@@ -10,6 +12,15 @@ export interface EnvironmentState {
     rainLevel: number;
     thunderLevel: number;
 }
+/** Persist command-controlled server tick and overworld clock identities independently of render frames. */
+export interface SimulationControl {
+    epoch:number; tickRate:number; frozen:boolean; stepTicks:number; sprintTicks:number; sprintRestore:boolean;
+    advanceTime:boolean; advanceWeather:boolean; clockPaused:boolean; clockRate:number; clockFraction:number;
+}
+/** Native defaults: twenty server ticks per second and one advancing overworld clock tick per game tick.
+ * @return {SimulationControl} Independent command state.
+ */
+export function emptyControl():SimulationControl{return{epoch:0,tickRate:20,frozen:false,stepTicks:0,sprintTicks:0,sprintRestore:false,advanceTime:true,advanceWeather:true,clockPaused:false,clockRate:1,clockFraction:0};}
 export interface SkySettings {time: 'game'|'real'; weather: 'game'|'real'}
 /** Default world seed is an authored reproducibility choice; sampling uses native Java's 48-bit generator. */
 export const WEATHER_SEED=60426;
@@ -44,19 +55,26 @@ export class NativeRandom {
 /** Start at the native day marker with uninitialized clear-weather counters.
  * @return {EnvironmentState} Independent durable environment state.
  */
-export function emptyEnvironment():EnvironmentState{return{version:1,dayTicks:1000,random:Number(new NativeRandom(WEATHER_SEED).state),rainTime:0,thunderTime:0,raining:false,thundering:false,rainLevel:0,thunderLevel:0};}
+export function emptyEnvironment():EnvironmentState{return{version:2,clearWeatherTime:0,control:emptyControl(),dayTicks:1000,random:Number(new NativeRandom(WEATHER_SEED).state),rainTime:0,thunderTime:0,raining:false,thundering:false,rainLevel:0,thunderLevel:0};}
 
 /** Apply exactly one advanceWeatherCycle step; zero counters choose a duration on the following tick.
  * @param {EnvironmentState} state Transaction-local environment.
  */
 export function tickEnvironment(state:EnvironmentState):void{
-    state.dayTicks++;
+    const c=state.control;
+    if(c.advanceTime&&!c.clockPaused){const total=Math.fround(c.clockFraction+c.clockRate),whole=Math.floor(total);state.dayTicks+=whole;c.clockFraction=Math.fround(total-whole);}
+
     const rng=new NativeRandom(state.random,true);
+    if(c.advanceWeather){
+    if(state.clearWeatherTime>0){state.clearWeatherTime--;state.thunderTime=state.thundering?0:1;state.rainTime=state.raining?0:1;state.thundering=state.raining=false;}
+    else {
     if(state.thunderTime>0){if(--state.thunderTime===0)state.thundering=!state.thundering;}
     else {const range=state.thundering?WEATHER_TIMERS.thunderDuration:WEATHER_TIMERS.thunderDelay;state.thunderTime=rng.integer(range[0],range[1]);}
     if(state.rainTime>0){if(--state.rainTime===0)state.raining=!state.raining;}
     else {const range=state.raining?WEATHER_TIMERS.rainDuration:WEATHER_TIMERS.rainDelay;state.rainTime=rng.integer(range[0],range[1]);}
+    }
     state.random=Number(rng.state);
+    }
     state.rainLevel=Math.max(0,Math.min(1,Math.fround(state.rainLevel+(state.raining?Math.fround(.01):-Math.fround(.01)))));
     state.thunderLevel=Math.max(0,Math.min(1,Math.fround(state.thunderLevel+(state.thundering?Math.fround(.01):-Math.fround(.01)))));
 }
@@ -66,9 +84,15 @@ export function tickEnvironment(state:EnvironmentState):void{
  */
 export function validateEnvironment(value:unknown):asserts value is EnvironmentState{
     const s=value as EnvironmentState;
-    if(!s||Object.keys(s).sort().join('|')!=='dayTicks|rainLevel|rainTime|raining|random|thunderLevel|thunderTime|thundering|version'||s.version!==1||
-        ![s.dayTicks,s.rainTime,s.thunderTime,s.random].every(n=>Number.isSafeInteger(n)&&n>=0)||s.random>=281474976710656||s.rainTime>180000||s.thunderTime>180000||
+    if(!s||Object.keys(s).sort().join('|')!=='clearWeatherTime|control|dayTicks|rainLevel|rainTime|raining|random|thunderLevel|thunderTime|thundering|version'||s.version!==2||
+        ![s.dayTicks,s.rainTime,s.thunderTime,s.clearWeatherTime,s.random].every(n=>Number.isSafeInteger(n)&&n>=0)||s.random>=281474976710656||s.rainTime>2147483647||s.thunderTime>2147483647||s.clearWeatherTime>2147483647||
         ![s.rainLevel,s.thunderLevel].every(n=>Number.isFinite(n)&&n>=0&&n<=1)||typeof s.raining!=='boolean'||typeof s.thundering!=='boolean')throw Error('invalid-environment');
+    const c=s.control;
+    if(!c||Object.keys(c).sort().join('|')!=='advanceTime|advanceWeather|clockFraction|clockPaused|clockRate|epoch|frozen|sprintRestore|sprintTicks|stepTicks|tickRate'||
+      ![c.epoch,c.stepTicks,c.sprintTicks].every(n=>Number.isSafeInteger(n)&&n>=0)||c.stepTicks>2147483647||c.sprintTicks>2147483647||
+      ![c.advanceTime,c.advanceWeather,c.clockPaused,c.frozen,c.sprintRestore].every(n=>typeof n==='boolean')||
+      !Number.isFinite(c.tickRate)||c.tickRate<1||c.tickRate>10000||!Number.isFinite(c.clockRate)||c.clockRate<Math.fround(.00001)||c.clockRate>1000||
+      !Number.isFinite(c.clockFraction)||c.clockFraction<0||c.clockFraction>=1)throw Error('invalid-environment-control');
 }
 
 /** Validate independent time/weather preferences without storing location or network observations.
@@ -84,3 +108,13 @@ export function validateSkySettings(value:unknown):asserts value is SkySettings{
  * @return {number} Native time within the day.
  */
 export function realDayTicks(date:Date):number{return ((date.getHours()*3600+date.getMinutes()*60+date.getSeconds()+date.getMilliseconds()/1000-21600+86400)%86400)/3.6;}
+
+/** Validate the previous exact environment before adding native command defaults during a versioned migration.
+ * @param {unknown} value Checksummed previous environment.
+ * @return {EnvironmentState} New validated environment without changing existing time or weather.
+ */
+export function migrateEnvironment(value:unknown):EnvironmentState {
+ const old=value as Record<string,unknown>;
+ if(!old||old.version!==1||Object.keys(old).sort().join('|')!=='dayTicks|rainLevel|rainTime|raining|random|thunderLevel|thunderTime|thundering|version')throw Error('invalid-old-environment');
+ const result={...old,version:2,clearWeatherTime:0,control:emptyControl()} as EnvironmentState;validateEnvironment(result);return result;
+}

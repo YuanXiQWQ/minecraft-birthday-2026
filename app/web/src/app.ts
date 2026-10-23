@@ -287,11 +287,11 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     function preferences(key: SettingKey, skyPatch?: Partial<SkySettings>): void {
         const draft = edits.submit(key);
         if (!draft) return;
-        setText(preferenceFeedback, 'settings.saving');
+        clearText(preferenceFeedback);
         void session.dispatch(skyPatch?{type:'sky-settings',patch:skyPatch}:{type: 'settings', patch: {[key]: draft.value}}).then(() => {
             if (disposed || !edits.finish(key, draft.ticket)) return;
             paintSettings();
-            setText(preferenceFeedback, 'settings.saved');
+            clearText(preferenceFeedback);
         }).catch(() => {
             if (disposed || !edits.finish(key, draft.ticket)) return;
             paintSettings();
@@ -429,7 +429,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     function showOptions(id: string): void {
         optionsPage = id; optionNavigation.hidden = id !== 'options';
         for (const [key, section] of optionSections) section.hidden = key !== id;
-        for (const element of [warning, reset, confirmSection]) element.hidden = id !== 'options' || element === confirmSection && !confirmation;
+        warning.hidden=true;
+        for (const element of [reset, confirmSection]) element.hidden = id !== 'options' || element === confirmSection && !confirmation;
         setText(dialogTitle, id === 'options' ? 'menu.options' : 'menu.' + id);
         if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();}
         nativeScreens.forEach(view => view.layout());
@@ -457,7 +458,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
                 else if (dialog.open) {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}
                 else if (menu!.open) {menu!.close(); updateGate();}
                 else openMenu();
-            } else if (e.code === 'KeyT' && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show();}
+            } else if ((e.code === 'KeyT'||(e.key==='/'||e.code==='Slash'&&!e.shiftKey)&&!e.ctrlKey&&!e.altKey&&!e.metaKey) && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show(e.code==='KeyT'?'':'/');}
         }, {signal: appAbort.signal});
     }
     /** Open the local pause interface without pausing the approved active simulation. */
@@ -563,6 +564,21 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             inventory.fill = (...args) => session.fillRecipe(...args);
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
+            /** Run native commands against locked facts and exclude replies from discarded game lifetimes.
+             * @param {string} source Slash-prefixed player input.
+             * @return {Promise<import('./domain/console.ts').CommandFeedback[]>} Committed native feedback or a current-lifetime failure.
+             */
+            chat.command=async source=>{
+                const generation=session.view.envelope?.generation,serial=session.serial,sceneId=session.view.envelope?.state.progress.scene;
+                try{
+                    const result=await session.transact({type:'console',source});
+                    if(disposed||session.serial!==serial||session.view.envelope?.generation!==generation||session.view.envelope?.state.progress.scene!==sceneId)return[];
+                    const messages=result.console??[];
+                    if(source.trim()==='/tick query'&&session.tickSamples.length){const samples=session.tickSamples,count=samples.reduce((n,s)=>n+s.ticks,0),ms=samples.reduce((n,s)=>n+s.ms,0),control=session.view.envelope!.state.progress.environment!.control;
+                        messages.push({key:control.sprintTicks?'commands.tick.query.rate.sprinting':'commands.tick.query.rate.running',values:{v0:control.tickRate.toFixed(1),v1:(ms/count).toFixed(3),v2:(1000/control.tickRate).toFixed(1)}});
+                    }return messages;
+                }catch{return !disposed&&session.serial===serial&&session.view.envelope?.generation===generation&&session.view.envelope?.state.progress.scene===sceneId?[{key:'game.actionFailed',error:true}]:[];}
+            };
             chat.onPaint = () => scene?.backgroundChanged();
             for (const message of pendingMessages.splice(0)) feedback(message.key,message.values);
             host.dataset.chatReady = 'true';
@@ -590,7 +606,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             session.eventListeners.add(events => {
                 if (events.some(e => e.type === 'cake-placed')) void celebration?.start();
             });
-            stopProcessing = processingClock(session);
+            stopProcessing = processingClock(session,message=>chat?.commandMessage(message));
             const value = session.view;
             if (value.envelope) reflect(value);
 

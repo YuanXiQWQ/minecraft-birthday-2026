@@ -6,7 +6,7 @@ const metrics = new WeakMap<HTMLInputElement, {font: BitmapFont; width: number; 
 const bound = new WeakSet<HTMLInputElement>();
 /** Blink epochs follow focus acquisition rather than the global page clock. */
 const focusedAt = new WeakMap<HTMLInputElement, number>();
-export interface FieldStyle {hint?: string; italicHint?: boolean; hintColor?: string; shadow?: boolean; color?: string; now?: number; inset?: number}
+export interface FieldStyle {hint?: string; italicHint?: boolean; hintColor?: string; shadow?: boolean; color?: string; now?: number; inset?: number; invalidFrom?:number}
 /** Resolve the active end of a directional HTML selection.
  * @param {HTMLInputElement} input Native editor.
  * @return {number} Active UTF-16 cursor position.
@@ -23,7 +23,7 @@ export function activeCursor(input: HTMLInputElement): number {return (input.sel
 export function caretState(now: number, focus: number, cursor: number, length: number, max: number): {visible: boolean; insert: boolean} {
     return {visible: Math.floor(Math.max(0, now - focus) / 300) % 2 === 0, insert: cursor < length || length >= max};
 }
-/** Paint glyphs, the active caret and then selection using the caller's native field configuration.
+/** Paint glyphs, optional command-error suffix, active caret and selection with native clipping and scrolling.
  * @param {CanvasRenderingContext2D} ctx GUI plane.
  * @param {BitmapFont} font Original glyph advances.
  * @param {HTMLInputElement} input Browser editing surface.
@@ -41,7 +41,8 @@ export function nativeField(ctx: CanvasRenderingContext2D, font: BitmapFont, inp
     scroll = Math.max(0, Math.min(scroll, Math.max(0, font.width(value) - w + 1)));
     metrics.set(input, {font, width: w, scroll, inset: config.inset ?? 0});
     ctx.save(); ctx.beginPath(); ctx.rect(x - 1, y - 1, w + 1, Math.max(11, h + 2)); ctx.clip();
-    font.draw(ctx, value, x - scroll, y, config.color ?? '#FFFFFF', config.shadow ?? true);
+    if(config.invalidFrom===undefined)font.draw(ctx, value, x - scroll, y, config.color ?? '#FFFFFF', config.shadow ?? true);
+    else{const prefix=value.slice(0,config.invalidFrom);font.draw(ctx,prefix,x-scroll,y,config.color??'#FFFFFF',config.shadow??true);font.draw(ctx,value.slice(config.invalidFrom),x-scroll+font.width(prefix),y,'#FF5555',config.shadow??true);}
     if (!value && !active && config.hint) {
         ctx.save(); ctx.translate(x, y);
         if (config.italicHint) {ctx.translate(1, 0); ctx.transform(1, 0, -.25, 1, 0, 0);}

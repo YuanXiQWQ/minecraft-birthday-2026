@@ -1,4 +1,5 @@
 /** Cooperative cross-page transactions use a real exclusive lock, reset epochs and lifecycle fencing. */
+import type {CommandFeedback} from '../domain/console.ts';
 import {timing} from '../performance.ts';
 import type {FurnaceTake} from '../domain/furnace.ts';
 import {freeze, initialState, resetState, transition} from '../domain/state.ts';
@@ -36,6 +37,8 @@ export class CommandRejected extends Error {
 
 /** Own immutable durable snapshots; no renderer, notification replay or natural-resource state is serialized. */
 export class SaveSession {
+    /** Bounded real synchronous tick-work samples; awaiting a shared lock is excluded. */
+    tickSamples:{ticks:number;ms:number}[]=[];
     rules?: Rules;
     storage: StoragePort;
     locks: LockPort | null;
@@ -74,6 +77,7 @@ export class SaveSession {
     publish(value: Snapshot): void {
         const end = timing('ui-projection');
         try {
+            if(this.view.envelope?.generation!==value.envelope?.generation)this.tickSamples.length=0;
             this.view = freeze(value);
             for (const listener of this.listeners) listener(this.view);
         } finally {
@@ -196,7 +200,8 @@ export class SaveSession {
         events: DomainEvent[];
         inventory?: InventoryState;
         receipt?: CraftReceipt;
-        transferred?: number
+        transferred?: number;
+        console?:CommandFeedback[]
     }> {
         const epoch = this.view.envelope?.generation, serial = this.serial;
         if (!this.locks || !this.view.writable || !epoch || this.disposed || this.suspended) throw new Error('save-read-only');
@@ -217,7 +222,8 @@ export class SaveSession {
                 const current = decoded.envelope;
                 if (current.generation !== epoch) throw new Error('stale-session');
                 if (serial !== this.serial || this.disposed || this.suspended) throw new Error('session-restored');
-                let result;
+                let result, simulationMs=0;
+                const cpuStart=performance.now();
                 const endSimulation = timing(command.type === 'processing-tick' ? 'tick-simulation:' + command.ticks : 'command:' + command.type);
                 try {
                     result = transition(current.state, command, this.policy, this.rules);
@@ -226,6 +232,7 @@ export class SaveSession {
                     throw new CommandRejected(error instanceof Error ? error.message : 'invalid-command');
                 } finally {
                     endSimulation();
+                    simulationMs=performance.now()-cpuStart;
                 }
                 if (JSON.stringify(result.state) === JSON.stringify(current.state)) {
                     this.publish({status: 'ready', envelope: current, migrated: decoded.migrated, writable: true});
@@ -233,7 +240,8 @@ export class SaveSession {
                         events: result.events,
                         inventory: result.inventory,
                         receipt: result.receipt,
-                        transferred: result.transferred
+                        transferred: result.transferred,
+                        console: result.console
                     };
                 }
                 const endSeal = timing('seal-serialize');
@@ -255,11 +263,13 @@ export class SaveSession {
                 }
                 this.publish({status: 'ready', envelope: next, migrated: false, writable: true});
                 for (const listener of this.eventListeners) listener(result.events);
+                if(command.type==='processing-tick'&&result.state.progress.world.tick>current.state.progress.world.tick){this.tickSamples.push({ticks:result.state.progress.world.tick-current.state.progress.world.tick,ms:simulationMs});if(this.tickSamples.length>100)this.tickSamples.shift();}
                 return {
                     events: result.events,
                     inventory: result.inventory,
                     receipt: result.receipt,
-                    transferred: result.transferred
+                    transferred: result.transferred,
+                    console: result.console
                 };
             });
         } catch (error) {

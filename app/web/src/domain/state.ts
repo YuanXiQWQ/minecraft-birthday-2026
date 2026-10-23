@@ -1,4 +1,5 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {executeCommand,type CommandFeedback} from './console.ts';
 import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
 import {quickMove} from './slots.ts';
 import {correctTool} from '../rules/process.ts';
@@ -252,13 +253,16 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     events: DomainEvent[];
     inventory?: InventoryState;
     receipt?: CraftReceipt;
-    transferred?: number
+    transferred?: number;
+    console?: CommandFeedback[]
 } {
     validateState(state);
     const next = structuredClone(state), p = next.progress, events: DomainEvent[] = [];
     let inventory: InventoryState | undefined, receipt: CraftReceipt | undefined, transferred: number | undefined;
+    let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
+        case 'console': console=executeCommand(next,command.source); break;
         case 'book-settings': {
             ensure(['crafting', 'furnace', 'blast_furnace'].includes(command.mode), 'invalid-recipe-book');
             ensure(Object.keys(command.patch).length > 0 && Object.entries(command.patch).every(([k, v]) => ['open', 'filter'].includes(k) && typeof v === 'boolean'), 'invalid-recipe-book');
@@ -338,9 +342,16 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'processing-tick': {
             ensure(rules, 'native-rules-unavailable');
             ensure(Number.isInteger(command.ticks) && command.ticks >= 0 && command.ticks <= 1200, 'invalid-ticks');
+            p.environment??=emptyEnvironment();
+            const control=p.environment.control;
+            if(command.controlEpoch!==undefined)ensure(command.controlEpoch===control.epoch,'processing-inactive');
+            const requested=command.ticks;
+            const ticks=control.sprintTicks?Math.min(requested,control.sprintTicks):control.frozen?Math.min(requested,control.stepTicks):requested;
             const ready = discover(p.recipeBook, p.unlocked);
             if (ready.length) events.push({type: 'recipes-discovered', recipes: ready});
-            for (let t = 0; t < command.ticks; t++) {
+            for (let t = 0; t < ticks; t++) {
+                if(control.sprintTicks){if(--control.sprintTicks===0)control.frozen=control.sprintRestore;}
+                if(control.stepTicks)control.stepTicks--;
                 p.world.tick++;
                 p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
                 for (const scene of Object.values(p.scenes)) {
@@ -529,7 +540,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});
     validateState(next);
-    return {state: freeze(next), events, inventory, receipt, transferred};
+    return {state: freeze(next), events, inventory, receipt, transferred, console};
 }
 
 /** Reset only progress, retaining the user's language, volume and mute choice.

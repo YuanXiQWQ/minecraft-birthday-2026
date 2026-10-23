@@ -56,7 +56,7 @@ export class NativeSky {
     moons:CanvasTexture[]=[];
     state:EnvironmentState=emptyEnvironment();preferences:SkySettings={time:'game',weather:'game'};
     weatherOverride:{rain:number;thunder:number;snow:boolean}|null=null;
-    received=0;gameTick=0;realRain=0;realThunder=0;weatherAtTime=0;cloudSource:ImageData;report:Record<string,unknown>={};
+    received=0;dayReceived=0;daySignature='';tickSignature='';gameTick=0;realRain=0;realThunder=0;weatherAtTime=0;cloudSource:ImageData;report:Record<string,unknown>={};
     day:any;moonTimeline:any;dimension:any;cloudWorker:Worker|null=null;disposed=false;cloudQuads=0;
 
     /** Compile original asset pixels and native timeline JSON once per scene adapter.
@@ -104,12 +104,17 @@ export class NativeSky {
      */
     body(half:number,map:CanvasTexture):Mesh{const m=new Mesh(new PlaneGeometry(half*2,half*2).rotateX(-Math.PI/2),new MeshBasicMaterial({map,transparent:true,side:DoubleSide,depthWrite:false,depthTest:false,blending:AdditiveBlending,toneMapped:false}));m.position.y=100;return m;}
 
-    /** Accept only committed game-clock state; civil time is evaluated without changing simulation facts.
+    /** Re-anchor changed committed clocks while unrelated GUI snapshots retain continuous interpolation.
      * @param {EnvironmentState} state Committed native environment.
      * @param {SkySettings} settings Independent user choices.
      * @param {number} tick Shared active-game tick.
      */
-    sync(state:EnvironmentState,settings:SkySettings,tick:number):void{this.state=state;this.preferences=settings;this.gameTick=tick;this.received=performance.now();}
+    sync(state:EnvironmentState,settings:SkySettings,tick:number):void{
+        const now=performance.now(),c=state.control,daySignature=JSON.stringify([state.dayTicks,c.clockFraction,c.clockRate,c.clockPaused,c.advanceTime,c.frozen,c.stepTicks,c.sprintTicks,c.tickRate,settings.time]),tickSignature=JSON.stringify([tick,c.frozen,c.stepTicks,c.sprintTicks,c.tickRate]);
+        if(daySignature!==this.daySignature){this.daySignature=daySignature;this.dayReceived=now;}
+        if(tickSignature!==this.tickSignature){this.tickSignature=tickSignature;this.received=now;}
+        this.state=state;this.preferences=settings;this.gameTick=tick;
+    }
 
     /** Ease opt-in observation changes at the native 0.01-per-tick rate without advancing game facts.
      * @param {number} now Monotonic render time.
@@ -151,7 +156,10 @@ export class NativeSky {
      * @param {Date} date Injectable civil clock.
      */
     render(renderer:WebGLRenderer,camera:PerspectiveCamera,now:number,date=new Date()):void{
-        const partial=document.hidden?0:Math.min(5,Math.max(0,now-this.received)/50),time=this.preferences.time==='real'?realDayTicks(date):this.state.dayTicks+partial,
+        const control=this.state.control,running=!control.frozen||control.stepTicks>0||control.sprintTicks>0,
+            partial=document.hidden||!running?0:Math.min(control.tickRate*.25,Math.max(0,now-this.received)*control.tickRate/1000),
+            dayPartial=document.hidden||!running||!control.advanceTime||control.clockPaused?0:Math.min(control.tickRate*.25,Math.max(0,now-this.dayReceived)*control.tickRate/1000)*control.clockRate,
+            time=this.preferences.time==='real'?realDayTicks(date):this.state.dayTicks+control.clockFraction+dayPartial,
             track=(key:string)=>trackAt(this.day.tracks['minecraft:visual/'+key],time,this.day.period_ticks),weatherValue=this.weatherAt(now),rain=weatherValue.rain,thunder=weatherValue.thunder;
         const attrs=this.dimension.attributes,sky=track('sky_color'),base=rgba(attrs['minecraft:visual/sky_color']),cloud=track('cloud_color'),cloudBase=rgba(attrs['minecraft:visual/cloud_color']);
         let skyRGB=base.map((v,i)=>v*sky[i]),cloudRGB=cloudBase.map((v,i)=>v*cloud[i]);
@@ -180,7 +188,7 @@ export class NativeSky {
         const cm=this.clouds.material as MeshBasicMaterial;cm.color.setRGB(cloudRGB[0],cloudRGB[1],cloudRGB[2],SRGBColorSpace);cm.opacity=cloudRGB[3];
         this.camera.aspect=camera.aspect;this.camera.fov=camera.fov;this.camera.quaternion.copy(camera.quaternion);this.camera.updateProjectionMatrix();
         const skyLight=weatherLighting(track('sky_light_factor'),track('sky_light_color'),rain,thunder);
-        this.report={dayTicks:time,sunAngle:track('sun_angle'),moonAngle:track('moon_angle'),moonPhase:phase,rain,thunder,skyLightFactor:skyLight.factor,skyLightColor:skyLight.color,cloudHeight:attrs['minecraft:visual/cloud_height'],cloudQuads:this.cloudQuads,cloudInstances:9,cloudReady:this.clouds.visible,cloudRange:128,starQuads:this.stars.geometry.index!.count/6};
+        this.report={dayTicks:time,sunAngle:track('sun_angle'),moonAngle:track('moon_angle'),moonPhase:phase,starAngle:track('star_angle'),starOpacity:(this.stars.material as MeshBasicMaterial).opacity,cloudWind:wind,cloudPosition:this.clouds.position.toArray(),gameTick:this.gameTick,partial,dayPartial,rain,thunder,skyLightFactor:skyLight.factor,skyLightColor:skyLight.color,cloudHeight:attrs['minecraft:visual/cloud_height'],cloudQuads:this.cloudQuads,cloudInstances:9,cloudReady:this.clouds.visible,cloudRange:128,starQuads:this.stars.geometry.index!.count/6};
         renderer.render(this.scene,this.camera);
     }
 

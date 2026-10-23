@@ -36,6 +36,8 @@ test('formal native field draws underscore at end, directional insertion caret a
     assert.ok(h.calls.findIndex(c=>c[0]==='text'&&c[1]==='abc')<h.calls.findIndex(c=>c[5]==='difference'));assert.equal(h.calls.at(-1)[5],'lighter');
     (document as any).activeElement=null;h.input.value='';h.calls.length=0;nativeField(h.ctx as any,h.font as any,h.input as any,[0,0,80,9],{hint:'Search...',italicHint:true});assert.ok(h.calls.some(c=>c[0]==='text'&&c[1]==='Search...'&&c[4]==='#AAAAAA'));
     h.calls.length=0;nativeField(h.ctx as any,h.font as any,h.input as any,[0,0,80,9],{hint:'Default hint'});assert.ok(h.calls.some(c=>c[0]==='text'&&c[1]==='Default hint'&&c[4]==='#555555'));
+    h.calls.length=0;h.input.value='/tick rate 0';nativeField(h.ctx as any,h.font as any,h.input as any,[0,0,120,9],{invalidFrom:11});
+    assert.ok(h.calls.some(c=>c[0]==='text'&&c[1]==='/tick rate '&&c[4]==='#FFFFFF'));assert.ok(h.calls.some(c=>c[0]==='text'&&c[1]==='0'&&c[4]==='#FF5555'));
 });
 test('formal EditBox keeps valid scroll and reveals the backwards endpoint without changing text',()=>{
     const h=fieldHarness();Object.assign(h.input,{value:'abcdefghij',selectionStart:10,selectionEnd:10});nativeField(h.ctx as any,h.font as any,h.input as any,[0,0,20,8]);assert.equal(JSON.parse((h.input.dataset as any).nativeEdit).scroll,41);
@@ -154,8 +156,8 @@ test('full-height scaled pause screen retains title clearance before its first b
             background:{getContext:()=>({setTransform(){},imageSmoothingEnabled:false})}});
         screen.layout();
         assert.match(title.style.cssText,/top:80px/);
-        assert.match(buttons[0].style.cssText,/top:108px/);
-        assert.match(buttons[2].style.cssText,/top:204px/);
+        assert.match(buttons[0].style.cssText,/top:152px/);
+        assert.match(buttons[2].style.cssText,/top:248px/);
         assert.equal(screen.dialog.dataset.nativePage,'pause');
     } finally {if(savedStyle)Object.defineProperty(globalThis,'getComputedStyle',savedStyle);else Reflect.deleteProperty(globalThis,'getComputedStyle');}
 });

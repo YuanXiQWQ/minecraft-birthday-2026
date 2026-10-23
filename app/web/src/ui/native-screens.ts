@@ -13,7 +13,7 @@ export function menuLayout(width:number,height:number,page:string){const header=
  * @param {number} count Visible option-category count.
  * @return {object} Nonoverlapping logical widget bounds.
  */
-export function optionFlow(width:number,count:number){const narrow=width<310,rows=narrow?count:Math.ceil(count/2),warningY=Math.max(narrow?169:145,91+(rows-1)*24+24);return{buttonWidth:Math.min(200,width-16),warningY,resetY:Math.max(narrow?209:176,warningY+(narrow?40:31))};}
+export function optionFlow(width:number,count:number){const warningY=67+count*24;return{buttonWidth:Math.min(200,width-16),warningY,resetY:warningY};}
 export interface ScreenControls {title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;mute:HTMLButtonElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
 /** Position one supported native screen; transaction callbacks remain owned by app/settings. */
 export class NativeScreens {
@@ -62,7 +62,8 @@ export class NativeScreens {
         if(background){const pattern=c.createPattern(background,'repeat')!;pattern.setTransform(new DOMMatrix().scale(2));c.fillStyle=pattern;c.fillRect(0,0,w,h);}
         if(page==='pause'){
             const title=this.plane.querySelector('h2')!,buttons=[...this.plane.querySelectorAll('button')];this.place(title,0,40,w,9);
-            const gridHeight=buttons.length*24,top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+4);
+            const gridHeight=50+buttons.length*20+Math.max(0,buttons.length-1)*4,
+                top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+50);
             buttons.forEach((b,i)=>this.place(b,(w-Math.min(204,w-16))/2,top+i*24,Math.min(204,w-16)));return;
         }
         if (page === 'language' || page === 'sound') {
@@ -71,7 +72,7 @@ export class NativeScreens {
             for(const [name,y] of [['header_separator',layout.header-2],['footer_separator',h-layout.footer]] as const){const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_'+name+'.png');if(image){const pattern=c.createPattern(image,'repeat');c.save();c.translate(0,y);c.fillStyle=pattern!;c.fillRect(0,0,w,2);c.restore();}}
         }
         if(!u)return;this.place(u.title,0,layout.titleY,w,9);this.place(u.done,(w-pw)/2,layout.footerY,pw);
-        this.place(u.navigation,0,0,w,h);[...u.navigation.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:w/2-154+(i%2)*158,91+(narrow?i:Math.floor(i/2))*24,narrow?pw:150));
+        this.place(u.navigation,0,0,w,h);[...u.navigation.querySelectorAll('button')].forEach((b,i)=>this.place(b,(w-pw)/2,67+i*24,pw));
         for(const section of u.sections.values())this.place(section,0,0,w,h);
         this.place(u.volumeLabel,0,0,0,0);u.volumeLabel.classList.add('sr-only');
         const slider=u.volume.parentElement!;this.place(slider,(w-wide)/2,layout.contentY,wide);

@@ -1,4 +1,5 @@
 /** Native local chat keeps message identity, wrapped-line history and screen input separate from world effects. */
+import {completeCommand,parseCommand,type CommandFeedback} from '../domain/console.ts';
 import {drawSprite} from './vanilla.ts';
 import {tooltipBox} from './inventory-state.ts';
 import type {PixelUI} from './pixels.ts';
@@ -31,6 +32,9 @@ export class GameChat {
     newWhileScrolled = false;
     accessible = document.createElement('div');
     open = false;
+    command:((source:string)=>Promise<CommandFeedback[]>)|null=null;
+    completion:{start:number;values:string[];index:number;source:string}|null=null;
+    lifetime=0;
     timer = 0;
     tagHover: [number, number] | null = null;
     abort = new AbortController();
@@ -41,7 +45,7 @@ export class GameChat {
      * @param {Function} username Latest committed identity.
      * @param {Function} gate Input ownership callback.
      */
-    constructor(public viewport: HTMLElement, public pixels: PixelUI, public text: (key: string) => string, public username: () => string, public gate: (open: boolean) => void) {
+    constructor(public viewport: HTMLElement, public pixels: PixelUI, public text: (key: string,values?:Record<string,string|number>) => string, public username: () => string, public gate: (open: boolean) => void) {
         this.root.className='game-chat'; this.root.setAttribute('aria-label',text('chat.input'));
         this.canvas.setAttribute('aria-hidden','true'); this.input.maxLength=256; this.input.hidden=true;
         this.input.setAttribute('aria-label',text('chat.input')); this.input.autocomplete='off';
@@ -52,15 +56,20 @@ export class GameChat {
             if(e.code==='Escape'){e.preventDefault();this.hide();}
             else if(e.code==='Enter'){
                 e.preventDefault();const value=this.input.value.trim();
-                if(value){this.append([{text:value}],'player',username());this.history.push(value);if(this.history.length>100)this.history.shift();}
+                if(value){
+                    if(value.startsWith('/'))void this.submitCommand(value);else this.append([{text:value}],'player',username());
+                    this.history.push(value);if(this.history.length>100)this.history.shift();
+                }
                 this.hide();
-            }else if(e.code==='PageUp'||e.code==='PageDown'){e.preventDefault();this.scroll(e.code==='PageUp'?19:-19);}
+            }else if(e.code==='Tab'){e.preventDefault();if(this.input.value.startsWith('/'))this.complete(e.shiftKey);}
+            else if(e.code==='PageUp'||e.code==='PageDown'){e.preventDefault();this.scroll(e.code==='PageUp'?19:-19);}
             else if(e.code==='ArrowUp'||e.code==='ArrowDown'){
-                e.preventDefault(); if(this.historyIndex===this.history.length)this.historyDraft=this.input.value;
+                e.preventDefault();if(this.completion||this.input.value.startsWith('/')&&completeCommand(this.input.value).values.length){this.complete(e.code==='ArrowUp');return;} if(this.historyIndex===this.history.length)this.historyDraft=this.input.value;
                 this.historyIndex=Math.max(0,Math.min(this.history.length,this.historyIndex+(e.code==='ArrowUp'?-1:1)));
                 this.input.value=this.historyIndex===this.history.length?this.historyDraft:this.history[this.historyIndex];this.input.setSelectionRange(this.input.value.length,this.input.value.length);this.paint();
             }
         },{signal:this.abort.signal});
+        this.input.addEventListener('input',()=>{this.completion=null;},{signal:this.abort.signal});
         for(const type of ['input','select','keyup','pointerup','focus','blur'])this.input.addEventListener(type,()=>this.paint(),{signal:this.abort.signal});
         this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();this.scroll(-Math.sign(e.deltaY)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
         this.root.addEventListener('pointermove',e=>{const r=viewport.getBoundingClientRect();this.tagHover=[e.clientX-r.left,e.clientY-r.top];this.paint();},{signal:this.abort.signal});
@@ -88,10 +97,39 @@ export class GameChat {
         const line=document.createElement('p');line.textContent=body.map(r=>r.text).join('');this.accessible.append(line);if(this.accessible.children.length>100)this.accessible.firstElementChild?.remove();
         this.root.dataset.messages=JSON.stringify(this.messages);this.paint();
     }
-    /** Begin an unbordered ChatScreen edit lifetime without blurring the world. */
-    show(): void {this.open=true;this.input.hidden=false;this.input.value='';this.historyDraft='';this.historyIndex=this.history.length;this.gate(true);this.input.focus();this.paint();}
+    /** Begin an unbordered ChatScreen edit lifetime without blurring the world. @param {string} initial Native initial input, including slash-command entry. */
+    show(initial=''): void {this.open=true;this.completion=null;this.input.hidden=false;this.input.value=initial;this.historyDraft='';this.historyIndex=this.history.length;this.gate(true);this.input.focus();this.paint();}
     /** Cancel an unsent message and restore world input ownership. */
-    hide(): void {this.open=false;this.input.hidden=true;this.input.value='';this.offset=0;this.newWhileScrolled=false;this.tagHover=null;this.gate(false);this.paint();}
+    hide(): void {this.completion=null;this.root.dataset.commandHint=JSON.stringify({suggestions:[],error:null});this.root.dataset.completion='null';this.open=false;this.input.hidden=true;this.input.value='';this.offset=0;this.newWhileScrolled=false;this.tagHover=null;this.gate(false);this.paint();}
+    /** Submit a command through its authoritative semantic transaction and suppress discarded page replies.
+     * @param {string} source Original slash command.
+     * @return {Promise<void>} Native success or red syntax feedback.
+     */
+    async submitCommand(source:string):Promise<void>{
+        const ticket=this.lifetime,handler=this.command;if(!handler)return;
+        const messages=await handler(source);if(ticket!==this.lifetime||this.abort.signal.aborted)return;
+        for(const message of messages)this.commandMessage(message,source);
+    }
+    /** Draw native command feedback separately from player identity and automatic gameplay chat.
+     * @param {CommandFeedback} message Localized command result.
+     * @param {string} source Original text for Brigadier's error context.
+     */
+    commandMessage(message:CommandFeedback,source=''):void{
+        for(const line of this.text(message.key,message.values).split('\n'))this.append([{text:line,color:message.error?'#FF5555':'#FFFFFF'}]);
+        if(message.cursor!==undefined){const at=message.cursor,start=Math.max(0,at-10);this.append([
+            {text:(start?'...':'')+source.slice(start,at),color:'#AAAAAA'},
+            {text:source.slice(at),color:'#FF5555'}, {text:this.text('command.context.here'),color:'#FF5555'}
+        ]);}
+    }
+    /** Complete at the caret, retaining the original prefix while Tab/Shift-Tab cycles one native suggestion set.
+     * @param {boolean} backwards Whether to select the previous suggestion.
+     */
+    complete(backwards=false):void{
+        if(!this.completion){const source=this.input.value.slice(0,this.input.selectionStart??this.input.value.length),suggest=completeCommand(source);if(!suggest.values.length)return;this.completion={...suggest,index:backwards?0:-1,source:this.input.value};}
+        const c=this.completion;c.index=(c.index+(backwards?-1:1)+c.values.length)%c.values.length;
+        const end=c.source.indexOf(' ',c.start),tail=end<0?'':c.source.slice(end);this.input.value=c.source.slice(0,c.start)+c.values[c.index]+tail;
+        const caret=c.start+c.values[c.index].length;this.input.setSelectionRange(caret,caret);this.paint();
+    }
     /** Draw native logical margins, nine-pixel lines, message tags, fading, scrollbar and the unbordered editor. */
     paint(): void {
         const scale=nativeScale(this.viewport),w=Math.ceil(this.viewport.clientWidth/scale),h=Math.ceil(this.viewport.clientHeight/scale),dpr=Math.min(devicePixelRatio||1,4),width=Math.min(320,w-8),base=h-40,height=this.open?180:90;
@@ -112,7 +150,14 @@ export class GameChat {
         c.globalAlpha=1;
         if(this.open){
             if(this.lineCount>20){const total=this.lineCount*9,visible=Math.min(180,total),bar=Math.floor(visible*visible/total),by=base-Math.floor(this.offset*visible/this.lineCount)-bar,alpha=this.offset>0?'AA':'60';c.fillStyle=(this.newWhileScrolled?'#CC3333':'#3333AA')+alpha;c.fillRect(8+width,by,2,bar);c.fillStyle='#CCCCCC'+alpha;c.fillRect(9+width,by,1,bar);}
-            c.fillStyle='#00000080';c.fillRect(2,h-14,w-4,12);nativeField(c,this.pixels.font,this.input,[4,h-12,w-4,12],{shadow:true});
+            const source=this.input.value,parsed=source.startsWith('/')?parseCommand(source):null,offered=source.startsWith('/')?completeCommand(source.slice(0,this.input.selectionStart??source.length)):null,
+                suggestion=this.completion??(offered?.values.length?{...offered,index:0,source}:null),error=parsed&&'key'in parsed&&!suggestion?parsed:null;
+            c.fillStyle='#00000080';c.fillRect(2,h-14,w-4,12);nativeField(c,this.pixels.font,this.input,[4,h-12,w-4,12],{shadow:true,invalidFrom:error?.cursor});
+            if(suggestion){const list=suggestion.values,from=Math.max(0,suggestion.index-9),shown=list.slice(from,from+10),sw=Math.max(...shown.map(v=>this.pixels.font.width(v)))+2,sx=Math.max(0,Math.min(w-sw,4+this.pixels.font.width(suggestion.source.slice(0,suggestion.start)))),sy=h-15-shown.length*12;
+                c.fillStyle='#000000E0';c.fillRect(sx,sy,sw,shown.length*12);shown.forEach((v,i)=>this.pixels.font.draw(c,v,sx+1,sy+i*12+2,from+i===suggestion.index?'#FFFF00':'#AAAAAA',false));}
+            else if(error){const lines=wrap(this.text(error.key,error.values),w-8,v=>this.pixels.font.width(v)),sy=h-15-lines.length*12;c.fillStyle='#000000E0';c.fillRect(2,sy,w-4,lines.length*12);lines.forEach((line,i)=>this.pixels.font.draw(c,line,4,sy+i*12+2,'#FF5555',false));}
+            this.root.dataset.commandHint=JSON.stringify({suggestions:suggestion?.values??[],error});
+            this.root.dataset.completion=JSON.stringify(this.completion);
             this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
         }
         if(tag&&this.tagHover){
@@ -124,5 +169,5 @@ export class GameChat {
         this.onPaint?.();
     }
     /** Cancel the single bounded update timer and all owned listeners. */
-    dispose(): void {clearInterval(this.timer);this.abort.abort();this.root.remove();}
+    dispose(): void {this.lifetime++;this.command=null;clearInterval(this.timer);this.abort.abort();this.root.remove();}
 }

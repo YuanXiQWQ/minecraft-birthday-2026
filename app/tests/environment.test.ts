@@ -56,7 +56,7 @@ test('real save ticks, unrelated settings and reset preserve current environment
 test('environment migration preserves old bytes and facts; read/write failures cannot publish partial weather updates',async()=>{
  const state=initialState();delete state.progress.environment;state.progress.unlocked=['minecraft:oak_log'];state.settings.volume=.65;
  const current=await seal(state,'old',2),{checksum:_hash,...body}=current,old={...body,contentVersion:'p8-experience-2'},raw=JSON.stringify({...old,checksum:await checksum(old)}),read=await decode(raw);
- assert.equal(read.migrated,true);assert.equal(read.envelope.contentVersion,'p9-environment-1');assert.deepEqual(read.envelope.state.progress.unlocked,['minecraft:oak_log']);assert.equal(read.envelope.state.settings.volume,.65);assert.equal(read.envelope.state.progress.environment!.dayTicks,1000);assert.equal(JSON.parse(raw).contentVersion,'p8-experience-2');
+ assert.equal(read.migrated,true);assert.equal(read.envelope.contentVersion,'p9-commands-1');assert.deepEqual(read.envelope.state.progress.unlocked,['minecraft:oak_log']);assert.equal(read.envelope.state.settings.volume,.65);assert.equal(read.envelope.state.progress.environment!.dayTicks,1000);assert.equal(JSON.parse(raw).contentVersion,'p8-experience-2');
  const h=await sessions(),before=h.raw;h.deny(true);await assert.rejects(h.a.dispatch({type:'processing-tick',ticks:20}));assert.equal(h.raw,before);h.deny(false);await h.a.refresh();await h.a.dispatch({type:'processing-tick',ticks:20});assert.equal(h.a.view.envelope!.state.progress.environment!.dayTicks,1020);
  assert.throws(()=>validateEnvironment({...emptyEnvironment(),random:NaN}));assert.throws(()=>validateEnvironment({...emptyEnvironment(),latitude:1}));
 });
@@ -129,8 +129,8 @@ test('native rain/thunder light and sunrise tint preserve layer order and origin
 
 
 test('four options fit a narrow native logical plane without warning intercepting the weather button',()=>{
- const narrow=optionFlow(196,4);assert.equal(narrow.buttonWidth,180);assert.ok(narrow.warningY>163+20);assert.ok(narrow.resetY>=narrow.warningY+36);
- const desktop=optionFlow(400,4);assert.equal(desktop.buttonWidth,200);assert.equal(desktop.warningY,145);assert.equal(desktop.resetY,176);
+ const narrow=optionFlow(196,4);assert.equal(narrow.buttonWidth,180);assert.equal(narrow.resetY,67+4*24);assert.ok(narrow.resetY>=67+3*24+24);
+ const desktop=optionFlow(400,4);assert.equal(desktop.buttonWidth,200);assert.equal(desktop.resetY,163);
 });
 
 
