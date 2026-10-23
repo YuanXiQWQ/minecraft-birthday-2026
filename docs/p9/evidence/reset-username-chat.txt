@@ -1,0 +1,26 @@
+Browser tab: 38, Title: "Jerry's farm - Vincent's birthday", URL: "http://127.0.0.1:4222/game/".
+1 AXWebArea Jerry's farm - Vincent's birthday, URL: 127.0.0.1:4222/game/
+	2 container app
+		9 text Welcome to Jerry's farm
+		4 container
+			5 button Plains
+			6 button Cave
+			7 button Farm
+			8 button Home
+		10 container scene
+			11 image First-person three-dimensional scene; use the mouse pointer to select visible objects
+			12 container Nine-slot hotbar
+				13 checkbox Description: Slot 1: Empty, Value: 1
+				14 checkbox Description: Slot 2: Empty, Value: 0
+				15 checkbox Description: Slot 3: Empty, Value: 0
+				16 checkbox Description: Slot 4: Empty, Value: 0
+				17 checkbox Description: Slot 5: Empty, Value: 0
+				18 checkbox Description: Slot 6: Empty, Value: 0
+				19 checkbox Description: Slot 7: Empty, Value: 0
+				20 checkbox Description: Slot 8: Empty, Value: 0
+				21 checkbox Description: Slot 9: Empty, Value: 0
+			22 container Chat message
+				24 text <P9_guest> P9 reset check
+		23 container Birthday celebration
+
+The focused UI element is 1 AXWebArea Jerry's farm - Vincent's birthday, URL: 127.0.0.1:4222/game/

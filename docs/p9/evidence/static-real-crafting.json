@@ -1,0 +1,20 @@
+{
+  "acquiring": "false",
+  "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+  "book": "{\"generation\":\"272ec0e8-6d23-4765-aa7d-6835db549161\",\"identity\":\"[\\\"272ec0e8-6d23-4765-aa7d-6835db549161\\\",1,\\\"plains\\\",[\\\"personal\\\",\\\"crafting\\\",2]]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":true,\"toastRecipes\":\"[\\\"minecraft:oak_slab\\\",\\\"minecraft:oak_stairs\\\",\\\"minecraft:barrel\\\",\\\"minecraft:oak_fence\\\",\\\"minecraft:oak_sign\\\",\\\"minecraft:stick\\\",\\\"minecraft:oak_button\\\",\\\"minecraft:oak_door\\\",\\\"minecraft:oak_fence_gate\\\",\\\"minecraft:oak_pressure_plate\\\",\\\"minecraft:oak_trapdoor\\\"]\"}",
+  "crafting": "[null,null,null,null]",
+  "cursor": "null",
+  "dpr": "1.25",
+  "drag": "false",
+  "dragPreview": "null",
+  "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+  "furnace": "null",
+  "guiScale": "2.4",
+  "hopper": "null",
+  "player": "{\"skin\":\"minecraft:entity/player/wide/steve\",\"window\":{\"x\":26,\"y\":8,\"width\":49,\"height\":70,\"scale\":30},\"framebuffer\":[147,210],\"look\":{\"body\":-0.13780815465797258,\"head\":0.13780815465797258,\"pitch\":0.4232558317399343,\"tilt\":0.4232558317399343},\"layout\":\"[{\\\"head\\\":null,\\\"chest\\\":null,\\\"legs\\\":null,\\\"feet\\\":null,\\\"offhand\\\":null},{\\\"id\\\":\\\"minecraft:oak_log\\\",\\\"count\\\":1}]\",\"parts\":[\"head\",\"body\",\"rightArm\",\"leftArm\",\"rightLeg\",\"leftLeg\"],\"outerLayers\":6,\"hands\":1,\"armorParts\":0,\"renders\":385,\"geometries\":13,\"textures\":3,\"animatedTextures\":0,\"calls\":78}",
+  "preview": "{\"status\":\"empty\",\"result\":null}",
+  "sideOffset": "0",
+  "stationId": "",
+  "tab": "crafting",
+  "workbench": "null"
+}

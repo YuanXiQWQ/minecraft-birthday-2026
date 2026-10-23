@@ -1,0 +1,92 @@
+[
+  {
+    "file": "birthday-first-gesture-fallback.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-home-before-placement.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-home-synced.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-other-tab-fallback.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-placed.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-reset-home.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "birthday-taken.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "reset-username-chat.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-chat-menu.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-directory-requested482-actual1280.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-home-new.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-home-settings.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-pages-directory-requested482.jpg",
+    "width": 482,
+    "height": 899
+  },
+  {
+    "file": "static-pages-settings-actual1331x900.jpg",
+    "width": 1331,
+    "height": 900
+  },
+  {
+    "file": "static-pages-settings-requested482.jpg",
+    "width": 467,
+    "height": 871
+  },
+  {
+    "file": "static-personal-requested482-actual1280.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-personal-steve.jpg",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "file": "static-real-crafting.jpg",
+    "width": 1280,
+    "height": 720
+  }
+]

@@ -2,17 +2,11 @@
 
 ## 当前任务与规范
 
-当前定向修复以dbcc8c9为基线：[主页设置与采集容量](docs/p8/settings-harvest-fix/report.md)。主页设置须实际挂载原版语言/音量/静音/重置控件；普通采集的有效掉落不受背包容量剥夺取得/发现，27+9尽可能入包，余量明确反馈、来源一次结算。挤奶转换、工作台返还及合成/炉输出保留各自原子容量合同，不全局放宽。其余十九项实现保留，仅完成这两项定向修复，不扩展其他阶段。
+当前执行 **P9：最终回归、正式产物审核与交付收尾**，基线为已审查通过的62041c22439c22f87635bf51225f01dfaa2a4e74。统一入口见[交付索引](docs/p9/README.md)，当前行为仍以[有效合同](docs/p8/current-contract.md)、[十九项矩阵](docs/p8/experience-19/matrix.md)及[主页设置/采集容量修复](docs/p8/settings-harvest-fix/report.md)为准。既有实现与389项回归保留，不重开需求讨论、不扩展玩法或平台。
 
+P9已获用户明确授权：隔离干净工作副本安装/验证、当前成品集成与有界性能核查、静态产物/隐私审计、既有main Pages发布链收尾。只发布经过审计的app/dist-pages；仓库保持私有，不改权限或发布目标。所有历史“不进入P9/一律不部署”仅记录当时边界，不能覆盖当前授权。README继续面向Vincent，仅英文生日内容及网站链接。
 
-当前正式任务为用户[十九项整改](docs/p8/experience-19/authorization.md)，从用户格式化提交68fa0b3继续，保留格式。现行数量/输入合同见[当前合同](docs/p8/current-contract.md)，[矩阵](docs/p8/experience-19/matrix.md)与[实现及证据](docs/p8/experience-19/report.md)。本次明确覆盖合成不消耗/A目录返还、正常关台保存九格、全页模态、禁止PointerLock等冲突旧条款；保留锁/迁移/票据/生日闭环及Pages自动更新。历史措辞不覆盖此次授权。
-
-
-用户最新明确授权 GitHub Pages 发布及 main 每次提交后的自动更新；工作流见 `.github/workflows/pages.yml`。仓库保持私有，只发布经过审计的 `app/dist-pages/`，不发布开发资料。历史“不部署”限制不适用于本次发布授权；这不代表其他P9工作自动获批。README保留英文生日祝福及实际网站链接。
-
-当前定向修复基线 f31d706：[缺料/耕地/Steve补证](docs/p8/repair/report.md)。有限填料、筛选、幽灵共用数量/组件分配；真实命中支撑格处理15/16耕地，Use按所持物分流。旧steve-left/top-left/bottom-right纯色截图无效，新九姿态以完整GUI原图及可核对坐标裁切为证。该段为前次修复记录；当前执行顶部十九项授权，Pages已有明确发布授权。
-
-原十五项/P8授权基线c3ee1e6：[完整用户授权](docs/p8/authorization.md)明确先完成十五项基础整改，再在同一任务实现P8生日闭环；不进入P9、不部署。当前实现/迁移合同见[体验与生日合同](docs/p8/current-contract.md)，证据及交付见[本轮报告](docs/p8/report.md)；历史P1—P7报告保留当时事实，不用历史已通过记录否认最新实际试玩问题。
+历史证据入口：[十九项原始授权](docs/p8/experience-19/authorization.md)、[十五项/P8](docs/p8/report.md)、[缺料/耕地/Steve补证](docs/p8/repair/report.md)。原始失败和未验记录保留；不以旧报告替代当前证据。当前不是新增研究轮次；完成后普通新提交、快进推送，核对Actions/部署/线上build，再停止独立审查。无人工体验证据时只能称工程候选就绪。
 
 最新要求覆盖冲突旧合同：
 
@@ -48,7 +42,7 @@ Java26.3原版模型/贴图/GUI/字体/图标/粒子/声音默认从resources/mi
 - [分阶段开发路线](docs/development-roadmap.md)：阶段依赖、验收、测试、风险及完成条件。
 - [技术决策与核实记录](docs/decisions-and-research.md)：建议状态、待确认项及一手资料来源。
 - [真正 3D 场景与 P2 验证计划](docs/3d-scene-plan.md)：最新用户决定、渲染建议、交互/模型边界、性能验证与历史方案替代关系。
-- 方案B、真正3D、第一人称、中央构图、无准星及右键有限原地转向已定；当前十五项整改及P8已授权，P9未授权。
+- 方案B、真正3D、第一人称、中央构图、无准星及右键有限原地转向已定；P9交付收尾已授权；人工体验验收与工程检查分开。
 - [P2 第一轮报告](docs/p2/report.md)：隔离 TypeScript/Vite/Three.js 原型、原版模型离线探针、真实浏览器交互/性能及未验证门槛；运行见 `experiments/scene3d/README.md`。
 - [P2 第一人称修正验收](docs/p2/first-person-review.md)：场景内部眼高视角、居中构图、无准星、默认隐藏调试面板及桌面浏览器回归证据。
 - [P2 第三轮GUI与输入](docs/p2/gui-input-review.md)：原版容器/精灵/ASCII、两类图标、实例绑定、输入与候选语义边界；隔离为历史事实，当前正常加载仓库资源，历史阶段不自动授权后续；当前阶段以顶部最新授权为准。

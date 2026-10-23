@@ -1,0 +1,19 @@
+{
+  "acquiring": "false",
+  "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+  "book": "{\"generation\":\"capacity-cake-ed3a353f-67c2-4872-bdb5-bc61a768efcd\",\"identity\":\"[\\\"capacity-cake-ed3a353f-67c2-4872-bdb5-bc61a768efcd\\\",2,\\\"plains\\\",[\\\"capacity-table\\\",\\\"crafting\\\",3]]\",\"mode\":\"crafting\",\"width\":3,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+  "crafting": "[null,null,null,null]",
+  "cursor": "null",
+  "dpr": "1.25",
+  "drag": "false",
+  "dragPreview": "null",
+  "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+  "furnace": "null",
+  "guiScale": "2.4",
+  "hopper": "null",
+  "preview": "{\"status\":\"empty\",\"result\":null}",
+  "sideOffset": "0",
+  "stationId": "capacity-table",
+  "tab": "crafting",
+  "workbench": "[{\"id\":\"minecraft:bucket\",\"count\":1},{\"id\":\"minecraft:bucket\",\"count\":1},{\"id\":\"minecraft:bucket\",\"count\":1},null,null,null,null,null,null]"
+}

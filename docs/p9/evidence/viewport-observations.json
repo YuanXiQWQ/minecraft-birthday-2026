@@ -1,0 +1,36 @@
+{
+  "note": "Viewport override affected the selected tab; other tabs retained 1280x720. JPEG dimensions are independently checked, not inferred from requested values.",
+  "root": {
+    "bottom": 720,
+    "height": 720,
+    "left": 0,
+    "right": 1280,
+    "top": 0,
+    "width": 1280,
+    "x": 0,
+    "y": 0
+  },
+  "pages": {
+    "build": "62041c22439c",
+    "document": {
+      "bottom": 1048,
+      "height": 1048,
+      "left": 0,
+      "right": 467.2000122070313,
+      "top": 0,
+      "width": 467.2000122070313,
+      "x": 0,
+      "y": 0
+    },
+    "scene": {
+      "bottom": 1000,
+      "height": 920,
+      "left": 0,
+      "right": 467.2000122070313,
+      "top": 80,
+      "width": 467.2000122070313,
+      "x": 0,
+      "y": 80
+    }
+  }
+}

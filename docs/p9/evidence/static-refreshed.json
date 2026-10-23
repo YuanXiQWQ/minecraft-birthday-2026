@@ -1,0 +1,20 @@
+{
+  "acquiring": "false",
+  "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+  "book": "{\"generation\":\"272ec0e8-6d23-4765-aa7d-6835db549161\",\"identity\":\"[\\\"272ec0e8-6d23-4765-aa7d-6835db549161\\\",1,\\\"plains\\\",[\\\"personal\\\",\\\"crafting\\\",2]]\",\"mode\":\"crafting\",\"width\":2,\"open\":true,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":6,\"recipes\":[\"minecraft:crafting_table\",\"minecraft:oak_button\",\"minecraft:oak_planks\",\"minecraft:oak_pressure_plate\",\"minecraft:oak_wood\",\"minecraft:stick\"],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+  "crafting": "[null,null,null,null]",
+  "cursor": "null",
+  "dpr": "1.25",
+  "drag": "false",
+  "dragPreview": "null",
+  "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+  "furnace": "null",
+  "guiScale": "2.4",
+  "hopper": "null",
+  "player": "{\"skin\":\"minecraft:entity/player/wide/steve\",\"window\":{\"x\":26,\"y\":8,\"width\":49,\"height\":70,\"scale\":30},\"framebuffer\":[147,210],\"look\":{\"body\":0.23729550645333086,\"head\":-0.23729550645333086,\"pitch\":-0.2734269568536586,\"tilt\":-0.2734269568536586},\"layout\":\"[{\\\"head\\\":null,\\\"chest\\\":null,\\\"legs\\\":null,\\\"feet\\\":null,\\\"offhand\\\":null},{\\\"id\\\":\\\"minecraft:oak_log\\\",\\\"count\\\":1}]\",\"parts\":[\"head\",\"body\",\"rightArm\",\"leftArm\",\"rightLeg\",\"leftLeg\"],\"outerLayers\":6,\"hands\":1,\"armorParts\":0,\"renders\":6,\"geometries\":13,\"textures\":3,\"animatedTextures\":0,\"calls\":78}",
+  "preview": "{\"status\":\"empty\",\"result\":null}",
+  "sideOffset": "0",
+  "stationId": "",
+  "tab": "crafting",
+  "workbench": "null"
+}

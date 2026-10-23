@@ -1,0 +1,44 @@
+{
+  "celebration": {
+    "celebration": "{\"active\":false,\"paused\":false,\"seconds\":0,\"audio\":\"ready\",\"particles\":0,\"visible\":0,\"bursts\":[],\"liveVoices\":0,\"created\":0,\"released\":0}",
+    "playing": "false",
+    "runs": "[]"
+  },
+  "inventory": {
+    "acquiring": "false",
+    "backpack": "[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+    "book": "{\"generation\":\"capacity-cake-ed3a353f-67c2-4872-bdb5-bc61a768efcd\",\"identity\":\"[\\\"capacity-cake-ed3a353f-67c2-4872-bdb5-bc61a768efcd\\\",2,\\\"plains\\\",[\\\"capacity-table\\\",\\\"crafting\\\",3]]\",\"mode\":\"crafting\",\"width\":3,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+    "crafting": "[null,null,null,null]",
+    "cursor": "null",
+    "dpr": "1.25",
+    "drag": "false",
+    "dragPreview": "null",
+    "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+    "furnace": "null",
+    "guiScale": "2.4",
+    "hopper": "null",
+    "preview": "{\"status\":\"matched\",\"recipe\":\"minecraft:cake\",\"result\":{\"id\":\"minecraft:cake\",\"count\":1}}",
+    "sideOffset": "0",
+    "stationId": "capacity-table",
+    "tab": "crafting",
+    "workbench": "[{\"id\":\"minecraft:milk_bucket\",\"count\":1},{\"id\":\"minecraft:milk_bucket\",\"count\":1},{\"id\":\"minecraft:milk_bucket\",\"count\":1},{\"id\":\"minecraft:sugar\",\"count\":1},{\"id\":\"minecraft:egg\",\"count\":1},{\"id\":\"minecraft:sugar\",\"count\":1},{\"id\":\"minecraft:wheat\",\"count\":1},{\"id\":\"minecraft:wheat\",\"count\":1},{\"id\":\"minecraft:wheat\",\"count\":1}]"
+  },
+  "world": {
+    "cake": "false",
+    "crops": "[]",
+    "drawCalls": "53",
+    "engine": "three.js r186",
+    "frames": "532",
+    "geometry": "37",
+    "hover": "null",
+    "instances": "[[\"capacity-table\",\"crafting_table\",[-1,0,2],\"south\",false]]",
+    "natural": "{\"epoch\":0,\"removed\":[],\"roll\":0}",
+    "placementPreview": "null",
+    "pointerMode": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":true,\"epoch\":3}",
+    "recoveredWorld": "{\"tick\":134,\"scene\":\"plains\",\"crops\":[]}",
+    "renderedScene": "plains",
+    "resourceVersion": "26.3",
+    "scene": "plains",
+    "triangles": "29412"
+  }
+}

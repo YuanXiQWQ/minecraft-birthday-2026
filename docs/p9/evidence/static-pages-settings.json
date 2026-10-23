@@ -1,0 +1,29 @@
+{
+  "buttons": [
+    "English",
+    "Sound: ON",
+    "Reset progress...",
+    "Done"
+  ],
+  "fields": [
+    {
+      "checked": false,
+      "connected": true,
+      "id": "language",
+      "value": "en"
+    },
+    {
+      "checked": false,
+      "connected": true,
+      "id": "volume",
+      "value": "0.2"
+    },
+    {
+      "checked": false,
+      "connected": true,
+      "id": "mute",
+      "value": "on"
+    }
+  ],
+  "open": true
+}
