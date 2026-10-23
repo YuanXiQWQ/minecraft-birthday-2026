@@ -48,11 +48,16 @@ export class WorldUse {
             scene.renderer.domElement.style.cursor = hit && (hit.id.startsWith('node:') || hit.id.startsWith('crop:') || !!session.view.envelope?.state.progress.scenes[session.view.envelope.state.progress.scene].stations.some(s => s.id === hit.id)) ? 'pointer' : 'default';
             this.preview();
         };
+        scene.canUse = hit => {
+            const p = session.view.envelope?.state.progress, held = p?.player.data.hotbar[p.player.data.selected], equip = held && inventory.rules.items[held.id]?.equipment;
+            if (!hit) return !!equip;
+            return !!p && (!!equip || (hit.id === 'birthday-table' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldKind() || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
+        };
         scene.onMineStart = hit => this.beginMining(hit);
         scene.onMineCancel = () => this.cancelMining();
         scene.onPick = null;
         scene.onUse = (hit, modifiers) => {
-            if (hit) this.use(hit, !!modifiers?.shift, !!modifiers?.alt, !!modifiers?.ctrl);
+            if (hit) this.use(hit, !!modifiers?.shift, !!modifiers?.alt, !!modifiers?.ctrl); else inventory.autoEquip();
         };
         window.addEventListener('keyup', e => {
             this.above = e.ctrlKey && e.altKey;
@@ -124,11 +129,12 @@ export class WorldUse {
         const scope = this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene;
         return this.session.dispatch(command).then(events => {
             if (scope !== this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene) return;
+            if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
             if (effect) this.scene.breakEffect(effect.block, effect.point);
-            if (!events.some(e => e.type === 'item-unlocked')) this.notify(message);
+            if (!['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound) this.sound(sound);
             this.preview();
-        }).catch(() => this.notify('game.actionFailed'));
+        }).catch(error => this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'));
     }
 
     /** Begin one active pointer hold against a real visible block, not an item or animal.
@@ -161,6 +167,7 @@ export class WorldUse {
             ticks,
             hit
         };
+        this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining);
         this.scene.showCrack(hit.id, 0);
         this.miningTimer = window.setInterval(() => this.advanceMining(), 25);
     }

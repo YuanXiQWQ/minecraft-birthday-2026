@@ -1,0 +1,35 @@
+{
+  "formal": {
+    "tests": 376,
+    "pass": 376,
+    "fail": 0,
+    "previousBaseline": 341
+  },
+  "p2": {
+    "tests": 48,
+    "pass": 48
+  },
+  "p4": {
+    "items": 113,
+    "reachableRecipes": 112,
+    "classified": 2042,
+    "cakeSteps": 18,
+    "hashes": true
+  },
+  "staticHTTP": {
+    "tests": 2,
+    "pass": 2,
+    "paths": [
+      "/",
+      "/minecraft-birthday-2026/"
+    ],
+    "everyManifestByteCompared": true
+  },
+  "ordinaryResources": {
+    "files": 667,
+    "bytes": 9833987
+  },
+  "nativeComputerChecks": "user explicitly deferred; not passed",
+  "pointerLockActualGrant": "BLOCKED by IAB; actual rejection/fallback observed",
+  "DPRTested": 1.0000000149011612
+}

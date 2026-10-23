@@ -78,7 +78,7 @@ async function make(s: SaveSession, recipe: string, bench = false): Promise<void
         context = station ? {scene: p.scene, id: station.id, expected: structuredClone(station.contents)} : undefined;
     assert.ok(p.recipeBook.data.known.includes('minecraft:' + recipe), 'discovered ' + recipe);
     for (const id of p.unlocked) for (let supply = 0; supply < (id === 'minecraft:milk_bucket' ? 3 : 1); supply++) {
-        if (progress(s).player.data.backpack.filter(s => s?.id === id).length >= (id === 'minecraft:milk_bucket' ? 3 : 1)) continue;
+        if (progress(s).player.data.backpack.filter(s => s?.id === id && s.count >= Math.min(rules.items[id].maxStack, 8)).length >= (id === 'minecraft:milk_bucket' ? 3 : 1)) continue;
         const copied = await s.editInventory({type: 'source', item: id, mode: 'clone'}, null, progress(s).player.data);
         const empty = progress(s).player.data.backpack.findIndex(s => s === null);
         if (empty >= 0) await s.editInventory({
@@ -168,7 +168,7 @@ test('shared visit identity rejects double collection and obsolete visit; refres
     assert.deepEqual(progress(a).world.visits.plains.removed, ['oak_log:0']);
     await a.dispatch({type: 'select-scene', scene: 'farm'});
     await a.dispatch({type: 'select-scene', scene: 'plains'});
-    await assert.rejects(() => a.dispatch(command), /visit-conflict/);
+    await assert.rejects(() => a.dispatch({...command, expected: progress(a).player.data}), /visit-conflict/);
 });
 test('failed harvest write preserves resource and unlock; refresh permits retry once', async () => {
     const h = await harness(), raw = h.raw();
@@ -417,7 +417,7 @@ test('P6 book save migrates without clearing existing carriers, devices, discove
             })
         }), m = await decode(raw);
     assert.equal(m.migrated, true);
-    assert.equal(m.envelope.contentVersion, 'p8-inventory-1');
+    assert.equal(m.envelope.contentVersion, 'p8-experience-2');
     assert.deepEqual(m.envelope.state, state);
     const h = await harness();
     h.write(raw);

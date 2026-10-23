@@ -10,6 +10,8 @@ export interface Scaling {
 /** Render the original ASCII provider, deriving advances at runtime rather than storing converted font data. */
 export class BitmapFont {
   sheet: HTMLCanvasElement;
+  unicode: Record<string, string> = {};
+  unicodeTiles = new Map<string, HTMLCanvasElement>();
   glyphs = new Map<string, { x: number; y: number; w: number; h: number; advance: number }>();
   tints = new Map<string, HTMLCanvasElement>();
 
@@ -25,6 +27,7 @@ export class BitmapFont {
     const sheet = images.get('assets/minecraft/textures/font/ascii.png');
     if (!p?.chars || !sheet || (p.height ?? 8) !== 8 || p.ascent !== 7) throw new Error('unsupported-font-provider');
     this.sheet = sheet;
+    this.unicode = (documents.get('assets/minecraft/font/project_unifont.json') ?? {}) as Record<string, string>;
     const w = sheet.width / [...p.chars[0]].length, h = sheet.height / p.chars.length,
         rgba = sheet.getContext('2d')!.getImageData(0, 0, sheet.width, sheet.height).data;
     p.chars.forEach((row, r) => [...row].forEach((char, c) => {
@@ -52,7 +55,7 @@ export class BitmapFont {
   width(text: string): number {
     return [...text].reduce((n, ch) => {
       const g = this.glyphs.get(ch);
-      if (!g) throw new Error('unsupported-font-character');
+      if (!g) {const bitmap = this.unicode[ch.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')]; return n + (bitmap ? bitmap.length / 8 + 1 : 6);}
       return n + g.advance;
     }, 0);
   }
@@ -81,15 +84,44 @@ export class BitmapFont {
     }
     for (const char of text) {
       const g = this.glyphs.get(char);
-      if (!g) throw new Error('unsupported-font-character');
+      if (!g) {
+        this.drawUnicode(context, char, x, y, color); x += this.width(char); continue;
+      }
       if (g.w) context.drawImage(tint, g.x, g.y, g.w, g.h, x, y, g.w * 8 / g.h, 8);
       x += g.advance;
     }
   }
 
+  /** Draw an original Unihex bitmap, with a bounded cache independent of user message count.
+   * @param {CanvasRenderingContext2D} context Target font plane.
+   * @param {string} char Code point.
+   * @param {number} x Logical left.
+   * @param {number} y Logical top.
+   * @param {string} color Native text tint.
+   */
+  drawUnicode(context: CanvasRenderingContext2D, char: string, x: number, y: number, color: string): void {
+    const bitmap = this.unicode[char.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')] ?? this.unicode['FFFD'];
+    if (!bitmap) return;
+    const key = char + color;
+    let tile = this.unicodeTiles.get(key);
+    if (!tile) {
+      tile = document.createElement('canvas'); tile.width = bitmap.length / 4; tile.height = 16;
+      const c = tile.getContext('2d')!; c.fillStyle = color;
+      for (let row = 0; row < 16; row++) {
+        const bits = BigInt('0x' + bitmap.slice(row * bitmap.length / 16, (row + 1) * bitmap.length / 16));
+        for (let col = 0; col < tile.width; col++) if (bits & 1n << BigInt(tile.width - col - 1)) c.fillRect(col, row, 1, 1);
+      }
+      if (this.unicodeTiles.size >= 256) this.unicodeTiles.delete(this.unicodeTiles.keys().next().value!);
+      this.unicodeTiles.set(key, tile);
+    }
+    context.drawImage(tile, x, y - 1, tile.width / 2, 8);
+  }
+
   /** Release runtime tinted glyph sheets and advance maps. */
   dispose(): void {
     this.tints.clear();
+    this.unicodeTiles.clear();
+    this.unicode = {};
     this.glyphs.clear();
   }
 }

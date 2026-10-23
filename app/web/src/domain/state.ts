@@ -1,4 +1,6 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {quickMove} from './slots.ts';
+import {correctTool} from '../rules/process.ts';
 import type {
     Command,
     DomainEvent,
@@ -30,10 +32,10 @@ import {
 import type {FurnaceKind} from './furnace.ts';
 import reachable from '../data/registry.json' with {type: 'json'};
 import nativeInventory from '../data/inventory-rules.json' with {type: 'json'};
-import {emptyInventory, layout, reduceInventory, validateStack, validateCarriers} from './inventory.ts';
+import {emptyInventory, layout, reduceInventory, validateStack, validateCarriers, playerTargets} from './inventory.ts';
 import {takeCraft} from './crafting.ts';
 import type {CraftReceipt} from './crafting.ts';
-import type {Rules} from '../rules/types.ts';
+import type {Rules, Stack} from '../rules/types.ts';
 import type {InventoryState} from './inventory.ts';
 import {identity} from './slots.ts';
 
@@ -68,7 +70,7 @@ export function initialProgress(): Progress {
  * @return {State} Independent state value.
  */
 export function initialState(): State {
-    return {progress: initialProgress(), settings: {locale: 'en', volume: .2, muted: false}};
+    return {progress: initialProgress(), settings: {locale: 'en', volume: .2, muted: false, username: 'sireoh'}};
 }
 
 /** Construct ephemeral presentation state without replaying persisted completion or notifications.
@@ -154,7 +156,8 @@ export function validateState(value: unknown): asserts value is State {
     const p = value.progress, s = value.settings;
     fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement']);
     validateWorld(p.world);
-    fields(s, ['locale', 'volume', 'muted']);
+    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : [])]);
+    ensure(s.username === undefined || typeof s.username === 'string' && /^[A-Za-z0-9_]{3,16}$/.test(s.username), 'invalid-username');
     ensure(typeof s.locale === 'string' && /^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$/.test(s.locale));
     ensure(typeof s.volume === 'number' && Number.isFinite(s.volume) && s.volume >= 0 && s.volume <= 1);
     ensure(typeof s.muted === 'boolean');
@@ -336,13 +339,26 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(rules, 'native-rules-unavailable');
             ensure(identity(command.expected) === identity(p.player.data), 'inventory-conflict');
             const held = p.player.data.hotbar[p.player.data.selected];
-            let acquired: string[] = [];
-            if (command.type === 'harvest-node') acquired = harvestNode(p, command.scene, command.node, command.visit, held, rules); else if (command.type === 'plant-crop') plantCrop(p, command.cell, command.id, held); else acquired = harvestCrop(p, command.id, rules);
-            for (const id of acquired) if (!p.unlocked.includes(id)) {
-                item(id);
-                p.unlocked.push(id);
-                events.push({type: 'item-unlocked', item: id});
+            let drops: Stack[] = [];
+            if (command.type === 'harvest-node') drops = harvestNode(p, command.scene, command.node, command.visit, held, rules);
+            else if (command.type === 'plant-crop') plantCrop(p, command.cell, command.id, held);
+            else drops = harvestCrop(p, command.id, rules);
+            const acquired = drops.map(s => s.id);
+            if (command.type === 'harvest-node' && command.node === 'cow:0') {
+                ensure(held?.id === rules.interactions.milk.input, 'milk-requires-bucket');
+                if (held.count === 1) {p.player.data.hotbar[p.player.data.selected] = structuredClone(drops[0]); drops = [];}
+                else p.player.data.hotbar[p.player.data.selected] = {...held, count: held.count - 1};
             }
+            const carriers = {...p.player.data, cursor: null};
+            for (const drop of drops) {
+                const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
+                quickMove(source, playerTargets(carriers), rules);
+                ensure(!source.stack, 'inventory-full');
+            }
+            for (const id of acquired) if (!p.unlocked.includes(id)) {
+                item(id); p.unlocked.push(id); events.push({type: 'item-unlocked', item: id});
+            }
+            if (acquired.length) events.push({type: 'items-acquired', stacks: drops.length ? structuredClone(drops) : acquired.map(id => ({id, count: 1}))});
             break;
         }
         case 'rotate-station': {
@@ -384,6 +400,20 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             } else if (device) device.contents = {version: 1, data: {grid: structuredClone(inventory.workbench!)}};
             break;
         }
+        case 'close-workbench': {
+            const station = p.scenes[command.scene].stations.find(s => s.id === command.id);
+            if (!station) break;
+            ensure(station.kind === 'crafting_table' && station.contents.version === 1, 'invalid-crafting-device');
+            const carriers = {...structuredClone(p.player.data), cursor: null};
+            for (const stack of station.contents.data.grid) if (stack) {
+                const source = {stack: structuredClone(stack) as Stack | null, policy: {take: true, place: false}};
+                quickMove(source, playerTargets(carriers), rules ?? nativeInventory);
+                ensure(!source.stack, 'workbench-return-full');
+            }
+            p.player.data = layout(carriers);
+            station.contents.data.grid = Array(9).fill(null);
+            break;
+        }
         case 'unlock':
             item(command.item);
             if (!p.unlocked.includes(command.item)) {
@@ -414,6 +444,10 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                     ensure(supported({...p, scene: command.scene}, command.station.cell), 'unsupported-placement');
                     ensure(!sourceOccupied({...p, scene: command.scene}, command.station.cell), 'occupied-resource');
                 }
+                if (command.expected) {
+                    const stack = p.player.data.hotbar[p.player.data.selected]!;
+                    p.player.data.hotbar[p.player.data.selected] = stack.count > 1 ? {...stack, count: stack.count - 1} : null;
+                }
                 list.push(structuredClone(command.station));
             } else {
                 ensure(list[index].kind === command.station.kind && identity(list[index].contents) === identity(command.station.contents), 'station-content-conflict');
@@ -424,12 +458,22 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'remove-station':
             ensure(p.scenes[command.scene].stations.some(s => s.id === command.id), 'station-unavailable');
             if (command.expected) ensure(command.scene === p.scene && identity(command.expected) === identity(p.player.data), 'inventory-conflict');
+            const removed = p.scenes[command.scene].stations.find(s => s.id === command.id)!;
+            if (command.expected && rules) {
+                const held = p.player.data.hotbar[p.player.data.selected];
+                if (removed.kind === 'crafting_table' || held && correctTool(held.id, 'minecraft:' + removed.kind, rules)) {
+                    const drop = {id: 'minecraft:' + removed.kind, count: 1}, source = {stack: drop as Stack | null, policy: {take: true, place: false}};
+                    quickMove(source, playerTargets({...p.player.data, cursor: null}), rules);
+                    ensure(!source.stack, 'inventory-full');
+                    events.push({type: 'items-acquired', stacks: [drop]});
+                }
+            }
             delete p.world.hoppers[command.id];
             ensure(SCENES.includes(command.scene));
             p.scenes[command.scene].stations = p.scenes[command.scene].stations.filter(s => s.id !== command.id);
             break;
         case 'settings':
-            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted'].includes(k)));
+            ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username'].includes(k)));
             next.settings = {...next.settings, ...command.patch};
             break;
         case 'record-cake-placement':

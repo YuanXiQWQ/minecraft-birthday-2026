@@ -36,7 +36,7 @@ for (const boundary of ['complete', 'release', 'target', 'tool', 'gui', 'look', 
                 modal: {open: false}
             },
             scene: {
-                input: true, look: {active: null}, showCrack() {
+                renderer: {domElement: {dataset: {}}}, input: true, look: {active: null}, showCrack() {
                 }, breakEffect() {
                 }, refreshHover: () => hit
             },

@@ -1,0 +1,334 @@
+{
+  "testObservationOnly": true,
+  "at": 108836.40000003576,
+  "viewport": [
+    1920,
+    1080
+  ],
+  "dpr": 1.0000000149011612,
+  "scene": {
+    "x": 0,
+    "y": 82,
+    "width": 1920,
+    "height": 998,
+    "top": 82,
+    "right": 1920,
+    "bottom": 1080,
+    "left": 0
+  },
+  "build": "68fa0b38e7c4",
+  "surfaces": [
+    {
+      "index": 0,
+      "className": "",
+      "rect": {
+        "x": 592,
+        "y": 980,
+        "width": 736,
+        "height": 96,
+        "top": 980,
+        "right": 1328,
+        "bottom": 1076,
+        "left": 592
+      },
+      "backing": [
+        736,
+        96
+      ],
+      "png": "surfaces/7ebf75680eef8a0460f162db56fb7a2581c409504c68be5eb059f462aa1878ca.png",
+      "sha256": "7ebf75680eef8a0460f162db56fb7a2581c409504c68be5eb059f462aa1878ca",
+      "capturedName": "final-directory-1920x1080-surface-0.png"
+    },
+    {
+      "index": 1,
+      "className": "offhand-hud",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        116,
+        96
+      ],
+      "png": "surfaces/26e611e3e687b422929cf9e0528bc9707d05753e056662a927ddf9551ded637a.png",
+      "sha256": "26e611e3e687b422929cf9e0528bc9707d05753e056662a927ddf9551ded637a",
+      "capturedName": "final-directory-1920x1080-surface-1.png"
+    },
+    {
+      "index": 2,
+      "className": "",
+      "rect": {
+        "x": 1088,
+        "y": 261,
+        "width": 112,
+        "height": 128,
+        "top": 261,
+        "right": 1200,
+        "bottom": 389,
+        "left": 1088
+      },
+      "backing": [
+        112,
+        128
+      ],
+      "png": "surfaces/907f2546576ed678b96c940d2b4c225bd2cc6a3a02c4b70ffa064a47bcdf4525.png",
+      "sha256": "907f2546576ed678b96c940d2b4c225bd2cc6a3a02c4b70ffa064a47bcdf4525",
+      "capturedName": "final-directory-1920x1080-surface-2.png"
+    },
+    {
+      "index": 3,
+      "className": "",
+      "rect": {
+        "x": 1200,
+        "y": 261,
+        "width": 112,
+        "height": 128,
+        "top": 261,
+        "right": 1312,
+        "bottom": 389,
+        "left": 1200
+      },
+      "backing": [
+        112,
+        128
+      ],
+      "png": "surfaces/384dfae77c25a751ca3450226462d20520461d01253f489550082877ac9ce1aa.png",
+      "sha256": "384dfae77c25a751ca3450226462d20520461d01253f489550082877ac9ce1aa",
+      "capturedName": "final-directory-1920x1080-surface-3.png"
+    },
+    {
+      "index": 4,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        588,
+        664
+      ],
+      "png": "surfaces/c5bdc27e0f8383f8be08d93ffc730b14a5283b17a148d325e69403393e5f1d39.png",
+      "sha256": "c5bdc27e0f8383f8be08d93ffc730b14a5283b17a148d325e69403393e5f1d39",
+      "capturedName": "final-directory-1920x1080-surface-4.png"
+    },
+    {
+      "index": 5,
+      "className": "",
+      "rect": {
+        "x": 570,
+        "y": 365,
+        "width": 780,
+        "height": 544,
+        "top": 365,
+        "right": 1350,
+        "bottom": 909,
+        "left": 570
+      },
+      "backing": [
+        780,
+        544
+      ],
+      "png": "surfaces/2720dcbeeb4b06a0be7d962c516e562790131699810051276ba39948afdbbfa8.png",
+      "sha256": "2720dcbeeb4b06a0be7d962c516e562790131699810051276ba39948afdbbfa8",
+      "capturedName": "final-directory-1920x1080-surface-5.png"
+    },
+    {
+      "index": 6,
+      "className": "player-entity-preview",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        196,
+        280
+      ],
+      "png": "surfaces/a4a10d499f4cec3cb52561d74fc50d6b9728e4bb7029d976e81f4c91c922f79e.png",
+      "sha256": "a4a10d499f4cec3cb52561d74fc50d6b9728e4bb7029d976e81f4c91c922f79e",
+      "capturedName": "final-directory-1920x1080-surface-6.png"
+    },
+    {
+      "index": 7,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        298,
+        12
+      ],
+      "png": "surfaces/8755b6f6348fd3ac32a99425facc5176fdc5e3b28fec2ac2d0f94962462bc606.png",
+      "sha256": "8755b6f6348fd3ac32a99425facc5176fdc5e3b28fec2ac2d0f94962462bc606",
+      "capturedName": "final-directory-1920x1080-surface-7.png"
+    },
+    {
+      "index": 8,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        50,
+        32
+      ],
+      "png": "surfaces/e93930dc3028d9c4f1e538f1d740f15c7ddb945c1bf3ae71c66d0e22fbc08a13.png",
+      "sha256": "e93930dc3028d9c4f1e538f1d740f15c7ddb945c1bf3ae71c66d0e22fbc08a13",
+      "capturedName": "final-directory-1920x1080-surface-8.png"
+    },
+    {
+      "index": 9,
+      "className": "item-cursor",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        96,
+        96
+      ],
+      "png": "surfaces/27e805ff8cccee3629f956315760388bb45a77ff9b12b840579ed1f31dbe9cf3.png",
+      "sha256": "27e805ff8cccee3629f956315760388bb45a77ff9b12b840579ed1f31dbe9cf3",
+      "capturedName": "final-directory-1920x1080-surface-9.png"
+    },
+    {
+      "index": 10,
+      "className": "",
+      "rect": {
+        "x": 4,
+        "y": 802,
+        "width": 300,
+        "height": 150,
+        "top": 802,
+        "right": 304,
+        "bottom": 952,
+        "left": 4
+      },
+      "backing": [
+        300,
+        150
+      ],
+      "png": "surfaces/8617e027d9070bad2f37098c59e09dd1818d6af11bcef176ac1ec1cd5e3fc0a2.png",
+      "sha256": "8617e027d9070bad2f37098c59e09dd1818d6af11bcef176ac1ec1cd5e3fc0a2",
+      "capturedName": "final-directory-1920x1080-surface-10.png"
+    },
+    {
+      "index": 11,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        40,
+        20
+      ],
+      "png": "surfaces/a5186784736f566bdca953552b76411a40fba130cb49e95e6b48c293febba795.png",
+      "sha256": "a5186784736f566bdca953552b76411a40fba130cb49e95e6b48c293febba795",
+      "capturedName": "final-directory-1920x1080-surface-11.png"
+    },
+    {
+      "index": 12,
+      "className": "recipe-toast",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        160,
+        32
+      ],
+      "png": "surfaces/f5463d4fb04caba4043682cc45360d738e8c4cfc5f49b0eb1a6bd4ff1192bbf0.png",
+      "sha256": "f5463d4fb04caba4043682cc45360d738e8c4cfc5f49b0eb1a6bd4ff1192bbf0",
+      "capturedName": "final-directory-1920x1080-surface-12.png"
+    }
+  ],
+  "save": "{\"format\":1,\"contentVersion\":\"p8-experience-2\",\"vanillaVersion\":\"26.3\",\"generation\":\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\",\"revision\":7416,\"state\":{\"progress\":{\"world\":{\"version\":1,\"tick\":35896,\"manual\":130,\"visits\":{\"plains\":{\"epoch\":6,\"removed\":[],\"roll\":27},\"cave\":{\"epoch\":2,\"removed\":[\"iron_ore:1\"],\"roll\":0},\"farm\":{\"epoch\":3,\"removed\":[],\"roll\":3},\"home\":{\"epoch\":1,\"removed\":[],\"roll\":0}},\"hoppers\":{}},\"unlocked\":[\"minecraft:oak_log\",\"minecraft:oak_planks\",\"minecraft:crafting_table\",\"minecraft:stick\",\"minecraft:wooden_pickaxe\",\"minecraft:cobblestone\",\"minecraft:stone_pickaxe\",\"minecraft:furnace\",\"minecraft:raw_iron\",\"minecraft:iron_ingot\",\"minecraft:bucket\",\"minecraft:milk_bucket\",\"minecraft:egg\",\"minecraft:sugar_cane\",\"minecraft:wheat_seeds\",\"minecraft:sugar\",\"minecraft:wheat\",\"minecraft:cake\",\"minecraft:chest\",\"minecraft:hopper\",\"minecraft:oak_stairs\",\"minecraft:oak_slab\"],\"scene\":\"plains\",\"scenes\":{\"plains\":{\"layoutVersion\":1,\"stations\":[{\"id\":\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"kind\":\"crafting_table\",\"cell\":[-1,0,2],\"facing\":\"south\",\"contents\":{\"version\":1,\"data\":{\"grid\":[null,null,null,null,null,null,null,null,null]}}}],\"crops\":[]},\"cave\":{\"layoutVersion\":1,\"stations\":[{\"id\":\"18264ab8-a159-4dc8-8b7c-6ad915d435e2\",\"kind\":\"furnace\",\"cell\":[0,0,2],\"facing\":\"south\",\"contents\":{\"version\":2,\"data\":{\"input\":null,\"fuel\":{\"id\":\"minecraft:oak_planks\",\"count\":29},\"output\":null,\"burn\":0,\"burnTotal\":300,\"cook\":0,\"cookTotal\":200,\"recipe\":null,\"speed\":1,\"outputRecipe\":null}}}],\"crops\":[]},\"farm\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]},\"home\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]}},\"player\":{\"version\":1,\"data\":{\"backpack\":[{\"id\":\"minecraft:oak_planks\",\"count\":12},{\"id\":\"minecraft:bucket\",\"count\":3},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":57},{\"id\":\"minecraft:oak_log\",\"count\":1},{\"id\":\"minecraft:hopper\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2},{\"id\":\"minecraft:oak_stairs\",\"count\":4},{\"id\":\"minecraft:oak_slab\",\"count\":6},{\"id\":\"minecraft:sugar\",\"count\":63},{\"id\":\"minecraft:wheat\",\"count\":62},{\"id\":\"minecraft:crafting_table\",\"count\":1},{\"id\":\"minecraft:chest\",\"count\":1},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"recipeBook\":{\"version\":1,\"data\":{\"known\":[\"minecraft:crafting_table\",\"minecraft:oak_planks\",\"minecraft:oak_wood\",\"minecraft:charcoal\",\"minecraft:oak_slab\",\"minecraft:oak_stairs\",\"minecraft:barrel\",\"minecraft:oak_fence\",\"minecraft:oak_sign\",\"minecraft:stick\",\"minecraft:oak_button\",\"minecraft:oak_door\",\"minecraft:oak_fence_gate\",\"minecraft:oak_pressure_plate\",\"minecraft:oak_trapdoor\",\"minecraft:wooden_spear\",\"minecraft:wooden_sword\",\"minecraft:campfire\",\"minecraft:ladder\",\"minecraft:wooden_axe\",\"minecraft:wooden_hoe\",\"minecraft:wooden_pickaxe\",\"minecraft:wooden_shovel\",\"minecraft:cobblestone_slab\",\"minecraft:cobblestone_stairs\",\"minecraft:stone\",\"minecraft:stone_spear\",\"minecraft:stone_sword\",\"minecraft:cobblestone_wall\",\"minecraft:furnace\",\"minecraft:lever\",\"minecraft:stone_axe\",\"minecraft:stone_hoe\",\"minecraft:stone_pickaxe\",\"minecraft:stone_shovel\",\"minecraft:torch\",\"minecraft:smoker\",\"minecraft:raw_iron_block\",\"minecraft:iron_ingot_from_blasting_raw_iron\",\"minecraft:iron_ingot_from_smelting_raw_iron\",\"minecraft:iron_block\",\"minecraft:iron_boots\",\"minecraft:iron_chestplate\",\"minecraft:iron_helmet\",\"minecraft:iron_leggings\",\"minecraft:iron_spear\",\"minecraft:iron_sword\",\"minecraft:shield\",\"minecraft:chest\",\"minecraft:iron_bars\",\"minecraft:iron_chain\",\"minecraft:lantern\",\"minecraft:lodestone\",\"minecraft:smithing_table\",\"minecraft:bucket\",\"minecraft:iron_nugget\",\"minecraft:heavy_weighted_pressure_plate\",\"minecraft:hopper\",\"minecraft:iron_door\",\"minecraft:iron_trapdoor\",\"minecraft:iron_axe\",\"minecraft:iron_hoe\",\"minecraft:iron_pickaxe\",\"minecraft:iron_shovel\",\"minecraft:shears\",\"minecraft:minecart\",\"minecraft:cake\",\"minecraft:paper\",\"minecraft:sugar_from_sugar_cane\",\"minecraft:hay_block\",\"minecraft:bread\",\"minecraft:composter\"],\"unseen\":[\"minecraft:charcoal\",\"minecraft:wooden_spear\",\"minecraft:wooden_sword\",\"minecraft:stone\",\"minecraft:stone_spear\",\"minecraft:stone_sword\",\"minecraft:stone_axe\",\"minecraft:stone_hoe\",\"minecraft:stone_shovel\",\"minecraft:smoker\",\"minecraft:raw_iron_block\",\"minecraft:iron_ingot_from_blasting_raw_iron\",\"minecraft:iron_ingot_from_smelting_raw_iron\",\"minecraft:iron_leggings\",\"minecraft:iron_spear\",\"minecraft:iron_sword\",\"minecraft:shield\",\"minecraft:lantern\",\"minecraft:lodestone\",\"minecraft:smithing_table\",\"minecraft:iron_pickaxe\",\"minecraft:iron_shovel\",\"minecraft:minecart\",\"minecraft:paper\",\"minecraft:composter\"],\"views\":{\"crafting\":{\"open\":true,\"filter\":false},\"furnace\":{\"open\":false,\"filter\":false},\"blast_furnace\":{\"open\":false,\"filter\":false}}}},\"cakePlacement\":{\"scene\":\"home\",\"table\":\"birthday-table\"}},\"settings\":{\"locale\":\"en\",\"volume\":0.2,\"muted\":false,\"username\":\"sireoh_test\"}},\"checksum\":\"82a336fa858f093110d392989da373014573e018e0940fc19cf00e677e6e6b6e\"}",
+  "inventory": {
+    "drag": "false",
+    "preview": "{\"status\":\"empty\",\"result\":null}",
+    "book": "{\"generation\":\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\",\"identity\":\"[\\\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\\\",1,\\\"plains\\\",null]\",\"mode\":\"crafting\",\"width\":2,\"open\":false,\"query\":\"\",\"category\":\"all\",\"page\":0,\"groups\":0,\"recipes\":[],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":false,\"toastRecipes\":null}",
+    "acquiring": "false",
+    "dragPreview": "null",
+    "guiScale": "3.999999940395356",
+    "dpr": "1.0000000149011612",
+    "cursor": "null",
+    "backpack": "[{\"id\":\"minecraft:oak_planks\",\"count\":12},{\"id\":\"minecraft:bucket\",\"count\":3},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":57},{\"id\":\"minecraft:oak_log\",\"count\":1},{\"id\":\"minecraft:hopper\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2},{\"id\":\"minecraft:oak_stairs\",\"count\":4},{\"id\":\"minecraft:oak_slab\",\"count\":6},{\"id\":\"minecraft:sugar\",\"count\":63},{\"id\":\"minecraft:wheat\",\"count\":62},{\"id\":\"minecraft:crafting_table\",\"count\":1},{\"id\":\"minecraft:chest\",\"count\":1},{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null]",
+    "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+    "crafting": "[null,null,null,null]",
+    "tab": "catalogue",
+    "stationId": "",
+    "workbench": "null",
+    "hopper": "null",
+    "sideOffset": "0",
+    "furnace": "null"
+  },
+  "world": {
+    "engine": "three.js r186",
+    "resourceVersion": "26.3",
+    "pointerMode": "{\"desired\":\"hidden\",\"actual\":false,\"pending\":false,\"paused\":true,\"epoch\":3}",
+    "hover": "null",
+    "placementPreview": "null",
+    "recoveredWorld": "{\"tick\":33797,\"scene\":\"plains\",\"crops\":[]}",
+    "scene": "plains",
+    "natural": "{\"epoch\":6,\"removed\":[],\"roll\":27}",
+    "crops": "[]",
+    "cake": "false",
+    "instances": "[[\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"crafting_table\",[-1,0,2],\"south\",false]]",
+    "renderedScene": "plains",
+    "frames": "2501",
+    "drawCalls": "53",
+    "geometry": "37",
+    "triangles": "29412"
+  },
+  "chat": {}
+}

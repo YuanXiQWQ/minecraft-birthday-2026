@@ -188,7 +188,7 @@ test('explicit upper attachment uses the same valid neighbor for preview and fin
     const placed = session.view.envelope!.state.progress.scenes.plains.stations[1];
     assert.deepEqual(placed.cell, candidate.cell);
     assert.equal(placed.facing, candidate.facing);
-    assert.equal(session.view.envelope!.state.progress.player.data.hotbar[0]!.count, 1);
+    assert.equal(session.view.envelope!.state.progress.player.data.hotbar[0], null);
 });
 
 test('formal WorldUse R re-picks and cannot rotate stale A or act during a look gesture', {timeout: 5000}, async () => {

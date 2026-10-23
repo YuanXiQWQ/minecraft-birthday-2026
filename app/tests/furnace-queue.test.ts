@@ -99,7 +99,7 @@ async function harness(options: { known?: boolean; merge?: number; bench?: boole
         open: true, dataset: {}, setAttribute() {
         }, close() {
             this.open = false;
-        }, showModal() {
+        }, show() {
             this.open = true;
         }, querySelector() {
             return {

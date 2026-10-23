@@ -1,0 +1,146 @@
+[
+  {
+    "file": "verified-seam-personal-1280x720.jpg",
+    "point": [
+      790,
+      264
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      760,
+      203,
+      820,
+      293
+    ]
+  },
+  {
+    "file": "verified-seam-directory-1280x720.jpg",
+    "point": [
+      755,
+      294
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      725,
+      233,
+      839,
+      323
+    ]
+  },
+  {
+    "file": "verified-seam-personal-1440x900.jpg",
+    "point": [
+      945,
+      285
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      902,
+      196,
+      988,
+      314
+    ]
+  },
+  {
+    "file": "verified-seam-directory-1440x900.jpg",
+    "point": [
+      892,
+      330
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      849,
+      241,
+      1016,
+      359
+    ]
+  },
+  {
+    "file": "verified-seam-personal-1920x1080.jpg",
+    "point": [
+      1260,
+      306
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      1204,
+      189,
+      1316,
+      335
+    ]
+  },
+  {
+    "file": "verified-seam-directory-1920x1080.jpg",
+    "point": [
+      1190,
+      366
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      1134,
+      249,
+      1354,
+      395
+    ]
+  },
+  {
+    "file": "verified-seam-personal-482x900.jpg",
+    "point": [
+      391,
+      341
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      361,
+      280,
+      421,
+      370
+    ]
+  },
+  {
+    "file": "verified-seam-directory-482x900.jpg",
+    "point": [
+      356,
+      371
+    ],
+    "RGB": [
+      198,
+      198,
+      198
+    ],
+    "crop": [
+      326,
+      310,
+      440,
+      400
+    ]
+  }
+]

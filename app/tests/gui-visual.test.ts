@@ -57,7 +57,7 @@ test('mouse feedback uses same-version bounded atan and independent body/head tr
     assert.equal(Math.abs(playerLook(0, 0).body), 0);
     assert.ok(playerLook(100, 50).body > 0);
     assert.ok(playerLook(-100, -50).body < 0);
-    assert.equal(playerLook(100, 50).head, playerLook(100, 50).body);
+    assert.equal(playerLook(100, 50).head, -playerLook(100, 50).body);
     assert.ok(Math.abs(playerLook(1e9, 1e9).body) < Math.PI * Math.PI / 18);
     assert.deepEqual(playerLook(42, 17), playerLook(42, 17));
 });

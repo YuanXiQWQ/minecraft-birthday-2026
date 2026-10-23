@@ -66,11 +66,11 @@ export const PLAYER_WINDOWS = {
 /** Reproduce the arctangent body/head tracking rather than inventing a turntable animation.
  * @param {number} dx Logical mouse X relative to preview center.
  * @param {number} dy Logical mouse Y relative to preview center.
- * @return {object} Radian model-space rotations derived from InventoryScreen's 40/20 constants.
+ * @return {object} Radian rotations with native Y/Z inversion conjugating the local head yaw, derived from InventoryScreen's 40/20 constants.
  */
 export function playerLook(dx: number, dy: number) {
     const x = Math.atan(-dx / 40), y = Math.atan(dy / 40), r = Math.PI / 180;
-    return {body: -x * 20 * r, head: -x * 20 * r, pitch: y * 20 * r, tilt: y * 20 * r};
+    return {body: -x * 20 * r, head: x * 20 * r, pitch: y * 20 * r, tilt: y * 20 * r};
 }
 
 /** Build native Cube polygon UVs with deformation changing geometry only, never stretching atlas coordinates.

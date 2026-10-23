@@ -1,4 +1,5 @@
 /** Accessible original bitmap text and sprite-backed buttons reuse P2 GUI primitives without container semantics. */
+import {nativeField} from './native-field.ts';
 import {BitmapFont, drawSprite} from './vanilla.ts';
 import type {Resources} from '../render/resources.ts';
 
@@ -41,6 +42,7 @@ export class PixelUI {
     font: BitmapFont;
     resources: Resources;
     observers: ResizeObserver[] = [];
+    mutations: MutationObserver[] = [];
     updates = new Map<HTMLElement, () => void>();
     texts = new Map<HTMLElement, { text: string; scale: number; color: string }>();
     pending = new Set<() => void>();
@@ -116,7 +118,7 @@ export class PixelUI {
         let highlighted = false;
         const draw = () => {
             const disabled = button instanceof HTMLButtonElement && button.disabled,
-                name = 'button' + (disabled ? '_disabled' : highlighted ? '_highlighted' : '') + '.png',
+                name = 'button' + (disabled ? '_disabled' : highlighted || button.getAttribute('aria-current') === 'true' ? '_highlighted' : '') + '.png',
                 path = 'assets/minecraft/textures/gui/sprites/widget/' + name,
                 image = this.resources.guiImages.get(path);
             if (!image) return;
@@ -134,10 +136,52 @@ export class PixelUI {
             highlighted = false;
             draw();
         });
+        const mutation = new MutationObserver(draw); mutation.observe(button, {attributes: true, attributeFilter: ['disabled', 'aria-current']}); this.mutations.push(mutation);
         const observer = new ResizeObserver(() => this.queue(draw));
         observer.observe(button);
         this.observers.push(observer);
         draw();
+    }
+
+    /** Preserve browser editing semantics under the original text-field sprites and bitmap text.
+     * @param {HTMLInputElement} input Existing semantic text field.
+     */
+    field(input: HTMLInputElement): void {
+        const host = document.createElement('div'), canvas = document.createElement('canvas'); host.className = 'native-text-field';
+        input.replaceWith(host); host.append(canvas, input);
+        const draw = () => {
+            const logical = Math.max(40, Math.floor(host.clientWidth / 2));
+            canvas.width = logical; canvas.height = 20;
+            const ctx = canvas.getContext('2d')!, path = 'assets/minecraft/textures/gui/sprites/widget/text_field' + (document.activeElement === input ? '_highlighted' : '') + '.png', image = this.resources.guiImages.get(path);
+            ctx.imageSmoothingEnabled = false;
+            if (image) drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, logical, 20);
+            nativeField(ctx, this.font, input, [4, 6, logical - 8, 8]);
+        };
+        for (const type of ['input', 'select', 'keyup', 'pointerup', 'focus', 'blur']) input.addEventListener(type, draw);
+        this.updates.set(input, draw); draw();
+    }
+
+    /** Paint a native slider while retaining browser range semantics and the existing settings edit lifecycle.
+     * @param {HTMLInputElement} input Real bounded range control.
+     */
+    slider(input: HTMLInputElement): void {
+        const host = document.createElement('div'), canvas = document.createElement('canvas');
+        host.className = 'native-slider'; input.replaceWith(host); host.append(canvas, input);
+        let highlighted = false;
+        const draw = () => {
+            canvas.width = 200; canvas.height = 20;
+            const ctx = canvas.getContext('2d')!; ctx.imageSmoothingEnabled = false;
+            for (const handle of [false, true]) {
+                const name = 'slider' + (handle ? '_handle' : '') + (highlighted ? '_highlighted' : ''), path = 'assets/minecraft/textures/gui/sprites/widget/' + name + '.png', image = this.resources.guiImages.get(path);
+                if (!image) continue;
+                const fraction = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
+                drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.round(192 * fraction) : 0, 0, handle ? 8 : 200, 20);
+            }
+        };
+        for (const type of ['input', 'change']) input.addEventListener(type, draw);
+        for (const type of ['pointerenter', 'focus']) input.addEventListener(type, () => {highlighted = true; draw();});
+        for (const type of ['pointerleave', 'blur']) input.addEventListener(type, () => {highlighted = false; draw();});
+        this.updates.set(input, draw); draw();
     }
 
     /** Move dimension-changing canvas writes out of ResizeObserver delivery and coalesce each redraw.
@@ -161,6 +205,8 @@ export class PixelUI {
         this.pending.clear();
         for (const o of this.observers) o.disconnect();
         this.observers = [];
+        for (const observer of this.mutations) observer.disconnect();
+        this.mutations = [];
         this.updates.clear();
         this.texts.clear();
         this.font.dispose();

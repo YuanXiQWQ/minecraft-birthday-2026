@@ -98,13 +98,13 @@ function storage() {
     };
 }
 
-test('D05 left/right target semantics grant a complete batch, preserve inputs and reject partial capacity or different components', () => {
+test('D05 left/right target semantics grant a complete batch, consume finite inputs and reject partial capacity or different components', () => {
     const v = {...emptyInventory(), crafting: [item('oak_log', 7), null, null, null]}, before = structuredClone(v),
         u = ['minecraft:oak_log'];
     let r = takeCraft(v, {mode: 'cursor'}, u, rules);
     assert.deepEqual(r.inventory.cursor, item('oak_planks', 4));
     assert.deepEqual(v, before);
-    assert.deepEqual(r.inventory.crafting, v.crafting);
+    assert.deepEqual(r.inventory.crafting, [item('oak_log', 6), null, null, null]);
     assert.deepEqual(r.acquired, ['minecraft:oak_planks']);
     assert.throws(() => takeCraft({
         ...v,
@@ -118,7 +118,7 @@ test('D05 left/right target semantics grant a complete batch, preserve inputs an
     }, {mode: 'cursor'}, [...u, 'minecraft:oak_planks'], rules), /target-full/);
 });
 test('D05 Shift is bounded by nine-slot capacity and complete batches, including uneven free capacity and native unstackables', () => {
-    const v = {...emptyInventory(), crafting: [item('oak_log'), null, null, null]};
+    const v = {...emptyInventory(), crafting: [item('oak_log', 64), null, null, null]};
     v.backpack = Array.from({length: 27}, () => item('oak_planks', 64));
     v.hotbar = Array.from({length: 9}, () => item('oak_planks', 64));
     v.hotbar[0] = item('oak_planks', 58);
@@ -130,9 +130,9 @@ test('D05 Shift is bounded by nine-slot capacity and complete batches, including
     assert.equal(takeCraft(v, {mode: 'shift'}, u, rules).batches, 2);
     v.hotbar = Array(9).fill(null);
     r = takeCraft(v, {mode: 'shift'}, u, rules);
-    assert.equal(r.batches, 144);
-    assert.ok(r.inventory.hotbar.every(s => s?.count === 64));
-    assert.throws(() => takeCraft(r.inventory, {mode: 'shift'}, [...u], rules), /target-full/);
+    assert.equal(r.batches, 64);
+    assert.equal(r.inventory.hotbar.reduce((n, s) => n + (s?.count ?? 0), 0), 256);
+    assert.throws(() => takeCraft(r.inventory, {mode: 'shift'}, [...u], rules), /craft-no-match/);
 });
 test('D05 numeric/F targets do not swap existing different items, and invalid result operations cannot clone or discard outputs', () => {
     const v = {...emptyInventory(), crafting: [item('oak_log'), null, null, null]}, u = ['minecraft:oak_log'];
@@ -203,9 +203,9 @@ test('D05 actual log-plank-stick-workbench-pick chain unlocks only after receipt
     assert.ok(r.state.progress.unlocked.includes('minecraft:wooden_pickaxe'));
     assert.ok(r.state.progress.recipeBook.data.known.includes('minecraft:wooden_pickaxe'));
     assert.ok(!r.state.progress.recipeBook.data.known.includes('minecraft:oak_boat'));
-    assert.deepEqual(r.state.progress.scenes.plains.stations[0].contents, {version: 1, data: {grid}});
+    assert.deepEqual(r.state.progress.scenes.plains.stations[0].contents, {version: 1, data: {grid: Array(9).fill(null)}});
 });
-test('D05 cake A returns exactly three buckets to the infinite directory with no hidden inventory or birthday completion', () => {
+test('finite cake consumption places three real buckets back into source cells without birthday completion', () => {
     let state = bench(facts('crafting_table', 'milk_bucket', 'sugar', 'egg', 'wheat'));
     state = structuredClone(state);
     const grid = [...Array.from({length: 3}, () => item('milk_bucket')), item('sugar'), item('egg'), item('sugar'), ...Array.from({length: 3}, () => item('wheat'))];
@@ -223,13 +223,9 @@ test('D05 cake A returns exactly three buckets to the infinite directory with no
     assert.deepEqual(r.events.map(e => e.item), ['minecraft:cake', 'minecraft:bucket']);
     assert.deepEqual(r.inventory?.cursor, item('cake'));
     assert.ok(r.inventory?.hotbar.every(s => s === null));
-    assert.deepEqual(r.state.progress.scenes.plains.stations[0].contents, {version: 1, data: {grid}});
+    assert.deepEqual(r.state.progress.scenes.plains.stations[0].contents, {version: 1, data: {grid: [item('bucket'), item('bucket'), item('bucket'), ...Array(6).fill(null)]}});
     assert.equal(r.state.progress.cakePlacement, null);
-    assert.equal(transition(r.state, {
-        ...command,
-        expected: r.state.progress.player.data,
-        workbench: context(r.state)
-    }, undefined, rules).events.length, 0);
+    assert.throws(() => transition(r.state, {...command, expected: r.state.progress.player.data, workbench: context(r.state)}, undefined, rules), /craft-no-match/);
     assert.throws(() => takeCraft({
         ...emptyInventory(),
         crafting: [item('milk_bucket'), item('milk_bucket'), item('milk_bucket'), item('wheat')]
@@ -358,7 +354,7 @@ test('P5 migration preserves durable layout/settings/cake and upgrades empty wor
         })
     }), decoded = await decode(raw);
     assert.equal(decoded.migrated, true);
-    assert.equal(decoded.envelope.contentVersion, 'p8-inventory-1');
+    assert.equal(decoded.envelope.contentVersion, 'p8-experience-2');
     assert.equal(decoded.envelope.state.progress.player.data.hotbar[3]?.id, 'minecraft:crafting_table');
     assert.equal(decoded.envelope.state.settings.volume, .75);
     assert.equal(decoded.envelope.state.progress.cakePlacement?.table, 'birthday-table');
@@ -368,7 +364,7 @@ test('P5 migration preserves durable layout/settings/cake and upgrades empty wor
     await m.session.refresh();
     assert.equal(m.read(), raw);
     await m.session.dispatch({type: 'settings', patch: {volume: .5}});
-    assert.equal(JSON.parse(m.read()!).contentVersion, 'p8-inventory-1');
+    assert.equal(JSON.parse(m.read()!).contentVersion, 'p8-experience-2');
 });
 test('D05 two sessions serialize a capacity-limited Shift receipt, stale reset commands cannot revive products', async () => {
     const m = storage(), s = m.session;

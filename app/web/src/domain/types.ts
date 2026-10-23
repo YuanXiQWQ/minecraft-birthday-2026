@@ -51,6 +51,7 @@ export interface SceneState {
 }
 
 export interface Settings {
+    username?: string;
     locale: string;
     volume: number;
     muted: boolean;
@@ -117,6 +118,7 @@ export type Command =
     expected: PlayerLayout;
     workbench: WorkbenchContext
 }
+    | { type: 'close-workbench'; scene: SceneId; id: string }
     | { type: 'unlock'; item: string }
     | { type: 'select-scene'; scene: SceneId }
     | { type: 'put-station'; scene: SceneId; station: Station; expected?: PlayerLayout }
@@ -141,7 +143,8 @@ export type Command =
 };
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'cake-placed' | 'recipes-discovered';
+    type: 'item-unlocked' | 'items-acquired' | 'cake-placed' | 'recipes-discovered';
+    stacks?: Stack[];
     item?: string;
     recipes?: string[];
 }

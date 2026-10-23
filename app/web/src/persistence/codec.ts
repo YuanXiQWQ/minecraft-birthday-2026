@@ -9,7 +9,7 @@ import {emptyInventory, layout} from '../domain/inventory.ts';
 
 export interface Envelope {
     format: 1;
-    contentVersion: 'p8-inventory-1';
+    contentVersion: 'p8-experience-2';
     vanillaVersion: '26.3';
     generation: string;
     revision: number;
@@ -57,7 +57,7 @@ export async function seal(state: State, generation: string, revision: number): 
     ensure(/^[a-zA-Z0-9_-]{1,80}$/.test(generation) && Number.isSafeInteger(revision) && revision >= 0);
     const body = {
         format: 1 as const,
-        contentVersion: 'p8-inventory-1' as const,
+        contentVersion: 'p8-experience-2' as const,
         vanillaVersion: '26.3' as const,
         generation,
         revision,
@@ -85,11 +85,11 @@ export async function decode(raw: string): Promise<Decoded> {
     ensure(Object.keys(value).sort().join('|') === 'checksum|contentVersion|format|generation|revision|state|vanillaVersion', 'unsupported-save');
     const {checksum: stored, ...body} = value;
     ensure(typeof stored === 'string' && stored === await checksum(body), 'checksum-mismatch');
-    ensure(value.vanillaVersion === '26.3' && (value.format === 0 ? value.contentVersion === 'p3-development-0' : ['p3-foundation-1', 'p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion)), 'unsupported-content');
-    const migrated = value.contentVersion !== 'p8-inventory-1',
-        oldPlayer = !['p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion);
+    ensure(value.vanillaVersion === '26.3' && (value.format === 0 ? value.contentVersion === 'p3-development-0' : ['p3-foundation-1', 'p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)), 'unsupported-content');
+    const migrated = value.contentVersion !== 'p8-experience-2',
+        oldPlayer = !['p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion);
     try {
-        if (!oldPlayer && value.contentVersion !== 'p8-inventory-1') {
+        if (!oldPlayer && !['p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)) {
             ensure(value.state?.progress?.player?.data && !Object.hasOwn(value.state.progress.player.data, 'backpack'), 'invalid-player-migration');
             value.state.progress.player.data.backpack = Array(27).fill(null);
         }
@@ -98,25 +98,26 @@ export async function decode(raw: string): Promise<Decoded> {
             value.state.progress.player = {version: 1, data: layout(emptyInventory())};
         }
         if (migrated) {
+            value.state.settings.username ??= 'sireoh';
             if (!value.state.progress.world) value.state.progress.world = emptyWorld();
-            if (!['p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion)) {
+            if (!['p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)) {
                 ensure(identityReserved(value.state?.progress?.recipeBook), 'pending-contract-version');
                 value.state.progress.recipeBook = initialBook(value.state.progress.unlocked);
             }
             validateState(value.state);
             for (const scene of Object.values(value.state.progress.scenes) as State['progress']['scenes'][keyof State['progress']['scenes']][]) for (const station of scene.stations) {
-                if (!['p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion)) {
+                if (!['p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)) {
                     ensure(identityReserved(station.contents), 'pending-contract-version');
                     if (station.kind === 'crafting_table') station.contents = {
                         version: 1,
                         data: {grid: Array(9).fill(null)}
                     };
                 }
-                if ((station.kind === 'furnace' || station.kind === 'blast_furnace') && !['p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion)) {
+                if ((station.kind === 'furnace' || station.kind === 'blast_furnace') && !['p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)) {
                     ensure(identityReserved(station.contents), 'pending-contract-version');
                     station.contents = emptyFurnace();
                 }
-                if (station.kind === 'hopper' && !['p6-book-1', 'p7-world-1', 'p8-inventory-1'].includes(value.contentVersion)) {
+                if (station.kind === 'hopper' && !['p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2'].includes(value.contentVersion)) {
                     ensure(identityReserved(station.contents), 'pending-contract-version');
                     station.contents = emptyHopper();
                 }

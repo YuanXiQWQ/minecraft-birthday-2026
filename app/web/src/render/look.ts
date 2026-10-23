@@ -8,7 +8,7 @@ export interface Gesture {
     dragging: boolean;
 }
 
-/** User-selected gesture has tunable engineering bounds; no camera translation or pointer lock is involved. */
+/** User-selected gesture has tunable engineering bounds; both pointer modes share the same fixed eye and angular bounds. */
 export class Look {
     active: Gesture | null = null;
     yaw = 0;
@@ -44,6 +44,15 @@ export class Look {
         this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity));
         this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity));
         return true;
+    }
+
+    /** Consume relative browser movement within the same bounds as right-drag observation.
+     * @param {number} dx Relative horizontal pixels.
+     * @param {number} dy Relative vertical pixels.
+     */
+    relative(dx: number, dy: number): void {
+        this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity));
+        this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity));
     }
 
     /** Finish once: a drag can never also emit the right-click interaction.

@@ -1,0 +1,443 @@
+{
+  "testObservationOnly": true,
+  "at": 386304.1999999881,
+  "viewport": [
+    1280,
+    720
+  ],
+  "dpr": 1.0000000149011612,
+  "scene": {
+    "x": 0,
+    "y": 82,
+    "width": 1280,
+    "height": 638,
+    "top": 82,
+    "right": 1280,
+    "bottom": 720,
+    "left": 0
+  },
+  "build": "68fa0b38e7c4",
+  "surfaces": [
+    {
+      "index": 0,
+      "className": "",
+      "rect": {
+        "x": 456,
+        "y": 668,
+        "width": 368,
+        "height": 48,
+        "top": 668,
+        "right": 824,
+        "bottom": 716,
+        "left": 456
+      },
+      "backing": [
+        552,
+        72
+      ],
+      "png": "surfaces/b533e16bb1c407480b93b9e071f78d80adfe91a72dc49c75f5f64d7099c27709.png",
+      "sha256": "b533e16bb1c407480b93b9e071f78d80adfe91a72dc49c75f5f64d7099c27709",
+      "capturedName": "icon-native-workbench-1280-surface-0.png"
+    },
+    {
+      "index": 1,
+      "className": "offhand-hud",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        87,
+        72
+      ],
+      "png": "surfaces/ae1950eb7aa3c5664b3623b264b2f1645470f5cc046203d056ee882724fd8b7b.png",
+      "sha256": "ae1950eb7aa3c5664b3623b264b2f1645470f5cc046203d056ee882724fd8b7b",
+      "capturedName": "icon-native-workbench-1280-surface-1.png"
+    },
+    {
+      "index": 2,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        84,
+        96
+      ],
+      "png": "surfaces/1163b152d99476c8d9368379788f899ad4e4c81bfd418d89b66bd0f7087acbcd.png",
+      "sha256": "1163b152d99476c8d9368379788f899ad4e4c81bfd418d89b66bd0f7087acbcd",
+      "capturedName": "icon-native-workbench-1280-surface-2.png"
+    },
+    {
+      "index": 3,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        84,
+        96
+      ],
+      "png": "surfaces/505cee0fc543b7eb8073c969658ae22ae77d1cc2998ae35850f3f4bcabe22d63.png",
+      "sha256": "505cee0fc543b7eb8073c969658ae22ae77d1cc2998ae35850f3f4bcabe22d63",
+      "capturedName": "icon-native-workbench-1280-surface-3.png"
+    },
+    {
+      "index": 4,
+      "className": "",
+      "rect": {
+        "x": 341,
+        "y": 235,
+        "width": 294,
+        "height": 332,
+        "top": 235,
+        "right": 635,
+        "bottom": 567,
+        "left": 341
+      },
+      "backing": [
+        441,
+        498
+      ],
+      "png": "surfaces/6e647d51fd4f37f7417c2280926ff098d4483f721c695e94d58d185bdcaca550.png",
+      "sha256": "6e647d51fd4f37f7417c2280926ff098d4483f721c695e94d58d185bdcaca550",
+      "capturedName": "icon-native-workbench-1280-surface-4.png"
+    },
+    {
+      "index": 5,
+      "className": "",
+      "rect": {
+        "x": 285,
+        "y": 241,
+        "width": 70,
+        "height": 54,
+        "top": 241,
+        "right": 355,
+        "bottom": 295,
+        "left": 285
+      },
+      "backing": [
+        105,
+        81
+      ],
+      "png": "surfaces/e961c5eee2db7fe32693abb92f354e48f6c006e3e851ecaf19462d5eb3057720.png",
+      "sha256": "e961c5eee2db7fe32693abb92f354e48f6c006e3e851ecaf19462d5eb3057720",
+      "capturedName": "icon-native-workbench-1280-surface-5.png"
+    },
+    {
+      "index": 6,
+      "className": "",
+      "rect": {
+        "x": 285,
+        "y": 295,
+        "width": 70,
+        "height": 54,
+        "top": 295,
+        "right": 355,
+        "bottom": 349,
+        "left": 285
+      },
+      "backing": [
+        105,
+        81
+      ],
+      "png": "surfaces/88a47a2770850d9bfa7f5384579830d866a4329be7ca9d76e63e968e6aebb430.png",
+      "sha256": "88a47a2770850d9bfa7f5384579830d866a4329be7ca9d76e63e968e6aebb430",
+      "capturedName": "icon-native-workbench-1280-surface-6.png"
+    },
+    {
+      "index": 7,
+      "className": "",
+      "rect": {
+        "x": 285,
+        "y": 349,
+        "width": 70,
+        "height": 54,
+        "top": 349,
+        "right": 355,
+        "bottom": 403,
+        "left": 285
+      },
+      "backing": [
+        105,
+        81
+      ],
+      "png": "surfaces/52043ab9428a4d73eac13d17eeed3e581fb2bbc6439692144068a6382c4b6e25.png",
+      "sha256": "52043ab9428a4d73eac13d17eeed3e581fb2bbc6439692144068a6382c4b6e25",
+      "capturedName": "icon-native-workbench-1280-surface-7.png"
+    },
+    {
+      "index": 8,
+      "className": "",
+      "rect": {
+        "x": 285,
+        "y": 403,
+        "width": 70,
+        "height": 54,
+        "top": 403,
+        "right": 355,
+        "bottom": 457,
+        "left": 285
+      },
+      "backing": [
+        105,
+        81
+      ],
+      "png": "surfaces/45f900b959afbb163f52eace1c234a0fc7c328a248c0599c47bc96d205b1b19e.png",
+      "sha256": "45f900b959afbb163f52eace1c234a0fc7c328a248c0599c47bc96d205b1b19e",
+      "capturedName": "icon-native-workbench-1280-surface-8.png"
+    },
+    {
+      "index": 9,
+      "className": "",
+      "rect": {
+        "x": 285,
+        "y": 457,
+        "width": 70,
+        "height": 54,
+        "top": 457,
+        "right": 355,
+        "bottom": 511,
+        "left": 285
+      },
+      "backing": [
+        105,
+        81
+      ],
+      "png": "surfaces/11b7a9ff322ba04de743af261d96cad2243f89affbfe77ab85329f506a799389.png",
+      "sha256": "11b7a9ff322ba04de743af261d96cad2243f89affbfe77ab85329f506a799389",
+      "capturedName": "icon-native-workbench-1280-surface-9.png"
+    },
+    {
+      "index": 10,
+      "className": "",
+      "rect": {
+        "x": 643,
+        "y": 235,
+        "width": 352,
+        "height": 332,
+        "top": 235,
+        "right": 995,
+        "bottom": 567,
+        "left": 643
+      },
+      "backing": [
+        528,
+        498
+      ],
+      "png": "surfaces/cd1cec613dacfabab2187923b856eccdcc5a347928906c0d0e0ef7870a23411b.png",
+      "sha256": "cd1cec613dacfabab2187923b856eccdcc5a347928906c0d0e0ef7870a23411b",
+      "capturedName": "icon-native-workbench-1280-surface-10.png"
+    },
+    {
+      "index": 11,
+      "className": "player-entity-preview",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        122,
+        175
+      ],
+      "png": "surfaces/e36978e685dfdf478a154723794d6884f7929ea998793df3af26775c0c7b616a.png",
+      "sha256": "e36978e685dfdf478a154723794d6884f7929ea998793df3af26775c0c7b616a",
+      "capturedName": "icon-native-workbench-1280-surface-11.png"
+    },
+    {
+      "index": 12,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        16,
+        12
+      ],
+      "png": "surfaces/6de150600502656e8348d87341397de5650ccee8841c13a59e16d85813bf1557.png",
+      "sha256": "6de150600502656e8348d87341397de5650ccee8841c13a59e16d85813bf1557",
+      "capturedName": "icon-native-workbench-1280-surface-12.png"
+    },
+    {
+      "index": 13,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        66,
+        32
+      ],
+      "png": "surfaces/fac329e9cb7cc38d9b23fa195cfa7f1b93fbdd84ecc3fa129c34df9b727717c2.png",
+      "sha256": "fac329e9cb7cc38d9b23fa195cfa7f1b93fbdd84ecc3fa129c34df9b727717c2",
+      "capturedName": "icon-native-workbench-1280-surface-13.png"
+    },
+    {
+      "index": 14,
+      "className": "item-cursor",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        72,
+        72
+      ],
+      "png": "surfaces/ab61a1d8f038b790d3fe7c047160b90e38750768b7310c9969862e47cbde2c0d.png",
+      "sha256": "ab61a1d8f038b790d3fe7c047160b90e38750768b7310c9969862e47cbde2c0d",
+      "capturedName": "icon-native-workbench-1280-surface-14.png"
+    },
+    {
+      "index": 15,
+      "className": "",
+      "rect": {
+        "x": 4,
+        "y": 476,
+        "width": 640,
+        "height": 180,
+        "top": 476,
+        "right": 644,
+        "bottom": 656,
+        "left": 4
+      },
+      "backing": [
+        320,
+        90
+      ],
+      "png": "surfaces/4065cd81f575829a38a2d72599dd906e9b1664cf257a999639daaa22f6bf79da.png",
+      "sha256": "4065cd81f575829a38a2d72599dd906e9b1664cf257a999639daaa22f6bf79da",
+      "capturedName": "icon-native-workbench-1280-surface-15.png"
+    },
+    {
+      "index": 16,
+      "className": "",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "backing": [
+        200,
+        20
+      ],
+      "png": "surfaces/c0fd1872a0233f4dd1315a85509f6bed6cb7db81f6ac380767e2cf79110198e9.png",
+      "sha256": "c0fd1872a0233f4dd1315a85509f6bed6cb7db81f6ac380767e2cf79110198e9",
+      "capturedName": "icon-native-workbench-1280-surface-16.png"
+    },
+    {
+      "index": 17,
+      "className": "recipe-toast",
+      "rect": {
+        "x": 948,
+        "y": 12,
+        "width": 320,
+        "height": 64,
+        "top": 12,
+        "right": 1268,
+        "bottom": 76,
+        "left": 948
+      },
+      "backing": [
+        160,
+        32
+      ],
+      "png": "surfaces/81f32db940e7a229fba4c12627f5c26ed07602051311cf335312a8805a20a65d.png",
+      "sha256": "81f32db940e7a229fba4c12627f5c26ed07602051311cf335312a8805a20a65d",
+      "capturedName": "icon-native-workbench-1280-surface-17.png"
+    }
+  ],
+  "save": "{\"format\":1,\"contentVersion\":\"p8-experience-2\",\"vanillaVersion\":\"26.3\",\"generation\":\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\",\"revision\":4048,\"state\":{\"progress\":{\"world\":{\"version\":1,\"tick\":19243,\"manual\":126,\"visits\":{\"plains\":{\"epoch\":6,\"removed\":[],\"roll\":27},\"cave\":{\"epoch\":2,\"removed\":[\"iron_ore:1\"],\"roll\":0},\"farm\":{\"epoch\":3,\"removed\":[],\"roll\":3},\"home\":{\"epoch\":1,\"removed\":[],\"roll\":0}},\"hoppers\":{}},\"unlocked\":[\"minecraft:oak_log\",\"minecraft:oak_planks\",\"minecraft:crafting_table\",\"minecraft:stick\",\"minecraft:wooden_pickaxe\",\"minecraft:cobblestone\",\"minecraft:stone_pickaxe\",\"minecraft:furnace\",\"minecraft:raw_iron\",\"minecraft:iron_ingot\",\"minecraft:bucket\",\"minecraft:milk_bucket\",\"minecraft:egg\",\"minecraft:sugar_cane\",\"minecraft:wheat_seeds\",\"minecraft:sugar\",\"minecraft:wheat\",\"minecraft:cake\",\"minecraft:chest\",\"minecraft:hopper\",\"minecraft:oak_stairs\",\"minecraft:oak_slab\"],\"scene\":\"plains\",\"scenes\":{\"plains\":{\"layoutVersion\":1,\"stations\":[{\"id\":\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"kind\":\"crafting_table\",\"cell\":[-1,0,2],\"facing\":\"south\",\"contents\":{\"version\":1,\"data\":{\"grid\":[null,null,null,null,null,null,null,null,null]}}}],\"crops\":[]},\"cave\":{\"layoutVersion\":1,\"stations\":[{\"id\":\"18264ab8-a159-4dc8-8b7c-6ad915d435e2\",\"kind\":\"furnace\",\"cell\":[0,0,2],\"facing\":\"south\",\"contents\":{\"version\":2,\"data\":{\"input\":null,\"fuel\":{\"id\":\"minecraft:oak_planks\",\"count\":29},\"output\":null,\"burn\":0,\"burnTotal\":300,\"cook\":0,\"cookTotal\":200,\"recipe\":null,\"speed\":1,\"outputRecipe\":null}}}],\"crops\":[]},\"farm\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]},\"home\":{\"layoutVersion\":1,\"stations\":[],\"crops\":[]}},\"player\":{\"version\":1,\"data\":{\"backpack\":[{\"id\":\"minecraft:oak_planks\",\"count\":12},{\"id\":\"minecraft:bucket\",\"count\":3},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":57},null,{\"id\":\"minecraft:hopper\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2},{\"id\":\"minecraft:oak_stairs\",\"count\":4},{\"id\":\"minecraft:oak_slab\",\"count\":6},{\"id\":\"minecraft:sugar\",\"count\":63},{\"id\":\"minecraft:wheat\",\"count\":62},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"recipeBook\":{\"version\":1,\"data\":{\"known\":[\"minecraft:crafting_table\",\"minecraft:oak_planks\",\"minecraft:oak_wood\",\"minecraft:charcoal\",\"minecraft:oak_slab\",\"minecraft:oak_stairs\",\"minecraft:barrel\",\"minecraft:oak_fence\",\"minecraft:oak_sign\",\"minecraft:stick\",\"minecraft:oak_button\",\"minecraft:oak_door\",\"minecraft:oak_fence_gate\",\"minecraft:oak_pressure_plate\",\"minecraft:oak_trapdoor\",\"minecraft:wooden_spear\",\"minecraft:wooden_sword\",\"minecraft:campfire\",\"minecraft:ladder\",\"minecraft:wooden_axe\",\"minecraft:wooden_hoe\",\"minecraft:wooden_pickaxe\",\"minecraft:wooden_shovel\",\"minecraft:cobblestone_slab\",\"minecraft:cobblestone_stairs\",\"minecraft:stone\",\"minecraft:stone_spear\",\"minecraft:stone_sword\",\"minecraft:cobblestone_wall\",\"minecraft:furnace\",\"minecraft:lever\",\"minecraft:stone_axe\",\"minecraft:stone_hoe\",\"minecraft:stone_pickaxe\",\"minecraft:stone_shovel\",\"minecraft:torch\",\"minecraft:smoker\",\"minecraft:raw_iron_block\",\"minecraft:iron_ingot_from_blasting_raw_iron\",\"minecraft:iron_ingot_from_smelting_raw_iron\",\"minecraft:iron_block\",\"minecraft:iron_boots\",\"minecraft:iron_chestplate\",\"minecraft:iron_helmet\",\"minecraft:iron_leggings\",\"minecraft:iron_spear\",\"minecraft:iron_sword\",\"minecraft:shield\",\"minecraft:chest\",\"minecraft:iron_bars\",\"minecraft:iron_chain\",\"minecraft:lantern\",\"minecraft:lodestone\",\"minecraft:smithing_table\",\"minecraft:bucket\",\"minecraft:iron_nugget\",\"minecraft:heavy_weighted_pressure_plate\",\"minecraft:hopper\",\"minecraft:iron_door\",\"minecraft:iron_trapdoor\",\"minecraft:iron_axe\",\"minecraft:iron_hoe\",\"minecraft:iron_pickaxe\",\"minecraft:iron_shovel\",\"minecraft:shears\",\"minecraft:minecart\",\"minecraft:cake\",\"minecraft:paper\",\"minecraft:sugar_from_sugar_cane\",\"minecraft:hay_block\",\"minecraft:bread\",\"minecraft:composter\"],\"unseen\":[\"minecraft:charcoal\",\"minecraft:wooden_spear\",\"minecraft:wooden_sword\",\"minecraft:stone\",\"minecraft:stone_spear\",\"minecraft:stone_sword\",\"minecraft:stone_axe\",\"minecraft:stone_hoe\",\"minecraft:stone_shovel\",\"minecraft:smoker\",\"minecraft:raw_iron_block\",\"minecraft:iron_ingot_from_blasting_raw_iron\",\"minecraft:iron_ingot_from_smelting_raw_iron\",\"minecraft:iron_leggings\",\"minecraft:iron_spear\",\"minecraft:iron_sword\",\"minecraft:shield\",\"minecraft:lantern\",\"minecraft:lodestone\",\"minecraft:smithing_table\",\"minecraft:iron_pickaxe\",\"minecraft:iron_shovel\",\"minecraft:minecart\",\"minecraft:paper\",\"minecraft:composter\"],\"views\":{\"crafting\":{\"open\":true,\"filter\":false},\"furnace\":{\"open\":false,\"filter\":false},\"blast_furnace\":{\"open\":false,\"filter\":false}}}},\"cakePlacement\":{\"scene\":\"home\",\"table\":\"birthday-table\"}},\"settings\":{\"locale\":\"en\",\"volume\":0.2,\"muted\":false,\"username\":\"sireoh_test\"}},\"checksum\":\"1fe926d22ab94a385261a7391539e445a89841db2850edecc68c7d85988f098e\"}",
+  "inventory": {
+    "drag": "false",
+    "preview": "{\"status\":\"empty\",\"result\":null}",
+    "book": "{\"generation\":\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\",\"identity\":\"[\\\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4\\\",33,\\\"plains\\\",[\\\"7854b20f-d328-4f28-8087-3b5bfa481b86\\\",\\\"crafting\\\",3]]\",\"mode\":\"crafting\",\"width\":3,\"open\":true,\"query\":\"Oak Slab\",\"category\":\"all\",\"page\":0,\"groups\":1,\"recipes\":[\"minecraft:oak_slab\"],\"ghost\":null,\"popup\":null,\"overlay\":false,\"toast\":true,\"toastRecipes\":\"[\\\"minecraft:composter\\\"]\"}",
+    "acquiring": "false",
+    "crafting": "[null,null,null,null]",
+    "cursor": "null",
+    "dragPreview": "null",
+    "backpack": "[{\"id\":\"minecraft:oak_planks\",\"count\":12},{\"id\":\"minecraft:bucket\",\"count\":3},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":57},null,{\"id\":\"minecraft:hopper\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2},{\"id\":\"minecraft:oak_stairs\",\"count\":4},{\"id\":\"minecraft:oak_slab\",\"count\":6},{\"id\":\"minecraft:sugar\",\"count\":63},{\"id\":\"minecraft:wheat\",\"count\":62},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]",
+    "equipment": "{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null}",
+    "tab": "crafting",
+    "stationId": "7854b20f-d328-4f28-8087-3b5bfa481b86",
+    "workbench": "[null,null,null,null,null,null,null,null,null]",
+    "hopper": "null",
+    "sideOffset": "0",
+    "furnace": "null"
+  },
+  "world": {
+    "engine": "three.js r186",
+    "resourceVersion": "26.3",
+    "pointerMode": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":true,\"epoch\":34}",
+    "hover": "null",
+    "placementPreview": "null",
+    "recoveredWorld": "{\"tick\":11589,\"scene\":\"cave\",\"crops\":[]}",
+    "scene": "plains",
+    "natural": "{\"epoch\":6,\"removed\":[],\"roll\":27}",
+    "crops": "[]",
+    "cake": "false",
+    "instances": "[[\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"crafting_table\",[-1,0,2],\"south\",false]]",
+    "renderedScene": "plains",
+    "frames": "20529",
+    "drawCalls": "53",
+    "geometry": "37",
+    "triangles": "29412",
+    "harvestResult": "{\"command\":{\"type\":\"harvest-crop\",\"id\":\"e318712f-07e7-4ea5-9c4d-8906a7991981\",\"expected\":{\"backpack\":[{\"id\":\"minecraft:oak_planks\",\"count\":29},{\"id\":\"minecraft:egg\",\"count\":1},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":62},{\"id\":\"minecraft:sugar\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,{\"id\":\"minecraft:wooden_pickaxe\",\"count\":1},{\"id\":\"minecraft:stone_pickaxe\",\"count\":1},null,{\"id\":\"minecraft:milk_bucket\",\"count\":1},null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"events\":[{\"type\":\"item-unlocked\",\"item\":\"minecraft:wheat\"},{\"type\":\"items-acquired\",\"stacks\":[{\"id\":\"minecraft:wheat\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2}]},{\"type\":\"recipes-discovered\",\"recipes\":[\"minecraft:hay_block\",\"minecraft:bread\"]}],\"selected\":0,\"backpack\":[{\"id\":\"minecraft:oak_planks\",\"count\":29},{\"id\":\"minecraft:egg\",\"count\":1},{\"id\":\"minecraft:cobblestone\",\"count\":54},{\"id\":\"minecraft:iron_ingot\",\"count\":62},{\"id\":\"minecraft:sugar\",\"count\":1},{\"id\":\"minecraft:wheat\",\"count\":1},{\"id\":\"minecraft:wheat_seeds\",\"count\":2},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"unlocked\":[\"minecraft:oak_log\",\"minecraft:oak_planks\",\"minecraft:crafting_table\",\"minecraft:stick\",\"minecraft:wooden_pickaxe\",\"minecraft:cobblestone\",\"minecraft:stone_pickaxe\",\"minecraft:furnace\",\"minecraft:raw_iron\",\"minecraft:iron_ingot\",\"minecraft:bucket\",\"minecraft:milk_bucket\",\"minecraft:egg\",\"minecraft:sugar_cane\",\"minecraft:wheat_seeds\",\"minecraft:sugar\",\"minecraft:wheat\"]}",
+    "mining": "{\"id\":\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"scope\":\"eaeaf908-a6eb-4f15-bc4e-7f06096004d4:plains\",\"tool\":\"[0,null]\",\"start\":335158.1999999881,\"ticks\":75,\"hit\":{\"id\":\"7854b20f-d328-4f28-8087-3b5bfa481b86\",\"point\":[-0.5236502651180663,0.48440267726364294,3],\"normal\":[1.2246467991473532e-16,0,1]}}",
+    "look": "{\"yaw\":0.02395643266094794,\"pitch\":0.02419935117805569,\"eye\":[0,1.62,7]}"
+  },
+  "chat": {
+    "messages": "[[{\"text\":\"Pointer lock is unavailable. Use the visible pointer and hold right-click to look.\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Iron Ingot\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Bucket\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Milk Bucket\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+1 \"},{\"text\":\"Milk Bucket\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Egg\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+1 \"},{\"text\":\"Egg\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Sugar Cane\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+1 \"},{\"text\":\"Sugar Cane\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Wheat Seeds\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+1 \"},{\"text\":\"Wheat Seeds\",\"color\":\"#FFFFFF\"}],[{\"text\":\"Seeds planted. Wheat grows in 12 active seconds.\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Sugar\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Wheat\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+1 \"},{\"text\":\"Wheat\",\"color\":\"#FFFFFF\"}],[{\"text\":\"+2 \"},{\"text\":\"Wheat Seeds\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Cake\",\"color\":\"#FF55FF\"}],[{\"text\":\"Your birthday cake is on the table!\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Chest\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Hopper\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Oak Stairs\",\"color\":\"#FFFFFF\"}],[{\"text\":\"First acquired: \"},{\"text\":\"Oak Slab\",\"color\":\"#FFFFFF\"}]]",
+    "open": "false"
+  }
+}

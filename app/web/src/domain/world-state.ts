@@ -1,7 +1,7 @@
 /** Source acquisition and approved crop stages operate only on transaction-local persistent facts. */
 import type {Progress, SceneId, Cell} from './types.ts';
 import type {Rules, Stack} from '../rules/types.ts';
-import {potentialDrops} from '../rules/harvest.ts';
+import {rolledDrops} from '../rules/harvest.ts';
 import {WORLD_SCENES, cropAge, sameCell} from './world-config.ts';
 
 export interface WorldState {
@@ -50,33 +50,35 @@ export function validateWorld(w: WorldState): void {
  * @param {number} visit Observed visit epoch.
  * @param {Stack|null} held Actual selected carrier.
  * @param {Rules} rules Verified native loot/tool facts.
- * @return {string[]} Actual acquired identities, possibly empty after destruction with a wrong tool.
+ * @return {Stack[]} Actual finite loot, possibly empty after destruction with a wrong tool.
  */
-export function harvestNode(p: Progress, scene: SceneId, node: string, visit: number, held: Stack | null, rules: Rules): string[] {
+export function harvestNode(p: Progress, scene: SceneId, node: string, visit: number, held: Stack | null, rules: Rules): Stack[] {
     if (scene !== p.scene || visit !== p.world.visits[scene].epoch) throw Error('resource-visit-conflict');
     const n = WORLD_SCENES[scene].nodes.find(n => n.id === node), v = p.world.visits[scene];
     if (!n || v.removed.includes(node)) throw Error('resource-unavailable');
     if (n.kind === 'cow') {
         if (held?.id !== rules.interactions.milk.input) throw Error('milk-requires-bucket');
-        return [rules.interactions.milk.output];
+        return [{id: rules.interactions.milk.output, count: 1}];
     }
     v.removed.push(node);
-    if (n.kind === 'egg') return ['minecraft:egg'];
-    return potentialDrops('minecraft:' + n.block, held, rules).filter(d => random(p.world, scene) < d.chance).map(d => d.id);
+    if (n.kind === 'egg') return [{id: 'minecraft:egg', count: 1}];
+    return rolledDrops('minecraft:' + n.block, held, rules, () => random(p.world, scene));
 }
 
 /** Create one crop only on an empty authored pretilled plot. @param {Progress} p Current progress. @param {Cell} cell Authored plot. @param {string} id Unique crop lifetime. @param {Stack|null} held Actual selected reference. */
 export function plantCrop(p: Progress, cell: Cell, id: string, held: Stack | null): void {
     if (p.scene !== 'farm' || held?.id !== 'minecraft:wheat_seeds' || !WORLD_SCENES.farm.plots.some(c => sameCell(c, cell)) || p.scenes.farm.crops.some(c => sameCell(c.cell, cell)) || p.scenes.farm.stations.some(s => sameCell(s.cell, cell)) || !/^[a-zA-Z0-9_-]{1,80}$/.test(id)) throw Error('invalid-plant');
+    const selected = p.player.data.selected, seed = p.player.data.hotbar[selected]!;
+    p.player.data.hotbar[selected] = seed.count > 1 ? {...seed, count: seed.count - 1} : null;
     p.scenes.farm.crops.push({id, item: 'minecraft:wheat_seeds', cell, growth: {version: 1, data: {ticks: 0}}});
 }
 
-/** Harvest the observed crop lifetime and clear its plot atomically. @param {Progress} p Current facts. @param {string} id Actual crop identity. @param {Rules} rules Native drops. @return {string[]} Mature or immature native acquisition facts. */
-export function harvestCrop(p: Progress, id: string, rules: Rules): string[] {
+/** Harvest the observed crop lifetime and clear its plot atomically. @param {Progress} p Current facts. @param {string} id Actual crop identity. @param {Rules} rules Native drops. @return {Stack[]} Actual mature or immature native loot. */
+export function harvestCrop(p: Progress, id: string, rules: Rules): Stack[] {
     if (p.scene !== 'farm') throw Error('wrong-crop-scene');
     const c = p.scenes.farm.crops.find(c => c.id === id);
     if (!c || c.growth.version !== 1) throw Error('crop-unavailable');
     const age = cropAge(c.growth.data.ticks);
     p.scenes.farm.crops = p.scenes.farm.crops.filter(c => c.id !== id);
-    return potentialDrops('minecraft:wheat', null, rules, undefined, age).filter(d => d.chance >= 1 || random(p.world, 'farm') < d.chance).map(d => d.id);
+    return rolledDrops('minecraft:wheat', null, rules, () => random(p.world, 'farm'), age);
 }

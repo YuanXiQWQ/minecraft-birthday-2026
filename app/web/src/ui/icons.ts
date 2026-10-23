@@ -1,15 +1,12 @@
 /** Hash-verified original item definitions become cached transparent GUI icons, without importing experimental entry points. */
 import {
-    AmbientLight,
-    DirectionalLight,
     BufferGeometry,
     Float32BufferAttribute,
     Mesh,
-    MeshLambertMaterial,
-    MeshBasicMaterial,
     CanvasTexture,
     NearestFilter,
-    SRGBColorSpace,
+    NoColorSpace,
+    ShaderMaterial,
     DoubleSide,
     Group,
     Scene,
@@ -19,6 +16,7 @@ import {
     Quaternion,
     Vector3
 } from 'three';
+import {guiLights} from './icon-light.ts';
 import {RESOURCE_BASE} from '../render/resources.ts';
 import {resourceId, resolveTexture} from '../render/model-format.ts';
 import {iconParts, iconModel, iconGeometry} from './icon-model.ts';
@@ -30,6 +28,7 @@ export interface CatalogueArt {
     images: Map<string, HTMLCanvasElement>;
     documents: Map<string, any>;
     coverage: object[];
+    kinds?: Map<string, 'sprite' | 'model'>;
     update: (time: number) => boolean;
     dispose: () => void;
 }
@@ -80,9 +79,11 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
     const extraResponse = await fetch(RESOURCE_BASE + 'interaction-manifest.json');
     if (!extraResponse.ok) throw Error('interaction-resource-unavailable');
     const extra = await extraResponse.json();
+    const experience = await (await fetch(RESOURCE_BASE + 'experience-manifest.json')).json();
+    if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();
     documents.set('player-equipment-bindings', player.equipment);
-    await Promise.all(Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && /\.(json|png|mcmeta)$/.test(p)).map(async ([p, hash]) => {
+    await Promise.all(Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs, ...experience.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && !p.includes('/font/') && /\.(json|png|mcmeta)$/.test(p)).map(async ([p, hash]) => {
         const r = await fetch(RESOURCE_BASE + p);
         if (!r.ok) throw Error('catalogue-resource-missing:' + p);
         const b = await r.arrayBuffer(),
@@ -102,20 +103,13 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
             frames: HTMLCanvasElement[];
             sequence: { index: number; time: number }[];
             last: number
-        }>(), icons = new Map<string, HTMLCanvasElement>(), coverage: object[] = [],
-        renderer = new WebGLRenderer({alpha: true, antialias: false, preserveDrawingBuffer: true}), scene = new Scene(),
+        }>(), icons = new Map<string, HTMLCanvasElement>(), kinds = new Map<string, 'sprite' | 'model'>(), coverage: object[] = [],
+        renderer = new WebGLRenderer({alpha: true, antialias: true, premultipliedAlpha: false, preserveDrawingBuffer: true}), scene = new Scene(),
         camera = new OrthographicCamera(-.5, .5, .5, -.5, .1, 10), textures = new Map<string, CanvasTexture>(),
-        materials = new Map<string, MeshBasicMaterial | MeshLambertMaterial>();
-    renderer.setSize(128, 128, false);
+        materials = new Map<string, ShaderMaterial & {map: CanvasTexture}>();
+    renderer.setSize(256, 256, false);
     renderer.setClearColor(0, 0);
     camera.position.z = 3;
-    scene.add(new AmbientLight(0xffffff, .4));
-    for (const [x, y, z] of [[.2, 1, -.7], [-.2, 1, .7]]) {
-        const light = new DirectionalLight(0xffffff, .6);
-        light.position.set(x, y, z);
-        scene.add(light);
-    }
-
     /** Resolve a texture frame with nearest sampling and its optional native grass tint.
      * @param {string} id Original texture ID.
      * @param {any} tint Native tint provider.
@@ -141,7 +135,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
             ctx.putImageData(pixels, 0, 0);
         }
         const map = new CanvasTexture(c);
-        map.colorSpace = SRGBColorSpace;
+        map.colorSpace = NoColorSpace;
         map.minFilter = map.magFilter = NearestFilter;
         map.generateMipmaps = false;
         textures.set(key, map);
@@ -164,8 +158,14 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
             const tint = f.tintindex === undefined ? undefined : tints[f.tintindex],
                 key = f.texture + front + JSON.stringify(tint ?? null);
             if (!materials.has(key)) {
-                const options = {map: texture(f.texture, tint), alphaTest: .1, side: DoubleSide, toneMapped: false};
-                materials.set(key, front ? new MeshBasicMaterial(options) : new MeshLambertMaterial(options));
+                const map = texture(f.texture, tint), lights = guiLights();
+                const material = new ShaderMaterial({
+                    uniforms: {map: {value: map}, light0: {value: lights[0]}, light1: {value: lights[1]}, front: {value: front ? 1 : 0}},
+                    vertexShader: `varying vec2 texCoord; varying vec3 faceNormal; void main(){texCoord=uv; faceNormal=normalize(normalMatrix*normal); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+                    fragmentShader: `uniform sampler2D map; uniform vec3 light0; uniform vec3 light1; uniform float front; varying vec2 texCoord; varying vec3 faceNormal; void main(){vec4 texel=texture2D(map,texCoord); if(texel.a<0.1)discard; float diffuse=min(1.0,0.4+0.6*(max(0.0,dot(light0,normalize(faceNormal)))+max(0.0,dot(light1,normalize(faceNormal))))); gl_FragColor=vec4(texel.rgb*mix(diffuse,1.0,front),texel.a);}`,
+                    side: DoubleSide, toneMapped: false
+                }) as ShaderMaterial & {map: CanvasTexture};
+                material.map = map; materials.set(key, material);
             }
             geometry.addGroup(i * 6, 6, i);
             return materials.get(key)!;
@@ -232,10 +232,10 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
                 renderer.clear();
                 renderer.render(scene, camera);
                 const canvas = document.createElement('canvas');
-                canvas.width = canvas.height = 128;
+                canvas.width = canvas.height = 256;
                 const context = canvas.getContext('2d', {willReadFrequently: true})!;
                 context.drawImage(renderer.domElement, 0, 0);
-                const count = context.getImageData(0, 0, 128, 128).data.filter((v, i) => i % 4 === 3 && v > 0).length;
+                const count = context.getImageData(0, 0, 256, 256).data.filter((v, i) => i % 4 === 3 && v > 0).length;
                 if (!count) throw Error('empty-native-icon:' + id);
                 icons.set(id, canvas);
                 const usedMaps = new Set<CanvasTexture>();
@@ -262,12 +262,13 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
                         renderer.clear();
                         renderer.render(scene, camera);
                         const cached = document.createElement('canvas');
-                        cached.width = cached.height = 128;
+                        cached.width = cached.height = 256;
                         cached.getContext('2d')!.drawImage(renderer.domElement, 0, 0);
                         frames.push(cached);
                     }
                     animations.set(id, {frames, sequence, last: 0});
                 }
+                kinds.set(id, parts.every(p => !p.special && !!iconModel(p.model, n => documents.get('assets/minecraft/models/' + n.split(':')[1] + '.json')).builtin) ? 'sprite' : 'model');
                 coverage.push({
                     id,
                     parts: parts.map(p => p.model),
@@ -288,7 +289,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
         renderer.forceContextLoss();
     }
     return {
-        icons, images, documents, coverage, update: (time: number) => {
+        icons, images, documents, coverage, kinds, update: (time: number) => {
             let changed = false;
             for (const [id, a] of animations) {
                 let tick = Math.floor(time / 50) % a.sequence.reduce((n, f) => n + f.time, 0), frame = 0;
@@ -309,6 +310,7 @@ export async function loadCatalogueArt(): Promise<CatalogueArt> {
         }, dispose: () => {
             animations.clear();
             icons.clear();
+            kinds.clear();
             images.clear();
             documents.clear();
         }

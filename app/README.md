@@ -1,6 +1,6 @@
 # Formal application
 
-Use Node 25.2.1/npm 11.6.2 with the pinned dependencies (Three 0.186.1, Vite 8.3.4, TypeScript 7.0.2).
+Pinned runtime: Node 25.2.1 / npm 11.6.2; Three.js 0.186.1, Vite 8.3.4 and TypeScript 7.0.2.
 
 ```powershell
 cd app
@@ -8,27 +8,24 @@ npm ci
 npm run dev
 ```
 
-- Home: http://127.0.0.1:4183/
-- Game: http://127.0.0.1:4183/game/
-- Checks: `npm run check`, `npm test`, `npm run data:verify`, `node tools/inventory-rules.ts --check`.
-- Root build/preview: `npm run build`, `npm run preview` (4185).
-- Pages build/preview: `npm run build:pages`, `npm run preview:pages` (4186, /minecraft-birthday-2026/).
-- Both HTTP resource/boundary checks: `npm run test:built`.
+Home: `http://127.0.0.1:4183/`; game: `/game/`. Root: `npm run build` / `npm run preview`. Pages: `npm run build:pages` / `npm run preview:pages` at `/minecraft-birthday-2026/`. Each main push runs the existing Pages workflow.
 
-The game contains four authored real first-person 3D scenes: plains, cave, farm and home. It has no movement, crosshair or pointer lock. Short right-click uses the picked object; right-drag turns the bounded camera. E opens the original screen-space catalogue; Esc/E/Done closes it. Personal and equipment pages contain the native Steve model. Locked catalogue art is masked only over the icon alpha silhouette.
+Four authored real first-person 3D scenes have fixed eye positions, bounded look, no movement and no crosshair. Hidden-pointer mode requests Pointer Lock on a user gesture and uses relative look/center ray; visible mode uses a pointer ray and right-drag. Denied/unsupported lock falls back visibly. Short right-click uses an object; empty short right-click switches pointer mode. Hold left to mine using the actual selected tool; hold an allowed device to place on a real legal support. R re-picks before rotating.
 
-The unlimited acquired directory supplies bounded temporary stacks. Hotbar/equipment/offhand/toolbar presets persist. Personal cursor and 2x2 inputs clear on close or re-entry. Personal 2x2 and instance 3x3 crafting take complete recipe batches without consuming input references; approved remainders return to the directory. A product unlocks only after successful acquisition.
+E opens native screen-space inventory: compass catalogue, chest player page, shared finite 27+9, armor/offhand and native Steve. The acquired catalogue is unlimited while groups remain finite. Crafting consumes matching inputs and creates real remainders atomically. Normal workbench close returns its real nine input groups; a full bag keeps inputs visible and asks the player to free space before closing. Furnaces consume finite input/fuel and store finite outputs; hoppers move finite groups. Discovery, ghosts, material availability and acquisition remain separate.
 
-Hold an acquired crafting table, furnace, blast furnace or hopper and short right-click the allowed floor to place it. Short right-click opens its native GUI; Shift-right-click removes it and its contents. Each scene has a finite authored building volume marked by a contrasting native floor. Alt-right-click attaches to the real device face; Ctrl-Alt-right-click attaches above the visible anchor when its top cannot be seen from eye height. R re-picks the current pointer before rotating; look gestures own input until release. Workbench inputs persist. Furnaces retain bounded input/fuel references, cook at native times, and store finite outputs. Input allows nonrecipe items; Shift routes by device recipe before fuel. Empty-cursor right-click takes half an actual output; Shift moves its finite content; number/F only take to an empty designated slot. A pending acquisition blocks other carrier changes, while close remains available.
+Esc opens the viewport-local game menu; T opens bounded local chat. Semantic HTML editors provide clipboard/IME/focus with native bitmap text/selection. English UI is supported; native Unicode glyphs preserve multilingual search and entered chat. Default username `sireoh` is configurable in Options. Reset keeps language, volume/mute and username.
 
-Only visible game-page active time advances all devices, including during GUI/settings. Hidden/offline/home-only time does not count. Multiple game pages share one native Web Lock simulation owner, with separate short save transactions and generation fences. Wheat grows over 12 active seconds on pretilled plots. Natural sources refill on leaving and returning; crops and devices persist. Five-slot hoppers derive real neighbors and move finite items on native cooldowns. Recipe books retain the approved discovery/fill policy. The final cake-placement celebration is P8 and is not implemented.
+Only a visible game page owning the shared clock advances all scenes, including GUI/options time. Hidden/offline/home-only time does not count. Wheat grows over 12 active seconds. Using an actual cake on the home table saves completion before celebration; reload never auto-replays. Home projects the same cake fact.
 
-Original Java26.3 models, textures, GUI, font, icons, particles and sounds are committed under ../resources/minecraft/26.3/ and enter ordinary builds via audited manifests. No private cache/client installation is needed at runtime. Builds exclude docs, full clients, historical experiments and verification fixtures. Public release rights remain a separate review.
+Original Java26.3 resources in `../resources/minecraft/26.3/` ship via audited manifests in Git and normal builds, with no private cache at runtime. `tools/experience-assets.py` exports bounded widget/search art, GUI lighting source, the official grass favicon and unchanged native Unihex glyphs with source/license hashes. Publishing rights remain separate from user development authorization.
 
-The versioned save key is minecraft-birthday-2026:formal:save. Current contentVersion is p7-world-1; P3/P5/P6-crafting data migrates without dropping workbench/player/settings/cake facts. Furnace contents version2 validates producer output separately from unlocked carriers. Reset clears progress while retaining language/volume/mute. Invalid/future or failed saves remain unchanged/read-only. Web Locks absence is explicitly read-only.
+Save key: `minecraft-birthday-2026:formal:save`; content version: `p8-experience-2`. Old saves migrate without deleting progress. Web Locks/generation fences protect commands, receipts, reset and one clock owner. Invalid/future data and failed writes are never silently overwritten.
 
-## Isolated browser verification
+Checks: `npm run check`, `npm test`, `npm run data:verify`, both builds, `npm run test:built`; historical P2 tests run under `../experiments/scene3d/`.
 
-`npm run dev:verify` serves http://127.0.0.1:4184/__verify__/index.html. It is a separate origin/save from ordinary dev. The furnace-source fixture unlocks only source materials/devices and configures the hotbar; no output is granted. Open /__verify__/input.html for actual production UI and bounded trusted-event/state evidence. Existing receipt-arm/release controls can delay an actual committed crafting or furnace receipt only on this verification route. Ordinary dev and both builds exclude every fixture.
+## Isolated verification
 
-Tests and screenshots complement manual checks; physical right/middle drag, real minimization/background throttling, Java-client visual comparison and other browsers are not claimed passed by unit tests. The ordinary new-save cake walkthrough, player-built furnace chain, crops, spatial access and controlled 60-second performance evidence are indexed in ../docs/p7/followup-review.md. /__verify__/world.html is an isolated renderer/network load fixture, not ordinary gameplay completion evidence.
+`npm run dev:verify` enables `/__verify__/` fixtures on a separate origin. Normal builds exclude them. In verification mode, ordinary `/game/?measure&capture-native` adds read-only capture without seeding/editing saves or bypassing player inputs. PNGs export actual canvas backings; full-page screenshots are CSS-resolution JPEGs. `/__verify__/performance.html?layout=chain&joint=1&gpu=1` explicitly seeds an isolated finite chain/completed replay state for load measurement; it is not ordinary completion evidence.
+
+Actual normal-page cake/crop/crafting steps, canvas chains, nine Steve poses and 60-second joint load are indexed in `../docs/p8/experience-19/report.md`. Actual pointer-lock success, physical right/middle drag, OS minimization, hearing, other engines and Java-client visual equivalence are not inferred from unit tests. The user elected to perform physical-computer checks later.

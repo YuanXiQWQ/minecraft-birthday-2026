@@ -51,3 +51,31 @@ header{position:relative;z-index:2;display:flex;gap:24px;justify-content:space-b
 @media(max-width:700px){.birthday-celebration{padding-bottom:155px}.birthday-message{font-size:12px}.birthday-toast{width:240px;height:48px}.birthday-controls{flex-direction:column}.birthday-celebration[data-playing=false]{padding-bottom:160px}}
 
 .birthday-message{width:min(880px,94vw);flex:none}.birthday-controls button{width:280px;flex:none;padding:8px 14px}.birthday-message .pixel-text{width:100%}.birthday-message h2{font-size:24px}.birthday-message p{background:#142219bb;padding:5px 10px}.birthday-controls{flex:none}@media(max-width:700px){.birthday-message{width:94vw}.birthday-message p{padding:3px}.birthday-controls button{width:min(280px,90vw)}}
+
+/* The world viewport owns its overlays; page navigation remains outside input ownership. */
+.game .copy,.game .table-caption,.game .selection{display:none}.game .save-status[data-ready=true]{display:none}
+.scene-panel[data-overlay=true]>canvas[role=img]{filter:blur(5px) brightness(.55)}
+.scene-panel .inventory-dialog[open]{position:absolute;inset:0;margin:0;width:100%;height:100%;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:auto;z-index:6;background:#0003}
+.scene-panel .hotbar{position:absolute;bottom:4px}
+.scene-panel .settings,.game-menu{position:absolute;inset:0;margin:0;width:100%;height:100%;max-width:100%;max-height:100%;border:0;box-shadow:none;padding:32px max(12px,calc((100% - 400px)/2));background:#0004;z-index:7;color:white;overflow:auto}
+.scene-panel .settings h2,.game-menu h2{text-align:center;margin:12px 0 32px}.game-menu button{width:100%;margin:8px auto}.scene-panel .settings>div>button{width:100%;margin:8px 0}.scene-panel .settings section>*{max-width:100%}.scene-panel .settings input[type=text]{width:100%}
+.inventory-dialog::backdrop{background:transparent}.mc-button:focus-visible,.hotbar button:focus-visible,.inventory-slot:focus-visible,.recipe-book-hit:focus-visible,.recipe-book-toggle:focus-visible{outline:none}
+.inventory-slot:hover,.inventory-slot:focus-visible{background:transparent;outline:none}.recipe-book-hit:hover,.recipe-book-hit:focus-visible{outline:none}.recipe-book-toggle:hover,.recipe-book-toggle:focus-visible{outline:none}
+.inventory-tabs{z-index:auto;align-self:center;position:relative;top:0;height:calc(28px * var(--gui-scale));padding:0;justify-content:flex-end;gap:calc(1px * var(--gui-scale));pointer-events:auto}.inventory-tabs .inventory-tab{position:relative;z-index:0;width:calc(26px * var(--gui-scale))}.inventory-tabs .inventory-tab[aria-pressed=true]{transform:none;z-index:2}.inventory-body{z-index:1}.inventory-tab canvas{display:block}
+.recipe-book-toggle:hover,.recipe-book-toggle:focus-visible{background-image:var(--native-book-highlight)!important}
+.catalogue-search{background:transparent;border:0;outline:none;padding:0;color:white;caret-color:white;font:calc(8px * var(--gui-scale)) monospace;line-height:1}
+.recipe-book-search{color:white;font:calc(8px * var(--gui-scale)) monospace;line-height:1;caret-color:white}
+.catalogue-search::selection,.recipe-book-search::selection{color:white;background:#0000aa}
+.game-chat{position:absolute;left:4px;bottom:calc(32px * var(--gui-scale,2));z-index:5;max-width:calc(100% - 8px);pointer-events:none}.game-chat canvas{display:block}.game-chat[data-open=true]{z-index:8;pointer-events:auto}.game-chat input{display:block;width:min(640px,calc(100vw - 20px));border:0;background:#0009;color:white;padding:4px;font:16px monospace}.game-chat input:focus{outline:none}
+.scene-panel .settings input:not([type=range]):not([type=checkbox]){background:#0009;border:1px solid #aaa;color:white}
+
+.catalogue-search,.recipe-book-search{color:transparent;caret-color:transparent}.catalogue-search::selection,.recipe-book-search::selection{color:transparent;background:transparent}
+
+.native-slider{position:relative;width:100%;height:40px}.native-slider>canvas{width:100%;height:40px;display:block;pointer-events:none}.native-slider>input[type=range]{position:absolute;inset:0;margin:0;width:100%;height:40px;opacity:0}
+.scene-panel[data-overlay=true]>.hotbar{filter:blur(5px) brightness(.55)}.scene-panel .game-chat input{max-width:100%}
+
+.native-text-field{position:relative;width:100%;height:40px}.native-text-field>canvas{width:100%;height:40px;display:block;pointer-events:none}.native-text-field>input{position:absolute;inset:0;margin:0;padding:0;width:100%;height:40px;opacity:0}.native-text-field:has(input[hidden]){display:none}.game-chat>.native-text-field{width:min(640px,calc(100vw - 16px))}
+
+.world-navigation button[aria-current=true]{outline:none}
+
+.scene-panel .item-cursor,.scene-panel .item-tooltip{position:absolute}.scene-panel .inventory-dialog{overflow:hidden}

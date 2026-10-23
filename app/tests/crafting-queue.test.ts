@@ -88,7 +88,7 @@ async function harness(options: { known?: boolean; merge?: number; bench?: boole
         open: true, dataset: {}, setAttribute() {
         }, close() {
             this.open = false;
-        }, showModal() {
+        }, show() {
             this.open = true;
         }, querySelector() {
             return {
@@ -476,11 +476,11 @@ test('workbench receipt also rejects empty-slot and directory operations while i
     await h.u.queue;
     assert.deepEqual(h.u.value.cursor, item('oak_planks', 4));
     assert.equal(h.ordinary(), 0);
-    assert.equal(h.u.value.workbench?.[0]?.count, 1);
+    assert.equal(h.u.value.workbench?.[0] ?? null, null);
     h.u.close();
     assert.equal(h.u.value.cursor, null);
     h.u.openWorkbench('table');
-    assert.equal(h.u.value.workbench?.[0]?.count, 1);
+    assert.equal(h.u.value.workbench?.[0] ?? null, null);
 });
 
 test('closing a delayed workbench receipt preserves nine inputs and cancels only the page-owned cursor', async () => {
@@ -492,7 +492,7 @@ test('closing a delayed workbench receipt preserves nine inputs and cancels only
     await h.u.queue;
     assert.equal(h.u.value.cursor, null);
     h.u.openWorkbench('table');
-    assert.equal(h.u.value.workbench?.[0]?.id, 'minecraft:oak_log');
+    assert.equal(h.u.value.workbench?.[0] ?? null, null);
     assert.equal(h.u.modal.dataset.acquiring, 'false');
 });
 

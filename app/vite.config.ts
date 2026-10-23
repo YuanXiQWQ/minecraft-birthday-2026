@@ -14,6 +14,7 @@ const english = JSON.parse(readFileSync(resolve(root, 'src/i18n/en.json'), 'utf8
 const birthday = JSON.parse(readFileSync(resolve(root, 'src/birthday.json'), 'utf8'));
 export default defineConfig(({mode}) => ({
     root,
+    define: {'import.meta.env.BUILD_ID': JSON.stringify(execFileSync('git', ['rev-parse', '--short=12', 'HEAD'], {encoding: 'utf8'}).trim())},
     publicDir: false,
     appType: 'mpa',
     cacheDir: resolve(import.meta.dirname, 'node_modules/.vite-' + mode),

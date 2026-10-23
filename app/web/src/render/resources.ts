@@ -42,7 +42,7 @@ export interface Resources extends VanillaPack {
  */
 export async function loadResources(world = false): Promise<Resources> {
     const start = performance.now(),
-        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'interaction-manifest.json', 'world-manifest.json'] : ['manifest.json', 'presentation-manifest.json']).map(async name => {
+        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'world-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json']).map(async name => {
             const r = await fetch(RESOURCE_BASE + name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
@@ -56,9 +56,9 @@ export async function loadResources(world = false): Promise<Resources> {
             sha256: string
         }[], documents = new Map<string, any>(), canvases = new Map<string, HTMLCanvasElement>(),
         images = new Map<string, Pixels>(), requests: object[] = [];
-    const wanted = new Set<string>([...base.entries, ...home.entries, ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : [])].map(e => e.entry));
+    const wanted = new Set<string>([...base.entries, ...home.entries, ...(manifests.find(m => m.derivedFont)?.entries ?? []), ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : [])].map(e => e.entry));
     for (const p of Object.keys(worldPack?.inputs ?? {})) if (p.startsWith('assets/')) wanted.add(p);
-    const entries = all.filter(e => wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/button(?:_highlighted|_disabled)?\.png(?:\.mcmeta)?$/.test(e.entry) || world && wanted.has(e.entry)));
+    const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry === 'assets/minecraft/textures/font/ascii.png' || /textures\/gui\/sprites\/widget\/button(?:_highlighted|_disabled)?\.png(?:\.mcmeta)?$/.test(e.entry) || world && wanted.has(e.entry)));
     await Promise.all(entries.map(async e => {
         if (e.entry.includes('..') || !/^assets\/minecraft\/[a-z0-9_/.\/-]+$/.test(e.entry)) throw new Error('resource-path');
         const response = await fetch(RESOURCE_BASE + e.entry);

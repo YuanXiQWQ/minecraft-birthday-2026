@@ -1,4 +1,6 @@
 /** Screen-space native catalogue and hotbar share one temporary command model and never send inventory gestures to Three.js. */
+import {nativeField} from './native-field.ts';
+import {itemColor} from './item-style.ts';
 import {matchesItem} from '../i18n/items.ts';
 import {RecipeBookView} from './recipe-book.ts';
 import type {Command} from '../domain/types.ts';
@@ -41,6 +43,7 @@ export interface Slot {
 /** Own formal GUI input listeners, semantic buttons, original pixel canvases and runtime temporary carriers. */
 export class GameInventory {
     search: HTMLInputElement;
+    viewport?: HTMLElement;
     book: RecipeBookView | null = null;
     bookCommand?: (command: Extract<Command, { type: 'book-settings' | 'book-seen' }>) => Promise<unknown>;
     fill?: (recipe: string, max: boolean, cursor: Stack | null, crafting: (Stack | null)[], expected: PlayerLayout, station?: WorkbenchContext) => Promise<InventoryState>;
@@ -49,6 +52,8 @@ export class GameInventory {
     masks = new IconMasks();
     mouse = {x: 0, y: 0};
     acquisition: object | null = null;
+    closing: Promise<boolean> | null = null;
+    returnWorkbench?: (scene: State['progress']['scene'], id: string) => Promise<unknown>;
     station: WorkbenchContext | null = null;
     notice = '';
     value: InventoryState = {...emptyInventory(), crafting: Array(4).fill(null)};
@@ -85,6 +90,7 @@ export class GameInventory {
     blur: () => void;
     abort = new AbortController();
     animation = 0;
+    caretFrame = -1;
 
     /** Mount game-only GUI after all original art and rules are ready.
      * @param {HTMLElement} host Formal app root.
@@ -164,11 +170,12 @@ export class GameInventory {
         this.search = document.createElement('input');
         this.search.type = 'search';
         this.search.className = 'catalogue-search';
-        this.search.setAttribute('aria-label', text('book.search'));
+        this.search.setAttribute('aria-label', text('inventory.nativeSearch'));
         this.search.addEventListener('input', () => {
             this.sideOffset = 0;
             this.draw();
         }, {signal: this.abort.signal});
+        for (const event of ['select', 'keyup', 'pointerup', 'focus', 'blur']) this.search.addEventListener(event, () => this.draw(false), {signal: this.abort.signal});
         this.panel.append(this.canvas, this.controls, this.scrollbar, this.search);
         this.hint = document.createElement('p');
         this.hint.className = 'inventory-hint';
@@ -237,7 +244,10 @@ export class GameInventory {
         this.panel.append(this.playerPreview.renderer.domElement);
         this.book = new RecipeBookView(this, body);
         this.resize = () => {
-            this.scale = Math.max(1, Math.min(4, Math.floor(Math.min(innerWidth / (innerWidth < 700 ? 184 : 320), innerHeight / 240))));
+            const width = this.viewport?.clientWidth ?? innerWidth, height = this.viewport?.clientHeight ?? innerHeight,
+                ratio = Math.min(devicePixelRatio, 4), limit = Math.min(width / (width < 700 ? 184 : 320), height / 215),
+                physical = Math.max(1, Math.min(Math.floor(4 * ratio + 1e-6), Math.floor(limit * ratio + 1e-6)));
+            this.scale = physical / ratio;
             this.host.style.setProperty('--gui-scale', String(this.scale));
             this.input.cancel();
             this.hideTooltip();
@@ -259,13 +269,15 @@ export class GameInventory {
         document.addEventListener('pointermove', e => {
             this.mouse = {x: e.clientX, y: e.clientY};
             if (this.modal.open && (this.tab === 'equipment' || this.tab === 'crafting' && !this.station)) this.draw(false);
-            this.cursor.style.left = (e.clientX - 8 * this.scale) + 'px';
-            this.cursor.style.top = (e.clientY - 8 * this.scale) + 'px';
+            this.positionCursor();
             if (this.hover) this.showTooltip(e.clientX, e.clientY);
         }, {capture: true, signal: this.abort.signal});
         this.resize();
         this.animation = window.setInterval(() => {
-            if (!document.hidden && this.art.update(performance.now())) this.draw(false);
+            if (document.hidden) return;
+            const caret = Math.floor(performance.now() / 500);
+            const editing = this.modal.open && (document.activeElement === this.search || document.activeElement === this.book?.search);
+            if (this.art.update(performance.now()) || editing && caret !== this.caretFrame) {this.caretFrame = caret; this.draw(false);}
         }, 50);
     }
 
@@ -306,7 +318,7 @@ export class GameInventory {
         if (this.station) {
             const found = state.progress.scenes[state.progress.scene].stations.find(s => s.id === this.station!.id && ['crafting_table', 'furnace', 'blast_furnace', 'hopper'].includes(s.kind));
             if (!found || this.station.scene !== state.progress.scene) {
-                this.close();
+                void this.close(true);
                 this.station = null;
                 delete this.value.workbench;
                 delete this.value.machine;
@@ -407,7 +419,7 @@ export class GameInventory {
         if (this.blocked() || !this.permanent) return;
         this.gate(true);
         this.hover = null;
-        this.modal.showModal();
+        this.modal.show();
         this.draw();
         this.modal.querySelector('button')?.focus();
     }
@@ -430,10 +442,28 @@ export class GameInventory {
         this.cursor.hidden = true;
     }
 
-    /** Close the personal screen and discard its carried group without altering saved slots or permanent unlocks. */
-    close(): void {
-        if (!this.modal.open) return;
+    /** Return real workbench inputs atomically before ending a valid menu; failure leaves them visible and recoverable.
+     * @param {boolean} invalidated Whether the station lifetime has already ended.
+     * @return {Promise<boolean>} Whether navigation may leave this menu.
+     */
+    async close(invalidated = false): Promise<boolean> {
+        if (!this.modal.open) return true;
+        if (this.closing && !invalidated) return this.closing;
+        const station = this.station, epoch = this.personal.epoch, generation = this.generation;
         this.clearPersonal();
+        if (!invalidated && station?.expected.version === 1 && this.returnWorkbench) {
+            const ticket = this.queue.then(() => this.returnWorkbench!(station.scene, station.id)).then(() => true).catch(() => {
+                if (this.generation === generation && this.modal.open && this.station?.id === station.id) {
+                    this.notice = this.text('inventory.returnFull'); this.draw(false);
+                }
+                return false;
+            });
+            this.closing = ticket;
+            const success = await ticket;
+            if (this.closing === ticket) this.closing = null;
+            if (!success) return false;
+            if (this.generation !== generation || this.station?.id !== station.id || this.personal.epoch !== epoch + 1) return false;
+        }
         this.modal.close();
         this.station = null;
         delete this.value.workbench;
@@ -443,6 +473,7 @@ export class GameInventory {
         this.modal.dataset.workbench = 'null';
         this.refreshPreview();
         this.gate(false);
+        return true;
     }
 
     /** Fetch an exact original GUI image or fail instead of creating a placeholder.
@@ -466,7 +497,10 @@ export class GameInventory {
         if (!stack) return;
         const icon = this.art.icons.get(stack.id);
         if (!icon) throw Error('missing-native-icon:' + stack.id);
+        context.imageSmoothingEnabled = this.art.kinds?.get(stack.id) === 'model';
+        context.imageSmoothingQuality = 'high';
         context.drawImage(locked ? this.masks.get(icon) : icon, x, y, 16, 16);
+        context.imageSmoothingEnabled = false;
         if (stack.count > 1) {
             const text = String(stack.count);
             this.pixels.font.draw(context, text, x + 17 - this.pixels.font.width(text), y + 9, '#FFF', true);
@@ -532,20 +566,21 @@ export class GameInventory {
             b.hidden = !!this.station;
             const selected = b.dataset.tab === this.tab;
             b.setAttribute('aria-pressed', String(selected));
-            const tile = b.querySelector('canvas')! as HTMLCanvasElement, tc = tile.getContext('2d')!,
+            const tile = b.querySelector('canvas')! as HTMLCanvasElement, tc = scaledCanvas(tile, 26, 32, this.scale),
                 edge = b.dataset.tab === 'catalogue' ? '1' : '7';
-            tc.clearRect(0, 0, 28, 32);
+            tc.clearRect(0, 0, 26, 32);
             tc.imageSmoothingEnabled = false;
-            tc.drawImage(this.image('sprites/container/creative_inventory/tab_top_' + (selected ? 'selected' : 'unselected') + '_' + edge), 0, 0, 28, 32);
-            tc.drawImage(this.art.icons.get(b.dataset.tab === 'catalogue' ? 'minecraft:compass' : 'minecraft:chest')!, 6, 9, 16, 16);
+            tc.drawImage(this.image('sprites/container/creative_inventory/tab_top_' + (selected ? 'selected' : 'unselected') + '_' + edge), 0, 0, 26, 32);
+            this.stack(tc, {id: b.dataset.tab === 'catalogue' ? 'minecraft:compass' : 'minecraft:chest', count: 1}, 5, 9);
         }
         const personal = this.tab === 'crafting', bench = personal && !!this.station,
             hopper = bench && this.station!.expected.version === 3,
             machine = bench && this.station!.expected.version === 2, w = personal ? 176 : 195,
             h = hopper ? 133 : personal ? 166 : 136;
+        if (nav) nav.style.width = w * this.scale + 'px';
         this.panel.style.width = w * this.scale + 'px';
         this.panel.style.height = h * this.scale + 'px';
-        const density = Math.ceil(this.scale * Math.min(devicePixelRatio, 2));
+        const density = Math.ceil(this.scale * Math.min(devicePixelRatio, 4) - 1e-6);
         if (this.canvas.width !== w * density || this.canvas.height !== h * density) {
             this.canvas.width = w * density;
             this.canvas.height = h * density;
@@ -554,20 +589,26 @@ export class GameInventory {
         ctx.setTransform(density, 0, 0, density, 0, 0);
         ctx.clearRect(0, 0, w, h);
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(this.image(personal ? (hopper ? 'container/hopper' : machine ? 'container/' + this.machineKind() : bench ? 'container/crafting_table' : 'container/inventory') : 'container/creative_inventory/' + (this.tab === 'equipment' ? 'tab_inventory' : 'tab_items')), 0, 0, w, h, 0, 0, w, h);
+        ctx.drawImage(this.image(personal ? (hopper ? 'container/hopper' : machine ? 'container/' + this.machineKind() : bench ? 'container/crafting_table' : 'container/inventory') : 'container/creative_inventory/' + (this.tab === 'equipment' ? 'tab_inventory' : 'tab_item_search')), 0, 0, w, h, 0, 0, w, h);
         if (rebuild) this.controls.replaceChildren();
         this.slots = [];
+        if (!personal) this.pixels.font.draw(ctx, this.text('inventory.nativeSearch'), 8, 6, '#404040', false);
         this.menuSlots(ctx);
+        if (this.tab === 'catalogue') nativeField(ctx, this.pixels.font, this.search, [82, 6, 85, 8]);
         if (machine) this.drawFurnace(ctx);
-        this.scrollbar.hidden = this.tab !== 'presets';
+        if (personal && bench) this.pixels.font.draw(ctx, this.text('inventory.nativeInventory'), 8, hopper ? 39 : 72, '#404040', false);
+        this.scrollbar.hidden = !['presets', 'catalogue'].includes(this.tab);
+        this.scrollbar.setAttribute('aria-label', this.text(this.tab === 'presets' ? 'inventory.presetScroll' : 'inventory.catalogueScroll'));
+        this.scrollbar.max = String(this.tab === 'presets' ? 4 : Math.max(0, Math.ceil(Math.max(0, directory(this.permanent).filter(e => matchesItem(e.item, this.search.value)).length - (this.search.value ? 0 : 18)) / 9) - 3));
+        this.scrollbar.disabled = Number(this.scrollbar.max) === 0;
         if (!this.scrollbar.hidden) {
             this.scrollbar.value = String(this.sideOffset);
             this.scrollbar.style.cssText = 'left:' + 175 * this.scale + 'px;top:' + 18 * this.scale + 'px;width:' + 12 * this.scale + 'px;height:' + 90 * this.scale + 'px';
-            ctx.drawImage(this.image('sprites/container/creative_inventory/scroller'), 175, 18 + this.sideOffset * 75 / 4, 12, 15);
+            ctx.drawImage(this.image('sprites/container/creative_inventory/' + (this.scrollbar.disabled ? 'scroller_disabled' : 'scroller')), 175, 18 + this.sideOffset * 75 / Math.max(1, Number(this.scrollbar.max)), 12, 15);
         }
         const drag = this.input.gesture.active;
         let projected = this.value;
-        if (drag?.drag && this.value.cursor) {
+        if (drag?.drag && drag.slots.size > 1 && this.value.cursor) {
             try {
                 projected = reduceInventory(this.value, {
                     type: 'drag',
@@ -578,8 +619,9 @@ export class GameInventory {
             }
         }
         this.modal.dataset.dragPreview = JSON.stringify(drag?.drag ? projected : null);
+        if (this.hover) this.slotHighlight(ctx, this.hover, 'back');
         for (const [slotIndex, slot] of this.slots.entries()) {
-            if (!(machine && slot.kind === 'preview')) ctx.drawImage(this.image('sprites/container/slot'), slot.x, slot.y);
+            if (slot.kind !== 'preview') ctx.drawImage(this.image('sprites/container/slot'), slot.x, slot.y);
             if (slot.kind === 'equipment' && !this.value.equipment[slot.equipment!]) {
                 const name = ({
                     head: 'helmet',
@@ -590,16 +632,16 @@ export class GameInventory {
                 })[slot.equipment!];
                 ctx.drawImage(this.image('sprites/container/slot/' + name), slot.x + 1, slot.y + 1, 16, 16);
             }
-            const stack = this.slotStack(slot, projected);
-            this.stack(ctx, stack, slot.x + 1, slot.y + 1, !!slot.locked);
-            const ref = this.reference(slot);
-            if (drag?.drag && ref && drag.slots.has(ref)) {
-                ctx.strokeStyle = '#FFF';
-                ctx.lineWidth = 1;
-                ctx.strokeRect(slot.x + .5, slot.y + .5, 17, 17);
-                if (stack && stack.count === this.rules.items[stack.id].maxStack) {
+            const stack = this.slotStack(slot, projected), ref = this.reference(slot);
+            const selected = !!(drag?.drag && ref && drag.slots.has(ref) && drag.slots.size > 1);
+            if (selected) {ctx.fillStyle = '#FFFFFF80'; ctx.fillRect(slot.x + 1, slot.y + 1, 16, 16);}
+            this.stack(ctx, drag?.drag && ref && drag.slots.has(ref) && drag.slots.size === 1 ? null : stack, slot.x + 1, slot.y + 1, !!slot.locked);
+            if (selected && stack && this.value.cursor) {
+                const original = this.slotStack(slot, this.value)?.count ?? 0;
+                const raw = original + (drag!.button === 1 ? this.rules.items[stack.id].maxStack : drag!.button === 2 ? 1 : Math.floor(this.value.cursor.count / drag!.slots.size));
+                if (raw > this.rules.items[stack.id].maxStack) {
                     const n = String(stack.count);
-                    this.pixels.font.draw(ctx, n, slot.x + 18 - this.pixels.font.width(n), slot.y + 10, '#FF5', true);
+                    this.pixels.font.draw(ctx, n, slot.x + 18 - this.pixels.font.width(n), slot.y + 10, '#FFFF55', true);
                 }
             }
             if (!rebuild) {
@@ -623,12 +665,12 @@ export class GameInventory {
             b.setAttribute('aria-disabled', String(!!slot.locked || slot.kind === 'preset-info' || slot.kind === 'preview' && (!this.acquire || !this.preview.result)));
             b.style.cssText = 'left:' + slot.x * this.scale + 'px;top:' + slot.y * this.scale + 'px;width:' + 18 * this.scale + 'px;height:' + 18 * this.scale + 'px';
             b.addEventListener('pointerenter', () => {
-                this.hover = slot;
+                this.hover = slot; this.draw(false);
             });
             b.addEventListener('pointerleave', () => {
                 if (document.activeElement === b) return;
-                if (this.hover === slot) this.hover = null;
-                this.hideTooltip();
+                if (this.hover?.x === slot.x && this.hover?.y === slot.y) this.hover = null;
+                this.hideTooltip(); this.draw(false);
             });
             b.addEventListener('focus', () => {
                 this.hover = slot;
@@ -636,8 +678,8 @@ export class GameInventory {
                 this.showTooltip(rect.right, rect.top);
             });
             b.addEventListener('blur', () => {
-                if (this.hover === slot) this.hover = null;
-                this.hideTooltip();
+                if (this.hover?.x === slot.x && this.hover?.y === slot.y) this.hover = null;
+                this.hideTooltip(); this.draw(false);
             });
             b.setAttribute('aria-describedby', 'item-tooltip');
             b.addEventListener('click', e => {
@@ -647,6 +689,7 @@ export class GameInventory {
             b.addEventListener('auxclick', e => e.preventDefault());
             this.controls.append(b);
         }
+        if (this.hover) this.slotHighlight(ctx, this.hover, 'front');
         this.book?.render();
         this.book?.drawGhost(ctx);
         if (this.playerPreview && (this.tab === 'equipment' || personal && !bench)) {
@@ -662,9 +705,9 @@ export class GameInventory {
         cursor.imageSmoothingEnabled = false;
         this.stack(cursor, projected.cursor, 0, 0);
         this.cursor.style.width = this.cursor.style.height = 24 * this.scale + 'px';
-        this.cursor.style.left = (this.mouse.x - 8 * this.scale) + 'px';
-        this.cursor.style.top = (this.mouse.y - 8 * this.scale) + 'px';
-        this.cursor.hidden = !this.value.cursor;
+        this.positionCursor();
+        this.modal.dataset.guiScale = String(this.scale);
+        this.modal.dataset.dpr = String(devicePixelRatio);
         this.modal.dataset.cursor = JSON.stringify(this.value.cursor);
         this.modal.dataset.backpack = JSON.stringify(this.value.backpack);
         this.modal.dataset.equipment = JSON.stringify(this.value.equipment);
@@ -677,6 +720,24 @@ export class GameInventory {
         this.modal.dataset.hopper = JSON.stringify(this.value.hopper ?? null);
         this.modal.dataset.sideOffset = String(this.sideOffset);
         this.modal.dataset.furnace = JSON.stringify(this.station?.expected.version === 2 ? this.station.expected.data : null);
+    }
+
+    /** Keep carried-item pixels inside their viewport-owned GUI without restricting external page navigation. */
+    positionCursor(): void {
+        const r = this.viewport?.getBoundingClientRect() ?? {left: 0, top: 0, right: innerWidth, bottom: innerHeight};
+        this.cursor.style.left = (this.mouse.x - r.left - 8 * this.scale) + 'px';
+        this.cursor.style.top = (this.mouse.y - r.top - 8 * this.scale) + 'px';
+        this.cursor.hidden = !this.value.cursor || this.mouse.x < r.left || this.mouse.x >= r.right || this.mouse.y < r.top || this.mouse.y >= r.bottom;
+    }
+
+    /** Draw the native hovered-slot layer independently from quick-craft selection fills.
+     * @param {CanvasRenderingContext2D} ctx Logical target.
+     * @param {Slot} slot Hovered logical content slot.
+     * @param {'back'|'front'} layer Native extraction layer.
+     */
+    slotHighlight(ctx: CanvasRenderingContext2D, slot: Slot, layer: 'back' | 'front'): void {
+        const path = 'assets/minecraft/textures/gui/sprites/container/slot_highlight_' + layer + '.png', image = this.art.images.get(path);
+        if (image) drawSprite(ctx, image, this.art.documents.get(path + '.mcmeta')?.gui?.scaling, slot.x - 3, slot.y - 3, 24, 24);
     }
 
     /** Describe a live logical slot without rebuilding its pointer/focus surface.
@@ -786,7 +847,7 @@ export class GameInventory {
                         y: 52
                     }, {kind: 'preview', x: 115, y: 34});
                     const title = this.text('inventory.' + this.machineKind());
-                    this.pixels.font.draw(ctx, title, (176 - this.pixels.font.width(title)) / 2, 5, '#404040', false);
+                    this.pixels.font.draw(ctx, title, (176 - this.pixels.font.width(title)) / 2, 6, '#404040', false);
                 } else if (this.station) {
                     for (let i = 0; i < 9; i++) this.slots.push({
                         kind: 'workbench',
@@ -795,7 +856,7 @@ export class GameInventory {
                         y: 16 + Math.floor(i / 3) * 18
                     });
                     this.slots.push({kind: 'preview', x: 123, y: 34});
-                    this.pixels.font.draw(ctx, this.text('inventory.workbench'), 29, 5, '#404040', false);
+                    this.pixels.font.draw(ctx, this.text('inventory.crafting'), 29, 6, '#404040', false);
                 } else {
                     for (const [slot, x, y] of [['head', 7, 7], ['chest', 7, 25], ['legs', 7, 43], ['feet', 7, 61], ['offhand', 76, 61]] as [EquipmentSlot, number, number][]) this.slots.push({
                         kind: 'equipment',
@@ -810,7 +871,7 @@ export class GameInventory {
                         y: 17 + Math.floor(i / 2) * 18
                     });
                     this.slots.push({kind: 'preview', x: 153, y: 27});
-                    this.pixels.font.draw(ctx, this.text('inventory.crafting'), 97, 7, '#404040', false);
+                    this.pixels.font.draw(ctx, this.text('inventory.crafting'), 97, 6, '#404040', false);
                 }
             }
             if (this.tab === 'catalogue') {
@@ -914,13 +975,14 @@ export class GameInventory {
             if (!image) throw Error('missing-native-tooltip');
             drawSprite(ctx, image, this.art.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, width, height);
         }
-        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : '#FFF', true));
+        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : lines[0] === itemName('minecraft:cake') ? itemColor('minecraft:cake') : '#FFF', true));
         const accessible = document.createElement('span');
         accessible.className = 'sr-only';
         accessible.textContent = lines.join(' ');
         this.tooltip.replaceChildren(accessible, canvas);
-        this.tooltip.style.left = Math.max(0, Math.min(x + 12, innerWidth - width * this.scale - 4)) + 'px';
-        this.tooltip.style.top = Math.max(0, Math.min(y + 12, innerHeight - height * this.scale - 4)) + 'px';
+        const r = this.viewport?.getBoundingClientRect() ?? {left: 0, top: 0, right: innerWidth, bottom: innerHeight};
+        this.tooltip.style.left = (Math.max(r.left + 4, Math.min(x + 12, r.right - width * this.scale - 4)) - r.left) + 'px';
+        this.tooltip.style.top = (Math.max(r.top + 4, Math.min(y + 12, r.bottom - height * this.scale - 4)) - r.top) + 'px';
         this.tooltip.hidden = false;
     }
 
@@ -999,7 +1061,7 @@ export class GameInventory {
         this.notice = '';
         this.gate(true);
         this.hover = null;
-        if (!this.modal.open) this.modal.showModal();
+        if (!this.modal.open) this.modal.show();
         this.draw();
         this.modal.querySelector('button')?.focus();
     }
@@ -1094,7 +1156,7 @@ export class GameInventory {
      * @return {boolean} Whether the active receipt owns carrier input.
      */
     carrierBusy(): boolean {
-        return !!this.acquisition;
+        return !!this.closing || !!this.acquisition;
     }
 
     /** Resolve the active native device title and texture family.
@@ -1139,7 +1201,7 @@ export class GameInventory {
         this.input.dispose();
         this.personal.close();
         clearInterval(this.animation);
-        this.close();
+        void this.close(true);
         this.abort.abort();
         this.hud.remove();
         this.modal.remove();
@@ -1158,8 +1220,8 @@ export class GameInventory {
  * @param {number} scale Integer GUI zoom.
  * @return {CanvasRenderingContext2D} Nearest-sampled scaled context.
  */
-function scaledCanvas(canvas: HTMLCanvasElement, width: number, height: number, scale: number): CanvasRenderingContext2D {
-    const d = Math.ceil(scale * Math.min(devicePixelRatio, 2));
+export function scaledCanvas(canvas: HTMLCanvasElement, width: number, height: number, scale: number): CanvasRenderingContext2D {
+    const d = Math.ceil(scale * Math.min(devicePixelRatio, 4) - 1e-6);
     if (canvas.width !== width * d || canvas.height !== height * d) {
         canvas.width = width * d;
         canvas.height = height * d;

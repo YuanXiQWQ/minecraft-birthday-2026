@@ -1,4 +1,4 @@
-/** Approved D05 complete-batch acquisition and directory remainder returns, independent of screens and storage. */
+/** Finite native crafting consumption and remainder delivery, independent of screens and storage. */
 import {findCrafting} from '../rules/matcher.ts';
 import type {Rules, Stack} from '../rules/types.ts';
 import {validateCarriers, validateStack, cell, playerTargets} from './inventory.ts';
@@ -28,56 +28,68 @@ export function carrierResult(stack: Stack, rules: Rules): Stack {
     return value;
 }
 
-/** Plan whole batches against finite targets, retaining ingredient stacks and returning remainders to the infinite directory.
- * @param {InventoryState} current Player carriers and optional workbench inputs.
- * @param {CraftTake} take Explicit result acquisition operation.
- * @param {string[]} unlocked Latest permanent acquisition facts.
- * @param {Rules} rules Verified runtime recipes and components.
- * @return {CraftReceipt} Transaction-local carriers, ordered acquisitions and bounded return facts.
+/** Consume complete native batches and place actual remainders before accepting an atomic result delivery.
+ * @param {InventoryState} current Player carriers and current recipe inputs.
+ * @param {CraftTake} take Explicit result route.
+ * @param {string[]} unlocked Permanent acquisition facts.
+ * @param {Rules} rules Verified recipes, capacities and components.
+ * @return {CraftReceipt} Finite transaction-local delivery, consumption and remainder facts.
  */
 export function takeCraft(current: InventoryState, take: CraftTake, unlocked: string[], rules: Rules): CraftReceipt {
     validateCarriers(current, unlocked, rules);
     if (!['cursor', 'shift', 'hotbar', 'offhand'].includes(take.mode)) throw Error('invalid-craft-operation');
-    const inventory = structuredClone(current), grid = inventory.workbench ?? inventory.crafting;
-    if (!grid) throw Error('invalid-crafting-grid');
-    const match = findCrafting(grid, inventory.workbench ? 3 : 2, rules);
-    if (!match) throw Error('craft-no-match');
-    const result = carrierResult(match.result, rules),
-        acquired = [result.id, ...match.remainders.flatMap(s => s ? [s.id] : [])].filter((id, i, all) => all.indexOf(id) === i),
-        eligible = [...new Set([...unlocked, ...acquired])];
-    validateStack(result, eligible, rules);
-    for (const s of match.remainders) validateStack(s, eligible, rules);
-    let targets: SlotValue[];
-    if (take.mode === 'shift') targets = playerTargets(inventory, true);
-    else if (take.mode === 'hotbar') {
-        if (!Number.isInteger(take.index) || take.index! < 0 || take.index! > 8) throw Error('invalid-hotbar-index');
-        targets = [cell(inventory, `hotbar:${take.index!}`)];
-    } else if (take.mode === 'offhand') targets = [cell(inventory, 'equipment:offhand')];
-    else targets = [{
-            /** Read the carried group. @return {Stack|null} Current cursor. */get stack() {
-                return inventory.cursor;
-            }, /** Set the carried group. @param {Stack|null} s Whole-batch result. */set stack(s) {
-                inventory.cursor = s;
-            }, policy: {take: true, place: true}
+    let inventory = structuredClone(current), batches = 0, firstError = 'craft-no-match';
+    const acquired: string[] = [], returned: Stack[] = [];
+    let recipe: string | undefined;
+    for (let attempt = 0; attempt < 64; attempt++) {
+        const next = structuredClone(inventory), grid = next.workbench ?? next.crafting;
+        if (!grid) throw Error('invalid-crafting-grid');
+        const match = findCrafting(grid, next.workbench ? 3 : 2, rules);
+        if (!match || recipe && match.recipe !== recipe) break;
+        const result = carrierResult(match.result, rules), ids = [result.id, ...match.remainders.flatMap(s => s ? [s.id] : [])], eligible = [...new Set([...unlocked, ...acquired, ...ids])];
+        validateStack(result, eligible, rules);
+        let targets: SlotValue[];
+        if (take.mode === 'shift') targets = playerTargets(next, true);
+        else if (take.mode === 'hotbar') {
+            if (!Number.isInteger(take.index) || take.index! < 0 || take.index! > 8) throw Error('invalid-hotbar-index');
+            targets = [cell(next, `hotbar:${take.index!}`)];
+        } else if (take.mode === 'offhand') targets = [cell(next, 'equipment:offhand')];
+        else targets = [{
+            /** Read the transaction-local cursor. @return {Stack|null} Current staged group. */
+            get stack() {return next.cursor;},
+            /** Stage one finite cursor group. @param {Stack|null} s Compatible result group. */
+            set stack(s: Stack | null) {next.cursor = s;},
+            policy: {take: true, place: true}
         }];
-    const free = targets.reduce((sum, slot) => sum + (!slot.stack || sameStack(slot.stack, result, rules) ? Math.max(0, capacity(slot, result, rules) - (slot.stack?.count ?? 0)) : 0), 0),
-        batches = take.mode === 'shift' ? Math.floor(free / result.count) : free >= result.count ? 1 : 0;
-    if (!batches) throw Error('craft-target-full');
-    // Every batch contributes at least one item into at most nine native bounded destinations.
-    for (let i = 0; i < batches; i++) {
-        const source: SlotValue = {stack: structuredClone(result), policy: {take: true, place: false}};
-        quickMove(source, targets, rules);
-        if (source.stack) throw Error('craft-incomplete-batch');
+        const free = targets.reduce((n, slot) => n + (!slot.stack || sameStack(slot.stack, result, rules) ? Math.max(0, capacity(slot, result, rules) - (slot.stack?.count ?? 0)) : 0), 0);
+        if (free < result.count) {firstError = 'craft-target-full'; break;}
+        const output: SlotValue = {stack: structuredClone(result), policy: {take: true, place: false}};
+        quickMove(output, targets, rules);
+        if (output.stack) throw Error('craft-incomplete-batch');
+        let overflow = false;
+        for (const i of match.used) {
+            const input = grid[i]!; grid[i] = input.count > 1 ? {...input, count: input.count - 1} : null;
+            const remainder = match.remainders[i];
+            if (!remainder) continue;
+            validateStack(remainder, eligible, rules);
+            if (!grid[i]) grid[i] = structuredClone(remainder);
+            else if (sameStack(grid[i]!, remainder, rules) && grid[i]!.count + remainder.count <= rules.items[remainder.id].maxStack) grid[i]!.count += remainder.count;
+            else {
+                const source: SlotValue = {stack: structuredClone(remainder), policy: {take: true, place: false}};
+                quickMove(source, playerTargets(next), rules);
+                if (source.stack) overflow = true;
+            }
+        }
+        if (overflow) {firstError = 'craft-remainder-full'; break;}
+        validateCarriers(next, eligible, rules);
+        inventory = next; batches++; recipe = match.recipe;
+        acquired.push(...ids.filter(id => !acquired.includes(id)));
+        for (const remainder of match.remainders) if (remainder) {
+            const prior = returned.find(s => sameStack(s, remainder, rules));
+            if (prior) prior.count += remainder.count; else returned.push(structuredClone(remainder));
+        }
+        if (take.mode !== 'shift') break;
     }
-    const returned: Stack[] = [];
-    for (const s of match.remainders) {
-        if (!s) continue;
-        const known = returned.find(v => sameStack(v, s, rules));
-        if (known) known.count += s.count * batches; else returned.push({
-            ...structuredClone(s),
-            count: s.count * batches
-        });
-    }
-    validateCarriers(inventory, eligible, rules);
-    return {inventory, acquired, batches, returned, recipe: match.recipe};
+    if (!batches) throw Error(firstError);
+    return {inventory, acquired, returned, batches, recipe};
 }

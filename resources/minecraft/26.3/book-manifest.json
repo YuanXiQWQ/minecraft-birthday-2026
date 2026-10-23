@@ -367,5 +367,6 @@
   },
   "limitations": [
     "UI compass uses original no-lodestone angle-zero frame; no compass world navigation"
-  ]
+  ],
+  "exporterSha256": "1f41fa00e8fce1fe27f87625407001f72c763fb6964d8d957aedb9791959cc17"
 }

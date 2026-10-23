@@ -1,5 +1,6 @@
 /** P7_TEST_ONLY: fixed-layout timing through the actual formal app, SaveSession, clock, GUI and renderer. */
 import {mount} from '../web/src/app.ts';
+import {initialBook} from '../web/src/domain/recipe-book.ts';
 import {initialState, transition} from '../web/src/domain/state.ts';
 import {emptyHopper} from '../web/src/domain/hopper.ts';
 import {emptyFurnace, inputChanged} from '../web/src/domain/furnace.ts';
@@ -44,6 +45,14 @@ if (layout === 'chain') {
 if (layout === 'dense') {
     const b = WORLD_SCENES.plains.build;
     for (let x = b.min[0]; x <= b.max[0]; x++) for (let z = b.min[2]; z <= b.max[2]; z++) for (let y = 0; y <= 2; y++) state.progress.scenes.plains.stations.push(device('dense-' + x + '-' + y + '-' + (z + 4), [x, y, z], y === 1, y === 0 ? 'east' : 'down'));
+}
+/** Joint fixture is isolated from ordinary play and uses the actual finite producer/network and completed replay UI. */
+const joint = new URLSearchParams(location.search).has('joint');
+if (joint) {
+    state.progress.scene = 'home'; state.progress.cakePlacement = {scene: 'home', table: 'birthday-table'};
+    state.progress.scenes.home.stations = state.progress.scenes.plains.stations; state.progress.scenes.plains.stations = [];
+    state.progress.unlocked = Object.keys(rules.items); state.progress.recipeBook = initialBook(state.progress.unlocked);
+    state.progress.player.data.backpack = Object.keys(rules.items).slice(0,27).map(id => ({id,count:1}));
 }
 localStorage.setItem(SAVE_KEY, JSON.stringify(await seal(state, 'p7-performance-' + layout, 0)));
 await mount('game');

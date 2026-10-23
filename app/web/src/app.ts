@@ -1,4 +1,6 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
+import {GameChat} from './ui/chat.ts';
+import {itemColor} from './ui/item-style.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
 import {itemName} from './i18n/items.ts';
 import {WorldUse} from './ui/world-use.ts';
@@ -9,8 +11,8 @@ import {SettingsEdits} from './ui/settings-edits.ts';
 import type {SettingKey} from './ui/settings-edits.ts';
 import {processingClock} from './persistence/processing-clock.ts';
 import birthday from './birthday.json' with {type: 'json'};
-import {translate, loadLocale, ENGLISH} from './i18n';
-import type {Dictionary} from './i18n';
+import {translate, loadLocale, ENGLISH} from './i18n/index.ts';
+import type {Dictionary} from './i18n/index.ts';
 import {browserSession} from './persistence/browser.ts';
 import {token} from './persistence/codec.ts';
 import type {Snapshot} from './persistence/session.ts';
@@ -33,10 +35,14 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     const root = document.getElementById('app')!, base = import.meta.env.BASE_URL;
     let dictionary = locale, pixels: PixelUI | null = null, scene: SceneView | null = null, disposed = false,
         confirmation: string | null = null, confirmationSerial = 0, resetting = false, localeGeneration = 0;
+    const appAbort = new AbortController();
     const edits = new SettingsEdits(), runtime = initialRuntime(), connection = browserSession(),
         session = connection.session,
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
-    let celebration: BirthdayCelebration | null = null;
+    let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null;
+    let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
+    const inputBlocked = () => dialog.open || !!menu?.open || !!chat?.open;
+    const updateGate = () => {const open = inputBlocked() || !!inventory?.modal.open; host.dataset.overlay = String(open); scene?.setInputEnabled(!open);};
     let worldUse: WorldUse | null = null, worldAudio: WorldAudio | null = null, lastWorldScene: SceneId | null = null;
     let runtimeGeneration: string | null = null, inventory: GameInventory | null = null,
         stopProcessing: (() => void) | null = null;
@@ -82,6 +88,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     document.title = t(page === 'home' ? 'html.homeTitle' : 'html.gameTitle');
     document.documentElement.lang = 'en';
     root.className = page;
+    root.dataset.build = import.meta.env.BUILD_ID;
     const header = document.createElement('header'),
         brand = node('p', page === 'home' ? 'home.eyebrow' : 'game.eyebrow', 'brand'),
         main = document.createElement('main'), copy = document.createElement('article'),
@@ -180,7 +187,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
     });
     retry.id = 'retry-save';
     dialog.append(dialogTitle, languageLabel, language, volumeLabel, volume, mute, muteLabel, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
-    root.append(dialog, retry);
+    (page === 'game' ? host : root).append(dialog); root.append(retry);
     const settings = button('common.settings', () => {
         inventory?.input.cancel();
         runtime.screen = 'settings';
@@ -191,19 +198,20 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         clearText(resetFeedback);
         confirmation = null;
         confirmSection.hidden = true;
-        dialog.showModal();
+        if (page === 'game') {showOptions('options'); dialog.show();} else dialog.showModal();
+        updateGate();
         close.focus();
     });
-    header.append(settings);
+    if (page === 'home') header.append(settings);
     dialog.addEventListener('close', () => {
         runtime.screen = inventory?.modal.open ? 'inventory' : 'scene';
-        scene?.setInputEnabled(!inventory?.modal.open);
+        updateGate();
         edits.cancel();
         paintSettings();
         clearText(preferenceFeedback);
         confirmation = null;
         confirmSection.hidden = true;
-        settings.focus();
+        if (page === 'home') settings.focus();
     });
     for (const type of ['pointerdown', 'pointerup', 'pointermove', 'click', 'wheel', 'contextmenu']) dialog.addEventListener(type, event => {
         if (type === 'contextmenu') event.preventDefault();
@@ -223,7 +231,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         const value = edits.view();
         if (value) {
             volume.value = String(value.volume);
+            pixels?.updates.get(volume)?.();
             mute.checked = value.muted;
+            setText(muteButton, value.muted ? 'settings.soundOff' : 'settings.soundOn');
             language.value = Array.from(language.options).some(option => option.value === value.locale) ? value.locale : 'en';
             setText(volumeLabel, 'settings.volume', {percent: Math.round(value.volume * 100)});
         }
@@ -280,6 +290,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         if (inventory) inventory.writable = value.writable;
         if (value.envelope && runtimeGeneration !== value.envelope.generation) {
             runtimeGeneration = value.envelope.generation;
+            scene?.mode?.suspend();
             scene?.cancel();
             scene?.showPreview(null);
             runtime.natural = {};
@@ -294,7 +305,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             root.dataset.completed = String(placed);
             celebration?.sync();
             if (page === 'game' && lastWorldScene !== s.progress.scene) {
-                inventory?.close();
+                void inventory?.close(true);
                 lastWorldScene = s.progress.scene;
             }
             inventory?.sync(s, value.writable, value.envelope.generation);
@@ -321,26 +332,97 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             });
         } else if (value.status !== 'loading') setText(caption, 'status.unknown');
         paintSettings();
+        saveStatus.dataset.ready = String(value.status === 'ready');
         retry.hidden = value.status === 'ready';
         setText(saveStatus, value.status === 'ready' ? (value.migrated ? 'status.migrated' : 'status.ready') : value.status === 'loading' ? 'common.loading' : Object.hasOwn(ENGLISH, 'error.' + value.status) ? 'error.' + value.status : 'error.generic');
     }
+
+    /** End an active inventory transaction before navigating to the independent birthday title. */
+    async function quitToTitle(): Promise<void> {
+        if (inventory && !await inventory.close()) return;
+        if (inventory) await inventory.queue;
+        dialog.close(); menu?.close(); chat?.hide();
+        scene?.mode?.suspend(); scene?.cancel();
+        if (!session.view.writable) {chat?.append([{text: t('game.actionFailed')}]); return;}
+        location.assign(base);
+    }
+    link.addEventListener('click', e => {if (page === 'game') {e.preventDefault(); void quitToTitle();}});
+    const optionNavigation = document.createElement('div'), optionSections = new Map<string, HTMLElement>();
+    const languageSection = document.createElement('section'), soundSection = document.createElement('section'), playerSection = document.createElement('section');
+    const muteButton = button('settings.soundOn', () => {edits.stage('muted', !edits.view()?.muted); preferences('muted');});
+    languageSection.append(languageLabel, language); soundSection.append(volumeLabel, volume, muteButton, mute, muteLabel);
+    if (page === 'game') {mute.hidden = muteLabel.hidden = true;}
+    const usernameLabel = node('label', 'menu.username'), username = document.createElement('input');
+    username.id = 'username'; username.maxLength = 16; usernameLabel.setAttribute('for', username.id);
+    const usernameFeedback = document.createElement('p'); usernameFeedback.setAttribute('role', 'status');
+    playerSection.append(usernameLabel, username, usernameFeedback, button('menu.save', () => {
+        if (!/^[A-Za-z0-9_]{3,16}$/.test(username.value)) {setText(usernameFeedback, 'menu.usernameInvalid'); return;}
+        edits.stage('username', username.value); preferences('username');
+    }), button('menu.cancel', () => showOptions('options')));
+    optionSections.set('language', languageSection); optionSections.set('sound', soundSection); optionSections.set('player', playerSection);
+    for (const id of ['language', 'sound', 'player']) optionNavigation.append(button('menu.' + id, () => showOptions(id)));
+    /** Show only supported preference categories, preserving the existing settings draft and reset transactions.
+     * @param {string} id Native option hierarchy node.
+     */
+    function showOptions(id: string): void {
+        optionsPage = id; optionNavigation.hidden = id !== 'options';
+        for (const [key, section] of optionSections) section.hidden = key !== id;
+        for (const element of [warning, reset, confirmSection]) element.hidden = id !== 'options' || element === confirmSection && !confirmation;
+        setText(dialogTitle, id === 'options' ? 'menu.options' : 'menu.' + id);
+        if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();}
+        updateGate();
+    }
+    if (page === 'game') {
+        dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
+        close.replaceWith(button('menu.done', () => {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}));
+        menu = document.createElement('dialog'); menu.className = 'game-menu'; menu.id = 'game-menu';
+        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
+        host.append(menu);
+        menu.addEventListener('close', updateGate);
+        for (const view of [menu, dialog]) {
+            view.addEventListener('cancel', e => e.preventDefault());
+            for (const type of ['pointerdown', 'pointerup', 'wheel', 'contextmenu']) view.addEventListener(type, e => {e.stopPropagation(); if (type === 'contextmenu') e.preventDefault();});
+        }
+        document.addEventListener('keydown', e => {
+            if (e.defaultPrevented || e.repeat) return;
+            if (e.code === 'Escape') {
+                if (performance.now() - lastPointerEscape < 150) {e.preventDefault(); return;}
+                e.preventDefault(); e.stopImmediatePropagation();
+                if (chat?.open) chat.hide();
+                else if (inventory?.modal.open) void inventory.close();
+                else if (dialog.open) {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}
+                else if (menu!.open) {menu!.close(); updateGate();}
+                else openMenu();
+            } else if (e.code === 'KeyT' && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show();}
+        }, {signal: appAbort.signal});
+    }
+    /** Open the local pause interface without pausing the approved active simulation. */
+    function openMenu(): void {if (page !== 'game' || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
 
     const navigation = document.createElement('nav');
     navigation.className = 'world-navigation';
     if (page === 'game') {
         for (const id of Object.keys(WORLD_SCENES) as SceneId[]) {
             const b = button('scene.' + id, () => {
-                inventory?.close();
-                scene?.cancel();
-                void session.dispatch({
-                    type: 'select-scene',
-                    scene: id
-                }).catch(() => setText(selection, 'game.actionFailed'));
+                void navigateScene(id);
             });
+            /* Navigation always settles the active menu before changing its domain scene. */
             b.dataset.scene = id;
             navigation.append(b);
         }
         root.insertBefore(navigation, main);
+    }
+
+    /** Finish visible carrier return before selecting another authored scene. @param {SceneId} id Target scene. */
+    async function navigateScene(id: SceneId): Promise<void> {
+                if (inventory && !await inventory.close()) return;
+        if (inventory) await inventory.queue;
+                dialog.close(); menu?.close(); chat?.hide();
+                scene?.mode?.suspend(); scene?.cancel();
+                void session.dispatch({
+                    type: 'select-scene',
+                    scene: id
+                }).catch(() => chat?.append([{text: t('game.actionFailed')}]));
     }
     const unsubscribe = session.subscribe(reflect);
     await session.refresh();
@@ -353,7 +435,12 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             setText(element, binding.key, binding.values);
         }
         for (const b of root.querySelectorAll<HTMLButtonElement | HTMLAnchorElement>('button,a.invite')) pixels.button(b);
+        pixels.slider(volume);
+        pixels.field(username);
+        if (page === 'game') {language.hidden = true; const english = button('settings.english', () => {language.value = 'en'; edits.stage('locale', 'en'); preferences('locale');}); languageSection.append(english);}
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
+        scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
+        scene.onPointerFailure = () => chat?.append([{text: t('game.pointerFailed')}]);
         scene.setInputEnabled(page === 'home' && !dialog.open);
         scene.onPick = hit => {
             if (hit.id === 'birthday-table') setText(selection, 'table.selected');
@@ -379,17 +466,31 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             setText(story, 'game.worldHint');
             inventory = new GameInventory(root, pixels, art, rules, t, open => {
                 runtime.screen = open ? 'inventory' : dialog.open ? 'settings' : 'scene';
-                scene?.setInputEnabled(!open && !dialog.open);
-            }, () => dialog.open, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
+                host.dataset.overlay = String(open || inputBlocked());
+                scene?.setInputEnabled(!open && !inputBlocked());
+            }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
+            host.append(inventory.hud, inventory.modal);
+            inventory.viewport = host; inventory.resize();
+            inventory.returnWorkbench = (scene, id) => session.dispatch({type: 'close-workbench', scene, id});
             inventory.acquireOutput = (take, cursor, expected, station) => session.takeOutput(take, cursor, expected, station);
             inventory.fill = (...args) => session.fillRecipe(...args);
             inventory.bookCommand = command => session.dispatch(command);
+            chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
+            let taught = session.view.envelope?.state.progress.unlocked.length !== 0;
             session.eventListeners.add(events => {
-                for (const event of events) if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []); else if (event.type === 'item-unlocked') setText(selection, 'game.acquired', {item: itemName(event.item!)});
+                for (const event of events) {
+                    if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
+                    else if (event.type === 'items-acquired') {
+                        for (const stack of event.stacks ?? []) chat?.append([{text: '+' + stack.count + ' '}, {text: itemName(stack.id), color: itemColor(stack.id)}]);
+                    } else if (event.type === 'item-unlocked') {
+                        chat?.append([{text: t('game.acquired', {item: ''})}, {text: itemName(event.item!), color: itemColor(event.item!)}]);
+                        if (!taught) {taught = true; chat?.append([{text: t('chat.tutorial')}]);}
+                    }
+                }
             });
             worldAudio = new WorldAudio(resources.documents, () => session.view.envelope!.state.settings);
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true});
-            worldUse = new WorldUse(scene!, inventory, session, key => setText(selection, key), id => void worldAudio?.play(id));
+            worldUse = new WorldUse(scene!, inventory, session, key => chat?.append([{text: t(key)}]), id => void worldAudio?.play(id));
             scene.setInputEnabled(!dialog.open && !inventory.modal.open);
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
                 state: session.view.envelope.state,
@@ -401,7 +502,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
             stopProcessing = processingClock(session);
             const value = session.view;
             if (value.envelope) reflect(value);
-            header.append(button('inventory.open', () => inventory?.open()));
+
             root.dataset.inventoryReady = 'true';
         }
     } catch (error) {
@@ -423,8 +524,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}): Pro
         clearText(preferenceFeedback);
         if (event.persisted) return;
         disposed = true;
+        appAbort.abort();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
+        chat?.dispose();
         celebration?.dispose();
         worldUse?.dispose();
         worldAudio?.dispose();

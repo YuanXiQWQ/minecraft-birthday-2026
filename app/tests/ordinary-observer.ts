@@ -1,4 +1,5 @@
 /** P8_TEST_ONLY: read-only measurement of the ordinary app; no save seed, state edit or alternate player path. */
+import {SAVE_KEY} from '../web/src/persistence/session.ts';
 import {observeTimings} from '../web/src/performance.ts';
 import type {Timing} from '../web/src/performance.ts';
 
@@ -135,4 +136,32 @@ if (new URLSearchParams(location.search).has('capture-drag')) {
         subtree: true,
         attributeFilter: ['data-drag-preview']
     });
+}
+// Capture-only observer remains separate from ordinary builds and never edits player state.
+if (new URLSearchParams(location.search).has('capture-native')) {
+    const button = document.createElement('button'), output = document.createElement('output');
+    button.textContent = 'Capture GUI evidence'; button.id = 'capture-native'; output.id = 'native-evidence'; output.hidden = true;
+    button.style.cssText = 'position:fixed;right:8px;bottom:34px;z-index:100;font:12px monospace;padding:2px';
+    document.addEventListener('DOMContentLoaded', () => document.body.append(button, output), {once:true});
+    /** Capture actual rendered surfaces and read committed state without a game command or synthetic player event. */
+    button.onclick = () => {
+        const surfaces = [...document.querySelectorAll<HTMLCanvasElement>('#inventory canvas,.hotbar canvas,.recipe-toast,.game-chat canvas')].map((canvas,index) => ({index,className:canvas.className,rect:canvas.getBoundingClientRect().toJSON(),backing:[canvas.width,canvas.height],png:canvas.toDataURL('image/png')}));
+        output.textContent = JSON.stringify({testObservationOnly:true,at:performance.now(),viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,scene:document.getElementById('scene')!.getBoundingClientRect().toJSON(),build:document.getElementById('app')!.dataset.build,surfaces,save:localStorage.getItem(SAVE_KEY),inventory:document.getElementById('inventory')?.dataset,world:document.querySelector<HTMLCanvasElement>('#scene>canvas')?.dataset,chat:document.querySelector<HTMLElement>('.game-chat')?.dataset});
+        output.dataset.ready = 'true';
+    };
+}
+
+
+if (new URLSearchParams(location.search).has('pointer-evidence')) {
+    const output = document.createElement('output'); output.id = 'pointer-evidence'; output.style.cssText = 'position:fixed;bottom:2px;left:2px;z-index:100;max-width:100%;background:#fff;color:#000;font:12px monospace;pointer-events:none;';
+    const events: unknown[] = [];
+    document.addEventListener('DOMContentLoaded', () => document.body.append(output), {once:true});
+    /** Observe actual browser notifications and trusted input, without changing pointer ownership. @param {Event} event Native event. */
+    function record(event: Event): void {
+        const canvas = document.querySelector<HTMLCanvasElement>('#scene>canvas'), mouse = event as MouseEvent;
+        events.push({type:event.type,trusted:event.isTrusted,locked:document.pointerLockElement===canvas,dx:mouse.movementX,dy:mouse.movementY,button:mouse.button});
+        if (events.length > 20) events.shift();
+        output.textContent = JSON.stringify({mode:canvas?.dataset.pointerMode,look:canvas?.dataset.look,hover:canvas?.dataset.hover,events});
+    }
+    for (const type of ['pointerlockchange','pointerlockerror','pointermove','pointerdown','pointerup','visibilitychange']) document.addEventListener(type, record, {capture:true});
 }

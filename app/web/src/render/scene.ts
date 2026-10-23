@@ -25,6 +25,7 @@ import {AuthoredWorld} from './authored-world.ts';
 import {WORLD_SCENES} from '../domain/world-config.ts';
 import type {Progress, SceneId, Kind, Facing, Cell} from '../domain/types.ts';
 import {Look} from './look.ts';
+import {PointerMode} from './pointer-mode.ts';
 import {PRESENTATION} from './presentation.ts';
 import type {PresentationSpec} from './presentation.ts';
 
@@ -47,8 +48,13 @@ export class SceneView {
     persistent = new Group();
     cake: Group | null = null;
     look = new Look();
+    mode: PointerMode | null = null;
+    onEscape: (() => void) | null = null;
+    onPointerFailure: (() => void) | null = null;
+    canUse: ((hit: Pick | null) => boolean) | null = null;
     basePitch = 0;
     rightTarget: string | null = null;
+    rightMotion = 0;
     onUse: ((hit: Pick | null, modifiers?: { shift: boolean; alt?: boolean; ctrl?: boolean }) => void) | null = null;
     authored: AuthoredWorld | null = null;
     worldId: SceneId | null = null;
@@ -142,14 +148,17 @@ export class SceneView {
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
         this.cancel = () => this.cancelInput();
+        if (game) this.mode = new PointerMode(canvas, () => {this.cancelInput(); this.refreshHover();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
         this.down = e => {
             if (!this.input || this.lost) return;
+            if (this.mode?.enter()) {e.preventDefault(); return;}
             this.pointerPosition = [e.clientX, e.clientY];
             if (e.button === 2) {
                 e.preventDefault();
                 this.cancel();
                 this.pointerPosition = [e.clientX, e.clientY];
-                this.rightTarget = this.pick(e.clientX, e.clientY)?.id ?? null;
+                this.rightTarget = this.refreshHover()?.id ?? null;
+                this.rightMotion = 0;
                 this.look.begin(e.pointerId, e.clientX, e.clientY);
                 this.onHover?.(null);
                 canvas.setPointerCapture(e.pointerId);
@@ -168,13 +177,14 @@ export class SceneView {
             if (!this.look.active) this.cancel();
         };
         this.contextMenu = e => {
-            if (this.input) e.preventDefault();
+            e.preventDefault();
         };
         this.visibility = () => {
             if (document.hidden) this.cancel();
         };
         this.lostHandler = e => {
             e.preventDefault();
+            this.mode?.suspend();
             this.lost = true;
             this.cancel();
             this.onGraphics?.(false);
@@ -217,8 +227,8 @@ export class SceneView {
      * @return {Pick|null} A fresh visible hit or no actionable pointer.
      */
     refreshHover(): Pick | null {
-        const position = this.pointerPosition, r = this.renderer.domElement.getBoundingClientRect();
-        const hit = position && !this.look.active && position[0] >= r.left && position[0] < r.right && position[1] >= r.top && position[1] < r.bottom ? this.pick(...position) : null;
+        const r = this.renderer.domElement.getBoundingClientRect(), position = this.mode?.actual ? [r.left + r.width / 2, r.top + r.height / 2] : this.pointerPosition;
+        const hit = position && !this.look.active && position[0] >= r.left && position[0] < r.right && position[1] >= r.top && position[1] < r.bottom ? this.pick(position[0], position[1]) : null;
         this.renderer.domElement.dataset.hover = JSON.stringify(hit);
         this.onHover?.(hit);
         return hit;
@@ -243,6 +253,12 @@ export class SceneView {
      */
     movePointer(e: PointerEvent, game: boolean): void {
         if (!this.input || this.lost) return;
+        if (this.mode?.actual) {
+            if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
+            this.look.relative(e.movementX, e.movementY);
+            this.camera.rotation.set(this.basePitch + this.look.pitch, this.look.yaw, 0, 'YXZ');
+            this.camera.updateMatrixWorld(true); this.refreshHover(); this.requestRender(); return;
+        }
         this.pointerPosition = [e.clientX, e.clientY];
         if (!this.look.active) {
             this.refreshHover();
@@ -274,6 +290,7 @@ export class SceneView {
             this.cancel();
             this.pointerPosition = [e.clientX, e.clientY];
             const hit = this.refreshHover();
+            if (result === 'use' && (hit?.id ?? null) === target && this.canUse && !this.canUse(hit)) {this.mode?.toggle(); return;}
             if (result === 'use' && (hit?.id ?? null) === target) this.onUse?.(hit, {
                 shift: e.shiftKey,
                 alt: e.altKey,
@@ -355,6 +372,7 @@ export class SceneView {
             crops: p.scenes.farm.crops
         });
         if (this.worldId !== p.scene) {
+            this.mode?.suspend();
             this.updateDebris(Infinity);
             this.worldId = p.scene;
             this.authored.build(p.scene);
@@ -504,6 +522,7 @@ export class SceneView {
      * @param {boolean} enabled Whether world input is currently available.
      */
     setInputEnabled(enabled: boolean): void {
+        this.mode?.pause(!enabled);
         this.input = enabled;
         this.cancel();
         if (!enabled) this.showPreview(null);
@@ -580,6 +599,7 @@ export class SceneView {
     /** Remove renderer callbacks, resize observation, input listeners and all owned GPU resources. */
     dispose(): void {
         if (this.disposed) return;
+        this.mode?.dispose();
         this.disposed = true;
         clearInterval(this.animation);
         this.cancel();

@@ -117,11 +117,11 @@ test('ordinary reset clears complete progress and keeps latest preferences witho
     }, null, s.view.envelope!.state.progress.player.data);
     await s.dispatch({type: 'record-cake-placement', scene: 'home', table: 'birthday-table'});
     const c = token(s.view.envelope!), old = s.view.envelope!.generation;
-    await s.dispatch({type: 'settings', patch: {locale: 'fr', volume: .75, muted: true}});
+    await s.dispatch({type: 'settings', patch: {locale: 'fr', volume: .75, muted: true, username: 'sireoh'}});
     await s.reset(c);
     assert.notEqual(s.view.envelope!.generation, old);
     assert.deepEqual(s.view.envelope!.state.progress, initialProgress());
-    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', volume: .75, muted: true});
+    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', volume: .75, muted: true, username: 'sireoh'});
     assert.equal(s.view.writable, true);
 });
 
@@ -294,7 +294,7 @@ test('remote settings sync when idle; during editing local explicit commit wins 
     const d = edits.submit('volume')!;
     await s.dispatch({type: 'settings', patch: {volume: d.value as number}});
     edits.finish('volume', d.ticket);
-    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', muted: true, volume: .4});
+    assert.deepEqual(s.view.envelope!.state.settings, {locale: 'fr', muted: true, volume: .4, username: 'sireoh'});
     await b.dispatch({type: 'settings', patch: {volume: .8}});
     await s.refresh();
     assert.equal(edits.view()!.volume, .8);

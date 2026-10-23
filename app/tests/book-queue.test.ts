@@ -89,10 +89,11 @@ async function harness(bench = false, take = false) {
             open: true, dataset: {}, setAttribute() {
             }, close() {
                 this.open = false;
-            }, showModal() {
+            }, show() {
                 this.open = true;
             }, querySelector() {
                 return {
+                    style: {},
                     focus() {
                     }
                 };
@@ -336,7 +337,7 @@ function attachLifecycleBook(h: Awaited<ReturnType<typeof harness>>) {
         groups: [],
         search: {value: '', style: {}},
         root: {hidden: true, style: {}},
-        toggle: {hidden: false, style: {}},
+        toggle: {hidden: false, style: {setProperty() {}}},
         canvas: {
             style: {}, getContext: () => ({
                 clearRect() {
@@ -348,6 +349,7 @@ function attachLifecycleBook(h: Awaited<ReturnType<typeof harness>>) {
             }
         },
         body: {
+            style: {},
             classList: {
                 contains: (key: string) => classes.has(key), toggle: (key: string, on: boolean) => {
                     if (on) classes.add(key); else classes.delete(key);

@@ -5,14 +5,14 @@ import {readFileSync, readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {resources, RESOURCE_ROOT} from '../tools/resources.ts';
 import {compileModel, resolveModel} from '../web/src/render/model-format.ts';
-import {ENGLISH, translate} from '../web/src/i18n';
+import {ENGLISH, translate} from '../web/src/i18n/index.ts';
 import {wrap} from '../web/src/ui/pixels.ts';
 import {PRESENTATION} from '../web/src/render/presentation.ts';
 
 test('both original-resource profiles verify exact bytes; the uncut cake has original inset and half-block height', () => {
     const files = resources(), profile = JSON.parse(new TextDecoder().decode(files.get('presentation-manifest.json')));
     assert.equal(profile.entries.length, 17);
-    assert.equal(files.size, 643);
+    assert.equal(files.size, 667);
     const docs = new Map([...files].filter(([n]) => n.endsWith('.json')).map(([n, b]) => [n, JSON.parse(new TextDecoder().decode(b))]));
     for (const model of Object.values(profile.models) as string[]) {
         const source = resolveModel(model, id => docs.get('assets/minecraft/models/' + id.split(':')[1] + '.json'));

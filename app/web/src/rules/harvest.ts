@@ -105,3 +105,32 @@ export function potentialDrops(block: string, tool: Stack | null, rules: Rules, 
     }
     return out;
 }
+
+/** Roll supported native modifiers using the real held tool; no explosion or unimplemented enchantment is synthesized.
+ * @param {string} block Native source.
+ * @param {Stack|null} tool Actual main-hand group.
+ * @param {Rules} rules Versioned registry.
+ * @param {Function} random Transaction-owned uniform generator.
+ * @param {number} age Actual crop age.
+ * @return {Stack[]} Finite actual loot groups.
+ */
+export function rolledDrops(block: string, tool: Stack | null, rules: Rules, random: () => number, age = 7): Stack[] {
+    const result: Stack[] = [];
+    for (const drop of potentialDrops(block, tool, rules, undefined, age)) {
+        if (drop.chance < 1 && random() >= drop.chance) continue;
+        let count = 1;
+        for (const raw of drop.modifiers) {
+            const modifier = raw as any;
+            if (modifier.type === 'minecraft:explosion_decay') continue;
+            if (modifier.type !== 'minecraft:apply_bonus') throw Error('unsupported-loot-modifier');
+            const level = Number((tool?.components?.['minecraft:enchantments'] as Record<string, number>|undefined)?.[modifier.enchantment] ?? 0);
+            if (modifier.formula === 'minecraft:binomial_with_bonus_count') {
+                for (let i = 0; i < level + modifier.parameters.extra; i++) if (random() < modifier.parameters.probability) count++;
+            } else if (modifier.formula === 'minecraft:uniform_bonus_count') count += Math.floor(random() * (modifier.parameters.bonusMultiplier * level + 1));
+            else if (modifier.formula === 'minecraft:ore_drops') {if (level) count *= Math.max(0, Math.floor(random() * (level + 2)) - 1) + 1;}
+            else throw Error('unsupported-loot-bonus');
+        }
+        if (count) result.push({id: drop.id, count});
+    }
+    return result;
+}

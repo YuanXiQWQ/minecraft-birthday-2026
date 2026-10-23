@@ -1,0 +1,18 @@
+{
+  "input": {
+    "id": "minecraft:raw_iron",
+    "count": 1
+  },
+  "fuel": {
+    "id": "minecraft:oak_planks",
+    "count": 29
+  },
+  "output": null,
+  "burn": 126,
+  "burnTotal": 300,
+  "cook": 175,
+  "cookTotal": 200,
+  "recipe": "minecraft:iron_ingot_from_smelting_raw_iron",
+  "speed": 1,
+  "outputRecipe": null
+}

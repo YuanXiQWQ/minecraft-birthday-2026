@@ -1,0 +1,155 @@
+[
+  {
+    "name": "center",
+    "colors": 31,
+    "alphaBounds": [
+      20,
+      12,
+      78,
+      124
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-center.jpg"
+  },
+  {
+    "name": "left",
+    "colors": 52,
+    "alphaBounds": [
+      19,
+      12,
+      79,
+      124
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-left.jpg"
+  },
+  {
+    "name": "right",
+    "colors": 53,
+    "alphaBounds": [
+      19,
+      12,
+      79,
+      124
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-right.jpg"
+  },
+  {
+    "name": "top",
+    "colors": 43,
+    "alphaBounds": [
+      20,
+      9,
+      78,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-top.jpg"
+  },
+  {
+    "name": "bottom",
+    "colors": 40,
+    "alphaBounds": [
+      20,
+      9,
+      78,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-bottom.jpg"
+  },
+  {
+    "name": "top-left",
+    "colors": 63,
+    "alphaBounds": [
+      19,
+      8,
+      79,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-top-left.jpg"
+  },
+  {
+    "name": "top-right",
+    "colors": 63,
+    "alphaBounds": [
+      19,
+      8,
+      79,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-top-right.jpg"
+  },
+  {
+    "name": "bottom-left",
+    "colors": 62,
+    "alphaBounds": [
+      19,
+      8,
+      79,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-bottom-left.jpg"
+  },
+  {
+    "name": "bottom-right",
+    "colors": 56,
+    "alphaBounds": [
+      19,
+      8,
+      79,
+      125
+    ],
+    "crop": [
+      516,
+      279,
+      614,
+      419
+    ],
+    "source": "steve19-bottom-right.jpg"
+  }
+]

@@ -3,16 +3,16 @@
   "exporter": "p4-export-1",
   "toolchain": "existing JDK 25 javap -v -c -p; Node 25; no Minecraft classes executed",
   "exporterSources": {
-    "tools/export-vanilla.ts": "13128113938f92bff3324f7a35241d4f300d0dcd0d4e2c4891714820bea28bef",
-    "tools/vanilla/zip.ts": "7d3dd5f6f235db5e55c6a9fd5190fa1205775877824330f52801785bace1c377",
-    "tools/vanilla/extract.ts": "312777dd333dd193755c6b9c3fcaab3c7517cdf7ebf6f0d9fcebd08f44908305",
-    "tools/vanilla/items.ts": "fcd4c93b950ea2efaab36153847fc8be1f48da4586fd0d0b6ccf43207635c0e5",
-    "tools/vanilla/sources.ts": "a77a1b20b247f56c52fd1c0882c18cd610d1e4c66f53ea8433aa81f81e40f0cd",
-    "tools/vanilla/closure.ts": "af33986d89944f7937f48abb98ab4f67c511ed5718a6f3b351713b4ca6e76433",
-    "tools/vanilla/verify.ts": "3dcca401693f875d327cadfed73e79ec9c7bac90123e42ae37a0b2d474682858",
-    "web/src/rules/matcher.ts": "e4be0a835c657a9bddc55bd129ce6a6b195201f4810cbbcf386a2a6f429d004a",
-    "web/src/rules/process.ts": "b00e07a1ef408738937596294d0ef4c16395a1ab66b6ac23f9e0400265eca920",
-    "web/src/rules/harvest.ts": "01d53eb0ff8868a7f5e1100314f813c1b762c57f09d0f354732c93a48ec9cb96"
+    "tools/export-vanilla.ts": "962e6fdac470c5f29307631213792996b9058252d6ef539b5d29c83db481c826",
+    "tools/vanilla/zip.ts": "1d240d3dbf202905f00131765bd376501bb0cf2b724951e2f263f463ed9f72fd",
+    "tools/vanilla/extract.ts": "81b3ac591fbbabb9b02f9e74ca52c51024066b71f7cf4a29880c1c0e6f740549",
+    "tools/vanilla/items.ts": "425aa4fa444550718c1c6e2cf1321363d158b472e5e24be8580c39b7c9b1fe7c",
+    "tools/vanilla/sources.ts": "81637ee2239d8d61c5ccb9186850e7de46b449e1a7ba38cab94e0162f74b8a18",
+    "tools/vanilla/closure.ts": "ead4d7f3c106323bc67c5f76af1b7cdd56930cc5f0da334236311aeb97018295",
+    "tools/vanilla/verify.ts": "19e4f6161cae64095c2823170e804023cf3b5dd2cd3309aad3b50ff9b59cdd2d",
+    "web/src/rules/matcher.ts": "ffe08802ae3fb0f17cb4eee3abd336898a48146d4d1a360deb0587e22ef27c64",
+    "web/src/rules/process.ts": "13a824142a8c3746cd4b6ef10c8356ec6c6b2d06d919d06703a7fc31c5986e59",
+    "web/src/rules/harvest.ts": "a9a1799f73906abd268259af005aa6b819887b17da05e4b66c2b0de60d72006d"
   },
   "client": {
     "sha1": "e877b6a07acd633fb3bb475002175cec036e7b87",

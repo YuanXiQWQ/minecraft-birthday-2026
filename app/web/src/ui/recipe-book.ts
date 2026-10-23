@@ -1,4 +1,6 @@
 /** Native screen-plane recipe book renders original sprites, grouped recipes, search and display-only ghosts. */
+import {nativeField} from './native-field.ts';
+import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
 import type {Recipe} from '../rules/types.ts';
 import {
@@ -67,6 +69,7 @@ export class RecipeBookView {
       this.popup = null;
       this.render();
     }, {signal: this.abort.signal});
+    for (const event of ['select', 'keyup', 'pointerup', 'focus', 'blur']) this.search.addEventListener(event, () => this.paint(), {signal: this.abort.signal});
     this.root.append(this.canvas, this.controls, this.search);
     body.prepend(this.root);
     this.toggle = document.createElement('button');
@@ -242,11 +245,24 @@ export class RecipeBookView {
     this.toggle.hidden = !available;
     const open = available && this.isOpen();
     this.root.hidden = !open;
-    const overlay = open && innerWidth < 379 * u.scale;
+    const overlay = open && (u.viewport?.clientWidth ?? innerWidth) < 379 * u.scale;
     this.body.classList.toggle('book-only', overlay);
+    const ratio = Math.min(globalThis.devicePixelRatio ?? 1, 4),
+        width = open ? (overlay ? 147 + 28 : 147 + 28 + 4 + 176) : u.tab === 'crafting' ? 176 : 195,
+        viewport = Math.round((u.viewport?.clientWidth ?? innerWidth) * ratio),
+        physical = Math.round(width * u.scale * ratio),
+        snap = Math.abs((viewport - physical) % 2) ? -.5 / ratio : 0,
+        tabs = u.modal.querySelector?.<HTMLElement>('.inventory-tabs');
+    this.body.style.transform = `translateX(${snap}px)`;
+    if (tabs) {
+      tabs.hidden = !!u.station || overlay;
+      // Relative positioning keeps selected tabs in the container's shared stacking context.
+      tabs.style.left = `${(open && !overlay ? (147 + 28 + 4) * u.scale / 2 : 0) + snap}px`;
+    }
     const tx = u.station?.expected.version === 2 ? 20 : u.station ? 5 : 104,
         ty = u.station?.expected.version === 2 ? 35 : u.station ? 35 : 60;
     this.toggle.style.cssText = `left:${tx * u.scale}px;top:${ty * u.scale}px;width:${20 * u.scale}px;height:${18 * u.scale}px`;
+    this.toggle.style.setProperty('--native-book-highlight', `url(${(import.meta.env?.BASE_URL ?? '/')}minecraft/26.3/assets/minecraft/textures/gui/sprites/recipe_book/button_highlighted.png)`);
     this.toggle.style.backgroundImage = `url(${(import.meta.env?.BASE_URL ?? '/')}minecraft/26.3/assets/minecraft/textures/gui/sprites/recipe_book/button.png)`;
     this.root.style.cssText = `width:${147 * u.scale}px;height:${166 * u.scale}px;margin-left:${28 * u.scale}px`;
     this.canvas.style.width = 147 * u.scale + 'px';
@@ -305,8 +321,9 @@ export class RecipeBookView {
     b.dataset.bookControl = key;
     b.style.cssText = `left:${box[0] * this.ui.scale}px;top:${box[1] * this.ui.scale}px;width:${box[2] * this.ui.scale}px;height:${box[3] * this.ui.scale}px`;
     const epoch = this.displayEpoch, scope = this.identity;
-    let blockedPress = false;
-    b.addEventListener('pointerdown', () => {
+    let blockedPress = false, rightPress = false;
+    b.addEventListener('pointerdown', e => {
+      rightPress = e.button === 2;
       blockedPress = !this.current(epoch, scope) || this.ui.carrierBusy();
     });
     b.addEventListener('click', e => {
@@ -318,7 +335,8 @@ export class RecipeBookView {
     });
     b.addEventListener('contextmenu', e => {
       e.preventDefault();
-      if (!blockedPress && this.current(epoch, scope)) alternate?.();
+      if (rightPress && !blockedPress && this.current(epoch, scope) && !this.ui.carrierBusy()) alternate?.();
+      rightPress = false;
     });
     b.addEventListener('pointerenter', e => {
       if (!this.current(epoch, scope)) return;
@@ -327,6 +345,12 @@ export class RecipeBookView {
       this.paint();
       this.ui.showTooltipText(tooltip, e.clientX, e.clientY);
     });
+    b.addEventListener('focus', () => {
+      if (!this.current(epoch, scope)) return;
+      this.hover = key; this.paint();
+      const rect = b.getBoundingClientRect(); this.ui.showTooltipText(tooltip, rect.right, rect.top);
+    });
+    b.addEventListener('blur', () => {if (this.current(epoch, scope)) {this.hover = ''; this.ui.hideTooltip(); this.paint();}});
     b.addEventListener('pointerleave', () => {
       if (!this.current(epoch, scope)) return;
       this.hover = '';
@@ -356,6 +380,7 @@ export class RecipeBookView {
       item: itemName(group.recipes[0].result!.id!),
       variants: group.recipes.length
     }), [11 + i % 5 * 25, 31 + Math.floor(i / 5) * 25, 25, 25], 'recipe:' + i, e => this.choose(group.recipes[Math.floor(performance.now() / 1000) % group.recipes.length], e.shiftKey), () => {
+      if (group.recipes.length < 2) return;
       this.popup = group;
       this.render();
     }, [itemName(group.recipes[0].result!.id!), ...(group.recipes.length > 1 ? [this.ui.text('book.more')] : [])]));
@@ -384,13 +409,13 @@ export class RecipeBookView {
     if (this.disposed) return;
     this.syncScope();
     if (this.root.hidden) return;
-    const u = this.ui, c = this.canvas.getContext('2d')!, frame = Math.floor(performance.now() / 1000);
+    const u = this.ui, c = scaledCanvas(this.canvas, 147, 166, u.scale), frame = Math.floor(performance.now() / 1000);
     c.clearRect(-28, 0, 175, 166);
     c.imageSmoothingEnabled = false;
     c.drawImage(this.image('recipe_book'), 0, 0, 147, 166, 0, 0, 147, 166);
     const filter = u.permanent!.progress.recipeBook.data.views[this.mode()].filter;
     this.sprite(c, (this.mode() === 'crafting' ? 'filter' : 'furnace_filter') + '_' + (filter ? 'enabled' : 'disabled') + (this.hover === 'filter' ? '_highlighted' : ''), 110, 12, 26, 16);
-    u.pixels.font.draw(c, this.query || u.text('book.searchHint'), 25, 16, this.query ? '#FFF' : '#777', false);
+    nativeField(c, u.pixels.font, this.search, [25, 16, 80, 9], u.text('book.searchHint'));
     this.groups.slice(this.page * 20, this.page * 20 + 20).forEach((group, i) => {
       const r = group.recipes[frame % group.recipes.length], x = 11 + i % 5 * 25, y = 31 + Math.floor(i / 5) * 25;
       this.sprite(c, 'slot_' + (group.recipes.length > 1 ? 'many_' : '') + (this.craftable(r) ? 'craftable' : 'uncraftable'), x, y, 25, 25);
@@ -409,12 +434,14 @@ export class RecipeBookView {
     for (const [i, category] of this.categories().entries()) {
       const b = this.controls.querySelector<HTMLButtonElement>('[data-book-control="tab:' + category + '"]');
       if (!b) continue;
-      const tile = document.createElement('canvas');
-      tile.width = 35;
-      tile.height = 27;
-      const tc = tile.getContext('2d')!;
+      let tile = b.querySelector('canvas');
+      if (!tile) {tile = document.createElement('canvas'); b.append(tile);}
+      const tc = scaledCanvas(tile, 37, 27, u.scale);
+      tc.clearRect(0, 0, 37, 27);
+      tile.style.position = 'absolute'; tile.style.left = -2 * u.scale + 'px';
+      tile.style.width = 37 * u.scale + 'px'; tile.style.height = '100%'; tile.style.pointerEvents = 'none';
       tc.imageSmoothingEnabled = false;
-      tc.drawImage(this.image('sprites/recipe_book/tab' + (category === this.category ? '_selected' : '')), 0, 0);
+      tc.drawImage(this.image('sprites/recipe_book/tab' + (category === this.category ? '_selected' : '')), category === this.category ? 0 : 2, 0);
       const icons: Record<string, string[]> = {
         all: ['compass'],
         equipment: ['iron_axe', 'golden_sword'],
@@ -427,9 +454,8 @@ export class RecipeBookView {
       icons[category].forEach((id, k) => u.stack(tc, {
         id: 'minecraft:' + id,
         count: 1
-      }, icons[category].length > 1 ? 3 + k * 12 : 9, 5));
-      b.style.backgroundImage = 'url(' + tile.toDataURL() + ')';
-      b.style.backgroundSize = '100% 100%';
+      }, icons[category].length > 1 ? 5 + k * 12 : 11, 5));
+
       b.dataset.tabIndex = String(i);
     }
     if (this.popup) {
@@ -439,7 +465,7 @@ export class RecipeBookView {
       drawSprite(c, this.image('sprites/recipe_book/overlay_recipe'), u.art.documents.get(path + '.mcmeta')?.gui?.scaling, 3, 33, Math.max(32, w), Math.max(32, h));
       this.popup.recipes.forEach((recipe, i) => {
         const x = 7 + i % cols * 25, y = 37 + Math.floor(i / cols) * 25;
-        this.sprite(c, (this.mode() === 'crafting' ? 'crafting' : 'furnace') + '_overlay' + (this.craftable(recipe) ? '' : '_disabled'), x, y, 24, 24);
+        this.sprite(c, (this.mode() === 'crafting' ? 'crafting' : 'furnace') + '_overlay' + (this.craftable(recipe) ? '' : '_disabled') + (this.hover === 'variant:' + i ? '_highlighted' : ''), x, y, 24, 24);
         recipeGhost(recipe, this.mode(), this.width(), u.permanent!.progress.unlocked, u.rules, frame).grid.forEach((s, n) => {
           if (!s) return;
           const icon = u.art.icons.get(s.id);

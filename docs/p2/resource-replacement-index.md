@@ -1,5 +1,8 @@
 # 原版资源清单、来源与使用索引
 
+当前十九项增量见[experience-manifest](../../resources/minecraft/26.3/experience-manifest.json)及[交付报告](../p8/experience-19/report.md)：有界原版搜索页/按钮/滑块/文本框/高亮、GUI light.glsl、官方草方块favicon、官方资产索引unifont.zip中的未改变字形位图与许可证。字体是可审计JSON转换，不是手绘替代；实际首次加载避免与图标加载重复解析。全部正常Git/build，依赖、版本、输入/转换/导出器哈希在清单；原始完整client.jar/zip不进网站。Pages发布已有后续明确授权，后文各阶段“不部署”只保留当时边界。
+
+
 P8当前增量：[interaction-manifest](../../resources/minecraft/26.3/interaction-manifest.json)新增10张原版破坏阶段、4张原版指南针/箱子页签背景、advancement toast及原版zh_CN词表，共16份素材+1清单；合计643份普通运行资源/清单。搜索别名只投影113候选物品并单独哈希，新增-text属性保持克隆字节稳定。原版烟花/12声音复用已有清单；无新增外部缓存或强制替换。见[当前体验/P8报告](../p8/report.md)。下文626等计数为历史范围。
 
 P7当前资源：world-manifest新增80份所需原版资产及1清单，合计626份运行资源/清单，正常Git/dev/build默认加载。地形/作物模型和父依赖、动画元数据、两成年实体皮肤、草/叶色图和7交互声音事件，派生实体几何及只读class哈希见[P7交付](../p7/report.md)。此前545/490/478计数是各阶段历史范围。没有强制素材替换计划。
