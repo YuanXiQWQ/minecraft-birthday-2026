@@ -184,10 +184,10 @@ export class SceneView {
                 this.rightMotion = 0;
                 this.look.begin(e.pointerId, e.clientX, e.clientY);
                 this.onHover?.(null);
-                canvas.setPointerCapture(e.pointerId);
+                this.capturePointer(e.pointerId);
             } else if (e.button === 0 && !this.look.active) {
                 this.pointer = e.pointerId;
-                canvas.setPointerCapture(e.pointerId);
+                this.capturePointer(e.pointerId);
                 const hit = this.refreshHover();
                 this.onMineStart?.(hit);
             }
@@ -256,6 +256,14 @@ export class SceneView {
         this.renderer.domElement.dataset.hover = JSON.stringify(hit);
         this.onHover?.(hit);
         return hit;
+    }
+
+    /** Capture visible-pointer gestures without violating the browser's exclusive pointer-lock ownership.
+     * @param {number} id Active pressed pointer identity.
+     */
+    capturePointer(id: number): void {
+        const canvas = this.renderer.domElement;
+        if (!this.mode?.actual && !canvas.ownerDocument.pointerLockElement) canvas.setPointerCapture(id);
     }
 
     /** Invalidate gestures and ray identity on GUI, lifecycle and capture boundaries. */

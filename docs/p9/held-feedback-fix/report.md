@@ -15,6 +15,8 @@
 
 来源见[native-evidence.json](native-evidence.json)：核实同一官方26.3 JAR SHA1，使用已有JDK只读javap核对Minecraft.continueAttack、MultiPlayerGameMode.continueDestroyBlock/startDestroyBlock、AbstractContainerScreen.extractTooltip和GhostSlots.extractTooltip。原版持续按住反复处理命中、异目标重开进度，正常完成destroyDelay=5；空槽hasItem失败直接返回，幽灵使用物品Tooltip。未启动Java客户端，未声称逐帧体验全部等价。
 
+浏览器捕获另按[W3C Pointer Events §9.2](https://www.w3.org/TR/pointerevents3/#setting-pointer-capture)核对：Pointer Lock存在时setPointerCapture必须抛InvalidStateError；SceneView.capturePointer对实际锁定及锁定事件尚未投影的document状态均跳过捕获，可见模式正常捕获。正式方法测试覆盖三种状态，并追加[捕获保护后可信长按复测](chain-capture-guard.json)，仍为一次按下/松开、2→1→0设备及实际增加2个熔炉；这不是实体Pointer Lock成功验收。
+
 ## 实际浏览器证据
 
 隔离Chromium、1280×720、4266独立验证源；页面使用正式mount/SceneView/WorldUse/GameInventory/SaveSession。只有明确标为Fixture的准备按钮授予有限样本并准备真实实例，后续操作走可信浏览器输入，没有dispatchEvent或直接调用破坏/配方选择来冒充输入。该样本不是新档无授物主线。
@@ -28,7 +30,7 @@
 
 ## 回归与复现
 
-类型检查、正式477项（保留原463项；新增14项，包括原领取队列中的容量静默/写失败反馈断言）、P4 113物品/112配方/2042分类/18步蛋糕链和哈希、P2关键48项；根路径/Pages构建审计及HTTP逐字节测试。旧领取、关台返还、炉队列、设置草稿、幽灵生命周期、采集容量和迁移均保留。
+类型检查、正式478项（保留原463项；新增15项，包括原领取队列中的容量静默/写失败反馈断言）、P4 113物品/112配方/2042分类/18步蛋糕链和哈希、P2关键48项；根路径/Pages构建审计及HTTP逐字节测试。旧领取、关台返还、炉队列、设置草稿、幽灵生命周期、采集容量和迁移均保留。
 
 `npm run dev:verify --prefix app -- --port 4266 --strictPort`，打开`/__verify__/held.html`；Fixture按钮只准备该验证源样本。two furnaces后在观察JSON的point长按左键7秒，查看transitions/events；one plank后E→箱子页→配方书→工作台；workbench后在point短右键→配方书→石铲。正式构建没有该页面/测试按钮，也没有新授物入口。
 

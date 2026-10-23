@@ -80,3 +80,8 @@ test('game settings operation feedback follows chat policy without moving notifi
 test('a hold begun over empty space can acquire a later real target without another press',async()=>{
  const h=await mining();try{h.target(null);h.use.beginMining(null,0);h.use.advanceMining(100);assert.equal(h.use.holding,true);assert.equal(h.use.mining,null);h.target('node:oak_log:1');h.use.advanceMining(1000);h.use.advanceMining(4000);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['oak_log:1']);}finally{h.restore();}
 });
+
+test('formal SceneView does not request pointer capture in an actual or newly acquired browser pointer lock',()=>{
+ const scene=Object.create(SceneView.prototype) as SceneView,captured:number[]=[],ownerDocument={pointerLockElement:null as object|null};Object.assign(scene,{mode:{actual:true},renderer:{domElement:{ownerDocument,setPointerCapture:(id:number)=>{if(ownerDocument.pointerLockElement)throw Error('InvalidStateError');captured.push(id);}}}});
+ scene.capturePointer(7);assert.deepEqual(captured,[]);scene.mode!.actual=false;ownerDocument.pointerLockElement={};scene.capturePointer(7);assert.deepEqual(captured,[]);ownerDocument.pointerLockElement=null;scene.capturePointer(7);assert.deepEqual(captured,[7]);
+});

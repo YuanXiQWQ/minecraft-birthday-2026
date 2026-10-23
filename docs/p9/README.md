@@ -20,7 +20,7 @@
 - [兼容与恢复](recovery.md)：无历史改写、无清档的恢复步骤。
 - [原版资源及来源](../../resources/minecraft/26.3/manifest.json)，其余profile清单在同目录，正式构建校验全部10份profile及依赖。
 
-工程命令入口：app/package.json；正式477项（保留原463项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
+工程命令入口：app/package.json；正式478项（保留原463项）及安全队列测试，data:verify，P2关键48项，build/build:pages/test:built。原P1—P8报告保留当时事实；当前不从历史待审字样推断未获授权。
 
 - [当前聊天七类、狭小矿洞及世界方位指南针](native-ui-fix/chat-cave-compass-review.md)。
 - [物品搜索自动聚焦及固定帧历史记录](native-ui-fix/catalogue-review.md)（固定左上已纠正）。
