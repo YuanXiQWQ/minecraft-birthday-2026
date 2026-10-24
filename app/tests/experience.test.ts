@@ -101,12 +101,12 @@ test('known but unowned materials cannot fill, while finite repeated ingredients
     assert.deepEqual(owned[0], s('oak_planks', 2));
     assert.ok(grid.every(v => v === null));
 });
-test('failed ingredient placement and component conflicts preserve every owned and input unit', () => {
+test('failed ingredient placement preserves every owned and input unit', () => {
     const r = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!,
         owned: (Stack | null)[] = [s('oak_planks', 3), ...Array(35).fill(null)], before = structuredClone(owned);
     assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, Array(4).fill(null), owned, rules), /missing/);
     assert.deepEqual(owned, before);
-    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, [s('egg'), null, null, null], owned, rules), /conflict/);
+    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, [s('egg'), null, null, null], owned, rules), /missing/);
     assert.deepEqual(owned, before);
 });
 test('finite furnace consumes once on ignition and once on completion, leaving independent residual fire', () => {
@@ -299,18 +299,18 @@ for (const count of [1, 3]) test('cake ghost reserves finite singleton milk buck
     assert.equal(g.missing.filter(Boolean).length, 3 - count);
     assert.equal(g.complete, count === 3);
 });
-test('input groups are reserved to their cells, separate from both backpack and hotbar quantities', () => {
+test('input groups redistribute across recipe cells without counting backpack or hotbar twice', () => {
     const recipe = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!,
         grid = [s('oak_planks', 9), null, null, null], owned = Array(36).fill(null);
     owned[0] = s('oak_planks');
     owned[35] = s('oak_planks');
     const g = ownedRecipeGhost(recipe, 'crafting', 2, grid, owned, rules);
-    assert.equal(g.missing.filter(Boolean).length, 1);
-    assert.equal(g.grid[0]!.count, 9);
+    assert.equal(g.missing.filter(Boolean).length, 0);
+    assert.equal(g.grid[0]!.count, 1);
     owned[35]!.count = 2;
     const n = fillOwnedRecipe(recipe, 'crafting', 2, grid, owned, rules);
-    assert.deepEqual(n.map(v => v?.count), [9, 1, 1, 1]);
-    assert.ok(owned.every(v => v === null));
+    assert.deepEqual(n.map(v => v?.count), [1, 1, 1, 1]);
+    assert.equal(owned.reduce((n, stack) => n + (stack?.count ?? 0), 0), 8);
 });
 test('ghost and fill share global overlapping-alternative allocation and preserve component identities', () => {
     const recipe = {
@@ -327,15 +327,31 @@ test('ghost and fill share global overlapping-alternative allocation and preserv
         ...s('coal', 64),
         components: {'minecraft:custom_name': 'other'}
     }], rules, 2);
-    assert.equal(shift.complete, false);
-    assert.equal(shift.missing[0], true);
+    assert.equal(shift.complete, true);
+    assert.equal(shift.grid[0]?.components?.['minecraft:custom_name'], 'other');
+    assert.equal(shift.grid[1]?.components?.['minecraft:custom_name'], 'other');
 });
-test('incompatible real input is a conflict, not a fictitious material shortage', () => {
-    const recipe = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!, owned = [s('oak_planks', 4)],
+test('unrelated real input returns to inventory without causing a fictitious material shortage', () => {
+    const recipe = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!, owned = [s('oak_planks', 4), ...Array(35).fill(null)],
         g = ownedRecipeGhost(recipe, 'crafting', 2, [s('egg'), null, null, null], owned, rules);
-    assert.equal(g.complete, false);
-    assert.deepEqual(g.conflicts, [true, false, false, false]);
+    assert.equal(g.complete, true);
+    assert.deepEqual(g.conflicts, [false, false, false, false]);
     assert.deepEqual(g.missing, [false, false, false, false]);
-    assert.throws(() => fillOwnedRecipe(recipe, 'crafting', 2, [s('egg'), null, null, null], owned, rules), /conflict/);
-    assert.equal(owned[0].count, 4);
+    assert.deepEqual(fillOwnedRecipe(recipe, 'crafting', 2, [s('egg'), null, null, null], owned, rules), Array(4).fill(s('oak_planks')));
+    assert.deepEqual(owned.filter(Boolean), [s('egg')]);
+});
+
+for(const width of [2,3])test(`switching returns unused components and full inventories fail atomically in ${width}x${width}`,()=>{
+    const recipe=rules.recipes.find(r=>r.id==='minecraft:crafting_table')!;
+    const old=Array(width*width).fill(null),named={...s('egg',3),components:{'minecraft:custom_name':'keep'}};
+    old[old.length-1]=named;old[0]=s('oak_planks',4);
+    const owned:(Stack|null)[]=Array(36).fill(null),original=structuredClone(old);
+    assert.equal(analyzeOwnedRecipe(recipe,'crafting',width,old,owned,rules).complete,true);
+    const filled=fillOwnedRecipe(recipe,'crafting',width,old,owned,rules);
+    assert.equal(filled.filter(Boolean).length,4);assert.ok(filled.filter(Boolean).every(v=>v!.id===s('oak_planks').id));
+    assert.deepEqual(owned.filter(Boolean),[named]);assert.deepEqual(old,original);
+    const full=Array(36).fill(s('cobblestone',64));full[0]=s('oak_planks',64);
+    const before=structuredClone(full);assert.equal(analyzeOwnedRecipe(recipe,'crafting',width,old,full,rules).complete,true);
+    assert.throws(()=>fillOwnedRecipe(recipe,'crafting',width,old,full,rules),/inventory-full/);
+    assert.deepEqual(full,before);assert.deepEqual(old,original);
 });

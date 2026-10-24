@@ -318,9 +318,9 @@ export class RecipeBookView {
     this.toggle.setAttribute('aria-label', this.ui.text('book.toggle'));
   }
 
-  /** Determine material qualification separately from current grid conflicts and product acquisition.
+  /** Count finite player and input groups independently of their current arrangement or product acquisition.
    * @param {Recipe} recipe Applicable discovered recipe.
-   * @return {boolean} Whether finite owned groups fit all requirements and current inputs.
+   * @return {boolean} Whether the available material quantities satisfy every ingredient.
    */
   craftable(recipe: Recipe): boolean {
     return analyzeOwnedRecipe(recipe, this.mode(), this.width(), this.ui.value.workbench ?? this.ui.value.crafting ?? Array(4).fill(null), [...this.ui.value.backpack, ...this.ui.value.hotbar], this.ui.rules, 1, false).complete;

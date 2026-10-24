@@ -765,7 +765,7 @@ test('actual book ghost draw reports finite quantities across real sessions and 
     assert.equal(u.preview.result, null);
 });
 
-test('actual book reports input conflict separately from complete finite material availability', async () => {
+test('actual book clears unrelated personal inputs and fills a materially available recipe', async () => {
     const h = await harness();
     await h.s.dispatch({type: 'unlock', item: 'minecraft:oak_planks'});
     const r = await h.s.editInventory({
@@ -783,14 +783,15 @@ test('actual book reports input conflict separately from complete finite materia
     await u.queue;
     u.command({type: 'craft-slot', index: 0, button: 0});
     await u.queue;
-    const before = h.raw();
-    book.choose(BOOK_RECIPES.find(r => r.id === 'minecraft:crafting_table')!, false);
+    const recipe = BOOK_RECIPES.find(r => r.id === 'minecraft:crafting_table')!;
+    assert.equal(book.craftable(recipe), true);
+    book.choose(recipe, false);
+    await h.entered; h.release(); await u.queue;
     assert.equal(u.notice, '');
-    const display = JSON.parse(u.modal.dataset.ghostAvailability!);
-    assert.equal(display.conflicts[0], true);
-    assert.ok(!display.missing.some(Boolean));
-    assert.equal(h.raw(), before);
-    assert.equal(u.value.crafting![0]?.id, 'minecraft:oak_log');
+    assert.equal(book.ghost, null);
+    assert.ok(u.value.crafting!.every(stack => stack?.id === 'minecraft:oak_planks' && stack.count === 1));
+    assert.equal(u.preview.result?.id, 'minecraft:crafting_table');
+    assert.equal([...u.value.backpack,...u.value.hotbar].filter(stack=>stack?.id==='minecraft:oak_log').reduce((n,stack)=>n+stack!.count,0),65);
 });
 
 test('native pulse survives the real book-seen receipt and unrelated snapshots without restarting', async () => {
@@ -808,4 +809,25 @@ test('native pulse survives the real book-seen receipt and unrelated snapshots w
     assert.equal(book.pulses.get('recipe:torch'), started);
     const other = await h.other(); await other.reset(token(other.view.envelope!)); await h.s.refresh();
     assert.equal(book.pulses.size, 0); assert.equal(book.pulseStarted.size, 0);
+});
+
+for(const bench of [false,true])test(`real recipe switching clears every obsolete input and preserves quantities and cursor; table=${bench}`,async()=>{
+    const h=await harness(bench),u=h.u;
+    await h.s.dispatch({type:'unlock',item:'minecraft:oak_planks'});
+    const source=await h.s.editInventory({type:'source',item:'minecraft:oak_planks',mode:'clone'},null,h.s.view.envelope!.state.progress.player.data);
+    await h.s.editInventory({type:'backpack-slot',index:1,button:0},source.cursor,h.s.view.envelope!.state.progress.player.data);
+    u.personal.value={id:'minecraft:oak_log',count:3};u.value.cursor=structuredClone(u.personal.value);
+    h.release();
+    for(const recipe of ['minecraft:crafting_table','minecraft:stick','minecraft:oak_planks','minecraft:crafting_table']){
+        u.fillInputs(recipe,false);await u.queue;
+        assert.equal(u.preview.result?.id,recipe);
+        const grid=u.value.workbench??u.value.crafting!;
+        assert.equal(grid.filter(Boolean).length,recipe==='minecraft:crafting_table'?4:recipe==='minecraft:stick'?2:1);
+        for(const id of ['oak_planks','oak_log'])assert.equal([...grid,...u.value.backpack,...u.value.hotbar].filter(s=>s?.id==='minecraft:'+id).reduce((n,s)=>n+s!.count,0),64);
+        assert.deepEqual(u.value.cursor,{id:'minecraft:oak_log',count:3});
+    }
+    u.fillInputs('minecraft:crafting_table',false);await u.queue;
+    assert.ok((u.value.workbench??u.value.crafting!).filter(Boolean).every(s=>s!.count===2));
+    u.fillInputs('minecraft:crafting_table',true);await u.queue;
+    assert.ok((u.value.workbench??u.value.crafting!).filter(Boolean).every(s=>s!.count===16));
 });

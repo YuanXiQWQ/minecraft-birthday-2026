@@ -67,3 +67,26 @@ test('explicit acquisition remains blocked by UI and unfocused documents',()=>{
         Object.assign(f.d,{hasFocus:()=>false});f.mode.pause(false);assert.equal(f.mode.enter(true),false);assert.equal(f.calls(),0);
     }finally{f.close();}
 });
+
+for(const reopen of [false,true])test(`UI return waits for asynchronous native unlock before reacquiring; reopen=${reopen}`,async()=>{
+    const f=fixture();try{
+        f.mode.enter();f.grant();await new Promise(resolve=>setImmediate(resolve));
+        f.d.exitPointerLock=()=>{};
+        f.mode.pause(true);f.mode.pause(false);assert.equal(f.calls(),1);assert.equal(f.mode.resumeQueued,true);
+        if(reopen)f.mode.pause(true);
+        f.d.pointerLockElement=null;f.d.dispatchEvent(new Event('pointerlockchange'));
+        assert.equal(f.calls(),reopen?1:2);assert.equal(f.escapes(),0);
+        if(!reopen){f.grant();await new Promise(resolve=>setImmediate(resolve));assert.equal(f.mode.actual,true);}
+    }finally{f.close();}
+});
+
+test('closing a UI with Escape requests hidden ownership after keyup, not while Escape remains held',async()=>{
+    const f=fixture();try{
+        f.mode.pause(true);
+        f.d.dispatchEvent(Object.assign(new Event('keydown'),{code:'Escape'}));
+        f.mode.pause(false);assert.equal(f.calls(),0);assert.equal(f.mode.resumeQueued,true);
+        f.d.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
+        f.grant();await new Promise(resolve=>setImmediate(resolve));assert.equal(f.mode.actual,true);
+        f.d.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
+    }finally{f.close();}
+});

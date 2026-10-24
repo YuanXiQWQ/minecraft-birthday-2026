@@ -2,7 +2,7 @@
 import source from '../data/recipe-book.json' with {type: 'json'};
 import type {Recipe, Rules, Stack, Ingredient} from '../rules/types.ts';
 import {alternatives, matchCrafting} from '../rules/matcher.ts';
-import {sameStack} from './slots.ts';
+import {sameStack, quickMove} from './slots.ts';
 
 export type BookMode = 'crafting' | 'furnace' | 'blast_furnace';
 
@@ -185,20 +185,38 @@ export function fillRecipe(recipe: Recipe, mode: BookMode, width: number, curren
     return selected;
 }
 
-/** One quantity-aware allocation keeps material absence separate from incompatible occupied inputs. */
+/** One quantity-aware allocation separates available ingredients from finite room for returned inputs. */
 export interface OwnedRecipeAnalysis {
     grid: (Stack | null)[];
     pool: (Stack | null)[];
     missing: boolean[];
     conflicts: boolean[];
     complete: boolean;
+    returnable: boolean;
 }
 
-/** Allocate real groups globally across overlapping ingredients without counting input groups twice.
+/** Return input leftovers into finite player slots, merging compatible components before using empty slots.
+ * @param {(Stack|null)[]} inputs Groups to return.
+ * @param {(Stack|null)[]} owned Player inventory without cursor or equipment.
+ * @param {Rules} rules Native stack limits and component identity.
+ * @return {(Stack|null)[]|null} Independent returned inventory, or null when it cannot fit.
+ */
+function returnInputs(inputs: (Stack | null)[], owned: (Stack | null)[], rules: Rules): (Stack | null)[] | null {
+    const targets = structuredClone(owned).map(stack => ({stack, policy: {take: true, place: true}}));
+    for (const stack of inputs) {
+        if (!stack) continue;
+        const source = {stack: structuredClone(stack) as Stack | null, policy: {take: true, place: false}};
+        quickMove(source, targets, rules);
+        if (source.stack) return null;
+    }
+    return targets.map(slot => slot.stack);
+}
+
+/** Allocate real groups globally across overlapping ingredients using both player inventory and all movable input groups exactly once.
  * @param {Recipe} recipe Native recipe.
  * @param {BookMode} mode Menu capability.
  * @param {number} width Input dimension.
- * @param {(Stack|null)[]} current Actual inputs pinned to their cells.
+ * @param {(Stack|null)[]} current Actual inputs available for clearing and redistribution.
  * @param {(Stack|null)[]} owned Actual player inventory, excluding cursor and input cells.
  * @param {Rules} rules Native capacities, identities and tags.
  * @param {number} amount Requested fill level.
@@ -208,7 +226,7 @@ export interface OwnedRecipeAnalysis {
 export function analyzeOwnedRecipe(recipe: Recipe, mode: BookMode, width: number, current: (Stack | null)[], owned: (Stack | null)[], rules: Rules, amount = 1, partial = true): OwnedRecipeAnalysis {
     const cells = recipeCells(recipe, mode, width);
     if (cells.length !== current.length) throw Error('recipe-menu-mismatch');
-    const conflicts = cells.map((ingredient, i) => !!current[i] && (!ingredient || !alternatives(ingredient, rules.itemTags).includes(current[i]!.id)));
+    const conflicts = cells.map(() => false);
     const total = cells.filter(Boolean).length;
     let best: { grid: (Stack | null)[]; pool: (Stack | null)[]; missing: boolean[]; score: number } | null = null;
 
@@ -225,16 +243,16 @@ export function analyzeOwnedRecipe(recipe: Recipe, mode: BookMode, width: number
             best = {grid, pool, missing, score};
             return;
         }
-        const ingredient = cells[index], old = current[index];
-        if (!ingredient || conflicts[index]) {
+        const ingredient = cells[index];
+        if (!ingredient) {
             assign(index + 1, pool, grid, missing, score);
             return;
         }
         const ids = alternatives(ingredient, rules.itemTags), choices: Stack[] = [];
-        if (old) choices.push(old); else for (const s of pool) if (s && ids.includes(s.id) && !choices.some(c => sameStack(c, s, rules))) choices.push(s);
+        for (const s of pool) if (s && ids.includes(s.id) && !choices.some(c => sameStack(c, s, rules))) choices.push(s);
         for (const chosen of choices) {
             if (amount > rules.items[chosen.id].maxStack) continue;
-            let needed = Math.max(0, amount - (old?.count ?? 0));
+            let needed = amount;
             if (pool.reduce((n, s) => n + (s && sameStack(s, chosen, rules) ? s.count : 0), 0) < needed) continue;
             const next = structuredClone(pool), filled = structuredClone(grid);
             for (let n = 0; n < next.length && needed; n++) {
@@ -244,7 +262,7 @@ export function analyzeOwnedRecipe(recipe: Recipe, mode: BookMode, width: number
                 needed -= take;
                 next[n] = s.count === take ? null : {...s, count: s.count - take};
             }
-            filled[index] = {...chosen, count: Math.max(amount, old?.count ?? 0)};
+            filled[index] = {...chosen, count: amount};
             assign(index + 1, next, filled, [...missing], score + 1);
         }
         if (partial) {
@@ -254,14 +272,14 @@ export function analyzeOwnedRecipe(recipe: Recipe, mode: BookMode, width: number
         }
     }
 
-    assign(0, structuredClone(owned), structuredClone(current), cells.map(Boolean).map(() => false), 0);
+    assign(0, structuredClone([...current, ...owned]), cells.map(() => null), cells.map(() => false), 0);
     const result = best as { grid: (Stack | null)[]; pool: (Stack | null)[]; missing: boolean[]; score: number } | null;
+    const returned = result ? returnInputs(result.pool.slice(0, current.length), result.pool.slice(current.length), rules) : null;
     return {
-        ...(result ?? {
-            grid: structuredClone(current),
-            pool: structuredClone(owned),
-            missing: cells.map((v, i) => !!v && !conflicts[i])
-        }), conflicts, complete: !!result && result.score === total && !conflicts.some(Boolean)
+        grid: result?.grid ?? cells.map(() => null),
+        pool: returned ?? structuredClone(owned),
+        missing: result?.missing ?? cells.map(Boolean),
+        conflicts, complete: !!result && result.score === total, returnable: returned !== null
     };
 }
 
@@ -287,7 +305,7 @@ export function ownedRecipeGhost(recipe: Recipe, mode: BookMode, width: number, 
     return analysis;
 }
 
-/** Move actual player groups into compatible inputs; failed allocations never mutate the supplied inventory.
+/** Clear finite inputs and arrange one recipe atomically; repeated clicks add a batch and Shift fills the maximum.
  * @param {Recipe} recipe Native recipe.
  * @param {BookMode} mode Menu capability.
  * @param {number} width Input dimension.
@@ -298,15 +316,22 @@ export function ownedRecipeGhost(recipe: Recipe, mode: BookMode, width: number, 
  * @return {(Stack|null)[]} Finite filled inputs.
  */
 export function fillOwnedRecipe(recipe: Recipe, mode: BookMode, width: number, current: (Stack | null)[], owned: (Stack | null)[], rules: Rules, max = false): (Stack | null)[] {
+    const matches = mode === 'crafting' ? !!matchCrafting(recipe, current, width, width, rules)
+        : !!current[0] && alternatives(recipe.ingredient!, rules.itemTags).includes(current[0].id);
+    const amount = !max && matches ? Math.min(64, Math.min(...current.filter((s): s is Stack => !!s).map(s => s.count)) + 1) : 1;
+    if (!returnInputs(current, owned, rules)) throw Error('inventory-full');
     let best: OwnedRecipeAnalysis | null = null;
-    for (let amount = 1; amount <= 64; amount++) {
-        const result = analyzeOwnedRecipe(recipe, mode, width, current, owned, rules, amount, false);
-        if (result.conflicts.some(Boolean)) throw Error('recipe-input-conflict');
+    for (let level = amount; level <= 64; level++) {
+        const result = analyzeOwnedRecipe(recipe, mode, width, current, owned, rules, level, false);
         if (!result.complete) break;
+        if (!result.returnable) throw Error('inventory-full');
         best = result;
         if (!max) break;
     }
-    if (!best) throw Error('recipe-materials-missing');
+    if (!best) {
+        if (matches && !max) return structuredClone(current);
+        throw Error('recipe-materials-missing');
+    }
     owned.splice(0, owned.length, ...best.pool);
     return best.grid;
 }

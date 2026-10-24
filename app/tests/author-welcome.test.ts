@@ -95,3 +95,18 @@ test('already aborted lifetime never starts author delivery', t => {
     scheduleAuthorWelcome({append: () => assert.fail('unexpected author')} as Pick<GameChat, 'append'>, key => key, lifetime.signal);
     t.mock.timers.tick(60000);
 });
+
+test('reset cancels the old author sequence and sends all eight messages once for the new generation', async t => {
+    t.mock.timers.enable({apis:['setTimeout']});
+    const {AuthorWelcome}=await import('../web/src/ui/author-welcome.ts');
+    const lifetime=new AbortController(), messages:string[]=[];
+    const welcome=new AuthorWelcome({append:runs=>messages.push(runs[0].text)} as Pick<GameChat,'append'>,key=>key,lifetime.signal);
+    welcome.sync('first',false);t.mock.timers.tick(10000);assert.equal(messages.length,0);
+    welcome.sync('first',true);t.mock.timers.tick(3000);assert.equal(messages.length,1);
+    welcome.sync('reset',true);t.mock.timers.tick(2999);assert.equal(messages.length,1);
+    welcome.sync('reset',true);t.mock.timers.tick(1);assert.equal(messages.length,2);assert.equal(messages[0],messages[1]);
+    for(let i=0;i<7;i++){welcome.sync('reset',true);t.mock.timers.tick(5000);}
+    assert.equal(messages.length,9);assert.equal(new Set(messages.slice(1)).size,8);
+    welcome.sync('reset',true);t.mock.timers.tick(60000);assert.equal(messages.length,9);
+    welcome.sync('second-reset',true);lifetime.abort();t.mock.timers.tick(60000);assert.equal(messages.length,9);
+});

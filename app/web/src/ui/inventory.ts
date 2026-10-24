@@ -1188,7 +1188,7 @@ export class GameInventory {
         }).catch(error => {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.modal.dataset.fillError = error instanceof Error ? error.message : 'recipe-fill-failed';
-            if (personalEpoch === this.personal.epoch && !(error instanceof Error && ['recipe-input-conflict', 'recipe-materials-missing'].includes(error.message))) this.reportFailure('book.failed');
+            if (personalEpoch === this.personal.epoch && !(error instanceof Error && ['recipe-input-conflict', 'recipe-materials-missing'].includes(error.message))) this.reportFailure(error instanceof Error && error.message === 'inventory-full' ? 'inventory.returnFull' : 'book.failed');
         }).finally(() => {
             if (this.acquisition === ticket) {
                 this.input.cancelGesture();

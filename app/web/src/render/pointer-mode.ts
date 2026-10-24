@@ -12,6 +12,10 @@ export class PointerMode {
     inFlight: object | null = null;
     /** A UI close may need to wait for an invalidated native request to finish before resuming. */
     resumeQueued = false;
+    /** Native unlock completion must precede the next acquisition. */
+    unlockPending = false;
+    /** Escape must be released before a UI return can request native ownership. */
+    escapeDown = false;
     abort = new AbortController();
     /** Bind actual browser notifications to one world input canvas.
      * @param {HTMLCanvasElement} canvas Lock owner.
@@ -22,6 +26,7 @@ export class PointerMode {
     constructor(public canvas: HTMLCanvasElement, public change: () => void, public escaped: () => void, public failure: () => void) {
         document.addEventListener('pointerlockchange', () => {
             const locked = document.pointerLockElement === canvas, before = this.actual;
+            if (!locked) this.unlockPending = false;
             this.actual = locked; this.pending = false;
             if (locked && (this.disposed || this.paused || this.requested !== this.epoch || this.desired !== 'hidden')) {this.release(this.resumeQueued); return;}
             this.change(); this.publish();
@@ -36,6 +41,8 @@ export class PointerMode {
         }, {signal: this.abort.signal});
         window.addEventListener('blur', () => this.suspend(true), {signal: this.abort.signal});
         window.addEventListener('pagehide', () => this.suspend(true), {signal: this.abort.signal});
+        document.addEventListener('keydown', e => {if (e.code === 'Escape') this.escapeDown = true;}, {capture: true, signal: this.abort.signal});
+        document.addEventListener('keyup', e => {if (e.code === 'Escape') {this.escapeDown = false; this.resumeIfReady();}}, {capture: true, signal: this.abort.signal});
         document.addEventListener('visibilitychange', () => {if (document.hidden) this.suspend(true);}, {signal: this.abort.signal});
         this.publish();
     }
@@ -77,6 +84,7 @@ export class PointerMode {
         if (this.paused || this.disposed || document.hidden || document.hasFocus?.() === false || this.actual) return false;
         if (fromGesture) this.desired = 'hidden';
         if (this.desired !== 'hidden') return false;
+        if (this.unlockPending || this.escapeDown) {this.resumeQueued = true; return true;}
         if (this.pending || this.inFlight) {if(this.inFlight && this.requested !== this.epoch)this.resumeQueued=true;return true;}
         this.resumeQueued = false;
         this.warned = false; this.pending = true; this.requested = this.epoch;
@@ -94,18 +102,18 @@ export class PointerMode {
     release(retainResume = false): void {
         this.resumeQueued=retainResume&&!this.paused&&!this.disposed&&this.desired==='hidden';
         this.epoch++; this.pending = false; this.intentional = true;
-        if (document.pointerLockElement === this.canvas) document.exitPointerLock();
+        if (document.pointerLockElement === this.canvas && !this.unlockPending) {this.unlockPending = true; document.exitPointerLock();}
         this.actual = false; this.change(); this.publish();
     }
     /** Complete a queued UI return only while its world input gate is still current and focused. */
     resumeIfReady():void {
-        if(!this.resumeQueued||this.inFlight||this.pending||this.paused||this.disposed||document.hidden||document.hasFocus?.()===false||this.desired!=='hidden'||document.pointerLockElement===this.canvas)return;
+        if(!this.resumeQueued||this.inFlight||this.pending||this.unlockPending||this.escapeDown||this.paused||this.disposed||document.hidden||document.hasFocus?.()===false||this.desired!=='hidden'||document.pointerLockElement===this.canvas)return;
         this.resumeQueued=false;this.enter();
     }
     /** Release ownership, optionally disarming ordinary click acquisition when the browser loses focus.
      * @param {boolean} visible Whether the lifecycle boundary should leave the cursor explicitly visible.
      */
-    suspend(visible = false): void {if (visible) this.desired = 'visible'; this.release();}
+    suspend(visible = false): void {if (visible) {this.desired = 'visible'; this.escapeDown = false;} this.release();}
     /** Transfer ownership to a GUI; closing it requests hidden observation once, independent of save snapshots.
      * @param {boolean} paused Whether a GUI owns input.
      */

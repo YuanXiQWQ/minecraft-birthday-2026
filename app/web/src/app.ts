@@ -7,7 +7,7 @@ import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat, nativeScale} from './ui/chat.ts';
-import {scheduleAuthorWelcome} from './ui/author-welcome.ts';
+import {AuthorWelcome} from './ui/author-welcome.ts';
 import {GameKeyboard} from './ui/game-keyboard.ts';
 import {pickupSoundOptions} from './ui/pickup-feedback.ts';
 import {AdvancementView} from './ui/advancements.ts';
@@ -56,6 +56,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         session = connection.session,
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
+    let authorWelcome: AuthorWelcome | null = null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
     const languageChoices = new Map<string, HTMLButtonElement>();
@@ -357,7 +358,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     volume.addEventListener('blur', cancelSettingsGesture);
     window.addEventListener('blur', cancelSettingsGesture);
 
-    /** Reflect one durable snapshot on either page, with no event replay or completion-trigger side effect.
+    /** Reflect durable facts and restart author delivery only for a new ready save generation.
      * @param {Snapshot} value Latest coordinated facts.
      */
     function reflect(value: Snapshot): void {
@@ -439,6 +440,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         else if (page === 'home' && scene?.lost) {setText(startupError, 'error.contextLost'); startupError.hidden = false;}
         else if ((value.status === 'ready' || value.status === 'lock-busy') && root.dataset.resources !== 'failed') {clearText(startupError); startupError.hidden = true;}
         if (page === 'game' && value.status !== lastSaveStatus && value.status !== 'loading') {feedback(statusKey, {}, 'storage'); lastSaveStatus = value.status;}
+        authorWelcome?.sync(runtimeGeneration ?? '', !!startup?.ready);
     }
 
     /** End an active inventory transaction before navigating to the independent birthday title. */
@@ -628,6 +630,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             advancements=new AdvancementView(inventory,host,()=>updateGate(),id=>inventory?.book?.sound?.(id));
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
+            authorWelcome = new AuthorWelcome(chat, t, appAbort.signal);
             /** Run native commands against locked facts and exclude replies from discarded game lifetimes.
              * @param {string} source Slash-prefixed player input.
              * @return {Promise<import('./domain/console.ts').CommandFeedback[]>} Committed native feedback or a current-lifetime failure.
@@ -695,7 +698,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             if (startup!.finish()) {
                 navigationPanel = new NavigationPanel(navigation, t('a11y.showScenes'));
                 gameKeyboard = new GameKeyboard(() => !!scene?.input && !disposed);
-                scheduleAuthorWelcome(chat, t, appAbort.signal);
+                authorWelcome.sync(session.view.envelope?.generation ?? '', true);
             }
             startupError.hidden = true;
             updateGate();
