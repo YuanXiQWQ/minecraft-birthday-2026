@@ -2,6 +2,7 @@
 import {soilAt} from './soil-state.ts';
 import names from '../data/placeable-blocks.json' with {type:'json'};
 import facts from '../data/block-properties.json' with {type:'json'};
+import caneSupport from '../data/cane-support.json' with {type:'json'};
 import type {Cell,Progress} from './types.ts';
 import {WORLD_SCENES,fixedSolid,sameCell,nodeAtCell,caveCleared} from './world-config.ts';
 import {plainsHeight} from './plains-shape.ts';
@@ -145,7 +146,7 @@ export function survives(p:Progress,b:PlacedBlock):boolean{
     const {block,cell,state}=b,below:Cell=[cell[0],cell[1]-1,cell[2]],base=blockAt(p,below);
     if(b.pair)return true;
     if(block==='short_grass')return ['grass_block','dirt','farmland'].includes(base?.block??'');
-    if(block==='sugar_cane')return base?.block==='sugar_cane'||['grass_block','dirt','sand'].includes(base?.block??'')&&['north','south','east','west'].some(d=>{const n=direction(d);return blockAt(p,[cell[0]+n[0],cell[1]-1,cell[2]+n[2]])?.block==='water';});
+    if(block==='sugar_cane')return base?.block==='sugar_cane'||caneSupport.ground.includes(base?.block??'')&&['north','south','east','west'].some(d=>{const n=direction(d),adjacent=blockAt(p,[cell[0]+n[0],cell[1]-1,cell[2]+n[2]]);return !!adjacent&&(caneSupport.blocks.includes(adjacent.block)||caneSupport.fluids.includes(adjacent.block)||adjacent.state.waterlogged==='true');});
     if(block==='cake')return !!base&&!replaceable(base.block);
     let toward:string|undefined,center=false;
     if(block==='torch'||block==='oak_sign'||/_door$|pressure_plate|^rail$/.test(block)){toward='down';center=block==='torch'||block.includes('pressure_plate');}

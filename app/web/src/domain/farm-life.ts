@@ -11,10 +11,26 @@ import {NativeRandom} from './environment.ts';
  */
 export function itemMotion(ticks:number,phase:number):{y:number;yaw:number}{return {y:Math.sin(ticks/10+phase)*.1+.1+.0625,yaw:ticks/20+phase};}
 
+/** Adult LivingEntity walk state uses smoothed speed for both phase and amplitude. */
+export class AnimalWalk {
+    speed=0;oldSpeed=0;position=0;
+    /** Advance WalkAnimationState once per 20 Hz entity tick.
+     * @param {number} distance Actual horizontal displacement this tick.
+     */
+    update(distance:number):void {this.oldSpeed=this.speed;this.speed+=(Math.min(distance*4,1)-this.speed)*.4;this.position+=this.speed;}
+    /** Evaluate a quadruped or chicken leg at the interpolated native phase.
+     * @param {number} alpha Partial tick.
+     * @param {boolean} opposite Whether this leg has a PI phase offset.
+     * @return {number} Model-space X rotation in radians.
+     */
+    leg(alpha:number,opposite:boolean):number {const speed=Math.min(this.oldSpeed+(this.speed-this.oldSpeed)*alpha,1),position=this.position-this.speed*(1-alpha);return Math.cos(position*.6662+(opposite?Math.PI:0))*1.4*speed;}
+}
+
 /** One adult ambient mob, restricted by the authored two-block home radius. */
 export class FarmAnimal {
     feet:Cell; previous:Cell; yaw=0; previousYaw=0; walk=0; previousWalk=0; ambientTime=0; age=0; path:Cell[]=[];
     random:NativeRandom;
+    animation=new AnimalWalk();
     /** Initialize an independent lifetime at its authored center.
      * @param {'cow'|'chicken'} kind Native adult type.
      * @param {Cell} origin Home center.
@@ -60,6 +76,7 @@ export class FarmAnimal {
         const target=this.path[0];if(target){const dx=target[0]-this.feet[0],dz=target[2]-this.feet[2],distance=Math.hypot(dx,dz),step=Math.min(distance,this.kind==='cow'?.2:.25),next=this.floor(this.feet[0]+dx/(distance||1)*step,this.feet[2]+dz/(distance||1)*step,solids,water);
             if(!next)this.path=[];else{this.feet=next;const desired=Math.atan2(-dx,-dz),turn=Math.atan2(Math.sin(desired-this.yaw),Math.cos(desired-this.yaw));this.yaw+=Math.max(-Math.PI/2,Math.min(Math.PI/2,turn));this.walk+=step;if(distance<=step+.001)this.path.shift();}
         }
+        this.animation.update(Math.hypot(this.feet[0]-this.previous[0],this.feet[2]-this.previous[2]));
         return {ambient,pitch:1+(this.random.float()-this.random.float())*.2,step:Math.floor(this.walk*.6)>Math.floor(this.previousWalk*.6)};
     }
 }

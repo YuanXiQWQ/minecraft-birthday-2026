@@ -294,7 +294,7 @@ export class AuthoredWorld {
             if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
         }
         if (id === 'farm' && this.farmRoot) {
-            const layout = JSON.stringify([stations.map(s => s.cell), p.scenes.farm.blocks?.map(b => b.cell),soils(p)]);
+            const layout = JSON.stringify([stations.map(s => s.cell), p.scenes.farm.blocks?.filter(b=>b.block!=='sugar_cane').map(b => b.cell),soils(p)]);
             if (layout !== this.farmSignature) {
                 this.farmSignature = layout; this.staticVersion++; this.clear(this.farmRoot);
                 this.farmLights = buildFarm(this, this.farmRoot, p);
@@ -363,7 +363,7 @@ export class AuthoredWorld {
     animateLife(alpha:number):void {
         for(const root of this.natural.children){const animal=this.animals.get(String(root.userData.id));
             if(animal){const position=animal.feet.map((v,i)=>animal.previous[i]+(v-animal.previous[i])*alpha);root.position.set(position[0],position[1]+1.5,position[2]);root.rotation.y=animal.previousYaw+(animal.yaw-animal.previousYaw)*alpha;
-                const legs=root.children.filter(o=>o.name.includes('leg')),walk=animal.previousWalk+(animal.walk-animal.previousWalk)*alpha;legs.forEach((leg,i)=>{leg.rotation.x=Math.cos(walk*4*.6662+((animal.kind==='cow'?[0,1,1,0][i]:i%2)?Math.PI:0))*Math.min(1,(animal.walk-animal.previousWalk)*4)*1.4;});
+                const legs=root.children.filter(o=>o.name.includes('leg'));legs.forEach((leg,i)=>{leg.rotation.x=animal.animation.leg(alpha,animal.kind==='cow'?!![1,0,0,1][i]:i%2===1);});
             }else if(root.userData.block==='egg'||root.userData.id?.startsWith('drop:')){const cell=root.userData.cell as Cell,motion=itemMotion(this.lifeTicks+alpha,root.userData.bobOffset??0);root.position.set(cell[0]+.5,cell[1]+motion.y,cell[2]+.5);root.rotation.y=motion.yaw;}
         }
     }

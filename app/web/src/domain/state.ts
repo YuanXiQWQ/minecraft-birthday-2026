@@ -235,13 +235,15 @@ export function validateState(value: unknown): asserts value is State {
         ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
         if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
         if(scene.agriculture){
-            const a=scene.agriculture;fields(a,['version','random','soils','drops','serial']);
+            const a=scene.agriculture;fields(a,['version','random','soils','drops','serial',...(a.caneAges===undefined?[]:['caneAges'])]);
+            if(a.caneAges!==undefined)ensure(a.caneAges!==null&&typeof a.caneAges==='object'&&!Array.isArray(a.caneAges)&&Object.entries(a.caneAges).every(([key,age])=>WORLD_SCENES[id].nodes.some(n=>n.id===key&&n.block==='sugar_cane')&&typeof age==='number'&&Number.isInteger(age)&&age>=0&&age<=15));
             ensure(a.version===1&&Number.isSafeInteger(a.random)&&a.random>=0&&a.random<281474976710656&&Number.isSafeInteger(a.serial)&&a.serial>=0);
             ensure(Array.isArray(a.soils)&&a.soils.length<=16384&&new Set(a.soils.map(s=>s.cell.join(','))).size===a.soils.length&&Array.isArray(a.drops)&&a.drops.length<=4096);
             for(const soil of a.soils){fields(soil,['cell','moisture']);cell(soil.cell);ensure(soil.cell[0]>=-18&&soil.cell[0]<=18&&soil.cell[2]>=-22&&soil.cell[2]<=10&&soil.cell[1]>=-4&&soil.cell[1]<=6&&(soil.moisture===null||Number.isInteger(soil.moisture)&&soil.moisture>=0&&soil.moisture<=7));}
             for(const drop of a.drops){fields(drop,['id','cell','stack']);cell(drop.cell);ensure(typeof drop.id==='string'&&!ids.has(drop.id));ids.add(drop.id);ensure(KNOWN_ITEMS.has(drop.stack.id)&&Number.isInteger(drop.stack.count)&&drop.stack.count>0&&drop.stack.count<=64);}
         }
         const blockCells=new Set<string>();
+        for(const b of scene.blocks??[])if(b.block==='sugar_cane')ensure(b.state.age===undefined||/^(?:[0-9]|1[0-5])$/.test(b.state.age),'invalid-cane-age');
         for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));ids.add(b.id);blockCells.add(b.cell.join(','));}
         ensure(scene.layoutVersion === 1 && Array.isArray(scene.stations) && scene.stations.length <= 512 && Array.isArray(scene.crops) && scene.crops.length <= 512);
         const occupied = new Set<string>();

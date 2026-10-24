@@ -176,6 +176,16 @@
     "data/minecraft/tags/block/turns_into_farmland.json": "b6e5c0b39744b55dff4b471486cf653757095ed24898fec15111a6da6eb21232",
     "data/minecraft/tags/block/maintains_farmland.json": "8d059a868793fe740b1cd2a6edc013246a068e35fb7477effef2b59b49f07bdc",
     "data/minecraft/tags/item/hoes.json": "ffb37ab6fdc123b30a2bb5439d30745f2e707e88e61cc7bcc0bb9d54c44f494d",
+    "data/minecraft/tags/block/supports_sugar_cane.json": "e14e48890d10f8a260218e45d9461ae7f3d2a8b67f40760e4d61f6e4f1ed082c",
+    "data/minecraft/tags/block/substrate_overworld.json": "bd87412cd52db66ca8be5c79bad2622ec04318a5ccd90da89304e03d15360e5a",
+    "data/minecraft/tags/block/dirt.json": "602250ca21d148d2039d75c295eb98a4298d0fdc262240d6d55d7ebb872809c6",
+    "data/minecraft/tags/block/mud.json": "21b98cf5d9598dd147bd1cb169d5ab133083b0af90bfdf343e786c7b2e764ee2",
+    "data/minecraft/tags/block/moss_blocks.json": "4302e1e162fddeb21cf18ac8375f57bc2885fbdfa5b5cdcfecf1406b701d73d7",
+    "data/minecraft/tags/block/grass_blocks.json": "43e3ca99c7840ab423acdc412cc895a3d420061e5471f79c273de5c3ef665037",
+    "data/minecraft/tags/block/sand.json": "8b019e944ba404bfbfadd0389a94e0fe907819b109cbccf577f7bb80826cc8e8",
+    "data/minecraft/tags/block/supports_sugar_cane_adjacently.json": "d423c0f2b573812f5145e497cf05f1a0f58919f8e8102d1cc8e41460c82c0a4e",
+    "data/minecraft/tags/fluid/supports_sugar_cane_adjacently.json": "acb940d54f732e02a50bce09283d5debc6afa9f5722b66d9e255074dca277bcf",
+    "data/minecraft/tags/fluid/water.json": "dcfa69a748d03dbf788d8f7b0e5eb6c8de6355a527fcaf74b9210fe4be2a3004",
     "asset-index:https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
     "minecraft/sounds.json": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099",
     "assets/minecraft/sounds/dig/stone1.ogg": "0f066e00a6bc068038713c66075b24fd033816b5c2f5162ef6d747b87e324a14",
@@ -243,6 +253,10 @@
     "assets/minecraft/sounds/mob/chicken/step2.ogg": "79554f12c0da554555d28825fed2a9bb9e472478c50a366743a8372aafe917d0"
   },
   "classes": {
+    "net/minecraft/world/entity/WalkAnimationState.class": "427726d3ddac62043d17e688a1eac23b1dc07b4ddd5894f0b1de52e98e3646ac",
+    "net/minecraft/world/entity/LivingEntity.class": "6eaecd529ba26174652f3bb71e7c86262e54ac6f5e1e70944fb0e629b3b9948a",
+    "net/minecraft/client/model/QuadrupedModel.class": "aa6b4a254e79ebca2bd2b5e334c26cbdf1770abcf8d50fc761b055a421b8fc48",
+    "net/minecraft/world/level/block/SugarCaneBlock.class": "574bb2c8f79f19abefb59bb797992fe543cd835c7b202d0eb39629ee66ea93d2",
     "net/minecraft/world/level/block/FarmlandBlock.class": "da986894ed5921e48faf3a9d3d80f62ae74a89f7d2f3402d9de5476ead1627f8",
     "net/minecraft/world/level/block/CropBlock.class": "a29d6fdceaba2fa3c105bbf1eb28bc50614f339416b96a0f058887a3934dd6a8",
     "net/minecraft/world/entity/Mob.class": "835b6db7f1e5c2dc803f62574f600faec729c19f7dadb2d246364b2bdb45f75f",
@@ -1976,14 +1990,64 @@
       "sha256": "a4c6294366b9a4c9c847e3e48c8896686efdfce1e6273f8053168934aed25e69"
     },
     {
+      "entry": "data/minecraft/tags/block/dirt.json",
+      "size": 100,
+      "sha256": "602250ca21d148d2039d75c295eb98a4298d0fdc262240d6d55d7ebb872809c6"
+    },
+    {
+      "entry": "data/minecraft/tags/block/grass_blocks.json",
+      "size": 99,
+      "sha256": "43e3ca99c7840ab423acdc412cc895a3d420061e5471f79c273de5c3ef665037"
+    },
+    {
       "entry": "data/minecraft/tags/block/maintains_farmland.json",
       "size": 409,
       "sha256": "8d059a868793fe740b1cd2a6edc013246a068e35fb7477effef2b59b49f07bdc"
     },
     {
+      "entry": "data/minecraft/tags/block/moss_blocks.json",
+      "size": 81,
+      "sha256": "4302e1e162fddeb21cf18ac8375f57bc2885fbdfa5b5cdcfecf1406b701d73d7"
+    },
+    {
+      "entry": "data/minecraft/tags/block/mud.json",
+      "size": 79,
+      "sha256": "21b98cf5d9598dd147bd1cb169d5ab133083b0af90bfdf343e786c7b2e764ee2"
+    },
+    {
+      "entry": "data/minecraft/tags/block/sand.json",
+      "size": 101,
+      "sha256": "8b019e944ba404bfbfadd0389a94e0fe907819b109cbccf577f7bb80826cc8e8"
+    },
+    {
+      "entry": "data/minecraft/tags/block/substrate_overworld.json",
+      "size": 126,
+      "sha256": "bd87412cd52db66ca8be5c79bad2622ec04318a5ccd90da89304e03d15360e5a"
+    },
+    {
+      "entry": "data/minecraft/tags/block/supports_sugar_cane_adjacently.json",
+      "size": 49,
+      "sha256": "d423c0f2b573812f5145e497cf05f1a0f58919f8e8102d1cc8e41460c82c0a4e"
+    },
+    {
+      "entry": "data/minecraft/tags/block/supports_sugar_cane.json",
+      "size": 81,
+      "sha256": "e14e48890d10f8a260218e45d9461ae7f3d2a8b67f40760e4d61f6e4f1ed082c"
+    },
+    {
       "entry": "data/minecraft/tags/block/turns_into_farmland.json",
       "size": 98,
       "sha256": "b6e5c0b39744b55dff4b471486cf653757095ed24898fec15111a6da6eb21232"
+    },
+    {
+      "entry": "data/minecraft/tags/fluid/supports_sugar_cane_adjacently.json",
+      "size": 44,
+      "sha256": "acb940d54f732e02a50bce09283d5debc6afa9f5722b66d9e255074dca277bcf"
+    },
+    {
+      "entry": "data/minecraft/tags/fluid/water.json",
+      "size": 74,
+      "sha256": "dcfa69a748d03dbf788d8f7b0e5eb6c8de6355a527fcaf74b9210fe4be2a3004"
     },
     {
       "entry": "data/minecraft/tags/item/hoes.json",
@@ -1992,6 +2056,6 @@
     }
   ],
   "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "af8a7ac1c01858dc9eeaa43a262f70d1fd71f9037f7c76dc684ad28344a404e9",
+  "exporterSha256": "7558a6c6e4b4f18709eb3fd9d7adcde846bf24198d53c54acdbfda4ff57b24d7",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; bounded native ambient sounds, ground items and farmland states"
 }

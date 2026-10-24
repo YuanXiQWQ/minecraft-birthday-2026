@@ -105,7 +105,14 @@ const animals = {
     }
 };
 for(const path of ['data/minecraft/block_transformer/hoe.json','data/minecraft/tags/block/turns_into_farmland.json','data/minecraft/tags/block/maintains_farmland.json','data/minecraft/tags/item/hoes.json'])take(path);
-const classes = Object.fromEntries(['net/minecraft/world/level/block/FarmlandBlock.class','net/minecraft/world/level/block/CropBlock.class','net/minecraft/world/entity/Mob.class','net/minecraft/world/entity/ai/goal/RandomStrollGoal.class','net/minecraft/world/entity/animal/cow/AbstractCow.class','net/minecraft/world/entity/animal/chicken/Chicken.class','net/minecraft/world/entity/item/ItemEntity.class','net/minecraft/client/renderer/entity/ItemEntityRenderer.class','net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
+/** Flatten original support tags while retaining every recursive source and digest.
+ * @param {string} kind Native registry.
+ * @param {string} name Namespaced tag identifier.
+ * @return {string[]} Native short identifiers.
+ */
+function tag(kind:string,name:string):string[]{const [namespace,path]=name.split(':'),doc=JSON.parse(take('data/'+namespace+'/tags/'+kind+'/'+path+'.json').toString());return [...new Set<string>(doc.values.flatMap((id:string)=>id.startsWith('#')?tag(kind,id.slice(1)):[id.split(':')[1]]))];}
+writeFileSync(resolve(root,'app/web/src/data/cane-support.json'),JSON.stringify({ground:tag('block','minecraft:supports_sugar_cane'),blocks:tag('block','minecraft:supports_sugar_cane_adjacently'),fluids:tag('fluid','minecraft:supports_sugar_cane_adjacently')},null,2)+'\n');
+const classes = Object.fromEntries(['net/minecraft/world/entity/WalkAnimationState.class','net/minecraft/world/entity/LivingEntity.class','net/minecraft/client/model/QuadrupedModel.class','net/minecraft/world/level/block/SugarCaneBlock.class','net/minecraft/world/level/block/FarmlandBlock.class','net/minecraft/world/level/block/CropBlock.class','net/minecraft/world/entity/Mob.class','net/minecraft/world/entity/ai/goal/RandomStrollGoal.class','net/minecraft/world/entity/animal/cow/AbstractCow.class','net/minecraft/world/entity/animal/chicken/Chicken.class','net/minecraft/world/entity/item/ItemEntity.class','net/minecraft/client/renderer/entity/ItemEntityRenderer.class','net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
 writeFileSync(resolve(root, 'app/web/src/data/animal-models.json'), JSON.stringify(animals, null, 2) + '\n');
 
 /** Fetch an official asset only after checking its locked SHA1. @param {string} url Official location. @param {string} sha1 Expected digest. @return {Promise<Buffer>} Verified bytes. */

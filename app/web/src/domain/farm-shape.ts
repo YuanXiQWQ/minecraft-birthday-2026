@@ -111,10 +111,10 @@ export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts
     const value = {cells, water, lights}; cached = {key, value}; return value;
 }
 
-/** Resolve the exact effective farm layout from durable station/block positions.
+/** Resolve construction support while preserving natural ground and adjacent water around cane.
  * @param {Progress} p Committed facts.
  * @return {FarmLayout} Cached shared layout; growth ticks do not rebuild it.
  */
 export function currentFarm(p: Progress): FarmLayout {
-    return farmLayout([...p.scenes.farm.stations, ...(p.scenes.farm.blocks ?? [])].map(s => s.cell), soils(p,'farm'));
+    return farmLayout([...p.scenes.farm.stations, ...(p.scenes.farm.blocks ?? []).filter(b=>b.block!=='sugar_cane')].map(s => s.cell), soils(p,'farm'));
 }

@@ -8,7 +8,7 @@ export const FARM_PLOTS:Cell[]=Array.from({length:9},(_,i)=>[-5+i%3,0,-2-Math.fl
 function sameCell(a:Cell,b:Cell):boolean{return a.every((v,i)=>v===b[i]);}
 export interface Soil {cell: Cell; moisture: number | null}
 export interface GroundDrop {id: string; cell: Cell; stack: Stack}
-export interface Agriculture {version: 1; random: number; soils: Soil[]; drops: GroundDrop[]; serial: number}
+export interface Agriculture {version: 1; random: number; soils: Soil[]; drops: GroundDrop[]; serial: number; caneAges?:Record<string,number>}
 
 /** Read original pretilled soil only for saves without explicit soil facts.
  * @param {Progress} p Current facts.

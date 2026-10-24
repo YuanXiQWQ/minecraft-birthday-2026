@@ -9,6 +9,8 @@ export type {Soil,Agriculture,GroundDrop} from './soil-state.ts';
 import {blockAt, BLOCK_PROPERTIES} from './placed-blocks.ts';
 import {sameCell} from './world-config.ts';
 import {playerBounds, overlaps} from './player-motion.ts';
+import type {PlacedBlock} from './placed-blocks.ts';
+import {caneBlocks,randomTickCane} from './sugar-cane.ts';
 
 /** Retain legacy approved stages while supporting every native age for newly growing crops.
  * @param {Crop} crop Saved crop.
@@ -77,9 +79,10 @@ export function dryToDirt(p: Progress, soil: Soil): Crop|undefined {
 export function tickAgriculture(p: Progress): {scene:SceneId,crop:Crop}[] {
     const removed:{scene:SceneId,crop:Crop}[]=[];
     for(const scene of ['plains','cave','farm','home'] as SceneId[]){
-        const view={...p,scene},a=agriculture(p,scene),rng=new NativeRandom(a.random,true),sections=new Map<string,Map<string,Soil|Crop>>();
-        /** Register ticking positions by native 16-cube section. @param {Cell} cell Position. @param {Soil|Crop} value Live object. */
-        const add=(cell:Cell,value:Soil|Crop):void=>{const key=cell.map(v=>Math.floor(v/16)).join(',');if(!sections.has(key))sections.set(key,new Map());sections.get(key)!.set(cell.join(','),value);};
+        const view={...p,scene},a=agriculture(p,scene),rng=new NativeRandom(a.random,true),sections=new Map<string,Map<string,Soil|Crop|PlacedBlock>>();
+        /** Register ticking positions by native 16-cube section. @param {Cell} cell Position. @param {Soil|Crop|PlacedBlock} value Live object. */
+        const add=(cell:Cell,value:Soil|Crop|PlacedBlock):void=>{const key=cell.map(v=>Math.floor(v/16)).join(',');if(!sections.has(key))sections.set(key,new Map());sections.get(key)!.set(cell.join(','),value);};
+        for(const cane of caneBlocks(view))add(cane.cell,cane);
         for(const soil of a.soils)if(soil.moisture!==null){
             const above=blockAt(view,[soil.cell[0],soil.cell[1]+1,soil.cell[2]]);
             if(above&&above.block!=='wheat'&&!above.block.endsWith('_fence_gate')&&BLOCK_PROPERTIES[above.block]?.collision){const crop=dryToDirt(view,soil);if(crop)removed.push({scene,crop});}
@@ -93,6 +96,7 @@ export function tickAgriculture(p: Progress): {scene:SceneId,crop:Crop}[] {
         for(const [section,entries] of sections){const base=section.split(',').map(v=>Number(v)*16);for(let i=0;i<3;i++){
             const pos=base.map(v=>v+rng.integer(0,15)).join(','),value=entries.get(pos);if(!value)continue;
             if('moisture' in value){if(value.moisture===null)continue;if(hydrated(view,value.cell))value.moisture=7;else if(value.moisture>0)value.moisture--;else {const above=blockAt(view,[value.cell[0],value.cell[1]+1,value.cell[2]])?.block;if(above!=='wheat'&&!above?.endsWith('_fence_gate'))dryToDirt(view,value);}}
+            else if('block' in value)randomTickCane(view,value);
             else if(value.growth.version===1&&rng.integer(0,Math.floor(25/growthSpeed(view,value.cell)))===0){const data=value.growth.data;data.age=Math.min(7,cropStage(value)+1);data.ticks=Math.max(data.ticks,Math.ceil(data.age*240/7));}
         }}a.random=Number(rng.state);
     }return removed;

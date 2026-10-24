@@ -1,0 +1,24 @@
+{
+  "ground": [
+    "dirt",
+    "coarse_dirt",
+    "rooted_dirt",
+    "mud",
+    "muddy_mangrove_roots",
+    "moss_block",
+    "pale_moss_block",
+    "grass_block",
+    "podzol",
+    "mycelium",
+    "sand",
+    "red_sand",
+    "suspicious_sand"
+  ],
+  "blocks": [
+    "frosted_ice"
+  ],
+  "fluids": [
+    "water",
+    "flowing_water"
+  ]
+}
