@@ -29,7 +29,7 @@ async function prepare(mode:'missing'|'chain'|'table'):Promise<void>{
  for(const [index,id] of items.entries()){const v=await s.editInventory({type:'source',item:'minecraft:'+id,mode:id==='furnace'?'clone':'left'},null,s.view.envelope!.state.progress.player.data);await s.editInventory(id==='wooden_pickaxe'?{type:'slot',index:0,button:0}:{type:'backpack-slot',index,button:0},v.cursor,s.view.envelope!.state.progress.player.data);}
  if(mode==='chain')for(const [id,cell] of [['front',[2,0,0]],['rear',[3,0,-3]]] as const)await s.dispatch({type:'put-station',scene:'plains',station:{id,kind:'furnace',cell:[...cell],facing:'south',contents:emptyFurnace()}});
  if(mode==='table')await s.dispatch({type:'put-station',scene:'plains',station:{id:'table',kind:'crafting_table',cell:[2,0,0],facing:'south',contents:{version:1,data:{grid:Array(9).fill(null)}}}});
- if(world.scene.mode?.desired==='hidden')world.scene.mode.toggle();
+ world.scene.mode?.suspend(true);
  records.length=0;events.length=0;transitions.length=0;record('prepared:'+mode);
 }
 document.querySelector('#missing')!.addEventListener('click',()=>void prepare('missing').catch(e=>{output.textContent=JSON.stringify({error:String(e)});}));

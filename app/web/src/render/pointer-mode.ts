@@ -31,8 +31,9 @@ export class PointerMode {
             if (this.inFlight || !this.pending) return;
             this.fail(this.requested);
         }, {signal: this.abort.signal});
-        window.addEventListener('blur', () => this.suspend(), {signal: this.abort.signal});
-        document.addEventListener('visibilitychange', () => {if (document.hidden) this.suspend();}, {signal: this.abort.signal});
+        window.addEventListener('blur', () => this.suspend(true), {signal: this.abort.signal});
+        window.addEventListener('pagehide', () => this.suspend(true), {signal: this.abort.signal});
+        document.addEventListener('visibilitychange', () => {if (document.hidden) this.suspend(true);}, {signal: this.abort.signal});
         this.publish();
     }
     /** Coalesce the error event and promise rejection for the same denied browser capability. */
@@ -42,7 +43,10 @@ export class PointerMode {
      */
     fail(epoch: number): void {
         if (epoch !== this.epoch || this.paused || this.disposed) return;
-        this.pending = false; this.desired = 'visible'; this.change(); this.publish(); this.warn();
+        this.pending = false;
+        this.desired = typeof this.canvas.requestPointerLock === 'function' ? 'hidden' : 'visible';
+        this.change(); this.publish();
+        if (globalThis.navigator?.userActivation?.hasBeenActive !== false) this.warn();
     }
     /** Prefer raw relative input and retry only an explicitly unsupported capability.
      * @param {number} epoch Acquisition generation.
@@ -83,14 +87,24 @@ export class PointerMode {
         if (document.pointerLockElement === this.canvas) document.exitPointerLock();
         this.actual = false; this.change(); this.publish();
     }
-    /** Suspend for GUI or lifecycle boundaries without automatically requesting a new lock. */
-    suspend(): void {this.release();}
-    /** Transfer ownership to an editable screen or restore gesture-based world entry.
+    /** Release ownership, optionally disarming ordinary click acquisition when the browser loses focus.
+     * @param {boolean} visible Whether the lifecycle boundary should leave the cursor explicitly visible.
+     */
+    suspend(visible = false): void {if (visible) this.desired = 'visible'; this.release();}
+    /** Transfer ownership to a GUI; closing it requests hidden observation once, independent of save snapshots.
      * @param {boolean} paused Whether a GUI owns input.
      */
-    pause(paused: boolean): void {this.paused = paused; if (paused) this.release(); this.publish();}
-    /** Toggle only after a completed empty-world short click. */
-    toggle(): void {this.desired = this.actual ? 'visible' : 'hidden'; if (this.desired === 'visible') this.release(); else this.enter(); this.publish();}
+    pause(paused: boolean): void {
+        if (this.paused === paused) return;
+        this.paused = paused;
+        if (paused) this.release();
+        else {
+            this.desired = 'hidden';
+            this.canvas.focus?.({preventScroll: true});
+            this.enter();
+        }
+        this.publish();
+    }
     /** Remove global listeners and reject late browser completions. */
     dispose(): void {this.disposed = true; this.release(); this.abort.abort();}
 }

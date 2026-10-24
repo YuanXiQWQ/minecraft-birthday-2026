@@ -51,10 +51,11 @@ async function fixture() {
  * @return {Promise<void>} Usable application.
  */
 async function ready(page, game = false) {
-    await page.waitForFunction(game => {
+    try{await page.waitForFunction(game => {
         const root = document.querySelector('#app');
         return root?.dataset.resources === 'failed' || root?.dataset.resources === '26.3' && (!game || root.dataset.boot === 'ready');
-    }, game, {timeout:60000});
+    }, game, {timeout:60000});}
+    catch(error){console.error('readiness-timeout',await page.evaluate(()=>({url:location.href,hidden:document.hidden,root:document.querySelector('#app')?.dataset,loading:document.querySelector('[data-loading]')?.dataset})));throw error;}
     assert.equal(await page.locator('#app').getAttribute('data-resource-error'), null);
     if (game) assert.equal(await page.locator('#app').getAttribute('data-inventory-ready'), 'true');
 }
@@ -75,15 +76,64 @@ async function choose(page, locale) {
     await page.waitForFunction(({key, locale}) => JSON.parse(localStorage.getItem(key)).state.settings.locale === locale && document.documentElement.lang === locale, {key, locale});
 }
 
+/** Compare opaque text texels with the actual browser screenshot, detecting compositor blur after canvas painting.
+ * @param {import('playwright').Page} page Ordinary production page.
+ * @param {string} selector Visible text-bearing canvas.
+ * @param {string} label Evidence identity.
+ * @param {object} options Optional native header region or chat-editor exclusion.
+ * @return {Promise<void>} Exact foreground comparison recorded for this surface.
+ */
+async function crisp(page,selector,label,options={}) {
+    if(!process.argv.includes('--text-raster'))return;
+    await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+    const png=(await page.screenshot()).toString('base64');
+    const result=await page.evaluate(async({png,selector,options})=>{
+        const source=document.querySelector(selector),r=source.getBoundingClientRect(),dpr=devicePixelRatio,
+            bitmap=await createImageBitmap(new Blob([Uint8Array.from(atob(png),c=>c.charCodeAt(0))],{type:'image/png'})),
+            screen=document.createElement('canvas');screen.width=bitmap.width;screen.height=bitmap.height;screen.getContext('2d').drawImage(bitmap,0,0);bitmap.close();
+        if(!r.width||!r.height)throw Error('text-surface-not-visible:'+selector);
+        const raw=source.getContext('2d').getImageData(0,0,source.width,source.height).data,shot=screen.getContext('2d').getImageData(0,0,screen.width,screen.height).data,
+            left=Math.round(r.left*dpr),top=Math.round(r.top*dpr),density=Number(document.querySelector('#inventory')?.dataset.guiScale??1)*dpr;
+        const pixels=[];
+        for(let y=0;y<source.height;y++)for(let x=0;x<source.width;x++){
+            if(options.header&&y>14*density||options.chat&&y>source.height-50*dpr||options.book&&(y<14*density||y>26*density||x<27*density||x>105*density))continue;
+            if(options.slider&&(y<5*source.height/20||y>15*source.height/20||x<source.width*.25||x>source.width*.75))continue;
+            const at=(y*source.width+x)*4,red=raw[at],green=raw[at+1],blue=raw[at+2];
+            if(raw[at+3]!==255||red!==green||red!==blue||(options.header?red!==64:options.slider?red!==255:red<160))continue;
+            pixels.push({x,y,red,green,blue});
+        }
+        const offsets=[];
+        for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+            let checked=0,mismatched=0,maxDelta=0;const samples=[];
+            for(const {x,y,red,green,blue} of pixels){
+                const sx=left+x+dx,sy=top+y+dy;if(sx<0||sy<0||sx>=screen.width||sy>=screen.height)continue;
+                const target=(sy*screen.width+sx)*4,delta=Math.max(Math.abs(red-shot[target]),Math.abs(green-shot[target+1]),Math.abs(blue-shot[target+2]));
+                checked++;maxDelta=Math.max(maxDelta,delta);if(delta>1){mismatched++;if(samples.length<8)samples.push({x,y,source:[red,green,blue],actual:[shot[target],shot[target+1],shot[target+2]]});}
+            }
+            offsets.push({translation:[dx,dy],checked,mismatched,maxDelta,samples});
+        }
+        const nominalMismatched=offsets[4].mismatched;
+        offsets.sort((a,b)=>a.mismatched-b.mismatched||Math.abs(a.translation[0])+Math.abs(a.translation[1])-Math.abs(b.translation[0])-Math.abs(b.translation[1]));
+        return{dpr,widthRatio:source.width/(r.width*dpr),heightRatio:source.height/(r.height*dpr),origin:[r.left*dpr,r.top*dpr],nominalMismatched,...offsets[0]};
+    },{png,selector,options});
+    if(result.mismatched)await page.screenshot({path:resolve(out,label+'-failed.png')});
+    records.push({label,...result});await writeFile(resolve(out,'raster-checks.json'),JSON.stringify(records.filter(v=>v.checked!==undefined),null,2)+'\n');assert.ok(result.checked>10,label+' has real glyph pixels');
+    assert.equal(result.mismatched,0,label+' actual screenshot must preserve opaque text pixels');
+}
+
 await mkdir(out, {recursive:true}); await new Promise(r => server.listen(0, '127.0.0.1', r));
-const origin = 'http://127.0.0.1:' + server.address().port,
-    browser = await pw.chromium.launch({executablePath:process.argv[3], headless:true});
+const origin = 'http://127.0.0.1:' + server.address().port;
+let browser = await pw.chromium.launch({executablePath:process.argv[3], headless:true});
 try {
-    for (const [label, base] of [['root','/'], ['pages','/minecraft-birthday-2026/']]) {
-        const context = await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:process.argv.includes('--language-style')&&label==='pages'?1.25:1}), errors = [];
+    const cases=process.argv.includes('--text-raster')?[['root','/',1],['pages','/minecraft-birthday-2026/',1.25],['root-150','/',1.5],['pages-200','/minecraft-birthday-2026/',2]]:[['root','/'],['pages','/minecraft-birthday-2026/']];
+    for (const [label, base, density] of cases) {
+        if(process.argv.some(value=>value.startsWith('--case='))&&!process.argv.includes('--case='+label))continue;
+        if(label!=='root'){await browser.close();browser=await pw.chromium.launch({executablePath:process.argv[3],headless:true});}
+        const context = await browser.newContext({viewport:{width:process.argv.includes('--text-raster')?691:1280,height:800},deviceScaleFactor:density??(process.argv.includes('--language-style')&&label==='pages'?1.25:1)}), errors = [];
         await context.addInitScript(({key, raw}) => {if (!localStorage.getItem(key)) localStorage.setItem(key, raw);}, {key, raw:await fixture()});
         const page = await context.newPage(); page.setDefaultTimeout(30000); page.on('pageerror', e => errors.push(e.message));
         await page.goto(origin + base); await ready(page); const before = await state(page);
+        await crisp(page,'.copy h1 canvas',label+'-home-title');await crisp(page,'.copy .story canvas',label+'-home-story');
         await page.getByRole('button', {name:'Settings', exact:true}).click();
         await page.getByRole('button', {name:'Language...', exact:true}).click();
         await page.locator('.language-search').fill('中文');
@@ -93,6 +143,9 @@ try {
         assert.equal(await page.locator('[data-locale="zh-CN"]').getAttribute('aria-selected'), 'true');
         assert.deepEqual((await state(page)).progress, before.progress);
         await page.locator('.language-search').fill('');
+        await crisp(page,'.language-accuracy canvas',label+'-footer');
+        await crisp(page,'[data-locale="zh-CN"] canvas',label+'-language');
+        await crisp(page,'#settings .native-screen-plane>button:last-child>canvas:not(.button-sprite)',label+'-button');
         if (process.argv.includes('--language-style')) {
             await page.locator('[data-locale="zh-CN"]').focus(); await page.locator('[data-locale="en"]').hover();
             const style=await page.evaluate(()=>{
@@ -117,7 +170,7 @@ try {
         await page.getByRole('button', {name:'设置', exact:true}).click();
         await page.getByRole('button', {name:'语言…', exact:true}).click(); await choose(page, 'en');
         await sibling.waitForFunction(() => document.documentElement.lang === 'en');
-        await choose(page, 'zh-CN'); await sibling.waitForFunction(() => document.documentElement.lang === 'zh-CN'); await sibling.close();
+        await choose(page, 'zh-CN'); await sibling.waitForFunction(() => document.documentElement.lang === 'zh-CN'); await sibling.close();await page.bringToFront();
         const build = await page.locator('#app').getAttribute('data-build'), cdp = await context.newCDPSession(page), responses = [];
         await cdp.send('Network.enable'); cdp.on('Network.responseReceived', e => {if (e.response.url.includes('startup-manifest.json')) responses.push({url:e.response.url,disk:e.response.fromDiskCache ?? false});});
         await page.goto(origin + base + 'cache-prime'); legacy = true; const primeStart = requests.length;
@@ -138,18 +191,30 @@ try {
         assert.equal(await page.locator('.inventory-slot[data-kind="source"][data-item="minecraft:cobblestone"]').getAttribute('aria-label'), '圆石');
         await page.locator('.inventory-slot[data-kind="source"][data-item="minecraft:cobblestone"]').hover();
         await page.screenshot({path:resolve(out, label + '-items.png')});
+        await crisp(page,'.item-tooltip canvas',label+'-tooltip');
+        await crisp(page,'.inventory-panel>canvas',label+'-inventory-header',{header:true});
         await page.locator('.inventory-tab[data-tab="crafting"]').click(); await page.locator('.recipe-book-search').fill('木板');
         assert.ok(await page.locator('.recipe-book-hit[aria-label*="橡木木板"]').count());
         await page.screenshot({path:resolve(out, label + '-recipes.png')});
+        if(process.argv.includes('--text-raster'))await page.keyboard.press('Tab');
+        await crisp(page,'.recipe-book>canvas',label+'-recipe-search',{book:true});
         await page.keyboard.press('Escape'); await page.locator('#inventory').waitFor({state:'hidden'});
+        if(process.argv.includes('--text-raster')){
+            const edge=await page.locator('.navigation-edge').boundingBox();
+            if(edge)await page.mouse.move(edge.x+edge.width/2,edge.y+edge.height/2);
+            await page.locator('.world-navigation[data-expanded="true"]').waitFor();
+            await page.locator('.world-navigation [data-scene="plains"]').click();
+            await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key)).state.progress.scene==='plains',key);
+        }
         await page.locator('canvas[data-scene]').click();
         await page.keyboard.press('Slash'); await page.locator('.game-chat input').fill('/weather clear'); await page.keyboard.press('Enter');
         await page.waitForFunction(() => document.querySelector('.game-chat')?.textContent.includes('天气已设为晴天'));
-        await page.keyboard.press('t'); await page.screenshot({path:resolve(out, label + '-chat.png')}); await page.keyboard.press('Escape');
+        await page.keyboard.press('t'); await page.screenshot({path:resolve(out, label + '-chat.png')});await crisp(page,'.game-chat>canvas',label+'-chat',{chat:true}); await page.keyboard.press('Escape');
         await page.keyboard.press('Escape'); await page.getByRole('button', {name:'选项…',exact:true}).click();
         await page.getByRole('button', {name:'音乐和声音…',exact:true}).click();
         assert.match(await page.locator('input[type=range]').first().getAttribute('aria-label'), /主音量/);
         await page.screenshot({path:resolve(out, label + '-sound.png')});
+        await crisp(page,'.native-slider>canvas',label+'-slider',{slider:true});
         await page.setViewportSize({width:390,height:844});
         await page.screenshot({path:resolve(out, label + '-sound-narrow.png')});
         await page.locator('#settings').getByRole('button', {name:'完成',exact:true}).click();

@@ -41,7 +41,7 @@ test('rotated cross uses native 45-degree rescale and upward shade; native UV-lo
 });
 test('world profile agrees with P4 oak/regular-egg closure, decorative leaves/dirt/water are not sources', () => {
     const nodes = Object.values(WORLD_SCENES).flatMap(s => s.nodes), kinds = new Set(nodes.map(n => n.block));
-    assert.deepEqual([...kinds].sort(), ['coal_ore', 'cow', 'egg', 'iron_ore', 'oak_log', 'short_grass', 'stone', 'sugar_cane'].sort());
+    assert.deepEqual([...kinds].sort(), ['coal_ore', 'cow', 'egg', 'iron_ore', 'oak_log', 'short_grass', 'tall_grass', 'stone', 'sugar_cane'].sort());
     for (const n of ['oak_leaves', 'dirt', 'water', 'oak_planks']) assert.equal(kinds.has(n), false);
     const coverage = JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/coverage.json', import.meta.url), 'utf8'));
     assert.equal(coverage.profile.tree, 'minecraft:oak_log');

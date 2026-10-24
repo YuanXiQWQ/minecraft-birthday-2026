@@ -1,0 +1,38 @@
+{
+  "method": "Measured production canvas before raster rounding correction; no image editing",
+  "viewport": [
+    691,
+    800
+  ],
+  "devicePixelRatio": 1.25,
+  "surface": ".language-accuracy canvas",
+  "rect": {
+    "x": 0,
+    "y": 728,
+    "width": 691.2000122070312,
+    "height": 19.20001220703125
+  },
+  "backing": [
+    865,
+    25
+  ],
+  "expectedPhysical": [
+    864,
+    24
+  ],
+  "sourceOpaqueGlyphPalette": [
+    [
+      186,
+      186,
+      186,
+      255
+    ],
+    [
+      46,
+      46,
+      46,
+      255
+    ]
+  ],
+  "cause": "Math.ceil promoted floating-point measurement noise into extra framebuffer pixels; browser resampled the bitmap to its smaller displayed rectangle"
+}

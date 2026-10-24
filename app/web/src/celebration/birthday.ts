@@ -1,5 +1,6 @@
 /** Birthday playback owns transient native effects; durable completion belongs exclusively to the save transaction. */
 import {timing} from '../performance.ts';
+import {alignRaster,rasterSize} from '../ui/raster.ts';
 import {Vector3} from 'three';
 import type {State, Settings} from '../domain/types.ts';
 import type {SceneView} from '../render/scene.ts';
@@ -204,7 +205,7 @@ export class BirthdayCelebration {
   /** Paint the native birthday toast at displayed framebuffer resolution, retaining original Unicode masks. */
   drawToast(): void {
     const scale=Math.max(1,(this.toast.getBoundingClientRect().width||320)/160*Math.min(globalThis.devicePixelRatio??1,4));
-    this.toast.width=Math.ceil(160*scale);this.toast.height=Math.ceil(32*scale);
+    this.toast.width=rasterSize(160,scale);this.toast.height=rasterSize(32,scale);
     const c = this.toast.getContext('2d')!;
     c.setTransform(this.toast.width/160,0,0,this.toast.height/32,0,0);
     c.clearRect(0, 0, 160, 32);
@@ -216,6 +217,7 @@ export class BirthdayCelebration {
     c.drawImage(icon, 8, 8, 16, 16);
     this.pixels.font.draw(c, this.text('celebration.toast'), 30, 7, '#FF5', false);
     this.pixels.font.draw(c, this.text('celebration.toastDetail'), 30, 18, '#FFF', false);
+    alignRaster(this.toast);
   }
 
   /** Advance a real 20Hz simulation from active elapsed time, scheduling only a short audio horizon and recording late calls.

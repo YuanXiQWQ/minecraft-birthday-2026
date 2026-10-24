@@ -23,7 +23,7 @@ function chatHarness(source='/unknown'){
  const draws:any[]=[],rects:any[]=[],transforms:any[]=[],input=Object.assign(new EventTarget(),{value:source,selectionStart:source.length,selectionEnd:source.length,selectionDirection:'none',maxLength:256,dataset:{},style:{}});
  Object.defineProperty(globalThis,'document',{configurable:true,value:{activeElement:input,createElement:()=>({textContent:''})}});
  Object.defineProperty(globalThis,'devicePixelRatio',{configurable:true,value:1});
- const ctx={globalAlpha:1,fillStyle:'',setTransform(){},save(){},restore(){},beginPath(){},rect(){},clip(){},translate(...v:number[]){transforms.push(['translate',...v]);},transform(...v:number[]){transforms.push(['transform',...v]);},fillRect(...v:number[]){rects.push([this.fillStyle,...v]);}};
+ const ctx={globalAlpha:1,fillStyle:'',setTransform(){},clearRect(){},save(){},restore(){},beginPath(){},rect(){},clip(){},translate(...v:number[]){transforms.push(['translate',...v]);},transform(...v:number[]){transforms.push(['transform',...v]);},fillRect(...v:number[]){rects.push([this.fillStyle,...v]);}};
  const font={width:(s:string)=>[...s].length*6,draw:(_c:unknown,...v:any[])=>draws.push(v)};
  const chat=Object.create(GameChat.prototype);Object.assign(chat,{viewport:{clientWidth:1280,clientHeight:720},pixels:{font},root:{dataset:{},style:{setProperty(){}}},canvas:{style:{},getContext:()=>ctx},input,text,messages:[],open:true,completion:null,offset:0,lineCount:0,tagHover:null,lifetime:0,abort:new AbortController(),accessible:{children:[],append(){}},username:()=> 'sireoh'});
  return{chat,input,draws,rects,transforms,ctx,font};
@@ -83,9 +83,9 @@ function screenHarness(width=400){
 
 test('formal settings layout uses two native columns and refreshes every button sprite synchronously',()=>{
  Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '1'})});
- const h=screenHarness();h.screen.layout();assert.match(h.buttons[0].style.cssText,/left:92px;top:134px;width:300px/);assert.match(h.buttons[1].style.cssText,/left:408px;top:134px;width:300px/);assert.match(h.buttons[2].style.cssText,/left:92px;top:182px/);assert.equal(h.refresh.length,4);
+ const h=screenHarness();h.screen.layout();assert.match(h.buttons[0].style.cssText,/left:46px;top:67px;width:150px/);assert.match(h.buttons[1].style.cssText,/left:204px;top:67px;width:150px/);assert.match(h.buttons[2].style.cssText,/left:46px;top:91px/);assert.equal(h.refresh.length,4);
  assert.equal(optionFlow(400,4).resetY,115);assert.equal(optionFlow(196,4).columns,1);
- h.confirmation.hidden=false;h.screen.layout();assert.equal(h.screen.dialog.dataset.confirming,'true');assert.match(h.confirmButtons[0].style.cssText,/width:300px/);h.confirmation.hidden=true;h.screen.layout();assert.equal(h.screen.dialog.dataset.confirming,'false');
+ h.confirmation.hidden=false;h.screen.layout();assert.equal(h.screen.dialog.dataset.confirming,'true');assert.match(h.confirmButtons[0].style.cssText,/width:150px/);h.confirmation.hidden=true;h.screen.layout();assert.equal(h.screen.dialog.dataset.confirming,'false');
 });
 
 test('PixelUI refresh paints both existing label and existing sprite without creating another canvas',()=>{

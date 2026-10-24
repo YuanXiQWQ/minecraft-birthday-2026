@@ -155,12 +155,13 @@ test('full-height pause screen pairs Back and Options, with full-span quit and r
             plane:{style:{},querySelector:()=>title,querySelectorAll:(selector:string)=>selector==='button'?buttons:[]},
             background:{getContext:()=>({setTransform(){},imageSmoothingEnabled:false})}});
         screen.layout();
-        assert.match(title.style.cssText,/top:80px/);
-        assert.match(buttons[0].style.cssText,/top:164px/);
-        assert.match(buttons[1].style.cssText,/left:368px;top:164px;width:196px/);
-        assert.match(buttons[2].style.cssText,/top:212px/);
-        assert.match(buttons[0].style.cssText,/left:156px;.*width:196px/);
-        assert.match(buttons[2].style.cssText,/left:156px;.*width:408px/);
+        assert.match(title.style.cssText,/top:160px/);
+        assert.match(buttons[0].style.cssText,/top:328px/);
+        assert.match(buttons[1].style.cssText,/left:736px;top:328px;width:392px/);
+        assert.match(buttons[2].style.cssText,/top:424px/);
+        assert.match(buttons[0].style.cssText,/left:312px;.*width:392px/);
+        assert.match(buttons[2].style.cssText,/left:312px;.*width:816px/);
+        assert.doesNotMatch(screen.plane.style.cssText,/transform:scale|zoom:/);
         assert.equal(screen.dialog.dataset.nativePage,'pause');
     } finally {if(savedStyle)Object.defineProperty(globalThis,'getComputedStyle',savedStyle);else Reflect.deleteProperty(globalThis,'getComputedStyle');}
 });

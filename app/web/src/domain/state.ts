@@ -19,7 +19,7 @@ import type {
     Station
 } from './types.ts';
 import {emptyWorld, validateWorld, harvestNode, plantCrop, harvestCrop} from './world-state.ts';
-import {WORLD_SCENES, sameCell, sourceOccupied} from './world-config.ts';
+import {WORLD_SCENES, sameCell, nodeAtCell, sourceOccupied} from './world-config.ts';
 import {tickHoppers, adjacentTransfer} from './hopper-network.ts';
 import {initialBook, validateBook, discover, BOOK_RECIPES, bookApplicable, fillOwnedRecipe} from './recipe-book.ts';
 import type {BookMode} from './recipe-book.ts';
@@ -280,7 +280,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
             const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id==='minecraft:'+command.item,'inventory-conflict');
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
-            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>sameCell(n.cell,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
+            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
             p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
         }
         case 'use-block': {

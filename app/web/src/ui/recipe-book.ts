@@ -2,6 +2,7 @@
 import {recipePulse, RecipeToastClock} from './native-animation.ts';
 import type {ToastSlots} from './toast-slots.ts';
 import {nativeField} from './native-field.ts';
+import {alignRaster} from './raster.ts';
 import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
 import type {Recipe} from '../rules/types.ts';
@@ -651,6 +652,7 @@ export class RecipeBookView {
     this.toast.style.width = 160 * scale + 'px'; this.toast.style.height = 32 * scale + 'px';
     this.toast.style.top = row * 32 * scale + 'px';
     this.toast.style.transform = `translateX(${160 * scale * (1 - sample.visible)}px)`;
+    alignRaster(this.toast,true);
     this.toast.dataset.timeline = JSON.stringify({...sample, started: this.toastClock.started, changed: this.toastClock.changed, at: performance.now(), recipes: this.toastClock.entries});
     this.toast.hidden = false;
   }

@@ -1,6 +1,6 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
 import {caveFixed, caveNodes, caveLayout, caveClearCells, CAVE_TORCHES} from './cave-shape.ts';
-import {retainedPlainsSupports} from './plains-shape.ts';
+import {retainedPlainsSupports, plainsPlants} from './plains-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
 export interface NaturalNode {
@@ -8,6 +8,7 @@ export interface NaturalNode {
     block: string;
     cell: Cell;
     kind?: 'egg' | 'cow';
+    renderCell?: Cell;
 }
 
 export interface WorldScene {
@@ -28,7 +29,7 @@ function nodes(block: string, cells: Cell[]): NaturalNode[] {
 /** Shared world-origin spawn reference; every authored view uses the same compass target. */
 export const WORLD_COMPASS_TARGET: Cell = [0, 0, 0];
 
-/** The implementation profile remains exactly P4 oak logs, regular eggs and the approved source kinds. */
+/** Deterministic collectible sources share stable visit identities across the four authored scenes. */
 export const WORLD_SCENES: Record<SceneId, WorldScene> = {
     plains: {
         floor: 'grass_block',
@@ -77,6 +78,8 @@ export const WORLD_SCENES: Record<SceneId, WorldScene> = {
         build: {min: [3, 0, -2], max: [6, 1, 2]}
     }
 };
+// Stable meadow sources retain the existing visit schema and all original source identities.
+WORLD_SCENES.plains.nodes.push(...plainsPlants(WORLD_SCENES.plains.nodes.map(n=>n.cell)).filter(p=>(p.block==='short_grass'||p.block==='tall_grass'&&p.state==='half=lower') && Math.round(p.cell[0])>=-18 && Math.round(p.cell[0])<=18 && Math.round(p.cell[2])>=-22 && Math.round(p.cell[2])<=10).map(p=>({id:'meadow:'+Math.round(p.cell[0])+':'+Math.round(p.cell[2]),block:p.block,cell:p.cell.map(Math.round) as Cell,renderCell:p.cell})));
 /** Admit finite scene cells while protecting actual structure and camera space. */
 export const WORLD_REGION: PlacementPolicy = {
     network: true,
@@ -96,6 +99,13 @@ export function cropAge(ticks: number): number {
 export function sameCell(a: Cell, b: Cell): boolean {
     return a.every((n, i) => n === b[i]);
 }
+
+/** Resolve either occupied half of a paired plant to its single finite source.
+ * @param {NaturalNode} node Authored resource.
+ * @param {Cell} cell Queried logical cell.
+ * @return {boolean} Whether this source occupies the cell.
+ */
+export function nodeAtCell(node:NaturalNode,cell:Cell):boolean{return sameCell(node.cell,cell)||node.block==='tall_grass'&&sameCell([node.cell[0],node.cell[1]+1,node.cell[2]],cell);}
 
 /** Match actual authored decorative solids rather than excluding whole resource lanes.
  * @param {SceneId} scene Current finite scene.
@@ -120,7 +130,7 @@ export function supported(p: Progress, cell: Cell): boolean {
     if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,[cell[0],cell[1]-1,cell[2]])))return true;
     if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
-    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveCleared(p).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id) && !(scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
+    return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveCleared(p).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'tall_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id) && !(scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
 }
 
 /** Keep live resource/crop, supported cave decoration and retained support occupancy separate from cleared terrain.
@@ -131,7 +141,7 @@ export function supported(p: Progress, cell: Cell): boolean {
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
     if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,cell)))return true;
     if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell), WORLD_SCENES.cave.eye, caveExcavated(p)).torches.some(t => sameCell(t.cell, cell))) return true;
-    return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => sameCell(n.cell, cell) && !p.world.visits[p.scene].removed.includes(n.id) && !(p.scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
+    return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => nodeAtCell(n, cell) && !p.world.visits[p.scene].removed.includes(n.id) && !(p.scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
 }
 
 /** Resolve durable cave excavation without encoding geometry or resources into saves.

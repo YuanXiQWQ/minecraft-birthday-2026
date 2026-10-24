@@ -14,6 +14,7 @@ export const STRENGTH: Record<string, number> = {
     blast_furnace: 3.5,
     hopper: 3,
     short_grass: 0,
+    tall_grass: 0,
     sugar_cane: 0,
     wheat: 0
 };

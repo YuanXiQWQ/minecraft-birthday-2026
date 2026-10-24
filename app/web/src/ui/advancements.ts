@@ -5,6 +5,7 @@ import {advancementText} from '../i18n/advancements.ts';
 import {scaledCanvas} from './inventory.ts';
 import type {GameInventory} from './inventory.ts';
 import {wrap} from './pixels.ts';
+import {alignRaster} from './raster.ts';
 import {drawSprite} from './vanilla.ts';
 import {RecipeToastClock} from './native-animation.ts';
 import {ToastSlots} from './toast-slots.ts';
@@ -153,6 +154,7 @@ export class AdvancementView {
         if(roots.length>1)roots.forEach((id,i)=>{const x=i*32;this.sprite(c,'sprites/advancements/tab_above_'+(i===0?'left':'middle')+(id===this.selected?'_selected':''),x,0,28,32);this.ui.stack(c,{id:ADVANCEMENTS[id].display.icon.id,count:1},x+6,9);if(rebuild)this.hit(id,x,0,true);});
         if(this.hover&&visible.has(this.hover))this.tooltip(c,this.hover);
         this.modal.dataset.visible=JSON.stringify([...visible]);this.modal.dataset.selected=this.selected;
+        for(const canvas of [this.title,this.doneCanvas,this.canvas])alignRaster(canvas,true);
     }
     /** Draw native title and description boxes within the game viewport.
      * @param {CanvasRenderingContext2D} c Native screen target.
@@ -190,6 +192,7 @@ export class AdvancementView {
                 if(lines.length===1){font.draw(c,this.text('advancements.toast.task'),30,7,'#FFFF00',false);font.draw(c,title,30,18,'#FFF',false);}
                 else{c.save();c.globalAlpha=Math.min(1,Math.max(0,(time<1500?1500-time:time-1500)/300));if(time<1500)font.draw(c,this.text('advancements.toast.task'),30,11,'#FFFF00',false);else lines.forEach((line,i)=>font.draw(c,line,30,Math.floor(16-lines.length*9/2)+i*9,'#FFF',false));c.restore();}
                 task.canvas.style.cssText=`width:${160*scale}px;height:${32*scale}px;top:${row*32*scale}px;transform:translateX(${160*scale*(1-sample.visible)}px)`;task.canvas.hidden=false;task.canvas.dataset.timeline=JSON.stringify(sample);
+                alignRaster(task.canvas,true);
             }
             this.animate();
         });

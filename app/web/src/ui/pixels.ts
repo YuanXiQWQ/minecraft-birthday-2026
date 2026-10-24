@@ -1,7 +1,14 @@
 /** Accessible original bitmap text and sprite-backed buttons reuse P2 GUI primitives without container semantics. */
 import {nativeField} from './native-field.ts';
+import {alignRaster,rasterSize} from './raster.ts';
 import {BitmapFont, drawSprite} from './vanilla.ts';
 import type {Resources} from '../render/resources.ts';
+
+/** Resolve the logical GUI scale of directly laid-out native widgets.
+ * @param {HTMLElement} host Widget host.
+ * @return {number} CSS pixels per logical widget pixel.
+ */
+function widgetScale(host:HTMLElement):number{return typeof getComputedStyle==='function'?parseFloat(getComputedStyle(host).getPropertyValue('--native-screen-scale'))||2:2;}
 
 /** Wrap at words and then characters, retaining every character even for long localized tokens.
  * @param {string} text Visible copy.
@@ -89,8 +96,8 @@ export class PixelUI {
                 logical = Math.max(8, Math.floor(w / scale)),
                 lines = wrap(value.text, logical - 1, t => this.font.width(t)), height = lines.length * 12,
                 resolution = Math.max(1,(parseFloat(style.getPropertyValue('--button-scale'))||value.scale)*host.getBoundingClientRect().width/host.clientWidth*Math.min(globalThis.devicePixelRatio??1,4));
-            canvas.width = Math.ceil(logical * resolution);
-            canvas.height = Math.ceil(height * resolution);
+            canvas.width = rasterSize(logical,resolution);
+            canvas.height = rasterSize(height,resolution);
             canvas.dataset.logicalHeight = String(height);
             canvas.style.width = logical * scale + 'px';
             canvas.style.height = height * scale + 'px';
@@ -98,6 +105,7 @@ export class PixelUI {
             context.setTransform(canvas.width/logical, 0, 0, canvas.height/height, 0, 0);
             context.imageSmoothingEnabled = false;
             lines.forEach((line, i) => this.font.draw(context, line, style.textAlign === 'center' ? Math.max(0, Math.floor((logical - this.font.width(line)) / 2)) : 0, i * 12, value.color, true));
+            alignRaster(canvas,true);
         };
         this.updates.set(host, draw);
         let lastWidth = -1;
@@ -136,6 +144,7 @@ export class PixelUI {
             const context = canvas.getContext('2d')!;
             context.imageSmoothingEnabled = false;
             drawSprite(context, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, canvas.width, canvas.height);
+            alignRaster(canvas);
         };
         this.buttonPaints.set(button,draw);
         for (const type of ['pointerenter', 'focus']) button.addEventListener(type, () => {
@@ -165,14 +174,15 @@ export class PixelUI {
         const host = document.createElement('div'), canvas = document.createElement('canvas'); host.className = 'native-text-field';
         input.replaceWith(host); host.append(canvas, input);
         const draw = () => {
-            const logical = Math.max(40, Math.floor(host.clientWidth / 2));
+            const logical = Math.max(40, Math.floor(host.clientWidth / widgetScale(host)));
             const height = Number(input.dataset.nativeHeight) || 20;
             const resolution=Math.max(1,host.getBoundingClientRect().width/logical*Math.min(globalThis.devicePixelRatio??1,4));
-            canvas.width = Math.ceil(logical*resolution); canvas.height = Math.ceil(height*resolution); canvas.style.width='100%';canvas.style.height = '100%';
+            canvas.width = rasterSize(logical,resolution); canvas.height = rasterSize(height,resolution); canvas.style.width='100%';canvas.style.height = '100%';
             const ctx = canvas.getContext('2d')!, path = 'assets/minecraft/textures/gui/sprites/widget/text_field' + (document.activeElement === input ? '_highlighted' : '') + '.png', image = this.resources.guiImages.get(path);
             ctx.setTransform(resolution,0,0,resolution,0,0);ctx.imageSmoothingEnabled = false;
             if (image) drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, logical, height);
             nativeField(ctx, this.font, input, [4, Math.floor((height - 8) / 2), logical - 8, 8], {hint: input.dataset.nativeHint, italicHint: input.dataset.italicHint === 'true', inset: 4});
+            alignRaster(canvas,true);
         };
         for (const type of ['input', 'select', 'keyup', 'pointerup', 'focus', 'blur']) input.addEventListener(type, draw);
         const observer = new ResizeObserver(() => this.queue(draw)); observer.observe(host); this.observers.push(observer);
@@ -190,9 +200,10 @@ export class PixelUI {
         let highlighted = false, changing = true, pointer: number | null = null;
         input.step = 'any';
         const draw = () => {
-            const width = Math.max(40, Math.floor(host.clientWidth / 2)), label = input.dataset.nativeLabel ?? '',
+            const width = Math.max(40, Math.floor(host.clientWidth / widgetScale(host))), label = input.dataset.nativeLabel ?? '',
                 resolution = Math.max(1,host.getBoundingClientRect().width/width*Math.min(globalThis.devicePixelRatio??1,4));
-            canvas.width = Math.ceil(width * resolution); canvas.height = Math.ceil(20 * resolution);
+            canvas.style.width='100%';canvas.style.height='100%';
+            canvas.width = rasterSize(width,resolution); canvas.height = rasterSize(20,resolution);
             const ctx = canvas.getContext('2d')!; ctx.setTransform(canvas.width/width,0,0,canvas.height/20,0,0); ctx.imageSmoothingEnabled = false;
             for (const handle of [false, true]) {
                 const name = 'slider' + (handle ? '_handle' : '') + (highlighted ? '_highlighted' : ''), path = 'assets/minecraft/textures/gui/sprites/widget/' + name + '.png', image = this.resources.guiImages.get(path);
@@ -201,6 +212,7 @@ export class PixelUI {
                 drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.floor((width - 8) * fraction) : 0, 0, handle ? 8 : width, 20);
             }
             this.font.draw(ctx, label, Math.floor((width - this.font.width(label)) / 2), 6, '#FFFFFF', true);
+            alignRaster(canvas,true);
         };
         /** Apply the native bounded slider value through the existing semantic input/change contract.
          * @param {number} fraction Native zero-to-one position.
@@ -215,14 +227,14 @@ export class PixelUI {
          * @param {number} x Pointer client position.
          * @return {number} Native clamped interval coordinate.
          */
-        function fraction(x: number): number {const r = host.getBoundingClientRect(), width = Math.max(40, Math.floor(host.clientWidth / 2)); return ((x - r.left) * width / r.width - 4) / (width - 8);}
+        function fraction(x: number): number {const r = host.getBoundingClientRect(), width = Math.max(40, Math.floor(host.clientWidth / widgetScale(host))); return ((x - r.left) * width / r.width - 4) / (width - 8);}
         input.addEventListener('pointerdown', e => {if (e.button !== 0 || input.disabled) return; e.preventDefault(); changing = true; input.focus(); pointer = e.pointerId; input.setPointerCapture(e.pointerId); setValue(fraction(e.clientX));});
         input.addEventListener('pointermove', e => {if (pointer === e.pointerId && e.buttons & 1) setValue(fraction(e.clientX));});
         input.addEventListener('pointerup', e => {if (pointer !== e.pointerId) return; pointer = null; input.dispatchEvent(new Event('change', {bubbles: true}));});
         for (const type of ['pointercancel','lostpointercapture','blur']) input.addEventListener(type, () => {pointer = null;});
         input.addEventListener('keydown', e => {
             if (e.code === 'Space' || e.code === 'Enter') {e.preventDefault(); changing = !changing; draw();}
-            else if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {e.preventDefault(); if (changing) setValue(Number(input.value) + (e.code === 'ArrowLeft' ? -1 : 1) / (Math.max(40, Math.floor(host.clientWidth / 2)) - 8), true);}
+            else if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {e.preventDefault(); if (changing) setValue(Number(input.value) + (e.code === 'ArrowLeft' ? -1 : 1) / (Math.max(40, Math.floor(host.clientWidth / widgetScale(host))) - 8), true);}
         });
         const observer = new ResizeObserver(() => this.queue(draw)); observer.observe(host); this.observers.push(observer);
         for (const type of ['input', 'change']) input.addEventListener(type, draw);

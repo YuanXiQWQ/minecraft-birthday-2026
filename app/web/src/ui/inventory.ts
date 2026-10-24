@@ -19,6 +19,7 @@ import type {Rules, Stack} from '../rules/types.ts';
 import type {PixelUI} from './pixels.ts';
 import type {CatalogueArt} from './icons.ts';
 import {itemName} from '../i18n/items.ts';
+import {alignRaster,rasterSize} from './raster.ts';
 import {drawSprite} from './vanilla.ts';
 import {personalPreview} from './crafting-preview.ts';
 import type {CraftingPreview} from './crafting-preview.ts';
@@ -756,6 +757,7 @@ export class GameInventory {
         this.modal.dataset.hopper = JSON.stringify(this.value.hopper ?? null);
         this.modal.dataset.sideOffset = String(this.sideOffset);
         this.modal.dataset.furnace = JSON.stringify(this.station?.expected.version === 2 ? this.station.expected.data : null);
+        alignRaster(this.canvas,true);alignRaster(this.hudCanvas,true);alignRaster(this.offhandCanvas,true);
     }
 
     /** Route genuine operation failures through system chat; slot/ghost/Toast presentation stays independent.
@@ -1015,8 +1017,8 @@ export class GameInventory {
     showTooltipText(lines: string[], x: number, y: number): void {
         const {width, height} = tooltipBox(lines.map(s => this.pixels.font.width(s))),
             canvas = document.createElement('canvas'), resolution = Math.max(1,this.scale*Math.min(globalThis.devicePixelRatio??1,4));
-        canvas.width = Math.ceil(width * resolution);
-        canvas.height = Math.ceil(height * resolution);
+        canvas.width = rasterSize(width,resolution);
+        canvas.height = rasterSize(height,resolution);
         canvas.style.width = width * this.scale + 'px';
         canvas.style.height = height * this.scale + 'px';
         const ctx = canvas.getContext('2d')!;
@@ -1036,6 +1038,7 @@ export class GameInventory {
         this.tooltip.style.left = (Math.max(r.left + 4, Math.min(x + 12, r.right - width * this.scale - 4)) - r.left) + 'px';
         this.tooltip.style.top = (Math.max(r.top + 4, Math.min(y + 12, r.bottom - height * this.scale - 4)) - r.top) + 'px';
         this.tooltip.hidden = false;
+        alignRaster(canvas,true);
     }
 
     /** Cache only the read-only output projection; an empty or reset grid always clears the previous result.
@@ -1265,21 +1268,23 @@ export class GameInventory {
     }
 }
 
-/** Keep logical GUI coordinates while rendering model icons at their actual screen/DPR density.
+/** Keep logical GUI coordinates while rendering text and icons at their actual screen/DPR density.
  * @param {HTMLCanvasElement} canvas Owned GUI layer.
  * @param {number} width Logical width.
  * @param {number} height Logical height.
- * @param {number} scale Integer GUI zoom.
+ * @param {number} scale CSS pixels per logical GUI pixel.
  * @return {CanvasRenderingContext2D} Nearest-sampled scaled context.
  */
 export function scaledCanvas(canvas: HTMLCanvasElement, width: number, height: number, scale: number): CanvasRenderingContext2D {
-    const d = Math.ceil(scale * Math.min(devicePixelRatio, 4) - 1e-6);
-    if (canvas.width !== width * d || canvas.height !== height * d) {
-        canvas.width = width * d;
-        canvas.height = height * d;
+    const d = scale * Math.min(devicePixelRatio, 4),w=rasterSize(width,d),h=rasterSize(height,d);
+    if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
     }
     const ctx = canvas.getContext('2d')!;
     ctx.setTransform(d, 0, 0, d, 0, 0);
     ctx.imageSmoothingEnabled = false;
+    canvas.style.width=width*scale+'px';canvas.style.height=height*scale+'px';
+    alignRaster(canvas,true);
     return ctx;
 }

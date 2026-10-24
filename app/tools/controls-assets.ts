@@ -31,7 +31,7 @@ async function object(key:string):Promise<Buffer>{const o=index.objects[key];if(
 const soundSource=await object('minecraft/sounds.json'),sounds=JSON.parse(soundSource.toString()),soundEvents:Record<string,any>={},soundPaths=new Set<string>(),properties=JSON.parse(readFileSync(resolve(root,'app/web/src/data/block-properties.json'),'utf8'));
 /** Preserve original event references recursively. @param {string} id Sound event. */
 function event(id:string):void{if(soundEvents[id])return;const def=sounds[id];if(!def)throw Error('native-event:'+id);soundEvents[id]=def;for(const raw of def.sounds){if(typeof raw==='object'&&raw.type==='event')event(raw.name.replace('minecraft:',''));else soundPaths.add('minecraft/sounds/'+(typeof raw==='string'?raw:raw.name).replace('minecraft:','')+'.ogg');}}
-for(const family of new Set(Object.values(properties).map((p:any)=>p.sound)))for(const action of ['hit','break','place','step','fall'])event('block.'+family+'.'+action);
+for(const family of new Set([...Object.values(properties).map((p:any)=>p.sound),'gravel']))for(const action of ['hit','break','place','step','fall'])event('block.'+family+'.'+action);
 await Promise.all([...soundPaths].map(async p=>files.set('assets/'+p,await object(p))));files.set('assets/minecraft/controls-sounds.json',Buffer.from(JSON.stringify(soundEvents,null,2)+'\n'));
 const loots=Object.fromEntries(blocks.map(b=>[b,JSON.parse(jar.get('data/minecraft/loot_table/blocks/'+b+'.json')!.toString())]));writeFileSync(resolve(root,'app/web/src/data/placed-loot.json'),JSON.stringify(loots,null,2)+'\n');
 /** Expand native mineable tags. @param {string} id Block tag. @return {string[]} Native members. */

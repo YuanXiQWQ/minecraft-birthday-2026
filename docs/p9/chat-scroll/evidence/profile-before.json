@@ -1,0 +1,55 @@
+{
+  "fixture": "synthetic 100-message Chinese history, actual GameChat and native mouse.wheel",
+  "setup": {
+    "initialPaint": 85.30000000447035,
+    "measurements": 22908
+  },
+  "samples": [
+    50.100000001490116,
+    57.20000000298023,
+    86.30000000447035,
+    89.39999999850988,
+    82.80000000447035,
+    65.30000000447035,
+    63.30000000447035,
+    54.5,
+    51.399999998509884,
+    52.30000000447035,
+    56.70000000298023,
+    55.70000000298023,
+    61.100000001490116,
+    57.70000000298023,
+    61.600000001490116,
+    59,
+    48.599999994039536,
+    35.29999999701977,
+    43.79999999701977,
+    36.099999994039536,
+    36.399999998509884
+  ],
+  "wheel": [
+    {
+      "queue": 245.80000000447035
+    },
+    {
+      "queue": 179
+    },
+    {
+      "queue": 127.59999999403954
+    },
+    {
+      "queue": 140.70000000298023
+    },
+    {
+      "queue": 146.80000000447035
+    },
+    {
+      "queue": 150
+    }
+  ],
+  "measurements": 484224,
+  "offset": 42,
+  "errors": [],
+  "instrumentation": "Synthetic 100-message history; actual GameChat.paint wrapped only for duration collection; native mouse.wheel. Queue timing is diagnostic, not an end-to-end paint measurement.",
+  "baselineRef": "6c6ea7f306f814f159515e6eadc2c5fc814793b8"
+}

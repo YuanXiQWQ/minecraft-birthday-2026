@@ -93,14 +93,14 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 .native-screen-background{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .native-screen-plane{position:absolute;left:0;top:0;isolation:isolate}
 .native-screen-plane>*{margin:0}.native-screen .mc-button{padding:0;min-width:0;min-height:0;overflow:hidden;text-align:center}
-.native-screen .mc-button>canvas:not(.button-sprite){position:absolute;top:12px;left:0;max-width:none;pointer-events:none}
+.native-screen .mc-button>canvas:not(.button-sprite){position:absolute;top:calc(6px * var(--native-screen-scale,2));left:0;max-width:none;pointer-events:none}
 .native-screen h2{text-align:center;color:white}.native-screen .native-text-field,.native-screen .native-slider{height:40px}
 .native-screen section{pointer-events:none}.native-screen section>*,.native-screen section input{pointer-events:auto}
 .native-language-list{overflow-y:auto;pointer-events:auto}
-.settings .native-language-row{position:relative;display:block;width:100%;height:36px;min-height:36px;margin:0;padding:0;background:transparent;border:0;outline:0;color:white;text-align:center;cursor:pointer}
-.native-language-row>canvas{position:absolute;left:0;top:10px;margin:0;pointer-events:none}
-.native-language-row[aria-selected=true]{background:#000;box-shadow:inset 0 0 0 2px #808080}
-.native-language-list:focus-within .native-language-row[aria-selected=true]{box-shadow:inset 0 0 0 2px #fff}
+.settings .native-language-row{position:relative;display:block;width:100%;height:calc(18px * var(--native-screen-scale,2));min-height:0;margin:0;padding:0;background:transparent;border:0;outline:0;color:white;text-align:center;cursor:pointer}
+.native-language-row>canvas{position:absolute;left:0;top:calc(5px * var(--native-screen-scale,2));margin:0;pointer-events:none}
+.native-language-row[aria-selected=true]{background:#000;box-shadow:inset 0 0 0 calc(1px * var(--native-screen-scale,2)) #808080}
+.native-language-list:focus-within .native-language-row[aria-selected=true]{box-shadow:inset 0 0 0 calc(1px * var(--native-screen-scale,2)) #fff}
 /* The native language screen overlays the world without retaining homepage cards or floating game controls. */
 .home:has(#settings[open][data-native-page=language]) .copy,.home:has(#settings[open][data-native-page=language])>header,.game:has(#settings[open][data-native-page=language])>.world-navigation,.game:has(#settings[open][data-native-page=language])>.navigation-edge,.game:has(#settings[open][data-native-page=language])>header,.game:has(#settings[open][data-native-page=language]) .birthday-celebration{visibility:hidden;pointer-events:none}
 .settings.native-screen[open][data-native-page=language]::backdrop{background:transparent}
@@ -116,7 +116,7 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 .scene-panel .advancement-toast{position:absolute;right:0;z-index:30;pointer-events:none;image-rendering:pixelated}
 .advancement-screen-title,.advancement-done{position:absolute;left:50%;transform:translateX(-50%)}.advancements-screen .advancement-screen-title{image-rendering:pixelated}
 .advancement-done{margin:0;padding:0;border:0;background:transparent;min-width:0;min-height:0}.advancement-done>canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
-.native-screen .native-text-field>input{height:100%}.native-screen-plane>section>p[role=status]{position:absolute;left:10px;top:156px;width:600px}
+.native-screen .native-text-field>input,.native-screen .native-slider>input{height:100%}.native-screen-plane>section>p[role=status]{position:absolute;left:10px;top:156px;width:600px}
 .native-screen .mc-button:disabled{opacity:1}
 /* Menu blurring is the native six-pass WebGL effect; chat and containers do not enable it. */
 .scene-panel[data-effect=menu]>canvas[role=img]{filter:none}

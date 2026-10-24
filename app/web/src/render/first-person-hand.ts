@@ -54,8 +54,9 @@ export class FirstPersonHand {
     }
     /** Draw the hand after clearing only world depth, with native hand FOV.
      * @param {WebGLRenderer} renderer Shared world renderer.
+     * @param {Matrix4} bob Native projection-space walking transform.
      */
-    render(renderer:WebGLRenderer):void{const size=renderer.getSize(new Vector2());this.camera.aspect=size.x/size.y;this.camera.updateProjectionMatrix();const clear=renderer.autoClear;renderer.autoClear=false;try{renderer.clearDepth();renderer.render(this.scene,this.camera);}finally{renderer.autoClear=clear;}renderer.domElement.dataset.hand=JSON.stringify({item:this.item,equip:this.height,swing:(this.clock-this.swingAt)/this.swingDuration,charge:this.charge(),profile:attackProfile(this.pending)});}
+    render(renderer:WebGLRenderer,bob=new Matrix4()):void{const size=renderer.getSize(new Vector2());this.camera.aspect=size.x/size.y;this.camera.updateProjectionMatrix();this.camera.projectionMatrix.multiply(bob);const clear=renderer.autoClear;renderer.autoClear=false;try{renderer.clearDepth();renderer.render(this.scene,this.camera);}finally{renderer.autoClear=clear;}renderer.domElement.dataset.hand=JSON.stringify({item:this.item,equip:this.height,swing:(this.clock-this.swingAt)/this.swingDuration,charge:this.charge(),profile:attackProfile(this.pending)});}
     /** Release only owned first-person geometry and materials. */
     dispose():void{if(this.model)this.items.release(this.model);this.items.dispose();}
 }

@@ -6,7 +6,7 @@ import properties from '../data/block-properties.json' with {type:'json'};
 const TYPES: Record<string, string> = {
     oak_log: 'wood', crafting_table: 'wood',
     stone: 'stone', coal_ore: 'stone', iron_ore: 'stone', furnace: 'stone', blast_furnace: 'stone',
-    hopper: 'metal', short_grass: 'grass', sugar_cane: 'grass', wheat: 'crop'
+    hopper: 'metal', short_grass: 'grass', tall_grass: 'grass', sugar_cane: 'grass', wheat: 'crop', grass_block:'grass',dirt:'gravel',dirt_path:'grass',farmland:'gravel',oak_leaves:'grass'
 };
 
 /** Read the native material event and unscaled SoundType parameters.

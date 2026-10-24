@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {WorldUse} from '../web/src/ui/world-use.ts';
 import {SceneView} from '../web/src/render/scene.ts';
+import {PlayerMotion} from '../web/src/domain/player-motion.ts';
 import {GameInventory} from '../web/src/ui/inventory.ts';
 import {systemFeedback, FAILURE_COLOR} from '../web/src/ui/system-feedback.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
@@ -32,6 +33,7 @@ async function mining(state?:State) {
     const s=new SaveSession({getItem:()=>raw,setItem:(_k,v)=>{if(reject)throw Error('write-failed');raw=v;}},{exclusive:async work=>{if(barrier)await barrier;return work();}},WORLD_REGION);s.rules=rules;await s.refresh();
     let id:string|null='node:oak_log:0';
     const scene=Object.create(SceneView.prototype) as SceneView;
+    scene.motion=new PlayerMotion();scene.movementEpoch=0;
     Object.assign(scene,{showOutline(){},keys:new Set(),renderer:{domElement:{dataset:{},style:{},getBoundingClientRect:()=>({left:0,top:0,right:100,bottom:100,width:100,height:100}),hasPointerCapture:()=>false}},input:true,lost:false,disposed:false,pointer:7,pointerPosition:[50,50],mode:null,look:{active:null,cancel(){}},/** Relay production cancellation within the geometry fixture. */cancel:()=>scene.onMineCancel?.(),showPreview(){},showCrack(){},breakEffect(){},pick:()=>id?{id,point:[-5,.5,-2],normal:[0,0,1]}:null});
     const inventory={rules,value:{...structuredClone(s.view.envelope!.state.progress.player.data),cursor:null},modal:{open:false}};
     const messages:string[]=[],sounds:{id:string;options?:SoundOptions}[]=[],use=new WorldUse(scene,inventory as any,s,k=>messages.push(k),(id,options)=>sounds.push({id,options})),jobs:Promise<unknown>[]=[];

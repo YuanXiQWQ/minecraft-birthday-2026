@@ -27,6 +27,7 @@ export class NativeScreens {
     mutation:MutationObserver;
     plane:HTMLDivElement;
     background:HTMLCanvasElement;
+    placementScale=2;
     /** Wrap existing controls in a logical-pixel screen without duplicating preference state.
      * @param {HTMLDialogElement} dialog Existing screen/input owner.
      * @param {HTMLElement} viewport Bounded drawing viewport.
@@ -40,14 +41,14 @@ export class NativeScreens {
         this.observer=new ResizeObserver(()=>this.layout());this.observer.observe(viewport);
         this.mutation=new MutationObserver(()=>this.layout());this.mutation.observe(dialog,{subtree:true,attributes:true,attributeFilter:['hidden','open']});this.layout();
     }
-    /** Place an existing widget at native bounds in the plane's two-pixel drawing units.
+    /** Place an existing widget directly at final CSS bounds using the native GUI scale.
      * @param {HTMLElement} element Semantic control.
      * @param {number} x Left logical coordinate.
      * @param {number} y Top logical coordinate.
      * @param {number} w Logical width.
      * @param {number} h Logical height.
      */
-    place(element:HTMLElement,x:number,y:number,w:number,h=20):void{element.style.cssText=`position:absolute;left:${x*2}px;top:${y*2}px;width:${w*2}px;height:${h*2}px;min-width:0;min-height:0;margin:0;padding:0`;}
+    place(element:HTMLElement,x:number,y:number,w:number,h=20):void{const s=this.placementScale??2;element.style.cssText=`position:absolute;left:${x*s}px;top:${y*s}px;width:${w*s}px;height:${h*s}px;min-width:0;min-height:0;margin:0;padding:0`;}
     /** Place and synchronously measure wrapped bitmap text in logical screen units.
      * @param {HTMLElement} element Existing localized text owner.
      * @param {number} x Logical left.
@@ -56,13 +57,14 @@ export class NativeScreens {
      * @return {number} Actual line height for the next text block.
      */
     placeText(element:HTMLElement,x:number,y:number,width:number):number{this.place(element,x,y,width,12);this.pixels.updates.get(element)?.();const value=this.pixels.texts.get(element),canvas=element.querySelector('canvas'),height=Math.max(12,Number(canvas?.dataset.logicalHeight??canvas?.height??12)*(value?.scale??2)/2);this.place(element,x,y,width,height);return height;}
-    /** Render native section textures and aligned full-span or left-column controls within the viewport. */
+    /** Lay out controls at their final screen size without an intermediate scaled or zoomed plane. */
     layout():void{
         for (const element of this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)')) {const value=this.pixels.texts.get(element); if(value) this.pixels.text(element,value.text,value.scale,'#FFFFFF');}
         const width=this.viewport.clientWidth,height=this.viewport.clientHeight;if(!width||!height)return;
         const scale=nativeScale(this.viewport),w=Math.ceil(width/scale),h=Math.ceil(height/scale),page=this.page(),layout=menuLayout(w,h,page),u=this.controls,narrow=w<310,wide=Math.min(310,w-16),flow=optionFlow(w,u?.navigation.querySelectorAll('button').length??0),pw=Math.min(200,w-16);
+        this.placementScale=scale;
         this.dialog.dataset.nativePage=page;this.dialog.dataset.layout=JSON.stringify({...layout,scale});
-        this.plane.style.cssText=`width:${w*2}px;height:${h*2}px;transform:scale(${scale/2});transform-origin:top left`;
+        this.plane.style.cssText=`width:${width}px;height:${height}px;transform:none;--native-screen-scale:${scale};--button-scale:${scale}`;
         const dpr=Math.min(devicePixelRatio||1,4),canvas=this.background;canvas.width=Math.ceil(w*scale*dpr);canvas.height=Math.ceil(h*scale*dpr);const c=canvas.getContext('2d')!;c.setTransform(scale*dpr,0,0,scale*dpr,0,0);c.imageSmoothingEnabled=false;
         const background=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_menu_background.png');
         if(background){const pattern=c.createPattern(background,'repeat')!;pattern.setTransform(new DOMMatrix().scale(2));c.fillStyle=pattern;c.fillRect(0,0,w,h);}
@@ -71,7 +73,7 @@ export class NativeScreens {
             const groupWidth=Math.min(204,w-16),left=(w-groupWidth)/2,columnWidth=(groupWidth-8)/2,
                 gridHeight=50+44,
                 top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+50);
-            buttons.forEach((b,i)=>{this.place(b,left+(i===1?columnWidth+8:0),top+(i<2?0:24),i<2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
+            buttons.forEach((b,i)=>{this.place(b,left+(i===1?columnWidth+8:0),top+(i<2?0:(i-1)*24),i<2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
         }
         if (['language','sound','player','weather'].includes(page)) {
             const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_menu_list_background.png');
@@ -88,7 +90,7 @@ export class NativeScreens {
         channelSliders.forEach((input,i)=>this.place(input.parentElement!,narrow?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+(i%2)*(flow.buttonWidth+8),28+Math.floor(i/(narrow?1:2))*24,narrow?flow.groupWidth:flow.buttonWidth));
         u.languageLabel.classList.add('sr-only');
         const language=languageLayout(w,h),list=u.sections.get('language')!.querySelector<HTMLElement>('[role=listbox]');
-        if(list){this.place(list,language.rowLeft,language.listTop,language.rowWidth,h-language.listTop-layout.footer);list.style.paddingTop=language.firstRow*2+'px';}
+        if(list){this.place(list,language.rowLeft,language.listTop,language.rowWidth,h-language.listTop-layout.footer);list.style.paddingTop=language.firstRow*scale+'px';}
         const search=u.sections.get('language')!.querySelector<HTMLInputElement>('.language-search');
         if(search)this.place(search.parentElement!, (w-pw)/2,17,pw,15);
         const accuracy=u.sections.get('language')!.querySelector<HTMLElement>('.language-accuracy');

@@ -33,10 +33,11 @@ function clip(box:Bounds,solids:Bounds[],axis:number,amount:number):number{
 /** Integrate a local player; scene/save facts remain owned by the transactional world. */
 export class PlayerMotion {
     feet:Cell=[0,0,7]; velocity:Cell=[0,0,0]; grounded=false; crouching=false; jumpDelay=0;
+    sprinting=false;forwardDown=false;sprintWindow=0;walk=0;walkOld=0;bob=0;bobOld=0;moveDistance=0;nextStep=1;step=false;fallDistance=0;landedDistance=0;
     /** Reset momentum on a scene transition.
      * @param {Cell} eye Authored safe spawn eye.
      */
-    reset(eye:Cell):void{this.feet=[eye[0],eye[1]-PLAYER_PHYSICS.eye,eye[2]];this.velocity=[0,0,0];this.grounded=false;this.crouching=false;this.jumpDelay=0;}
+    reset(eye:Cell):void{this.feet=[eye[0],eye[1]-PLAYER_PHYSICS.eye,eye[2]];this.velocity=[0,0,0];this.grounded=false;this.crouching=false;this.jumpDelay=0;this.sprinting=this.forwardDown=this.step=false;this.sprintWindow=this.walk=this.walkOld=this.bob=this.bobOld=this.moveDistance=this.fallDistance=this.landedDistance=0;this.nextStep=1;}
     /** Resolve Y then horizontal axes, matching Entity collision ordering.
      * @param {Cell} delta Desired movement.
      * @param {Bounds[]} solids Collision shapes.
@@ -54,9 +55,13 @@ export class PlayerMotion {
      * @param {{water?:boolean,climb?:boolean}} environment Native fluid and climbable occupancy.
      */
     tick(keys:Set<string>,yaw:number,solids:Bounds[],environment:{water?:boolean,climb?:boolean}={}):void{
+        this.walkOld=this.walk;this.bobOld=this.bob;this.bob+=((this.grounded&&!environment.water?Math.min(.1,Math.hypot(this.velocity[0],this.velocity[2])):0)-this.bob)*.4;this.step=false;this.landedDistance=0;
         const sneak=keys.has('ShiftLeft')||keys.has('ShiftRight');
         this.crouching=sneak||solids.some(b=>overlaps(playerBounds(this.feet),b));
-        const sprint=!this.crouching&&(keys.has('ControlLeft')||keys.has('ControlRight'))&&keys.has('KeyW');
+        const forward=keys.has('KeyW')&&!keys.has('KeyS');if(this.sprintWindow>0)this.sprintWindow--;
+        if(forward&&!this.forwardDown){if(this.sprintWindow>0)this.sprinting=true;this.sprintWindow=7;}
+        this.forwardDown=forward;if(!forward||this.crouching)this.sprinting=false;else if(keys.has('ControlLeft')||keys.has('ControlRight'))this.sprinting=true;
+        const sprint=this.sprinting;
         let x=Number(keys.has('KeyD'))-Number(keys.has('KeyA')),z=Number(keys.has('KeyS'))-Number(keys.has('KeyW'));
         const norm=Math.max(1,Math.hypot(x,z)),scale=.98*(this.crouching?.3:1)/norm;x*=scale;z*=scale;
         const accel=environment.water?.02:this.grounded?(sprint?.13:.1):(sprint?.026:.02),cos=Math.cos(yaw),sin=Math.sin(yaw);
@@ -76,6 +81,10 @@ export class PlayerMotion {
         this.feet=this.feet.map((n,i)=>n+moved[i]) as Cell;
         for(let i=0;i<3;i++)if(Math.abs(moved[i]-desired[i])>1e-7)this.velocity[i]=0;
         const wall=moved[0]!==desired[0]||moved[2]!==desired[2];
+        if(wall)this.sprinting=false;
+        const horizontal=Math.hypot(moved[0],moved[2])*.6;this.walk+=horizontal;this.moveDistance+=environment.climb?Math.hypot(...moved)*.6:horizontal;
+        if(!this.grounded&&moved[1]<0)this.fallDistance-=moved[1];else if(this.grounded){this.landedDistance=this.fallDistance;this.fallDistance=0;}
+        if(this.moveDistance>this.nextStep&&(this.grounded||environment.climb)&&!environment.water){this.nextStep=Math.floor(this.moveDistance)+1;this.step=!sneak;}
         if(environment.climb&&(wall||keys.has('Space')))this.velocity[1]=.2;
         if(environment.water){this.velocity[1]=this.velocity[1]*.8-.005;if(wall){const raised=this.feet.map((n,i)=>n+(i===1?.6:desired[i])) as Cell;if(!solids.some(b=>overlaps(playerBounds(raised,this.crouching),b)))this.velocity[1]=.3;}}
         else this.velocity[1]=(this.velocity[1]-.08)*.98;

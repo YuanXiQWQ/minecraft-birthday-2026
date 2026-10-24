@@ -11,6 +11,7 @@ export function soundChannel(event:string):SoundKey{if(event.startsWith('music.'
 /** Apply legacy mute, master and category in one place for all runtime voices.
  * @param {Settings} settings Latest authoritative or actively edited preferences.
  * @param {string} event Native sound event.
+ * @param {SoundKey} channel Optional native caller source, such as player footsteps using a block sample.
  * @return {number} Effective normalized gain.
  */
-export function soundGain(settings:Settings,event:string):number{return settings.muted?0:settings.volume*(settings[soundChannel(event)]??1);}
+export function soundGain(settings:Settings,event:string,channel=soundChannel(event)):number{return settings.muted?0:settings.volume*(settings[channel]??1);}

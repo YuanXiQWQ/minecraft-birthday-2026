@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {Scene, Group, Mesh, BoxGeometry, MeshBasicMaterial, PerspectiveCamera, Raycaster} from 'three';
 import {SceneView} from '../web/src/render/scene.ts';
 import {Look} from '../web/src/render/look.ts';
+import {PlayerMotion} from '../web/src/domain/player-motion.ts';
 import {WorldUse, placement} from '../web/src/ui/world-use.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {initialState} from '../web/src/domain/state.ts';
@@ -25,6 +26,7 @@ function view(): SceneView {
         camera: new PerspectiveCamera(70, 1000 / 600, .1, 90),
         ray: new Raycaster(),
         look: new Look(),
+        motion:new PlayerMotion(),movementEpoch:0,
         input: true,
         lost: false,
         disposed: false,
@@ -206,6 +208,7 @@ test('explicit upper attachment uses the same valid neighbor for preview and fin
 test('formal WorldUse R re-picks and cannot rotate stale A or act during a look gesture', {timeout: 5000}, async () => {
     const previous = globalThis.window;
     const target = new EventTarget();
+    Object.assign(target, {setInterval, clearInterval});
     Object.defineProperty(globalThis, 'window', {value: target, configurable: true});
     try {
         const state = initialState();

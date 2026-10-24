@@ -62,6 +62,8 @@ export function harvestNode(p: Progress, scene: SceneId, node: string, visit: nu
     }
     v.removed.push(node);
     if (n.kind === 'egg') return [{id: 'minecraft:egg', count: 1}];
+    // The native paired tall-grass loot settles once for either half: two grass with shears, otherwise a 1/8 seed chance.
+    if(n.block==='tall_grass')return held?.id==='minecraft:shears'?[{id:'minecraft:short_grass',count:2}]:random(p.world,scene)<.125?[{id:'minecraft:wheat_seeds',count:1}]:[];
     return rolledDrops('minecraft:' + n.block, held, rules, () => random(p.world, scene));
 }
 

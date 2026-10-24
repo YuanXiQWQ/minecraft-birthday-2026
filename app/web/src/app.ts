@@ -7,6 +7,8 @@ import {GameStartup} from './ui/game-startup.ts';
 import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat, nativeScale} from './ui/chat.ts';
+import {scheduleAuthorWelcome} from './ui/author-welcome.ts';
+import {GameKeyboard} from './ui/game-keyboard.ts';
 import {AdvancementView} from './ui/advancements.ts';
 import {advancementChat} from './ui/advancement-chat.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
@@ -58,13 +60,21 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     const languageChoices = new Map<string, HTMLButtonElement>();
     const nativeScreens: NativeScreens[] = [];
     let navigationPanel: NavigationPanel | null = null, startup: GameStartup | null = null;
+    let gameKeyboard: GameKeyboard | null = null;
     let homeButtonObserver: ResizeObserver | null = null;
     let localWeather: LocalWeather | null = null, weatherTimeControl: HTMLButtonElement | null = null, weatherModeControl: HTMLButtonElement | null = null, weatherGeneration='', weatherMode='game';
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
     const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open || !!advancements?.modal.open;
-    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {const open = inputBlocked() || inventoryOpen; host.dataset.overlay = String(open); delete host.dataset.menuComposited; host.dataset.effect = dialog.open || menu?.open || advancements?.modal.open ? 'menu' : inventoryOpen ? 'container' : 'none'; scene?.setInputEnabled(!open);};
+    /** Update compositor and input ownership only across actual UI transitions, independently of autosave. */
+    const updateGate = (inventoryOpen = !!inventory?.modal.open) => {
+        const open = inputBlocked() || inventoryOpen, effect = dialog.open || menu?.open || advancements?.modal.open ? 'menu' : inventoryOpen ? 'container' : 'none';
+        if (host.dataset.overlay !== String(open)) host.dataset.overlay = String(open);
+        if (host.dataset.effect !== effect) {delete host.dataset.menuComposited; host.dataset.effect = effect; scene?.requestRender();}
+        scene?.setInputEnabled(!open);
+        gameKeyboard?.sync();
+    };
     const listenerDirection=new Vector3();
     let music:GameMusic|null=null,lastAudioReport=0;
     let buttonSounds:NativeButtonSounds|null=null;
@@ -424,9 +434,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         paintSettings();
         retry.hidden = value.status === 'ready' || value.status === 'loading';
         const statusKey = value.status === 'ready' ? (value.migrated ? 'status.migrated' : 'status.ready') : value.status === 'loading' ? 'common.loading' : Object.hasOwn(ENGLISH, 'error.' + value.status) ? 'error.' + value.status : 'error.generic';
-        if ((page === 'home' || !chat) && value.status !== 'ready' && value.status !== 'loading') {setText(startupError, statusKey); startupError.hidden = false;}
+        if ((page === 'home' || !chat) && value.status !== 'ready' && value.status !== 'loading' && value.status !== 'lock-busy') {setText(startupError, statusKey); startupError.hidden = false;}
         else if (page === 'home' && scene?.lost) {setText(startupError, 'error.contextLost'); startupError.hidden = false;}
-        else if (value.status === 'ready' && root.dataset.resources !== 'failed') {clearText(startupError); startupError.hidden = true;}
+        else if ((value.status === 'ready' || value.status === 'lock-busy') && root.dataset.resources !== 'failed') {clearText(startupError); startupError.hidden = true;}
         if (page === 'game' && value.status !== lastSaveStatus && value.status !== 'loading') {feedback(statusKey, {}, 'storage'); lastSaveStatus = value.status;}
     }
 
@@ -481,7 +491,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
 
         menu = document.createElement('dialog'); menu.className = 'game-menu'; menu.id = 'game-menu';
-        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
+        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}), button('menu.fullscreen', () => {
+            void gameKeyboard?.fullscreen().then(success => {if (!success) feedback('game.fullscreenFailed'); else {menu!.close(); updateGate();}});
+        }));
         host.append(menu);
         menu.addEventListener('close', () => updateGate());
         for (const view of [menu, dialog]) {
@@ -652,11 +664,13 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                 }
             });
             music=new GameMusic(worldAudio);
+            scene.movementSound=(id,options)=>{void worldAudio?.play(id,options);};
             if(scene.weather)scene.weather.sound=(id,options)=>{void worldAudio?.play(id,options);};
             scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.audioLoad=JSON.stringify({voices:worldAudio?.voices.size,decoding:worldAudio?.loading.size});host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
+            window.addEventListener('keydown',e=>{if(e.isTrusted&&scene?.input&&['KeyW','KeyA','KeyS','KeyD','Space'].includes(e.code))worldAudio?.activate();},{signal:appAbort.signal});
             scene!.enableHands(art);
             worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), (id, options) => void worldAudio?.play(id, options));
             updateGate();
@@ -678,7 +692,11 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             if (scene.lost) throw new Error('webgl-unavailable');
             loading?.update('frame', 1);
             loading?.finish();
-            if (startup!.finish()) navigationPanel = new NavigationPanel(navigation, t('a11y.showScenes'));
+            if (startup!.finish()) {
+                navigationPanel = new NavigationPanel(navigation, t('a11y.showScenes'));
+                gameKeyboard = new GameKeyboard(() => !!scene?.input && !disposed);
+                scheduleAuthorWelcome(chat, t, appAbort.signal);
+            }
             startupError.hidden = true;
             updateGate();
         }
@@ -707,7 +725,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); homeButtonObserver?.disconnect(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
-        chat?.dispose();
+        chat?.dispose();gameKeyboard?.dispose();
         advancements?.dispose();
         celebration?.dispose();
         worldUse?.dispose();

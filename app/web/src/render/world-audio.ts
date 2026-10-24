@@ -1,11 +1,12 @@
 /** Verified local sound events use one gesture-activated context and generation-fenced decode work. */
 import {soundGain,soundChannel} from '../domain/audio-settings.ts';
+import type {SoundKey} from '../domain/audio-settings.ts';
 import {fetchManifest,fetchAsset} from './resource-fetch.ts';
 
 import type {Settings} from '../domain/types.ts';
 /** Static source ownership stays bounded; streaming game music uses its separate media node. */
 const MAX_STATIC_VOICES=256;
-export interface SoundOptions {volume?:number;pitch?:number;variant?:number;position?:[number,number,number];valid?:()=>boolean}
+export interface SoundOptions {volume?:number;pitch?:number;variant?:number;position?:[number,number,number];valid?:()=>boolean;category?:SoundKey}
 /** Select an original weighted sample without replacing its definition parameters.
  * @param {any[]} sounds Native event choices.
  * @param {number} value Uniform zero-to-one random value.
@@ -19,7 +20,7 @@ export class WorldAudio {
     loading=new Map<string,Promise<AudioBuffer>>();
     weatherRequests=new Map<string,number>();
     weatherStarts=new Map<string,number>();
-    voices=new Map<AudioBufferSourceNode,{gain:GainNode;volume:number;event:string;panner:PannerNode|null}>();
+    voices=new Map<AudioBufferSourceNode,{gain:GainNode;volume:number;event:string;panner:PannerNode|null;category?:SoundKey}>();
     disposed=false;
     epoch=0;
     records:object[]=[];
@@ -40,7 +41,7 @@ export class WorldAudio {
     /** Resume the audio context only within an actual input gesture. */
     activate():void{if(this.disposed)return;try{this.context??=new AudioContext();void this.context.resume().then(()=>this.record('activation',this.context!.state)).catch(()=>this.record('activation','blocked'));}catch{this.record('activation','unavailable');}}
     /** Apply effective local preferences to playing voices and invalidate muted pending decodes. */
-    sync():void{const s=this.settings();for(const v of this.voices.values())v.gain.gain.value=soundGain(s,v.event)*v.volume;if(s.muted)this.cancel();}
+    sync():void{const s=this.settings();for(const v of this.voices.values())v.gain.gain.value=soundGain(s,v.event,v.category)*v.volume;if(s.muted)this.cancel();}
     /** Share one verified decode per immutable resource rather than issuing parallel fetch/decoder bursts.
      * @param {string} path Audited sound path.
      * @param {AudioContext} context Existing context.
@@ -60,7 +61,7 @@ export class WorldAudio {
     async play(id:string,options:SoundOptions={}):Promise<string>{
         const c=this.context,s=this.settings(),epoch=this.epoch;
         if(options.valid&&!options.valid()){this.record(id,'cancelled');return 'cancelled';}
-        if(this.disposed||document.hidden||!soundGain(s,id)){this.record(id,'suppressed');return 'suppressed';}
+        if(this.disposed||document.hidden||!soundGain(s,id,options.category)){this.record(id,'suppressed');return 'suppressed';}
         if(!c||c.state!=='running'){this.record(id,'blocked');return 'blocked';}
         const weather=id.startsWith('weather.rain')?'rain':id.startsWith('entity.lightning_bolt.')?id:null,requested=performance.now();
         if(weather){if(requested-(this.weatherRequests.get(weather)??-Infinity)<50){this.record(id,'coalesced');return 'coalesced';}this.weatherRequests.set(weather,requested);}
@@ -73,10 +74,10 @@ export class WorldAudio {
             if(weather){const now=performance.now();if(now-(this.weatherStarts.get(weather)??-Infinity)<50){this.record(id,'coalesced');return 'coalesced';}this.weatherStarts.set(weather,now);}
             if(this.voices.size>=MAX_STATIC_VOICES){this.record(id,'channel-full');return 'channel-full';}
             const current=this.settings(),source=c.createBufferSource(),gain=c.createGain(),rawVolume=(raw.volume??1)*(options.volume??1),volume=Math.min(1,rawVolume);
-            source.buffer=buffer;source.playbackRate.value=(raw.pitch??1)*(options.pitch??1);gain.gain.value=soundGain(current,id)*volume;
-            const panner=options.position?c.createPanner():null;source.connect(gain);if(panner){panner.panningModel='equalpower';panner.distanceModel='linear';panner.refDistance=0;panner.maxDistance=Math.max(1,rawVolume)*16;panner.rolloffFactor=1;[panner.positionX.value,panner.positionY.value,panner.positionZ.value]=options.position!;gain.connect(panner).connect(c.destination);}else gain.connect(c.destination);this.voices.set(source,{gain,volume,event:id,panner});
+            source.buffer=buffer;source.playbackRate.value=(raw.pitch??1)*(options.pitch??1);gain.gain.value=soundGain(current,id,options.category)*volume;
+            const panner=options.position?c.createPanner():null;source.connect(gain);if(panner){panner.panningModel='equalpower';panner.distanceModel='linear';panner.refDistance=0;panner.maxDistance=Math.max(1,rawVolume)*16;panner.rolloffFactor=1;[panner.positionX.value,panner.positionY.value,panner.positionZ.value]=options.position!;gain.connect(panner).connect(c.destination);}else gain.connect(c.destination);this.voices.set(source,{gain,volume,event:id,panner,category:options.category});
             source.onended=()=>{this.voices.delete(source);source.disconnect();gain.disconnect();panner?.disconnect();};source.start();
-            this.record(id,'scheduled',{sample:path,volume:gain.gain.value,pitch:source.playbackRate.value,duration:buffer.duration,category:soundChannel(id),sourceVolume:rawVolume,spatial:!!panner,position:options.position});return 'scheduled';
+            this.record(id,'scheduled',{sample:path,volume:gain.gain.value,pitch:source.playbackRate.value,duration:buffer.duration,category:options.category??soundChannel(id),sourceVolume:rawVolume,spatial:!!panner,position:options.position});return 'scheduled';
         }catch(error){if(this.disposed||epoch!==this.epoch||document.hidden){this.record(id,'cancelled',{requestEpoch:epoch});return 'cancelled';}const status=error instanceof Error?error.message:'decode-failed';this.record(id,status);return status;}
     }
     /** Resolve original event references while retaining nested pitch and volume multipliers.

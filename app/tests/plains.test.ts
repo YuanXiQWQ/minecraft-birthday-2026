@@ -35,10 +35,11 @@ test('plains is deterministic, preserves every saved floor coordinate and expose
     }
 });
 
-test('native vegetation has both tall halves, five untinted flowers, and no new sources', () => {
+test('native vegetation preserves both tall halves and five flowers while retaining the original sources', () => {
     const p = pack(), plants = plainsPlants(WORLD_SCENES.plains.nodes.map(n => n.cell));
     assert.deepEqual(plants, plainsPlants(WORLD_SCENES.plains.nodes.map(n => n.cell)));
-    assert.equal(WORLD_SCENES.plains.nodes.length, 33);
+    assert.equal(WORLD_SCENES.plains.nodes.filter(n=>!n.id.startsWith('meadow:')).length, 33);
+    assert.ok(WORLD_SCENES.plains.nodes.length>100);
     for (const block of ['dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet']) {
         assert.ok(plants.some(v => v.block === block));
         const sample = p.samples.find(s => s.block === block)!;

@@ -2,7 +2,7 @@
 import names from '../data/placeable-blocks.json' with {type:'json'};
 import facts from '../data/block-properties.json' with {type:'json'};
 import type {Cell,Progress} from './types.ts';
-import {WORLD_SCENES,fixedSolid,sameCell,caveCleared} from './world-config.ts';
+import {WORLD_SCENES,fixedSolid,sameCell,nodeAtCell,caveCleared} from './world-config.ts';
 import {plainsHeight} from './plains-shape.ts';
 import {overlaps,playerBounds} from './player-motion.ts';
 import loot from '../data/placed-loot.json' with {type:'json'};
@@ -43,7 +43,7 @@ export function blockAt(p:Progress,cell:Cell):{block:string;state:Record<string,
     const device=scene.stations.find(s=>sameCell(s.cell,cell));if(device)return {block:device.kind,state:{facing:device.facing},id:device.id};
     const crop=scene.crops.find(c=>sameCell(c.cell,cell));if(crop)return {block:'wheat',state:{},id:crop.id};
     if(p.scene==='home'&&cell[0]>=-2&&cell[0]<=1&&cell[2]>=-4&&cell[2]<=-2&&cell[1]>=0&&cell[1]<=1)return {block:'oak_planks',state:{}};
-    const node=WORLD_SCENES[p.scene].nodes.find(n=>!n.kind&&sameCell(n.cell,cell)&&!p.world.visits[p.scene].removed.includes(n.id));
+    const node=WORLD_SCENES[p.scene].nodes.find(n=>!n.kind&&nodeAtCell(n,cell)&&!p.world.visits[p.scene].removed.includes(n.id));
     if(node&&!(p.scene==='cave'&&caveCleared(p).has(cell.join(','))))return {block:node.block,state:{},id:'node:'+node.id};
     if(cell[0]<-18||cell[0]>18||cell[2]<-22||cell[2]>10)return null;
     if(fixedSolid(p.scene,cell))return {block:p.scene==='cave'?'stone':'oak_planks',state:{}};

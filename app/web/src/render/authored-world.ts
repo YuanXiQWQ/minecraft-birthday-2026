@@ -2,7 +2,6 @@
 import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
 import type {SceneId, Progress, Cell} from '../domain/types.ts';
 import {caveLayout, caveFixed} from '../domain/cave-shape.ts';
-import {lightCave} from './cave-lighting.ts';
 import {WORLD_SCENES, cropAge, caveExcavated, caveCleared} from '../domain/world-config.ts';
 import type {VanillaModels} from './vanilla-models.ts';
 import type {Resources} from './resources.ts';
@@ -119,7 +118,7 @@ export class AuthoredWorld {
         const leaves = PLAINS_OAKS.flatMap((base, i) => [0, 1, 2].every(dy => removed.includes('oak_log:' + (i * 3 + dy))) ? [] : oakCrown(base, 3, i)).filter(c => !occupied(c));
         this.batch('oak_leaves', leaves, this.plainsDecor, 'decoration');
         this.batch('oak_log', retainedPlainsSupports(stations.map(s => s.cell)), this.plainsDecor, 'scenery');
-        const plants = plainsPlants([...WORLD_SCENES.plains.nodes.map(n => n.cell), ...stations.map(s => s.cell)]);
+        const plants = plainsPlants([...WORLD_SCENES.plains.nodes.filter(n=>!n.id.startsWith('meadow:')).map(n => n.cell), ...stations.map(s => s.cell)]).filter(plant=>!WORLD_SCENES.plains.nodes.some(n=>n.renderCell&&n.renderCell[0]===plant.cell[0]&&n.renderCell[2]===plant.cell[2]));
         const groups = new Map<string, {block: string; state: string; cells: Cell[]}>();
         for (const plant of plants) {
             const key = plant.block + plant.state;
@@ -259,8 +258,9 @@ export class AuthoredWorld {
         const existing = new Set(retained.map(o=>o.userData.id));
         for (const n of visible) {
             if (existing.has('node:'+n.id)) continue;
-            const root = n.kind === 'cow' ? this.animal('cow') : n.kind === 'egg' ? this.egg() : this.block(n.block);
-            root.position.add(new Vector3(...n.cell));
+            const root = n.kind === 'cow' ? this.animal('cow') : n.kind === 'egg' ? this.egg() : this.block(n.block,n.block==='tall_grass'?'half=lower':'');
+            if(n.block==='tall_grass'){const upper=this.block(n.block,'half=upper');upper.position.y=1;root.add(upper);}
+            root.position.add(new Vector3(...(n.renderCell??n.cell)));
             root.userData.id = 'node:' + n.id;root.userData.block=n.block;
             root.userData.cell = [...n.cell];
             this.natural.add(root);
@@ -270,10 +270,6 @@ export class AuthoredWorld {
             root.position.set(c.cell[0], -.0625, c.cell[2]);
             root.userData.id = 'crop:' + c.id;root.userData.cell=[c.cell[0],0,c.cell[2]];root.userData.block='wheat';
             this.crops.add(root);
-        }
-        if (id === 'cave') {
-            lightCave(this.staticRoot, this.caveLights);
-            lightCave(this.natural, this.caveLights);
         }
     }
 
