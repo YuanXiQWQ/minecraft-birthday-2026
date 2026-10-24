@@ -6,20 +6,18 @@ import {resolve,extname} from 'node:path';
 import assert from 'node:assert/strict';
 import {initialState} from '../web/src/domain/state.ts';
 import {seal} from '../web/src/persistence/codec.ts';
-import {agriculture} from '../web/src/domain/soil-state.ts';
-import {NativeRandom} from '../web/src/domain/environment.ts';
 import {installPointerSimulation} from './browser-pointer-sim.mjs';
 /** Formal resource roots and isolated browser runtime. */
 const root=resolve(import.meta.dirname,'..'),key='minecraft-birthday-2026:formal:save',pw=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),old=await readFile(resolve(root,'tests/fixtures/world-manifest-before-agriculture.json'));
 let legacy=false;
 /** Serve real build bytes, retaining long-lived old resource cache entries. */
 const server=createServer(async(req,res)=>{try{const path=new URL(req.url,'http://localhost').pathname,base=path.startsWith('/minecraft-birthday-2026/')?'/minecraft-birthday-2026/':'/';let file=path.slice(base.length);if(!file||file.endsWith('/'))file+='index.html';if(file==='fixture'){res.setHeader('Content-Type','text/html');res.end('<title>Fixture</title>');return;}const body=legacy&&file==='minecraft/26.3/world-manifest.json'?old:await readFile(resolve(root,base==='/'?'dist':'dist-pages',file));res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.ogg':'audio/ogg'})[extname(file)]??'application/octet-stream');res.setHeader('Cache-Control',file.startsWith('minecraft/')?'public,max-age=31536000':'no-cache');res.end(body);}catch{res.statusCode=404;res.end('missing');}});
-/** Prepare finite cane, physical pose and a deterministic next random sample for a mature stalk.
+/** Prepare finite cane, physical pose and a mature stalk close to its next growth step.
  * @param {boolean} growth Whether to prepare a two-high stalk at age fifteen.
  * @return {Promise<string>} Valid sealed save.
  */
 async function fixture(growth=false){const s=initialState(),p=s.progress;p.scene='farm';p.unlocked=['minecraft:sugar_cane'];p.player.data.hotbar[0]={id:'minecraft:sugar_cane',count:4};p.environment.control.advanceTime=false;p.environment.control.advanceWeather=false;p.environment.dayTicks=6000;p.scenes.farm.pose={feet:[7.5,0,2.5],yaw:0,pitch:-Math.atan2(1.64,2)};
- if(growth){p.scenes.farm.blocks=[{id:'growing-cane',block:'sugar_cane',cell:[7,1,-3],state:{age:'15'}}];const a=agriculture(p);for(let seed=0;seed<1000000;seed++){const rng=new NativeRandom(seed),saved=Number(rng.state);if(rng.integer(0,15)===7&&rng.integer(0,15)===1&&rng.integer(0,15)===13){a.random=saved;break;}}}
+ if(growth){p.scenes.farm.blocks=[{id:'growing-cane',block:'sugar_cane',cell:[7,1,-3],state:{age:'15'}}];}
  return JSON.stringify(await seal(s,'cane-browser',0));}
 /** Check formal boot and first world frame without screenshots. @param {import('playwright').Page} page Isolated page. */
 async function ready(page){await page.waitForFunction(()=>['ready','failed'].includes(document.querySelector('#app')?.dataset.boot),{},{timeout:90000});assert.equal(await page.locator('#app').getAttribute('data-boot'),'ready',await page.locator('#app').evaluate(e=>JSON.stringify(e.dataset)));await page.waitForFunction(()=>document.querySelector('canvas[data-scene]')?.dataset.renderedScene==='farm');}

@@ -1,4 +1,4 @@
-/** Native cane ages share random section ticks and finite placed-block lifetimes. */
+/** Accelerated cane ages share active game time and finite placed-block lifetimes. */
 import type {Progress,Cell} from './types.ts';
 import {blockAt,survives,type PlacedBlock} from './placed-blocks.ts';
 import {agriculture} from './soil-state.ts';
@@ -15,11 +15,11 @@ export function caneBlocks(p:Progress):PlacedBlock[]{
     return [...placed,...natural.map(n=>({id:'node:'+n.id,block:n.block,cell:n.cell,state:{age:String(a.caneAges?.[n.id]??0)}}))];
 }
 
-/** Advance an exposed stalk once per selected random tick, growing on age fifteen below height three.
+/** Advance one native age step on an exposed stalk, growing on age fifteen below height three.
  * @param {Progress} p Mutable scene facts.
- * @param {PlacedBlock} cane Selected original or placed stalk.
+ * @param {PlacedBlock} cane Original or placed stalk.
  */
-export function randomTickCane(p:Progress,cane:PlacedBlock):void{
+export function advanceCaneAge(p:Progress,cane:PlacedBlock):void{
     const above:Cell=[cane.cell[0],cane.cell[1]+1,cane.cell[2]];
     if(above[1]>15||blockAt(p,above)||!survives(p,cane))return;
     let height=1;while(height<3&&blockAt(p,[cane.cell[0],cane.cell[1]-height,cane.cell[2]])?.block==='sugar_cane')height++;
@@ -29,3 +29,11 @@ export function randomTickCane(p:Progress,cane:PlacedBlock):void{
     if(cane.id.startsWith('node:'))(a.caneAges??={})[cane.id.slice(5)]=Number(cane.state.age);
     if(age===15)(p.scenes[p.scene].blocks??=[]).push({id:'cane-growth-'+p.scene+'-'+(++a.serial),block:'sugar_cane',cell:above,state:{age:'0'}});
 }
+
+/** Fifteen active ticks per age step make sixteen steps last about twelve seconds at 20 TPS. */
+export const CANE_AGE_INTERVAL=15;
+
+/** Advance supported cane on the shared active clock; paused and offline time cannot accumulate.
+ * @param {Progress} p Mutable scene facts after the current active tick increments.
+ */
+export function tickCane(p:Progress):void {if(p.world.tick%CANE_AGE_INTERVAL!==0)return;for(const cane of caneBlocks(p))advanceCaneAge(p,cane);}
