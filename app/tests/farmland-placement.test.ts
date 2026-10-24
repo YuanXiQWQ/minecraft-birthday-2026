@@ -1,5 +1,6 @@
 /** Native indented terrain rays exercise formal placement, use routing and durable occupancy. */
 import test from 'node:test';
+import {buildFarm} from '../web/src/render/farm-world.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Scene, Group, PerspectiveCamera, Raycaster, MeshBasicMaterial} from 'three';
@@ -47,13 +48,16 @@ function nativeRay(block = 'farmland', cell: Cell = [-5, -1, -2]) {
         }));
         for (const sample of models.pack.samples) for (const texture of sample.compiled.textures) if (!models.materials.has(texture)) models.materials.set(texture, new MeshBasicMaterial());
         for (const texture of ['minecraft:entity/chicken/chicken_temperate', 'minecraft:block/water_still']) if (!models.materials.has(texture)) models.materials.set(texture, new MeshBasicMaterial());
+        Object.assign(models.pack, {documents: docs});
         authored.build('farm');
+        const p = initialState().progress; p.scene = 'farm';
+        buildFarm(authored, authored.farmRoot!, p);
     } else authored.batch(block, [cell], authored.staticRoot, 'ground');
     const v = Object.create(SceneView.prototype) as SceneView;
     Object.assign(v, {
         scene: new Scene(),
         world: new Group(),
-        persistent: new Group(),placed:new Group(),keys:new Set(),playerIntersects:()=>false,
+        persistent: new Group(),placed:new Group(),keys:new Set(),motion:{crouching:false},playerIntersects:()=>false,
         authored,
         camera: new PerspectiveCamera(60, 1, .1, 90),
         ray: new Raycaster(),

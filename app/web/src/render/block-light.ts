@@ -51,6 +51,11 @@ export class BlockLight {
      * @param {Bounds[]} solids Full opaque collision volumes.
      */
     rebuild(emitters:{cell:Cell,level:number}[],solids:Bounds[]):void{
+        if (!emitters.length) {
+            if (this.sources.length) {this.values.fill(0); this.texture.needsUpdate = true;}
+            this.sources = [];
+            return;
+        }
         this.values.fill(0);const blocked=new Uint8Array(this.values.length),queue:number[]=[];
         for(const b of solids){if([0,1,2].some(i=>b[i+3]-b[i]<.999))continue;for(let y=Math.max(ORIGIN[1],Math.floor(b[1]));y<Math.min(ORIGIN[1]+HEIGHT,Math.ceil(b[4]));y++)for(let z=Math.max(ORIGIN[2],Math.floor(b[2]));z<Math.min(ORIGIN[2]+SIZE,Math.ceil(b[5]));z++)for(let x=Math.max(ORIGIN[0],Math.floor(b[0]));x<Math.min(ORIGIN[0]+SIZE,Math.ceil(b[3]));x++)blocked[this.index([x,y,z])]=1;}
         this.sources=emitters.map(e=>e.cell);for(const e of emitters){const i=this.index(e.cell);if(i>=0){this.values[i]=e.level;queue.push(i);}}

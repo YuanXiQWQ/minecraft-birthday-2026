@@ -180,5 +180,62 @@
       "random/pop"
     ],
     "subtitle": "subtitles.entity.item.pickup"
+  },
+  "item.hoe.till": {
+    "sounds": [
+      "item/hoe/till1",
+      "item/hoe/till2",
+      "item/hoe/till3",
+      "item/hoe/till4"
+    ],
+    "subtitle": "subtitles.item.hoe.till"
+  },
+  "entity.cow.ambient": {
+    "sounds": [
+      "mob/cow/say1",
+      "mob/cow/say2",
+      "mob/cow/say3",
+      "mob/cow/say4"
+    ],
+    "subtitle": "subtitles.entity.cow.ambient"
+  },
+  "entity.chicken.ambient": {
+    "sounds": [
+      {
+        "name": "mob/chicken/say1",
+        "volume": 0.8
+      },
+      {
+        "name": "mob/chicken/say2",
+        "volume": 0.8
+      },
+      {
+        "name": "mob/chicken/say3",
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.entity.chicken.ambient"
+  },
+  "entity.cow.step": {
+    "sounds": [
+      "mob/cow/step1",
+      "mob/cow/step2",
+      "mob/cow/step3",
+      "mob/cow/step4"
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "entity.chicken.step": {
+    "sounds": [
+      {
+        "name": "mob/chicken/step1",
+        "volume": 0.5
+      },
+      {
+        "name": "mob/chicken/step2",
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
   }
 }

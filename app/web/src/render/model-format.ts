@@ -20,9 +20,11 @@ export interface ModelElement {
     shade_direction_override?: Face;
 }
 
+export type TextureReference = string | {sprite:string; force_translucent?:boolean};
+
 export interface ModelSource {
     parent?: string;
-    textures?: Record<string, string>;
+    textures?: Record<string, TextureReference>;
     elements?: ModelElement[];
     display?: Record<string, { rotation?: Cell; translation?: Cell; scale?: Cell }>;
 }
@@ -73,19 +75,20 @@ export function resolveModel(id: string, load: (id: string) => ModelSource, chai
     };
 }
 
-/** Resolve texture-variable indirection with explicit cycle and missing-reference errors.
- * @param {string} ref Texture variable or resource ID.
- * @param {Record<string,string>} textures Merged texture dictionary.
+/** Resolve native sprite descriptors and texture variables with explicit cycle and missing-reference errors.
+ * @param {TextureReference} ref Texture variable, sprite descriptor or resource ID.
+ * @param {Record<string,TextureReference>} textures Merged texture dictionary.
  * @return {string} Resolved namespaced texture.
  */
-export function resolveTexture(ref: string, textures: Record<string, string>): string {
+export function resolveTexture(ref: TextureReference, textures: Record<string, TextureReference>): string {
     const visited = new Set<string>();
-    while (ref.startsWith('#')) {
+    while (true) {
+        if (typeof ref !== 'string') ref = ref.sprite;
+        if (!ref.startsWith('#')) return resourceId(ref);
         if (visited.has(ref) || !textures[ref.slice(1)]) throw new Error('texture-reference-cycle-or-missing');
         visited.add(ref);
         ref = textures[ref.slice(1)];
     }
-    return resourceId(ref);
 }
 
 /** Emit an outward-wound quad for one element face.

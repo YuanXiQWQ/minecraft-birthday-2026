@@ -1,6 +1,8 @@
 /** Authored P7 source nodes, protected resource lanes and finite three-dimensional build volumes. */
 import {caveFixed, caveNodes, caveLayout, caveClearCells, CAVE_TORCHES} from './cave-shape.ts';
 import {retainedPlainsSupports, plainsPlants} from './plains-shape.ts';
+import {FARM_PLOTS, farmLayout, currentFarm} from './farm-shape.ts';
+import {homeFixed,currentHome} from './home-shape.ts';
 import type {Cell, SceneId, PlacementPolicy, Progress} from './types.ts';
 
 export interface NaturalNode {
@@ -65,7 +67,7 @@ export const WORLD_SCENES: Record<SceneId, WorldScene> = {
             kind: 'egg',
             cell: [5, 0, -3]
         }],
-        plots: Array.from({length: 9}, (_, i) => [-5 + i % 3, 0, -2 - Math.floor(i / 3) * 2] as Cell),
+        plots: FARM_PLOTS,
         build: {min: [1, 0, 0], max: [5, 2, 2]}
     },
     home: {
@@ -86,7 +88,7 @@ export const WORLD_REGION: PlacementPolicy = {
     /** Test finite world bounds and real structure/eye collision; support and occupancy belong to domain commands. @param {SceneId} scene Scene identity. @param {Station} station Device candidate. @return {boolean} Region admission. */
     allows: (scene, station) => {
         const [x, y, z] = station.cell;
-        return x >= -18 && x <= 18 && z >= -22 && z <= 10 && y >= 0 && y <= 6 && !fixedSolid(scene, station.cell) && !(scene === 'home' && x >= -2 && x <= 1 && z >= -4 && z <= -2 && y <= 1);
+        return x >= -18 && x <= 18 && z >= -22 && z <= 10 && y >= 0 && y <= 6 && (scene === 'farm' || scene === 'home' || !fixedSolid(scene, station.cell)) && !(scene === 'home' && x >= -2 && x <= 1 && z >= -4 && z <= -2 && y <= 1);
     }
 };
 
@@ -113,11 +115,10 @@ export function nodeAtCell(node:NaturalNode,cell:Cell):boolean{return sameCell(n
  * @return {boolean} Whether unbreakable authored structure occupies the cell.
  */
 export function fixedSolid(scene: SceneId, cell: Cell): boolean {
-    const [x, y, z] = cell;
     if (scene === 'plains') return false;
     if (scene === 'cave') return caveFixed(cell);
-    if (scene === 'home') return z === -9 && x >= -11 && x <= 11 && y < 6 && !(Math.abs(x) < 4 && y > 1 && y < 5) || Math.abs(x) === 11 && z >= -8 && z <= 5 && y < 6;
-    if (scene === 'farm') return z === -12 && x >= -10 && x <= -7 && y < 4 || [-11, -6].includes(x) && z >= -12 && z <= -8 && y < 4 || y === 4 && x >= -11 && x <= -6 && z >= -12 && z <= -8;
+    if (scene === 'home') return homeFixed(cell);
+    if (scene === 'farm') {const b = farmLayout().cells.get(cell.join(',')); return !!b && b.block !== 'water';}
     return false;
 }
 
@@ -128,7 +129,12 @@ export function fixedSolid(scene: SceneId, cell: Cell): boolean {
  */
 export function supported(p: Progress, cell: Cell): boolean {
     if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,[cell[0],cell[1]-1,cell[2]])))return true;
-    if (cell[1] === 0) return !(p.scene === 'farm' && cell[0] === 8 && cell[2] >= -5 && cell[2] <= 0);
+    if(p.scene==='home'){
+        const below:Cell=[cell[0],cell[1]-1,cell[2]],b=currentHome(p).get(below.join(','));
+        return cell[1]===0||p.scenes.home.stations.some(s=>sameCell(s.cell,below))||!!b&&b.block!=='oak_stairs'&&!(b.block==='oak_slab'&&b.state==='type=bottom');
+    }
+    if (p.scene === 'farm') return p.scenes.farm.stations.some(s => sameCell(s.cell, [cell[0], cell[1] - 1, cell[2]])) || (currentFarm(p).cells.get([cell[0], cell[1] - 1, cell[2]].join(','))?.support ?? false);
+    if (cell[1] === 0) return true;
     const below: Cell = [cell[0], cell[1] - 1, cell[2]], scene = p.scene;
     return p.scenes[scene].stations.some(s => sameCell(s.cell, below)) || scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, below)) || fixedSolid(scene, below) && !(scene === 'cave' && caveCleared(p).has(below.join(','))) || WORLD_SCENES[scene].nodes.some(n => !n.kind && !['short_grass', 'tall_grass', 'sugar_cane'].includes(n.block) && sameCell(n.cell, below) && !p.world.visits[scene].removed.includes(n.id) && !(scene === 'cave' && caveCleared(p).has(n.cell.join(','))));
 }
@@ -139,6 +145,8 @@ export function supported(p: Progress, cell: Cell): boolean {
  * @return {boolean} Whether a resource, crop, supported decoration or retained support occupies it.
  */
 export function sourceOccupied(p: Progress, cell: Cell): boolean {
+    if(p.scene==='home'&&currentHome(p).has(cell.join(',')))return true;
+    if (p.scene === 'farm') {const b = currentFarm(p).cells.get(cell.join(',')); if (b && b.block !== 'water') return true;}
     if(p.scenes[p.scene].blocks?.some(b=>sameCell(b.cell,cell)))return true;
     if (p.scene === 'cave' && CAVE_TORCHES.some(t => sameCell(t.cell, cell)) && caveLayout(p.scenes.cave.stations.map(s => s.cell), WORLD_SCENES.cave.eye, caveExcavated(p)).torches.some(t => sameCell(t.cell, cell))) return true;
     return p.scene === 'plains' && retainedPlainsSupports(p.scenes.plains.stations.map(s => s.cell)).some(c => sameCell(c, cell)) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || WORLD_SCENES[p.scene].nodes.some(n => nodeAtCell(n, cell) && !p.world.visits[p.scene].removed.includes(n.id) && !(p.scene === 'cave' && caveCleared(p).has(n.cell.join(','))));

@@ -1,4 +1,5 @@
 /** Persistent facts and versioned carrier contracts have no DOM or renderer dependency. */
+import type {Agriculture} from './agriculture.ts';
 import type {EnvironmentState,SkySettings} from './environment.ts';
 import type {AdvancementFacts} from './advancements.ts';
 import type {WorldState} from './world-state.ts';
@@ -44,10 +45,11 @@ export interface Crop {
     id: string;
     item: string;
     cell: Cell;
-    growth: Reserved | { version: 1; data: { ticks: number } };
+    growth: Reserved | { version: 1; data: { ticks: number; age?: number } };
 }
 
 export interface SceneState {
+    agriculture?: Agriculture;
     pose?: {feet:Cell;yaw:number;pitch:number};
     blocks?: PlacedBlock[];
     layoutVersion: 1;
@@ -99,6 +101,10 @@ export interface RuntimeState {
 }
 
 export type Command =
+    {type:'till-soil';scene:SceneId;cell:Cell;normal:Cell;expected:PlayerLayout}
+    | {type:'land-on-soil';scene:SceneId;feet:Cell;distance:number}
+    | {type:'pickup-ground';scene:SceneId;feet:Cell;visit:number}
+    |
     {type:'save-pose';scene:SceneId;pose:{feet:Cell;yaw:number;pitch:number}}
     | {type:'place-block';scene:SceneId;item:string;hit:BlockHit;id:string;expected:PlayerLayout}
     | {type:'break-block';scene:SceneId;id:string;expected:PlayerLayout}
@@ -170,6 +176,8 @@ export interface DomainEvent {
     stacks?: Stack[];
     /** Finite groups actually delivered to visible player carriers. */
     deposited?: Stack[];
+    /** World-drop pickup, as opposed to a direct bucket-use conversion. */
+    pickup?: boolean;
     /** Effective drops that did not fit; no hidden carrier is created. */
     overflow?: Stack[];
     item?: string;

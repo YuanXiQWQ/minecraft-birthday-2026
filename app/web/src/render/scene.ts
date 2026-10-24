@@ -1,4 +1,7 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {cropStage,soilAt} from '../domain/agriculture.ts';
+import {currentFarm} from '../domain/farm-shape.ts';
+import {BlockFeedback} from './block-feedback.ts';
 import {blockAt} from '../domain/placed-blocks.ts';
 import {attackProfile} from '../domain/attack.ts';
 import {nativeShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
@@ -15,6 +18,7 @@ import {LineSegmentsGeometry} from 'three/addons/lines/LineSegmentsGeometry.js';
 import {LineMaterial} from 'three/addons/lines/LineMaterial.js';
 import {NativeWeather} from './native-weather.ts';
 import {NativePrecipitation} from './native-precipitation.ts';
+import {HOME_LIGHTS,HOME_BARRIERS,currentHome} from '../domain/home-shape.ts';
 import {NativeSky} from './native-sky.ts';
 import {emptyEnvironment} from '../domain/environment.ts';
 import type {SkySettings} from '../domain/environment.ts';
@@ -25,11 +29,7 @@ import {
     Color,
     Fog,
     Group,
-    MeshBasicMaterial,
     ShaderMaterial,
-    PlaneGeometry,
-    CanvasTexture,
-    NearestFilter,
     InstancedMesh,
     Matrix4,
     Mesh,
@@ -72,14 +72,22 @@ export class SceneView {
     compassView(scope: string): CompassView {
         return {position: this.camera.position.toArray(), yaw: 180 - this.camera.rotation.y * 180 / Math.PI, target: WORLD_COMPASS_TARGET, scope};
     }
+    onPlayerTick: (()=>void)|null=null;
     motion=new PlayerMotion();
     movementSound:((id:string,options:SoundOptions)=>void)|null=null;
     movementEpoch=0;
     blockLight:BlockLight|null=null;lightSignature='';
     keys=new Set<string>();
+    /** Pause player physics only for startup and pause/options screens, independently of GUI input ownership. */
+    simulationPaused = true;
+    /** Preserve a physical jump press until one simulation tick has observed it. */
+    jumpQueued = false;
     controlsAbort=new AbortController();
     motionClock=0; motionRemainder=0;previousFeet:Cell=[0,0,7];
     collision:Bounds[]=[]; collisionSignature='';
+    /** Static terrain bounds survive ordinary source removals and inventory saves. */
+    staticCollisionVersion = -1;
+    staticCollisions: Bounds[] = [];
     hand:FirstPersonHand|null=null;
     outline:LineSegments2|null=null;
     renderer: WebGLRenderer;
@@ -107,7 +115,6 @@ export class SceneView {
     canUse: ((hit: Pick | null) => boolean) | null = null;
     basePitch = 0;
     rightTarget: string | null = null;
-    rightMotion = 0;
     onUse: ((hit: Pick | null, modifiers?: { shift: boolean; alt?: boolean; ctrl?: boolean }) => void) | null = null;
     authored: AuthoredWorld | null = null;
     worldId: SceneId | null = null;
@@ -119,11 +126,12 @@ export class SceneView {
     onFrame: ((now: number) => boolean) | null = null;
     onMineStart: ((hit: Pick | null) => void) | null = null;
     onMineCancel: (() => void) | null = null;
-    debris: { mesh: Mesh; velocity: Vector3; start: number; origin: Vector3 }[] = [];
+    debris: BlockFeedback['batches'] = [];
+    feedbackEffects: BlockFeedback | null = null;
     crackSignature = '';
     crackImages = new Map<string, HTMLCanvasElement>();
     crack: Group | null = null;
-    crackTexture: CanvasTexture | null = null;
+
     onHover: ((hit: Pick | null) => void) | null = null;
     pointerPosition: [number, number] | null = null;
     config: PresentationSpec;
@@ -158,7 +166,7 @@ export class SceneView {
     constructor(host: HTMLElement, pack: Resources, label: string, game = false, config: PresentationSpec = PRESENTATION) {
         this.config = config;
         if(game){
-            window.addEventListener('keydown',e=>{if(!this.input||document.hidden||e.metaKey||e.altKey||e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement)return;if(['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','ControlLeft','ControlRight'].includes(e.code)){e.preventDefault();this.keys.add(e.code);this.requestRender();}},{signal:this.controlsAbort.signal});
+            window.addEventListener('keydown', e => this.pressMovementKey(e), {signal:this.controlsAbort.signal});
             window.addEventListener('keyup',e=>this.keys.delete(e.code),{signal:this.controlsAbort.signal});
         }
         this.crackImages = pack.guiImages;
@@ -174,6 +182,7 @@ export class SceneView {
         host.append(canvas);
         this.models = new VanillaModels(pack);
         if(game){this.blockLight=new BlockLight();for(const material of this.models.materials.values())this.blockLight.bind(material);}
+        if (game) this.feedbackEffects = new BlockFeedback(pack, this.models, this.scene, this.camera, this.blockLight);
         this.scene.background = new Color(game ? '#617C7B' : '#9BAFA0');
         this.scene.add(this.world, this.persistent,this.placed);
         if (!game) {
@@ -213,15 +222,15 @@ export class SceneView {
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
         this.cancel = () => this.cancelInput();
-        if (game) this.mode = new PointerMode(canvas, () => {this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
+        if (game) this.mode = new PointerMode(canvas, () => {if (this.mode?.actual) this.cancelPointerGesture(); else this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
         this.down = e => this.beginPointer(e);
         this.move = e => this.movePointer(e, game);
         this.up = e => this.releasePointer(e);
         this.captureLost = () => {
-            if (this.look.active || this.pointer !== null) this.cancel(); else this.refreshHover();
+            if (this.look.active || this.pointer !== null) this.cancelPointerGesture(); else this.refreshHover();
         };
         this.leave = () => {
-            if (!this.look.active) this.cancel();
+            if (!this.look.active) this.cancelPointerGesture();
         };
         this.contextMenu = e => {
             e.preventDefault();
@@ -245,7 +254,7 @@ export class SceneView {
         canvas.addEventListener('pointermove', this.move);
         canvas.addEventListener('mousemove', e => this.moveLockedMouse(e), {signal: this.controlsAbort.signal});
         canvas.addEventListener('pointerup', this.up);
-        canvas.addEventListener('pointercancel', this.cancel);
+        canvas.addEventListener('pointercancel', this.captureLost);
         canvas.addEventListener('lostpointercapture', this.captureLost);
         canvas.addEventListener('pointerleave', this.leave);
         canvas.addEventListener('contextmenu', this.contextMenu);
@@ -264,19 +273,23 @@ export class SceneView {
         this.requestRender();
     }
 
-    /** Route world presses to acquisition, mining or Use; visible mouse ownership belongs to open GUIs.
+    /** Route locked right presses immediately to Use, reserving click/drag arbitration for visible pointers.
      * @param {PointerEvent} e Native canvas press, gated out while any UI owns input.
      */
     beginPointer(e: PointerEvent): void {
         if (!this.input || this.lost || this.disposed) return;
-        if (e.button === 0 && this.mode?.enter()) {e.preventDefault(); return;}
+        if ((e.button === 0 || e.button === 2) && this.mode?.enter(true)) {e.preventDefault(); return;}
         this.pointerPosition = [e.clientX, e.clientY];
         if (e.button === 2) {
             e.preventDefault();
-            this.cancel();
+            this.cancelPointerGesture();
             this.pointerPosition = [e.clientX, e.clientY];
+            if (this.mode?.actual) {
+                const hit = this.refreshHover();
+                this.onUse?.(hit, {shift: e.shiftKey, alt: e.altKey, ctrl: e.ctrlKey});
+                return;
+            }
             this.rightTarget = this.refreshHover()?.id ?? null;
-            this.rightMotion = 0;
             this.look.begin(e.pointerId, e.clientX, e.clientY);
             this.onHover?.(null);
             this.capturePointer(e.pointerId);
@@ -308,11 +321,18 @@ export class SceneView {
         if (!this.mode?.actual && !canvas.ownerDocument.pointerLockElement) canvas.setPointerCapture(id);
     }
 
-    /** Invalidate gestures and ray identity on GUI, lifecycle and capture boundaries. */
+    /** Clear held movement and pointer gestures when UI, focus, scene or document lifetime changes. */
     cancelInput(): void {
         this.movementEpoch++;this.motion.sprinting=false;this.motion.forwardDown=false;this.motion.sprintWindow=0;
         this.keys.clear();
+        this.jumpQueued = false;
         this.motionRemainder=0;
+        this.motionClock=0;
+        this.cancelPointerGesture();
+    }
+
+    /** End pointer gestures and release their captures without dropping independently held movement keys. */
+    cancelPointerGesture(): void {
         const left = this.pointer;
         this.onMineCancel?.();
         this.pointer = null;
@@ -331,8 +351,7 @@ export class SceneView {
      */
     moveLockedMouse(e: MouseEvent): void {
         if (!this.input || this.lost || !this.mode?.actual) return;
-        if (this.pointer !== null && !(e.buttons & 1)) {this.cancel(); return;}
-        if (this.look.active) {this.rightMotion += Math.hypot(e.movementX, e.movementY); if (this.rightMotion >= this.look.threshold) this.look.active.dragging = true;}
+        if (this.pointer !== null && !(e.buttons & 1)) {this.cancelPointerGesture(); return;}
         this.look.relative(e.movementX, e.movementY);
         this.camera.rotation.set(this.look.pitch, this.look.yaw, 0, 'YXZ');
         this.camera.updateMatrixWorld(true); this.refreshHover(); this.requestRender();
@@ -344,10 +363,10 @@ export class SceneView {
      */
     movePointer(e: PointerEvent, game: boolean): void {
         if (!this.input || this.lost || this.mode?.actual) return;
-        if (this.pointer !== null && !(e.buttons & 1)) {this.cancel(); return;}
+        if (this.pointer !== null && !(e.buttons & 1)) {this.cancelPointerGesture(); return;}
         if (this.pointer !== null && !this.mode?.actual) {
             const bounds = this.renderer.domElement.getBoundingClientRect();
-            if (e.clientX < bounds.left || e.clientX >= bounds.right || e.clientY < bounds.top || e.clientY >= bounds.bottom) {this.cancel(); return;}
+            if (e.clientX < bounds.left || e.clientX >= bounds.right || e.clientY < bounds.top || e.clientY >= bounds.bottom) {this.cancelPointerGesture(); return;}
         }
         this.pointerPosition = [e.clientX, e.clientY];
         if (!this.look.active) {
@@ -356,7 +375,7 @@ export class SceneView {
         }
         this.onHover?.(null);
         if (!(e.buttons & 2)) {
-            this.cancel();
+            this.cancelPointerGesture();
             return;
         }
         if (this.look.move(e.pointerId, e.clientX, e.clientY) && game) {
@@ -370,14 +389,15 @@ export class SceneView {
         }
     }
 
-    /** Finish exactly one gesture and refresh its ray without turning a completed drag into Use.
+    /** Finish visible-pointer gestures without replaying locked presses or turning a completed drag into Use.
      * @param {PointerEvent} e Native pointer release.
      */
     releasePointer(e: PointerEvent): void {
         if (!this.input || this.lost) return;
         if (e.button === 2) {
+            if (!this.look.active) return;
             const target = this.rightTarget, result = this.look.end(e.pointerId);
-            this.cancel();
+            this.cancelPointerGesture();
             this.pointerPosition = [e.clientX, e.clientY];
             const hit = this.refreshHover();
             if (result === 'use' && (hit?.id ?? null) === target) this.onUse?.(hit, {
@@ -467,7 +487,7 @@ export class SceneView {
             this.updateDebris(Infinity);
             this.worldId = p.scene;
             this.authored.build(p.scene);
-            this.scene.fog = p.scene === 'plains' ? new Fog('#c0d8ff', 44, 68) : null;
+            this.scene.fog = p.scene === 'plains' || p.scene === 'farm' ? new Fog('#c0d8ff', 44, 68) : null;
             const spec = WORLD_SCENES[p.scene];
             this.scene.background = this.sky ? null : new Color(spec.sky);
             this.camera.position.set(...spec.eye);
@@ -492,9 +512,12 @@ export class SceneView {
         const placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks]);
         if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models));}
         this.rebuildCollision();
+        const footCell:Cell=[Math.floor(this.motion.feet[0]),Math.floor(this.motion.feet[1]-.2),Math.floor(this.motion.feet[2])],soil=soilAt(p,footCell);
+        if(soil?.moisture===null&&this.motion.feet[1]<footCell[1]+1&&this.motion.feet[1]>=footCell[1]+15/16-.001){this.motion.feet[1]=footCell[1]+1;this.previousFeet=[...this.motion.feet];}
         if(this.blockLight&&this.lightSignature!==this.collisionSignature){
             this.lightSignature=this.collisionSignature;
-            const emitters=(p.scene==='cave'?this.authored.caveLights:[]).map(cell=>({cell:cell.map(Math.floor) as Cell,level:14}));
+            const emitters=(p.scene==='cave'?this.authored.caveLights:p.scene==='farm'?this.authored.farmLights:[]).map(cell=>({cell:cell.map(Math.floor) as Cell,level:p.scene==='farm'?15:14}));
+            if(p.scene==='home')emitters.push(...HOME_LIGHTS.filter(cell=>currentHome(p).get(cell.join(','))?.block==='glowstone').map(cell=>({cell,level:15})));
             for(const b of p.scenes[p.scene].blocks??[])if(['torch','wall_torch','lantern','campfire'].includes(b.block)&&b.state.lit!=='false')emitters.push({cell:b.cell,level:b.block.includes('torch')?14:15});
             this.blockLight.rebuild(emitters,this.collision);this.renderer.domElement.dataset.blockLight=JSON.stringify({emitters,maximum:Math.max(...this.blockLight.values)});
         }
@@ -517,20 +540,26 @@ export class SceneView {
 
     /** Build nearby block collision boxes from authored native geometry, excluding non-solid vegetation and entities. */
     rebuildCollision():void{
-        if(!this.authored)return;const signature=JSON.stringify([this.worldId,this.authored.signature,this.stationSignature,this.placedSignature]);if(signature===this.collisionSignature)return;this.collisionSignature=signature;
+        if(!this.authored)return;const signature=JSON.stringify([this.worldId,this.authored.signature,this.authored.staticVersion,this.stationSignature,this.placedSignature]);if(signature===this.collisionSignature)return;this.collisionSignature=signature;
         this.scene.updateMatrixWorld(true);const result:Bounds[]=[],matrix=new Matrix4(),seen=new Set<Object3D>();
-        for(const owner of [this.authored.staticRoot,this.authored.natural,this.persistent,this.placed])owner.traverse(o=>{
+        for(const owner of [this.authored.staticRoot,this.authored.natural,this.persistent,this.placed]) {
+        if (owner === this.authored.staticRoot && this.staticCollisionVersion === this.authored.staticVersion) {result.push(...this.staticCollisions); continue;}
+        const start = result.length;
+        owner.traverse(o=>{
             if(!(o instanceof Mesh))return;let root:Object3D|null=o;while(root&&!root.userData.id)root=root.parent;
             if(root?.userData.collision===false)return;
             if(root?.userData.collisionShapes){if(seen.has(root))return;seen.add(root);for(const b of root.userData.collisionShapes as Bounds[])result.push(b.map((n,i)=>n+root!.position.getComponent(i%3)) as Bounds);return;}
             const id=String(root?.userData.id??''),block=String(root?.userData.block??'');
             if(/cow|chicken|egg|crop:|^water$/.test(id)||/grass|flower|poppy|dandelion|daisy|bluet|torch|sugar_cane|water/.test(block)&&!['grass_block'].includes(block)||/short_grass|sugar_cane/.test(id))return;
-            o.geometry.computeBoundingBox();const box=o.geometry.boundingBox!;
+            if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();const box=o.geometry.boundingBox!;
             if(o instanceof InstancedMesh){for(let i=0;i<o.count;i++){o.getMatrixAt(i,matrix);const b=box.clone().applyMatrix4(new Matrix4().multiplyMatrices(o.matrixWorld,matrix));result.push([...b.min.toArray(),...b.max.toArray()] as Bounds);}}
             else {const b=box.clone().applyMatrix4(o.matrixWorld);result.push([...b.min.toArray(),...b.max.toArray()] as Bounds);}
         });
+        if (owner === this.authored.staticRoot) {this.staticCollisionVersion = this.authored.staticVersion; this.staticCollisions = result.slice(start);}
+        }
         // Invisible full collision barriers bound the authored finite region in survival.
-        result.push([-19,-8,-23,-18,32,12],[19,-8,-23,20,32,12],[-19,-8,-23,20,32,-22],[-19,-8,11,20,32,12],[-19,16,-23,20,17,12],[-19,-5,-23,20,-4,12]);if(this.worldId==='farm')result.push([8,-2,-5,9,-1,1]);this.collision=result;
+        if(this.worldId==='home')result.push(...HOME_BARRIERS);
+        result.push([-19,-8,-23,-18,32,12],[19,-8,-23,20,32,12],[-19,-8,-23,20,32,-22],[-19,-8,11,20,32,12],[-19,16,-23,20,17,12],[-19,-5,-23,20,-4,12]);this.collision=result;
     }
 
     /** Reject placement intersecting the player's current physical body.
@@ -539,15 +568,40 @@ export class SceneView {
      */
     playerIntersects(cell:Cell):boolean{return overlaps(playerBounds(this.motion.feet,this.motion.crouching),[...cell,cell[0]+1,cell[1]+1,cell[2]+1]);}
 
-    /** Advance native physics on the visible render loop and keep the ray tied to the moving eye.
+    /** Collect world movement, retaining short Space presses even if released before the next physics tick.
+     * @param {KeyboardEvent} event Browser key press outside editable screens.
+     */
+    pressMovementKey(event: KeyboardEvent): void {
+        if (!this.input || this.lost || this.disposed || globalThis.document?.hidden || event.metaKey || event.altKey) return;
+        if (typeof Element !== 'undefined' && event.target instanceof Element && event.target.closest('input,textarea,select,[contenteditable=true]')) return;
+        if (!['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','ControlLeft','ControlRight'].includes(event.code)) return;
+        event.preventDefault();
+        this.keys.add(event.code);
+        if (event.code === 'Space' && !event.repeat) this.jumpQueued = true;
+        this.requestRender();
+    }
+
+    /** Consume one pending jump edge without turning a released key into a permanently held jump.
+     * @return {Set<string>} Held movement keys and any unobserved jump press for this tick only.
+     */
+    movementKeys(): Set<string> {
+        if (!this.input) {this.jumpQueued=false;return new Set<string>();}
+        const keys = this.jumpQueued && !this.keys.has('Space') ? new Set([...this.keys, 'Space']) : this.keys;
+        this.jumpQueued = false;
+        return keys;
+    }
+
+    /** Advance gravity and inertia through non-pausing GUIs, accepting movement keys only while world input owns them.
      * @param {number} now Monotonic frame time.
      */
     advancePlayer(now:number):void{
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
-        if(!this.authored||!this.input||document.hidden||this.lost){this.motionRemainder=0;return;}
+        if(!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
-        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&f[0]+.3>8&&f[0]-.3<9&&f[2]+.3>-5&&f[2]-.3<1&&f[1]<-.001,climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.keys,this.look.yaw,near,{water:fluid,climb});this.playMovement();changed=true;}
-        const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(changed||this.keys.size)this.refreshHover();
+        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb});this.onPlayerTick?.();this.playMovement();
+            const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}));changed=true;}
+        this.authored.animateLife(this.motionRemainder/50);
+        const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
         this.renderer.domElement.dataset.player=JSON.stringify({feet:this.motion.feet,velocity:this.motion.velocity,grounded:this.motion.grounded,crouching:this.motion.crouching,sprinting:this.motion.sprinting,bob:this.motion.bob,walk:this.motion.walk,eye:this.camera.position.toArray(),yaw:this.look.yaw});
     }
 
@@ -556,7 +610,7 @@ export class SceneView {
         const p=this.environmentProgress;if(!p||!this.movementSound||!this.motion.step&&this.motion.landedDistance<=3)return;
         const feet=this.motion.feet,cell:Cell=[Math.floor(feet[0]),Math.floor(feet[1]-.2),Math.floor(feet[2])],block=blockAt(p,cell)?.block;
         if(!block)return;const sound=blockSounds(block),epoch=this.movementEpoch,fall=this.motion.landedDistance>3;
-        this.movementSound(fall?sound.step.replace(/step$/,'fall'):sound.step,{volume:sound.volume*(fall?.5:.15),pitch:sound.pitch*(fall?.75:1),category:'playersVolume',valid:()=>this.movementEpoch===epoch&&this.input&&!this.disposed&&!this.lost&&!document.hidden});
+        this.movementSound(fall?sound.step.replace(/step$/,'fall'):sound.step,{volume:sound.volume*(fall?.5:.15),pitch:sound.pitch*(fall?.75:1),category:'playersVolume',valid:()=>this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden});
     }
 
     /** Draw a black selection outline around the targeted native block shape.
@@ -571,102 +625,62 @@ export class SceneView {
         this.outline=new LineSegments2(geometry,new LineMaterial({color:0,transparent:true,opacity:.4,depthWrite:false,linewidth:2.5}));this.outline.position.set(...hit.cell);this.outline.userData.key=key;this.scene.add(this.outline);
     }
 
-    /** Emit small native-texture fragments after a successful break without creating collectible world entities.
+    /** Emit original volume fragments after a successful transaction using the real block origin.
      * @param {string} block Native short block name.
-     * @param {Cell} point Actual broken surface.
+     * @param {Cell} point Observed hit point, retained for legacy callers.
+     * @param {Cell} cell Native block origin.
+     * @param {Record<string,string>} state Broken block properties.
      */
-    breakEffect(block: string, point: Cell): void {
-        const name = block === 'crafting_table' ? 'crafting_table_top' : block === 'hopper' ? 'hopper_outside' : ['furnace', 'blast_furnace'].includes(block) ? block + '_side' : block,
-            image = this.crackImages.get('assets/minecraft/textures/block/' + name + '.png');
-        if (!image) return;
-        for (let i = 0; i < 12; i++) {
-            const texture = new CanvasTexture(image);
-            texture.minFilter = texture.magFilter = NearestFilter;
-            const geometry = new PlaneGeometry(.08, .08), uv = geometry.getAttribute('uv'), u = (i % 4) / 4,
-                v = (Math.floor(i / 4) % 4) / 4;
-            for (let n = 0; n < uv.count; n++) uv.setXY(n, u + uv.getX(n) / 4, v + uv.getY(n) / 4);
-            const mesh = new Mesh(geometry, new MeshBasicMaterial({map: texture, transparent: true, alphaTest: .1})),
-                origin = new Vector3(...point);
-            mesh.position.copy(origin);
-            mesh.quaternion.copy(this.camera.quaternion);
-            this.scene.add(mesh);
-            const angle = i * 2.399963;
-            this.debris.push({
-                mesh,
-                origin,
-                start: performance.now(),
-                velocity: new Vector3(Math.sin(angle) * .7, .8 + i % 3 * .15, Math.cos(angle) * .7)
-            });
-        }
+    breakEffect(block:string,point:Cell,cell:Cell=point.map(Math.floor) as Cell,state:Record<string,string>={}):void {
+        this.feedbackEffects?.burst(block,cell,state,this.collision??[]);
+        this.debris=this.feedbackEffects?.batches??[];
+        this.renderer.domElement.dataset.breakParticles=JSON.stringify({block,cell,count:this.debris.at(-1)?.particles.length??0,texture:this.feedbackEffects?.sprites.get(block+JSON.stringify(state))?.texture});
         this.requestRender();
     }
 
-    /** Advance only transient native-texture feedback and release every owned fragment allocation.
-     * @param {number} now Monotonic frame time.
+    /** Submit the original small face fragment at native four-tick mining feedback boundaries.
+     * @param {Pick} hit Current selected block face.
+     * @param {string} block Native block identity.
      */
-    updateDebris(now: number): void {
-        this.debris = this.debris.filter(p => {
-            const t = (now - p.start) / 1000;
-            if (t >= .75) {
-                p.mesh.removeFromParent();
-                p.mesh.geometry.dispose();
-                const material = p.mesh.material as MeshBasicMaterial;
-                material.map?.dispose();
-                material.dispose();
-                return false;
-            }
-            p.mesh.position.copy(p.origin).addScaledVector(p.velocity, t);
-            p.mesh.position.y -= 2 * t * t;
-            p.mesh.quaternion.copy(this.camera.quaternion);
-            return true;
-        });
+    hitEffect(hit:Pick,block:string):void {
+        if(!hit.cell)return;
+        const progress=this.environmentProgress,scene=progress?.scenes[this.worldId!],crop=scene?.crops.find(c=>'crop:'+c.id===hit.id),station=scene?.stations.find(s=>s.id===hit.id),cell=[...hit.cell] as Cell;
+        const state={...(scene?.blocks?.find(b=>b.id===hit.id)?.state??(crop?{age:String(cropStage(crop))}:station?{facing:station.facing}:{}))};
+        if(block==='tall_grass'&&hit.id.startsWith('node:')){cell[1]=Math.max(cell[1],Math.floor(hit.point[1]-hit.normal[1]*.00001));state.half=cell[1]>hit.cell[1]?'upper':'lower';}
+        this.feedbackEffects?.hit(block,cell,hit.normal,state,this.collision??[]);
+        this.debris=this.feedbackEffects?.batches??[];
+        this.requestRender();
     }
 
-    /** Project the current destruction stage onto the real target geometry without modifying shared model materials.
-     * @param {string|null} id Stable target identity, or null to cancel.
-     * @param {number} stage Native crack stage zero through nine.
+    /** Advance native particle ticks, interpolate current billboards and release expired batches.
+     * @param {number} now Monotonic frame time; Infinity clears the current scene's transient effects.
      */
-    showCrack(id: string | null, stage = 0): void {
-        const signature = JSON.stringify([id, stage]);
-        if (this.crackSignature === signature) return;
-        this.crackSignature = signature;
-        if (this.crack) {
-            this.crack.removeFromParent();
-            this.crack.traverse(o => {
-                if (o instanceof Mesh) (o.material as MeshBasicMaterial).dispose();
-            });
-            this.crack = null;
-        }
-        this.crackTexture?.dispose();
-        this.crackTexture = null;
-        if (id) {
-            const candidates = [...this.persistent.children,...this.placed.children, ...(this.authored ? [...this.authored.natural.children, ...this.authored.crops.children] : [])],
-                target = candidates.find(o => o.userData.id === id),
-                image = this.crackImages.get('assets/minecraft/textures/block/destroy_stage_' + Math.max(0, Math.min(9, stage)) + '.png');
-            if (target && image) {
-                const texture = new CanvasTexture(image);
-                texture.magFilter = texture.minFilter = NearestFilter;
-                this.crackTexture = texture;
-                const overlay = new Group();
-                target.updateMatrixWorld(true);
-                target.traverse(o => {
-                    if (o instanceof Mesh) {
-                        const m = new Mesh(o.geometry, new MeshBasicMaterial({
-                            map: texture,
-                            transparent: true,
-                            depthWrite: false,
-                            polygonOffset: true,
-                            polygonOffsetFactor: -2
-                        }));
-                        m.matrixAutoUpdate = false;
-                        m.matrix.copy(o.matrixWorld);
-                        overlay.add(m);
-                    }
-                });
-                this.crack = overlay;
-                this.scene.add(overlay);
-            }
-        }
+    updateDebris(now:number):void {this.feedbackEffects?.update(now);this.debris=this.feedbackEffects?.batches??[];}
+
+    /** Project original crack stages onto actual geometry with native sheet UV and blend state.
+     * @param {string|null} id Stable observed target identity, or null to clear.
+     * @param {number} stage Native zero-based crack stage.
+     */
+    showCrack(id:string|null,stage=0):void {
+        const candidates=[...this.persistent.children,...this.placed.children,...(this.authored?[...this.authored.natural.children,...this.authored.crops.children]:[])],target=id?candidates.find(o=>o.userData.id===id)??null:null;
+        this.feedbackEffects?.showCrack(target,stage,target?.userData.cell??[0,0,0]);
+        this.crack=this.feedbackEffects?.crack??null;
+        const signature=JSON.stringify([id,stage]);
+        if(this.crackSignature!==signature)this.renderer.domElement.dataset.crack=JSON.stringify({id,stage,projected:true,blend:['DST_COLOR','SRC_COLOR']});
+        this.crackSignature=signature;
+        this.requestRender();
+    }
+
+    /** Freeze player physics without conflating inventory or chat ownership with a pause menu.
+     * @param {boolean} paused Whether startup or a pause/options screen freezes the player.
+     */
+    setSimulationPaused(paused: boolean): void {
+        if (this.simulationPaused === paused) return;
+        this.simulationPaused = paused;
+        this.movementEpoch++;
+        this.motionClock = 0;
+        this.motionRemainder = 0;
+        this.previousFeet = [...this.motion.feet];
         this.requestRender();
     }
 
@@ -821,7 +835,7 @@ export class SceneView {
         c.removeEventListener('pointerdown', this.down);
         c.removeEventListener('pointermove', this.move);
         c.removeEventListener('pointerup', this.up);
-        c.removeEventListener('pointercancel', this.cancel);
+        c.removeEventListener('pointercancel', this.captureLost);
         c.removeEventListener('lostpointercapture', this.captureLost);
         c.removeEventListener('pointerleave', this.leave);
         c.removeEventListener('contextmenu', this.contextMenu);
@@ -834,6 +848,7 @@ export class SceneView {
         this.showCrack(null);
         this.updateDebris(Infinity);
         this.authored?.dispose();
+        this.feedbackEffects?.dispose();
         this.models.dispose();
         this.crosshair?.dispose(); this.menuBlur.dispose();
         this.renderer.dispose();

@@ -1,9 +1,12 @@
 /** Finite, persistent native block placement uses actual held groups and adjacent world faces. */
+import {soilAt} from './soil-state.ts';
 import names from '../data/placeable-blocks.json' with {type:'json'};
 import facts from '../data/block-properties.json' with {type:'json'};
 import type {Cell,Progress} from './types.ts';
 import {WORLD_SCENES,fixedSolid,sameCell,nodeAtCell,caveCleared} from './world-config.ts';
 import {plainsHeight} from './plains-shape.ts';
+import {currentFarm} from './farm-shape.ts';
+import {currentHome,homeFloor} from './home-shape.ts';
 import {overlaps,playerBounds} from './player-motion.ts';
 import loot from '../data/placed-loot.json' with {type:'json'};
 import type {Rules,Stack} from '../rules/types.ts';
@@ -39,6 +42,7 @@ export function placedDrops(block:PlacedBlock,tool:Stack|null,rules:Rules,requir
  * @return {{block:string,state:Record<string,string>,id?:string}|null} Native state or air.
  */
 export function blockAt(p:Progress,cell:Cell):{block:string;state:Record<string,string>;id?:string}|null{
+    const soil=soilAt(p,cell);if(soil)return {block:soil.moisture===null?'dirt':'farmland',state:soil.moisture===null?{}:{moisture:String(soil.moisture)}};
     const scene=p.scenes[p.scene],placed=scene.blocks?.find(b=>sameCell(b.cell,cell));if(placed)return placed;
     const device=scene.stations.find(s=>sameCell(s.cell,cell));if(device)return {block:device.kind,state:{facing:device.facing},id:device.id};
     const crop=scene.crops.find(c=>sameCell(c.cell,cell));if(crop)return {block:'wheat',state:{},id:crop.id};
@@ -46,9 +50,15 @@ export function blockAt(p:Progress,cell:Cell):{block:string;state:Record<string,
     const node=WORLD_SCENES[p.scene].nodes.find(n=>!n.kind&&nodeAtCell(n,cell)&&!p.world.visits[p.scene].removed.includes(n.id));
     if(node&&!(p.scene==='cave'&&caveCleared(p).has(cell.join(','))))return {block:node.block,state:{},id:'node:'+node.id};
     if(cell[0]<-18||cell[0]>18||cell[2]<-22||cell[2]>10)return null;
+    if(p.scene==='home'){
+        const b=currentHome(p).get(cell.join(','));
+        if(b)return {block:b.block,state:Object.fromEntries(b.state.split(',').filter(Boolean).map(s=>s.split('=')))};
+        return cell[1]>=-4&&cell[1]<0?{block:cell[1]===-1?homeFloor(cell[0],cell[2]):'dirt',state:{}}:null;
+    }
+    if(p.scene==='farm'){const b=currentFarm(p).cells.get(cell.join(','));return b?{block:b.block,state:b.state}:cell[1]<-1&&cell[1]>=-4?{block:'dirt',state:{}}:null;}
     if(fixedSolid(p.scene,cell))return {block:p.scene==='cave'?'stone':'oak_planks',state:{}};
     const ground=p.scene==='plains'?plainsHeight(cell[0],cell[2]):0;
-    if(cell[1]<ground&&cell[1]>=-4){if(p.scene==='farm'&&cell[0]===8&&cell[2]>=-5&&cell[2]<=0&&cell[1]===-1)return {block:'water',state:{}};if(p.scene==='farm'&&WORLD_SCENES.farm.plots.some(c=>c[0]===cell[0]&&c[2]===cell[2]))return {block:'farmland',state:{}};return {block:cell[1]===ground-1?WORLD_SCENES[p.scene].floor:'dirt',state:{}};}
+    if(cell[1]<ground&&cell[1]>=-4){return {block:cell[1]===ground-1?WORLD_SCENES[p.scene].floor:'dirt',state:{}};}
     return null;
 }
 /** Read native horizontal facing from the player's view.

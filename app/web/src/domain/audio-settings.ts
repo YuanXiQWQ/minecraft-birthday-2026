@@ -7,7 +7,7 @@ export type SoundKey=typeof SOUND_CHANNELS[number][0];
  * @param {string} event Native sound ID.
  * @return {SoundKey} Implemented source channel.
  */
-export function soundChannel(event:string):SoundKey{if(event.startsWith('music.'))return 'musicVolume';if(event.startsWith('weather.')||event.startsWith('entity.lightning_bolt.'))return 'weatherVolume';if(event.startsWith('ui.'))return 'uiVolume';if(event.startsWith('block.')||event==='item.crop.plant')return 'blocksVolume';if(event.startsWith('entity.cow.')||event.startsWith('entity.chicken.')||event.startsWith('entity.firework_rocket.'))return 'neutralVolume';return 'playersVolume';}
+export function soundChannel(event:string):SoundKey{if(event.startsWith('music.'))return 'musicVolume';if(event.startsWith('weather.')||event.startsWith('entity.lightning_bolt.'))return 'weatherVolume';if(event.startsWith('ui.'))return 'uiVolume';if(event.startsWith('block.')||event==='item.crop.plant'||event==='item.hoe.till')return 'blocksVolume';if(event.startsWith('entity.cow.')||event.startsWith('entity.chicken.')||event.startsWith('entity.firework_rocket.'))return 'neutralVolume';return 'playersVolume';}
 /** Apply legacy mute, master and category in one place for all runtime voices.
  * @param {Settings} settings Latest authoritative or actively edited preferences.
  * @param {string} event Native sound event.

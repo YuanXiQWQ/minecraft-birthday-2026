@@ -38,9 +38,9 @@ export class NativePrecipitation {
         const heightSignature=JSON.stringify([progress.scene,progress.world.visits[progress.scene].removed,progress.scenes[progress.scene].stations.map(s=>s.cell),progress.scenes[progress.scene].blocks]);
         if(heightSignature!==this.heightSignature){
         this.heightSignature=heightSignature;const heights=this.heights=new Map<string,number>();
-        /** Register a blocking block top. @param {number[]} cell Original logical block coordinates. */
-        const block=(cell:number[])=>{const key=cell[0]+':'+cell[2];heights.set(key,Math.max(heights.get(key)??-64,cell[1]+1));};
-        scenery.traverse(object=>{if(object.userData.blocksRain===false)return;for(const cell of object.userData.cells??[])block(cell);});
+        /** Register a blocking surface. @param {number[]} cell Original logical block coordinates. @param {number} top Actual authored surface height, or the full-block top. */
+        const block=(cell:number[],top=cell[1]+1)=>{const key=cell[0]+':'+cell[2];heights.set(key,Math.max(heights.get(key)??-64,top));};
+        scenery.traverse(object=>{if(object.userData.blocksRain===false)return;for(const [i,cell] of (object.userData.cells??[]).entries())block(cell,object.userData.rainTops?.[i]);});
         for(const n of WORLD_SCENES[progress.scene].nodes)if(!n.kind&&!['short_grass','tall_grass','sugar_cane','wheat'].includes(n.block)&&!progress.world.visits[progress.scene].removed.includes(n.id))block(n.cell);
         for(const station of progress.scenes[progress.scene].stations)block(station.cell);
         for(const placed of progress.scenes[progress.scene].blocks??[])if(!/torch|ladder|sign|rail|lever|button|pressure_plate|tripwire/.test(placed.block))block(placed.cell);

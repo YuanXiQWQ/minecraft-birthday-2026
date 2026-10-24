@@ -10,6 +10,8 @@ export class PointerMode {
     intentional = false;
     warned = false;
     inFlight: object | null = null;
+    /** A UI close may need to wait for an invalidated native request to finish before resuming. */
+    resumeQueued = false;
     abort = new AbortController();
     /** Bind actual browser notifications to one world input canvas.
      * @param {HTMLCanvasElement} canvas Lock owner.
@@ -21,10 +23,11 @@ export class PointerMode {
         document.addEventListener('pointerlockchange', () => {
             const locked = document.pointerLockElement === canvas, before = this.actual;
             this.actual = locked; this.pending = false;
-            if (locked && (this.disposed || this.paused || this.requested !== this.epoch || this.desired !== 'hidden')) {this.release(); return;}
+            if (locked && (this.disposed || this.paused || this.requested !== this.epoch || this.desired !== 'hidden')) {this.release(this.resumeQueued); return;}
             this.change(); this.publish();
             if (before && !locked && !this.intentional && !this.paused && !this.disposed) {this.desired = 'visible'; this.escaped();}
             this.intentional = false;
+            if (!locked) this.resumeIfReady();
         }, {signal: this.abort.signal});
         document.addEventListener('pointerlockerror', () => {
             // Promise requests classify unsupported raw input before deciding whether acquisition failed.
@@ -66,26 +69,38 @@ export class PointerMode {
     }
     /** Publish real lock diagnostics independently of persistence. */
     publish(): void {this.canvas.dataset.pointerMode = JSON.stringify({desired: this.desired, actual: this.actual, pending: this.pending, paused: this.paused, epoch: this.epoch});}
-    /** Request only inside a trusted canvas gesture; consume that gesture even if acquisition fails.
+    /** Request hidden ownership at game entry or a UI-return gesture, excluding unfocused documents.
+     * @param {boolean} fromGesture Whether an explicit world click requests hidden observation after focus returns.
      * @return {boolean} Whether this gesture is reserved for acquiring pointer ownership.
      */
-    enter(): boolean {
-        if (this.paused || this.disposed || this.desired !== 'hidden' || this.actual) return false;
-        if (this.pending || this.inFlight) return true;
+    enter(fromGesture = false): boolean {
+        if (this.paused || this.disposed || document.hidden || document.hasFocus?.() === false || this.actual) return false;
+        if (fromGesture) this.desired = 'hidden';
+        if (this.desired !== 'hidden') return false;
+        if (this.pending || this.inFlight) {if(this.inFlight && this.requested !== this.epoch)this.resumeQueued=true;return true;}
+        this.resumeQueued = false;
         this.warned = false; this.pending = true; this.requested = this.epoch;
         const epoch = this.epoch, ticket = {}; this.inFlight = ticket;
         try {
             const pending = this.request(epoch, true);
-            if (pending) void pending.then(() => {if (epoch !== this.epoch && document.pointerLockElement === this.canvas) this.release();}).catch(() => this.fail(epoch)).finally(() => {if (this.inFlight === ticket) this.inFlight = null;});
+            if (pending) void pending.then(() => {if (epoch !== this.epoch && document.pointerLockElement === this.canvas) this.release(this.resumeQueued);}).catch(() => this.fail(epoch)).finally(() => {if (this.inFlight === ticket) {this.inFlight = null;this.resumeIfReady();}});
             else this.inFlight = null;
         } catch {this.inFlight = null; this.fail(epoch);}
         this.publish(); return true;
     }
-    /** Invalidate in-flight acquisition and release this canvas without affecting another owner. */
-    release(): void {
+    /** Invalidate acquisition and release this canvas without affecting another owner.
+     * @param {boolean} retainResume Whether an obsolete native grant is being discarded while a newer UI close waits.
+     */
+    release(retainResume = false): void {
+        this.resumeQueued=retainResume&&!this.paused&&!this.disposed&&this.desired==='hidden';
         this.epoch++; this.pending = false; this.intentional = true;
         if (document.pointerLockElement === this.canvas) document.exitPointerLock();
         this.actual = false; this.change(); this.publish();
+    }
+    /** Complete a queued UI return only while its world input gate is still current and focused. */
+    resumeIfReady():void {
+        if(!this.resumeQueued||this.inFlight||this.pending||this.paused||this.disposed||document.hidden||document.hasFocus?.()===false||this.desired!=='hidden'||document.pointerLockElement===this.canvas)return;
+        this.resumeQueued=false;this.enter();
     }
     /** Release ownership, optionally disarming ordinary click acquisition when the browser loses focus.
      * @param {boolean} visible Whether the lifecycle boundary should leave the cursor explicitly visible.

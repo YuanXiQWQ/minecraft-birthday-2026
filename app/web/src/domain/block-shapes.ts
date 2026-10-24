@@ -9,6 +9,7 @@ export const FULL_BLOCK:Bounds=[0,0,0,1,1,1];
  * @return {Bounds[]|null} Unit-space voxel boxes.
  */
 export function nativeShapes(block:string,state:Record<string,string>,collision=false):Bounds[]|null{
+    if(block==='wheat')return collision?[]:[[0,0,0,1,(2+Math.max(0,Math.min(7,Number(state.age)||0))*2)/16,1]];
     if(block.endsWith('_stairs')){
         const top=state.half==='top',boxes:Bounds[]=[top?[0,.5,0,1,1,1]:[0,0,0,1,.5,1]],f=state.facing,left=({north:'west',west:'south',south:'east',east:'north'} as Record<string,string>)[f],corner=state.shape?.endsWith('left')?left:({north:'east',east:'south',south:'west',west:'north'} as Record<string,string>)[f];
         /** Select the half plane behind a stair riser. @param {string} d Direction. @param {number} x Quadrant X. @param {number} z Quadrant Z. @return {boolean} Occupied half. */

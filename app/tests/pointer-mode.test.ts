@@ -34,9 +34,36 @@ test('UI still cancels a late grant after automatic resume', async () => {
  const f=fixture();try {f.mode.pause(true);f.mode.pause(false);f.mode.pause(true);f.grant();await new Promise(r=>setImmediate(r));assert.equal(f.d.pointerLockElement,null);assert.equal(f.mode.actual,false);}finally{f.close();}
 });
 
+test('closing any UI during an obsolete native request resumes automatically after that request settles', async () => {
+    const f=fixture();try {
+        f.mode.enter();f.mode.pause(true);f.mode.pause(false);
+        assert.equal(f.calls(),1);
+        f.grant();await new Promise(resolve=>setImmediate(resolve));
+        assert.equal(f.calls(),2);assert.equal(f.mode.pending,true);assert.equal(f.mode.paused,false);
+        f.grant();await new Promise(resolve=>setImmediate(resolve));
+        assert.equal(f.mode.actual,true);assert.equal(f.escapes(),0);
+    }finally{f.close();}
+});
+
  test('initial scene synchronization preserves first-click entry, while focus loss disarms it', () => {
     const f=fixture();try {
         f.mode.suspend();assert.equal(f.mode.desired,'hidden');
         f.mode.suspend(true);assert.equal(f.mode.desired,'visible');assert.equal(f.mode.enter(),false);
     } finally {f.close();}
+});
+
+
+test('an explicit world click can reacquire after focus returns without automatic focus capture',async()=>{
+    const f=fixture();try {
+        f.mode.suspend(true);assert.equal(f.mode.enter(),false);assert.equal(f.calls(),0);
+        assert.equal(f.mode.enter(true),true);assert.equal(f.calls(),1);assert.equal(f.mode.actual,false);
+        f.grant();await new Promise(resolve=>setImmediate(resolve));assert.equal(f.mode.actual,true);
+    }finally{f.close();}
+});
+
+test('explicit acquisition remains blocked by UI and unfocused documents',()=>{
+    const f=fixture();try {
+        f.mode.pause(true);assert.equal(f.mode.enter(true),false);assert.equal(f.calls(),0);
+        Object.assign(f.d,{hasFocus:()=>false});f.mode.pause(false);assert.equal(f.mode.enter(true),false);assert.equal(f.calls(),0);
+    }finally{f.close();}
 });

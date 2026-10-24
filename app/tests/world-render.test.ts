@@ -26,7 +26,7 @@ test('all selected native world states compile with retained UV/texture dependen
         assert.equal(c.uvs.length, c.positions.length / 3 * 2);
         for (const texture of c.textures) assert.ok(files.has('assets/minecraft/textures/' + texture.split(':')[1] + '.png'));
     }
-    assert.deepEqual(world.states.filter((v: any) => v.block === 'wheat').map((v: any) => v.state), ['age=0', 'age=2', 'age=5', 'age=7']);
+    assert.deepEqual(world.states.filter((v: any) => v.block === 'wheat').map((v: any) => v.state), Array.from({length:8},(_,i)=>'age='+i));
 });
 test('rotated cross uses native 45-degree rescale and upward shade; native UV-lock and sign rotations compile; invalid rotations fail explicitly', () => {
     const m = resolveModel('minecraft:block/short_grass', id => docs.get('assets/minecraft/models/' + id.split(':')[1] + '.json')),
@@ -64,7 +64,7 @@ test('adult animal geometry includes actual head/body/four cow legs and chicken 
 test('world dependencies keep source hashes and bounded extraction excludes full clients and developer directories', () => {
     for (const [path, hash] of Object.entries(world.inputs) as [string, string][]) if (path.startsWith('assets/')) assert.equal(createHash('sha256').update(files.get(path)!).digest('hex'), hash, path);
     for (const name of files.keys()) assert.ok(!/client\.jar|docs\/|AGENTS|AppData|\.class$/.test(name));
-    assert.equal(world.classes && Object.keys(world.classes).length, 3);
+    for(const name of ['world/level/block/FarmlandBlock','world/level/block/CropBlock','world/entity/Mob','client/renderer/entity/ItemEntityRenderer'])assert.match(world.classes['net/minecraft/'+name+'.class'],/^[a-f0-9]{64}$/);
 });
 test('placement derives adjacent cells from actual top/side face, checks occupancy/support and excludes natural nodes', () => {
     const s = new SaveSession({

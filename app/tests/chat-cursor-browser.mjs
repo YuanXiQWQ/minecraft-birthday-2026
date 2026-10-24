@@ -1,4 +1,5 @@
-/** Native Chromium input and DOM timing checks in an isolated profile; no physical desktop automation. */
+/** Browser interaction and rendering checks use simulated ownership; native OS pointer capture is not exercised. */
+import {installPointerSimulation} from './browser-pointer-sim.mjs';
 import {createRequire} from 'node:module';
 import {mkdir, writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
@@ -9,9 +10,12 @@ const [runtime, executablePath, url, output] = process.argv.slice(2);
 const pw = createRequire(resolve(runtime, 'package.json'))('playwright');
 const browser = await pw.chromium.launch({executablePath, headless: true});
 const context = await browser.newContext({viewport: {width: 1280, height: 800}});
-const page = await context.newPage(), errors = [], report = {url};
+const page = await context.newPage(), errors = [], report = {url,pointerMode:'simulated-no-os-lock'};
+await installPointerSimulation(context);
 page.on('pageerror', error => errors.push(error.message));
 await page.addInitScript(() => {
+    window.jumpSamples=[];
+    new MutationObserver(()=>{const canvas=document.querySelector('canvas[data-player]');if(canvas)window.jumpSamples.push(JSON.parse(canvas.dataset.player));}).observe(document,{subtree:true,attributes:true,attributeFilter:['data-player']});
     window.keyboardCaptures=[];window.forwardEvents=[];window.worldResizes=[];window.frameSamples=[];
     const keyboard=navigator.keyboard;
     if(keyboard?.lock){const lock=keyboard.lock.bind(keyboard);keyboard.lock=async keys=>{try{await lock(keys);window.keyboardCaptures.push({keys,success:true});}catch(error){window.keyboardCaptures.push({keys,success:false,error:String(error)});throw error;}};}
@@ -66,13 +70,17 @@ try {
     await page.waitForFunction(() => !!document.pointerLockElement && !document.querySelector('dialog[open]'));
     await page.keyboard.press('Escape');
     await page.waitForFunction(() => !!document.querySelector('#game-menu[open]'));
-    await page.getByRole('button', {name: 'Fullscreen game', exact: true}).click();
-    await page.waitForFunction(() => !!document.fullscreenElement && !!document.pointerLockElement);
-    await page.keyboard.down('Control');await page.keyboard.down('KeyW');await page.waitForTimeout(500);await page.keyboard.up('KeyW');await page.keyboard.up('Control');
-    report.fullscreen = await page.evaluate(() => ({fullscreen:!!document.fullscreenElement, keyboard:window.keyboardCaptures, events:window.forwardEvents}));
-    assert.ok(report.fullscreen.fullscreen);
-    assert.ok(report.fullscreen.keyboard.some(item => item.success));
-    assert.ok(report.fullscreen.events.some(event => event.ctrl && event.cancelled));
+    assert.equal(await page.locator('#game-menu button').count(),3);
+    assert.equal(await page.getByRole('button', {name: 'Fullscreen game',exact:true}).count(),0);
+    await page.getByRole('button',{name:'Back to Game',exact:true}).click();
+    await page.waitForFunction(()=>!!document.pointerLockElement);
+    await page.keyboard.down('ControlLeft');await page.keyboard.down('KeyW');await page.waitForTimeout(200);
+    const jumpStart=await page.evaluate(()=>window.jumpSamples.length);
+    await page.keyboard.press('Space');await page.waitForTimeout(450);
+    await page.keyboard.up('KeyW');await page.keyboard.up('ControlLeft');
+    report.jump=await page.evaluate(i=>window.jumpSamples.slice(i),jumpStart);
+    assert.ok(Math.max(...report.jump.map(v=>v.feet[1]))>.5,'quick Ctrl + W + Space did not jump');
+    assert.ok(report.jump.some(v=>v.sprinting));
     const before = await page.locator('#app').getAttribute('data-revision');
     await page.waitForFunction(revision => Number(document.querySelector('#app').dataset.revision) >= Number(revision)+4, before);
     report.saves = await page.evaluate(() => ({revision:document.querySelector('#app').dataset.revision, resizes:window.worldResizes, samples:window.frameSamples}));
@@ -90,6 +98,8 @@ try {
     assert.ok(timing.messages.find(m => m.kind === 'system').observed < authors[0].observed);
     assert.ok(authors.every(m => m.identity === 'YuanXiQWQ'));
     assert.match(authors.at(-1).runs.map(r => r.text).join(''), /inventory or pause/);
+    assert.match(authors.at(-1).runs.map(r=>r.text).join(''),/F11.*:>/);
+    assert.ok(!timing.messages.some(m=>m.runs.some(r=>/browser has not locked/.test(r.text))));
     report.timing = timing;
     await page.keyboard.press('KeyT');
     await page.keyboard.type('Hello Vincent!');
@@ -102,7 +112,7 @@ try {
     report.errors = errors; report.passed = true;
     await mkdir(resolve(output), {recursive: true});
     await writeFile(resolve(output, 'results.json'), JSON.stringify(report, null, 2));
-    console.log(JSON.stringify({passed: true, delays: report.delays, cursor: report.cursor, fullscreen:report.fullscreen, samples:report.saves.samples.length}));
+    console.log(JSON.stringify({passed: true, delays: report.delays, cursor: report.cursor, jumpPeak:Math.max(...report.jump.map(v=>v.feet[1])), samples:report.saves.samples.length}));
 } catch (error) {
     console.error(JSON.stringify({state: await state().catch(() => null), timing: await page.evaluate(() => window.chatTiming).catch(() => null), errors}));
     throw error;

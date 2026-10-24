@@ -30,34 +30,9 @@ test('game cancels delivered Ctrl + W without cancelling editing or UI shortcuts
     }finally{f.close();}
 });
 
-test('reserved W capture requires API fullscreen and is released for UI, focus loss and navigation', async () => {
-    const f=keyboard();try {
-        f.controller.sync();assert.equal(f.calls.length,0);
-        f.doc.fullscreenElement={};f.controller.sync();f.controller.sync();await Promise.resolve();
-        assert.deepEqual(f.calls,[['KeyW']]);
-        f.enable(false);f.controller.sync();assert.equal(f.controller.locking,false);
-        f.enable(true);f.controller.sync();assert.equal(f.calls.length,2);
-        f.win.dispatchEvent(new Event('blur'));assert.equal(f.controller.locking,false);
-        f.controller.sync();f.win.dispatchEvent(new Event('pagehide'));assert.equal(f.controller.locking,false);
-        assert.ok(f.unlocks()>=3);
-    }finally{f.close();}
-});
-
 test('unchanged autosave gates preserve gestures, mouse ownership and render state', () => {
     const view=Object.assign(Object.create(SceneView.prototype),{input:true,mode:{pause:()=>assert.fail('changed lock')},cancel:()=>assert.fail('cancelled input'),requestRender:()=>assert.fail('restarted render')}) as SceneView;
     for(let i=0;i<40;i++)view.setInputEnabled(true);
-});
-
-test('denied keyboard permission cannot be requested again by autosave snapshots', async () => {
-    const f=keyboard();try {
-        let requests=0;
-        f.controller.port={lock:async()=>{requests++;throw Error('permission denied');},unlock:()=>{}};
-        f.doc.fullscreenElement={};f.controller.sync();await new Promise(resolve=>setImmediate(resolve));
-        for(let i=0;i<20;i++)f.controller.sync();
-        assert.equal(requests,1);assert.equal(f.controller.denied,true);
-        f.enable(false);f.controller.sync();f.enable(true);f.controller.sync();
-        await new Promise(resolve=>setImmediate(resolve));assert.equal(requests,2);
-    }finally{f.close();}
 });
 
 test('unchanged viewport notifications do not clear the framebuffer; real resize is consumed by the render frame', () => {

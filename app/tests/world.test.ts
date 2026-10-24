@@ -190,7 +190,7 @@ test('grass chance uses shared reproducible native rolls and cane/egg profile ad
     assert.ok(progress(h.a).unlocked.includes('minecraft:wheat_seeds'));
     await h.a.dispatch({type: 'select-scene', scene: 'farm'});
     await harvest(h.a, 'sugar_cane:0');
-    await harvest(h.a, 'chicken-egg:0');
+    await h.a.dispatch({type:'pickup-ground',scene:'farm',feet:[4.5,0,-1.5],visit:progress(h.a).world.visits.farm.epoch});
     assert.ok(progress(h.a).unlocked.includes('minecraft:sugar_cane'));
     assert.ok(progress(h.a).unlocked.includes('minecraft:egg'));
 });
@@ -538,7 +538,7 @@ test('empty formal save reaches cake through native sources, approved fill/take,
         expected: structuredClone(progress(a).scenes.cave.stations[0].contents)
     });
     await a.dispatch({type: 'select-scene', scene: 'farm'});
-    await harvest(a, 'chicken-egg:0');
+    await a.dispatch({type:'pickup-ground',scene:'farm',feet:[4.5,0,-1.5],visit:progress(a).world.visits.farm.epoch});
     await harvest(a, 'sugar_cane:0');
     await a.dispatch({type: 'select-scene', scene: 'plains'});
     const table = progress(a).scenes.plains.stations[0];

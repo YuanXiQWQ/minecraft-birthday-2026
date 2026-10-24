@@ -40,17 +40,25 @@ function texture(id: string): void {
 
 /** Authoring chooses exact native states, not unsupported arbitrary weighted rotations. */
 const states: { block: string; state: string; variant: any }[] = [];
-for (const block of ['grass_block', 'dirt', 'dirt_path', 'oak_log', 'oak_leaves', 'short_grass', 'tall_grass', 'dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet', 'sugar_cane', 'coal_ore', 'iron_ore', 'stone', 'cobblestone', 'farmland', 'wheat', 'oak_planks', 'wall_torch']) {
+for (const block of ['grass_block', 'dirt', 'dirt_path', 'oak_log', 'oak_leaves', 'short_grass', 'tall_grass', 'dandelion', 'poppy', 'oxeye_daisy', 'cornflower', 'azure_bluet', 'sugar_cane', 'coal_ore', 'iron_ore', 'stone', 'cobblestone', 'farmland', 'wheat', 'oak_planks', 'wall_torch', 'oak_stairs', 'oak_slab', 'hay_block', 'lantern', 'spruce_log', 'spruce_planks', 'birch_planks', 'stone_bricks', 'smooth_stone', 'bookshelf', 'red_wool', 'glowstone', 'glass']) {
     const doc = JSON.parse(take('assets/minecraft/blockstates/' + block + '.json').toString());
     for (const [state, value] of Object.entries(doc.variants)) {
-        if (block === 'grass_block' && state !== 'snowy=false' || block === 'oak_log' && state !== 'axis=y' || block === 'farmland' && state !== 'moisture=7' || block === 'wheat' && !['age=0', 'age=2', 'age=5', 'age=7'].includes(state)) continue;
+        if (block === 'grass_block' && state !== 'snowy=false' || block === 'oak_log' && state !== 'axis=y') continue;
         const variant = Array.isArray(value) ? value[0] : value;
         const m = resolveModel((variant as any).model, model);
         for (const t of Object.values(m.textures ?? {})) texture(resolveTexture(t, m.textures ?? {}));
         states.push({block, state, variant});
     }
 }
-for (const t of ['entity/cow/cow_temperate', 'entity/chicken/chicken_temperate', 'colormap/grass', 'colormap/foliage', 'block/water_still', 'item/egg']) texture(t);
+// Native multipart fence pieces retain the exact original variant rotations and UV lock.
+const fence=JSON.parse(take('assets/minecraft/blockstates/oak_fence.json').toString());
+for(const part of fence.multipart) {
+    const state=!part.when?'post':Object.entries(part.when).map(([key,value])=>key+'='+value).join(',');
+    const variant=part.apply,m=resolveModel(variant.model,model);
+    for(const t of Object.values(m.textures??{}))texture(resolveTexture(t,m.textures??{}));
+    states.push({block:'oak_fence',state,variant});
+}
+for (const t of ['entity/cow/cow_temperate', 'entity/chicken/chicken_temperate', 'colormap/grass', 'colormap/foliage', 'block/water_still', 'item/egg', 'item/wheat', 'item/wheat_seeds']) texture(t);
 /** Native adult static geometry transcribed from the hash-locked createBase*Model methods; model space has downward Y. */
 const animals = {
     version: '26.3',
@@ -96,7 +104,8 @@ const animals = {
         }]
     }
 };
-const classes = Object.fromEntries(['net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
+for(const path of ['data/minecraft/block_transformer/hoe.json','data/minecraft/tags/block/turns_into_farmland.json','data/minecraft/tags/block/maintains_farmland.json','data/minecraft/tags/item/hoes.json'])take(path);
+const classes = Object.fromEntries(['net/minecraft/world/level/block/FarmlandBlock.class','net/minecraft/world/level/block/CropBlock.class','net/minecraft/world/entity/Mob.class','net/minecraft/world/entity/ai/goal/RandomStrollGoal.class','net/minecraft/world/entity/animal/cow/AbstractCow.class','net/minecraft/world/entity/animal/chicken/Chicken.class','net/minecraft/world/entity/item/ItemEntity.class','net/minecraft/client/renderer/entity/ItemEntityRenderer.class','net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
 writeFileSync(resolve(root, 'app/web/src/data/animal-models.json'), JSON.stringify(animals, null, 2) + '\n');
 
 /** Fetch an official asset only after checking its locked SHA1. @param {string} url Official location. @param {string} sha1 Expected digest. @return {Promise<Buffer>} Verified bytes. */
@@ -122,7 +131,7 @@ const soundsRaw = await object('minecraft/sounds.json'), sounds = JSON.parse(sou
     events: Record<string, unknown> = {};
 inputs['asset-index:' + lock.url] = lock.sha1;
 inputs['minecraft/sounds.json'] = hash(soundsRaw);
-for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break', 'block.metal.break', 'block.stone.hit', 'block.wood.hit', 'block.metal.hit', 'block.grass.hit', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup']) {
+for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break', 'block.metal.break', 'block.stone.hit', 'block.wood.hit', 'block.metal.hit', 'block.grass.hit', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup', 'item.hoe.till', 'entity.cow.ambient', 'entity.chicken.ambient', 'entity.cow.step', 'entity.chicken.step']) {
     if (!sounds[name]) throw Error('missing-native-sound:' + name);
     events[name] = sounds[name];
     for (const raw of sounds[name].sounds) {
@@ -135,7 +144,7 @@ for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break'
 }
 files.set('assets/minecraft/world-sounds.json', Buffer.from(JSON.stringify(events, null, 2) + '\n'));
 const existing = new Set<string>();
-for (const name of ['manifest', 'presentation-manifest', 'catalogue-manifest', 'player-manifest', 'book-manifest']) for (const e of JSON.parse(readFileSync(resolve(out, name + '.json'), 'utf8')).entries) existing.add(e.entry);
+for (const name of ['manifest', 'presentation-manifest', 'catalogue-manifest', 'player-manifest', 'book-manifest', 'experience-manifest', 'interaction-manifest', 'interface-manifest', 'environment-manifest', 'ambience-manifest', 'startup-manifest', 'advancement-manifest', 'controls-manifest']) for (const e of JSON.parse(readFileSync(resolve(out, name + '.json'), 'utf8')).entries) existing.add(e.entry);
 const entries = [...files].filter(([p]) => !existing.has(p)).sort(([a], [b]) => a.localeCompare(b)).map(([entry, b]) => {
     mkdirSync(dirname(resolve(out, entry)), {recursive: true});
     writeFileSync(resolve(out, entry), b);
@@ -150,6 +159,6 @@ writeFileSync(resolve(out, 'world-manifest.json'), JSON.stringify({
     entries,
     animalModelSha256: hash(readFileSync(resolve(root, 'app/web/src/data/animal-models.json'))),
     exporterSha256: hash(readFileSync(import.meta.filename, 'utf8').replaceAll('\r\n', '\n')),
-    scope: 'Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; static animal pose, no navigation/AI'
+    scope: 'Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; bounded native ambient sounds, ground items and farmland states'
 }, null, 2) + '\n');
 console.log({states: states.length, newResources: entries.length});

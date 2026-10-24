@@ -1,8 +1,11 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {agriculture,soilAt,till,trample,tickAgriculture,cropStage,canPickup} from './agriculture.ts';
+import {rolledDrops} from '../rules/harvest.ts';
 import {placementBlocks,PLACEABLE,placedDrops,connectBlocks,survives} from './placed-blocks.ts';
 import {SOUND_CHANNELS} from './audio-settings.ts';
 import {emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
+import {NativeRandom} from './environment.ts';
 import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
 import {quickMove} from './slots.ts';
 import {correctTool} from '../rules/process.ts';
@@ -58,12 +61,13 @@ export const KNOWN_ITEMS = new Set(reachable);
  * @param {Stack[]} deposited Groups actually put into visible carriers.
  * @param {Stack[]} overflow Groups available through permanent facts but not stored elsewhere.
  * @param {DomainEvent[]} events Commit-only notifications.
+ * @param {boolean} pickup Whether delivery represents collecting world drops.
  */
-function acquisition(p: Progress, drops: Stack[], deposited: Stack[], overflow: Stack[], events: DomainEvent[]): void {
+function acquisition(p: Progress, drops: Stack[], deposited: Stack[], overflow: Stack[], events: DomainEvent[], pickup = true): void {
     for (const drop of drops) if (!p.unlocked.includes(drop.id)) {
         item(drop.id); p.unlocked.push(drop.id); events.push({type: 'item-unlocked', item: drop.id});
     }
-    if (drops.length) events.push({type: 'items-acquired', stacks: structuredClone(drops), deposited: structuredClone(deposited), overflow: structuredClone(overflow)});
+    if (drops.length) events.push({type: 'items-acquired', stacks: structuredClone(drops), deposited: structuredClone(deposited), overflow: structuredClone(overflow), pickup});
 }
 
 /** Deliver harvest with hotbar-first vacancies, retaining compatible merges, overflow facts and one settlement.
@@ -82,6 +86,15 @@ function depositHarvest(p: Progress, drops: Stack[], rules: Rules, events: Domai
         if (source.stack) overflow.push(structuredClone(source.stack));
     }
     acquisition(p, drops, deposited, overflow, events);
+}
+
+/** Keep trampled wheat drops on the ground until actual pickup fits the finite bag.
+ * @param {Progress} p Mutable scene facts.
+ * @param {import('./types.ts').Crop} crop Removed crop lifetime.
+ * @param {Rules} rules Original loot tables.
+ */
+function dropCrop(p:Progress,crop:import('./types.ts').Crop,rules:Rules):void {
+    const a=agriculture(p),rng=new NativeRandom(a.random,true);for(const stack of rolledDrops('minecraft:wheat',null,rules,()=>rng.float(),cropStage(crop)))a.drops.push({id:'soil-drop-'+p.scene+'-'+(++a.serial),cell:[...crop.cell],stack});a.random=Number(rng.state);
 }
 
 /** Create independent empty progress, with no natural-resource visits or offline timestamps.
@@ -218,9 +231,16 @@ export function validateState(value: unknown): asserts value is State {
     const ids = new Set<string>();
     for (const id of SCENES) {
         const scene = p.scenes[id];
-        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[])]);
+        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[]),...(Object.hasOwn(scene,'agriculture')?['agriculture']:[])]);
         ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
         if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
+        if(scene.agriculture){
+            const a=scene.agriculture;fields(a,['version','random','soils','drops','serial']);
+            ensure(a.version===1&&Number.isSafeInteger(a.random)&&a.random>=0&&a.random<281474976710656&&Number.isSafeInteger(a.serial)&&a.serial>=0);
+            ensure(Array.isArray(a.soils)&&a.soils.length<=16384&&new Set(a.soils.map(s=>s.cell.join(','))).size===a.soils.length&&Array.isArray(a.drops)&&a.drops.length<=4096);
+            for(const soil of a.soils){fields(soil,['cell','moisture']);cell(soil.cell);ensure(soil.cell[0]>=-18&&soil.cell[0]<=18&&soil.cell[2]>=-22&&soil.cell[2]<=10&&soil.cell[1]>=-4&&soil.cell[1]<=6&&(soil.moisture===null||Number.isInteger(soil.moisture)&&soil.moisture>=0&&soil.moisture<=7));}
+            for(const drop of a.drops){fields(drop,['id','cell','stack']);cell(drop.cell);ensure(typeof drop.id==='string'&&!ids.has(drop.id));ids.add(drop.id);ensure(KNOWN_ITEMS.has(drop.stack.id)&&Number.isInteger(drop.stack.count)&&drop.stack.count>0&&drop.stack.count<=64);}
+        }
         const blockCells=new Set<string>();
         for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));ids.add(b.id);blockCells.add(b.cell.join(','));}
         ensure(scene.layoutVersion === 1 && Array.isArray(scene.stations) && scene.stations.length <= 512 && Array.isArray(scene.crops) && scene.crops.length <= 512);
@@ -240,8 +260,9 @@ export function validateState(value: unknown): asserts value is State {
             ensure(!blockCells.has(c.cell.join(',')));
             if (c.growth?.version === 1) {
                 fields(c.growth, ['version', 'data']);
-                fields(c.growth.data, ['ticks']);
-                ensure(id === 'farm' && c.item === 'minecraft:wheat_seeds' && WORLD_SCENES.farm.plots.some(plot => sameCell(plot, c.cell)), 'invalid-crop-location');
+                fields(c.growth.data, ['ticks',...(c.growth.data.age===undefined?[]:['age'])]);
+                ensure(c.growth.data.age===undefined||Number.isInteger(c.growth.data.age)&&c.growth.data.age>=0&&c.growth.data.age<=7);
+                ensure(c.item === 'minecraft:wheat_seeds' && soilAt({...p,scene:id} as Progress,[c.cell[0],c.cell[1]-1,c.cell[2]])?.moisture != null, 'invalid-crop-location');
                 ensure(Number.isInteger(c.growth.data.ticks) && c.growth.data.ticks >= 0 && c.growth.data.ticks <= 240);
             } else reserved(c.growth);
             ensure(!occupied.has(c.cell.join(',')));
@@ -275,6 +296,27 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
+        case 'till-soil': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            till(p,command.cell,command.normal,p.player.data.hotbar[p.player.data.selected]);break;
+        }
+        case 'land-on-soil': {
+            ensure(command.scene===p.scene&&rules,'wrong-scene');
+            const crop=trample(p,command.feet,command.distance);if(crop)dropCrop(p,crop,rules);
+            break;
+        }
+        case 'pickup-ground': {
+            ensure(command.scene===p.scene&&command.visit===p.world.visits[p.scene].epoch&&rules,'resource-visit-conflict');
+            const a=agriculture(p),visit=p.world.visits[p.scene];
+            const candidates=[...a.drops,...WORLD_SCENES[p.scene].nodes.filter(n=>n.kind==='egg'&&!visit.removed.includes(n.id)).map(n=>({id:n.id,cell:n.cell,stack:{id:'minecraft:egg',count:1}}))];
+            for(const drop of candidates){if(!canPickup(command.feet,drop.cell))continue;
+                const source={stack:structuredClone(drop.stack) as Stack|null,policy:{take:true,place:false}};
+                storeAcquired(source,{...p.player.data,cursor:null},rules);const count=drop.stack.count-(source.stack?.count??0);
+                if(!count)continue;const delivered={...drop.stack,count};acquisition(p,[delivered],[delivered],[],events);
+                if(WORLD_SCENES[p.scene].nodes.some(n=>n.kind==='egg'&&n.id===drop.id))visit.removed.push(drop.id);
+                else if(source.stack)drop.stack=source.stack;else a.drops=a.drops.filter(d=>d.id!==drop.id);
+            }break;
+        }
         case 'save-pose':ensure(command.scene===p.scene,'wrong-scene');p.scenes[p.scene].pose=structuredClone(command.pose);break;
         case 'place-block': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
@@ -390,8 +432,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if(control.stepTicks)control.stepTicks--;
                 p.world.tick++;
                 p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
+                for(const {scene,crop} of tickAgriculture(p))dropCrop({...p,scene},crop,rules);
                 for (const scene of Object.values(p.scenes)) {
-                    for (const crop of scene.crops) if (crop.growth.version === 1) crop.growth.data.ticks = Math.min(240, crop.growth.data.ticks + 1);
                     for (const device of scene.stations) if (device.kind === 'furnace' || device.kind === 'blast_furnace') {
                         if (device.contents.version !== 2) device.contents = emptyFurnace();
                         const returned = advanceFurnace(device.contents as ReturnType<typeof emptyFurnace>, device.kind, 1, rules);
@@ -438,7 +480,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                     storeAcquired(source, carriers, rules);
                     ensure(!source.stack, 'inventory-full');
                 }
-                acquisition(p, converted, converted, [], events);
+                acquisition(p, converted, converted, [], events, false);
             } else depositHarvest(p, drops, rules, events);
             break;
         }

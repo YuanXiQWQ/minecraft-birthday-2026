@@ -89,7 +89,7 @@ export async function loadResources(world = false, progress?: (done: number, tot
                 rgba: c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data,
                 static: e.entry.includes('/entity/') || e.entry.includes('/item/'),
                 cutout:e.entry.endsWith('/tripwire.png'),
-                blend: e.entry.includes('/water_') || e.entry.includes('/destroy_stage_'),
+                blend: e.entry.includes('/water_') || e.entry.includes('/destroy_stage_') || e.entry.endsWith('/block/glass.png'),
                 sha256: hash
             });
         } else documents.set(e.entry, JSON.parse(new TextDecoder().decode(bytes)));
@@ -101,8 +101,8 @@ export async function loadResources(world = false, progress?: (done: number, tot
     }
     const samples: Sample[] = [];
     for (const [path, doc] of documents) if (path.includes('/blockstates/')) {
-        if (!doc.variants || doc.multipart) continue;
         const authored = worldPack?.states.filter((v: any) => path.endsWith('/' + v.block + '.json'));
+        if ((!doc.variants || doc.multipart) && !authored?.length) continue;
         if(!authored?.length&&!base.entries.some((e:any)=>e.entry===path)&&!home.entries.some((e:any)=>e.entry===path))continue;
         for (const [state, raw] of (authored?.length ? authored.map((v: any) => [v.state, v.variant]) : Object.entries(doc.variants))) for (const [i, variant] of (Array.isArray(raw) ? raw : [raw]).entries()) {
             const v = variant as Variant;

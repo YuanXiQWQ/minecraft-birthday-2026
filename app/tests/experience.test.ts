@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {Box3, Group, MeshBasicMaterial, Vector3, Scene, PerspectiveCamera} from 'three';
+import {Box3, Group, MeshBasicMaterial, Vector3, Scene, PerspectiveCamera, Texture} from 'three';
 import {emptyInventory, reduceInventory, layout} from '../web/src/domain/inventory.ts';
 import {initialState, transition} from '../web/src/domain/state.ts';
 import {checksum, seal, decode} from '../web/src/persistence/codec.ts';
@@ -16,6 +16,8 @@ import {VanillaModels} from '../web/src/render/vanilla-models.ts';
 import {resolveModel, compileModel} from '../web/src/render/model-format.ts';
 import {resources} from '../tools/resources.ts';
 import {SceneView} from '../web/src/render/scene.ts';
+import {BlockFeedback} from '../web/src/render/block-feedback.ts';
+import type {Resources} from '../web/src/render/resources.ts';
 import type {Rules, Stack} from '../web/src/rules/types.ts';
 
 /** The exact audited rule registry, including all supported finite capacities. */
@@ -250,20 +252,21 @@ test('native-texture break fragments keep the existing RAF alive only until thei
                 info: {autoReset: true, reset() {}, render: {calls: 1, triangles: 24}, memory: {geometries: 12}}
             }
         });
+        const texture=new Texture();let textureReleased=0,geometryReleased=0,materialReleased=0;
+        texture.addEventListener('dispose',()=>textureReleased++);
+        v.models.textures=new Map([['minecraft:block/oak_log',{map:texture} as any]]);
+        const pack={documents:new Map([['assets/minecraft/blockstates/oak_log.json',{variants:{'':{model:'minecraft:block/oak_log'}}}],['assets/minecraft/models/block/oak_log.json',{textures:{particle:'minecraft:block/oak_log'}}]])} as unknown as Resources;
+        v.feedbackEffects=new BlockFeedback(pack,v.models,v.scene,v.camera,null);
         v.breakEffect('oak_log', [0, 1, 0]);
-        assert.equal(v.debris.length, 12);
-        let released = 0;
-        for (const p of v.debris) {
-            p.mesh.geometry.addEventListener('dispose', () => released++);
-            const m = p.mesh.material as MeshBasicMaterial;
-            m.addEventListener('dispose', () => released++);
-            m.map!.addEventListener('dispose', () => released++);
-        }
+        assert.equal(v.debris.length, 1);assert.equal(v.debris[0].particles.length,64);
+        v.debris[0].mesh.geometry.addEventListener('dispose',()=>geometryReleased++);
+        v.debris[0].mesh.material.addEventListener('dispose',()=>materialReleased++);
         callbacks.shift()!(performance.now());
         assert.equal(callbacks.length, 1);
-        v.updateDebris(performance.now() + 1000);
-        assert.equal(v.debris.length, 0);
-        assert.equal(released, 36);
+        v.updateDebris(performance.now() + 2500);
+        assert.equal(v.debris.length, 0);assert.equal(geometryReleased,1);
+        assert.equal(materialReleased,0);assert.equal(textureReleased,0);
+        v.feedbackEffects.dispose();assert.equal(materialReleased,1);assert.equal(textureReleased,0);
         callbacks.shift()!(performance.now());
         assert.equal(callbacks.length, 0);
     } finally {

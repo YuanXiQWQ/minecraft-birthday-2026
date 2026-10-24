@@ -48,7 +48,7 @@ export class PlayerMotion {
         const box=playerBounds(origin,this.crouching),result:Cell=[0,0,0],axes=Math.abs(delta[0])<Math.abs(delta[2])?[1,2,0]:[1,0,2];
         for(const a of axes){result[a]=clip(box,solids,a,delta[a]);box[a]+=result[a];box[a+3]+=result[a];}return result;
     }
-    /** Advance one native travel tick with WASD, jump, sprint and edge-safe sneak.
+    /** Advance one native travel tick with WASD, jump, sprint, edge-safe sneak and complete downward landing distance.
      * @param {Set<string>} keys Physical keyboard codes currently held.
      * @param {number} yaw Camera yaw in Three's right-handed coordinates.
      * @param {Bounds[]} solids Nearby authoritative collision shapes.
@@ -83,7 +83,7 @@ export class PlayerMotion {
         const wall=moved[0]!==desired[0]||moved[2]!==desired[2];
         if(wall)this.sprinting=false;
         const horizontal=Math.hypot(moved[0],moved[2])*.6;this.walk+=horizontal;this.moveDistance+=environment.climb?Math.hypot(...moved)*.6:horizontal;
-        if(!this.grounded&&moved[1]<0)this.fallDistance-=moved[1];else if(this.grounded){this.landedDistance=this.fallDistance;this.fallDistance=0;}
+        if(environment.water)this.fallDistance=0;else if(moved[1]<0)this.fallDistance-=moved[1];if(this.grounded){this.landedDistance=this.fallDistance;this.fallDistance=0;}
         if(this.moveDistance>this.nextStep&&(this.grounded||environment.climb)&&!environment.water){this.nextStep=Math.floor(this.moveDistance)+1;this.step=!sneak;}
         if(environment.climb&&(wall||keys.has('Space')))this.velocity[1]=.2;
         if(environment.water){this.velocity[1]=this.velocity[1]*.8-.005;if(wall){const raised=this.feet.map((n,i)=>n+(i===1?.6:desired[i])) as Cell;if(!solids.some(b=>overlaps(playerBounds(raised,this.crouching),b)))this.velocity[1]=.3;}}

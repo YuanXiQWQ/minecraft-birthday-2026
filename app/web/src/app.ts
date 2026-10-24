@@ -9,6 +9,7 @@ import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat, nativeScale} from './ui/chat.ts';
 import {scheduleAuthorWelcome} from './ui/author-welcome.ts';
 import {GameKeyboard} from './ui/game-keyboard.ts';
+import {pickupSoundOptions} from './ui/pickup-feedback.ts';
 import {AdvancementView} from './ui/advancements.ts';
 import {advancementChat} from './ui/advancement-chat.ts';
 import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
@@ -73,7 +74,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         if (host.dataset.overlay !== String(open)) host.dataset.overlay = String(open);
         if (host.dataset.effect !== effect) {delete host.dataset.menuComposited; host.dataset.effect = effect; scene?.requestRender();}
         scene?.setInputEnabled(!open);
-        gameKeyboard?.sync();
+        scene?.setSimulationPaused(page === 'game' && (!startup?.ready || dialog.open || !!menu?.open));
     };
     const listenerDirection=new Vector3();
     let music:GameMusic|null=null,lastAudioReport=0;
@@ -491,9 +492,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
 
         menu = document.createElement('dialog'); menu.className = 'game-menu'; menu.id = 'game-menu';
-        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}), button('menu.fullscreen', () => {
-            void gameKeyboard?.fullscreen().then(success => {if (!success) feedback('game.fullscreenFailed'); else {menu!.close(); updateGate();}});
-        }));
+        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
         host.append(menu);
         menu.addEventListener('close', () => updateGate());
         for (const view of [menu, dialog]) {
@@ -597,7 +596,6 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         showOptions('options');
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
         scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
-        scene.onPointerFailure = () => feedback('game.pointerFailed');
         scene.setInputEnabled(page === 'home' && !dialog.open);
         scene.onGraphics = ready => {
             if (!ready) delete host.dataset.menuComposited;
@@ -657,6 +655,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                     }
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
+                        const pickup=pickupSoundOptions(event),owner=runtimeGeneration,serial=session.serial,sceneId=session.view.envelope?.state.progress.scene;
+                        if(pickup)void worldAudio?.play('entity.item.pickup',{...pickup,valid:()=>!disposed&&!session.suspended&&runtimeGeneration===owner&&session.serial===serial&&session.view.envelope?.state.progress.scene===sceneId});
                         for (const line of harvestFeedback(event, t, session.view.envelope?.state.settings.locale)) chat?.append(line);
                     } else if (event.type === 'item-unlocked') {
                         if (!taught) {taught = true; chat?.append([{text: t('chat.tutorial')}]);}
