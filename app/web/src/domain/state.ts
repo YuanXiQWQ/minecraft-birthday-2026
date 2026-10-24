@@ -3,7 +3,8 @@ import {agriculture,soilAt,till,trample,tickAgriculture,cropStage,canPickup} fro
 import {rolledDrops} from '../rules/harvest.ts';
 import {placementBlocks,PLACEABLE,placedDrops,connectBlocks,survives} from './placed-blocks.ts';
 import {SOUND_CHANNELS} from './audio-settings.ts';
-import {emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
+import {BIRTHDAY_ADVANCEMENT,emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
+import {teleportScene} from './teleport.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
 import {NativeRandom} from './environment.ts';
 import {emptyEnvironment,tickEnvironment,validateEnvironment,validateSkySettings} from './environment.ts';
@@ -272,8 +273,9 @@ export function validateState(value: unknown): asserts value is State {
         }
     }
     if (p.cakePlacement !== null) {
-        fields(p.cakePlacement, ['scene', 'table']);
+        fields(p.cakePlacement, ['scene', 'table', ...(Object.hasOwn(p.cakePlacement,'bites')?['bites']:[])]);
         ensure(p.cakePlacement.scene === 'home' && p.cakePlacement.table === 'birthday-table' && p.unlocked.includes('minecraft:cake'));
+        if(p.cakePlacement.bites!==undefined)ensure(Number.isInteger(p.cakePlacement.bites)&&p.cakePlacement.bites>=0&&p.cakePlacement.bites<=7);
     }
 }
 
@@ -326,6 +328,22 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
             for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
             p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
+        }
+        case 'eat-cake': {
+            ensure(command.scene===p.scene,'wrong-scene');
+            ensure(Number.isInteger(command.expectedBites)&&command.expectedBites>=0&&command.expectedBites<7,'invalid-cake-bites');
+            if(command.id==='birthday-cake'){
+                const cake=p.cakePlacement;
+                if(p.scene!=='home'||!cake||(cake.bites??0)!==command.expectedBites)break;
+                cake.bites=command.expectedBites+1;
+            }else{
+                const scene=p.scenes[p.scene],cake=scene.blocks?.find(b=>b.id===command.id&&b.block==='cake');
+                if(!cake||Number(cake.state.bites??0)!==command.expectedBites)break;
+                if(command.expectedBites===6)scene.blocks=scene.blocks!.filter(b=>b.id!==cake.id);
+                else cake.state.bites=String(command.expectedBites+1);
+            }
+            events.push({type:'cake-eaten'});
+            break;
         }
         case 'use-block': {
             ensure(command.scene===p.scene,'wrong-scene');const blocks=p.scenes[p.scene].blocks??[],b=blocks.find(b=>b.id===command.id);ensure(b,'block-unavailable');
@@ -507,6 +525,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 ensure(rules, 'native-rules-unavailable');
                 receipt = takeCraft(carriers, command.take, p.unlocked, rules);
                 if (receipt.recipe) acquiredRecipes.push(receipt.recipe);
+                if (receipt.recipe === 'minecraft:cake' && !p.advancements?.criteria[BIRTHDAY_ADVANCEMENT]?.includes('cake_crafted')) events.push({type:'cake-crafted'});
                 inventory = receipt.inventory;
                 for (const id of receipt.acquired) {
                     item(id);
@@ -548,11 +567,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             break;
         case 'select-scene':
             ensure(SCENES.includes(command.scene));
-            if (p.scene !== command.scene) {
-                p.scene = command.scene;
-                p.world.visits[p.scene].epoch++;
-                p.world.visits[p.scene].removed = [];
-            }
+            teleportScene(p, command.scene);
             break;
         case 'put-station':
             if (command.expected) ensure(command.scene === p.scene && identity(command.expected) === identity(p.player.data) && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:' + command.station.kind, 'inventory-conflict');
@@ -606,19 +621,20 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'record-cake-placement':
             if (command.expected) ensure(identity(command.expected) === identity(p.player.data), 'inventory-conflict');
             ensure(command.scene === 'home' && command.table === 'birthday-table' && p.scene === 'home' && p.unlocked.includes('minecraft:cake'), 'invalid-cake-placement');
-            if (!p.cakePlacement) {
+            if (!p.cakePlacement || p.cakePlacement.bites===7) {
+                const firstPlacement=!p.cakePlacement;
                 const held = p.player.data.hotbar[p.player.data.selected];
                 ensure(held?.id === 'minecraft:cake' && held.count > 0, 'cake-not-held');
                 p.player.data.hotbar[p.player.data.selected] = held.count > 1 ? {...held, count: held.count - 1} : null;
                 p.cakePlacement = {scene: 'home', table: 'birthday-table'};
-                events.push({type: 'cake-placed'});
+                if(firstPlacement)events.push({type: 'cake-placed'});
             }
             break;
         default:
             throw new Error('unknown-command');
     }
     p.advancements??=emptyAdvancements();
-    const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop');
+    const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop',events.some(e=>e.type==='cake-placed'),events.some(e=>e.type==='cake-crafted'));
     if(completed.length)events.push({type:'advancements-completed',advancements:completed});
     if (!['processing-tick','settings','save-pose'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
@@ -658,7 +674,7 @@ export function catalogue(state: State): { item: string; unlocked: boolean }[] {
 
 /** Project the sole persistent completion fact for either page.
  * @param {State} state Current snapshot.
- * @return {boolean} Whether the table should display a cake.
+ * @return {boolean} Whether the birthday placement milestone has been completed, including an eaten cake.
  */
 export function hasCake(state: State): boolean {
     return state.progress.cakePlacement !== null;

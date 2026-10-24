@@ -10,7 +10,40 @@ import type {TextRun} from './item-style.ts';
 export type ChatKind = 'system' | 'player' | 'author';
 export interface ChatMessage {runs: TextRun[]; time: number; kind: ChatKind; identity?: string}
 /** A wrapped line retains its message and component offset for native styling and hover text. */
-interface ChatRow {text:string;message:ChatMessage;start:number}
+interface ChatRow {text:string;message:ChatMessage;start:number;indent:boolean}
+/** Split native chat components without collapsing spaces or losing source offsets; soft wraps receive one display-only space.
+ * @param {string} raw Joined component text.
+ * @param {number} width Native wrapping width before continuation indentation.
+ * @param {Function} measure Font advance measurement.
+ * @return {object[]} Lines with UTF-16 source offsets and native continuation flags.
+ */
+export function wrapChat(raw:string,width:number,measure:(text:string)=>number):{text:string;start:number;indent:boolean}[]{
+    const rows:{text:string;start:number;indent:boolean}[]=[];let start=0,indent=false;
+    while(start<raw.length){
+        let at=start,lastSpace=-1,used=0,hasWidth=false,split=raw.length;
+        for(const ch of raw.slice(start)){
+            if(ch==='\n'){split=at;break;}
+            if(ch===' ')lastSpace=at;
+            const advance=measure(ch);used+=advance;
+            if(hasWidth&&used>Math.max(1,width)){split=lastSpace>=start?lastSpace:at;break;}
+            hasWidth ||= advance!==0;at+=ch.length;
+        }
+        rows.push({text:raw.slice(start,split),start,indent});
+        if(split===raw.length)return rows;
+        const newline=raw[split]==='\n';start=split+((newline||raw[split]===' ')?1:0);indent=!newline;
+        if(newline&&start===raw.length)rows.push({text:'',start,indent:false});
+    }
+    return rows.length?rows:[{text:'',start:0,indent:false}];
+}
+/** Normalize outgoing ChatScreen input using Java whitespace rules and the native 256-unit limit.
+ * @param {string} value Editor contents.
+ * @return {string} Message stored in history and sent to the command or player channel.
+ */
+export function normalizeChat(value:string):string{
+    return value.replace(/[\u0000-\u0020]+$/g,'').replace(/^[\u0000-\u0020]+/g,'')
+        .replace(/[\u0009-\u000D\u001C-\u0020\u1680\u2000-\u2006\u2008-\u200A\u2028\u2029\u205F\u3000]+/g,' ')
+        .replace(/\u00A0/g,' ').replace(/^ +| +$/g,'').slice(0,256);
+}
 /** Native auto GUI sizing leaves at least 320 by 240 logical pixels. @param {number} w View width. @param {number} h View height. @param {number} dpr Framebuffer pixel density. @return {number} CSS size of one native GUI pixel. */
 export function chatScale(w: number, h: number, dpr=1): number {let s=1; while(s<4*dpr && w*dpr/(s+1)>=320 && h*dpr/(s+1)>=240)s++; return s/dpr;}
 /** Reuse the approved DPI-aligned inventory GUI scale for every screen and HUD surface.
@@ -93,14 +126,14 @@ export class GameChat {
         this.timer=window.setInterval(()=>{if(!document.hidden&&(this.open||this.messages.some(m=>performance.now()-m.time<10_050)))this.requestPaint();},50);
         this.paint();
     }
-    /** Route history independently of offered completions; Tab explicitly owns suggestion cycling.
+    /** Normalize sent chat and route history independently of offered completions; Tab owns suggestion cycling.
      * @param {KeyboardEvent} e Actual editor keyboard input.
      */
     key(e:KeyboardEvent):void{
             e.stopPropagation(); if(e.isComposing)return;
             if(e.code==='Escape'){e.preventDefault();this.hide();}
             else if(e.code==='Enter'){
-                e.preventDefault();const value=this.input.value.trim();
+                e.preventDefault();const value=normalizeChat(this.input.value);
                 if(value){
                     if(value.startsWith('/'))void this.submitCommand(value);else this.append([{text:value}],'player',this.username());
                     this.history.push(value);if(this.history.length>100)this.history.shift();
@@ -124,7 +157,7 @@ export class GameChat {
         if(this.paintFrame||this.abort.signal.aborted)return;
         this.paintFrame=requestAnimationFrame(()=>{this.paintFrame=0;if(!this.abort.signal.aborted)this.paint();});
     }
-    /** Wrap a message only when its identity or available logical width changes.
+    /** Cache native component wrapping and continuation indentation by message identity and logical width.
      * @param {ChatMessage} message Immutable appended message.
      * @param {number} width Logical line width.
      * @return {ChatRow[]} Cached native lines and component offsets.
@@ -132,8 +165,8 @@ export class GameChat {
     messageRows(message:ChatMessage,width:number):ChatRow[]{
         this.wrapping??=new WeakMap();
         const cached=this.wrapping.get(message);if(cached?.width===width)return cached.rows;
-        const raw=message.runs.map(run=>run.text).join('');let from=0;
-        const rows=wrap(raw,width,text=>this.pixels.font.width(text)).map(text=>{const start=Math.max(from,raw.indexOf(text,from));from=start+text.length;return{text,message,start};});
+        const raw=message.runs.map(run=>run.text).join('');
+        const rows=wrapChat(raw,width,text=>this.pixels.font.width(text)).map(row=>({...row,message}));
         this.wrapping.set(message,{width,rows});return rows;
     }
     /** Reuse bounded history layout across scrolling, fading, editing and hover-only paints.
@@ -178,7 +211,7 @@ export class GameChat {
      * @param {string} source Original text for Brigadier's error context.
      */
     commandMessage(message:CommandFeedback,source=''):void{
-        for(const line of this.text(message.key,message.values).split('\n'))this.append([{text:line,color:message.error?'#FF5555':'#FFFFFF'}]);
+        for(const line of this.text(message.key,{...message.values,...(message.destination?{v1:this.text('scene.'+message.destination)}:{})}).split('\n'))this.append([{text:line,color:message.error?'#FF5555':'#FFFFFF'}]);
         if(message.cursor!==undefined){const offset=source.startsWith('/')?1:0,input=source.slice(offset),at=Math.min(input.length,Math.max(0,message.cursor-offset)),start=Math.max(0,at-10);this.append([
             {text:(start?'...':'')+input.slice(start,at),color:'#AAAAAA'},
             {text:input.slice(at),color:'#FF5555',underline:true}, {text:this.text('command.context.here'),color:'#FF5555',italic:true}
@@ -188,12 +221,12 @@ export class GameChat {
      * @param {boolean} backwards Whether to select the previous suggestion.
      */
     complete(backwards=false):void{
-        if(!this.completion){const source=this.input.value.slice(0,this.input.selectionStart??this.input.value.length),suggest=completeCommand(source);if(!suggest.values.length)return;this.completion={...suggest,index:backwards?0:-1,source:this.input.value};}
+        if(!this.completion){const source=this.input.value.slice(0,this.input.selectionStart??this.input.value.length),suggest=completeCommand(source,this.username());if(!suggest.values.length)return;this.completion={...suggest,index:backwards?0:-1,source:this.input.value};}
         const c=this.completion;c.index=(c.index+(backwards?-1:1)+c.values.length)%c.values.length;
         const end=c.source.indexOf(' ',c.start),tail=end<0?'':c.source.slice(end);this.input.value=c.source.slice(0,c.start)+c.values[c.index]+tail;
         const caret=c.start+c.values[c.index].length;this.input.setSelectionRange(caret,caret);this.paint();
     }
-    /** Draw native logical margins, styled component hovers, nine-pixel lines, message tags, fading, scrollbar and the unbordered editor. */
+    /** Draw native margins, continuation indents and component hovers; only system and scripted author messages carry a system tag. */
     paint(): void {
         if(this.paintFrame){cancelAnimationFrame(this.paintFrame);this.paintFrame=0;}
         const scale=nativeScale(this.viewport),w=Math.ceil(this.viewport.clientWidth/scale),h=Math.ceil(this.viewport.clientHeight/scale),dpr=Math.min(devicePixelRatio||1,4),width=Math.min(320,w-8),base=h-40,height=this.open?180:90;
@@ -207,17 +240,19 @@ export class GameChat {
         let y=base,tag:string|null=null,hover:TextRun['hover'];
         for(const row of bounded.slice(0,bounded.length-this.offset).reverse().slice(0,Math.floor(height/9))){
             const fade=this.open?1:chatFade((performance.now()-row.message.time)/50);
-            if(fade){c.globalAlpha=fade;c.fillStyle='#00000080';c.fillRect(4,y-9,width+4,9);c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);
-                let x=4,consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);
+            if(fade){c.globalAlpha=fade;c.fillStyle='#00000080';c.fillRect(0,y-9,width+12,9);
+                const tagged=row.message.kind!=='player';
+                if(tagged){c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);}
+                let x=4+(row.indent?this.pixels.font.width(' '):0),consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);
                     if(this.open&&this.tagHover&&this.tagHover[0]/scale>=x&&this.tagHover[0]/scale<x+this.pixels.font.width(ch)&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)hover=style.hover;
                     x+=this.pixels.font.width(ch);consumed+=ch.length;}
-                if(this.open&&this.tagHover&&this.tagHover[0]/scale<4&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)tag=this.text(row.message.kind==='system'?'chat.tag.system':'chat.tag.local');
+                if(tagged&&this.open&&this.tagHover&&this.tagHover[0]/scale>=0&&this.tagHover[0]/scale<2&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)tag=this.text('chat.tag.system');
             }y-=9;
         }
         c.globalAlpha=1;
         if(this.open){
             if(this.lineCount>20){const total=this.lineCount*9,visible=Math.min(180,total),bar=Math.floor(visible*visible/total),by=base-Math.floor(this.offset*visible/this.lineCount)-bar,alpha=this.offset>0?'AA':'60';c.fillStyle=(this.newWhileScrolled?'#CC3333':'#3333AA')+alpha;c.fillRect(8+width,by,2,bar);c.fillStyle='#CCCCCC'+alpha;c.fillRect(9+width,by,1,bar);}
-            const source=this.input.value,parsed=source.startsWith('/')?parseCommand(source):null,offered=source.startsWith('/')?completeCommand(source.slice(0,this.input.selectionStart??source.length)):null,
+            const source=this.input.value,parsed=source.startsWith('/')?parseCommand(source):null,offered=source.startsWith('/')?completeCommand(source.slice(0,this.input.selectionStart??source.length),this.username()):null,
                 suggestion=this.completion??(offered?.values.length?{...offered,index:0,source}:null),error=parsed&&'key'in parsed&&!suggestion?parsed:null;
             c.fillStyle='#00000080';c.fillRect(2,h-14,w-4,12);nativeField(c,this.pixels.font,this.input,[4,h-12,w-4,12],{shadow:true,color:source.startsWith('/')?'#AAAAAA':'#FFFFFF',invalidFrom:error?.cursor});
             if(suggestion){const list=suggestion.values,from=Math.max(0,suggestion.index-9),shown=list.slice(from,from+10),sw=Math.max(...shown.map(v=>this.pixels.font.width(v)))+2,sx=Math.max(0,Math.min(w-sw,4+this.pixels.font.width(suggestion.source.slice(0,suggestion.start)))),sy=h-15-shown.length*12;
@@ -228,7 +263,7 @@ export class GameChat {
             this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
         }
         if((tag||hover)&&this.tagHover){
-            const lines=tag?wrap(tag,200,v=>this.pixels.font.width(v)).map(text=>({text,color:'#FFFFFF'})):hover!.flatMap(line=>wrap(line.text,200,v=>this.pixels.font.width(v)).map(text=>({text,color:line.color??'#FFFFFF'}))),box=tooltipBox(lines.map(v=>this.pixels.font.width(v.text))),tx=Math.max(0,Math.min(w-box.width,this.tagHover[0]/scale+12)),ty=Math.max(0,this.tagHover[1]/scale-box.height);
+            const lines=tag?wrap(tag,210,v=>this.pixels.font.width(v)).map(text=>({text,color:'#FFFFFF'})):hover!.flatMap(line=>wrap(line.text,200,v=>this.pixels.font.width(v)).map(text=>({text,color:line.color??'#FFFFFF'}))),box=tooltipBox(lines.map(v=>this.pixels.font.width(v.text))),tx=Math.max(0,Math.min(w-box.width,this.tagHover[0]/scale+12)),ty=Math.max(0,this.tagHover[1]/scale-box.height);
             for(const name of ['background','frame']){const path='assets/minecraft/textures/gui/sprites/tooltip/'+name+'.png';drawSprite(c,this.pixels.resources.guiImages.get(path)!,this.pixels.resources.documents.get(path+'.mcmeta')?.gui?.scaling,tx,ty,box.width,box.height);}
             lines.forEach((line,i)=>this.pixels.font.draw(c,line.text,tx+12,ty+12+i*12,line.color,true));
         }

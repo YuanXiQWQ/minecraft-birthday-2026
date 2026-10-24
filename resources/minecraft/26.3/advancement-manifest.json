@@ -35,7 +35,9 @@
     "assets/minecraft/textures/block/grass_block_top.png": "52f44b64ce884a13dfe35e4b4da2e35898b790dd4d7a5ea536f1b0c0d56d29b4",
     "assets/minecraft/textures/block/grass_block_side.png": "76a677640eb91d6a9aed844bc66e329b1894f89e241a0071333b6678c0854580",
     "assets/minecraft/textures/block/grass_block_side_overlay.png": "872056682c3b059c04aba88f8b4e706f2526b907e1acef12626a9f912f573a85",
-    "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486"
+    "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486",
+    "assets/minecraft/textures/gui/sprites/advancements/challenge_frame_obtained.png": "06dc86718cab0d8bb9a6cece17039c747987a175a86c8fecbb954420fe3195c7",
+    "assets/minecraft/textures/gui/sprites/advancements/challenge_frame_unobtained.png": "ce44c61263b5762fa7813ea522e144fa10a2283901567df59ca5ccf4c70eb445"
   },
   "uiDefinitions": {
     "minecraft:grass_block": {
@@ -175,6 +177,16 @@
       "entry": "assets/minecraft/items/grass_block.json",
       "size": 219,
       "sha256": "90f0396883aac33237938af6063cbead9df853db87558d8d27c00568f96822fc"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/challenge_frame_obtained.png",
+      "size": 192,
+      "sha256": "06dc86718cab0d8bb9a6cece17039c747987a175a86c8fecbb954420fe3195c7"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/advancements/challenge_frame_unobtained.png",
+      "size": 162,
+      "sha256": "ce44c61263b5762fa7813ea522e144fa10a2283901567df59ca5ccf4c70eb445"
     }
   ]
 }

@@ -42,8 +42,8 @@ export class AuthoredWorld {
     caveLights: Cell[] = [];
     plainsDecor: Group | null = null;
 
-    /** Retain the shared native material factory. @param {VanillaModels} models Native model ownership. @param {Resources} resources Verified pixels and documents. */
-    constructor(public models: VanillaModels, public resources: Resources) {
+    /** Retain shared native materials and optional fixed-camera geometry bounds. @param {VanillaModels} models Native model ownership. @param {Resources} resources Verified pixels and documents. @param {number} homeBack Optional furthest visible home row; the complete roof remains for weather. */
+    constructor(public models: VanillaModels, public resources: Resources, public homeBack = Infinity) {
     }
 
     /** Select a declared native block state. @param {string} block Original block. @param {string} state Optional native state fragment. @return {Group} Owned model geometry. */
@@ -193,6 +193,7 @@ export class AuthoredWorld {
         this.clear(this.homeRoot);this.staticVersion++;
         const groups = new Map<string, {block:string; state:string; cells:Cell[]}>();
         for (const {block,state,cell} of cells) {
+            if(cell[2]>this.homeBack&&cell[1]<7)continue;
             if(block==='oak_stairs'){
                 const object=this.block(block,state),properties=Object.fromEntries(state.split(',').map(s=>s.split('=')));
                 object.position.set(...cell);
@@ -244,6 +245,7 @@ export class AuthoredWorld {
         this.caveRoot = null; this.caveSignature = '[]';
         const spec = WORLD_SCENES[id], floor: Cell[] = [], pad: Cell[] = [];
         for (let x = -18; x <= 18; x++) for (let z = -22; z <= 10; z++) {
+            if(id==='home'&&z>this.homeBack)continue;
             if (id !== 'farm' || !spec.plots.some(c => c[0] === x && c[2] === z) && !(x === 8 && z >= -5 && z <= 0)) {
                 floor.push([x, -1, z]);
             }

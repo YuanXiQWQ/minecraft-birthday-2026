@@ -11,7 +11,7 @@ import type {SceneId, Station} from '../web/src/domain/types.ts';
  * @param {Object3D} root Native object.
  * @return {Vector3[]} World-space candidate surfaces.
  */
-function surfaces(root: Object3D): Vector3[] {
+export function surfaces(root: Object3D): Vector3[] {
     root.updateWorldMatrix(true, true);
     const points = [new Box3().setFromObject(root).getCenter(new Vector3())];
     root.traverse(o => {

@@ -66,7 +66,7 @@ export class WorldUse {
         scene.canUse = hit => {
             const p = session.view.envelope?.state.progress, held = p?.player.data.hotbar[p.player.data.selected], equip = held && inventory.rules.items[held.id]?.equipment;
             if (!hit) return !!equip;
-            return !!p && (!!equip || (canTill(p,this.blockHit(hit).cell,this.blockHit(hit).normal,held??null) || hit.block==='farmland' || hit.id === 'birthday-table' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
+            return !!p && (!!equip || (canTill(p,this.blockHit(hit).cell,this.blockHit(hit).normal,held??null) || hit.block==='farmland' || hit.id === 'birthday-table' || hit.id === 'birthday-cake' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
         };
         scene.onMineStart = hit => this.beginMining(hit);
         scene.onMineCancel = () => this.cancelMining();
@@ -173,10 +173,10 @@ export class WorldUse {
         return this.session.dispatch(command).then(events => {
             if (!this.current(scope, serial)) return false;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
-            if(command.type==='put-station'||command.type==='plant-crop'||command.type==='record-cake-placement')this.scene.hand?.swing();
+            if(command.type==='put-station'||command.type==='plant-crop'||command.type==='record-cake-placement'||command.type==='eat-cake'&&events.some(e=>e.type==='cake-eaten'))this.scene.hand?.swing();
             if (effect) this.scene.breakEffect(effect.block, effect.point, effect.cell, effect.state);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
-            if (sound) {
+            if (sound && (command.type!=='eat-cake'||events.some(e=>e.type==='cake-eaten'))) {
                 const breaking=sound.startsWith('block.')&&['harvest-node','harvest-crop','remove-station','break-block'].includes(command.type);
                 this.sound(sound,{...options,...(breaking?{volume:((options?.volume??1)+1)/2,pitch:(options?.pitch??1)*Math.fround(.8)}:{}),valid:()=>this.current(scope,serial)});
             }
@@ -332,10 +332,14 @@ export class WorldUse {
         return Promise.resolve(false);
     }
 
-    /** Short right Use opens stations, plants, milks or places against actual faces. @param {Pick} hit Real ray. @param {boolean} shift Suppress opening a device. @param {boolean} attach Place against an existing device face. @param {boolean} above Explicit upper neighbor of the visible device. */
+    /** Short right Use eats cake, opens stations, plants, milks or places against actual faces. @param {Pick} hit Real ray. @param {boolean} shift Suppress block use. @param {boolean} attach Place against an existing device face. @param {boolean} above Explicit upper neighbor of the visible device. */
     use(hit: Pick, shift: boolean, attach = false, above = false): void {
         const p = this.session.view.envelope?.state.progress;
         if (!p) return;
+        if(hit.id==='birthday-cake'){
+            if(!shift&&p.scene==='home'&&p.cakePlacement&&(p.cakePlacement.bites??0)<7)void this.run({type:'eat-cake',scene:p.scene,id:hit.id,expectedBites:p.cakePlacement.bites??0},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});
+            return;
+        }
         if (hit.id === 'birthday-table') {
             if (p.scene === 'home' && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:cake') this.run({
                 type: 'record-cake-placement',
@@ -346,6 +350,7 @@ export class WorldUse {
             return;
         }
         const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
+        if(placed?.block==='cake'&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
         if(placed&&!shift&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);
         if (found && attach && this.heldKind()) {

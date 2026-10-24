@@ -685,7 +685,10 @@
     "assets/minecraft/sounds/block/lantern/break4.ogg": "f39cfc1f22af32e5629e43ad6923d46e63922efe9526628196c335695ef8eb84",
     "assets/minecraft/sounds/step/gravel2.ogg": "5576cefacc6789d6e3c1911a1e28f09a03f254fb73e605f32e29daa4074856d7",
     "assets/minecraft/sounds/dig/wood2.ogg": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7",
-    "assets/minecraft/controls-sounds.json": "e6fc42c4db411883da5d72caf47df6a2de6766cc5bc9b3001c6919578cf6fb83"
+    "assets/minecraft/controls-sounds.json": "a8450437f10f94d49a9b8d8715b64655276d600457a192f0158ef48a225bbe4a",
+    "assets/minecraft/sounds/random/eat1.ogg": "b96b9b3586acc8e35fad92395648e03d612534a05f332eb59bfb3ed2ace4e87a",
+    "assets/minecraft/sounds/random/eat3.ogg": "1198a64c34a8a30a7d288321915b39a79fb54813f85352e2184108fbeaa5f8e4",
+    "assets/minecraft/sounds/random/eat2.ogg": "9bf29af6b0ce04a60ed44b8a0dfc4703cad58ae9fa28a27326890828b615578d"
   },
   "entries": [
     {
@@ -970,8 +973,8 @@
     },
     {
       "entry": "assets/minecraft/controls-sounds.json",
-      "size": 16812,
-      "sha256": "e6fc42c4db411883da5d72caf47df6a2de6766cc5bc9b3001c6919578cf6fb83"
+      "size": 16975,
+      "sha256": "a8450437f10f94d49a9b8d8715b64655276d600457a192f0158ef48a225bbe4a"
     },
     {
       "entry": "assets/minecraft/models/block/barrel_open.json",
@@ -2149,6 +2152,21 @@
       "sha256": "7696f2375d33a721531415338b593540cea50e694e89aff837b704f7acb93d1f"
     },
     {
+      "entry": "assets/minecraft/sounds/random/eat1.ogg",
+      "size": 6185,
+      "sha256": "b96b9b3586acc8e35fad92395648e03d612534a05f332eb59bfb3ed2ace4e87a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/eat2.ogg",
+      "size": 6605,
+      "sha256": "9bf29af6b0ce04a60ed44b8a0dfc4703cad58ae9fa28a27326890828b615578d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/eat3.ogg",
+      "size": 6339,
+      "sha256": "1198a64c34a8a30a7d288321915b39a79fb54813f85352e2184108fbeaa5f8e4"
+    },
+    {
       "entry": "assets/minecraft/sounds/step/cloth1.ogg",
       "size": 5289,
       "sha256": "737cee2a9d1d5db85c9d47c5e36117bce3da345ce98f66d2aba2684ad4930f2b"
@@ -2720,6 +2738,7 @@
     "net/minecraft/world/item/Items.class": "cf7c261ee18d6bb55af7da16adc51fbbb7994fa09f9f8f13bec2d159bb9c9a37",
     "net/minecraft/world/item/Item$Properties.class": "da3706f036ed1d53ebf16c3dc1bb926092c57d68c6a1a6cf5565db58804dab8d",
     "net/minecraft/world/item/BlockItem.class": "cc93868ce96a2b8c0e477fe5deb0e79c78caf45be3d78e2b71d31ada0d738f39",
+    "net/minecraft/world/level/block/CakeBlock.class": "0221f820822754b857a61da4d7295b67f3da1a42e94e7554d397b319ca48a73a",
     "net/minecraft/world/level/block/Blocks.class": "2208668d8b07b2de44870cd557bb0e01625d451f55cac20c6b299f54f20638b7",
     "net/minecraft/world/level/block/BarrierBlock.class": "afb69ad95f5ef137beb7392c69d51708666dbcccbbbe33a02b1972d049bfbed0",
     "net/minecraft/world/level/block/SlabBlock.class": "82d73c22546568f5c9fbde749e9e789ce6caf8df2db0b52cc8f75235f12bc3d4",
@@ -2734,5 +2753,5 @@
     "net/minecraft/client/gui/Hud.class": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716",
     "net/minecraft/client/renderer/LevelRenderer.class": "4468dbf0dcd446d08701859a9f3a7043c8df78a8ce30fa4d1305d41cf33da020"
   },
-  "exporterSha256": "106ea336c226a18af9f749a553a86f94fbea9aa88fd7735d86599acedc9aadf5"
+  "exporterSha256": "1d170ee801a1bcf80a773e39561a9cfd374d753adf8f03896446a43a519905da"
 }

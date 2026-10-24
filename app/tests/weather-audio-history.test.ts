@@ -33,7 +33,7 @@ test('celebration production sync follows local channel drafts without committin
 function key(code:string):KeyboardEvent{return{code,stopPropagation(){},preventDefault(){}} as KeyboardEvent;}
 
 test('actual chat history Up/Down wins over automatic command offers and restores the unsent draft',()=>{
- const input={value:'/we',selectionStart:3,setSelectionRange(a:number){this.selectionStart=a;}},chat=Object.assign(Object.create(GameChat.prototype),{input,history:['/time set noon','/weather rain'],historyIndex:2,historyDraft:'',completion:null,paint(){}}) as GameChat;
+ const input={value:'/we',selectionStart:3,setSelectionRange(a:number){this.selectionStart=a;}},chat=Object.assign(Object.create(GameChat.prototype),{input,username:()=> 'sireoh',history:['/time set noon','/weather rain'],historyIndex:2,historyDraft:'',completion:null,paint(){}}) as GameChat;
  chat.key(key('ArrowUp'));assert.equal(input.value,'/weather rain');chat.key(key('ArrowUp'));assert.equal(input.value,'/time set noon');chat.key(key('ArrowDown'));assert.equal(input.value,'/weather rain');chat.key(key('ArrowDown'));assert.equal(input.value,'/we');
  chat.key(key('Tab'));assert.equal(input.value,'/weather');assert.ok(chat.completion);chat.key(key('ArrowDown'));assert.equal(input.value,'/weather');
 });

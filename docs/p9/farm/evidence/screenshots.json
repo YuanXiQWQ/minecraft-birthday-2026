@@ -1,0 +1,39 @@
+{
+  "screenshots": [
+    {
+      "file": "empty-1440.png",
+      "viewport": [
+        1440,
+        900
+      ],
+      "dpr": 1,
+      "build": "192bcde0be27",
+      "setup": "empty initial farm, controlled noon clock",
+      "canvas": {
+        "engine": "three.js r186",
+        "resourceVersion": "26.3",
+        "pointerMode": "{\"desired\":\"hidden\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":2}",
+        "hover": "null",
+        "placementPreview": "null",
+        "recoveredWorld": "{\"tick\":0,\"scene\":\"farm\",\"crops\":[]}",
+        "scene": "farm",
+        "natural": "{\"epoch\":0,\"removed\":[],\"roll\":0}",
+        "crops": "[]",
+        "cake": "false",
+        "instances": "[]",
+        "blockLight": "{\"emitters\":[{\"cell\":[-11,1,-7],\"level\":15},{\"cell\":[6,1,-7],\"level\":15}],\"maximum\":15}",
+        "crosshair": "{\"visible\":false,\"bounds\":[172,105,15,15],\"scale\":4,\"logical\":[360,225],\"ray\":[0,0],\"blend\":[\"ONE_MINUS_DST_COLOR\",\"ONE_MINUS_SRC_COLOR\",\"ONE\",\"ZERO\"]}",
+        "renderedScene": "farm",
+        "frames": "76",
+        "environment": "{\"dayTicks\":6000,\"sunAngle\":0,\"moonAngle\":180,\"moonPhase\":\"full_moon\",\"starAngle\":0,\"starOpacity\":0,\"cloudWind\":0.14999999664723873,\"cloudPosition\":[-0.14999999664723873,190.71,-10.960000038146973],\"gameTick\":0,\"partial\":5,\"dayPartial\":0,\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780,\"rainTick\":5,\"rainCenter\":[0,0,0],\"rainColumns\":0,\"lightning\":[],\"activeLightning\":0,\"lightningChunks\":625}",
+        "drawCalls": "433",
+        "geometry": "357",
+        "triangles": "675498",
+        "crack": "{\"id\":null,\"stage\":0,\"projected\":true,\"blend\":[\"DST_COLOR\",\"SRC_COLOR\"]}",
+        "player": "{\"feet\":[0,0,7],\"velocity\":[0,-0.0784,0],\"grounded\":false,\"crouching\":false,\"sprinting\":false,\"bob\":0,\"walk\":0,\"eye\":[0,1.62,7],\"yaw\":0}",
+        "hand": "{\"item\":null,\"equip\":1,\"swing\":16.853333333333335,\"charge\":1,\"profile\":{\"speed\":4,\"duration\":6,\"stab\":false}}"
+      }
+    }
+  ],
+  "errors": []
+}

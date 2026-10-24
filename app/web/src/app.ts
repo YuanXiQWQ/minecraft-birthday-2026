@@ -1,4 +1,5 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
+import {parseCommand} from './domain/console.ts';
 import {Vector3} from 'three';
 import type {SkySettings} from './domain/environment.ts';
 import {LocalWeather} from './render/local-weather.ts';
@@ -418,7 +419,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             celebration?.sync();
             inventory?.sync(s, value.writable, value.envelope.generation);
             advancements?.sync(s.progress.advancements,value.envelope.generation);
-            if (page === 'home') scene?.setCake(placed);
+            if (page === 'home' && scene) {
+                scene.skySettings=s.settings.sky??{time:'game',weather:'game'};
+                scene.syncWorld(s.progress);
+            }
             if (edits.generation && edits.generation !== value.envelope.generation) clearText(preferenceFeedback);
             if(weatherGeneration&&weatherGeneration!==value.envelope.generation){localWeather?.stop();localWeather?.status('weather.locationNeeded');}
             weatherGeneration=value.envelope.generation;
@@ -543,7 +547,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     }
     window.addEventListener('pagehide', abandonStartup, {signal: appAbort.signal});
 
-    /** Finish visible carrier return before selecting another authored scene. @param {SceneId} id Target scene. */
+    /** Return visible carriers before teleporting to a scene and announcing the committed destination. @param {SceneId} id Target scene. */
     async function navigateScene(id: SceneId): Promise<void> {
         advancements?.close();
         const owner = session.view.envelope?.generation, from = session.view.envelope?.state.progress.scene;
@@ -553,7 +557,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         dialog.close(); menu?.close(); chat?.hide();
         scene?.mode?.suspend(); scene?.cancel(); worldAudio?.cancel(); inventory?.book?.clearToast();
         const serial = session.serial;
-        void session.dispatch({type: 'select-scene', scene: id}).catch(() => {
+        void session.transact({type: 'console', source: '/tp '+id}).then(result=>{
+            if(disposed||session.suspended||session.serial!==serial||session.view.envelope?.generation!==owner||session.view.envelope?.state.progress.scene!==id)return;
+            for(const message of result.console??[])chat?.commandMessage(message);
+        }).catch(() => {
             if (!disposed && !session.suspended && !session.disposed && serial === session.serial && owner === session.view.envelope?.generation && from === session.view.envelope?.state.progress.scene) feedback('game.actionFailed');
         });
     }
@@ -561,7 +568,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     await session.refresh();
     loading?.update('save', 1);
     try {
-        const resources = await loadResources(page === 'game', (done, total) => loading?.update('resources', done, total));
+        const resources = await loadResources(true, (done, total) => loading?.update('resources', done, total));
         if (disposed) return;
         worldAudio = new WorldAudio(resources.documents, () => edits.view() ?? session.view.envelope!.state.settings);
         buttonSounds = new NativeButtonSounds(root,worldAudio);
@@ -636,10 +643,11 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
              * @return {Promise<import('./domain/console.ts').CommandFeedback[]>} Committed native feedback or a current-lifetime failure.
              */
             chat.command=async source=>{
-                const generation=session.view.envelope?.generation,serial=session.serial,sceneId=session.view.envelope?.state.progress.scene;
+                const generation=session.view.envelope?.generation,serial=session.serial,sceneId=session.view.envelope?.state.progress.scene,parsed=parseCommand(source);
+                const destination='op'in parsed&&parsed.op==='teleport'?parsed.args.at(-1):sceneId;
                 try{
                     const result=await session.transact({type:'console',source});
-                    if(disposed||session.serial!==serial||session.view.envelope?.generation!==generation||session.view.envelope?.state.progress.scene!==sceneId)return[];
+                    if(disposed||session.serial!==serial||session.view.envelope?.generation!==generation||session.view.envelope?.state.progress.scene!==(result.console?.some(m=>m.error)?sceneId:destination))return[];
                     const messages=result.console??[];
                     if(source.trim()==='/tick query'&&session.tickSamples.length){const samples=session.tickSamples,count=samples.reduce((n,s)=>n+s.ticks,0),ms=samples.reduce((n,s)=>n+s.ms,0),control=session.view.envelope!.state.progress.environment!.control;
                         messages.push({key:control.sprintTicks?'commands.tick.query.rate.sprinting':'commands.tick.query.rate.running',values:{v0:control.tickRate.toFixed(1),v1:(ms/count).toFixed(3),v2:(1000/control.tickRate).toFixed(1)}});
@@ -656,6 +664,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                         const saved=session.view.envelope?.state;
                         if(saved)for(const line of advancementChat(event,saved))chat?.append(line);
                     }
+                    if (event.type === 'cake-crafted') chat?.append([{text:t('chat.cakeReady')}], 'author');
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {
                         const pickup=pickupSoundOptions(event),owner=runtimeGeneration,serial=session.serial,sceneId=session.view.envelope?.state.progress.scene;

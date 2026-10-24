@@ -135,6 +135,8 @@ export class SceneView {
     onHover: ((hit: Pick | null) => void) | null = null;
     pointerPosition: [number, number] | null = null;
     config: PresentationSpec;
+    /** Fixed homepage views share home geometry without owning player input or simulation. */
+    presentationOnly = false;
     observer: ResizeObserver;
     queued = 0;
     /** Pending CSS viewport is applied inside the frame that paints it, never between painted frames. */
@@ -156,15 +158,16 @@ export class SceneView {
     lostHandler: (e: Event) => void;
     restoredHandler: () => void;
 
-    /** Create an independent native home presentation or authored first-person game view.
+    /** Create a shared authored world with either fixed homepage viewing or first-person game controls.
      * @param {HTMLElement} host Canvas host.
      * @param {Resources} pack Verified shared original resources.
      * @param {string} label Localized accessible scene description.
      * @param {boolean} game Whether this is the first-person game carrier rather than the home presentation.
-     * @param {PresentationSpec} config Home presentation dimensions; the game uses its authored WorldScene definitions.
+     * @param {PresentationSpec} config Fixed homepage camera; the game uses its authored WorldScene definitions.
      */
     constructor(host: HTMLElement, pack: Resources, label: string, game = false, config: PresentationSpec = PRESENTATION) {
         this.config = config;
+        this.presentationOnly = !game;
         if(game){
             window.addEventListener('keydown', e => this.pressMovementKey(e), {signal:this.controlsAbort.signal});
             window.addEventListener('keyup',e=>this.keys.delete(e.code),{signal:this.controlsAbort.signal});
@@ -181,43 +184,17 @@ export class SceneView {
         canvas.dataset.resourceVersion = '26.3';
         host.append(canvas);
         this.models = new VanillaModels(pack);
-        if(game){this.blockLight=new BlockLight();for(const material of this.models.materials.values())this.blockLight.bind(material);}
+        this.blockLight=new BlockLight();for(const material of this.models.materials.values())this.blockLight.bind(material);
         if (game) this.feedbackEffects = new BlockFeedback(pack, this.models, this.scene, this.camera, this.blockLight);
         this.scene.background = new Color(game ? '#617C7B' : '#9BAFA0');
         this.scene.add(this.world, this.persistent,this.placed);
-        if (!game) {
-            const floorSource = this.model('floor').children[0] as Mesh, wood: Matrix4[] = [], stone: Matrix4[] = [];
-            for (let x = config.xMin; x <= config.xMax; x++) for (let z = config.zMin; z <= config.zMax; z++) {
-                wood.push(new Matrix4().makeTranslation(x, -1, z));
-                wood.push(new Matrix4().makeTranslation(x, config.height, z));
-            }
-            for (let x = config.xMin; x <= config.xMax; x++) for (let y = 0; y < config.height; y++) stone.push(new Matrix4().makeTranslation(x, y, config.zMin));
-            for (const x of [config.xMin, config.xMax]) for (let y = 0; y < config.height; y++) for (let z = config.zMin + 1; z <= config.zMax; z++) stone.push(new Matrix4().makeTranslation(x, y, z));
-            this.batch(floorSource, wood, 'presentation-structure');
-            const stoneSample = pack.samples.find(s => s.block === 'stone');
-            if (!stoneSample) throw new Error('missing-original-stone');
-            this.batch(this.models.sample(stoneSample).children[0] as Mesh, stone, 'presentation-walls');
-            for (let x = -1; x <= 1; x++) for (let z = 0; z <= 1; z++) {
-                const top = this.model('tabletop');
-                top.position.set(x - .5, config.tabletopY, z - 1);
-                top.userData.id = 'birthday-table';
-                this.world.add(top);
-            }
-            for (const x of [-1.2, 1.2]) for (const z of [-.75, .75]) {
-                const leg = this.model('leg');
-                leg.position.set(x - .5, 0, z - .5);
-                leg.userData.id = 'birthday-table';
-                this.world.add(leg);
-            }
-        } else {
-            this.camera.layers.enable(1);
-            this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.weather=new NativeWeather();this.scene.add(this.weather.root);this.scene.background=null;
-            this.blockLight?.bindWeather(this.precipitation.mesh.material as ShaderMaterial);
-            this.authored = new AuthoredWorld(this.models, pack);
-            this.scene.add(this.authored.staticRoot, this.authored.natural, this.authored.crops);
-        }
-        this.camera.position.set(0, config.eye, game ? config.gameZ : config.homeZ);
-        this.camera.lookAt(0, config.targetY, 0);
+        this.camera.layers.enable(1);
+        this.sky=new NativeSky(pack); this.precipitation=new NativePrecipitation(pack);this.scene.add(this.precipitation.root);this.weather=new NativeWeather();this.scene.add(this.weather.root);this.scene.background=null;
+        this.blockLight.bindWeather(this.precipitation.mesh.material as ShaderMaterial);
+        this.authored = new AuthoredWorld(this.models, pack, game ? undefined : config.back);
+        this.scene.add(this.authored.staticRoot, this.authored.natural, this.authored.crops);
+        this.camera.position.set(...config.eye);
+        this.camera.lookAt(...config.target);
         this.camera.rotation.order = 'YXZ';
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
@@ -277,7 +254,7 @@ export class SceneView {
      * @param {PointerEvent} e Native canvas press, gated out while any UI owns input.
      */
     beginPointer(e: PointerEvent): void {
-        if (!this.input || this.lost || this.disposed) return;
+        if (this.presentationOnly || !this.input || this.lost || this.disposed) return;
         if ((e.button === 0 || e.button === 2) && this.mode?.enter(true)) {e.preventDefault(); return;}
         this.pointerPosition = [e.clientX, e.clientY];
         if (e.button === 2) {
@@ -362,7 +339,7 @@ export class SceneView {
      * @param {boolean} game Whether first-person look is enabled.
      */
     movePointer(e: PointerEvent, game: boolean): void {
-        if (!this.input || this.lost || this.mode?.actual) return;
+        if (this.presentationOnly || !this.input || this.lost || this.mode?.actual) return;
         if (this.pointer !== null && !(e.buttons & 1)) {this.cancelPointerGesture(); return;}
         if (this.pointer !== null && !this.mode?.actual) {
             const bounds = this.renderer.domElement.getBoundingClientRect();
@@ -436,21 +413,22 @@ export class SceneView {
         return this.models.sample(sample);
     }
 
-    /** Reflect a changed completion fact without redrawing an unchanged home on unrelated processing snapshots.
+    /** Project durable cake portions without rebuilding unchanged geometry.
      * @param {boolean} placed Whether the durable home-table fact exists.
+     * @param {number} bites Consumed portions; seven represents an empty table.
      */
-    setCake(placed: boolean): void {
-        if (placed === !!this.cake && this.renderer.domElement.dataset.cake === String(placed)) return;
-        if (placed && !this.cake) {
-            this.cake = this.model('cake');
-            this.cake.position.set(-.5, this.authored ? 1.5 : this.config.cakeY, this.authored ? -3.5 : -.5);
-            this.cake.userData.id = 'birthday-cake';
+    setCake(placed: boolean, bites=0): void {
+        const visible=placed&&bites<7,dataset=this.renderer.domElement.dataset;
+        if(visible===!!this.cake&&dataset.cake===String(visible)&&dataset.cakeBites===String(bites))return;
+        if(this.cake){this.release(this.cake);this.cake=null;}
+        if(visible){
+            const state={bites:String(bites)},cell:Cell=[-.5,1.5,-3.5];
+            this.cake=bites===0?this.model('cake'):placedModel({id:'birthday-cake',block:'cake',cell,state},this.models.pack as Resources,this.models);
+            this.cake.position.set(...cell);
+            Object.assign(this.cake.userData,{id:'birthday-cake',block:'cake',cell,state,shapes:nativeShapes('cake',state),collisionShapes:nativeShapes('cake',state)});
             this.world.add(this.cake);
-        } else if (!placed && this.cake) {
-            this.release(this.cake);
-            this.cake = null;
         }
-        this.renderer.domElement.dataset.cake = String(placed);
+        dataset.cake=String(visible);dataset.cakeBites=String(bites);
         this.requestRender();
     }
 
@@ -472,9 +450,10 @@ export class SceneView {
         this.requestRender();
     }
 
-    /** Project the selected authored scene and durable natural/crop layers. @param {Progress} p Current authoritative progress. */
+    /** Project durable home facts for the fixed homepage or the selected scene for the game. @param {Progress} p Current authoritative progress. */
     syncWorld(p: Progress): void {
         if (!this.authored) return;
+        if(this.presentationOnly)p={...p,scene:'home'};
         this.sky?.sync(p.environment??emptyEnvironment(),this.skySettings,p.world.tick);this.environmentProgress=p;
         if (this.worldId === null) this.renderer.domElement.dataset.recoveredWorld = JSON.stringify({
             tick: p.world.tick,
@@ -490,13 +469,13 @@ export class SceneView {
             this.scene.fog = p.scene === 'plains' || p.scene === 'farm' ? new Fog('#c0d8ff', 44, 68) : null;
             const spec = WORLD_SCENES[p.scene];
             this.scene.background = this.sky ? null : new Color(spec.sky);
-            this.camera.position.set(...spec.eye);
-            this.camera.lookAt(...spec.target);
+            this.camera.position.set(...(this.presentationOnly ? this.config.eye : spec.eye));
+            this.camera.lookAt(...(this.presentationOnly ? this.config.target : spec.target));
             this.camera.rotation.order = 'YXZ';
             this.basePitch = this.camera.rotation.x;
             this.look.yaw = 0;
             this.look.pitch = this.basePitch;
-            this.motion.reset(spec.eye);const pose=p.scenes[p.scene].pose;if(pose){this.motion.feet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');}this.previousFeet=[...this.motion.feet];
+            this.motion.reset(spec.eye);const pose=p.scenes[p.scene].pose;if(pose&&!this.presentationOnly){this.motion.feet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');}this.previousFeet=[...this.motion.feet];
             this.cancel();
             this.showPreview(null);
             this.stationSignature = '';
@@ -507,7 +486,7 @@ export class SceneView {
         data.natural = JSON.stringify(p.world.visits[p.scene]);
         data.crops = JSON.stringify(p.scenes[p.scene].crops);
         this.authored.sync(p);
-        this.setCake(p.scene === 'home' && p.cakePlacement !== null);
+        this.setCake(p.scene === 'home' && p.cakePlacement !== null,p.cakePlacement?.bites??0);
         this.sync(p.scenes[p.scene]);
         const placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks]);
         if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models));}
@@ -521,7 +500,7 @@ export class SceneView {
             for(const b of p.scenes[p.scene].blocks??[])if(['torch','wall_torch','lantern','campfire'].includes(b.block)&&b.state.lit!=='false')emitters.push({cell:b.cell,level:b.block.includes('torch')?14:15});
             this.blockLight.rebuild(emitters,this.collision);this.renderer.domElement.dataset.blockLight=JSON.stringify({emitters,maximum:Math.max(...this.blockLight.values)});
         }
-        if(entering&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
+        if(entering&&!this.presentationOnly&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
         this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);
         this.refreshHover();
         this.requestRender();
@@ -540,9 +519,9 @@ export class SceneView {
 
     /** Build nearby block collision boxes from authored native geometry, excluding non-solid vegetation and entities. */
     rebuildCollision():void{
-        if(!this.authored)return;const signature=JSON.stringify([this.worldId,this.authored.signature,this.authored.staticVersion,this.stationSignature,this.placedSignature]);if(signature===this.collisionSignature)return;this.collisionSignature=signature;
+        if(!this.authored)return;const signature=JSON.stringify([this.worldId,this.authored.signature,this.authored.staticVersion,this.stationSignature,this.placedSignature,this.cake?.userData.state]);if(signature===this.collisionSignature)return;this.collisionSignature=signature;
         this.scene.updateMatrixWorld(true);const result:Bounds[]=[],matrix=new Matrix4(),seen=new Set<Object3D>();
-        for(const owner of [this.authored.staticRoot,this.authored.natural,this.persistent,this.placed]) {
+        for(const owner of [this.authored.staticRoot,this.authored.natural,this.persistent,this.placed,this.world]) {
         if (owner === this.authored.staticRoot && this.staticCollisionVersion === this.authored.staticVersion) {result.push(...this.staticCollisions); continue;}
         const start = result.length;
         owner.traverse(o=>{
@@ -596,7 +575,7 @@ export class SceneView {
      */
     advancePlayer(now:number):void{
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
-        if(!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
+        if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
         while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb});this.onPlayerTick?.();this.playMovement();
             const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}));changed=true;}
@@ -617,10 +596,10 @@ export class SceneView {
      * @param {Pick|null} hit Current in-range target.
      */
     showOutline(hit:Pick|null):void{
-        const key=JSON.stringify(hit?[hit.id,hit.cell,this.placedSignature,this.stationSignature]:null);if(this.outline?.userData.key===key)return;
+        const key=JSON.stringify(hit?[hit.id,hit.cell,this.placedSignature,this.stationSignature,this.cake?.userData.state]:null);if(this.outline?.userData.key===key)return;
         if(this.outline){this.outline.removeFromParent();this.outline.geometry.dispose();this.outline.material.dispose();this.outline=null;}
         if(!hit||!hit.cell||/cow|chicken|egg/.test(hit.id))return;
-        const root=[...this.placed.children,...this.persistent.children,...(this.authored?.natural.children??[]),...(this.authored?.crops.children??[])].find(o=>o.userData.id===hit.id),shapes:Bounds[]=root?.userData.shapes??nativeShapes(hit.block??'',root?.userData.state??{})??[FULL_BLOCK];
+        const root=[...this.world.children,...this.placed.children,...this.persistent.children,...(this.authored?.natural.children??[]),...(this.authored?.crops.children??[])].find(o=>o.userData.id===hit.id),shapes:Bounds[]=root?.userData.shapes??nativeShapes(hit.block??'',root?.userData.state??{})??[FULL_BLOCK];
         const geometry=new LineSegmentsGeometry();geometry.setPositions(shapeEdges(shapes));
         this.outline=new LineSegments2(geometry,new LineMaterial({color:0,transparent:true,opacity:.4,depthWrite:false,linewidth:2.5}));this.outline.position.set(...hit.cell);this.outline.userData.key=key;this.scene.add(this.outline);
     }
@@ -765,7 +744,7 @@ export class SceneView {
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
             const resetInfo = this.renderer.info.autoReset;
             this.renderer.info.autoReset = false; this.renderer.info.reset();
-            const projection=this.camera.projectionMatrix.clone(),bob=this.authored?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
+            const projection=this.camera.projectionMatrix.clone(),bob=this.authored&&!this.presentationOnly?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
             this.camera.projectionMatrix.multiply(bob);
             try {
                 const host = this.renderer.domElement.parentElement;

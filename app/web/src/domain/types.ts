@@ -86,7 +86,7 @@ export interface Progress {
     scenes: Record<SceneId, SceneState>;
     player: Player;
     recipeBook: RecipeBook;
-    cakePlacement: null | { scene: 'home'; table: 'birthday-table' };
+    cakePlacement: null | { scene: 'home'; table: 'birthday-table'; bites?: number };
 }
 
 export interface State {
@@ -109,6 +109,7 @@ export type Command =
     | {type:'place-block';scene:SceneId;item:string;hit:BlockHit;id:string;expected:PlayerLayout}
     | {type:'break-block';scene:SceneId;id:string;expected:PlayerLayout}
     | {type:'use-block';scene:SceneId;id:string}
+    | {type:'eat-cake';scene:SceneId;id:string;expectedBites:number}
     | { type: 'harvest-node'; scene: SceneId; node: string; visit: number; expected: PlayerLayout }
     | {
     type: 'plant-crop';
@@ -170,7 +171,7 @@ export type Command =
 };
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'items-acquired' | 'cake-placed' | 'recipes-discovered' | 'advancements-completed';
+    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-eaten' | 'recipes-discovered' | 'advancements-completed';
     advancements?: string[];
     /** Effective native drops, independent of bag capacity. */
     stacks?: Stack[];

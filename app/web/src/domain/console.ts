@@ -1,13 +1,16 @@
 /** Java 26.3 command registration, argument parsing and completion for the authored overworld. */
+import {sceneDestination,sceneDestinations,teleportScene} from './teleport.ts';
+import type {SceneId} from './types.ts';
 import type {State} from './types.ts';
 import {emptyEnvironment, NativeRandom, WEATHER_TIMERS} from './environment.ts';
 
-export interface CommandFeedback {key:string; values?:Record<string,string|number>; error?:boolean; cursor?:number}
+export interface CommandFeedback {key:string; values?:Record<string,string|number>; error?:boolean; cursor?:number; destination?:SceneId}
 export interface ParsedCommand {op:string; args:(string|number|boolean)[]}
 /** Registered clock markers and timeline periods come from the audited 26.3 timeline resources. */
 export const TIME_MARKERS:Record<string,number>={day:1000,noon:6000,night:13000,midnight:18000,roll_village_siege:18000,wake_up_from_sleep:0};
 /** Each executable branch is shared by parsing and completion; unrelated server commands are absent. */
 const BRANCHES:[string,string[]][]=[
+ ...['tp','teleport'].flatMap(root=>[['teleport',[root,'<scene>']],['teleport',[root,'<target>','<scene>']]] as [string,string[]][]),
  ['tick.query',['tick','query']],['tick.rate',['tick','rate','<tickrate>']],['tick.freeze',['tick','freeze']],['tick.unfreeze',['tick','unfreeze']],
  ['tick.step',['tick','step']],['tick.step',['tick','step','<duration>']],['tick.step.stop',['tick','step','stop']],
  ['tick.sprint',['tick','sprint','<duration>']],['tick.sprint.stop',['tick','sprint','stop']],
@@ -27,6 +30,8 @@ const BRANCHES:[string,string[]][]=[
  */
 function argument(name:string,raw:string):string|number|boolean|null{
  const id=raw.replace(/^minecraft:/,'');
+ if(name==='<scene>')return sceneDestination(raw);
+ if(name==='<target>')return /^(@[spa]|[A-Za-z0-9_]{1,16})$/.test(raw)?raw:null;
  if(name==='<boolean>')return raw==='true'?true:raw==='false'?false:null;
  if(name==='<clock>')return id==='overworld'?'overworld':null;
  if(name==='<timeline>')return ['day','moon'].includes(id)?id:null;
@@ -48,7 +53,7 @@ function argument(name:string,raw:string):string|number|boolean|null{
  */
 function argumentError(name:string,raw:string):CommandFeedback|null{
  if(name==='<boolean>')return{key:'parsing.bool.invalid',values:{v0:raw},error:true};
- if(name==='<clock>'||name==='<timeline>'||name==='<marker>')return null;
+ if(['<clock>','<timeline>','<marker>','<scene>','<target>'].includes(name))return null;
  if(name==='<tickrate>'||name==='<clockrate>'){
   const n=Number(raw),min=name==='<tickrate>'?1:.00001,max=name==='<tickrate>'?10000:1000;
   if(Number.isFinite(n)&&n<min)return{key:'argument.float.low',values:{v0:min,v1:n},error:true};
@@ -73,7 +78,7 @@ export function parseCommand(source:string):ParsedCommand|CommandFeedback{
   for(;at<tokens.length&&at<path.length;at++){
    const expected=path[at],actual=tokens[at];
    if(expected.startsWith('<')){const value=argument(expected,actual);if(value===null){failures.push({at,message:argumentError(expected,actual)});break;}if(expected!=='<clock>')args.push(value);}
-   else if(expected!==actual&&!(at===1&&tokens[0]==='gamerule'&&actual==='minecraft:'+expected))break;
+   else if(expected!==actual&&!((at===0||at===1&&tokens[0].replace(/^minecraft:/,'')==='gamerule')&&actual==='minecraft:'+expected))break;
   }
   best=Math.max(best,at);
   if(at===tokens.length&&at===path.length)return{op,args};
@@ -84,13 +89,14 @@ export function parseCommand(source:string):ParsedCommand|CommandFeedback{
 }
 /** Produce native-prefix suggestions from the same executable tree, including Shift-Tab cycling.
  * @param {string} source Text before the caret.
+ * @param {string} username Current local player name for target completion.
  * @return {{start:number,values:string[]}} Replacement range and sorted candidates.
  */
-export function completeCommand(source:string):{start:number;values:string[]}{
+export function completeCommand(source:string,username=''):{start:number;values:string[]}{
  const start=Math.max(source.lastIndexOf(' ')+1,source.startsWith('/')?1:0),prefix=source.slice(start),before=source.slice(0,start).trim().replace(/^\//,'').split(/\s+/).filter(Boolean),out=new Set<string>();
  for(const [,path] of BRANCHES){if(before.length>=path.length)continue;
   if(!before.every((value,i)=>path[i].startsWith('<')?argument(path[i],value)!==null:value===path[i]||value==='minecraft:'+path[i]))continue;
-  const next=path[before.length],choices=next==='<boolean>'?['true','false']:next==='<clock>'?['minecraft:overworld']:next==='<timeline>'?['minecraft:day','minecraft:moon']:next==='<marker>'?['minecraft:day','minecraft:noon','minecraft:night','minecraft:midnight']:next==='<duration>'?(before[1]==='sprint'?['60s','1d','3d']:['1t','1s']):next==='<tickrate>'?['20']:next==='<clockrate>'?['1']:next.startsWith('<')?[]:[next];
+  const next=path[before.length],choices=next==='<scene>'?sceneDestinations():next==='<target>'?['@s','@p','@a',...(username?[username]:[])]:next==='<boolean>'?['true','false']:next==='<clock>'?['minecraft:overworld']:next==='<timeline>'?['minecraft:day','minecraft:moon']:next==='<marker>'?['minecraft:day','minecraft:noon','minecraft:night','minecraft:midnight']:next==='<duration>'?(before[1]==='sprint'?['60s','1d','3d']:['1t','1s']):next==='<tickrate>'?['20']:next==='<clockrate>'?['1']:next.startsWith('<')?[]:[next];
   for(const value of choices)if(value.startsWith(prefix)||value.replace(/^minecraft:/,'').startsWith(prefix))out.add(value);
  }
  return{start,values:[...out].sort()};
@@ -102,7 +108,14 @@ export function completeCommand(source:string):{start:number;values:string[]}{
  */
 export function executeCommand(state:State,source:string):CommandFeedback[]{
  const parsed=parseCommand(source);if('key'in parsed)return[parsed];
- const {op,args}=parsed,e=state.progress.environment??=emptyEnvironment(),c=e.control,value=args[0];
+ const {op,args}=parsed;
+ if(op==='teleport'){
+  const username=state.settings.username??'sireoh',target=args.length===2?args[0]:username;
+  if(!['@s','@p','@a',username].includes(String(target)))return[{key:'argument.entity.notfound.player',error:true}];
+  const destination=args.at(-1) as SceneId;teleportScene(state.progress,destination);
+  return[{key:'commands.teleport.success.entity.single',values:{v0:username},destination}];
+ }
+ const e=state.progress.environment??=emptyEnvironment(),c=e.control,value=args[0];
  /** Create a native command response with numbered translation arguments.
   * @param {string} key Original translation key.
   * @param {(string|number|boolean)[]} values Ordered native message parameters.

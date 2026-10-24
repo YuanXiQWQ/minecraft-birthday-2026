@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "criteria": {
+    "cake_on_table": {
+      "trigger": "jerrys_farm:cake_on_table"
+    },
+    "cake_crafted": {
+      "trigger": "jerrys_farm:cake_crafted"
+    }
+  },
+  "requirements": [
+    [
+      "cake_on_table"
+    ]
+  ],
+  "display": {
+    "title": {
+      "translate": "advancements.birthday.title"
+    },
+    "description": {
+      "translate": "advancements.birthday.description"
+    },
+    "icon": {
+      "id": "minecraft:cake"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  }
+}

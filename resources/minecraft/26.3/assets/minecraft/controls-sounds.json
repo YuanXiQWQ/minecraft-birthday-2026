@@ -763,5 +763,13 @@
       "step/gravel4"
     ],
     "subtitle": "subtitles.block.generic.fall"
+  },
+  "entity.generic.eat": {
+    "sounds": [
+      "random/eat1",
+      "random/eat2",
+      "random/eat3"
+    ],
+    "subtitle": "subtitles.entity.generic.eat"
   }
 }

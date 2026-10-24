@@ -146,7 +146,7 @@ export class AdvancementView {
                     c.beginPath();c.moveTo(X,Y);c.lineTo(X+14,Y);c.lineTo(X+14,y);c.lineTo(x,y);c.stroke();}}
             for(const [id,p] of positions)if(visible.has(id)){
                 const x=9+Math.floor(offset.x+p.x),y=18+Math.floor(offset.y+p.y),done=advancementDone(this.facts,id);
-                this.sprite(c,'sprites/advancements/task_frame_'+(done?'obtained':'unobtained'),x,y,26,26);this.ui.stack(c,{id:ADVANCEMENTS[id].display.icon.id,count:1},x+5,y+5);
+                this.sprite(c,'sprites/advancements/'+(ADVANCEMENTS[id].display.frame??'task')+'_frame_'+(done?'obtained':'unobtained'),x,y,26,26);this.ui.stack(c,{id:ADVANCEMENTS[id].display.icon.id,count:1},x+5,y+5);
                 if(rebuild&&x>=9&&x+26<=243&&y>=18&&y+26<=131)this.hit(id,x,y+28);
             }
         }else{const a=this.text('advancements.empty'),b=this.text('advancements.sad_label');font.draw(c,a,126-font.width(a)/2,68,'#FFF',true);font.draw(c,b,126-font.width(b)/2,86,'#FFF',true);}
@@ -165,21 +165,21 @@ export class AdvancementView {
         const nodeX=9+Math.floor(offset.x+(position?.x??0)),nodeY=46+Math.floor(offset.y+(position?.y??0)),flip=nodeX+w>243,x=Math.max(9,Math.min(243-w,flip?nodeX-w+32:nodeX)),y=Math.max(28,Math.min(142,nodeY)),above=y+26+h>159,top=above?y-h:y;
         this.sprite(c,'sprites/advancements/title_box',x,top,w,h+26);
         this.sprite(c,'sprites/advancements/box_'+(advancementDone(this.facts,id)?'obtained':'unobtained'),x,y,w,26);
-        font.draw(c,title,x+(flip?5:32),y+9,'#FFF',true);lines.forEach((line,i)=>font.draw(c,line,x+5,(above?top+4:y+30)+i*9,'#55FF55',false));
-        this.sprite(c,'sprites/advancements/task_frame_'+(advancementDone(this.facts,id)?'obtained':'unobtained'),nodeX,y,26,26);this.ui.stack(c,{id:d.display.icon.id,count:1},nodeX+5,y+5);
+        font.draw(c,title,x+(flip?5:32),y+9,'#FFF',true);lines.forEach((line,i)=>font.draw(c,line,x+5,(above?top+4:y+30)+i*9,d.display.frame==='challenge'?'#AA00AA':'#55FF55',false));
+        this.sprite(c,'sprites/advancements/'+(d.display.frame??'task')+'_frame_'+(advancementDone(this.facts,id)?'obtained':'unobtained'),nodeX,y,26,26);this.ui.stack(c,{id:d.display.icon.id,count:1},nodeX+5,y+5);
     }
-    /** Queue native task notifications once per generation, after the save has published its facts.
-     * @param {string[]} ids Newly completed original IDs.
+    /** Queue task or challenge notifications once per generation, after the save has published its facts.
+     * @param {string[]} ids Newly completed advancement IDs.
      * @param {string} generation Source reset epoch.
      */
     notify(ids:string[],generation:string):void {
         if(this.disposed||generation!==this.generation||document.hidden)return;
         for(const id of ids)if(ADVANCEMENTS[id]?.display.show_toast!==false&&advancementDone(this.facts,id)&&!this.notified.has(id)){
-            this.notified.add(id);const canvas=document.createElement('canvas'),clock=new RecipeToastClock();canvas.className='advancement-toast';canvas.setAttribute('role','status');canvas.setAttribute('aria-label',this.text('advancements.toast.task')+' '+this.text(ADVANCEMENTS[id].display.title.translate));canvas.dataset.advancement=id;canvas.hidden=true;this.host.append(canvas);clock.add([id],performance.now());this.tasks.push({id,canvas,clock});
+            this.notified.add(id);const canvas=document.createElement('canvas'),clock=new RecipeToastClock();canvas.className='advancement-toast';canvas.setAttribute('role','status');canvas.setAttribute('aria-label',this.text('advancements.toast.'+(ADVANCEMENTS[id].display.frame??'task'))+' '+this.text(ADVANCEMENTS[id].display.title.translate));canvas.dataset.advancement=id;canvas.hidden=true;this.host.append(canvas);clock.add([id],performance.now());this.tasks.push({id,canvas,clock});
         }
         this.animate();
     }
-    /** Repaint five native rows and leave excess notifications queued without advancing their clocks. */
+    /** Repaint five shared upper-right toast rows and leave excess notifications queued without advancing their clocks. */
     animate():void {
         if(this.frame||this.disposed||!this.tasks.length)return;
         this.frame=requestAnimationFrame(()=>{this.frame=0;
@@ -187,11 +187,12 @@ export class AdvancementView {
                 const row=this.slots.claim(task);if(row<0)continue;
                 const sample=task.clock.sample(performance.now());if(sample.transition)this.sound(sample.transition==='show'?'ui.toast.in':'ui.toast.out');
                 if(sample.phase==='done'){this.slots.release(task);task.canvas.remove();this.tasks.splice(this.tasks.indexOf(task),1);continue;}
-                const scale=this.ui.scale,c=scaledCanvas(task.canvas,160,32,scale),font=this.ui.pixels.font,title=this.text(ADVANCEMENTS[task.id].display.title.translate),lines=wrap(title,125,s=>font.width(s)),time=sample.fullyVisibleFor;
-                c.clearRect(0,0,160,32);c.drawImage(this.image('sprites/toast/advancement'),0,0);this.ui.stack(c,{id:ADVANCEMENTS[task.id].display.icon.id,count:1},8,8);
-                if(lines.length===1){font.draw(c,this.text('advancements.toast.task'),30,7,'#FFFF00',false);font.draw(c,title,30,18,'#FFF',false);}
-                else{c.save();c.globalAlpha=Math.min(1,Math.max(0,(time<1500?1500-time:time-1500)/300));if(time<1500)font.draw(c,this.text('advancements.toast.task'),30,11,'#FFFF00',false);else lines.forEach((line,i)=>font.draw(c,line,30,Math.floor(16-lines.length*9/2)+i*9,'#FFF',false));c.restore();}
-                task.canvas.style.cssText=`width:${160*scale}px;height:${32*scale}px;top:${row*32*scale}px;transform:translateX(${160*scale*(1-sample.visible)}px)`;task.canvas.hidden=false;task.canvas.dataset.timeline=JSON.stringify(sample);
+                const frame=ADVANCEMENTS[task.id].display.frame??'task',label=this.text('advancements.toast.'+frame),color=frame==='challenge'?'#FF88FF':'#FFFF00';
+                const scale=this.ui.scale,height=32,c=scaledCanvas(task.canvas,160,height,scale),font=this.ui.pixels.font,title=this.text(ADVANCEMENTS[task.id].display.title.translate),lines=wrap(title,125,s=>font.width(s)),time=sample.fullyVisibleFor;
+                c.clearRect(0,0,160,height);this.sprite(c,'sprites/toast/advancement',0,0,160,height);this.ui.stack(c,{id:ADVANCEMENTS[task.id].display.icon.id,count:1},8,8);
+                if(lines.length===1){font.draw(c,label,30,7,color,false);font.draw(c,title,30,18,'#FFF',false);}
+                else{c.save();c.globalAlpha=Math.min(1,Math.max(0,(time<1500?1500-time:time-1500)/300));if(time<1500)font.draw(c,label,30,11,color,false);else lines.forEach((line,i)=>font.draw(c,line,30,Math.floor(16-lines.length*9/2)+i*9,'#FFF',false));c.restore();}
+                task.canvas.style.cssText=`width:${160*scale}px;height:${height*scale}px;top:${row*32*scale}px;transform:translateX(${160*scale*(1-sample.visible)}px)`;task.canvas.hidden=false;task.canvas.dataset.timeline=JSON.stringify(sample);
                 alignRaster(task.canvas,true);
             }
             this.animate();

@@ -39,7 +39,6 @@ export function homeFixed([x,y,z]:Cell):boolean {
  */
 export function homeFloor(x:number,z:number):string {
     if (x < -10 || x > 10 || z < -8) return 'grass_block';
-    if (x>=3 && x<=6 && z>=-2 && z<=2) return z===-2 && x<=5 ? 'stone_bricks' : 'smooth_stone';
     if(x>=-3 && x<=2 && z>=3 && z<=7)return x===-3||x===2||z===3||z===7?'spruce_planks':'red_wool';
     if ((x===-3 || x===2) && z>=-5 && z<=0 || (z===-5 || z===0) && x>=-3 && x<=2) return 'spruce_planks';
     return 'oak_planks';
@@ -59,9 +58,6 @@ export function homeStructure(occupied:Cell[]=[]):HomeBlock[] {
         const post=z===-9?[-11,-8,-4,4,8,11].includes(x):[-6,0,5].includes(z);
         if(post){block='spruce_log';state='axis=y';}
         if(y===5){block='spruce_log';state=z===-9?'axis=x':'axis=z';}
-        if(z===-9 && x>=-7 && x<=-6 && (y===1||y===2)){block='bookshelf';state='';}
-        if(x===-11 && z>=-4 && z<=-2 && y===1){block='bookshelf';state='';}
-        if(z===-9 && x===-9 && (y===2||y===3)){block='red_wool';state='';}
         if(y===7){block=[-8,-2,5,10].includes(z)?'spruce_log':'spruce_planks';state=block==='spruce_log'?'axis=x':'';}
         if(HOME_LIGHTS.some(c=>c[0]===x&&c[1]===y&&c[2]===z)){block='glowstone';state='';}
         blocks.push({block,cell:[x,y,z],state});
@@ -92,7 +88,7 @@ export function homeStructure(occupied:Cell[]=[]):HomeBlock[] {
     for(let z=4;z<=7;z++){
         put('oak_stairs',[-8,0,z],'facing=west,half=bottom,shape=straight');
         put('spruce_planks',[-9,0,z]);put('spruce_planks',[-9,1,z]);
-        if(z<=6)put('bookshelf',[-11,2,z]);
+        if(z===4)put('spruce_planks',[-11,2,z]);
     }
     for(const z of [5,6])put('oak_slab',[-6,0,z],'type=top');
     for(let x=7;x<=9;x++)for(const z of [4,5]){

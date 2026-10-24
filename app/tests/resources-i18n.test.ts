@@ -59,15 +59,15 @@ test('long text wraps at words and within long tokens without deleting copy or e
     assert.ok(lines.every(v => v.length <= 12));
     assert.equal(lines.join('').replaceAll(' ', ''), text.replaceAll(' ', ''));
 });
-test('presentation keeps native slab thickness and exact cake contact, with a materially larger authored environment', () => {
+test('home presentation retains native slabs and a fixed interior camera facing the birthday table', () => {
     const files = resources(),
         docs = new Map([...files].filter(([n]) => n.endsWith('.json')).map(([n, b]) => [n, JSON.parse(new TextDecoder().decode(b))])),
         id = 'minecraft:block/oak_slab',
         model = compileModel(resolveModel(id, n => docs.get('assets/minecraft/models/' + n.split(':')[1] + '.json')), {model: id}),
         top = Math.max(...model.positions.filter((_, i) => i % 3 === 1));
     assert.equal(top, .5);
-    assert.equal(PRESENTATION.tabletopY + top, PRESENTATION.cakeY);
-    assert.equal(PRESENTATION.xMax - PRESENTATION.xMin + 1, 49);
-    assert.equal(PRESENTATION.zMax - PRESENTATION.zMin + 1, 37);
-    assert.equal(PRESENTATION.eye, 1.62);
+    assert.equal(1 + top, 1.5);
+    assert.deepEqual(PRESENTATION.eye, [0,1.62,4]);
+    assert.deepEqual(PRESENTATION.target, [0,1,-4]);
+    assert.ok(PRESENTATION.back > PRESENTATION.eye[2]);
 });

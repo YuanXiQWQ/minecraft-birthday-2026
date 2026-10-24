@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {token, decode} from '../web/src/persistence/codec.ts';
 import {initialState, transition} from '../web/src/domain/state.ts';
+import {BIRTHDAY_ADVANCEMENT,ADVANCEMENTS,advancementDone} from '../web/src/domain/advancements.ts';
+import {advancementChat} from '../web/src/ui/advancement-chat.ts';
 import {birthdayPlan, birthdayCues} from '../web/src/celebration/plan.ts';
 import {FireworkSimulation, SHAPES} from '../web/src/celebration/firework-simulation.ts';
 import {BirthdayCelebration} from '../web/src/celebration/birthday.ts';
@@ -93,6 +95,20 @@ test('concurrent table uses have one winner; stale layout does not consume or du
     assert.ok(state.progress.cakePlacement);
     assert.equal(state.progress.player.data.hotbar.filter(Boolean).length, 0);
 });
+
+test('table placement grants one persistent purple birthday challenge, with localized title and hover description',async()=>{
+ const h=await setup(),events:any[]=[];h.a.eventListeners.add(e=>events.push(...e));
+ assert.equal(advancementDone(h.a.view.envelope!.state.progress.advancements,BIRTHDAY_ADVANCEMENT),false);
+ await h.a.dispatch(placement(h.a));await h.a.dispatch(placement(h.a));await h.a.refresh();await h.b.refresh();
+ const awards=events.filter(e=>e.type==='advancements-completed');assert.equal(awards.length,1);assert.deepEqual(awards[0].advancements,[BIRTHDAY_ADVANCEMENT]);
+ assert.equal(ADVANCEMENTS[BIRTHDAY_ADVANCEMENT].display.frame,'challenge');assert.equal(advancementDone(h.b.view.envelope!.state.progress.advancements,BIRTHDAY_ADVANCEMENT),true);
+ for(const locale of ['en','zh-CN']){
+  const state=structuredClone(h.a.view.envelope!.state);state.settings.locale=locale;
+  const line=advancementChat(awards[0],state)[0],hover=line.find(r=>r.hover)?.hover;
+  assert.equal(line.map(r=>r.text).join(''),locale==='en'?'sireoh has completed the challenge [Happy Birthday!]':'sireoh完成了挑战[生日快乐！]');
+  assert.equal(hover?.[1].text,locale==='en'?'Make a cyber cake':'做好一个赛博蛋糕');assert.equal(hover?.[0].color,'#AA00AA');
+ }
+});
 test('failed durable write gives no false completion/event and supports a deliberate retry', async () => {
     const h = await setup(), before = h.raw();
     let events = 0;
@@ -130,11 +146,12 @@ test('complete seeded twenty-second plan contains all five native shapes twice w
     assert.equal(a.particles.length, 0);
     assert.ok(a.peak > 1000);
     const cues = birthdayCues(plan, 2632026);
-    assert.equal(cues.length, 35);
+    assert.equal(cues.length, 33);
     for (const name of ['launch', 'blast', 'twinkle']) assert.ok(cues.some(c => c.cue.event.includes(name)));
     assert.ok(cues.every((c, i) => !i || c.seconds >= cues[i - 1].seconds));
     assert.throws(() => birthdayPlan(2));
-    assert.equal(birthdayCues(birthdayPlan(30), 2632026, 30).find(c => c.cue.event === 'ui.toast.out')?.seconds, 29.5);
+    assert.equal(birthdayCues(birthdayPlan(30), 2632026, 30).find(c => c.cue.event === 'entity.player.levelup')?.seconds, 28);
+    assert.ok(cues.every(c=>!['ui.toast.in','ui.toast.out'].includes(c.cue.event)));
 });
 
 /** Bind the real controller methods to deterministic audio/scene ports; this is not an auditory or WebGL test.

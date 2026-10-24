@@ -43,7 +43,8 @@ for (const locale of ['en', 'zh-CN']) test(`ready ${locale} game schedules eight
             assert.equal(message.runs[0].text, '<YuanXiQWQ> ');
         }
         assert.match(children[1].textContent, /Hi Vincent/);
-        for (const command of ['/gamerule advance_time', '/gamerule advance_weather', '/time', '/weather', '/tick']) assert.ok(children[4].textContent.includes(command));
+        for (const command of ['/gamerule advance_time', '/gamerule advance_weather', '/time', '/weather', '/tick', '/tp']) assert.ok(children[4].textContent.includes(command));
+        assert.ok(children.every(line=>!line.textContent.includes(text('chat.cakeReady'))));
         assert.equal(children[7].textContent, '<YuanXiQWQ> ' + text('chat.welcome.chat'));
         assert.equal(children[8].textContent, '<YuanXiQWQ> ' + text('chat.welcome.scenes'));
         assert.deepEqual(chat.history, []);

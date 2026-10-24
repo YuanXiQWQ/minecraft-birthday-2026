@@ -11,6 +11,7 @@ import {SaveSession} from '../web/src/persistence/session.ts';
 import {decode, seal, checksum, token} from '../web/src/persistence/codec.ts';
 import {GameInventory} from '../web/src/ui/inventory.ts';
 import {PersonalCursor} from '../web/src/domain/personal-menu.ts';
+import {BIRTHDAY_ADVANCEMENT,advancementDone} from '../web/src/domain/advancements.ts';
 import type {Rules, Stack} from '../web/src/rules/types.ts';
 
 /** Committed same-version recipes, not test-only replacement recipes. */
@@ -220,7 +221,8 @@ test('finite cake consumption places three real buckets back into source cells w
     };
     const r = transition(state, command, undefined, rules);
     assert.deepEqual(r.receipt?.returned, [item('bucket', 3)]);
-    assert.deepEqual(r.events.map(e => e.item), ['minecraft:cake', 'minecraft:bucket']);
+    assert.deepEqual(r.events.filter(e=>e.type==='item-unlocked').map(e => e.item), ['minecraft:cake', 'minecraft:bucket']);
+    assert.equal(r.events.filter(e=>e.type==='cake-crafted').length,1);
     assert.deepEqual(r.inventory?.cursor, item('cake'));
     assert.ok(r.inventory?.hotbar.every(s => s === null));
     assert.deepEqual(r.state.progress.scenes.plains.stations[0].contents, {version: 1, data: {grid: [item('bucket'), item('bucket'), item('bucket'), ...Array(6).fill(null)]}});
@@ -230,6 +232,21 @@ test('finite cake consumption places three real buckets back into source cells w
         ...emptyInventory(),
         crafting: [item('milk_bucket'), item('milk_bucket'), item('milk_bucket'), item('wheat')]
     }, {mode: 'cursor'}, state.progress.unlocked, rules), /craft-no-match/);
+});
+
+test('cake guidance is commit-only and persists across refresh, repeats, prior catalogue unlock and prior birthday completion',async()=>{
+ for(const birthdayAlreadyDone of [false,true]){
+  const state=structuredClone(bench(facts('crafting_table','milk_bucket','sugar','egg','wheat','cake'))),h=storage(),s=h.session;
+  const grid=['milk_bucket','milk_bucket','milk_bucket','sugar','egg','sugar','wheat','wheat','wheat'].map(id=>item(id));
+  state.progress.scenes.plains.stations[0].contents={version:1,data:{grid}};
+  if(birthdayAlreadyDone){state.progress.cakePlacement={scene:'home',table:'birthday-table'};state.progress.advancements!.criteria[BIRTHDAY_ADVANCEMENT]=['cake_on_table'];}
+  h.write(JSON.stringify(await seal(state,'cake-hint',0)));await s.refresh();let hints=0;s.eventListeners.add(events=>hints+=events.filter(e=>e.type==='cake-crafted').length);
+  h.deny();await assert.rejects(s.takeCraft({mode:'cursor'},null,Array(4).fill(null),s.view.envelope!.state.progress.player.data,context(s.view.envelope!.state)),/write-failed/);assert.equal(hints,0);
+  h.restore();await s.refresh();await s.takeCraft({mode:'cursor'},null,Array(4).fill(null),s.view.envelope!.state.progress.player.data,context(s.view.envelope!.state));assert.equal(hints,1);
+  const saved=structuredClone(s.view.envelope!.state);assert.equal(advancementDone(saved.progress.advancements,BIRTHDAY_ADVANCEMENT),birthdayAlreadyDone);
+  saved.progress.scenes.plains.stations[0].contents={version:1,data:{grid}};h.write(JSON.stringify(await seal(saved,'cake-hint',s.view.envelope!.revision+1)));await s.refresh();
+  await s.takeCraft({mode:'cursor'},null,Array(4).fill(null),s.view.envelope!.state.progress.player.data,context(s.view.envelope!.state));assert.equal(hints,1);
+ }
 });
 test('D05 native pristine repair results normalize only the matching default max_damage component', () => {
     const p = item('wooden_pickaxe');

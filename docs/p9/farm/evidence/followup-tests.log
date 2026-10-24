@@ -1,0 +1,55 @@
+(node:39612) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ native actual-player acquisition crafting_table (146.9919ms)
+✔ native actual-player acquisition cobblestone (45.3045ms)
+✔ native actual-player acquisition stone_pickaxe (138.3438ms)
+✔ native actual-player acquisition iron_ingot (85.9782ms)
+✔ native actual-player acquisition iron_pickaxe (141.3727ms)
+✔ native actual-player acquisition iron_helmet (44.7272ms)
+✔ native actual-player acquisition iron_chestplate (32.4018ms)
+✔ native actual-player acquisition iron_leggings (28.8497ms)
+✔ native actual-player acquisition iron_boots (51.403ms)
+✔ native precise predicate rejects wooden_pickaxe (26.8253ms)
+✔ native precise predicate rejects stone (17.4625ms)
+✔ native precise predicate rejects stone_axe (14.871ms)
+✔ native precise predicate rejects stone_shovel (26.8897ms)
+✔ native precise predicate rejects iron_axe (33.7963ms)
+✔ native precise predicate rejects raw_iron (27.8915ms)
+✔ native precise predicate rejects iron_nugget (13.4461ms)
+✔ native precise predicate rejects iron_block (24.2044ms)
+✔ catalogue number writes Inventory and grants (33.3422ms)
+✔ catalogue offhand writes Inventory and grants (23.2494ms)
+✔ unified Inventory pathway quick (11.8652ms)
+✔ unified Inventory pathway swap (9.6048ms)
+✔ unified Inventory pathway equipment (8.5954ms)
+✔ unified Inventory pathway equip (10.3395ms)
+✔ unified Inventory pathway preset (12.9855ms)
+✔ one multi-slot preset grants every changedItem, not merely its first item (15.8626ms)
+✔ changedItem does not rescan unchanged inventory, ignores templates, normalizes default components, detects counts and components (10.6022ms)
+✔ finite furnace output and hopper slots are excluded; actual machine pickup to cursor then player grants once (80.6166ms)
+✔ full-bag real stone harvest unlocks cobblestone but grants only when a later player slot actually changes (23.4691ms)
+✔ successful planting consumes a seed and immediately completes child with incomplete husbandry root; failures and harvesting do not (84.4689ms)
+✔ harvesting an existing mature crop and acquiring a seed or hoe cannot invent a placed-wheat event (38.9419ms)
+✔ denied planting writes leave the seed, plot, criteria and notification stream unchanged (14.6616ms)
+✔ actual native crafting-table result cursor distinguishes acquired cursor and Inventory (21.5007ms)
+✔ actual native crafting-table result shift distinguishes acquired cursor and Inventory (20.8093ms)
+✔ failed storage, competing tabs, reset and stale old callbacks preserve atomic progress and notify once (33.1957ms)
+✔ additive old-save adaptation reads only current Inventory, never unlocked items, old crops, devices or birthday; restore is silent (7.9975ms)
+✔ locked refresh durably synchronizes old Inventory once, with no toast events; failed migration preserves original bytes (9.2642ms)
+✔ original data, translated Suit Up title, no rewards, root flags and shared five-row toast allocation (5769.1441ms)
+(node:17780) ExperimentalWarning: Transform Types is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ farm retains nine planting identities and every original finite source (4.4801ms)
+✔ one farm cell map supplies nonoverlapping surfaces, exact native roof states and open target lanes (188.531ms)
+✔ old equipment at fences, pillars, canals and roof keeps contents, actual support and effective occupancy (212.8096ms)
+✔ farm water never supports devices; growth and unrelated inventory snapshots retain layout identity (90.1585ms)
+✔ farm original model states and exporter bytes remain declared and hash locked (8.5901ms)
+✔ legacy farm equipment keeps actual hopper input/fuel ports after local fence carving (94.9123ms)
+ℹ tests 43
+ℹ suites 0
+ℹ pass 43
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8517.3285

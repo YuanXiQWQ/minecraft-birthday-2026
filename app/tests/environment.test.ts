@@ -76,16 +76,19 @@ test('location construction is passive; explicit request rounds coordinates, fai
 
 for(const [code,rain,thunder,snow] of [[0,0,0,false],[61,1,0,false],[75,1,0,true],[95,1,1,false]] as const)test('documented WMO projection '+code,()=>assert.deepEqual(wmoWeather(code),{rain,thunder,snow}));
 
-test('production panel initially retracts after five seconds, holds under hover, and restarts each departure timer',t=>{
+test('production panel stays expanded until first hover, then holds under hover and restarts each departure timer',t=>{
  t.mock.timers.enable({apis:['setTimeout']});const previous=Object.getOwnPropertyDescriptor(globalThis,'document');
  const edge=Object.assign(new EventTarget(),{className:'',type:'',hidden:false,setAttribute(){},remove(){}}),panel=Object.assign(new EventTarget(),{id:'nav',dataset:{} as Record<string,string>,inert:false,after(){},querySelector:()=>null});
  Object.defineProperty(globalThis,'document',{configurable:true,value:{createElement:()=>edge}});
  const controller=new NavigationPanel(panel as unknown as HTMLElement,'Show scenes');
  try{
-  t.mock.timers.tick(4999);assert.equal(panel.dataset.expanded,'true');t.mock.timers.tick(1);assert.equal(panel.dataset.expanded,'false');assert.equal(edge.hidden,false);
-  edge.dispatchEvent(new Event('pointerenter'));panel.dispatchEvent(new Event('pointerenter'));t.mock.timers.tick(9000);assert.equal(panel.dataset.expanded,'true');assert.equal(edge.hidden,true);
+  t.mock.timers.tick(60000);assert.equal(panel.dataset.expanded,'true');assert.equal(panel.inert,false);assert.equal(edge.hidden,true);assert.equal(controller.timer,null);
+  panel.dispatchEvent(new Event('focusout'));t.mock.timers.tick(60000);assert.equal(panel.dataset.expanded,'true');assert.equal(controller.timer,null);
+  panel.dispatchEvent(new Event('pointerenter'));t.mock.timers.tick(9000);assert.equal(panel.dataset.expanded,'true');assert.equal(edge.hidden,true);
   panel.dispatchEvent(new Event('pointerleave'));t.mock.timers.tick(4000);assert.equal(panel.dataset.expanded,'true');panel.dispatchEvent(new Event('pointerenter'));t.mock.timers.tick(2000);assert.equal(panel.dataset.expanded,'true');
-  panel.dispatchEvent(new Event('pointerleave'));t.mock.timers.tick(4999);assert.equal(panel.dataset.expanded,'true');t.mock.timers.tick(1);assert.equal(panel.dataset.expanded,'false');controller.dispose();edge.dispatchEvent(new Event('pointerenter'));assert.equal(panel.dataset.expanded,'false');
+  panel.dispatchEvent(new Event('pointerleave'));t.mock.timers.tick(4999);assert.equal(panel.dataset.expanded,'true');t.mock.timers.tick(1);assert.equal(panel.dataset.expanded,'false');assert.equal(panel.inert,true);assert.equal(edge.hidden,false);
+  edge.dispatchEvent(new Event('pointerenter'));assert.equal(panel.dataset.expanded,'true');assert.equal(panel.inert,false);assert.equal(edge.hidden,true);
+  t.mock.timers.tick(5000);assert.equal(panel.dataset.expanded,'false');controller.dispose();edge.dispatchEvent(new Event('pointerenter'));assert.equal(panel.dataset.expanded,'false');
  }finally{controller.dispose();if(previous)Object.defineProperty(globalThis,'document',previous);else Reflect.deleteProperty(globalThis,'document');}
 });
 

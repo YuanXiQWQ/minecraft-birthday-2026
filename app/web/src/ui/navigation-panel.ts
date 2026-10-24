@@ -1,12 +1,13 @@
-/** Timed scene navigation stays reachable through a compact, keyboard-accessible top edge. */
+/** Scene navigation stays expanded until first hovered, then retracts to a keyboard-accessible top edge. */
 export class NavigationPanel {
     edge: HTMLButtonElement;
     timer: ReturnType<typeof setTimeout> | null = null;
     abort = new AbortController();
     hovered = false;
+    hasHovered = false;
     disposed = false;
 
-    /** Show scene actions initially and retract five seconds after pointer departure.
+    /** Keep scene actions visible until first hovered, then retract five seconds after pointer departure.
      * @param {HTMLElement} panel Existing four-button scene navigation.
      * @param {string} label Localized edge action label.
      */
@@ -16,7 +17,7 @@ export class NavigationPanel {
         this.edge.setAttribute('aria-label', label); this.edge.setAttribute('aria-controls', panel.id);
         panel.after(this.edge);
         const options = {signal: this.abort.signal};
-        panel.addEventListener('pointerenter', () => {this.hovered = true; this.show();}, options);
+        panel.addEventListener('pointerenter', () => {this.hasHovered = true; this.hovered = true; this.show();}, options);
         panel.addEventListener('pointerleave', () => {this.hovered = false; this.arm();}, options);
         panel.addEventListener('focusin', () => {if(panel.querySelector(':focus-visible'))this.show();}, options);
         panel.addEventListener('focusout', () => this.arm(), options);
@@ -36,10 +37,10 @@ export class NavigationPanel {
         this.edge.setAttribute('aria-expanded','true'); this.arm();
     }
 
-    /** Restart the five-second departure interval without collapsing beneath a hovered pointer. */
+    /** After the first hover, restart the five-second departure interval while respecting pointer and keyboard focus. */
     arm(): void {
         this.cancel();
-        if(this.disposed||this.hovered||this.panel.querySelector(':focus-visible'))return;
+        if(this.disposed||!this.hasHovered||this.hovered||this.panel.querySelector(':focus-visible'))return;
         this.timer=setTimeout(()=>{
             this.timer=null; if(this.disposed||this.hovered)return;
             this.panel.dataset.expanded='false'; this.panel.inert=true; this.edge.hidden=false;

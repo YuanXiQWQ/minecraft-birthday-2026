@@ -12,6 +12,7 @@ import {NativeSky} from '../web/src/render/native-sky.ts';
 import {GameChat} from '../web/src/ui/chat.ts';
 import {optionFlow} from '../web/src/ui/native-screens.ts';
 import {PerspectiveCamera} from 'three';
+import {translate,localeDictionary} from '../web/src/i18n/index.ts';
 import type {Rules} from '../web/src/rules/types.ts';
 /** Audited rules are identical to those supplied to the normal application. */
 const rules=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8')) as Rules;
@@ -40,6 +41,28 @@ test('real command receipts query without writing; unknown commands cannot alter
  const h=await owners(),before=h.raw;
  assert.equal((await h.a.transact({type:'console',source:'/time query time'})).console![0].values?.v1,'1000');assert.equal(h.raw,before);
  const invalid=await h.a.transact({type:'console',source:'/give @s diamond'});assert.equal(invalid.console![0].key,'command.unknown.command');assert.equal(h.raw,before);assert.deepEqual(h.a.view.envelope!.state.progress.unlocked,[]);
+});
+
+test('teleport parses both languages and native target forms, with destination and player TAB completion',()=>{
+ for(const [source,scene] of [['/tp farm','farm'],['/tp @s 矿洞','cave'],['/teleport sireoh 平原','plains'],['/minecraft:tp @p 家','home'],['/tp @a 农场','farm']]){
+  const parsed=parseCommand(source);assert.ok('op'in parsed);assert.equal(parsed.op,'teleport');assert.equal(parsed.args.at(-1),scene);
+ }
+ assert.deepEqual(completeCommand('/tp fa').values,['farm']);assert.deepEqual(completeCommand('/tp @s 矿').values,['矿洞']);
+ assert.ok(completeCommand('/tp ','Vincent').values.includes('Vincent'));assert.deepEqual(completeCommand('/tp Vincent h','Vincent').values,['home']);
+ for(const source of ['/tp','/tp desert','/tp @s 0 64 0','/tp @e farm'])assert.ok('error'in parseCommand(source));
+});
+
+test('teleport receipts preserve inventory and clocks, localize destinations, and never report a failed save as success',async()=>{
+ const h=await owners(),before=structuredClone(h.a.view.envelope!.state.progress);
+ const result=await h.a.transact({type:'console',source:'/tp 农场'}),after=h.a.view.envelope!.state.progress;
+ assert.equal(after.scene,'farm');assert.equal(after.world.visits.farm.epoch,before.world.visits.farm.epoch+1);
+ assert.deepEqual(after.player,before.player);assert.deepEqual(after.environment,before.environment);
+ for(const locale of ['en','zh-CN']){
+  const lines:string[]=[],chat=Object.create(GameChat.prototype);chat.text=(key:string,values={})=>translate(key,values,localeDictionary(locale));chat.append=(runs:{text:string}[])=>lines.push(runs.map(r=>r.text).join(''));
+  chat.commandMessage(result.console![0]);assert.equal(lines[0],locale==='en'?'Teleported sireoh to Farm':'已将sireoh传送至农场');
+ }
+ const saved=h.raw;const bad=await h.a.transact({type:'console',source:'/tp Nobody cave'});assert.equal(bad.console![0].error,true);assert.equal(h.raw,saved);
+ h.deny(true);await assert.rejects(h.a.transact({type:'console',source:'/tp cave'}),/write-failed/);assert.equal(h.raw,saved);
 });
 
 test('native clock markers move forward, numeric set resets fraction, signed add clamps at zero and rate uses float accumulation',async()=>{
@@ -130,7 +153,7 @@ test('real NativeSky moves clouds and stars, unrelated snapshots do not reset ph
 });
 
 test('formal chat completion cycles without rebuilding prefixes or passing game keys through the field',()=>{
- const input={value:'/we',selectionStart:3,setSelectionRange(a:number){this.selectionStart=a;}},view=Object.assign(Object.create(GameChat.prototype),{input,completion:null,paint(){}}) as GameChat;
+ const input={value:'/we',selectionStart:3,setSelectionRange(a:number){this.selectionStart=a;}},view=Object.assign(Object.create(GameChat.prototype),{input,completion:null,username:()=> 'sireoh',paint(){}}) as GameChat;
  view.complete();assert.equal(input.value,'/weather');input.value='/weather ';input.selectionStart=9;view.completion=null;view.complete();assert.equal(input.value,'/weather clear');view.complete();assert.equal(input.value,'/weather rain');view.complete(true);assert.equal(input.value,'/weather clear');
 });
 

@@ -4,7 +4,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {initialState,transition,validateState} from '../web/src/domain/state.ts';
-import {ADVANCEMENTS,advancementDone,emptyAdvancements,updateAdvancements,visibleAdvancements} from '../web/src/domain/advancements.ts';
+import {BIRTHDAY_ADVANCEMENT,ADVANCEMENTS,advancementDone,emptyAdvancements,updateAdvancements,visibleAdvancements} from '../web/src/domain/advancements.ts';
+import {AdvancementView} from '../web/src/ui/advancements.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {seal,decode,checksum,token} from '../web/src/persistence/codec.ts';
 import {WORLD_SCENES,WORLD_REGION} from '../web/src/domain/world-config.ts';
@@ -146,8 +147,26 @@ test('locked refresh durably synchronizes old Inventory once, with no toast even
 test('original data, translated Suit Up title, no rewards, root flags and shared five-row toast allocation',()=>{
     const evidence=JSON.parse(readFileSync(new URL('../../docs/p9/advancements/native-evidence.json',import.meta.url),'utf8'));
     for(const entry of evidence.derived)assert.equal(createHash('sha256').update(readFileSync(new URL('../../'+entry.entry,import.meta.url))).digest('hex'),entry.sha256);
-    const files=resources();for(const [id,definition] of Object.entries(ADVANCEMENTS)){const path='data/minecraft/advancement/'+id.split(':')[1]+'.json';assert.deepEqual(JSON.parse(Buffer.from(files.get(path)!).toString()),definition);assert.equal('rewards' in definition,false);}
+    const files=resources();for(const [id,definition] of Object.entries(ADVANCEMENTS).filter(([id])=>id.startsWith('minecraft:'))){const path='data/minecraft/advancement/'+id.split(':')[1]+'.json';assert.deepEqual(JSON.parse(Buffer.from(files.get(path)!).toString()),definition);assert.equal('rewards' in definition,false);}
     assert.equal(ADVANCEMENTS['minecraft:story/root'].display.show_toast,false);assert.equal(ADVANCEMENTS['minecraft:story/mine_stone'].display.icon.id,stack('wooden_pickaxe').id);
     assert.equal(JSON.parse(readFileSync(new URL('../web/src/i18n/advancements.zh_cn.json',import.meta.url),'utf8'))['advancements.story.obtain_armor.title'],'整装上阵');
     const rows=new ToastSlots(),owners=Array.from({length:6},()=>({}));assert.deepEqual(owners.map(o=>rows.claim(o)),[0,1,2,3,4,-1]);rows.release(owners[1]);assert.equal(rows.claim(owners[5]),1);assert.equal(rows.claim(owners[0]),0);
+});
+
+test('birthday challenge uses original frame assets and a localized upper-right native-size toast without replay',()=>{
+ const files=resources();for(const state of ['obtained','unobtained'])assert.ok(files.has('assets/minecraft/textures/gui/sprites/advancements/challenge_frame_'+state+'.png'));
+ const saved=Object.fromEntries(['document','requestAnimationFrame','cancelAnimationFrame','devicePixelRatio'].map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
+ const canvases:any[]=[],drawn:any[]=[],sprites:string[]=[];let next:(()=>void)|undefined;
+ const ctx={setTransform(){},clearRect(){}};
+ Object.defineProperty(globalThis,'document',{configurable:true,value:{hidden:false,createElement:()=>({style:{},dataset:{},width:0,height:0,isConnected:false,setAttribute(){},getContext:()=>ctx,remove(){}})}});
+ Object.defineProperty(globalThis,'requestAnimationFrame',{configurable:true,value:(fn:()=>void)=>{next=fn;return 1;}});
+ Object.defineProperty(globalThis,'cancelAnimationFrame',{configurable:true,value:()=>{}});
+ Object.defineProperty(globalThis,'devicePixelRatio',{configurable:true,value:1});
+ try{
+  const view=Object.assign(Object.create(AdvancementView.prototype),{facts:{version:1,criteria:{[BIRTHDAY_ADVANCEMENT]:['cake_on_table']}},generation:'birthday',notified:new Set(),tasks:[],slots:new ToastSlots(),frame:0,disposed:false,host:{append:(canvas:any)=>canvases.push(canvas)},sound(){},sprite:(_ctx:any,name:string)=>sprites.push(name),ui:{scale:2,permanent:{settings:{locale:'zh-CN'}},stack(){},pixels:{font:{width:(text:string)=>text.length*6,draw:(_ctx:any,...args:any[])=>drawn.push(args)}}}}) as AdvancementView;
+  view.notify([BIRTHDAY_ADVANCEMENT],'birthday');next!();
+  assert.equal(canvases.length,1);assert.equal(canvases[0].width,320);assert.equal(canvases[0].height,64);
+  assert.match(canvases[0].style.cssText,/top:0px;transform:translateX\(320px\)/);assert.doesNotMatch(canvases[0].style.cssText,/left:|bottom:|right:auto/);assert.ok(drawn.some(args=>args[0]==='挑战已完成！'&&args[3]==='#FF88FF'));assert.ok(drawn.some(args=>args[0]==='生日快乐！'));
+  assert.deepEqual(sprites,['sprites/toast/advancement']);view.notify([BIRTHDAY_ADVANCEMENT],'birthday');assert.equal(canvases.length,1);view.clearToasts();
+ }finally{for(const [key,value] of Object.entries(saved)){if(value)Object.defineProperty(globalThis,key,value);else Reflect.deleteProperty(globalThis,key);}}
 });

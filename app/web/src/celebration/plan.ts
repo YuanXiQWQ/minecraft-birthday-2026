@@ -26,7 +26,7 @@ export function birthdayPlan(seconds = 20): Explosion[] {
     }));
 }
 
-/** Derive original event/variant/pitch parameters on the same active timeline as the visual bursts.
+/** Derive celebration audio on the same active timeline as the visual bursts; advancement views own toast transitions.
  * @param {Explosion[]} plan Native plan.
  * @param {number} seed Shared reproducible seed.
  * @param {number} duration Configured active duration.
@@ -54,7 +54,7 @@ export function birthdayCues(plan: Explosion[], seed: number, duration = 20): Ti
             }
         });
     }
-    for (const [seconds, event, volume, pitch] of [[.1, 'ui.toast.in', 1, 1], [.2, 'ui.toast.challenge_complete', 1, 1], [duration - 3, 'entity.experience_orb.pickup', .2, 1], [duration - 2, 'entity.player.levelup', .75, 1], [duration - .5, 'ui.toast.out', 1, 1]] as const) cues.push({
+    for (const [seconds, event, volume, pitch] of [[.2, 'ui.toast.challenge_complete', 1, 1], [duration - 3, 'entity.experience_orb.pickup', .2, 1], [duration - 2, 'entity.player.levelup', .75, 1]] as const) cues.push({
         seconds,
         variant: rng.next(),
         cue: {tick: Math.round(seconds * 20), event, volume, pitch, position: [0, 1.62, 6], distanceDelay: false}

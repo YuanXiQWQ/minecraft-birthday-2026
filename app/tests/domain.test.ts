@@ -42,7 +42,7 @@ test('completion is a single table fact; requires unlocked cake, home context an
     s.progress.player.data.hotbar[0] = {id: 'minecraft:cake', count: 1};
     const result = transition(s, {type: 'record-cake-placement', scene: 'home', table: 'birthday-table'});
     assert.equal(hasCake(result.state), true);
-    assert.deepEqual(result.events, [{type: 'cake-placed'}]);
+    assert.deepEqual(result.events, [{type: 'cake-placed'}, {type:'advancements-completed',advancements:['jerrys_farm:happy_birthday']}]);
     assert.deepEqual(transition(result.state, {
         type: 'record-cake-placement',
         scene: 'home',

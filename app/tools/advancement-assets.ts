@@ -27,7 +27,7 @@ function copy(entry: string): void {
 const definitions=Object.fromEntries(ids.map(id=>['minecraft:'+id,JSON.parse(zip.get('data/minecraft/advancement/'+id+'.json')!.toString())]));
 for(const id of ids)copy('data/minecraft/advancement/'+id+'.json');
 copy('data/minecraft/tags/item/stone_tool_materials.json');
-for(const name of zip.keys())if(name.startsWith('assets/minecraft/textures/gui/advancements/')&&(name.includes('/backgrounds/stone.')||name.includes('/backgrounds/husbandry.')||name.endsWith('/window.png'))||name.startsWith('assets/minecraft/textures/gui/sprites/advancements/')&&(/(?:task_frame|box_|title_box|tab_above_(?:left|middle))/.test(name)))copy(name);
+for(const name of zip.keys())if(name.startsWith('assets/minecraft/textures/gui/advancements/')&&(name.includes('/backgrounds/stone.')||name.includes('/backgrounds/husbandry.')||name.endsWith('/window.png'))||name.startsWith('assets/minecraft/textures/gui/sprites/advancements/')&&(/(?:task_frame|challenge_frame|box_|title_box|tab_above_(?:left|middle))/.test(name)))copy(name);
 copy('assets/minecraft/textures/gui/sprites/toast/advancement.png');
 /** Resolve UI-only grass icon dependencies without adding an obtainable item.
  * @param {string} id Native model ID.

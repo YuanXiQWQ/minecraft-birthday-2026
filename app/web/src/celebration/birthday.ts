@@ -1,6 +1,5 @@
 /** Birthday playback owns transient native effects; durable completion belongs exclusively to the save transaction. */
 import {timing} from '../performance.ts';
-import {alignRaster,rasterSize} from '../ui/raster.ts';
 import {Vector3} from 'three';
 import type {State, Settings} from '../domain/types.ts';
 import type {SceneView} from '../render/scene.ts';
@@ -39,7 +38,6 @@ export class BirthdayCelebration {
   root = document.createElement('section');
   message = document.createElement('div');
   status = document.createElement('p');
-  toast = document.createElement('canvas');
   replay: HTMLButtonElement;
   skip: HTMLButtonElement;
   ready: Promise<void>;
@@ -77,15 +75,14 @@ export class BirthdayCelebration {
     this.root.className = 'birthday-celebration';
     this.root.setAttribute('aria-label', text('celebration.label'));
     this.message.className = 'birthday-message';
+    const copy=document.createElement('div');copy.className='birthday-copy';
+    this.message.append(copy);
     for (const key of ['celebration.title', 'celebration.body', 'celebration.signature']) {
       const p = document.createElement(key.endsWith('title') ? 'h2' : 'p');
       this.pixels.text(p, this.text(key), key.endsWith('title') ? 3 : 2);
-      this.message.append(p);
+      if(key.endsWith('title'))this.message.prepend(p);else copy.append(p);
     }
     this.status.setAttribute('role', 'status');
-    this.toast.width = 160;
-    this.toast.height = 32;
-    this.toast.className = 'birthday-toast';
     this.replay = this.button('celebration.replay', () => {
       void this.start();
     });
@@ -93,7 +90,7 @@ export class BirthdayCelebration {
     const controls = document.createElement('div');
     controls.className = 'birthday-controls';
     controls.append(this.replay, this.skip);
-    this.root.append(this.message, this.toast, this.status, controls);
+    this.root.append(this.message, this.status, controls);
     host.append(this.root);
     this.root.addEventListener('pointerdown', e => e.stopPropagation(), {signal: this.abort.signal});
     this.ready = this.load();
@@ -143,14 +140,13 @@ export class BirthdayCelebration {
     this.publish();
   }
 
-  /** Refresh birthday copy and toast pixels without replaying the celebration or changing saved completion. */
+  /** Refresh birthday copy without replaying the celebration or changing saved completion. */
   localize(): void {
     const keys = ['celebration.title', 'celebration.body', 'celebration.signature'];
     this.root.setAttribute('aria-label', this.text('celebration.label'));
-    [...this.message.children].forEach((element, i) => this.pixels.text(element as HTMLElement, this.text(keys[i]), i === 0 ? 3 : 2));
+    [...this.message.querySelectorAll('h2,p')].forEach((element, i) => this.pixels.text(element as HTMLElement, this.text(keys[i]), i === 0 ? 3 : 2));
     this.pixels.text(this.replay, this.text('celebration.replay'), 2);
     this.pixels.text(this.skip, this.text('celebration.skip'), 2);
-    this.drawToast();
   }
 
   /** Project committed completion and effective audio settings; reset or leaving home invalidates asynchronous playback. */
@@ -197,27 +193,8 @@ export class BirthdayCelebration {
     this.last = 0;
     this.paused = document.hidden;
     this.batch.begin();
-    this.drawToast();
     this.publish();
     this.view.requestRender();
-  }
-
-  /** Paint the native birthday toast at displayed framebuffer resolution, retaining original Unicode masks. */
-  drawToast(): void {
-    const scale=Math.max(1,(this.toast.getBoundingClientRect().width||320)/160*Math.min(globalThis.devicePixelRatio??1,4));
-    this.toast.width=rasterSize(160,scale);this.toast.height=rasterSize(32,scale);
-    const c = this.toast.getContext('2d')!;
-    c.setTransform(this.toast.width/160,0,0,this.toast.height/32,0,0);
-    c.clearRect(0, 0, 160, 32);
-    c.imageSmoothingEnabled = false;
-    const image = this.art.images.get('assets/minecraft/textures/gui/sprites/toast/advancement.png');
-    if (!image) throw Error('missing-advancement-toast');
-    c.drawImage(image, 0, 0, 160, 32);
-    const icon = this.art.icons.get('minecraft:cake')!;
-    c.drawImage(icon, 8, 8, 16, 16);
-    this.pixels.font.draw(c, this.text('celebration.toast'), 30, 7, '#FF5', false);
-    this.pixels.font.draw(c, this.text('celebration.toastDetail'), 30, 18, '#FFF', false);
-    alignRaster(this.toast);
   }
 
   /** Advance a real 20Hz simulation from active elapsed time, scheduling only a short audio horizon and recording late calls.
@@ -343,7 +320,6 @@ export class BirthdayCelebration {
     this.skip.hidden = !playing;
     const value = this.current();
     this.replay.hidden = (playing && this.audioState !== 'blocked') || !value?.state.progress.cakePlacement || value.state.progress.scene !== 'home';
-    this.toast.hidden = !playing || this.elapsed > 5;
     this.root.dataset.playing = String(playing);
     this.root.dataset.celebration = JSON.stringify({
       active: playing,
