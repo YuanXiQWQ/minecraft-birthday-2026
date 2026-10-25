@@ -30,6 +30,7 @@ try{
             await page.goto('http://127.0.0.1:'+server.address().port+base+'game/');
             await page.waitForFunction(()=>['ready','failed'].includes(document.querySelector('#app')?.dataset.boot),null,{timeout:90000});
             assert.equal(await page.locator('#app').getAttribute('data-boot'),'ready');
+            await page.waitForFunction(()=>JSON.parse(document.querySelector('.game-chat').dataset.messages??'[]').some(m=>m.kind==='author'));
             await page.keyboard.press('t');await page.keyboard.insertText('hello   world');await page.keyboard.press('Enter');
             await page.keyboard.press('t');
             const player=await page.locator('.game-chat').evaluate(node=>JSON.parse(node.dataset.messages).findLast(m=>m.kind==='player'));
@@ -39,10 +40,12 @@ try{
             const sample=await page.locator('.game-chat').evaluate(node=>{
                 const layout=JSON.parse(node.dataset.layout),messages=JSON.parse(node.dataset.messages),canvas=node.querySelector('canvas'),ctx=canvas.getContext('2d'),ratio=canvas.width/canvas.getBoundingClientRect().width;
                 const row=layout.lines.findIndex(line=>line==='<Alice> hello world'),distance=layout.lines.length-1-row;
+                const authorRow=layout.lines.findIndex(line=>line.startsWith('<YuanXiQWQ> ')),authorDistance=layout.lines.length-1-authorRow;
                 const pixel=(x,y)=>Array.from(ctx.getImageData(Math.floor(x*layout.scale*ratio),Math.floor(y*layout.scale*ratio),1,1).data);
-                return{layout,messages,playerEdge:pixel(0,layout.base-distance*9-5),systemEdge:pixel(0,layout.base-5),pointerMode:window.__pointerSimulation};
+                return{layout,messages,authorRow,authorEdge:pixel(0,layout.base-authorDistance*9-5),playerEdge:pixel(0,layout.base-distance*9-5),systemEdge:pixel(0,layout.base-5),pointerMode:window.__pointerSimulation};
             });
             assert.deepEqual(sample.playerEdge.slice(0,3),[0,0,0]);assert.ok(sample.playerEdge[3]>=127&&sample.playerEdge[3]<=128);
+            assert.ok(sample.authorRow>=0);assert.deepEqual(sample.authorEdge,[0,0,0,128]);
             assert.deepEqual(sample.systemEdge,[208,208,208,255]);assert.equal(sample.pointerMode,true);
             assert.ok(sample.messages.some(m=>m.runs.some(r=>r.underline&&r.color==='#FF5555')));
             await page.keyboard.press('Escape');
@@ -50,7 +53,7 @@ try{
             await page.keyboard.press('t');await page.mouse.move(120,600);await page.mouse.wheel(0,-100);
             await page.waitForFunction(()=>JSON.parse(document.querySelector('.game-chat').dataset.layout).offset===7);
             await page.keyboard.press('PageDown');await page.waitForFunction(()=>JSON.parse(document.querySelector('.game-chat').dataset.layout).offset===0);
-            assert.deepEqual(errors,[]);console.log(JSON.stringify({base,locale,pointerMode:'simulated',playerPrefix:true,playerHasNoTag:true,systemTag:true,errorStyles:true,scroll:true}));
+            assert.deepEqual(errors,[]);console.log(JSON.stringify({base,locale,pointerMode:'simulated',playerPrefix:true,playerHasNoTag:true,authorHasNoTag:true,systemTag:true,errorStyles:true,scroll:true}));
         }finally{await context.close();}
     }
 }finally{await browser.close();server.close();}

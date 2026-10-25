@@ -4,11 +4,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {WorldUse} from '../web/src/ui/world-use.ts';
 import {SceneView} from '../web/src/render/scene.ts';
+import {FirstPersonHand} from '../web/src/render/first-person-hand.ts';
 import {PlayerMotion} from '../web/src/domain/player-motion.ts';
 import {GameInventory} from '../web/src/ui/inventory.ts';
 import {systemFeedback, FAILURE_COLOR} from '../web/src/ui/system-feedback.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
-import {WORLD_REGION} from '../web/src/domain/world-config.ts';
+import {WORLD_REGION,WORLD_SCENES} from '../web/src/domain/world-config.ts';
 import {token,seal} from '../web/src/persistence/codec.ts';
 import {initialState} from '../web/src/domain/state.ts';
 import {emptyFurnace} from '../web/src/domain/furnace.ts';
@@ -118,6 +119,28 @@ test('operation failures route to red system chat without changing native Toast 
 
 test('native instant resources continue on the next attack tick instead of the progressive block delay',async()=>{
  const h=await mining();try{h.target('node:short_grass:0');h.use.beginMining(h.scene.refreshHover()!,10000);await h.settle();h.target('node:short_grass:1');h.use.advanceMining(10049);assert.equal(h.use.mining,null);h.use.advanceMining(10050);await h.settle();assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,['short_grass:0','short_grass:1']);}finally{h.restore();}
+});
+
+for(const block of ['short_grass','tall_grass'])test('one held press repeats native hand swings while instantly breaking '+block,async t=>{
+ t.mock.method(performance,'now',()=>0);
+ const h=await mining(),hand=Object.create(FirstPersonHand.prototype) as FirstPersonHand;
+ Object.assign(hand,{clock:0,swingAt:-100,swingDuration:6,pending:null,attackAt:-100,stab:false});
+ h.scene.hand=hand;
+ const nodes=[...WORLD_SCENES.plains.nodes.filter(n=>n.block===block),...WORLD_SCENES.plains.nodes.filter(n=>n.block!==block&&n.block==='short_grass')].slice(0,4);
+ assert.equal(nodes.length,4);
+ try{
+ h.target('node:'+nodes[0].id);h.scene.onMineStart!(h.scene.refreshHover());await h.settle();
+ assert.equal(hand.swingAt,0);
+ hand.clock=1;h.target('node:'+nodes[1].id);h.use.advanceMining(50);await h.settle();
+ assert.equal(hand.swingAt,0,'a quick second break preserves the in-flight swing');
+ hand.clock=3;h.target('node:'+nodes[2].id);h.use.advanceMining(150);await h.settle();
+ assert.equal(hand.swingAt,3,'the next eligible break repeats the interaction swing');
+ hand.clock=10;h.target('node:'+nodes[3].id);h.use.advanceMining(500);await h.settle();
+ assert.equal(hand.swingAt,10,'breaking another target after the animation ends starts a new swing');
+ assert.deepEqual(h.s.view.envelope!.state.progress.world.visits.plains.removed,nodes.map(n=>n.id));
+ assert.equal(h.use.holding,true);assert.equal(hand.attackAt,-100);assert.equal(hand.stab,false);
+ h.use.cancelMining();hand.clock=20;h.use.advanceMining(1000);assert.equal(hand.swingAt,10);
+ }finally{h.restore();}
 });
 
 test('game settings operation feedback follows chat policy without moving notifications or normal save acknowledgements to chat',()=>{

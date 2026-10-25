@@ -294,7 +294,7 @@ export class GameChat {
         const end=c.source.indexOf(' ',c.start),tail=end<0?'':c.source.slice(end);this.input.value=c.source.slice(0,c.start)+c.values[c.index]+tail;
         const caret=c.start+c.values[c.index].length;this.input.setSelectionRange(caret,caret);this.paint();
     }
-    /** Composite cached native text rows with independent input, caret, hover, fading and system source tags. */
+    /** Composite cached native text rows; only system notifications receive source tags, while player and author chat retain sender formatting. */
     paint(): void {
         if(this.paintFrame){cancelAnimationFrame(this.paintFrame);this.paintFrame=0;}
         const scale=nativeScale(this.viewport),w=Math.ceil(this.viewport.clientWidth/scale),h=Math.ceil(this.viewport.clientHeight/scale),dpr=Math.min(devicePixelRatio||1,4),width=Math.min(320,w-8),base=h-40,height=this.open?180:90;
@@ -313,7 +313,7 @@ export class GameChat {
         for(const row of bounded.slice(0,bounded.length-this.offset).reverse().slice(0,Math.floor(height/9))){
             const fade=this.open?1:chatFade((performance.now()-row.message.time)/50);
             if(fade){c.globalAlpha=fade;c.fillStyle='#00000080';c.fillRect(0,y-9,width+12,9);
-                const tagged=row.message.kind!=='player';
+                const tagged=row.message.kind==='system';
                 if(tagged){c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);}
                 const raster=this.rasterRow(row,width,scale*dpr);
                 c.drawImage(raster.canvas,0,y-9,raster.canvas.width/(scale*dpr),raster.canvas.height/(scale*dpr));

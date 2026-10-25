@@ -229,7 +229,7 @@ export class WorldUse {
         this.clearMiningProgress();
     }
 
-    /** Start progress and initial native hit feedback for the live visible block using the actual main-hand tool.
+    /** Start progress, a native interaction swing and initial hit feedback for the live visible block using the actual main-hand tool.
      * @param {Pick} hit Fresh nearest ray target.
      * @param {number} now Active monotonic time.
      */
@@ -240,6 +240,7 @@ export class WorldUse {
             block = station?.kind ?? p.scenes[p.scene].blocks?.find(b=>b.id===hit.id)?.block ?? (hit.id.startsWith('crop:') ? 'wheat' : node?.block);
         if (!block || node?.kind === 'cow'||node?.kind==='egg') return;
         const held = p.player.data.hotbar[p.player.data.selected], ticks = miningTicks(block, held, this.inventory.rules);
+        this.scene.hand?.swing();
         this.mining = {id: hit.id, scope: this.holdScope, tool: JSON.stringify([p.player.data.selected, held]), start: now, ticks, hit, block, nextSound: now + 200};
         if (!ticks) this.finishMining(now);
         else {this.scene.renderer.domElement.dataset.mining = JSON.stringify(this.mining); this.scene.showCrack(hit.id, 0); this.miningSound();}

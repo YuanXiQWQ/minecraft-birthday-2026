@@ -11,7 +11,7 @@ import {TickClock,processingClock} from '../web/src/persistence/processing-clock
 import {NativeSky} from '../web/src/render/native-sky.ts';
 import {GameChat} from '../web/src/ui/chat.ts';
 import {optionFlow} from '../web/src/ui/native-screens.ts';
-import {PerspectiveCamera} from 'three';
+import {PerspectiveCamera,Vector3} from 'three';
 import {translate,localeDictionary} from '../web/src/i18n/index.ts';
 import type {Rules} from '../web/src/rules/types.ts';
 /** Audited rules are identical to those supplied to the normal application. */
@@ -142,13 +142,23 @@ test('real NativeSky moves clouds and stars, unrelated snapshots do not reset ph
  Object.defineProperty(globalThis,'performance',{configurable:true,value:{now:()=>now}});Object.defineProperty(globalThis,'document',{configurable:true,value:{hidden:false}});
  const image={width:1,height:1,getContext:()=>({getImageData:()=>({data:new Uint8ClampedArray([255,255,255,255]),width:1,height:1})})};
  const entries=['timeline/day','timeline/moon','dimension_type/overworld'].map(name=>['data/minecraft/'+name+'.json',JSON.parse(readFileSync(new URL('../../resources/minecraft/26.3/data/minecraft/'+name+'.json',import.meta.url),'utf8'))] as [string,any]);
- const sky=new NativeSky({documents:new Map(entries),guiImages:{get:()=>image}} as any),renderer={render(){}} as any,camera=new PerspectiveCamera(),env=emptyEnvironment();env.dayTicks=18000;
+ const sky=new NativeSky({documents:new Map(entries),guiImages:{get:()=>image}} as any),renderer={render(){}} as any,camera=new PerspectiveCamera(70,1.6,.1,512),env=emptyEnvironment();env.dayTicks=18000;
  try{
   sky.sync(env,{time:'game',weather:'game'},100);sky.render(renderer,camera,1000);const before={...sky.report};
   now=1100;sky.sync(structuredClone(env),{time:'game',weather:'game'},100);sky.render(renderer,camera,now);assert.equal(sky.report.partial,2);assert.notEqual(sky.report.starAngle,before.starAngle);assert.ok((sky.report.cloudWind as number)>(before.cloudWind as number));
   env.control.advanceTime=false;now=1250;sky.sync(env,{time:'game',weather:'game'},105);sky.render(renderer,camera,now);const stars=sky.report.starAngle,wind=sky.report.cloudWind;
   for(let i=0;i<20;i++)tickEnvironment(env);now=2250;sky.sync(env,{time:'game',weather:'game'},125);sky.render(renderer,camera,now);assert.equal(sky.report.starAngle,stars);assert.notEqual(sky.report.cloudWind,wind);
   env.control.frozen=true;now=2500;sky.sync(env,{time:'game',weather:'game'},125);sky.render(renderer,camera,now);const frozen={...sky.report};sky.render(renderer,camera,3500);assert.equal(sky.report.cloudWind,frozen.cloudWind);assert.equal(sky.report.starAngle,frozen.starAngle);
+  camera.zoom=1.2;
+  for(const yaw of [0,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.75]){
+   camera.rotation.y=yaw;camera.updateProjectionMatrix();camera.updateMatrixWorld();sky.render(renderer,camera,now);sky.camera.updateMatrixWorld();
+   const distantCloud=new Vector3(0,192,-1000).applyQuaternion(camera.quaternion);
+   assert.ok(distantCloud.clone().project(camera).z>1,'world far plane clips still-visible clouds');
+   assert.ok(distantCloud.clone().project(sky.camera).z<1,'sky retains clouds beyond the world far plane at every yaw');
+   assert.equal(sky.camera.projectionMatrix.elements[0],camera.projectionMatrix.elements[0]);
+   assert.equal(sky.camera.projectionMatrix.elements[5],camera.projectionMatrix.elements[5]);
+   assert.ok(sky.camera.far>128*16,'clouds reach zero opacity before the sky clipping plane');
+  }
  }finally{sky.dispose();if(perf)Object.defineProperty(globalThis,'performance',perf);if(doc)Object.defineProperty(globalThis,'document',doc);else Reflect.deleteProperty(globalThis,'document');}
 });
 

@@ -23,7 +23,7 @@ test('native soft wraps indent once, explicit newlines reset indentation and off
     assert.equal(wrapChat('longword',1,s=>s.length*6).map(row=>row.text).join(''),'longword');
 });
 
-test('native drawing distinguishes local player chat from system and scripted author messages',()=>{
+test('native drawing tags only system notifications and keeps player and author chat untagged',()=>{
     const originalDpr=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');
     const originalDocument=Object.getOwnPropertyDescriptor(globalThis,'document');
     Object.defineProperty(globalThis,'devicePixelRatio',{value:1,configurable:true});
@@ -42,12 +42,19 @@ test('native drawing distinguishes local player chat from system and scripted au
     }) as GameChat;
     try{
         chat.paint();
-        assert.equal(rectangles.filter(r=>r.color==='#D0D0D0').length,2,'only system and scripted author messages have a source tag');
+        assert.equal(rectangles.filter(r=>r.color==='#D0D0D0').length,1,'only system notifications have a source tag');
         assert.ok(rectangles.filter(r=>r.color==='#00000080').every(r=>r.bounds[0]===0&&r.bounds[2]===332),'native background includes both margins');
         assert.equal(glyphs[0]?.x,10,'soft continuation starts one space after x=4');
         assert.equal(glyphs.find(g=>g.text==='红')?.color,'#FF5555','source style survives continuation indentation');
         assert.equal(glyphs.find(g=>g.text==='<')?.x,4,'first line starts at x=4');
         const glyphCount=glyphs.length;chat.paint();assert.equal(glyphs.length,glyphCount,'unchanged history reuses rasterized glyphs');
+        const messages=chat.messages;
+        for(const kind of ['player','author','system']){
+            chat.messages=messages.filter(message=>message.kind===kind);rectangles.length=0;
+            chat.paint();
+            assert.ok(chat.lineCount>0);
+            assert.equal(rectangles.filter(r=>r.color==='#D0D0D0').length,kind==='system'?chat.lineCount:0,kind+' source tag');
+        }
     }finally{
         if(originalDpr)Object.defineProperty(globalThis,'devicePixelRatio',originalDpr);else delete (globalThis as any).devicePixelRatio;
         if(originalDocument)Object.defineProperty(globalThis,'document',originalDocument);else delete (globalThis as any).document;

@@ -14,6 +14,7 @@ import {GameChat, nativeScale} from './ui/chat.ts';
 import {AuthorWelcome} from './ui/author-welcome.ts';
 import {bindOddCakeRemarks} from './ui/odd-cake-chat.ts';
 import {GameKeyboard} from './ui/game-keyboard.ts';
+import {bindEscapeKey} from './ui/escape-key.ts';
 import {pickupSoundOptions} from './ui/pickup-feedback.ts';
 import {AdvancementView} from './ui/advancements.ts';
 import {advancementChat} from './ui/advancement-chat.ts';
@@ -63,7 +64,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
     let authorWelcome: AuthorWelcome | null = null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
-    let menu: HTMLDialogElement | null = null, optionsPage = 'options', lastPointerEscape = -Infinity;
+    let menu: HTMLDialogElement | null = null, optionsPage = 'options';
     const languageChoices = new Map<string, HTMLButtonElement>();
     const nativeScreens: NativeScreens[] = [];
     let navigationPanel: NavigationPanel | null = null, startup: GameStartup | null = null;
@@ -552,22 +553,18 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             } else if ((e.code === 'KeyT'||(e.key==='/'||e.code==='Slash'&&!e.shiftKey)&&!e.ctrlKey&&!e.altKey&&!e.metaKey) && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show(e.code==='KeyT'?'':'/');}
         }, {signal: appAbort.signal});
     }
-    // Capture Escape before focused editors and container handlers can consume it or close a second screen.
-    document.addEventListener('keydown',event=>{
-        if(event.code!=='Escape'||disposed||(page==='game'?!startup?.ready:!dialog.open))return;
-        event.preventDefault();event.stopImmediatePropagation();
-        if(event.repeat||performance.now()-lastPointerEscape<150)return;
-        closeCurrentScreen();
-    },{capture:true,signal:appAbort.signal});
-    /** Close one active screen, preserving container-return transactions and each settings page's parent navigation. */
+    const nativeEscape=bindEscapeKey(()=>!disposed&&(page==='game'?!!startup?.ready:dialog.open),closeCurrentScreen,appAbort.signal,()=>{
+        if(!inputBlocked()&&!inventory?.modal.open)openMenu();
+    });
+    /** Close one active screen without opening pause, preserving container transactions and settings subpage navigation. */
     function closeCurrentScreen():void {
         if(chat?.open)chat.hide();
-        else if(advancements?.modal.open)advancements.close();
+        else if(advancements?.modal.open)advancements.close(false);
         else if(inventory?.modal.open)void inventory.close();
         else if(dialog.open){
             if(!confirmSection.hidden)cancelReset.click();
             else if(optionsPage!=='options')showOptions('options');
-            else{dialog.close();if(page==='game')openMenu();}
+            else{dialog.close();updateGate();}
         }
         else if(menu?.open){menu.close();updateGate();}
         else openMenu();
@@ -584,7 +581,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             owner.screenshotSaved(screenshot);
         }catch{if(!disposed&&!owner?.abort.signal.aborted&&session.view.envelope?.generation===generation)feedback('error.screenshot');}
     }
-    /** Open the local pause interface without pausing the approved active simulation. */
+    /** Open pause only when the world is ready and no other screen owns input. */
     function openMenu(): void {if (page !== 'game' || !startup?.ready || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
 
     const navigation = document.createElement('nav');
@@ -668,7 +665,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         showOptions('options');
         if (page === 'home') root.dataset.homeUi = 'ready';
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
-        scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
+        scene.onNativeUnlock=nativeEscape;
         scene.setInputEnabled(page === 'home' && !dialog.open);
         scene.onGraphics = ready => {
             if (!ready) delete host.dataset.menuComposited;

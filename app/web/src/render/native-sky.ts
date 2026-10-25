@@ -156,7 +156,7 @@ export class NativeSky {
         }catch{this.installClouds(cloudGeometry(source.data,source.width,source.height));}
     }
 
-    /** Render original overworld sky geometry at the current camera orientation.
+    /** Render sky orientation and field of view with a sky-only far plane beyond the cloud fade range.
      * @param {WebGLRenderer} renderer Shared renderer and current target.
      * @param {PerspectiveCamera} camera World view.
      * @param {number} now Monotonic render time.
@@ -193,7 +193,7 @@ export class NativeSky {
         const wind=((this.gameTick% (this.cloudSource.width*400))+partial)*Math.fround(.03);
         this.clouds.position.set(-wind-camera.position.x,attrs['minecraft:visual/cloud_height']-camera.position.y,-Math.fround(3.96)-camera.position.z);
         const cm=this.clouds.material as MeshBasicMaterial;cm.color.setRGB(cloudRGB[0],cloudRGB[1],cloudRGB[2],SRGBColorSpace);cm.opacity=cloudRGB[3];
-        this.camera.aspect=camera.aspect;this.camera.fov=camera.fov;this.camera.quaternion.copy(camera.quaternion);this.camera.projectionMatrix.copy(camera.projectionMatrix);
+        this.camera.aspect=camera.aspect;this.camera.fov=camera.fov;this.camera.zoom=camera.zoom;this.camera.near=camera.near;this.camera.quaternion.copy(camera.quaternion);this.camera.updateProjectionMatrix();
         const skyLight=weatherLighting(track('sky_light_factor'),track('sky_light_color'),rain,thunder);if(this.flash)skyLight.factor=1;
         this.report={dayTicks:time,sunAngle:track('sun_angle'),moonAngle:track('moon_angle'),moonPhase:phase,starAngle:track('star_angle'),starOpacity:(this.stars.material as MeshBasicMaterial).opacity,cloudWind:wind,cloudPosition:this.clouds.position.toArray(),gameTick:this.gameTick,partial,dayPartial,rain,thunder,skyLightFactor:skyLight.factor,skyLightColor:skyLight.color,cloudHeight:attrs['minecraft:visual/cloud_height'],cloudQuads:this.cloudQuads,cloudInstances:9,cloudReady:this.clouds.visible,cloudRange:128,starQuads:this.stars.geometry.index!.count/6};
         renderer.render(this.scene,this.camera);

@@ -117,8 +117,8 @@ export class SceneView {
     mode: PointerMode | null = null;
     crosshair: NativeCrosshair | null = null;
     menuBlur = new NativeMenuBlur();
-    onEscape: (() => void) | null = null;
     onPointerFailure: (() => void) | null = null;
+    onNativeUnlock: (() => void) | null = null;
     canUse: ((hit: Pick | null) => boolean) | null = null;
     basePitch = 0;
     rightTarget: string | null = null;
@@ -206,7 +206,8 @@ export class SceneView {
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
         this.cancel = () => this.cancelInput();
-        if (game) this.mode = new PointerMode(canvas, () => {if (this.mode?.actual) this.cancelPointerGesture(); else this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onEscape?.(), () => this.onPointerFailure?.());
+        if (game) this.mode = new PointerMode(canvas, () => {if (this.mode?.actual) this.cancelPointerGesture(); else this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onPointerFailure?.());
+        if(this.mode)this.mode.onNativeUnlock=()=>this.onNativeUnlock?.();
         this.down = e => this.beginPointer(e);
         this.move = e => this.movePointer(e, game);
         this.up = e => this.releasePointer(e);
