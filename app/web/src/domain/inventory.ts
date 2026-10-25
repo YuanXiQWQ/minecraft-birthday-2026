@@ -12,7 +12,8 @@ export type SlotRef =
     | `crafting:${number}`
     | `workbench:${number}`
     | `machine:${number}`
-    | `hopper:${number}`;
+    | `hopper:${number}`
+    | `storage:${number}`;
 
 export interface PlayerLayout {
     backpack: (Stack | null)[];
@@ -28,9 +29,10 @@ export interface InventoryState extends PlayerLayout {
     workbench?: (Stack | null)[];
     machine?: (Stack | null)[];
     hopper?: (Stack | null)[];
+    storage?: (Stack | null)[];
 }
 
-export type InventoryCommand = { type: 'backpack-slot'; index: number; button: 0 | 2 } | {
+export type InventoryCommand = {type:'storage-slot';index:number;button:0|2} | {type:'return-cursor'} | { type: 'backpack-slot'; index: number; button: 0 | 2 } | {
     type: 'hopper-slot';
     index: number;
     button: 0 | 2
@@ -82,7 +84,7 @@ export function emptyInventory(): InventoryState {
  * @return {PlayerLayout} Durable layout data.
  */
 export function layout(state: InventoryState): PlayerLayout {
-    const {cursor: _, crafting: __, workbench: ___, machine: ____, hopper: _____, ...value} = state;
+    const {cursor: _, crafting: __, workbench: ___, machine: ____, hopper: _____, storage: ______, ...value} = state;
     return structuredClone(value);
 }
 
@@ -111,13 +113,14 @@ export function validateStack(s: Stack | null, unlocked: string[], rules: ItemRu
  * @param {ItemRules} rules Original policies.
  */
 export function validateCarriers(value: InventoryState, unlocked: string[], rules: ItemRules): void {
-    if (!value || Object.keys(value).filter(k => k !== 'crafting' && k !== 'workbench' && k !== 'machine' && k !== 'hopper').sort().join('|') !== 'backpack|cursor|equipment|hotbar|presets|selected' || !Array.isArray(value.backpack) || value.backpack.length !== 27 || !Number.isInteger(value.selected) || value.selected < 0 || value.selected > 8 || !Array.isArray(value.hotbar) || value.hotbar.length !== 9 || !Array.isArray(value.presets) || value.presets.length !== 9) throw Error('invalid-hotbar');
+    if (!value || Object.keys(value).filter(k => k !== 'crafting' && k !== 'workbench' && k !== 'machine' && k !== 'hopper' && k !== 'storage').sort().join('|') !== 'backpack|cursor|equipment|hotbar|presets|selected' || !Array.isArray(value.backpack) || value.backpack.length !== 27 || !Number.isInteger(value.selected) || value.selected < 0 || value.selected > 8 || !Array.isArray(value.hotbar) || value.hotbar.length !== 9 || !Array.isArray(value.presets) || value.presets.length !== 9) throw Error('invalid-hotbar');
     if (!value.equipment || Object.keys(value.equipment).sort().join('|') !== 'chest|feet|head|legs|offhand') throw Error('invalid-equipment');
     if (value.crafting !== undefined && (!Array.isArray(value.crafting) || value.crafting.length !== 4)) throw Error('invalid-personal-grid');
     if (value.workbench !== undefined && (!Array.isArray(value.workbench) || value.workbench.length !== 9)) throw Error('invalid-workbench-grid');
     if (value.machine !== undefined && (!Array.isArray(value.machine) || value.machine.length !== 2)) throw Error('invalid-machine-grid');
     if (value.hopper !== undefined && (!Array.isArray(value.hopper) || value.hopper.length !== 5)) throw Error('invalid-hopper-grid');
-    for (const s of [...value.backpack, ...value.hotbar, value.cursor, ...Object.values(value.equipment), ...(value.crafting ?? []), ...(value.workbench ?? []), ...(value.machine ?? []), ...(value.hopper ?? [])]) validateStack(s, unlocked, rules);
+    if(value.storage!==undefined&&(!Array.isArray(value.storage)||![27,54].includes(value.storage.length)))throw Error('invalid-storage-grid');
+    for (const s of [...value.backpack, ...value.hotbar, value.cursor, ...Object.values(value.equipment), ...(value.crafting ?? []), ...(value.workbench ?? []), ...(value.machine ?? []), ...(value.hopper ?? []), ...(value.storage ?? [])]) validateStack(s, unlocked, rules);
     for (const [key, s] of Object.entries(value.equipment)) if (s && key !== 'offhand' && (s.count !== 1 || rules.items[s.id].equipment !== key)) throw Error('invalid-equipment');
     for (const preset of value.presets) {
         if (preset === null) continue;
@@ -139,6 +142,12 @@ export function cell(value: InventoryState, ref: SlotRef): SlotValue {
         }, /** Write owned main inventory. @param {Stack|null} s Validated group. */set stack(s) {
             value.backpack[Number(key)] = s;
         }, policy: {take: true, place: true}
+    };
+    if(kind==='storage'&&/^(?:[0-9]|[1-4][0-9]|5[0-3])$/.test(key)&&value.storage&&Number(key)<value.storage.length)return {
+        /** Read a finite storage cell. @return {Stack|null} Stored group. */
+        get stack(){return value.storage![Number(key)];},
+        /** Write a finite storage cell. @param {Stack|null} stack Accepted group. */
+        set stack(stack){value.storage![Number(key)]=stack;},policy:{take:true,place:true}
     };
     if (kind === 'hopper' && /^[0-4]$/.test(key) && value.hopper) return {
         /** Read instance cell. @return {Stack|null} Current finite group. */get stack() {
@@ -198,10 +207,11 @@ export function cell(value: InventoryState, ref: SlotRef): SlotValue {
  * @param {boolean} workbench Whether instance inputs are present.
  * @param {boolean} machine Whether two finite device inputs are present.
  * @param {boolean} hopper Whether five instance-owned cells are present.
+ * @param {number} storage Native storage-menu capacity.
  * @return {SlotRef[]} Stable pickup/transfer order.
  */
-export function finiteSlots(personal = false, workbench = false, machine = false, hopper = false): SlotRef[] {
-    return [...Array.from({length: 27}, (_, i) => `backpack:${i}` as SlotRef), ...(hopper ? Array.from({length: 5}, (_, i) => `hopper:${i}` as SlotRef) : []), ...(machine ? ['machine:0', 'machine:1'] as SlotRef[] : []), ...(workbench ? Array.from({length: 9}, (_, i) => `workbench:${i}` as SlotRef) : []), ...(personal ? Array.from({length: 4}, (_, i) => `crafting:${i}` as SlotRef) : []), ...Array.from({length: 9}, (_, i) => `hotbar:${i}` as SlotRef), ...(['head', 'chest', 'legs', 'feet', 'offhand'] as const).map(k => `equipment:${k}` as SlotRef)];
+export function finiteSlots(personal = false, workbench = false, machine = false, hopper = false, storage = 0): SlotRef[] {
+    return [...Array.from({length:storage},(_,i)=>`storage:${i}` as SlotRef), ...Array.from({length: 27}, (_, i) => `backpack:${i}` as SlotRef), ...(hopper ? Array.from({length: 5}, (_, i) => `hopper:${i}` as SlotRef) : []), ...(machine ? ['machine:0', 'machine:1'] as SlotRef[] : []), ...(workbench ? Array.from({length: 9}, (_, i) => `workbench:${i}` as SlotRef) : []), ...(personal ? Array.from({length: 4}, (_, i) => `crafting:${i}` as SlotRef) : []), ...Array.from({length: 9}, (_, i) => `hotbar:${i}` as SlotRef), ...(['head', 'chest', 'legs', 'feet', 'offhand'] as const).map(k => `equipment:${k}` as SlotRef)];
 }
 
 /** Route hotbar armor to empty equipment, and equipment/personal inputs to hotbar; other container routes stay unavailable.
@@ -213,7 +223,7 @@ export function finiteSlots(personal = false, workbench = false, machine = false
 function targets(v: InventoryState, ref: SlotRef, rules: ItemRules): SlotValue[] {
     const s = cell(v, ref).stack, gear = s && rules.items[s.id].equipment,
         player = ref.startsWith('backpack:') || ref.startsWith('hotbar:');
-    if (player && !v.workbench && !v.machine && !v.hopper && gear && ['head', 'chest', 'legs', 'feet'].includes(gear) && !v.equipment[gear as EquipmentSlot]) return [cell(v, `equipment:${gear}` as SlotRef)];
+    if (player && !v.workbench && !v.machine && !v.hopper && !v.storage && gear && ['head', 'chest', 'legs', 'feet'].includes(gear) && !v.equipment[gear as EquipmentSlot]) return [cell(v, `equipment:${gear}` as SlotRef)];
     return player ? ref.startsWith('hotbar:') ? Array.from({length: 27}, (_, i) => cell(v, `backpack:${i}`)) : Array.from({length: 9}, (_, i) => cell(v, `hotbar:${i}`)) : [...Array.from({length: 27}, (_, i) => cell(v, `backpack:${i}`)), ...Array.from({length: 9}, (_, i) => cell(v, `hotbar:${i}`))];
 }
 
@@ -263,6 +273,13 @@ export function reduceInventory(current: InventoryState, command: InventoryComma
             }; else v.cursor = null;
             break;
         }
+        case 'return-cursor': {
+            const source={stack:v.cursor,policy:{take:true,place:false}};storeAcquired(source,v,rules);
+            v.cursor=source.stack;break;
+        }
+        case 'storage-slot':
+            if(!Number.isInteger(command.index)||command.index<0||command.index>=(v.storage?.length??0))throw Error('invalid-storage-slot');
+            v.cursor=pickup(cell(v,`storage:${command.index}`),v.cursor,command.button,rules);break;
         case'hopper-slot':
             if (![0, 2].includes(command.button)) throw Error('invalid-button');
             v.cursor = pickup(cell(v, `hopper:${command.index}`), v.cursor, command.button, rules);
@@ -327,7 +344,7 @@ export function reduceInventory(current: InventoryState, command: InventoryComma
             break;
         }
         case'collect':
-            v.cursor = collect(finiteSlots(!!v.crafting, !!v.workbench, !!v.machine, !!v.hopper).map(r => cell(v, r)), v.cursor, rules);
+            v.cursor = collect(finiteSlots(!!v.crafting, !!v.workbench, !!v.machine, !!v.hopper, v.storage?.length??0).map(r => cell(v, r)), v.cursor, rules);
             break;
         case'quick':
             quickMove(cell(v, command.slot), targets(v, command.slot, rules), rules);

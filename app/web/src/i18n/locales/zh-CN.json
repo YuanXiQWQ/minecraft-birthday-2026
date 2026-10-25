@@ -288,5 +288,8 @@
   "bed.tooFar": "你现在不能休息，床太远了",
   "bed.obstructed": "这张床被阻挡了",
   "bed.incomplete": "床头和床尾必须完整",
-  "bed.leave": "起床"
+  "bed.leave": "起床",
+  "inventory.chest": "箱子",
+  "inventory.largeChest": "大型箱子",
+  "inventory.barrel": "木桶"
 }

@@ -120,7 +120,7 @@ export class RecipeBookView {
    * @return {string} Stable scope independent of book visibility, processing timers and settings.
    */
   scope(): string {
-    return JSON.stringify([this.ui.generation, this.ui.personal.epoch, this.ui.permanent?.progress.scene, this.ui.modal.open && this.ui.tab === 'crafting' && this.ui.station?.expected.version !== 3 ? [this.ui.station?.id ?? 'personal', this.mode(), this.width()] : null]);
+    return JSON.stringify([this.ui.generation, this.ui.personal.epoch, this.ui.permanent?.progress.scene, this.ui.modal.open && this.ui.tab === 'crafting' && (this.ui.station?.expected.version !== 3&&this.ui.station?.expected.version!==4) ? [this.ui.station?.id ?? 'personal', this.mode(), this.width()] : null]);
   }
 
   /** Publish temporary display diagnostics separately from all real item carriers. */

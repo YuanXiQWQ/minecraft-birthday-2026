@@ -1,4 +1,6 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {containerDevice,isStorage,validateStorage,reduceStorageInventory,pairChest,reconcileChests,canOpenStorage} from './storage.ts';
+import type {ContainerDevice} from './storage.ts';
 import {agriculture,soilAt,till,trample,tickAgriculture,cropStage,canPickup} from './agriculture.ts';
 import {rolledDrops} from '../rules/harvest.ts';
 import {placementBlocks,PLACEABLE,placedDrops,connectBlocks,survives} from './placed-blocks.ts';
@@ -254,7 +256,7 @@ export function validateState(value: unknown): asserts value is State {
         const blockCells=new Set<string>();
         for(const b of scene.blocks??[])if(b.block===ODD_BLOCK)ensure(/^[0-6]$/.test(b.state.bites),'invalid-cake-bites');
         for(const b of scene.blocks??[])if(b.block==='sugar_cane')ensure(b.state.age===undefined||/^(?:[0-9]|1[0-5])$/.test(b.state.age),'invalid-cane-age');
-        for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));ids.add(b.id);blockCells.add(b.cell.join(','));}
+        for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[]),...(b.contents!==undefined?['contents']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));if(b.contents!==undefined){ensure(isStorage(b.block),'invalid-storage-owner');validateStorage(b.contents,p.unlocked,processing as Rules);}ids.add(b.id);blockCells.add(b.cell.join(','));}
         ensure(scene.layoutVersion === 1 && Array.isArray(scene.stations) && scene.stations.length <= 512 && Array.isArray(scene.crops) && scene.crops.length <= 512);
         const occupied = new Set<string>();
         for (const v of scene.stations) {
@@ -338,7 +340,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
             const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id===blockItem(command.item),'inventory-conflict');
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
-            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
+            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);pairChest(p,block,command.hit);}
             p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
         }
         case 'try-odd-cake-table': {
@@ -375,7 +377,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             const scene=p.scenes[p.scene],block=scene.blocks?.find(b=>b.id===command.id);ensure(block,'block-unavailable');
             const primary=block!.pair?scene.blocks!.find(b=>b.id===block!.pair)??block!:block!;
             if(rules)depositHarvest(p,placedDrops(primary,p.player.data.hotbar[p.player.data.selected],rules),rules,events);
-            scene.blocks=scene.blocks!.filter(b=>b.id!==primary.id&&b.pair!==primary.id);break;
+            if(primary.contents){const a=agriculture(p);for(const stack of primary.contents.data.slots)if(stack)a.drops.push({id:'storage-drop-'+p.scene+'-'+(++a.serial),cell:[...primary.cell],stack:structuredClone(stack)});}
+            scene.blocks=scene.blocks!.filter(b=>b.id!==primary.id&&b.pair!==primary.id);reconcileChests(scene.blocks);break;
         }
 
         case 'console': console=executeCommand(next,command.source); break;
@@ -395,7 +398,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(typeof command.max === 'boolean' && p.recipeBook.data.known.includes(command.recipe), 'recipe-not-discovered');
             ensure(identity(command.expected) === identity(p.player.data), 'inventory-conflict');
             const device = command.workbench ? currentContainer(next, command.workbench) : null;
-            ensure(!device || device.kind !== 'hopper', 'recipe-menu-mismatch');
+            ensure(!device || ['crafting_table','furnace','blast_furnace'].includes(device.kind), 'recipe-menu-mismatch');
             const mode: BookMode = device?.kind === 'furnace' || device?.kind === 'blast_furnace' ? device.kind : 'crafting',
                 recipe = BOOK_RECIPES.find(r => r.id === command.recipe);
             ensure(recipe && bookApplicable(recipe, mode, device?.kind === 'crafting_table' ? 3 : 2), 'recipe-menu-mismatch');
@@ -539,7 +542,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             const device = command.workbench ? currentContainer(next, command.workbench) : null;
             const carriers: InventoryState = {
                 ...p.player.data,
-                cursor: command.cursor, ...(command.crafting ? {crafting: command.crafting} : {}), ...(device?.kind === 'crafting_table' ? {workbench: structuredClone(device.contents.version === 1 ? device.contents.data.grid : Array(9).fill(null))} : {}), ...(device?.contents.version === 3 ? {hopper: structuredClone(device.contents.data.slots)} : {}), ...(device?.contents.version === 2 ? {machine: [structuredClone(device.contents.data.input), structuredClone(device.contents.data.fuel)]} : {})
+                cursor: command.cursor, ...(command.crafting ? {crafting: command.crafting} : {}), ...(device?.kind === 'crafting_table' ? {workbench: structuredClone(device.contents.version === 1 ? device.contents.data.grid : Array(9).fill(null))} : {}), ...(device?.contents.version === 4 ? {storage:structuredClone(device.contents.data.slots)}:{}), ...(device?.contents.version === 3 ? {hopper: structuredClone(device.contents.data.slots)} : {}), ...(device?.contents.version === 2 ? {machine: [structuredClone(device.contents.data.input), structuredClone(device.contents.data.fuel)]} : {})
             };
             if (command.type === 'craft-take') {
                 ensure(!device || device.kind === 'crafting_table', 'invalid-crafting-device');
@@ -555,9 +558,12 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                         events.push({type: 'item-unlocked', item: id});
                     }
                 }
-            } else inventory = device?.contents.version === 3 ? reduceHopperInventory(carriers, command.intent, p.unlocked, processing as Rules) : device?.contents.version === 2 ? reduceFurnaceInventory(carriers, command.intent, p.unlocked, processing as Rules, device.kind as FurnaceKind) : reduceInventory(carriers, command.intent, p.unlocked, nativeInventory);
+            } else inventory = device?.contents.version === 4 ? reduceStorageInventory(carriers,command.intent,p.unlocked,processing as Rules) : device?.contents.version === 3 ? reduceHopperInventory(carriers, command.intent, p.unlocked, processing as Rules) : device?.contents.version === 2 ? reduceFurnaceInventory(carriers, command.intent, p.unlocked, processing as Rules, device.kind as FurnaceKind) : reduceInventory(carriers, command.intent, p.unlocked, nativeInventory);
             p.player = {version: 1, data: layout(inventory)};
-            if (device?.contents.version === 3) device.contents.data.slots = structuredClone(inventory.hopper!); else if (device?.contents.version === 2) {
+            if(command.type==='inventory'&&command.intent.type==='return-cursor'&&inventory.cursor){
+                const a=agriculture(p);a.drops.push({id:'storage-drop-'+p.scene+'-'+(++a.serial),cell:(p.scenes[p.scene].pose?.feet??WORLD_SCENES[p.scene].eye).map(Math.floor) as [number,number,number],stack:inventory.cursor});inventory.cursor=null;
+            }
+            if (device?.contents.version === 4) device.contents.data.slots=structuredClone(inventory.storage!); else if (device?.contents.version === 3) device.contents.data.slots = structuredClone(inventory.hopper!); else if (device?.contents.version === 2) {
                 const before = device.contents.data.input;
                 device.contents.data.input = inventory.machine![0];
                 device.contents.data.fuel = inventory.machine![1];
@@ -660,7 +666,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop',events.some(e=>e.type==='cake-placed'),events.some(e=>e.type==='cake-crafted'),acquiredRecipes.includes(ODD_CAKE));
     if(completed.length)events.push({type:'advancements-completed',advancements:completed});
     if(p.sleep&&(p.sleep.scene!==p.scene||!p.scenes[p.sleep.scene].blocks?.some(b=>b.id===p.sleep!.id)))leaveBed(p,events);
-    if (!['processing-tick','settings','save-pose'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
+    if (!['processing-tick','settings','save-pose','pressure-contacts'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});
     if(['place-block','break-block','harvest-node','remove-station','put-station'].includes(command.type)){
@@ -734,9 +740,15 @@ export function currentDevice(state: State, context: WorkbenchContext): Station 
 /** Compare only manually editable references, allowing timer updates while an ordinary slot transaction is queued.
  * @param {State} state Latest locked state.
  * @param {WorkbenchContext} context Observed input ownership.
- * @return {Station} Valid current container.
+ * @return {ContainerDevice} Valid current container, including compound storage.
  */
-function currentContainer(state: State, context: WorkbenchContext): Station {
+function currentContainer(state: State, context: WorkbenchContext): ContainerDevice {
+    if(context.expected.version===4){
+        ensure(context.scene===state.progress.scene,'station-scene-changed');
+        const value=containerDevice(state.progress,context.scene,context.id);
+        ensure(value?.contents.version===4&&canOpenStorage(state.progress,context.scene,context.id),'station-unavailable');
+        ensure(identity(value.contents)===identity(context.expected),'station-content-conflict');return value;
+    }
     if (context.expected.version === 3) {
         ensure(context.scene === state.progress.scene, 'station-scene-changed');
         const value = state.progress.scenes[context.scene].stations.find(s => s.id === context.id);

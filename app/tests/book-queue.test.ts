@@ -561,7 +561,7 @@ for (const take of [false, true]) test('cross-session reset fences a real ' + (t
         u.command({type: 'craft-slot', index: 0, button: 0});
         await u.queue;
     }
-    book.choose(torch, false);
+    if(take)book.showGhost(torch.id);else book.choose(torch, false);
     book.popup = {key: 'old', recipes: [torch]};
     if (take) u.takeResult({mode: 'cursor'}); else u.fillInputs('minecraft:oak_planks', false);
     await h.entered;
@@ -830,4 +830,23 @@ for(const bench of [false,true])test(`real recipe switching clears every obsolet
     assert.ok((u.value.workbench??u.value.crafting!).filter(Boolean).every(s=>s!.count===2));
     u.fillInputs('minecraft:crafting_table',true);await u.queue;
     assert.ok((u.value.workbench??u.value.crafting!).filter(Boolean).every(s=>s!.count===16));
+});
+
+for(const bench of [false,true])test(`uncraftable recipe returns actual old inputs before its ghost and preserves quantities; table=${bench}`,async()=>{
+    const h=await harness(bench),u=h.u;h.release();
+    await h.s.dispatch({type:'unlock',item:'minecraft:stone_pickaxe'});
+    u.fillInputs('minecraft:oak_planks',false);await u.queue;
+    assert.ok((u.value.workbench??u.value.crafting!).some(Boolean));
+    const {book}=attachLifecycleBook(h),recipe=BOOK_RECIPES.find(r=>r.id==='minecraft:torch')!;
+    book.choose(recipe,false);assert.equal(book.ghost,null);await u.queue;
+    assert.ok((u.value.workbench??u.value.crafting!).every(s=>!s));assert.equal(u.preview.result,null);assert.equal((book.ghost as Recipe|null)?.id,recipe.id);
+    assert.equal([...u.value.backpack,...u.value.hotbar].filter(s=>s?.id==='minecraft:oak_log').reduce((n,s)=>n+s!.count,0),64);
+    const before=h.raw();book.choose(recipe,false);assert.equal(h.raw(),before);
+});
+
+test('failed old-grid return preserves durable items and never displays an uncommitted recipe ghost',async()=>{
+    const h=await harness(true),u=h.u;h.release();await h.s.dispatch({type:'unlock',item:'minecraft:stone_pickaxe'});
+    u.fillInputs('minecraft:oak_planks',false);await u.queue;const {book}=attachLifecycleBook(h),before=h.raw();h.deny(true);
+    book.choose(BOOK_RECIPES.find(r=>r.id==='minecraft:torch')!,false);await u.queue;
+    assert.equal(h.raw(),before);assert.equal(book.ghost,null);assert.ok(u.value.workbench!.some(Boolean));assert.equal(u.carrierBusy(),false);
 });

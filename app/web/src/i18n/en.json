@@ -288,5 +288,8 @@
   "bed.tooFar": "You may not rest now; the bed is too far away",
   "bed.obstructed": "This bed is obstructed",
   "bed.incomplete": "Both halves of the bed must be present",
-  "bed.leave": "Leave Bed"
+  "bed.leave": "Leave Bed",
+  "inventory.chest": "Chest",
+  "inventory.largeChest": "Large Chest",
+  "inventory.barrel": "Barrel"
 }

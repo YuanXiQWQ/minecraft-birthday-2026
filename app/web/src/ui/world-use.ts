@@ -1,4 +1,5 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {isStorage} from '../domain/storage.ts';
 import {KEY_BINDINGS,boundKey} from '../domain/control-settings.ts';
 import {isCake,ODD_CAKE} from '../domain/easter-egg.ts';
 import {canTill,canPickup,soilAt,cropStage} from '../domain/agriculture.ts';
@@ -146,7 +147,7 @@ export class WorldUse {
      * @param {Pick} hit In-range target.
      * @return {BlockHit} Native placement context.
      */
-    blockHit(hit:Pick):BlockHit{return {cell:hit.cell??hit.point.map((n,i)=>Math.floor(n-hit.normal[i]*.001)) as Cell,normal:hit.normal.map(Math.round) as Cell,point:hit.point,eye:this.scene.camera.position.toArray(),yaw:this.scene.camera.rotation.y,crouch:this.scene.motion.crouching};}
+    blockHit(hit:Pick):BlockHit{return {cell:hit.cell??hit.point.map((n,i)=>Math.floor(n-hit.normal[i]*.001)) as Cell,normal:hit.normal.map(Math.round) as Cell,point:hit.point,eye:this.scene.camera.position.toArray(),yaw:this.scene.camera.rotation.y,pitch:this.scene.camera.rotation.x,crouch:this.scene.motion.crouching};}
 
     /** Read only the selected actual temporary group. @return {Kind|null} Placeable selected device, if any. */
     heldKind(): Kind | null {
@@ -379,6 +380,7 @@ export class WorldUse {
             return;
         }
         const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
+        if(placed&&isStorage(placed.block)&&(!shift||!p.player.data.hotbar[p.player.data.selected])){this.inventory.openWorkbench(placed.id);return;}
         if(placed&&isCake(placed.block)&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
         if(placed&&(!shift||!p.player.data.hotbar[p.player.data.selected])&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);

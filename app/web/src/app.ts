@@ -715,6 +715,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
             inventory.input.controls=controlSettings(session.view.envelope?.state.settings.controls);
             inventory.feedback = key => feedback(key);
+            inventory.storageView=ids=>scene?.setStorageOpen(ids);
             inventory.sound = (id, options) => {void worldAudio?.play(id, options);};
             host.append(inventory.hud, inventory.modal);
             inventory.onHudPaint = () => scene?.backgroundChanged();

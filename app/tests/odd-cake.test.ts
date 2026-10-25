@@ -104,7 +104,8 @@ test('ground placement consumes one cake, table placement rejects atomically and
     assert.throws(()=>placementBlocks(s.progress,ODD_BLOCK,{cell:[0,1,-3],normal:[0,1,0],point:[.5,2,-2.5],eye:[.5,2,0],yaw:0},'odd-table'),/unsupported-placement/);
     const held=structuredClone(s);held.progress.player.data.hotbar[0]={id:ODD_CAKE,count:1};held.progress.unlocked.push('minecraft:cake');
     assert.throws(()=>transition(held,{type:'record-cake-placement',scene:'home',table:'birthday-table'},WORLD_REGION,rules),/cake-not-held/);
-    assert.deepEqual(blockSounds(ODD_BLOCK),blockSounds('cake'));assert.deepEqual(placedDrops(blocks[0],null,rules),[]);
+    assert.deepEqual(blockSounds('cake'),{hit:'block.wool.hit',break:'block.wool.break',place:'block.wool.place',step:'block.wool.step',volume:1,pitch:1});
+    assert.deepEqual(blockSounds(ODD_BLOCK),{...blockSounds('cake'),place:'block.slime_block.place'});assert.deepEqual(placedDrops(blocks[0],null,rules),[]);
     for(let bites=0;bites<7;bites++){
         assert.deepEqual(nativeShapes(ODD_BLOCK,{bites:String(bites)}),nativeShapes('cake',{bites:String(bites)}));
         const command:Command={type:'eat-cake',scene:'home',id:'odd-ground',expectedBites:bites};

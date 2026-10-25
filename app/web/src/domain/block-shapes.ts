@@ -43,7 +43,11 @@ export function nativeShapes(block:string,state:Record<string,string>,collision=
         if(state.part==='head')boxes.push(state.facing==='north'?[0,0,0,1,5/16,.5]:state.facing==='south'?[0,0,.5,1,5/16,1]:state.facing==='west'?[0,0,0,.5,5/16,1]:[.5,0,0,1,5/16,1]);
         return boxes;
     }
-    if(block==='chest'||block==='trapped_chest')return [[1/16,0,1/16,15/16,14/16,15/16]];
+    if(block==='chest'||block==='trapped_chest'){
+        const box:Bounds=[1/16,0,1/16,15/16,14/16,15/16];
+        if(block==='chest'&&['left','right'].includes(state.type)){const faces=['north','east','south','west'],face=faces[(faces.indexOf(state.facing)+(state.type==='left'?1:3))%4];if(face==='east')box[3]=1;else if(face==='west')box[0]=0;else if(face==='south')box[5]=1;else box[2]=0;}
+        return [box];
+    }
     if(block.endsWith('_slab'))return [state.type==='double'?FULL_BLOCK:state.type==='top'?[0,.5,0,1,1,1]:[0,0,0,1,.5,1]];
     if(block==='hopper'){
         const boxes:Bounds[]=[[0,10/16,0,1,11/16,1],[0,11/16,0,2/16,1,1],[14/16,11/16,0,1,1,1],[2/16,11/16,0,14/16,1,2/16],[2/16,11/16,14/16,14/16,1,1],[4/16,4/16,4/16,12/16,10/16,12/16]];

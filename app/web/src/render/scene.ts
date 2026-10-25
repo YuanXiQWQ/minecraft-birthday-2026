@@ -116,6 +116,8 @@ export class SceneView {
     world = new Group();
     persistent = new Group();
     placed=new Group();placedSignature='';
+    storageOpen=new Set<string>();
+    storageAnimation=new Map<string,{value:number;time:number}>();
     cake: Group | null = null;
     look = new Look();
     mode: PointerMode | null = null;
@@ -504,6 +506,7 @@ export class SceneView {
             this.cancel();
             this.showPreview(null);
             this.stationSignature = '';
+            this.storageOpen.clear();this.storageAnimation.clear();
             this.renderer.domElement.dataset.scene = p.scene;
         }
         const end = timing('scene-update');
@@ -513,8 +516,8 @@ export class SceneView {
         this.authored.sync(p);
         this.setCake(p.scene === 'home' && p.cakePlacement !== null,p.cakePlacement?.bites??0);
         this.sync(p.scenes[p.scene]);
-        const glass=glassCells(p),placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks,[...glass]]);
-        if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models,glass));}
+        const glass=glassCells(p),visualBlocks=(p.scenes[p.scene].blocks??[]).map(({contents:_,...b})=>b.block==='barrel'?{...b,state:{...b.state,open:String(this.storageOpen.has(b.id))}}:b),placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks?visualBlocks:undefined,[...glass]]);
+        if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of visualBlocks)this.placed.add(placedModel(b,this.models.pack as Resources,this.models,glass));}
         this.rebuildCollision();
         const footCell:Cell=[Math.floor(this.motion.feet[0]),Math.floor(this.motion.feet[1]-.2),Math.floor(this.motion.feet[2])],soil=soilAt(p,footCell);
         if(soil?.moisture===null&&this.motion.feet[1]<footCell[1]+1&&this.motion.feet[1]>=footCell[1]+15/16-.001){this.motion.feet[1]=footCell[1]+1;this.previousFeet=[...this.motion.feet];}
@@ -821,6 +824,7 @@ export class SceneView {
             this.resizeViewport();
             const start = performance.now();this.advancePlayer(start);const continuing = this.onFrame?.(start) ?? false;
             this.models.animate(start);
+            const storageAnimating=this.animateStorage(start);
             const swing=this.hand?(this.hand.clock-this.hand.swingAt)/this.hand.swingDuration:0;
             this.playerView?.animate(this.camera,this.motion,this.hand?.clock?this.hand.clock*50:0,swing);
             this.scene.updateMatrixWorld(true);
@@ -864,8 +868,38 @@ export class SceneView {
             this.renderer.domElement.dataset.drawCalls = String(this.renderer.info.render.calls);
             this.renderer.domElement.dataset.geometry = String(this.renderer.info.memory.geometries);
             this.renderer.domElement.dataset.triangles = String(this.renderer.info.render.triangles);
-            if (!globalThis.document?.hidden&&(continuing || this.debris.length || this.sky)) this.requestRender();
+            if (!globalThis.document?.hidden&&(continuing || storageAnimating || this.debris.length || this.sky)) this.requestRender();
         });
+    }
+
+    /** Set local menu opener identities; hopper access never changes visual state.
+     * @param {string[]} ids Physical halves used by the current menu.
+     */
+    setStorageOpen(ids:string[]):void {
+        this.animateStorage(performance.now());
+        this.storageOpen=new Set(ids);
+        if(this.environmentProgress)this.syncWorld(this.environmentProgress);
+        this.requestRender();
+    }
+
+    /** Advance chest lids at 0.1 per native tick and apply the original cubic opening curve.
+     * @param {number} now Renderer clock in milliseconds.
+     * @return {boolean} Whether a lid still needs animation frames.
+     */
+    animateStorage(now:number):boolean {
+        if(!this.placed?.children.length){this.storageAnimation?.clear();return false;}
+        let moving=false;const live=new Set<string>();
+        for(const root of this.placed.children){
+            const lid=root.getObjectByName('chest-lid');if(!lid)continue;
+            const id=root.userData.id as string,target=this.storageOpen.has(id)?1:0,record=this.storageAnimation.get(id)??{value:0,time:now};live.add(id);
+            const step=Math.max(0,Math.min(now-record.time,50))/500;
+            record.value=target?Math.min(1,record.value+step):Math.max(0,record.value-step);record.time=now;
+            lid.rotation.x=-(1-Math.pow(1-record.value,3))*Math.PI/2;
+            this.storageAnimation.set(id,record);if(record.value!==target)moving=true;
+        }
+        for(const id of this.storageAnimation.keys())if(!live.has(id))this.storageAnimation.delete(id);
+        this.renderer.domElement.dataset.storageAnimation=JSON.stringify([...this.storageAnimation].map(([id,r])=>({id,openness:r.value,open:this.storageOpen.has(id)})));
+        return moving;
     }
 
     /** Combine native sky intensity with the finite block-light field, independently of GUI materials. */

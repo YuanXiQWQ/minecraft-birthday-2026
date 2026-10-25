@@ -94,20 +94,29 @@ test('English, exact original simplified Chinese and namespaced IDs resolve the 
 test('known but unowned materials cannot fill, while finite repeated ingredients move once and Shift has an owned upper bound', () => {
     const r = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!,
         owned: (Stack | null)[] = Array(36).fill(null), grid = Array(4).fill(null);
-    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, grid, owned, rules), /missing/);
+    assert.deepEqual(fillOwnedRecipe(r, 'crafting', 2, grid, owned, rules), Array(4).fill(null));
+    assert.deepEqual(owned, Array(36).fill(null));
     owned[0] = s('oak_planks', 10);
     const n = fillOwnedRecipe(r, 'crafting', 2, grid, owned, rules, true);
     assert.deepEqual(n, Array(4).fill(s('oak_planks', 2)));
     assert.deepEqual(owned[0], s('oak_planks', 2));
     assert.ok(grid.every(v => v === null));
 });
-test('failed ingredient placement preserves every owned and input unit', () => {
+test('missing ingredients return old inputs without consuming material; insufficient return space is atomic', () => {
     const r = rules.recipes.find(r => r.id === 'minecraft:crafting_table')!,
         owned: (Stack | null)[] = [s('oak_planks', 3), ...Array(35).fill(null)], before = structuredClone(owned);
-    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, Array(4).fill(null), owned, rules), /missing/);
+    assert.deepEqual(fillOwnedRecipe(r, 'crafting', 2, Array(4).fill(null), owned, rules), Array(4).fill(null));
     assert.deepEqual(owned, before);
-    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, [s('egg'), null, null, null], owned, rules), /missing/);
-    assert.deepEqual(owned, before);
+    const grid = [s('egg'), null, null, null], inputs = structuredClone(grid);
+    assert.deepEqual(fillOwnedRecipe(r, 'crafting', 2, grid, owned, rules), Array(4).fill(null));
+    assert.deepEqual(owned, [s('oak_planks', 3), s('egg'), ...Array(34).fill(null)]);
+    assert.deepEqual(grid, inputs);
+
+    const full = [s('egg', 15), ...Array.from({length: 35}, () => s('stone', 64))],
+        fullBefore = structuredClone(full), blocked = [s('egg'), s('coal'), null, null], blockedBefore = structuredClone(blocked);
+    assert.throws(() => fillOwnedRecipe(r, 'crafting', 2, blocked, full, rules), /inventory-full/);
+    assert.deepEqual(full, fullBefore);
+    assert.deepEqual(blocked, blockedBefore);
 });
 test('finite furnace consumes once on ignition and once on completion, leaving independent residual fire', () => {
     const c = emptyFurnace();

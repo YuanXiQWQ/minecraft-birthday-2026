@@ -5,6 +5,7 @@ import {itemColor} from './item-style.ts';
 import {matchesItem} from '../i18n/items.ts';
 import {RecipeBookView} from './recipe-book.ts';
 import type {Command} from '../domain/types.ts';
+import {containerDevice,canOpenStorage,storageParts,storageSoundPosition,reduceStorageInventory} from '../domain/storage.ts';
 import {reduceHopperInventory} from '../domain/hopper.ts';
 import {reduceFurnaceInventory} from '../domain/furnace.ts';
 import type {FurnaceTake, FurnaceKind, FurnaceData} from '../domain/furnace.ts';
@@ -33,7 +34,7 @@ import type {SoundOptions} from '../render/world-audio.ts';
 
 /** One logical slot description has no dependency on screen scaling or scene coordinates. */
 export interface Slot {
-    kind: 'backpack' | 'source' | 'hotbar' | 'equipment' | 'crafting' | 'preset-info' | 'preview' | 'workbench' | 'machine' | 'hopper';
+    kind: 'backpack' | 'source' | 'hotbar' | 'equipment' | 'crafting' | 'preset-info' | 'preview' | 'workbench' | 'machine' | 'hopper' | 'storage';
     preset?: number;
     presetCell?: number;
     x: number;
@@ -87,7 +88,10 @@ export class GameInventory {
     tooltip: HTMLDivElement;
     cursor: HTMLCanvasElement;
     feedback: ((key: string) => void) | null = null;
-    /** Committed local equipment feedback shares the native player sound channel. */
+    /** Project current native openers into the world renderer. */
+    storageView: ((ids:string[])=>void)|null=null;
+    storageOpen: {ids:string[];kind:string;position:[number,number,number];scene:string;generation:string}|null=null;
+    /** Positional storage and committed equipment feedback use native sound categories. */
     sound: ((id: string, options: SoundOptions) => void) | null = null;
     input: InventoryInput;
     queue: Promise<void> = Promise.resolve();
@@ -259,7 +263,7 @@ export class GameInventory {
         this.book = new RecipeBookView(this, body);
         this.resize = () => {
             const width = this.viewport?.clientWidth ?? innerWidth, height = this.viewport?.clientHeight ?? innerHeight,
-                ratio = Math.min(devicePixelRatio, 4), limit = Math.min(width / (width < 700 ? 184 : 320), height / 215),
+                ratio = Math.min(devicePixelRatio, 4), limit = Math.min(width / (width < 700 ? 184 : 320), height / (this.value.storage?.length===54?240:215)),
                 physical = Math.max(1, Math.min(Math.floor(4 * ratio + 1e-6), Math.floor(limit * ratio + 1e-6)));
             this.scale = physical / ratio;
             this.host.style.setProperty('--gui-scale', String(this.scale));
@@ -342,13 +346,14 @@ export class GameInventory {
         }
         this.writable = writable;
         if (this.station) {
-            const found = state.progress.scenes[state.progress.scene].stations.find(s => s.id === this.station!.id && ['crafting_table', 'furnace', 'blast_furnace', 'hopper'].includes(s.kind));
-            if (!found || this.station.scene !== state.progress.scene) {
+            const found = containerDevice(state.progress,state.progress.scene,this.station!.id);
+            if (!found || this.station.scene !== state.progress.scene || this.storageOpen&&this.storageOpen.generation!==generation || found.contents.version===4&&JSON.stringify(storageParts(state.progress,state.progress.scene,found.id).map(b=>b.id))!==JSON.stringify(this.storageOpen?.ids)) {
                 void this.close(true);
                 this.station = null;
                 delete this.value.workbench;
                 delete this.value.machine;
                 delete this.value.hopper;
+                delete this.value.storage;
             } else if (!this.pending) this.station = {
                 scene: state.progress.scene,
                 id: found.id,
@@ -392,8 +397,8 @@ export class GameInventory {
             cursorEpoch = this.personal.epoch, workbench = this.station ? structuredClone(this.station) : undefined,
             scene = this.permanent.progress.scene;
         try {
-            this.value = this.station?.expected.version === 3 ? reduceHopperInventory(this.value, intent, this.permanent.progress.unlocked, this.rules) : this.station?.expected.version === 2 ? reduceFurnaceInventory(this.value, intent, this.permanent.progress.unlocked, this.rules, this.machineKind()) : inventoryCommand(this.value, intent, this.permanent, this.rules);
-            if (this.station?.expected.version === 3) this.station.expected.data.slots = structuredClone(this.value.hopper!); else if (this.station?.expected.version === 2) {
+            this.value = this.station?.expected.version === 4 ? reduceStorageInventory(this.value,intent,this.permanent.progress.unlocked,this.rules) : this.station?.expected.version === 3 ? reduceHopperInventory(this.value, intent, this.permanent.progress.unlocked, this.rules) : this.station?.expected.version === 2 ? reduceFurnaceInventory(this.value, intent, this.permanent.progress.unlocked, this.rules, this.machineKind()) : inventoryCommand(this.value, intent, this.permanent, this.rules);
+            if(this.station?.expected.version===4)this.station.expected.data.slots=structuredClone(this.value.storage!); else if (this.station?.expected.version === 3) this.station.expected.data.slots = structuredClone(this.value.hopper!); else if (this.station?.expected.version === 2) {
                 this.station.expected.data.input = structuredClone(this.value.machine![0]);
                 this.station.expected.data.fuel = structuredClone(this.value.machine![1]);
             } else if (this.station) this.station.expected = {
@@ -453,6 +458,7 @@ export class GameInventory {
         delete this.value.workbench;
         delete this.value.machine;
         delete this.value.hopper;
+        delete this.value.storage;
         this.input.cancel();
         if (this.blocked() || !this.permanent) return;
         this.gate(true);
@@ -489,7 +495,7 @@ export class GameInventory {
         this.cursor.hidden = true;
     }
 
-    /** Return real workbench inputs atomically before ending a valid menu; failure leaves them visible and recoverable.
+    /** Settle storage cursors and workbench inputs before ending a valid menu; failed writes leave them recoverable.
      * @param {boolean} invalidated Whether the station lifetime has already ended.
      * @return {Promise<boolean>} Whether navigation may leave this menu.
      */
@@ -497,6 +503,17 @@ export class GameInventory {
         if (!this.modal.open) return true;
         if (this.closing && !invalidated) return this.closing;
         const station = this.station, epoch = this.personal.epoch, generation = this.generation;
+        if(!invalidated&&station?.expected.version===4){
+            const ticket=this.queue.then(async()=>{
+                if(this.generation!==generation||this.disposed)return false;
+                const cursor=structuredClone(this.personal.value);
+                if(cursor){const result=await this.commit({type:'return-cursor'},cursor,structuredClone(this.permanent!.progress.player.data));this.personal.commit(this.personal.epoch,result.cursor);}
+                return true;
+            }).catch(()=>{this.reportFailure('inventory.returnFull');return false;});
+            this.closing=ticket;const success=await ticket;if(this.closing===ticket)this.closing=null;
+            if(!success||this.generation!==generation||this.station?.id!==station.id)return false;
+        }
+        this.storageFeedback(false);
         this.clearPersonal();
         if (!invalidated && station?.expected.version === 1 && this.returnWorkbench) {
             const ticket = this.queue.then(() => this.returnWorkbench!(station.scene, station.id)).then(() => true).catch(() => {
@@ -516,6 +533,7 @@ export class GameInventory {
         delete this.value.workbench;
         delete this.value.machine;
         delete this.value.hopper;
+        delete this.value.storage;
         this.modal.dataset.stationId = '';
         this.modal.dataset.workbench = 'null';
         this.refreshPreview();
@@ -622,9 +640,10 @@ export class GameInventory {
             this.stack(tc, {id: b.dataset.tab === 'catalogue' ? 'minecraft:compass' : 'minecraft:chest', count: 1}, 5, 9);
         }
         const personal = this.tab === 'crafting', bench = personal && !!this.station,
+            storage = bench && this.station!.expected.version===4, rows=(this.value.storage?.length??27)/9,
             hopper = bench && this.station!.expected.version === 3,
             machine = bench && this.station!.expected.version === 2, w = personal ? 176 : 195,
-            h = hopper ? 133 : personal ? 166 : 136;
+            h = storage ? rows*18+114 : hopper ? 133 : personal ? 166 : 136;
         if (nav) nav.style.width = w * this.scale + 'px';
         this.panel.style.width = w * this.scale + 'px';
         this.panel.style.height = h * this.scale + 'px';
@@ -637,6 +656,7 @@ export class GameInventory {
         ctx.setTransform(density, 0, 0, density, 0, 0);
         ctx.clearRect(0, 0, w, h);
         ctx.imageSmoothingEnabled = false;
+        if(storage){const image=this.image('container/generic_54');ctx.drawImage(image,0,0,176,rows*18+17,0,0,176,rows*18+17);ctx.drawImage(image,0,126,176,96,0,rows*18+17,176,96);}else
         ctx.drawImage(this.image(personal ? (hopper ? 'container/hopper' : machine ? 'container/' + this.machineKind() : bench ? 'container/crafting_table' : 'container/inventory') : 'container/creative_inventory/' + (this.tab === 'equipment' ? 'tab_inventory' : 'tab_item_search')), 0, 0, w, h, 0, 0, w, h);
         if (rebuild) this.controls.replaceChildren();
         this.slots = [];
@@ -644,7 +664,7 @@ export class GameInventory {
         this.menuSlots(ctx);
         if (this.tab === 'catalogue') nativeField(ctx, this.pixels.font, this.search, [82, 6, 80, 9]);
         if (machine) this.drawFurnace(ctx);
-        if (personal && bench) this.pixels.font.draw(ctx, this.text('inventory.nativeInventory'), 8, hopper ? 39 : 72, '#404040', false);
+        if (personal && bench) this.pixels.font.draw(ctx, this.text('inventory.nativeInventory'), 8, storage ? rows*18+20 : hopper ? 39 : 72, '#404040', false);
         this.scrollbar.hidden = !['presets', 'catalogue'].includes(this.tab);
         this.scrollbar.setAttribute('aria-label', this.text(this.tab === 'presets' ? 'inventory.presetScroll' : 'inventory.catalogueScroll'));
         this.scrollbar.max = String(this.tab === 'presets' ? 4 : Math.max(0, Math.ceil(Math.max(0, directory(this.permanent).filter(e => matchesItem(e.item, this.search.value)).length - (this.search.value ? 0 : 18)) / 9) - 3));
@@ -764,6 +784,7 @@ export class GameInventory {
         this.modal.dataset.compass = JSON.stringify(this.art.documents.get('$compass-state') ?? null);
         this.modal.dataset.stationId = this.station?.id ?? '';
         this.modal.dataset.workbench = JSON.stringify(this.value.workbench ?? null);
+        this.modal.dataset.storage = JSON.stringify(this.value.storage??null);
         this.modal.dataset.hopper = JSON.stringify(this.value.hopper ?? null);
         this.modal.dataset.sideOffset = String(this.sideOffset);
         this.modal.dataset.furnace = JSON.stringify(this.station?.expected.version === 2 ? this.station.expected.data : null);
@@ -831,7 +852,7 @@ export class GameInventory {
             type: 'backpack-slot',
             index: slot.index!,
             button
-        } : slot.kind === 'hopper' ? {
+        } : slot.kind === 'storage' ? {type:'storage-slot',index:slot.index!,button} : slot.kind === 'hopper' ? {
             type: 'hopper-slot',
             index: slot.index!,
             button
@@ -893,7 +914,10 @@ export class GameInventory {
                 ctx.fillRect(172, 111, 20, 22);
             }
             if (this.tab === 'crafting') {
-                if (this.station?.expected.version === 3) {
+                if(this.station?.expected.version===4){
+                    for(let i=0;i<this.value.storage!.length;i++)this.slots.push({kind:'storage',index:i,x:7+i%9*18,y:17+Math.floor(i/9)*18});
+                    this.pixels.font.draw(ctx,this.storageTitle(),8,6,'#404040',false);
+                } else if (this.station?.expected.version === 3) {
                     for (let i = 0; i < 5; i++) this.slots.push({kind: 'hopper', index: i, x: 43 + i * 18, y: 19});
                     this.pixels.font.draw(ctx, this.text('inventory.hopper'), 8, 6, '#404040', false);
                 } else if (this.station?.expected.version === 2) {
@@ -942,7 +966,7 @@ export class GameInventory {
                     y: 17 + Math.floor(i / 9) * 18
                 });
             } else {
-                const y = this.station?.expected.version === 3 ? 50 : 83;
+                const y = this.station?.expected.version===4 ? this.value.storage!.length/9*18+31 : this.station?.expected.version === 3 ? 50 : 83;
                 for (let i = 0; i < 27; i++) this.slots.push({
                     kind: 'backpack',
                     index: i,
@@ -955,7 +979,7 @@ export class GameInventory {
             kind: 'hotbar',
             index: i,
             x: (this.tab === 'crafting' ? 7 : 8) + i * 18,
-            y: this.tab === 'crafting' ? (this.station?.expected.version === 3 ? 108 : 141) : 111
+            y: this.tab === 'crafting' ? (this.station?.expected.version===4 ? this.value.storage!.length/9*18+89 : this.station?.expected.version === 3 ? 108 : 141) : 111
         });
     }
 
@@ -964,7 +988,7 @@ export class GameInventory {
      * @return {Stack|null} Current carrier, read-only result, or informational paper icon.
      */
     slotStack(slot: Slot, value: InventoryState = this.value): Stack | null {
-        return slot.kind === 'backpack' ? value.backpack[slot.index!] ?? null : slot.kind === 'hopper' ? value.hopper?.[slot.index!] ?? null : slot.kind === 'machine' ? value.machine?.[slot.index!] ?? null : slot.kind === 'preview' ? this.preview.result : slot.kind === 'preset-info' ? {
+        return slot.kind === 'backpack' ? value.backpack[slot.index!] ?? null : slot.kind === 'storage' ? value.storage?.[slot.index!]??null : slot.kind === 'hopper' ? value.hopper?.[slot.index!] ?? null : slot.kind === 'machine' ? value.machine?.[slot.index!] ?? null : slot.kind === 'preview' ? this.preview.result : slot.kind === 'preset-info' ? {
             id: 'minecraft:paper',
             count: 1
         } : slot.kind === 'source' ? slot.preset !== undefined ? value.presets[slot.preset]?.[slot.presetCell!] ?? null : slot.item ? {
@@ -978,7 +1002,7 @@ export class GameInventory {
      * @return {SlotRef|null} Finite reference.
      */
     reference(slot: Slot | null): SlotRef | null {
-        return slot?.kind === 'backpack' ? `backpack:${slot.index!}` : slot?.kind === 'hopper' ? `hopper:${slot.index!}` : slot?.kind === 'machine' ? `machine:${slot.index!}` : slot?.kind === 'workbench' ? `workbench:${slot.index!}` : slot?.kind === 'crafting' ? `crafting:${slot.index!}` : slot?.kind === 'hotbar' ? `hotbar:${slot.index!}` : slot?.kind === 'equipment' ? `equipment:${slot.equipment!}` : null;
+        return slot?.kind === 'backpack' ? `backpack:${slot.index!}` : slot?.kind === 'storage' ? `storage:${slot.index!}` : slot?.kind === 'hopper' ? `hopper:${slot.index!}` : slot?.kind === 'machine' ? `machine:${slot.index!}` : slot?.kind === 'workbench' ? `workbench:${slot.index!}` : slot?.kind === 'crafting' ? `crafting:${slot.index!}` : slot?.kind === 'hotbar' ? `hotbar:${slot.index!}` : slot?.kind === 'equipment' ? `equipment:${slot.equipment!}` : null;
     }
 
     /** Copy from a directory/preset or discard the cursor at an empty directory cell through the shared reducer.
@@ -1056,7 +1080,7 @@ export class GameInventory {
      * No inventory command, notification or storage write is sent by this method.
      */
     refreshPreview(): void {
-        if (this.station?.expected.version === 3) {
+        if (this.station?.expected.version === 3 || this.station?.expected.version===4) {
             this.preview = {status: 'empty', result: null};
             this.modal.dataset.preview = JSON.stringify(this.preview);
             return;
@@ -1088,11 +1112,14 @@ export class GameInventory {
             delete this.value.workbench;
             delete this.value.machine;
             delete this.value.hopper;
+            delete this.value.storage;
             return;
         }
-        const instance = this.permanent.progress.scenes[this.station.scene].stations.find(s => s.id === this.station!.id);
+        const instance = containerDevice(this.permanent.progress,this.station.scene,this.station.id);
         if (!instance) return;
         this.station.expected = structuredClone(instance.contents);
+        if(instance.contents.version===4){delete this.value.workbench;delete this.value.machine;delete this.value.hopper;this.value.storage=structuredClone(instance.contents.data.slots);return;}
+        delete this.value.storage;
         if (instance.contents.version === 3) {
             delete this.value.workbench;
             delete this.value.machine;
@@ -1100,6 +1127,7 @@ export class GameInventory {
             return;
         }
         delete this.value.hopper;
+        delete this.value.storage;
         if (instance.contents.version === 2) {
             delete this.value.workbench;
             this.value.machine = [structuredClone(instance.contents.data.input), structuredClone(instance.contents.data.fuel)];
@@ -1107,29 +1135,53 @@ export class GameInventory {
         }
         delete this.value.machine;
         delete this.value.hopper;
+        delete this.value.storage;
         this.value.workbench = structuredClone(instance.contents.version === 1 ? instance.contents.data.grid : Array(9).fill(null));
     }
 
-    /** Open the native screen for an actual current-scene workbench or furnace instance.
+    /** Open the native screen for an actual current-scene workstation or storage instance.
      * @param {string} id Picked persistent station ID.
      */
     openWorkbench(id: string): void {
         if (this.blocked() || !this.permanent || this.pending) return;
         const scene = this.permanent.progress.scene,
-            instance = this.permanent.progress.scenes[scene].stations.find(s => s.id === id && ['crafting_table', 'furnace', 'blast_furnace', 'hopper'].includes(s.kind));
-        if (!instance) return;
+            instance = containerDevice(this.permanent.progress,scene,id);
+        if (!instance||instance.contents.version===4&&!canOpenStorage(this.permanent.progress,scene,id)) return;
         this.clearPersonal();
         this.station = {scene, id, expected: structuredClone(instance.contents)};
         this.syncWorkbench();
-        this.modal.setAttribute('aria-label', this.text(instance.kind === 'crafting_table' ? 'inventory.workbench' : 'inventory.' + instance.kind));
+        this.storageFeedback(true);
+        this.modal.setAttribute('aria-label', instance.contents.version===4?this.storageTitle():this.text(instance.kind === 'crafting_table' ? 'inventory.workbench' : 'inventory.' + instance.kind));
         this.tab = 'crafting';
         this.sideOffset = 0;
         this.notice = '';
         this.gate(true);
         this.hover = null;
         if (!this.modal.open) this.modal.show();
-        this.draw();
+        if(instance.contents.version===4)this.resize();else this.draw();
         this.modal.querySelector('button')?.focus();
+    }
+
+    /** Read the native localized title for a storage menu.
+     * @return {string} Chest, large chest or barrel title.
+     */
+    storageTitle():string {return this.text(this.value.storage?.length===54?'inventory.largeChest':this.storageOpen?.kind==='barrel'?'inventory.barrel':'inventory.chest');}
+
+    /** Publish one native opener transition and its positional sound, excluding automatic hopper access.
+     * @param {boolean} open Whether the current player is opening storage.
+     */
+    storageFeedback(open:boolean):void {
+        const p=this.permanent?.progress;
+        if(open){
+            if(!p||this.station?.expected.version!==4)return;
+            const parts=storageParts(p,this.station.scene,this.station.id);if(!parts.length)return;
+            this.storageOpen={ids:parts.map(b=>b.id),kind:parts[0].block,position:storageSoundPosition(parts),scene:p.scene,generation:this.generation};
+        }
+        const active=this.storageOpen;if(!active)return;
+        this.storageView?.(open?active.ids:[]);
+        const valid=()=>!this.disposed&&active.generation===this.generation&&active.scene===this.permanent?.progress.scene;
+        if(valid())this.sound?.('block.'+active.kind+'.'+(open?'open':'close'),{volume:.5,pitch:.9+Math.random()*.1,position:active.position,valid});
+        if(!open)this.storageOpen=null;
     }
 
     /** Own carrier input until a finite-output or complete-batch receipt resolves, without optimistic grants.
@@ -1181,7 +1233,7 @@ export class GameInventory {
      * @param {boolean} max Shift bounded-capacity fill.
      */
     fillInputs(recipe: string, max: boolean): void {
-        if (!this.fill || !this.permanent || !this.writable || this.carrierBusy() || this.pending || !this.modal.open || this.tab !== 'crafting' || this.station?.expected.version === 3) return;
+        if (!this.fill || !this.permanent || !this.writable || this.carrierBusy() || this.pending || !this.modal.open || this.tab !== 'crafting' || (this.station?.expected.version === 3||this.station?.expected.version===4)) return;
         const expected = layout(this.value), cursor = structuredClone(this.value.cursor),
             crafting = structuredClone(this.value.crafting ?? Array(4).fill(null)),
             station = this.station ? structuredClone(this.station) : undefined, generation = this.generation,

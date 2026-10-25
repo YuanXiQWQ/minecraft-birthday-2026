@@ -1,4 +1,5 @@
 /** Finite, persistent native block placement uses actual held groups and adjacent world faces. */
+import type {StorageContents} from './storage.ts';
 import {ODD_BLOCK,isCake} from './easter-egg.ts';
 import {soilAt} from './soil-state.ts';
 import names from '../data/placeable-blocks.json' with {type:'json'};
@@ -15,8 +16,8 @@ import type {Rules,Stack} from '../rules/types.ts';
 import {correctTool} from '../rules/process.ts';
 import {nativeShapes,FULL_BLOCK} from './block-shapes.ts';
 
-export interface PlacedBlock {id:string;block:string;cell:Cell;state:Record<string,string>;pair?:string}
-export interface BlockHit {cell:Cell;normal:Cell;point:Cell;eye:Cell;yaw:number;crouch?:boolean}
+export interface PlacedBlock {id:string;block:string;cell:Cell;state:Record<string,string>;pair?:string;contents?:StorageContents}
+export interface BlockHit {cell:Cell;normal:Cell;point:Cell;eye:Cell;yaw:number;pitch?:number;crouch?:boolean}
 /** Original reachable BlockItem identities; ordinary wheat is an item, not a placeable block. */
 export const PLACEABLE=new Set([...names,ODD_BLOCK]);
 /** Native registered strength and collision facts. */
@@ -114,7 +115,11 @@ export function placementBlocks(p:Progress,item:string,hit:BlockHit,id:string):P
     if(item==='rail')state.shape=['east','west'].includes(facing)?'east_west':'north_south';
     if(['chest','trapped_chest'].includes(item))Object.assign(state,{facing:opposite(facing),type:'single'});
     if(['smoker','stonecutter','chiseled_bookshelf','anvil','barrel','campfire'].includes(item))state.facing=item==='anvil'?(['north','south'].includes(facing)?'east':'north'):opposite(facing);
-    if(item==='barrel')state.open='false';if(['campfire','smoker'].includes(item))state.lit=String(item==='campfire');if(item==='campfire')state.signal_fire='false';
+    if(item==='barrel'){
+        state.open='false';
+        const dx=hit.pitch===undefined?hit.point[0]-hit.eye[0]:-Math.sin(hit.yaw)*Math.cos(hit.pitch),dy=hit.pitch===undefined?hit.point[1]-hit.eye[1]:Math.sin(hit.pitch),dz=hit.pitch===undefined?hit.point[2]-hit.eye[2]:-Math.cos(hit.yaw)*Math.cos(hit.pitch);
+        if(Math.abs(dy)>Math.max(Math.abs(dx),Math.abs(dz)))state.facing=dy<0?'up':'down';
+    }if(['campfire','smoker'].includes(item))state.lit=String(item==='campfire');if(item==='campfire')state.signal_fire='false';
     if(isCake(item))state.bites='0';if(item==='composter')state.level='0';if(item==='sugar_cane')state.age='0';
     if(item==='chiseled_bookshelf')for(let i=0;i<6;i++)state['slot_'+i+'_occupied']='false';
     if(item==='oak_sign'){if(face==='down')throw Error('unsupported-placement');if(face==='up')state.rotation=String((Math.floor((180-hit.yaw*180/Math.PI)*16/360+.5)&15));else {block='oak_wall_sign';state.facing=face;}}

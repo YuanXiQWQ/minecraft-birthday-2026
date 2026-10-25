@@ -39,9 +39,10 @@ export interface CatalogueArt {
 /** Build entity-model cuboids with the native Cube face layout, texture offsets and 64x64 UV atlas.
  * @param {number[]} box Native x,y,z,width,height,depth,u,v tuple.
  * @param {string} texture Original atlas ID.
+ * @param {'east'|'west'} omitSide Internal face omitted by a native double-chest half.
  * @return {CompiledModel} Native cube quads.
  */
-export function entityCube(box: number[], texture: string): CompiledModel {
+export function entityCube(box: number[], texture: string, omitSide?:'east'|'west'): CompiledModel {
     const [x, y, z, w, h, d, u, v] = box, X = x + w, Y = y + h, Z = z + d,
         vertices = [[x, y, z], [X, y, z], [X, Y, z], [x, Y, z], [x, y, Z], [X, y, Z], [X, Y, Z], [x, Y, Z]],
         faces = [[5, 4, 0, 1], [2, 3, 7, 6], [0, 4, 7, 3], [1, 0, 3, 2], [5, 1, 2, 6], [4, 5, 6, 7]],
@@ -51,12 +52,13 @@ export function entityCube(box: number[], texture: string): CompiledModel {
         const ps = faces[f].map(i => new Vector3(...vertices[i] as [number, number, number]).multiplyScalar(1 / 16)),
             n = ps[1].clone().sub(ps[0]).cross(ps[2].clone().sub(ps[0])).normalize(), [a, b, A, B] = rects[f],
             uv = [[A, b], [a, b], [a, B], [A, B]];
+        if(omitSide==='east'&&n.x>.5||omitSide==='west'&&n.x<-.5)continue;
+        const start = out.positions.length/3;
         for (let i = 0; i < 4; i++) {
             out.positions.push(...ps[i].toArray());
             out.normals.push(...n.toArray());
             out.uvs.push(uv[i][0] / 64, 1 - uv[i][1] / 64);
         }
-        const start = f * 4;
         out.indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
         out.faces.push({direction: 'north', texture});
     }
@@ -108,6 +110,10 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     if(advancement.version!=='26.3'||advancement.clientSha1!==manifest.clientSha1)throw Error('advancement-version');
     Object.assign(book.uiDefinitions,advancement.uiDefinitions);
     Object.assign(extra.inputs,advancement.inputs);
+    const controls=await (await fetchManifest('controls-manifest.json')).json();
+    if(controls.version!=='26.3'||controls.clientSha1!==manifest.clientSha1)throw Error('controls-version');
+    const storageGui='assets/minecraft/textures/gui/container/generic_54.png';
+    extra.inputs[storageGui]=controls.inputs[storageGui];
     documents.set('player-equipment-bindings', player.equipment);
     const dependencies = Object.entries({...manifest.inputs, ...player.inputs, ...book.inputs, ...extra.inputs, ...experience.inputs} as Record<string, string>).filter(([p]) => p.startsWith('assets/') && !p.includes('/lang/') && !p.includes('/font/') && /\.(json|png|mcmeta)$/.test(p));
     const total = dependencies.length + manifest.items.length + Object.keys(book.uiDefinitions).length + book.compassModels.length;

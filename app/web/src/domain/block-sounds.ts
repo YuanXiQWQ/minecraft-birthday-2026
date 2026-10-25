@@ -9,12 +9,13 @@ const TYPES: Record<string, string> = {
     hopper: 'metal', short_grass: 'grass', tall_grass: 'grass', sugar_cane: 'grass', wheat: 'crop', grass_block:'grass',dirt:'gravel',dirt_path:'grass',farmland:'gravel',oak_leaves:'grass'
 };
 
-/** Read the native material event and unscaled SoundType parameters.
+/** Read native material events and unscaled SoundType parameters, with sticky placement for inverted cake.
  * @param {string} block Supported unnamespaced block identity.
  * @return {{hit:string,break:string,place:string,step:string,volume:number,pitch:number}} Original event and material values.
  */
 export function blockSounds(block: string): {hit: string; break: string; place:string; step:string; volume: number; pitch: number} {
-    block=block==='upside_down_cake'?'cake':block==='wall_torch'?'torch':block==='oak_wall_sign'?'oak_sign':block;
+    if(block==='upside_down_cake')return {...blockSounds('cake'),place:'block.slime_block.place'};
+    block=block==='wall_torch'?'torch':block==='oak_wall_sign'?'oak_sign':block;
     const type = TYPES[block]??(properties as Record<string,{sound:string}>)[block]?.sound;
     if (!type) throw Error('unsupported-block-sound');
     return {hit: 'block.' + (type === 'crop' ? 'grass' : type) + '.hit', break: 'block.' + type + '.break', place:'block.'+type+'.place',step:'block.'+type+'.step',volume: type==='anvil'?.3:1, pitch: type === 'metal' ? 1.5 : 1};

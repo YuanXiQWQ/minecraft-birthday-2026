@@ -764,6 +764,15 @@
     ],
     "subtitle": "subtitles.block.generic.fall"
   },
+  "block.slime_block.place": {
+    "sounds": [
+      "mob/slime/big1",
+      "mob/slime/big2",
+      "mob/slime/big3",
+      "mob/slime/big4"
+    ],
+    "subtitle": "subtitles.block.generic.place"
+  },
   "entity.generic.eat": {
     "sounds": [
       "random/eat1",
@@ -1076,5 +1085,44 @@
       }
     ],
     "subtitle": "subtitles.block.fence_gate.toggle"
+  },
+  "block.chest.open": {
+    "sounds": [
+      {
+        "attenuation_distance": 12,
+        "name": "block/chest/open"
+      }
+    ],
+    "subtitle": "subtitles.block.chest.open"
+  },
+  "block.chest.close": {
+    "sounds": [
+      {
+        "attenuation_distance": 12,
+        "name": "block/chest/close1"
+      },
+      {
+        "attenuation_distance": 12,
+        "name": "block/chest/close2"
+      },
+      {
+        "attenuation_distance": 12,
+        "name": "block/chest/close3"
+      }
+    ],
+    "subtitle": "subtitles.block.chest.close"
+  },
+  "block.barrel.open": {
+    "sounds": [
+      "block/barrel/open1",
+      "block/barrel/open2"
+    ],
+    "subtitle": "subtitles.block.barrel.open"
+  },
+  "block.barrel.close": {
+    "sounds": [
+      "block/barrel/close"
+    ],
+    "subtitle": "subtitles.block.barrel.close"
   }
 }

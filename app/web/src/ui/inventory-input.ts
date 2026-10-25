@@ -14,7 +14,7 @@ import {inventoryKey, directory} from './inventory-state.ts';
  * @return {SlotRef|null} Finite identity or null.
  */
 export function slotRef(slot: Slot | null): SlotRef | null {
-    return slot?.kind === 'backpack' ? `backpack:${slot.index!}` : slot?.kind === 'hopper' ? `hopper:${slot.index!}` : slot?.kind === 'machine' ? `machine:${slot.index!}` : slot?.kind === 'workbench' ? `workbench:${slot.index!}` : slot?.kind === 'crafting' ? `crafting:${slot.index!}` : slot?.kind === 'hotbar' ? `hotbar:${slot.index!}` : slot?.kind === 'equipment' ? `equipment:${slot.equipment!}` : null;
+    return slot?.kind === 'backpack' ? `backpack:${slot.index!}` : slot?.kind === 'storage' ? `storage:${slot.index!}` : slot?.kind === 'hopper' ? `hopper:${slot.index!}` : slot?.kind === 'machine' ? `machine:${slot.index!}` : slot?.kind === 'workbench' ? `workbench:${slot.index!}` : slot?.kind === 'crafting' ? `crafting:${slot.index!}` : slot?.kind === 'hotbar' ? `hotbar:${slot.index!}` : slot?.kind === 'equipment' ? `equipment:${slot.equipment!}` : null;
 }
 
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */

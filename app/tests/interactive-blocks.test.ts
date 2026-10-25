@@ -86,7 +86,7 @@ test('straw bed chooses safe side, skips a blocking door, and uses head fallback
 });
 
 test('native icon overhang retains model scale and position for both original and locked silhouettes',()=>{
-    const calls:unknown[][]=[],context={drawImage:(...args:unknown[])=>calls.push(args)} as unknown as CanvasRenderingContext2D,icon={dataset:{nativePadding:'4'}} as HTMLCanvasElement,mask={} as HTMLCanvasElement;
+    const calls:unknown[][]=[],context={drawImage:(...args:unknown[])=>calls.push(args)} as unknown as CanvasRenderingContext2D,icon={dataset:{nativePadding:'4'}} as unknown as HTMLCanvasElement,mask={} as HTMLCanvasElement;
     drawIcon(context,icon,10,20);assert.deepEqual(calls[0],[icon,6,16,24,24]);drawIcon(context,icon,10,20,6,mask);assert.deepEqual(calls[1],[mask,8.5,18.5,9,9]);
 });
 

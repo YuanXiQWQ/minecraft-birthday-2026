@@ -7,6 +7,7 @@ import type {WorldState} from './world-state.ts';
 import type {PlacedBlock,BlockHit} from './placed-blocks.ts';
 import type {RecipeBook, BookMode, BookSetting} from './recipe-book.ts';
 import type {TransferPlan} from './device-transfer.ts';
+import type {StorageContents} from './storage.ts';
 import type {HopperContents} from './hopper.ts';
 import type {FurnaceContents, FurnaceTake} from './furnace.ts';
 import type {InventoryCommand, PlayerLayout} from './inventory.ts';
@@ -31,7 +32,7 @@ export interface WorkbenchContents {
 export interface WorkbenchContext {
     scene: SceneId;
     id: string;
-    expected: Reserved | WorkbenchContents | FurnaceContents | HopperContents;
+    expected: Reserved | WorkbenchContents | FurnaceContents | HopperContents | StorageContents;
 }
 
 export interface Station {

@@ -34,7 +34,13 @@ export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModel
     else {const entry=Object.entries(doc.variants).find(([key])=>!key||key.split(',').every(term=>{const [k,v]=term.split('=');return block.state[k]===v;}));if(!entry)throw Error('world-state:'+block.block+JSON.stringify(block.state));const raw=entry[1] as Variant|Variant[];variants=[Array.isArray(raw)?raw[0]:raw];}
     if(['chest','trapped_chest'].includes(block.block)){
         const body=new Group();body.position.set(.5,0,.5);body.rotation.y=-['south','west','north','east'].indexOf(block.state.facing)*Math.PI/2;
-        for(const box of [[1,0,1,14,10,14,0,19],[1,9,1,14,5,14,0,0],[7,7,15,2,4,1,0,0]]){const part=models.sample({id:block.id,block:block.block,state:'',variant:{model:'chest'},compiled:entityCube(box,'minecraft:entity/chest/'+(block.block==='chest'?'normal':'trapped'))});part.position.set(-.5,0,-.5);body.add(part);}root.add(body);shapes.push([1/16,0,1/16,15/16,14/16,15/16]);
+        const type=block.state.type??'single',double=block.block==='chest'&&type!=='single',x=double&&type==='left'?0:1,w=double?15:14,
+            texture='minecraft:entity/chest/'+(block.block==='chest'?'normal':'trapped')+(double?'_'+type:''),omit=double?(type==='left'?'west':'east'):undefined;
+        const bottom=models.sample({id:block.id,block:block.block,state:'',variant:{model:'chest'},compiled:entityCube([x,0,1,w,10,14,0,19],texture,omit)});
+        bottom.position.set(-.5,0,-.5);body.add(bottom);
+        const lid=new Group();lid.name='chest-lid';lid.position.set(-.5,9/16,1/16-.5);
+        for(const box of [[x,0,0,w,5,14,0,0],[double?(type==='left'?0:15):7,-2,14,double?1:2,4,1,0,0]])lid.add(models.sample({id:block.id,block:block.block,state:'',variant:{model:'chest'},compiled:entityCube(box,texture,omit)}));
+        body.add(lid);root.add(body);shapes.push([1/16,0,1/16,15/16,14/16,15/16]);
     }
     for(const variant of variants){const source=resolveModel(variant.model,id=>{const m=pack.documents.get(assetPath('models',id));if(!m)throw Error('missing-placement-model:'+id);return m;});
         if(!source.elements?.length)continue;
