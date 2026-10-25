@@ -1,0 +1,141 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "url": "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar",
+  "method": "Read-only javap -c -p -constants; no client execution",
+  "inputs": [
+    {
+      "entry": "assets/minecraft/lang/en_us.json",
+      "size": 546577,
+      "sha256": "b0dff75d40225a2e1351e45422ad7d7d62cfbb98314ada51d3d24f90a234696b"
+    },
+    {
+      "entry": "assets/minecraft/lang/zh_cn.json",
+      "size": 562116,
+      "sha256": "1533a83d5341f7484da695e530dc739688e6b79325561e0f92d0509d54acd245"
+    }
+  ],
+  "classes": [
+    {
+      "entry": "net/minecraft/client/gui/screens/options/controls/ControlsScreen.class",
+      "size": 4801,
+      "sha256": "945db33068e28dec1d1d9b43d29f31b31a366a4a78a901329d9c2edc282200c4"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/options/MouseSettingsScreen.class",
+      "size": 1949,
+      "sha256": "51d1e92a48520a73694a0226020e0edfbb3aa5e5dad72efc019ffcfb9e1b4720"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/options/controls/KeyBindsScreen.class",
+      "size": 6706,
+      "sha256": "597f568250453d48f44bd7a1f89d507819b07de72ebf269dcbf3f12f971e0c22"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/options/controls/KeyBindsList.class",
+      "size": 5223,
+      "sha256": "2a72247196346ebd74618947ed51762cca542f904e564b9ce6ba7a722341dbb7"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/options/controls/KeyBindsList$KeyEntry.class",
+      "size": 9761,
+      "sha256": "7fd5c81e1f8836941e2dcf2851b542d6bd9a04f0c60f087635554f4dfbe7bc43"
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/options/controls/KeyBindsList$CategoryEntry.class",
+      "size": 3928,
+      "sha256": "20b79d2bd255e809ddcad8fc369bf40626c1ed864293699c8b12d2e772bc5e1e"
+    },
+    {
+      "entry": "net/minecraft/client/Options.class",
+      "size": 96797,
+      "sha256": "4cf1c5dd3ef42b2cd9fea835cc0be18c3dfb4691ee7315cd7993ebb6a1504629"
+    },
+    {
+      "entry": "net/minecraft/client/OptionInstance$IntRangeBase.class",
+      "size": 2963,
+      "sha256": "2cf9d26432465f5b735744aa5c2f37dfe0bbe73dc4e9ea3e6366d2b06be3e21b"
+    },
+    {
+      "entry": "net/minecraft/client/ScrollWheelHandler.class",
+      "size": 1249,
+      "sha256": "2609e62226002f403891007cd41fbf48321b25095a80094d63a86968fcce7ca7"
+    },
+    {
+      "entry": "net/minecraft/client/KeyMapping.class",
+      "size": 10633,
+      "sha256": "901e9984ce5df01095dee3be5eb8a2cfc278c447d4bd1a28fc95c26592e40426"
+    },
+    {
+      "entry": "net/minecraft/client/KeyMapping$Category.class",
+      "size": 3587,
+      "sha256": "dc5e463e79725f28084617b47376350a2b8b72f448d4576963b88a6a4d0b01ee"
+    },
+    {
+      "entry": "net/minecraft/client/ToggleKeyMapping.class",
+      "size": 2556,
+      "sha256": "b91b9669c800de9149790d10fce358a28f41363829a5db4586fa698b01eef6ae"
+    },
+    {
+      "entry": "net/minecraft/client/MouseHandler.class",
+      "size": 18542,
+      "sha256": "3151e8826e8a8819521f364ef53c8c11bb7c2158b31c1a3b99a0aa2214b20071"
+    },
+    {
+      "entry": "net/minecraft/client/player/LocalPlayer.class",
+      "size": 56651,
+      "sha256": "d5390f22219039f78f5f59a9961685c11d3cf36f12a645866008135862b59435"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/OptionsList.class",
+      "size": 8492,
+      "sha256": "e0e78beffaa09fa0110cc80188574c484d852131718ad7c924700a910ebd9cf2"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/AbstractSelectionList.class",
+      "size": 21467,
+      "sha256": "b27b003747bc509a2991f0cbe360b52d4a5e8731d0bffdcff3ef2ec5f812579a"
+    },
+    {
+      "entry": "net/minecraft/client/gui/layouts/HeaderAndFooterLayout.class",
+      "size": 5718,
+      "sha256": "130547f20aa39927318e9a895292621900145ac0de63d8897825b51db271f58c"
+    },
+    {
+      "entry": "net/minecraft/client/gui/layouts/AbstractLayout$AbstractChildWrapper.class",
+      "size": 2194,
+      "sha256": "fc12fe189e3fb7395a6b3da1a08171b8fe776a1d061385e0828cd181d45d13bd"
+    },
+    {
+      "entry": "com/mojang/blaze3d/platform/InputConstants$Type.class",
+      "size": 16508,
+      "sha256": "8618875cc655b9fc66a1200abb3ebc4d8f6c3735da3d153560610ae66075427e"
+    },
+    {
+      "entry": "com/mojang/blaze3d/font/GlyphInfo.class",
+      "size": 1265,
+      "sha256": "b767f442966e4a75d1cf8bb072aa6e8bd4e411a33a102e5dd9b14082cf0cf4cc"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/AbstractScrollArea.class",
+      "size": 6063,
+      "sha256": "c57d2be1a74cfe4cc5486175ed0d7b4367216614d382e95a3eab058b9dae4f3e"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/AbstractSelectionList$Entry.class",
+      "size": 4424,
+      "sha256": "ec33f0bb35d19d5b73d016f3eff0ba988b9a899720f52936b11cda09a54a1e21"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/FocusableTextWidget.class",
+      "size": 8206,
+      "sha256": "2dfb5f31b19fec6de3083e854270a702f2db1c5ae17e9bbdc3ed528bbf04c74f"
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/FocusableTextWidget$Builder.class",
+      "size": 2316,
+      "sha256": "140eff4691b2365f6dd6b4c8840c5b4382d0e9525d3b9a693fe537728a841354"
+    }
+  ],
+  "exporterSha256": "5cd801ff3d1b6a7fec52633a622e47c090e458a6f8bdab00d7d3ad4544066cb3"
+}

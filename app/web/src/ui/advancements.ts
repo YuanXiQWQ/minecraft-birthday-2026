@@ -1,4 +1,5 @@
 /** Native advancement screen and commit-only task toasts share verified resources, icons, font and toast rows. */
+import {controlSettings,scrollDelta} from '../domain/control-settings.ts';
 import {ADVANCEMENTS,advancementDone,visibleAdvancements} from '../domain/advancements.ts';
 import type {AdvancementFacts} from '../domain/advancements.ts';
 import {advancementText} from '../i18n/advancements.ts';
@@ -62,7 +63,7 @@ export class AdvancementView {
         this.modal.addEventListener('pointerdown',e=>{if(e.button!==0||(e.target as Element).closest('.advancement-done,[data-tab]'))return;this.drag={x:e.clientX,y:e.clientY};this.modal.setPointerCapture(e.pointerId);},{signal});
         this.modal.addEventListener('pointermove',e=>{if(!this.drag||!this.selected)return;const s=this.scroll.get(this.selected);if(s){s.x+=(e.clientX-this.drag.x)/this.scale;s.y+=(e.clientY-this.drag.y)/this.scale;this.clampScroll(s);this.paint();}this.drag={x:e.clientX,y:e.clientY};},{signal});
         for(const event of ['pointerup','pointercancel'])this.modal.addEventListener(event,()=>{this.drag=null;},{signal});
-        this.modal.addEventListener('wheel',e=>{e.preventDefault();const s=this.scroll.get(this.selected);if(s){s.x-=e.deltaX/Math.max(1,Math.abs(e.deltaX))*16||0;s.y-=e.deltaY/Math.max(1,Math.abs(e.deltaY))*16||0;this.clampScroll(s);this.paint();}},{signal,passive:false});
+        this.modal.addEventListener('wheel',e=>{e.preventDefault();const s=this.scroll.get(this.selected);if(s){const controls=controlSettings(this.ui.permanent?.settings.controls);s.x-=scrollDelta(e.deltaX,e.deltaMode??0,controls)*16||0;s.y-=scrollDelta(e.deltaY,e.deltaMode??0,controls)*16||0;this.clampScroll(s);this.paint();}},{signal,passive:false});
         window.addEventListener('blur',()=>this.close(false),{signal});
         document.addEventListener('visibilitychange',()=>{if(document.hidden){this.close(false);this.clearToasts();}},{signal});
         this.resize=new ResizeObserver(()=>{this.paint();});this.resize.observe(host);

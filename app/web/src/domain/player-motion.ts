@@ -32,12 +32,13 @@ function clip(box:Bounds,solids:Bounds[],axis:number,amount:number):number{
 }
 /** Integrate a local player; scene/save facts remain owned by the transactional world. */
 export class PlayerMotion {
+    autoJumpTime=0;
     feet:Cell=[0,0,7]; velocity:Cell=[0,0,0]; grounded=false; crouching=false; jumpDelay=0;
     sprinting=false;forwardDown=false;sprintWindow=0;walk=0;walkOld=0;bob=0;bobOld=0;moveDistance=0;nextStep=1;step=false;fallDistance=0;landedDistance=0;
     /** Reset momentum on a scene transition.
      * @param {Cell} eye Authored safe spawn eye.
      */
-    reset(eye:Cell):void{this.feet=[eye[0],eye[1]-PLAYER_PHYSICS.eye,eye[2]];this.velocity=[0,0,0];this.grounded=false;this.crouching=false;this.jumpDelay=0;this.sprinting=this.forwardDown=this.step=false;this.sprintWindow=this.walk=this.walkOld=this.bob=this.bobOld=this.moveDistance=this.fallDistance=this.landedDistance=0;this.nextStep=1;}
+    reset(eye:Cell):void{this.autoJumpTime=0;this.feet=[eye[0],eye[1]-PLAYER_PHYSICS.eye,eye[2]];this.velocity=[0,0,0];this.grounded=false;this.crouching=false;this.jumpDelay=0;this.sprinting=this.forwardDown=this.step=false;this.sprintWindow=this.walk=this.walkOld=this.bob=this.bobOld=this.moveDistance=this.fallDistance=this.landedDistance=0;this.nextStep=1;}
     /** Resolve Y then horizontal axes, matching Entity collision ordering.
      * @param {Cell} delta Desired movement.
      * @param {Bounds[]} solids Collision shapes.
@@ -52,14 +53,15 @@ export class PlayerMotion {
      * @param {Set<string>} keys Physical keyboard codes currently held.
      * @param {number} yaw Camera yaw in Three's right-handed coordinates.
      * @param {Bounds[]} solids Nearby authoritative collision shapes.
-     * @param {{water?:boolean,climb?:boolean}} environment Native fluid and climbable occupancy.
+     * @param {{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean}} environment Fluid occupancy and native movement preferences.
      */
-    tick(keys:Set<string>,yaw:number,solids:Bounds[],environment:{water?:boolean,climb?:boolean}={}):void{
+    tick(keys:Set<string>,yaw:number,solids:Bounds[],environment:{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean}={}):void{
+        if(this.autoJumpTime>0){this.autoJumpTime--;if(environment.autoJump){keys=new Set(keys);keys.add('Space');}}
         this.walkOld=this.walk;this.bobOld=this.bob;this.bob+=((this.grounded&&!environment.water?Math.min(.1,Math.hypot(this.velocity[0],this.velocity[2])):0)-this.bob)*.4;this.step=false;this.landedDistance=0;
         const sneak=keys.has('ShiftLeft')||keys.has('ShiftRight');
         this.crouching=sneak||solids.some(b=>overlaps(playerBounds(this.feet),b));
         const forward=keys.has('KeyW')&&!keys.has('KeyS');if(this.sprintWindow>0)this.sprintWindow--;
-        if(forward&&!this.forwardDown){if(this.sprintWindow>0)this.sprinting=true;this.sprintWindow=7;}
+        if(forward&&!this.forwardDown){if(this.sprintWindow>0)this.sprinting=true;this.sprintWindow=environment.sprintWindow??7;}
         this.forwardDown=forward;if(!forward||this.crouching)this.sprinting=false;else if(keys.has('ControlLeft')||keys.has('ControlRight'))this.sprinting=true;
         const sprint=this.sprinting;
         let x=Number(keys.has('KeyD'))-Number(keys.has('KeyA')),z=Number(keys.has('KeyS'))-Number(keys.has('KeyW'));
@@ -90,5 +92,28 @@ export class PlayerMotion {
         else this.velocity[1]=(this.velocity[1]-.08)*.98;
         const drag=environment.water?(sprint?.9:.8):this.grounded?.6*.91:.91;this.velocity[0]*=drag;this.velocity[2]*=drag;
         for(let i=0;i<3;i++)if(Math.abs(this.velocity[i])<.003)this.velocity[i]=0;
+        if(environment.autoJump&&!environment.water&&!environment.climb&&!keys.has('Space'))this.planAutoJump(keys,yaw,solids,moved);
+    }
+
+    /** Schedule the native one-tick automatic jump using two shoulder rays and overhead clearance.
+     * @param {Set<string>} keys Logical movement controls.
+     * @param {number} yaw Current orientation.
+     * @param {Bounds[]} solids Nearby native collision shapes.
+     * @param {Cell} moved Actual travel displacement.
+     */
+    planAutoJump(keys:Set<string>,yaw:number,solids:Bounds[],moved:Cell):void{
+        if(!this.grounded||this.crouching||this.autoJumpTime||!['KeyW','KeyA','KeyS','KeyD'].some(k=>keys.has(k)))return;
+        let dx=moved[0],dz=moved[2],speed=this.sprinting?.13:.1;
+        if(dx*dx+dz*dz<=.001){const x=Number(keys.has('KeyD'))-Number(keys.has('KeyA')),z=Number(keys.has('KeyS'))-Number(keys.has('KeyW'));dx=(x*Math.cos(yaw)+z*Math.sin(yaw))*speed;dz=(z*Math.cos(yaw)-x*Math.sin(yaw))*speed;}
+        const length=Math.hypot(dx,dz);if(length*length<=.001)return;const nx=dx/length,nz=dz/length;if(-Math.sin(yaw)*nx-Math.cos(yaw)*nz<-.15)return;
+        const [x,y,z]=this.feet,distance=Math.max(speed*7,length),eyeCell=[Math.floor(x),Math.floor(y+PLAYER_PHYSICS.height),Math.floor(z)];
+        if(solids.some(b=>overlaps(b,[eyeCell[0],eyeCell[1],eyeCell[2],eyeCell[0]+1,eyeCell[1]+2,eyeCell[2]+1])))return;
+        for(const b of solids){if(b[1]>y+.51||b[4]<y+.51)continue;
+            let hit=false;for(const side of [-1,1]){const sx=x+nz*.3*side,sz=z-nx*.3*side,ex=sx+dx+nx*distance,ez=sz+dz+nz*distance;let enter=0,leave=1;
+                for(const [start,end,min,max] of [[sx,ex,b[0],b[3]],[sz,ez,b[2],b[5]]]){const d=end-start;if(Math.abs(d)<1e-9){if(start<min||start>max){enter=2;break;}}else{const a=(min-start)/d,c=(max-start)/d;enter=Math.max(enter,Math.min(a,c));leave=Math.min(leave,Math.max(a,c));}}if(enter<=leave)hit=true;}
+            if(!hit)continue;let top=b[4];const cx=(b[0]+b[3])/2,cz=(b[2]+b[5])/2;
+            for(const above of solids)if(cx>=above[0]&&cx<=above[3]&&cz>=above[2]&&cz<=above[5]&&above[1]<y+2.8&&above[4]>top)top=Math.max(top,above[4]);
+            if(top-y>.5&&top-y<=1.2)this.autoJumpTime=1;return;
+        }
     }
 }

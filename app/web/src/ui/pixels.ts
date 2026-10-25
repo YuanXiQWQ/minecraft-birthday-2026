@@ -92,9 +92,9 @@ export class PixelUI {
             accessible.textContent = value.text;
             if (host.clientWidth <= 0) return;
             const scale = parseFloat(style.getPropertyValue('--button-scale')) || value.scale,
-                w = Math.max(16, host.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (host.matches('.native-language-row,.language-accuracy')?0:2)),
+                w = Math.max(16, host.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (host.matches('.native-language-row,.language-accuracy,.keybind-category')?0:2)),
                 logical = Math.max(8, Math.floor(w / scale)),
-                lines = wrap(value.text, logical - 1, t => this.font.width(t)), height = lines.length * 12,
+                lines = wrap(value.text, logical - 1, t => this.font.width(t)), height = host.classList.contains('keybind-category')?17:lines.length * 12,
                 resolution = Math.max(1,(parseFloat(style.getPropertyValue('--button-scale'))||value.scale)*host.getBoundingClientRect().width/host.clientWidth*Math.min(globalThis.devicePixelRatio??1,4));
             canvas.width = rasterSize(logical,resolution);
             canvas.height = rasterSize(height,resolution);
@@ -104,7 +104,18 @@ export class PixelUI {
             const context = canvas.getContext('2d')!;
             context.setTransform(canvas.width/logical, 0, 0, canvas.height/height, 0, 0);
             context.imageSmoothingEnabled = false;
-            lines.forEach((line, i) => this.font.draw(context, line, style.textAlign === 'center' ? Math.max(0, Math.floor((logical - this.font.width(line)) / 2)) : 0, i * 12, value.color, true));
+            lines.forEach((line,i)=>{
+                let x=style.textAlign==='center'?Math.max(0,Math.floor((logical-this.font.width(line))/2)):0;const y=i*12;
+                if(host.classList.contains('keybind-category')){
+                    x=4;const width=this.font.width(line)+[...line].length;
+                    for(const ch of line){const offset=this.font.glyphs.has(ch)?1:.5;this.font.draw(context,ch,x+offset,4+offset,'#3F3F3F');this.font.draw(context,ch,x+1+offset,4+offset,'#3F3F3F');this.font.draw(context,ch,x,4,'#FFFFFF');this.font.draw(context,ch,x+1,4,'#FFFFFF');x+=this.font.width(ch)+1;}
+                    context.fillStyle='#3F3F3F';context.fillRect(4,13,width+1,1);context.fillStyle='#FFFFFF';context.fillRect(3,12,width+1,1);
+                }else if(host.dataset.keyChange&&(host.dataset.bindingSelected==='true'||host.dataset.conflict==='true')){
+                    const selected=host.dataset.bindingSelected==='true',prefix=selected?'> ':'[',suffix=selected?' <':' ]',inner=line.slice(prefix.length,-suffix.length);
+                    this.font.draw(context,prefix,x,y,'#FFFF55',true);x+=this.font.width(prefix);this.font.draw(context,inner,x,y,'#FFFFFF',true);
+                    if(selected){context.fillStyle='#FFFFFF';context.fillRect(x,y+9,this.font.width(inner),1);}x+=this.font.width(inner);this.font.draw(context,suffix,x,y,'#FFFF55',true);
+                }else this.font.draw(context,line,x,y,value.color,true);
+            });
             alignRaster(canvas,true);
         };
         this.updates.set(host, draw);
@@ -208,7 +219,7 @@ export class PixelUI {
             for (const handle of [false, true]) {
                 const name = 'slider' + (handle ? '_handle' : '') + (highlighted ? '_highlighted' : ''), path = 'assets/minecraft/textures/gui/sprites/widget/' + name + '.png', image = this.resources.guiImages.get(path);
                 if (!image) continue;
-                const fraction = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min));
+                const fraction = (Number(input.value) - Number(input.min)) / (Number(input.max) - Number(input.min)+(input.dataset.nativeInteger==='true'?1:0));
                 drawSprite(ctx, image, this.resources.documents.get(path + '.mcmeta')?.gui?.scaling, handle ? Math.floor((width - 8) * fraction) : 0, 0, handle ? 8 : width, 20);
             }
             this.font.draw(ctx, label, Math.floor((width - this.font.width(label)) / 2), 6, '#FFFFFF', true);
@@ -219,7 +230,8 @@ export class PixelUI {
          * @param {boolean} commit Whether this completed interaction submits its preference draft.
          */
         function setValue(fraction: number, commit = false): void {
-            input.value = String(Math.max(0, Math.min(1, fraction)));
+            const min=Number(input.min),max=Number(input.max),f=Math.max(0,Math.min(1,fraction));
+            input.value=String(input.dataset.nativeInteger==='true'?Math.min(max,Math.floor(min+f*(max-min+1))):min+f*(max-min));
             input.dispatchEvent(new Event('input', {bubbles: true}));
             if (commit) input.dispatchEvent(new Event('change', {bubbles: true}));
         }
@@ -234,7 +246,7 @@ export class PixelUI {
         for (const type of ['pointercancel','lostpointercapture','blur']) input.addEventListener(type, () => {pointer = null;});
         input.addEventListener('keydown', e => {
             if (e.code === 'Space' || e.code === 'Enter') {e.preventDefault(); changing = !changing; draw();}
-            else if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {e.preventDefault(); if (changing) setValue(Number(input.value) + (e.code === 'ArrowLeft' ? -1 : 1) / (Math.max(40, Math.floor(host.clientWidth / widgetScale(host))) - 8), true);}
+            else if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {e.preventDefault();if(changing){const span=Number(input.max)-Number(input.min)+(input.dataset.nativeInteger==='true'?1:0),step=input.dataset.nativeInteger==='true'?Math.max(1/span,1/(Math.max(40,Math.floor(host.clientWidth/widgetScale(host)))-8)):1/(Math.max(40,Math.floor(host.clientWidth/widgetScale(host)))-8);setValue((Number(input.value)-Number(input.min))/span+(e.code==='ArrowLeft'?-1:1)*step+(input.dataset.nativeInteger==='true'?1e-10:0),true);}}
         });
         const observer = new ResizeObserver(() => this.queue(draw)); observer.observe(host); this.observers.push(observer);
         for (const type of ['input', 'change']) input.addEventListener(type, draw);

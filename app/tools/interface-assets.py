@@ -7,7 +7,7 @@ body=Path(a.client).read_bytes();sha=hashlib.sha1(body).hexdigest()
 assert sha=='e877b6a07acd633fb3bb475002175cec036e7b87'
 z=zipfile.ZipFile(a.client);entries=[]
 known={e['entry'] for p in root.glob('*manifest.json') if p.name!='interface-manifest.json' for e in json.loads(p.read_text())['entries']}
-for name in ['header_separator','footer_separator','inworld_header_separator','inworld_footer_separator','menu_background','inworld_menu_background','menu_list_background','inworld_menu_list_background','sprites/hud/crosshair']:
+for name in ['header_separator','footer_separator','inworld_header_separator','inworld_footer_separator','menu_background','inworld_menu_background','menu_list_background','inworld_menu_list_background','sprites/hud/crosshair','sprites/widget/scroller','sprites/widget/scroller_background']:
     for suffix in ['.png','.png.mcmeta']:
         path='assets/minecraft/textures/gui/'+name+suffix
         if path not in z.namelist() or path in known:continue

@@ -13,7 +13,7 @@ for (const [folder, base] of [['dist', '/'], ['dist-pages', '/minecraft-birthday
     configFile: resolve(root, 'vite.config.ts'),
     base,
     build: {outDir: resolve(root, folder)},
-    preview: {host: '127.0.0.1', port: base === '/' ? 4191 : 4192, strictPort: false},
+    preview: {host: '127.0.0.1', port: 0, strictPort: false},
     logLevel: 'silent'
   }), origin = 'http://127.0.0.1:' + server.httpServer.address().port;
   try {

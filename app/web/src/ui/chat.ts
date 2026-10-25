@@ -1,4 +1,5 @@
 /** Native local chat keeps message identity, wrapped-line history and screen input separate from world effects. */
+import {controlSettings,ControlScroll} from '../domain/control-settings.ts';
 import {completeCommand,parseCommand,type CommandFeedback} from '../domain/console.ts';
 import {type BitmapFont,drawSprite} from './vanilla.ts';
 import {tooltipBox} from './inventory-state.ts';
@@ -83,6 +84,8 @@ export function chatGlyph(c:CanvasRenderingContext2D,font:BitmapFont,ch:string,x
 }
 /** Own one local single-player chat surface without persistent message history or networking. */
 export class GameChat {
+    inputControls=controlSettings();
+    wheelSteps=new ControlScroll();
     root = document.createElement('section');
     canvas = document.createElement('canvas');
     input = document.createElement('input');
@@ -125,7 +128,7 @@ export class GameChat {
         this.input.addEventListener('keydown', e=>this.key(e),{signal:this.abort.signal});
         this.input.addEventListener('input',()=>{this.completion=null;},{signal:this.abort.signal});
         for(const type of ['input','select','keyup','pointerup','focus','blur'])this.input.addEventListener(type,()=>this.requestPaint(),{signal:this.abort.signal});
-        this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();if(e.deltaY)this.scroll(-Math.sign(e.deltaY)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
+        this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();if(e.deltaY)this.scroll(-this.wheelSteps.steps(e.deltaY,e.deltaMode??0,this.inputControls)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
         this.root.addEventListener('pointermove',e=>{const r=viewport.getBoundingClientRect();this.tagHover=[e.clientX-r.left,e.clientY-r.top];this.requestPaint();},{signal:this.abort.signal});
         this.root.addEventListener('pointerleave',()=>{this.tagHover=null;this.requestPaint();},{signal:this.abort.signal});
         this.root.addEventListener('click',event=>{

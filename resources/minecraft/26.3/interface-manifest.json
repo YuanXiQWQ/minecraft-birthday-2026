@@ -37,6 +37,26 @@
       "entry": "assets/minecraft/textures/gui/sprites/hud/crosshair.png",
       "size": 81,
       "sha256": "5dc5e55cd66df2f27fefbd98bb97770844b0d2c24aaada16fe271b35b071e65e"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/scroller.png",
+      "size": 75,
+      "sha256": "597fe534e56c7028ff948a57d30ac6e9ca4073da8df1b0c51d002bdac8f24acc"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/scroller.png.mcmeta",
+      "size": 162,
+      "sha256": "c1323eb90dd50e0f029f94e5757205a92a5de4b24b35613411b3562e5ec9b1b2"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/scroller_background.png",
+      "size": 68,
+      "sha256": "0955e3a96511b678ac3e86b6c71fe5548b105c27ca1286ab05268c4789767be0"
+    },
+    {
+      "entry": "assets/minecraft/textures/gui/sprites/widget/scroller_background.png.mcmeta",
+      "size": 162,
+      "sha256": "c1323eb90dd50e0f029f94e5757205a92a5de4b24b35613411b3562e5ec9b1b2"
     }
   ]
 }

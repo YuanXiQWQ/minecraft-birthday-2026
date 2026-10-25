@@ -278,5 +278,9 @@
   "profile.unavailable": "Player lookup unavailable. Try again.",
   "error.screenshot": "Could not download the screenshot. Please try again.",
   "chat.cakeTableOnly": "Not so fast, let's put it on the table!",
-  "screenshot.success": "Saved screenshot as %s"
+  "screenshot.success": "Saved screenshot as %s",
+  "menu.controls": "Controls...",
+  "menu.mouse": "Mouse Settings",
+  "menu.keybinds": "Key Binds",
+  "menu.controlsTitle": "Controls"
 }

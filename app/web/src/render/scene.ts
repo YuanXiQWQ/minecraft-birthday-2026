@@ -1,4 +1,5 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
+import {ActionKeys,KEY_BINDINGS,boundKey,controlSettings,lookSensitivity,type ControlSettings} from '../domain/control-settings.ts';
 import {cropStage,soilAt} from '../domain/agriculture.ts';
 import {currentFarm} from '../domain/farm-shape.ts';
 import {BlockFeedback} from './block-feedback.ts';
@@ -151,6 +152,10 @@ export class SceneView {
     disposed = false;
     lost = false;
     input = true;
+    controls=controlSettings();
+    actionKeys=new ActionKeys();
+    screenToggles=new Set<string>();
+    useDelay=0;
     pointer: number | null = null;
     onPick: ((hit: Pick) => void) | null = null;
     onGraphics: ((ready: boolean) => void) | null = null;
@@ -177,7 +182,7 @@ export class SceneView {
         this.presentationOnly = !game;
         if(game){
             window.addEventListener('keydown', e => this.pressMovementKey(e), {signal:this.controlsAbort.signal});
-            window.addEventListener('keyup',e=>this.keys.delete(e.code),{signal:this.controlsAbort.signal});
+            window.addEventListener('keyup',e=>{this.keys.delete(e.code);this.controlEdge(e.code,false,e);},{signal:this.controlsAbort.signal});
         }
         this.crackImages = pack.guiImages;
         const canvas = document.createElement('canvas'), gl = canvas.getContext('webgl2', {antialias: true});
@@ -206,12 +211,13 @@ export class SceneView {
         this.basePitch = this.camera.rotation.x;
         this.camera.updateMatrixWorld(true);
         this.cancel = () => this.cancelInput();
-        if (game) this.mode = new PointerMode(canvas, () => {if (this.mode?.actual) this.cancelPointerGesture(); else this.cancelInput(); this.refreshHover(); this.requestRender();}, () => this.onPointerFailure?.());
+        if (game) this.mode = new PointerMode(canvas, () => {if (this.mode?.actual) this.cancelPointerGesture(); else this.cancelInput(!this.input); this.refreshHover(); this.requestRender();}, () => this.onPointerFailure?.());
         if(this.mode)this.mode.onNativeUnlock=()=>this.onNativeUnlock?.();
         this.down = e => this.beginPointer(e);
         this.move = e => this.movePointer(e, game);
         this.up = e => this.releasePointer(e);
         this.captureLost = () => {
+            if([...this.actionKeys.physical].some(code=>code.startsWith('Mouse'))){this.cancelInput();return;}
             if (this.look.active || this.pointer !== null) this.cancelPointerGesture(); else this.refreshHover();
         };
         this.leave = () => {
@@ -265,6 +271,7 @@ export class SceneView {
         if (this.presentationOnly || !this.input || this.lost || this.disposed) return;
         if ((e.button === 0 || e.button === 2) && this.mode?.enter(true)) {e.preventDefault(); return;}
         this.pointerPosition = [e.clientX, e.clientY];
+        if(this.actionKeys&&(this.mode?.actual||this.controls.toggleAttack||this.controls.toggleUse||KEY_BINDINGS.some(([id,def])=>boundKey(this.controls,id)==='Mouse'+e.button&&boundKey(this.controls,id)!==def)||boundKey(this.controls,'attack')!=='Mouse0'||boundKey(this.controls,'use')!=='Mouse2')){e.preventDefault();this.capturePointer(e.pointerId);this.controlEdge('Mouse'+e.button,true,e);return;}
         if (e.button === 2) {
             e.preventDefault();
             this.cancelPointerGesture();
@@ -306,10 +313,14 @@ export class SceneView {
         if (!this.mode?.actual && !canvas.ownerDocument.pointerLockElement) canvas.setPointerCapture(id);
     }
 
-    /** Clear held movement and pointer gestures when UI, focus, scene or document lifetime changes. */
-    cancelInput(): void {
+    /** Clear active gestures, optionally retaining keyboard sneak/sprint restoration owned by an open GUI.
+     * @param {boolean} preserveScreenToggles Whether a requested GUI unlock may retain its toggle receipt.
+     */
+    cancelInput(preserveScreenToggles=false): void {
         this.movementEpoch++;this.motion.sprinting=false;this.motion.forwardDown=false;this.motion.sprintWindow=0;
         this.keys.clear();
+        this.actionKeys?.clear();this.useDelay=0;this.motion.autoJumpTime=0;
+        if(!preserveScreenToggles)this.screenToggles?.clear();
         this.jumpQueued = false;
         this.motionRemainder=0;
         this.motionClock=0;
@@ -379,6 +390,7 @@ export class SceneView {
      */
     releasePointer(e: PointerEvent): void {
         if (!this.input || this.lost) return;
+        if(this.actionKeys?.physical.has('Mouse'+e.button)){this.controlEdge('Mouse'+e.button,false,e);return;}
         if (e.button === 2) {
             if (!this.look.active) return;
             const target = this.rightTarget, result = this.look.end(e.pointerId);
@@ -565,6 +577,11 @@ export class SceneView {
      * @param {KeyboardEvent} event Browser key press outside editable screens.
      */
     pressMovementKey(event: KeyboardEvent): void {
+        if(this.actionKeys){
+            if(event.code==='F5'&&boundKey(this.controls,'togglePerspective')==='F5'&&!event.ctrlKey&&!event.altKey&&!event.metaKey)event.preventDefault();
+            if(!this.input||this.lost||this.disposed||document.hidden||(event.target instanceof Element&&event.target.closest('input,textarea,select,[contenteditable=true]')))return;
+            if(this.controlEdge(event.code,true,event))event.preventDefault();return;
+        }
         if(event.code==='F5'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!this.disposed)event.preventDefault();
         if (!this.input || this.lost || this.disposed || globalThis.document?.hidden || event.metaKey || event.altKey) return;
         if (typeof Element !== 'undefined' && event.target instanceof Element && event.target.closest('input,textarea,select,[contenteditable=true]')) return;
@@ -574,6 +591,30 @@ export class SceneView {
         this.keys.add(event.code);
         if (event.code === 'Space' && !event.repeat) this.jumpQueued = true;
         this.requestRender();
+    }
+
+    /** Apply committed control preferences without resetting input for unrelated save snapshots.
+     * @param {ControlSettings} settings Complete committed preferences.
+     */
+    setControls(settings:ControlSettings):void{if(JSON.stringify(this.controls)!==JSON.stringify(settings)){this.cancelInput();this.controls=settings;}this.look.sensitivity=lookSensitivity(settings.sensitivity);this.look.invertX=settings.invertMouseX;this.look.invertY=settings.invertMouseY;}
+
+    /** Route physical keyboard or mouse edges to movement and world actions.
+     * @param {string} code Physical input identity.
+     * @param {boolean} down Press or release.
+     * @param {{shiftKey?:boolean,altKey?:boolean,ctrlKey?:boolean}} event Physical modifiers.
+     * @return {boolean} Whether a world action matched.
+     */
+    controlEdge(code:string,down:boolean,event:{shiftKey?:boolean,altKey?:boolean,ctrlKey?:boolean}={}):boolean{
+        if(!this.actionKeys||!this.input||this.lost||this.disposed)return false;
+        const attack=this.actionKeys.active.has('attack'),fresh=this.actionKeys.edge(code,down,this.controls),active=this.actionKeys.active;
+        const movement:Record<string,string>={forward:'KeyW',back:'KeyS',left:'KeyA',right:'KeyD',jump:'Space',sneak:'ShiftLeft',sprint:'ControlLeft'};
+        this.keys.clear();for(const [id,key] of Object.entries(movement))if(active.has(id))this.keys.add(key);
+        if(fresh.includes('jump'))this.jumpQueued=true;
+        if(fresh.includes('sprint')&&this.controls.toggleSprint&&!active.has('sprint'))this.motion.sprinting=false;
+        if(fresh.includes('togglePerspective')&&this.playerView){this.playerView.mode=nextPerspective(this.playerView.mode);this.cancelPointerGesture();}
+        if(!attack&&active.has('attack'))this.onMineStart?.(this.refreshHover());else if(attack&&!active.has('attack'))this.onMineCancel?.();
+        if(fresh.includes('use')&&active.has('use')){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:active.has('sneak'),alt:!!event.altKey,ctrl:!!event.ctrlKey});}
+        this.requestRender();return [...Object.keys(movement),'attack','use','togglePerspective'].some(id=>boundKey(this.controls,id)===code);
     }
 
     /** Consume one pending jump edge without turning a released key into a permanently held jump.
@@ -593,7 +634,8 @@ export class SceneView {
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
         if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
-        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb});this.onPlayerTick?.();this.playMovement();
+        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump});
+            if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.onPlayerTick?.();this.playMovement();
             const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}),this.motion);changed=true;}
         this.authored.animateLife(this.motionRemainder/50);
         const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
@@ -684,9 +726,11 @@ export class SceneView {
      */
     setInputEnabled(enabled: boolean): void {
         if(this.input===enabled)return;
+        const restore=enabled?new Set(this.screenToggles):new Set(['sneak','sprint'].filter(id=>this.actionKeys?.active.has(id)&&(id==='sneak'?this.controls.toggleCrouch:this.controls.toggleSprint)&&!boundKey(this.controls,id).startsWith('Mouse')));
         this.input = enabled;
         this.mode?.pause(!enabled);
         this.cancel();
+        if(enabled){for(const id of restore){this.actionKeys?.active.add(id);this.keys.add(id==='sneak'?'ShiftLeft':'ControlLeft');}}else this.screenToggles=restore;
         if (!enabled) this.showPreview(null);
         this.requestRender();
     }

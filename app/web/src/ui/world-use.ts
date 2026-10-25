@@ -1,4 +1,5 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {KEY_BINDINGS,boundKey} from '../domain/control-settings.ts';
 import {isCake,ODD_CAKE} from '../domain/easter-egg.ts';
 import {canTill,canPickup,soilAt,cropStage} from '../domain/agriculture.ts';
 import {PLACEABLE,placementBlocks,lookFacing,opposite} from '../domain/placed-blocks.ts';
@@ -85,7 +86,7 @@ export class WorldUse {
         window.addEventListener('keydown', e => {
             this.above = e.ctrlKey && e.altKey;
             if (this.above) this.scene.refreshHover();
-            if (e.code !== 'KeyR' || scene.look.active || !scene.input || inventory.modal.open || e.repeat || e.ctrlKey || e.altKey || e.metaKey) return;
+            if (e.code !== 'KeyR' || KEY_BINDINGS.some(([id])=>boundKey(scene.controls,id)===e.code) || scene.look.active || !scene.input || inventory.modal.open || e.repeat || e.ctrlKey || e.altKey || e.metaKey) return;
             e.preventDefault();
             scene.refreshHover();
             const p = session.view.envelope?.state.progress,

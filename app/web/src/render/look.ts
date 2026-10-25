@@ -15,6 +15,7 @@ export class Look {
     pitch = 0;
     threshold = 6;
     sensitivity = .003;
+    invertX=false;invertY=false;
     maxYaw = Infinity;
     maxPitch = Math.PI / 2;
 
@@ -41,8 +42,8 @@ export class Look {
         a.dragging = true;
         a.lastX = x;
         a.lastY = y;
-        this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity));
-        this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity));
+        this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity*(this.invertX?-1:1)));
+        this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity*(this.invertY?-1:1)));
         return true;
     }
 
@@ -51,8 +52,8 @@ export class Look {
      * @param {number} dy Relative vertical pixels.
      */
     relative(dx: number, dy: number): void {
-        this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity));
-        this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity));
+        this.yaw = Math.max(-this.maxYaw, Math.min(this.maxYaw, this.yaw - dx * this.sensitivity*(this.invertX?-1:1)));
+        this.pitch = Math.max(-this.maxPitch, Math.min(this.maxPitch, this.pitch - dy * this.sensitivity*(this.invertY?-1:1)));
     }
 
     /** Finish once: a drag can never also emit the right-click interaction.

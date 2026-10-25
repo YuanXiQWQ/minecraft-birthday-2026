@@ -1,4 +1,5 @@
 /** Screen-space keyboard and pointer ownership, including staged quick-craft and browser shortcut boundaries. */
+import {KEY_BINDINGS,boundKey,controlSettings,ControlScroll} from '../domain/control-settings.ts';
 import type {GameInventory, Slot} from './inventory.ts';
 import type {SlotRef} from '../domain/inventory.ts';
 import type {Stack} from '../rules/types.ts';
@@ -18,6 +19,8 @@ export function slotRef(slot: Slot | null): SlotRef | null {
 
 /** Keep GUI drag ownership separate from world look and from asynchronous durable commits. */
 export class InventoryInput {
+    controls=controlSettings();
+    scroll=new ControlScroll();
     gesture = new SlotGesture();
     outside = new OutsideClick();
     keys = new Set<string>();
@@ -30,8 +33,10 @@ export class InventoryInput {
      */
     constructor(public ui: GameInventory) {
         const opt = {signal: this.abort.signal};
-        document.addEventListener('keydown', e => this.key(e), {...opt, capture: true});
-        document.addEventListener('keyup', e => this.keys.delete(e.code), {...opt, capture: true});
+        document.addEventListener('keydown', e => this.physicalKey(e), {...opt, capture: true});
+        document.addEventListener('keyup', e => {for(const [id,code] of KEY_BINDINGS)if(boundKey(this.controls,id)===e.code)this.keys.delete(code);}, {...opt, capture: true});
+        document.addEventListener('pointerdown',e=>{if(!ui.blocked())this.physicalKey(e,'Mouse'+e.button);},{...opt,capture:true});
+        document.addEventListener('pointerup',e=>{for(const [id,code] of KEY_BINDINGS)if(boundKey(this.controls,id)==='Mouse'+e.button)this.keys.delete(code);},{...opt,capture:true});
         window.addEventListener('wheel', e => this.wheel(e), {...opt, capture: true, passive: false});
         ui.panel.addEventListener('pointerdown', e => this.down(e), opt);
         ui.panel.addEventListener('pointermove', e => this.move(e), opt);
@@ -80,6 +85,18 @@ export class InventoryInput {
      */
     editing(target: EventTarget | null): boolean {
         return target instanceof HTMLElement && !!target.closest('input:not([type="range"]),textarea,select,[contenteditable]:not([contenteditable="false"])');
+    }
+
+    /** Map configurable physical inputs to the existing logical inventory actions without dispatching DOM events.
+     * @param {KeyboardEvent|PointerEvent} event Browser input.
+     * @param {string} physical Optional mouse identity.
+     */
+    physicalKey(event:KeyboardEvent|PointerEvent,physical='code' in event?event.code:''):void{
+        const supported=KEY_BINDINGS.filter(([, ,category])=>category==='inventory'||category==='creative');
+        for(const [id,code] of supported)if(boundKey(this.controls,id)===physical){
+            const e={code,key:'key' in event?event.key:'',repeat:'repeat' in event?event.repeat:false,isComposing:'isComposing' in event?event.isComposing:false,ctrlKey:event.ctrlKey&&!/^Control/.test(physical),altKey:event.altKey&&!/^Alt/.test(physical),metaKey:event.metaKey&&!/^Meta/.test(physical),shiftKey:event.shiftKey,target:event.target,preventDefault:()=>event.preventDefault(),stopPropagation:()=>event.stopPropagation()} as KeyboardEvent;
+            this.key(e);
+        }
     }
 
     /** Route creative search numeric hover actions before text capture; other editors retain their own key ownership.
@@ -185,21 +202,22 @@ export class InventoryInput {
             e.preventDefault();
             this.cancelGesture();
             if (e.target instanceof HTMLElement && e.target.closest('.recipe-book')) return;
+            const steps=this.scroll.steps(e.deltaY,e.deltaMode??0,this.controls);if(!steps)return;
             if (u.tab === 'presets') {
-                u.sideOffset = Math.max(0, Math.min(4, u.sideOffset + Math.sign(e.deltaY)));
+                u.sideOffset = Math.max(0, Math.min(4, u.sideOffset + steps));
                 u.hover = null;
                 u.hideTooltip();
                 u.draw();
                 return;
             }
             const total = Math.max(0, directory(u.permanent!).length - 18), rows = u.tab === 'catalogue' ? 3 : 1;
-            u.sideOffset = Math.max(0, Math.min(Math.max(0, Math.ceil(total / 9) - rows), u.sideOffset + Math.sign(e.deltaY)));
+            u.sideOffset = Math.max(0, Math.min(Math.max(0, Math.ceil(total / 9) - rows), u.sideOffset + steps));
             u.hover = null;
             u.hideTooltip();
             u.draw();
         } else if (e.target instanceof HTMLElement && e.target.closest('.scene-panel,.hotbar')) {
             e.preventDefault();
-            u.command({type: 'wheel', direction: e.deltaY});
+            const steps=this.scroll.steps(e.deltaY,e.deltaMode,this.controls);if(steps)u.command({type:'select',index:((u.value.selected+steps)%9+9)%9});
         }
     }
 
@@ -336,6 +354,7 @@ export class InventoryInput {
         this.cancelGesture();
         this.quickMatch = null;
         this.keys.clear();
+        if(this.scroll)this.scroll.remainder=0;
     }
 
     /** Release every listener and pending gesture when the UI is disposed. */

@@ -35,3 +35,5 @@ Save key: minecraft-birthday-2026:formal:save. Preserve existing saves and trans
 On the user's Windows desktop, install tests/browser-pointer-sim.mjs before navigation. Do not invoke native Pointer Lock without verified independent input isolation. Simulated ownership and events do not establish native input success; physical interaction and listening checks remain manual.
 
 Normal builds use committed resources and require no Minecraft installation or extraction step. Export tools are maintenance utilities for the locked official client. Keep source hashes, file sizes and runtime manifests consistent when updating assets.
+
+Control settings: `node tools/control-settings-sources.ts <verified-client-jar>` regenerates bounded native translations and source identities. After both production builds, run `node --experimental-transform-types tests/control-settings-production.mjs <playwright-package-directory> <browser-executable>` for the root/Pages control regression with simulated Pointer Lock.

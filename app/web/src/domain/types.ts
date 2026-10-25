@@ -1,6 +1,7 @@
 /** Persistent facts and versioned carrier contracts have no DOM or renderer dependency. */
 import type {Agriculture} from './agriculture.ts';
 import type {EnvironmentState,SkySettings} from './environment.ts';
+import type {ControlSettings,ControlPatch} from './control-settings.ts';
 import type {AdvancementFacts} from './advancements.ts';
 import type {WorldState} from './world-state.ts';
 import type {PlacedBlock,BlockHit} from './placed-blocks.ts';
@@ -58,6 +59,7 @@ export interface SceneState {
 }
 
 export interface Settings {
+    controls?:ControlSettings;
     audioVersion?: 1;
     musicVolume?: number;
     weatherVolume?: number;
@@ -154,6 +156,7 @@ export type Command =
     | { type: 'console'; source: string }
     | { type: 'sky-settings'; patch: Partial<SkySettings> }
     | { type: 'settings'; patch: Partial<Settings> }
+    | { type: 'control-settings'; patch:ControlPatch }
     | { type: 'record-cake-placement'; scene: 'home'; table: 'birthday-table'; expected?: PlayerLayout }
     | {
     type: 'craft-take';

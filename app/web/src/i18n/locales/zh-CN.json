@@ -278,5 +278,9 @@
   "profile.unavailable": "暂时无法查询玩家，请重试。",
   "error.screenshot": "无法下载截图，请重试。",
   "chat.cakeTableOnly": "别着急，我们把它放到桌子上吧！",
-  "screenshot.success": "已将截图保存为%s"
+  "screenshot.success": "已将截图保存为%s",
+  "menu.controls": "按键控制…",
+  "menu.mouse": "鼠标设置",
+  "menu.keybinds": "按键绑定",
+  "menu.controlsTitle": "按键控制"
 }

@@ -1,4 +1,5 @@
 /** Native menu pages use HeaderAndFooterLayout coordinates and existing semantic settings controls. */
+import type {ControlSettingsUI} from './control-settings.ts';
 import type {PixelUI} from './pixels.ts';
 import {nativeScale} from './chat.ts';
 /** Compute native header/list/footer boundaries without depending on CSS card widths.
@@ -20,7 +21,7 @@ export function optionFlow(width:number,count:number){const columns=width>=310?2
  * @return {object} Native list and footer anchors.
  */
 export function languageLayout(width:number,height:number){const rowWidth=Math.min(270,width-16);return{rowWidth,rowLeft:(width-rowWidth)/2,rowHeight:18,listTop:36,firstRow:2,textTop:5,warningY:height-45,doneY:height-28};}
-export interface ScreenControls {title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
+export interface ScreenControls {controlsUI?:ControlSettingsUI;title:HTMLElement;navigation:HTMLElement;sections:Map<string,HTMLElement>;volume:HTMLInputElement;volumeLabel:HTMLElement;languageLabel:HTMLElement;language:HTMLSelectElement;username:HTMLInputElement;usernameLabel:HTMLElement;warning:HTMLElement;reset:HTMLButtonElement;confirmation:HTMLElement;feedback:HTMLElement[];done:HTMLButtonElement}
 /** Position one supported native screen; transaction callbacks remain owned by app/settings. */
 export class NativeScreens {
     observer:ResizeObserver;
@@ -75,7 +76,7 @@ export class NativeScreens {
                 top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+50);
             buttons.forEach((b,i)=>{this.place(b,left+(i===2?columnWidth+8:0),top+(i===0?0:i<3?24:48),i===1||i===2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
         }
-        if (['language','sound','player','weather'].includes(page)) {
+        if (['language','sound','player','weather','controls','mouse','keybinds'].includes(page)) {
             const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_menu_list_background.png');
             if(image){const pattern=c.createPattern(image,'repeat')!;pattern.setTransform(new DOMMatrix().scale(2));c.fillStyle=pattern;c.fillRect(0,layout.header,w,h-layout.header-layout.footer);}
             for(const [name,y] of [['header_separator',layout.header-2],['footer_separator',h-layout.footer]] as const){const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_'+name+'.png');if(image){const pattern=c.createPattern(image,'repeat');c.save();c.translate(0,y);c.fillStyle=pattern!;c.fillRect(0,0,w,2);c.restore();}}
@@ -107,7 +108,7 @@ export class NativeScreens {
             const credit=weather.querySelector<HTMLElement>('.weather-attribution');
             if(credit)this.place(credit,Math.max(4,w-70),h-13,66,9);
         }
-        this.place(u.warning,(w-wide)/2,flow.warningY,wide,narrow?36:24);this.place(u.reset,(w-flow.groupWidth)/2,flow.resetY,flow.groupWidth);
+        this.place(u.warning,(w-wide)/2,flow.warningY,wide,narrow?36:24);if(u.reset.parentElement!==u.navigation)this.place(u.reset,(w-flow.groupWidth)/2,flow.resetY,flow.groupWidth);
         this.place(u.confirmation,(w-wide)/2,Math.min(105,h-120),wide,95);
         u.feedback.forEach((f,i)=>this.place(f,(w-wide)/2,h-layout.footer-(page==='weather'?12:28)-i*18,wide,page==='weather'?12:18));
         this.dialog.dataset.confirming=String(page==='options'&&!u.confirmation.hidden);
@@ -117,6 +118,7 @@ export class NativeScreens {
             this.placeText(title,(w-wide)/2,y,wide);const textHeight=this.placeText(note,(w-wide)/2,y+20,wide);
             [...u.confirmation.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),y+28+textHeight+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         }
+        u.controlsUI?.layout(this,w,h,u.done,page);
         this.dialog.querySelectorAll<HTMLElement>('.mc-button').forEach(b=>this.pixels.refreshButton(b));
         this.plane.querySelectorAll<HTMLElement>('.pixel-text:not(.mc-button)').forEach(element=>this.pixels.updates.get(element)?.());
         this.dialog.querySelectorAll<HTMLInputElement>('.native-text-field>input,.native-slider>input').forEach(input=>this.pixels.updates.get(input)?.());

@@ -3,6 +3,7 @@ import {agriculture,soilAt,till,trample,tickAgriculture,cropStage,canPickup} fro
 import {rolledDrops} from '../rules/harvest.ts';
 import {placementBlocks,PLACEABLE,placedDrops,connectBlocks,survives} from './placed-blocks.ts';
 import {SOUND_CHANNELS} from './audio-settings.ts';
+import {validControls,patchControls} from './control-settings.ts';
 import {BIRTHDAY_ADVANCEMENT,emptyAdvancements,updateAdvancements,validateAdvancements} from './advancements.ts';
 import {teleportScene} from './teleport.ts';
 import {executeCommand,type CommandFeedback} from './console.ts';
@@ -212,7 +213,8 @@ export function validateState(value: unknown): asserts value is State {
     if(p.oddCakeTableTried!==undefined)ensure(p.oddCakeTableTried===true);
     if(p.environment!==undefined)validateEnvironment(p.environment);
     validateWorld(p.world);
-    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[]),...(Object.hasOwn(s,'audioVersion')?['audioVersion']:[]),...SOUND_CHANNELS.map(([k])=>k).filter(k=>Object.hasOwn(s,k))]);
+    fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s,'controls')?['controls']:[]), ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[]),...(Object.hasOwn(s,'audioVersion')?['audioVersion']:[]),...SOUND_CHANNELS.map(([k])=>k).filter(k=>Object.hasOwn(s,k))]);
+    if(s.controls!==undefined)ensure(validControls(s.controls));
     if(s.sky!==undefined)validateSkySettings(s.sky);
     if(s.audioVersion!==undefined)ensure(s.audioVersion===1);
     if(SOUND_CHANNELS.some(([key])=>s[key]!==undefined))ensure(s.audioVersion===1);
@@ -622,6 +624,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(Object.keys(command.patch).length>0&&Object.entries(command.patch).every(([key,v])=>['time','weather'].includes(key)&&['game','real'].includes(v!)),'invalid-sky-settings');
             next.settings.sky={time:'game',weather:'game',...next.settings.sky,...command.patch};break;
         }
+        case 'control-settings':
+            next.settings.controls=patchControls(next.settings.controls,command.patch);break;
         case 'settings':
             ensure(Object.keys(command.patch).every(k => ['locale', 'volume', 'muted', 'username', 'sky',...SOUND_CHANNELS.map(([key])=>key)].includes(k)));
             next.settings = {...next.settings, ...command.patch};
