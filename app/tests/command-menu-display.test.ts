@@ -21,9 +21,9 @@ function text(key:string,values:Record<string,string|number>={}){return (english
  */
 function chatHarness(source='/unknown'){
  const draws:any[]=[],rects:any[]=[],transforms:any[]=[],input=Object.assign(new EventTarget(),{value:source,selectionStart:source.length,selectionEnd:source.length,selectionDirection:'none',maxLength:256,dataset:{},style:{}});
- Object.defineProperty(globalThis,'document',{configurable:true,value:{activeElement:input,createElement:()=>({textContent:''})}});
+ Object.defineProperty(globalThis,'document',{configurable:true,value:{activeElement:input,createElement:()=>({textContent:'',getContext:()=>ctx})}});
  Object.defineProperty(globalThis,'devicePixelRatio',{configurable:true,value:1});
- const ctx={globalAlpha:1,fillStyle:'',setTransform(){},clearRect(){},save(){},restore(){},beginPath(){},rect(){},clip(){},translate(...v:number[]){transforms.push(['translate',...v]);},transform(...v:number[]){transforms.push(['transform',...v]);},fillRect(...v:number[]){rects.push([this.fillStyle,...v]);}};
+ const ctx={globalAlpha:1,fillStyle:'',setTransform(){},clearRect(){},save(){},restore(){},drawImage(){},beginPath(){},rect(){},clip(){},translate(...v:number[]){transforms.push(['translate',...v]);},transform(...v:number[]){transforms.push(['transform',...v]);},fillRect(...v:number[]){rects.push([this.fillStyle,...v]);}};
  const font={width:(s:string)=>[...s].length*6,draw:(_c:unknown,...v:any[])=>draws.push(v)};
  const chat=Object.create(GameChat.prototype);Object.assign(chat,{viewport:{clientWidth:1280,clientHeight:720},pixels:{font},root:{dataset:{},style:{setProperty(){}}},canvas:{style:{},getContext:()=>ctx},input,text,messages:[],open:true,completion:null,offset:0,lineCount:0,tagHover:null,lifetime:0,abort:new AbortController(),accessible:{children:[],append(){}},username:()=> 'sireoh'});
  return{chat,input,draws,rects,transforms,ctx,font};
@@ -44,7 +44,7 @@ test('actual SaveSession receipt produces red chat with slashless underlined err
  await h.chat.submitCommand('/unknown');assert.equal(raw,before);assert.equal(h.chat.messages.length,2);
  assert.deepEqual(h.chat.messages[0].runs,[{text:english['command.unknown.command'],color:'#FF5555'}]);
  assert.deepEqual(h.chat.messages[1].runs,[{text:'',color:'#AAAAAA'},{text:'unknown',color:'#FF5555',underline:true},{text:'<--[HERE]',color:'#FF5555',italic:true}]);
- h.chat.open=false;h.draws.length=0;h.rects.length=0;h.chat.paint();
+ h.chat.open=false;h.chat.paint();
  assert.ok(h.rects.some(r=>r[0]==='#FF5555'&&r[4]===1));assert.ok(h.transforms.some(t=>t[0]==='transform'&&t[3]===-.25));
  assert.ok(!JSON.parse(h.chat.root.dataset.layout).lines.some((s:string)=>s.includes('/unknown')));
  session.dispose();
@@ -59,6 +59,7 @@ test('argument context has client slash offset; sent response shows previous ten
 test('valid editing and completion remove only the preview error, without creating system chat',()=>{
  const h=chatHarness();h.chat.paint();h.input.value='/time query time';h.input.selectionStart=h.input.selectionEnd=h.input.value.length;h.chat.paint();assert.equal(JSON.parse(h.chat.root.dataset.commandHint).error,null);
  h.input.value='/we';h.input.selectionStart=h.input.selectionEnd=3;h.chat.paint();assert.deepEqual(JSON.parse(h.chat.root.dataset.commandHint).suggestions,['weather']);assert.equal(h.chat.messages.length,0);
+ h.chat.commandMessage({key:'game.actionFailed',error:true});assert.equal(h.chat.messages.length,0);
  h.chat.commandMessage({key:'commands.tick.step.fail',error:true});assert.equal(h.chat.messages.length,1);
 });
 

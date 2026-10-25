@@ -174,7 +174,8 @@ export class GameInventory {
         }, {signal: this.abort.signal});
         for (const type of ['pointerup', 'pointercancel']) this.scrollbar.addEventListener(type, () => this.focusCatalogue(), {signal: this.abort.signal});
         this.search = document.createElement('input');
-        this.search.type = 'search'; this.search.maxLength = 50;
+        // CreativeModeInventoryScreen uses a plain EditBox without a browser search-cancel button.
+        this.search.type = 'text'; this.search.maxLength = 50;
         this.search.className = 'catalogue-search';
         this.search.setAttribute('aria-label', text('inventory.nativeSearch'));
         this.search.addEventListener('input', () => {

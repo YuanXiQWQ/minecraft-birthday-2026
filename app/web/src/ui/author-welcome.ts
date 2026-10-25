@@ -13,7 +13,7 @@ const WELCOME_KEYS = [
     'chat.welcome.scenes'
 ] as const;
 
-/** Schedule author chat three seconds after readiness, then five seconds after each delivered message.
+/** Schedule author chat five seconds after readiness and after each delivered message.
  * System chat uses its own immediate path. Chained timers never burst overdue messages after a suspended tab.
  * @param {GameChat} chat Current game document's chat.
  * @param {Function} text Lookup using the committed language and birthday names.
@@ -37,7 +37,7 @@ export function scheduleAuthorWelcome(chat: Pick<GameChat, 'append'>, text: (key
     }
     if (!signal.aborted) {
         signal.addEventListener('abort', cancel, {once: true});
-        timer = setTimeout(deliver, 3000);
+        timer = setTimeout(deliver, 5000);
     }
     return cancel;
 }

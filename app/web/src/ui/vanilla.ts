@@ -9,6 +9,8 @@ export interface Scaling {
 
 /** Native inclusive source-column overrides for Unicode code point ranges. */
 interface UnihexSizeOverride {from:string;to:string;left:number;right:number}
+/** A full Chinese chat page and its shadow masks fit together without repeatedly rebuilding tiny glyph canvases. */
+const UNICODE_TILE_LIMIT = 2048;
 
 /** Render native bitmap and Unihex providers with their original bounds, advances and shadow offsets. */
 export class BitmapFont {
@@ -131,7 +133,7 @@ export class BitmapFont {
     }
   }
 
-  /** Draw native cropped Unihex masks at oversample two, baseline zero and nearest sampling.
+  /** Reuse bounded native Unihex masks at oversample two, baseline zero and nearest sampling.
    * @param {CanvasRenderingContext2D} context Target font plane.
    * @param {string} char Code point.
    * @param {number} x Logical left.
@@ -150,7 +152,7 @@ export class BitmapFont {
         const bits = BigInt('0x' + bitmap.slice(row * bitmap.length / 16, (row + 1) * bitmap.length / 16));
         for (let col = 0; col < tile.width; col++) if (bits & 1n << BigInt(tile.width - col - 1)) c.fillRect(col, row, 1, 1);
       }
-      if (this.unicodeTiles.size >= 256) this.unicodeTiles.delete(this.unicodeTiles.keys().next().value!);
+      if (this.unicodeTiles.size >= UNICODE_TILE_LIMIT) this.unicodeTiles.delete(this.unicodeTiles.keys().next().value!);
       this.unicodeTiles.set(key, tile);
     }
     const smoothing = context.imageSmoothingEnabled;

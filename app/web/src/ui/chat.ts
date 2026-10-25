@@ -11,6 +11,8 @@ export type ChatKind = 'system' | 'player' | 'author';
 export interface ChatMessage {runs: TextRun[]; time: number; kind: ChatKind; identity?: string}
 /** A wrapped line retains its message and component offset for native styling and hover text. */
 interface ChatRow {text:string;message:ChatMessage;start:number;indent:boolean}
+/** A physical-resolution text row retains native glyph hit areas independently of its scroll position. */
+interface ChatRaster {canvas:HTMLCanvasElement;density:number;width:number;font:BitmapFont;hits:{left:number;right:number;hover:TextRun['hover']}[]}
 /** Split native chat components without collapsing spaces or losing source offsets; soft wraps receive one display-only space.
  * @param {string} raw Joined component text.
  * @param {number} width Native wrapping width before continuation indentation.
@@ -100,6 +102,9 @@ export class GameChat {
     paintFrame = 0;
     wrapping = new WeakMap<ChatMessage,{width:number;rows:ChatRow[]}>();
     rowLayout: {width:number;messages:ChatMessage[];rows:ChatRow[]}|null = null;
+    rowRasters = new Map<ChatRow,ChatRaster>();
+    geometry = '';
+    timerState = '';
     tagHover: [number, number] | null = null;
     abort = new AbortController();
     /** Bind the native ChatScreen editor and ChatComponent projection to one viewport.
@@ -117,13 +122,13 @@ export class GameChat {
         this.root.append(this.canvas,this.input,this.accessible);viewport.append(this.root);
         this.input.addEventListener('keydown', e=>this.key(e),{signal:this.abort.signal});
         this.input.addEventListener('input',()=>{this.completion=null;},{signal:this.abort.signal});
-        for(const type of ['input','select','keyup','pointerup','focus','blur'])this.input.addEventListener(type,()=>this.paint(),{signal:this.abort.signal});
+        for(const type of ['input','select','keyup','pointerup','focus','blur'])this.input.addEventListener(type,()=>this.requestPaint(),{signal:this.abort.signal});
         this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();if(e.deltaY)this.scroll(-Math.sign(e.deltaY)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
         this.root.addEventListener('pointermove',e=>{const r=viewport.getBoundingClientRect();this.tagHover=[e.clientX-r.left,e.clientY-r.top];this.requestPaint();},{signal:this.abort.signal});
         this.root.addEventListener('pointerleave',()=>{this.tagHover=null;this.requestPaint();},{signal:this.abort.signal});
         for(const type of ['pointerdown','pointerup','contextmenu'])this.root.addEventListener(type,e=>{e.stopPropagation();if(type==='contextmenu'&&e.target!==this.input)e.preventDefault();},{signal:this.abort.signal});
         window.addEventListener('resize',()=>this.paint(),{signal:this.abort.signal});
-        this.timer=window.setInterval(()=>{if(!document.hidden&&(this.open||this.messages.some(m=>performance.now()-m.time<10_050)))this.requestPaint();},50);
+        this.timer=window.setInterval(()=>this.tickPaint(),50);
         this.paint();
     }
     /** Normalize sent chat and route history independently of offered completions; Tab owns suggestion cycling.
@@ -157,6 +162,37 @@ export class GameChat {
         if(this.paintFrame||this.abort.signal.aborted)return;
         this.paintFrame=requestAnimationFrame(()=>{this.paintFrame=0;if(!this.abort.signal.aborted)this.paint();});
     }
+    /** Repaint timers only when the native caret phase or a message's fading opacity changes.
+     */
+    tickPaint():void {
+        if(document.hidden)return;
+        const now=performance.now(),focus=this.input.dataset.nativeEdit?JSON.parse(this.input.dataset.nativeEdit).focusedAt:null;
+        const state=this.open?'open:'+String(document.activeElement===this.input&&focus!==null?Math.floor((now-focus)/300)%2:'blur'):
+            this.messages.map(message=>{const age=(now-message.time)/50;return age<180?'shown':age>=200?'hidden':String(Math.floor(age));}).join(',');
+        if(state===this.timerState)return;
+        this.timerState=state;this.requestPaint();
+    }
+    /** Rasterize each immutable line once at the current physical resolution, preserving source styles and hover positions.
+     * @param {ChatRow} row Native wrapped line.
+     * @param {number} width Available logical line width.
+     * @param {number} density Physical pixels per logical pixel.
+     * @return {ChatRaster} Bounded reusable line image and component hit areas.
+     */
+    rasterRow(row:ChatRow,width:number,density:number):ChatRaster {
+        this.rowRasters??=new Map();
+        const cached=this.rowRasters.get(row),font=this.pixels.font;
+        if(cached?.density===density&&cached.width===width&&cached.font===font)return cached;
+        const canvas=document.createElement('canvas');canvas.width=rasterSize(width+12,density);canvas.height=rasterSize(11,density);
+        const c=canvas.getContext('2d')!;c.setTransform(density,0,0,density,0,0);c.imageSmoothingEnabled=false;
+        const hits:ChatRaster['hits']=[];let x=4+(row.indent?font.width(' '):0),consumed=row.start;
+        for(const ch of row.text){
+            let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}
+            const advance=font.width(ch);chatGlyph(c,font,ch,x,1,style);
+            if(style.hover)hits.push({left:x,right:x+advance,hover:style.hover});
+            x+=advance;consumed+=ch.length;
+        }
+        const raster={canvas,density,width,font,hits};this.rowRasters.set(row,raster);return raster;
+    }
     /** Cache native component wrapping and continuation indentation by message identity and logical width.
      * @param {ChatMessage} message Immutable appended message.
      * @param {number} width Logical line width.
@@ -177,6 +213,7 @@ export class GameChat {
         const cached=this.rowLayout;
         if(cached?.width===width&&cached.messages.length===this.messages.length&&cached.messages.every((message,index)=>message===this.messages[index]))return cached.rows;
         const rows=this.messages.flatMap(message=>this.messageRows(message,width)).slice(-100);
+        if(this.rowRasters){const retained=new Set(rows);for(const row of this.rowRasters.keys())if(!retained.has(row))this.rowRasters.delete(row);}
         this.rowLayout={width,messages:[...this.messages],rows};return rows;
     }
     /** Append an event with explicit source identity, freezing the username at send time.
@@ -206,11 +243,12 @@ export class GameChat {
         const messages=await handler(source);if(ticket!==this.lifetime||this.abort.signal.aborted)return;
         for(const message of messages)this.commandMessage(message,source);
     }
-    /** Draw native command feedback separately from player identity and automatic gameplay chat.
+    /** Draw native command feedback without the generic action-save warning, independently of player identity.
      * @param {CommandFeedback} message Localized command result.
      * @param {string} source Original text for Brigadier's error context.
      */
     commandMessage(message:CommandFeedback,source=''):void{
+        if(message.key==='game.actionFailed')return;
         for(const line of this.text(message.key,{...message.values,...(message.destination?{v1:this.text('scene.'+message.destination)}:{})}).split('\n'))this.append([{text:line,color:message.error?'#FF5555':'#FFFFFF'}]);
         if(message.cursor!==undefined){const offset=source.startsWith('/')?1:0,input=source.slice(offset),at=Math.min(input.length,Math.max(0,message.cursor-offset)),start=Math.max(0,at-10);this.append([
             {text:(start?'...':'')+input.slice(start,at),color:'#AAAAAA'},
@@ -226,15 +264,19 @@ export class GameChat {
         const end=c.source.indexOf(' ',c.start),tail=end<0?'':c.source.slice(end);this.input.value=c.source.slice(0,c.start)+c.values[c.index]+tail;
         const caret=c.start+c.values[c.index].length;this.input.setSelectionRange(caret,caret);this.paint();
     }
-    /** Draw native margins, continuation indents and component hovers; only system and scripted author messages carry a system tag. */
+    /** Composite cached native text rows with independent input, caret, hover, fading and system source tags. */
     paint(): void {
         if(this.paintFrame){cancelAnimationFrame(this.paintFrame);this.paintFrame=0;}
         const scale=nativeScale(this.viewport),w=Math.ceil(this.viewport.clientWidth/scale),h=Math.ceil(this.viewport.clientHeight/scale),dpr=Math.min(devicePixelRatio||1,4),width=Math.min(320,w-8),base=h-40,height=this.open?180:90;
-        this.root.style.setProperty('--chat-scale',String(scale));
         const pixelWidth=rasterSize(this.viewport.clientWidth,dpr),pixelHeight=rasterSize(this.viewport.clientHeight,dpr);
-        if(this.canvas.width!==pixelWidth)this.canvas.width=pixelWidth;if(this.canvas.height!==pixelHeight)this.canvas.height=pixelHeight;
-        this.canvas.style.width=this.viewport.clientWidth+'px';this.canvas.style.height=this.viewport.clientHeight+'px';
-        alignRaster(this.canvas,true);
+        const geometry=[scale,dpr,this.viewport.clientWidth,this.viewport.clientHeight].join(':');
+        if(this.geometry!==geometry){
+            this.geometry=geometry;this.root.style.setProperty('--chat-scale',String(scale));
+            if(this.canvas.width!==pixelWidth)this.canvas.width=pixelWidth;if(this.canvas.height!==pixelHeight)this.canvas.height=pixelHeight;
+            this.canvas.style.width=this.viewport.clientWidth+'px';this.canvas.style.height=this.viewport.clientHeight+'px';
+            this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
+            alignRaster(this.canvas,true);
+        }
         const c=this.canvas.getContext('2d')!;c.setTransform(1,0,0,1,0,0);c.clearRect(0,0,pixelWidth,pixelHeight);c.setTransform(scale*dpr,0,0,scale*dpr,0,0);c.imageSmoothingEnabled=false;
         const bounded=this.layoutRows(width);this.lineCount=bounded.length;this.offset=Math.max(0,Math.min(Math.max(0,bounded.length-Math.floor(height/9)),this.offset));
         let y=base,tag:string|null=null,hover:TextRun['hover'];
@@ -243,9 +285,9 @@ export class GameChat {
             if(fade){c.globalAlpha=fade;c.fillStyle='#00000080';c.fillRect(0,y-9,width+12,9);
                 const tagged=row.message.kind!=='player';
                 if(tagged){c.fillStyle='#D0D0D0';c.fillRect(0,y-9,2,9);}
-                let x=4+(row.indent?this.pixels.font.width(' '):0),consumed=row.start;for(const ch of row.text){let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}chatGlyph(c,this.pixels.font,ch,x,y-8,style);
-                    if(this.open&&this.tagHover&&this.tagHover[0]/scale>=x&&this.tagHover[0]/scale<x+this.pixels.font.width(ch)&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)hover=style.hover;
-                    x+=this.pixels.font.width(ch);consumed+=ch.length;}
+                const raster=this.rasterRow(row,width,scale*dpr);
+                c.drawImage(raster.canvas,0,y-9,raster.canvas.width/(scale*dpr),raster.canvas.height/(scale*dpr));
+                if(this.open&&this.tagHover&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)hover=raster.hits.find(hit=>this.tagHover![0]/scale>=hit.left&&this.tagHover![0]/scale<hit.right)?.hover;
                 if(tagged&&this.open&&this.tagHover&&this.tagHover[0]/scale>=0&&this.tagHover[0]/scale<2&&this.tagHover[1]/scale>=y-9&&this.tagHover[1]/scale<y)tag=this.text('chat.tag.system');
             }y-=9;
         }
@@ -260,7 +302,6 @@ export class GameChat {
             else if(error){const hint=commandHint(source,error,this.text),sy=h-27;c.fillStyle='#000000E0';c.fillRect(2,sy,this.pixels.font.width(hint)+2,12);this.pixels.font.draw(c,hint,3,sy+2,'#FFFFFF',true);}
             this.root.dataset.commandHint=JSON.stringify({suggestions:suggestion?.values??[],error,hint:error?commandHint(source,error,this.text):null});
             this.root.dataset.completion=JSON.stringify(this.completion);
-            this.input.style.cssText=`left:${4*scale}px;bottom:0;width:calc(100% - ${4*scale}px);height:${12*scale}px`;
         }
         if((tag||hover)&&this.tagHover){
             const lines=tag?wrap(tag,210,v=>this.pixels.font.width(v)).map(text=>({text,color:'#FFFFFF'})):hover!.flatMap(line=>wrap(line.text,200,v=>this.pixels.font.width(v)).map(text=>({text,color:line.color??'#FFFFFF'}))),box=tooltipBox(lines.map(v=>this.pixels.font.width(v.text))),tx=Math.max(0,Math.min(w-box.width,this.tagHover[0]/scale+12)),ty=Math.max(0,this.tagHover[1]/scale-box.height);
@@ -272,5 +313,5 @@ export class GameChat {
         this.onPaint?.();
     }
     /** Cancel pending paint, the update timer and all owned listeners. */
-    dispose(): void {this.lifetime++;this.command=null;clearInterval(this.timer);cancelAnimationFrame(this.paintFrame);this.paintFrame=0;this.rowLayout=null;this.wrapping=new WeakMap();this.abort.abort();this.root.remove();}
+    dispose(): void {this.lifetime++;this.command=null;clearInterval(this.timer);cancelAnimationFrame(this.paintFrame);this.paintFrame=0;this.rowLayout=null;this.rowRasters.clear();this.wrapping=new WeakMap();this.abort.abort();this.root.remove();}
 }

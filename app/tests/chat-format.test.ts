@@ -25,9 +25,11 @@ test('native soft wraps indent once, explicit newlines reset indentation and off
 
 test('native drawing distinguishes local player chat from system and scripted author messages',()=>{
     const originalDpr=Object.getOwnPropertyDescriptor(globalThis,'devicePixelRatio');
+    const originalDocument=Object.getOwnPropertyDescriptor(globalThis,'document');
     Object.defineProperty(globalThis,'devicePixelRatio',{value:1,configurable:true});
     const rectangles:any[]=[],glyphs:any[]=[];
-    const context={fillStyle:'',globalAlpha:1,setTransform(){},clearRect(){},save(){},restore(){},fillRect(...bounds:number[]){rectangles.push({color:this.fillStyle,bounds});}};
+    const context={fillStyle:'',globalAlpha:1,setTransform(){},clearRect(){},save(){},restore(){},drawImage(){},fillRect(...bounds:number[]){rectangles.push({color:this.fillStyle,bounds});}};
+    Object.defineProperty(globalThis,'document',{value:{createElement:()=>({getContext:()=>context})},configurable:true});
     const chat=Object.assign(Object.create(GameChat.prototype),{
         paintFrame:0,viewport:{clientWidth:640,clientHeight:360},canvas:{width:640,height:360,style:{},getContext:()=>context},
         root:{style:{setProperty(){}},dataset:{}},input:{value:'',style:{}},pixels:{font:{width:(s:string)=>[...s].length*6,draw(_c:unknown,text:string,x:number,y:number,color:string){glyphs.push({text,x,y,color});}}},
@@ -42,10 +44,12 @@ test('native drawing distinguishes local player chat from system and scripted au
         chat.paint();
         assert.equal(rectangles.filter(r=>r.color==='#D0D0D0').length,2,'only system and scripted author messages have a source tag');
         assert.ok(rectangles.filter(r=>r.color==='#00000080').every(r=>r.bounds[0]===0&&r.bounds[2]===332),'native background includes both margins');
-        assert.equal(glyphs.find(g=>g.y===312)?.x,10,'soft continuation starts one space after x=4');
+        assert.equal(glyphs[0]?.x,10,'soft continuation starts one space after x=4');
         assert.equal(glyphs.find(g=>g.text==='红')?.color,'#FF5555','source style survives continuation indentation');
         assert.equal(glyphs.find(g=>g.text==='<')?.x,4,'first line starts at x=4');
+        const glyphCount=glyphs.length;chat.paint();assert.equal(glyphs.length,glyphCount,'unchanged history reuses rasterized glyphs');
     }finally{
         if(originalDpr)Object.defineProperty(globalThis,'devicePixelRatio',originalDpr);else delete (globalThis as any).devicePixelRatio;
+        if(originalDocument)Object.defineProperty(globalThis,'document',originalDocument);else delete (globalThis as any).document;
     }
 });

@@ -23,7 +23,7 @@ for (const locale of ['en', 'zh-CN']) test(`ready ${locale} game schedules eight
         assert.equal(chat.messages.length, 1);
         for (let i = 0; i < 3; i++) if (startup.finish()) scheduleAuthorWelcome(chat, text, lifetime.signal);
         assert.equal(chat.messages.length, 1);
-        t.mock.timers.tick(2999);
+        t.mock.timers.tick(4999);
         assert.equal(chat.messages.length, 1);
         t.mock.timers.tick(1);
         assert.equal(chat.messages.length, 2);
@@ -61,7 +61,7 @@ test('discarded startup never publishes author messages', () => {
     assert.equal(startup.finish(), false);
 });
 
-for (const elapsed of [0, 3000, 13000]) test(`leaving the document at ${elapsed}ms cancels unread author messages`, t => {
+for (const elapsed of [0, 3000, 5000, 15000]) test(`leaving the document at ${elapsed}ms cancels unread author messages`, t => {
     t.mock.timers.enable({apis: ['setTimeout']});
     const lifetime = new AbortController(), messages: unknown[] = [];
     scheduleAuthorWelcome({append: (...args) => {messages.push(args);}} as Pick<GameChat, 'append'>, key => key, lifetime.signal);
@@ -103,8 +103,8 @@ test('reset cancels the old author sequence and sends all eight messages once fo
     const lifetime=new AbortController(), messages:string[]=[];
     const welcome=new AuthorWelcome({append:runs=>messages.push(runs[0].text)} as Pick<GameChat,'append'>,key=>key,lifetime.signal);
     welcome.sync('first',false);t.mock.timers.tick(10000);assert.equal(messages.length,0);
-    welcome.sync('first',true);t.mock.timers.tick(3000);assert.equal(messages.length,1);
-    welcome.sync('reset',true);t.mock.timers.tick(2999);assert.equal(messages.length,1);
+    welcome.sync('first',true);t.mock.timers.tick(5000);assert.equal(messages.length,1);
+    welcome.sync('reset',true);t.mock.timers.tick(4999);assert.equal(messages.length,1);
     welcome.sync('reset',true);t.mock.timers.tick(1);assert.equal(messages.length,2);assert.equal(messages[0],messages[1]);
     for(let i=0;i<7;i++){welcome.sync('reset',true);t.mock.timers.tick(5000);}
     assert.equal(messages.length,9);assert.equal(new Set(messages.slice(1)).size,8);
