@@ -97,7 +97,10 @@ export class NativeScreens {
         if(accuracy){this.place(accuracy,0,language.warningY,w,9);this.pixels.text(accuracy,this.pixels.texts.get(accuracy)?.text??'',2,'#BABABA');}
         if(page==='language')this.place(u.done,(w-pw)/2,language.doneY,pw);
         this.place(u.usernameLabel,(w-pw)/2,layout.contentY,pw,9);this.place(u.username.parentElement!,(w-pw)/2,layout.contentY+12,pw);
-        [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+40+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
+        const profile=u.sections.get('player')!.querySelector<HTMLElement>('.player-profile-match');
+        if(profile){this.place(profile,(w-pw)/2,layout.contentY+36,pw,32);profile.style.border='1px solid #808080';profile.style.background='rgba(0,0,0,.65)';const face=profile.querySelector('canvas')!;this.place(face,4,4,24,24);face.style.imageRendering='pixelated';const name=profile.querySelector('span')!;this.place(name,face.hidden?5:34,11,pw-(face.hidden?10:39),12);this.pixels.updates.get(name)?.();}
+        const profileFeedback=u.sections.get('player')!.querySelector<HTMLElement>('.profile-feedback');if(profileFeedback)this.placeText(profileFeedback,(w-pw)/2,layout.contentY+100,pw);
+        [...u.sections.get('player')!.querySelectorAll('button')].forEach((b,i)=>this.place(b,narrow?(w-pw)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+76+(narrow?i*24:0),narrow?pw:flow.buttonWidth));
         const weather=u.sections.get('weather');
         if(weather){
             [...weather.querySelectorAll<HTMLElement>('button')].forEach((b,i)=>this.place(b,narrow?(w-flow.groupWidth)/2:(w-flow.groupWidth)/2+i*(flow.buttonWidth+8),layout.contentY+(narrow?i*24:0),narrow?flow.groupWidth:flow.buttonWidth));

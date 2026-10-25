@@ -1,0 +1,41 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "Public Mojang session profile; player textures are user content, not vanilla client assets",
+  "profile": {
+    "name": "sireoh",
+    "id": "929ae351eb2c4ebdb70044d7b0fa239f",
+    "slim": true
+  },
+  "properties": [
+    {
+      "name": "textures",
+      "value": "ewogICJ0aW1lc3RhbXAiIDogMTc5Mjg5MTkwMjkwMCwKICAicHJvZmlsZUlkIiA6ICI5MjlhZTM1MWViMmM0ZWJkYjcwMDQ0ZDdiMGZhMjM5ZiIsCiAgInByb2ZpbGVOYW1lIiA6ICJzaXJlb2giLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjk3OGU1MGFkN2M4MjVhYmM4Y2JmZjM1YTAxZDYwYTM3NmNlM2FmYzUxODU4NDlhMjZkNzI5YzMzNjY5MDJkZiIsCiAgICAgICJtZXRhZGF0YSIgOiB7CiAgICAgICAgIm1vZGVsIiA6ICJzbGltIgogICAgICB9CiAgICB9LAogICAgIkNBUEUiIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzIzNDBjMGUwM2RkMjRhMTFiMTVhOGIzM2MyYTdlOWUzMmFiYjIwNTFiMjQ4MWQwYmE3ZGVmZDYzNWNhN2E5MzMiCiAgICB9CiAgfQp9"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "SKIN",
+      "entry": "assets/jerrys_farm/textures/player/2978e50ad7c825abc8cbff35a01d60a376ce3afc5185849a26d729c3366902df.png",
+      "source": "https://textures.minecraft.net/texture/2978e50ad7c825abc8cbff35a01d60a376ce3afc5185849a26d729c3366902df",
+      "size": 987,
+      "sha256": "2978e50ad7c825abc8cbff35a01d60a376ce3afc5185849a26d729c3366902df"
+    },
+    {
+      "kind": "CAPE",
+      "entry": "assets/jerrys_farm/textures/player/2340c0e03dd24a11b15a8b33c2a7e9e32abb2051b2481d0ba7defd635ca7a933.png",
+      "source": "https://textures.minecraft.net/texture/2340c0e03dd24a11b15a8b33c2a7e9e32abb2051b2481d0ba7defd635ca7a933",
+      "size": 705,
+      "sha256": "2340c0e03dd24a11b15a8b33c2a7e9e32abb2051b2481d0ba7defd635ca7a933"
+    }
+  ],
+  "classes": {
+    "net/minecraft/client/Camera.class": "0e775d8e4358692db9395a4993b99ba675edb5f5e989b9aa3faf1d540b0c6e70",
+    "net/minecraft/client/CameraType.class": "880f4ec393bde7b92ebfec2067213a4b784893b78722a04fe1717e4e559cdab8",
+    "net/minecraft/client/model/player/PlayerModel.class": "2b079f3f2f1ec200bfd080b5eac968c057f67b955374ec5c567a8765fed83981",
+    "net/minecraft/client/model/player/PlayerCapeModel.class": "362fb81e56c8ceece3d4681c37ece766017527f7a9e79320a1eb3aaed9a5d9c0",
+    "net/minecraft/client/renderer/entity/layers/CapeLayer.class": "2a1adbe6bed2d8b9653ca847b69f46e7a43d55fc86ca56428a2318e3760707fc",
+    "net/minecraft/client/renderer/entity/player/AvatarRenderer.class": "f1d785b3c8fa7a016a0c8c2fc01192153312b3e1f9d7a94b3b080ab717ba56c8"
+  },
+  "exporterSha256": "c1de94dfdd9dff2de567c79a7bb9cb0391162b9da8295323ce442bd3ac77c565"
+}

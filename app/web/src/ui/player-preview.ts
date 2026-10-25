@@ -1,36 +1,28 @@
 /** A single reusable WebGL entity preview is composited into the screen GUI without any input hit surface or animation loop. */
 import {Scene, Group, OrthographicCamera, WebGLRenderer, AmbientLight, DirectionalLight} from 'three';
-import {PlayerItems} from './player-items.ts';
-import {PLAYER_PARTS, PLAYER_WINDOWS, playerCube, playerLook, armorParts} from './player-model.ts';
-import type {PartName} from './player-model.ts';
+import {PlayerAvatar} from './player-avatar.ts';
+import {PLAYER_WINDOWS, playerLook} from './player-model.ts';
 import type {CatalogueArt} from './icons.ts';
-import type {PlayerLayout} from '../domain/inventory.ts';
 import type {Rules} from '../rules/types.ts';
 
 /** Preview geometry reflects committed layout only; the world renderer and persistent state are never touched. */
-export class PlayerPreview {
+export class PlayerPreview extends PlayerAvatar {
     renderer: WebGLRenderer;
     scene = new Scene();
     camera = new OrthographicCamera();
     tilt = new Group();
     body = new Group();
-    native = new Group();
-    parts = new Map<PartName, Group>();
-    armor = new Group();
-    hands: Group[] = [];
-    items: PlayerItems;
-    signature = '';
     disposed = false;
     pointer = {x: 0, y: 0};
     look = playerLook(0, 0);
     renders = 0;
 
-    /** Allocate one owned renderer and native wide Steve with all outer skin layers.
+    /** Allocate one owned renderer and the shared native player with all outer skin layers.
      * @param {CatalogueArt} art Audited original resources.
      * @param {Rules} rules Native equipment component slots.
      */
-    constructor(public art: CatalogueArt, public rules: Rules) {
-        this.items = new PlayerItems(art);
+    constructor(art: CatalogueArt, rules: Rules) {
+        super(art,rules);
         this.renderer = new WebGLRenderer({alpha: true, antialias: false, preserveDrawingBuffer: true});
         this.renderer.setClearColor(0, 0);
         this.renderer.domElement.className = 'player-entity-preview';
@@ -50,61 +42,7 @@ export class PlayerPreview {
         this.body.add(this.native);
         this.native.scale.set(.9375, -.9375, -.9375);
         this.native.position.y = .5;
-        for (const p of PLAYER_PARTS) {
-            const g = new Group();
-            g.name = p.name;
-            g.position.set(...p.pivot.map(n => n / 16) as [number, number, number]);
-            g.add(this.items.mesh(playerCube(p.box, 'minecraft:entity/player/wide/steve')), this.items.mesh(playerCube(p.overlay, 'minecraft:entity/player/wide/steve', 64, p.inflate)));
-            this.parts.set(p.name, g);
-            this.native.add(g);
-        }
-        this.native.add(this.armor);
-    }
 
-    /** Synchronize armor and true hand-context geometry from the latest saved effective player layout.
-     * @param {PlayerLayout} layout Last accepted persistent layout.
-     */
-    sync(layout: PlayerLayout): void {
-        const signature = JSON.stringify([layout.equipment, layout.hotbar[layout.selected]]);
-        if (this.signature === signature) return;
-        this.signature = signature;
-        for (const h of this.hands) this.items.release(h);
-        this.hands = [];
-        for (const child of [...this.armor.children]) this.items.release(child as Group);
-        for (const p of PLAYER_PARTS) this.parts.get(p.name)!.rotation.set(0, 0, 0);
-        for (const [slot, stack] of Object.entries(layout.equipment)) {
-            if (!stack || slot === 'offhand') continue;
-            if (this.rules.items[stack.id]?.equipment !== slot) throw Error('invalid-preview-equipment');
-            const equipment = this.art.documents.get('player-equipment-bindings')?.[stack.id];
-            if (!equipment) throw Error('unsupported-preview-equipment:' + stack.id);
-            const layer = slot === 'legs' ? 'humanoid_leggings' : 'humanoid',
-                definition = this.art.documents.get('assets/minecraft/equipment/' + equipment.split(':')[1] + '.json');
-            for (const entry of definition.layers[layer]) for (const name of armorParts(slot)) {
-                const p = PLAYER_PARTS.find(p => p.name === name)!, leg = name === 'rightLeg' || name === 'leftLeg',
-                    box = leg ? [...p.box.slice(0, 6), 0, 16] : name === 'leftArm' ? [-1, -2, -2, 4, 12, 4, 40, 16] : p.box,
-                    inflate = (slot === 'legs' ? .5 : 1) - (leg ? .1 : 0),
-                    texture = 'minecraft:entity/equipment/' + layer + '/' + entry.texture.split(':').at(-1),
-                    g = new Group();
-                g.position.copy(this.parts.get(name)!.position);
-                const mesh = this.items.mesh(playerCube(box, texture, 32, inflate, name === 'leftArm' || name === 'leftLeg'));
-                g.add(mesh);
-                g.userData.part = name;
-                this.armor.add(g);
-            }
-        }
-        for (const [left, stack] of [[false, layout.hotbar[layout.selected]], [true, layout.equipment.offhand]] as const) {
-            const part = this.parts.get(left ? 'leftArm' : 'rightArm')!;
-            if (!stack) continue;
-            part.rotation.x = -Math.PI / 10;
-            const hand = new Group(), offset = new Group();
-            hand.rotation.set(-Math.PI / 2, Math.PI, 0);
-            offset.position.set((left ? -1 : 1) / 16, 2 / 16, -10 / 16);
-            hand.add(offset);
-            offset.add(this.items.held(stack.id, left));
-            part.add(hand);
-            this.hands.push(hand);
-        }
-        for (const g of this.armor.children) g.rotation.copy(this.parts.get(g.userData.part)!.rotation);
     }
 
     /** Draw within the original entity rectangle, leaving its original panel background untouched.
@@ -143,7 +81,7 @@ export class PlayerPreview {
         this.renderer.render(this.scene, this.camera);
         this.renders++;
         return {
-            skin: 'minecraft:entity/player/wide/steve',
+            skin: this.appearance?.profile.id??'minecraft:entity/player/wide/steve', slim:!!this.appearance?.profile.slim, cape:!!this.cape,
             window: b,
             framebuffer: [this.renderer.domElement.width, this.renderer.domElement.height],
             look: this.look,

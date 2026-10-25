@@ -6,6 +6,9 @@ import {blockAt} from '../domain/placed-blocks.ts';
 import {attackProfile} from '../domain/attack.ts';
 import {nativeShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
 import {placedModel} from './placed-world.ts';
+import {PlayerPerspective,nextPerspective} from './player-perspective.ts';
+import type {PlayerAppearance} from '../ui/player-profile.ts';
+import type {Rules} from '../rules/types.ts';
 import {FirstPersonHand} from './first-person-hand.ts';
 import {viewBob} from './view-bob.ts';
 import {blockSounds} from '../domain/block-sounds.ts';
@@ -89,6 +92,9 @@ export class SceneView {
     staticCollisionVersion = -1;
     staticCollisions: Bounds[] = [];
     hand:FirstPersonHand|null=null;
+    playerView:PlayerPerspective|null=null;
+    /** One F2 capture is consumed immediately after the next complete render. */
+    captureFrame:((canvas:HTMLCanvasElement)=>void)|null=null;
     outline:LineSegments2|null=null;
     renderer: WebGLRenderer;
     scene = new Scene();
@@ -475,7 +481,7 @@ export class SceneView {
             this.basePitch = this.camera.rotation.x;
             this.look.yaw = 0;
             this.look.pitch = this.basePitch;
-            this.motion.reset(spec.eye);const pose=p.scenes[p.scene].pose;if(pose&&!this.presentationOnly){this.motion.feet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');}this.previousFeet=[...this.motion.feet];
+            this.motion.reset(spec.eye);this.playerView?.reset();const pose=p.scenes[p.scene].pose;if(pose&&!this.presentationOnly){this.motion.feet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');}this.previousFeet=[...this.motion.feet];
             this.cancel();
             this.showPreview(null);
             this.stationSignature = '';
@@ -501,7 +507,7 @@ export class SceneView {
             this.blockLight.rebuild(emitters,this.collision);this.renderer.domElement.dataset.blockLight=JSON.stringify({emitters,maximum:Math.max(...this.blockLight.values)});
         }
         if(entering&&!this.presentationOnly&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
-        this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);
+        this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);this.playerView?.sync(p.player.data);
         this.refreshHover();
         this.requestRender();
         end();
@@ -514,8 +520,9 @@ export class SceneView {
 
     /** Attach verified native first-person item and skin resources.
      * @param {CatalogueArt} art Shared catalogue artwork.
+     * @param {Rules} rules Native equipment slots.
      */
-    enableHands(art:CatalogueArt):void{this.hand=new FirstPersonHand(art);this.hand.select(this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id??null);}
+    enableHands(art:CatalogueArt,rules:Rules):void{this.playerView=new PlayerPerspective(art,rules);this.scene.add(this.playerView.root);if(this.environmentProgress)this.playerView.sync(this.environmentProgress.player.data);this.hand=new FirstPersonHand(art);this.hand.select(this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id??null);}
 
     /** Build nearby block collision boxes from authored native geometry, excluding non-solid vegetation and entities. */
     rebuildCollision():void{
@@ -541,6 +548,11 @@ export class SceneView {
         result.push([-19,-8,-23,-18,32,12],[19,-8,-23,20,32,12],[-19,-8,-23,20,32,-22],[-19,-8,11,20,32,12],[-19,16,-23,20,17,12],[-19,-5,-23,20,-4,12]);this.collision=result;
     }
 
+    /** Apply one committed profile to both first and third person geometry.
+     * @param {PlayerAppearance|null} appearance Complete validated texture set.
+     */
+    setAppearance(appearance:PlayerAppearance|null):void{this.hand?.setAppearance(appearance);this.playerView?.setAppearance(appearance);this.requestRender();}
+
     /** Reject placement intersecting the player's current physical body.
      * @param {Cell} cell Candidate full block.
      * @return {boolean} Whether the player would be enclosed.
@@ -551,8 +563,10 @@ export class SceneView {
      * @param {KeyboardEvent} event Browser key press outside editable screens.
      */
     pressMovementKey(event: KeyboardEvent): void {
+        if(event.code==='F5'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!this.disposed)event.preventDefault();
         if (!this.input || this.lost || this.disposed || globalThis.document?.hidden || event.metaKey || event.altKey) return;
         if (typeof Element !== 'undefined' && event.target instanceof Element && event.target.closest('input,textarea,select,[contenteditable=true]')) return;
+        if(event.code==='F5'&&!event.ctrlKey){event.preventDefault();if(!event.repeat&&this.playerView){this.playerView.mode=nextPerspective(this.playerView.mode);this.cancelPointerGesture();this.requestRender();}return;}
         if (!['KeyW','KeyA','KeyS','KeyD','Space','ShiftLeft','ShiftRight','ControlLeft','ControlRight'].includes(event.code)) return;
         event.preventDefault();
         this.keys.add(event.code);
@@ -570,7 +584,7 @@ export class SceneView {
         return keys;
     }
 
-    /** Advance gravity and inertia through non-pausing GUIs, accepting movement keys only while world input owns them.
+    /** Advance gravity, inertia and animal pushing through non-pausing GUIs, accepting keys only while world input owns them.
      * @param {number} now Monotonic frame time.
      */
     advancePlayer(now:number):void{
@@ -578,7 +592,7 @@ export class SceneView {
         if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
         while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb});this.onPlayerTick?.();this.playMovement();
-            const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}));changed=true;}
+            const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}),this.motion);changed=true;}
         this.authored.animateLife(this.motionRemainder/50);
         const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
         this.renderer.domElement.dataset.player=JSON.stringify({feet:this.motion.feet,velocity:this.motion.velocity,grounded:this.motion.grounded,crouching:this.motion.crouching,sprinting:this.motion.sprinting,bob:this.motion.bob,walk:this.motion.walk,eye:this.camera.position.toArray(),yaw:this.look.yaw});
@@ -733,30 +747,37 @@ export class SceneView {
             this.resizeViewport();
             const start = performance.now();this.advancePlayer(start);const continuing = this.onFrame?.(start) ?? false;
             this.models.animate(start);
+            const swing=this.hand?(this.hand.clock-this.hand.swingAt)/this.hand.swingDuration:0;
+            this.playerView?.animate(this.camera,this.motion,this.hand?.clock?this.hand.clock*50:0,swing);
+            this.scene.updateMatrixWorld(true);
+            const camera=this.playerView?.view(this.camera,[this.world,this.persistent,this.placed,...(this.authored?[this.authored.staticRoot,this.authored.natural,this.authored.crops]:[])],hit=>{const target=this.hit(hit);return !/cow|chicken|egg|water/.test(target.id)&&target.block!=='water'&&this.models.accepts(hit);})??this.camera;
+            this.renderer.domElement.dataset.perspective=String(this.playerView?.mode??0);
+            this.renderer.domElement.dataset.avatar=JSON.stringify({name:this.playerView?.appearance?.profile.name,slim:this.playerView?.appearance?.profile.slim,cape:!!this.playerView?.cape,visible:this.playerView?.root.visible,distance:this.playerView?.distance,eye:this.camera.position.toArray(),camera:camera.position.toArray()});
             this.blockLight?.update(start);
             if(this.sky&&this.precipitation&&this.environmentProgress&&this.authored){
                 const p=this.environmentProgress,weather=this.sky.weatherAt(start);
-                const weatherEnd=timing('weather-update'),ticks=this.sky.ticksAt(start);this.precipitation.update(this.camera,p,this.authored.staticRoot,ticks,weather.rain,weather.snow);
-                this.weather?.update(ticks,p.scene,this.camera.position.toArray(),this.precipitation.heights,weather);this.sky.flash=!!this.weather&&this.weather.flashUntil>=Math.floor(ticks);this.onEnvironmentFrame?.(start);weatherEnd();
+                const weatherEnd=timing('weather-update'),ticks=this.sky.ticksAt(start);this.precipitation.update(camera,p,this.authored.staticRoot,ticks,weather.rain,weather.snow);
+                this.weather?.update(ticks,p.scene,camera.position.toArray(),this.precipitation.heights,weather);this.sky.flash=!!this.weather&&this.weather.flashUntil>=Math.floor(ticks);this.onEnvironmentFrame?.(start);weatherEnd();
             }
             this.updateDebris(start);
             const end = timing('cpu-render-submit'),
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
             const resetInfo = this.renderer.info.autoReset;
             this.renderer.info.autoReset = false; this.renderer.info.reset();
-            const projection=this.camera.projectionMatrix.clone(),bob=this.authored&&!this.presentationOnly?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
-            this.camera.projectionMatrix.multiply(bob);
+            const projection=camera.projectionMatrix.clone(),bob=this.authored&&!this.presentationOnly&&!this.playerView?.mode?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
+            camera.projectionMatrix.multiply(bob);
             try {
                 const host = this.renderer.domElement.parentElement;
                 if (host?.dataset.effect === 'menu') {
-                    const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, this.camera, layers,this.sky?()=>{this.sky!.render(this.renderer,this.camera,start);this.applySkyLighting();}:undefined);
+                    const layers=menuLayers(host);this.menuBlur.render(this.renderer, this.scene, camera, layers,this.sky?()=>{this.sky!.render(this.renderer,camera,start);this.applySkyLighting();}:undefined);
                     host.dataset.menuComposited='true';this.renderer.domElement.dataset.menuComposite=JSON.stringify(layers.map(({canvas,...layout})=>layout));
-                } else {if(host)delete host.dataset.menuComposited;const clear=this.renderer.autoClear;try{if(this.sky){this.sky.render(this.renderer,this.camera,start);this.applySkyLighting();this.renderer.autoClear=false;}this.renderer.render(this.scene,this.camera);}finally{this.renderer.autoClear=clear;}}
+                } else {if(host)delete host.dataset.menuComposited;const clear=this.renderer.autoClear;try{if(this.sky){this.sky.render(this.renderer,camera,start);this.applySkyLighting();this.renderer.autoClear=false;}this.renderer.render(this.scene,camera);}finally{this.renderer.autoClear=clear;}}
                 if(this.outline){const w=this.renderer.domElement.width,ratio=this.renderer.getPixelRatio();this.outline.material.linewidth=Math.max(2.5,w/1920*2.5)/ratio;}
-                if(this.input)this.hand?.render(this.renderer,bob);
+                if(this.input&&!this.playerView?.mode)this.hand?.render(this.renderer,bob);
                 if(this.crosshair&&this.hand){this.crosshair.attackProgress=this.hand.charge();const target=JSON.parse(this.renderer.domElement.dataset.hover??'null');this.crosshair.attackFull=this.hand.charge()>=1&&20/attackProfile(this.hand.pending).speed>5&&/cow|chicken/.test(target?.id??'');}
-                this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden, lost: this.lost, disposed: this.disposed});
-            } finally {this.renderer.info.autoReset = resetInfo;this.camera.projectionMatrix.copy(projection);}
+                this.crosshair?.render(this.renderer, {actual: this.mode?.actual ?? false, owned: document.pointerLockElement === this.renderer.domElement, desired: this.mode?.desired ?? 'visible', pending: this.mode?.pending ?? false, paused: this.mode?.paused ?? true, enabled: this.input && !document.hidden && !this.playerView?.mode, lost: this.lost, disposed: this.disposed});
+            } finally {this.renderer.info.autoReset = resetInfo;camera.projectionMatrix.copy(projection);}
+            const capture=this.captureFrame;this.captureFrame=null;capture?.(this.renderer.domElement);
             gpuEnd();
             end();
             this.frames++;
@@ -800,7 +821,7 @@ export class SceneView {
     /** Remove renderer callbacks, resize observation, input listeners and all owned GPU resources. */
     dispose(): void {
         if (this.disposed) return;
-        this.controlsAbort.abort();this.hand?.dispose();this.showOutline(null);
+        this.controlsAbort.abort();this.hand?.dispose();this.playerView?.dispose();this.showOutline(null);
         this.blockLight?.dispose();this.movementSound=null;
         this.mode?.dispose();
         this.sky?.dispose(); this.precipitation?.dispose();this.weather?.dispose();this.onEnvironmentFrame=null;

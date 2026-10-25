@@ -73,12 +73,12 @@ export function playerLook(dx: number, dy: number) {
     return {body: -x * 20 * r, head: x * 20 * r, pitch: y * 20 * r, tilt: y * 20 * r};
 }
 
-/** Build native Cube polygon UVs with deformation changing geometry only, never stretching atlas coordinates.
+/** Build native Cube polygon UVs with outward normals and winding on mirrored geometry; deformation preserves atlas coordinates.
  * @param {number[]} box Native x,y,z,width,height,depth,u,v.
  * @param {string} texture Original atlas identity.
  * @param {number} height Atlas height (skin64, armor32).
  * @param {number} inflate Native cube deformation in model pixels.
- * @param {boolean} mirror Native left armor mirroring.
+ * @param {boolean} mirror Native animal or left armor mirroring, including reversed polygon winding.
  * @return {CompiledModel} Six independent textured faces.
  */
 export function playerCube(box: number[], texture: string, height = 64, inflate = 0, mirror = false): CompiledModel {
@@ -92,7 +92,7 @@ export function playerCube(box: number[], texture: string, height = 64, inflate 
         out: CompiledModel = {positions: [], normals: [], uvs: [], indices: [], faces: [], textures: [texture]};
     for (let f = 0; f < 6; f++) {
         const ps = faces[f].map(i => new Vector3(...vertices[i] as [number, number, number]).multiplyScalar(1 / 16)),
-            n = ps[1].clone().sub(ps[0]).cross(ps[2].clone().sub(ps[0])).normalize(), [U, V, R, S] = rects[f],
+            n = ps[1].clone().sub(ps[0]).cross(ps[2].clone().sub(ps[0])).normalize().multiplyScalar(mirror ? -1 : 1), [U, V, R, S] = rects[f],
             uv = [[R, V], [U, V], [U, S], [R, S]];
         for (let i = 0; i < 4; i++) {
             out.positions.push(...ps[i].toArray());
@@ -100,7 +100,8 @@ export function playerCube(box: number[], texture: string, height = 64, inflate 
             out.uvs.push(uv[i][0] / 64, 1 - uv[i][1] / height);
         }
         const start = f * 4;
-        out.indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
+        if (mirror) out.indices.push(start, start + 2, start + 1, start, start + 3, start + 2);
+        else out.indices.push(start, start + 1, start + 2, start, start + 2, start + 3);
         out.faces.push({direction: 'north', texture});
     }
     return out;
@@ -124,3 +125,9 @@ export function armorParts(slot: string): PartName[] {
             return [];
     }
 }
+
+/** Select native wide or slim arm cuboids without mutating shared definitions.
+ * @param {boolean} slim Three-pixel arms.
+ * @return {PlayerPart[]} Native body definitions.
+ */
+export function playerParts(slim=false):PlayerPart[]{return PLAYER_PARTS.map(p=>{if(!slim||!p.name.endsWith('Arm'))return p;const left=p.name==='leftArm',box=[...p.box],overlay=[...p.overlay];box[0]=overlay[0]=left?-1:-2;box[3]=overlay[3]=3;return{...p,pivot:[p.pivot[0],2.5,0],box,overlay};});}

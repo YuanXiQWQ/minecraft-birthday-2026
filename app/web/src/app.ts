@@ -1,4 +1,7 @@
 /** Formal page composition connects localized screen UI, domain transactions, persistence and independent 3D presentation. */
+import {captureGame,downloadScreenshot} from './ui/game-screenshot.ts';
+import {defaultAppearance,lookupAppearance} from './ui/player-profile.ts';
+import type {PlayerAppearance} from './ui/player-profile.ts';
 import {parseCommand} from './domain/console.ts';
 import {Vector3} from 'three';
 import type {SkySettings} from './domain/environment.ts';
@@ -385,6 +388,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         root.dataset.revision = String(value.envelope?.revision ?? '');
         if (value.envelope) {
             const s = value.envelope.state, placed = hasCake(s);
+            syncAppearance(s.settings.username??'sireoh',value.envelope.generation);
             root.dataset.completed = String(placed);
             if (page === 'game' && lastWorldScene !== s.progress.scene) {
                 void inventory?.close(true);
@@ -466,11 +470,43 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     for(const [key] of SOUND_CHANNELS){const input=document.createElement('input');input.type='range';input.min='0';input.max='1';input.step='any';input.id=key;soundSliders.set(key,input);soundSection.append(input);input.addEventListener('input',()=>{edits.stage(key,Number(input.value));clearText(preferenceFeedback);paintSettings();});input.addEventListener('change',()=>preferences(key));input.addEventListener('blur',cancelSettingsGesture);}
     const usernameLabel = node('label', 'menu.username'), username = document.createElement('input');
     username.id = 'username'; username.maxLength = 16; usernameLabel.setAttribute('for', username.id);
-    const usernameFeedback = document.createElement('p'); usernameFeedback.setAttribute('role', 'status');
-    playerSection.append(usernameLabel, username, usernameFeedback, button('menu.save', () => {
-        if (!/^[A-Za-z0-9_]{3,16}$/.test(username.value)) {setText(usernameFeedback, 'menu.usernameInvalid'); return;}
-        edits.stage('username', username.value); preferences('username');
-    }), button('menu.cancel', () => showOptions('options')));
+    const usernameFeedback = document.createElement('p'); usernameFeedback.setAttribute('role', 'status');usernameFeedback.className='profile-feedback';
+    const profileCard=document.createElement('div'),profileFace=document.createElement('canvas'),profileName=document.createElement('span');
+    profileCard.className='player-profile-match';profileCard.setAttribute('role','status');profileFace.width=profileFace.height=8;profileFace.setAttribute('aria-hidden','true');profileCard.append(profileFace,profileName);
+    let profileMatch:PlayerAppearance|null=null,profileQuery=0,profileTimer=0,appearanceName='',appearanceOwner=0,currentAppearance:PlayerAppearance|null=null;
+    const savePlayer=button('menu.save',()=>{if(!profileMatch||profileMatch.profile.name.toLowerCase()!==username.value.toLowerCase())return;edits.stage('username',profileMatch.profile.name);preferences('username');});
+    /** Redraw the exact match row without changing the saved identity.
+     * @param {PlayerAppearance|null} match One complete public profile.
+     * @param {string} status Localized pending/failure key.
+     */
+    function drawProfileMatch(match:PlayerAppearance|null,status='profile.lookup'):void{
+        profileMatch=match;savePlayer.disabled=!match;profileCard.dataset.state=match?'ready':status;
+        profileFace.hidden=!match;clearText(profileName);
+        if(match){if(pixels)pixels.text(profileName,match.profile.name,2);else profileName.textContent=match.profile.name;const c=profileFace.getContext('2d')!;c.clearRect(0,0,8,8);c.drawImage(match.skin,8,8,8,8,0,0,8,8);c.drawImage(match.skin,40,8,8,8,0,0,8,8);profileCard.dataset.uuid=match.profile.id;}
+        else {delete profileCard.dataset.uuid;setText(profileName,status);}
+        nativeScreens.forEach(view=>view.layout());
+    }
+    /** Debounce typed names and discard every stale response before it can become a selectable match. */
+    function searchProfile():void{
+        const ticket=++profileQuery,name=username.value;clearTimeout(profileTimer);clearText(usernameFeedback);
+        if(!/^[A-Za-z0-9_]{3,16}$/.test(name)){drawProfileMatch(null,'profile.invalid');return;}
+        drawProfileMatch(null);
+        profileTimer=window.setTimeout(()=>{void lookupAppearance(name).then(match=>{if(!disposed&&ticket===profileQuery&&username.value===name)drawProfileMatch(match);}).catch(error=>{if(!disposed&&ticket===profileQuery)drawProfileMatch(null,error instanceof Error&&error.message==='profile-not-found'?'profile.missing':'profile.unavailable');});},300);
+    }
+    /** Project only a committed username, guarding asynchronous completion across saves/reset/disposal.
+     * @param {string} name Saved player name.
+     * @param {string} generation Save generation.
+     */
+    function syncAppearance(name:string,generation:string):void{
+        const owner=generation+':'+name.toLowerCase();if(appearanceName===owner)return;appearanceName=owner;const ticket=++appearanceOwner;
+        currentAppearance=null;scene?.setAppearance(null);inventory?.playerPreview?.setAppearance(null);
+        /** Apply a complete appearance to every current rendering surface. @param {PlayerAppearance} value Validated pixels. */
+        const apply=(value:PlayerAppearance):void=>{if(disposed||ticket!==appearanceOwner)return;currentAppearance=value;scene?.setAppearance(value);inventory?.playerPreview?.setAppearance(value);if(inventory?.modal.open)inventory.draw();root.dataset.playerProfile=value.profile.name;delete root.dataset.profileError;};
+        const initial=name.toLowerCase()==='sireoh'?defaultAppearance():lookupAppearance(name);
+        void initial.then(apply).then(()=>{if(name.toLowerCase()==='sireoh')void lookupAppearance(name).then(apply).catch(()=>{});}).catch(()=>{if(!disposed&&ticket===appearanceOwner){root.dataset.profileError='unavailable';if(optionsPage==='player')setText(usernameFeedback,'profile.unavailable');}});
+    }
+    username.addEventListener('input',searchProfile);
+    playerSection.append(usernameLabel,username,profileCard,usernameFeedback,savePlayer,button('menu.cancel',()=>showOptions('options')));
     const weatherSection=document.createElement('section');weatherSection.className='weather-section';
     localWeather=new LocalWeather(value=>{if(scene?.sky){scene.sky.weatherOverride=value;scene.requestRender();}},key=>{weatherModeControl!.title=t('weather.privacy')+' '+t(key);if(['weather.locationDenied','weather.locationUnavailable','weather.fetchFailed'].includes(key))setText(preferenceFeedback,'error.'+key);});
     weatherTimeControl=button('weather.timeGame',()=>{const current=edits.view()?.sky??{time:'game' as const,weather:'game' as const};const time=current.time==='game'?'real':'game';edits.stage('sky',{...current,time});preferences('sky',{time});paintSettings();});
@@ -489,7 +525,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         warning.hidden=true;
         for (const element of [reset, confirmSection]) element.hidden = id !== 'options' || element === confirmSection && !confirmation;
         setText(dialogTitle, id === 'options' ? 'menu.options' : 'menu.' + id);
-        if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();}
+        if (id === 'player') {username.value = session.view.envelope?.state.settings.username ?? 'sireoh'; clearText(usernameFeedback); pixels?.updates.get(username)?.();searchProfile();}
         nativeScreens.forEach(view => view.layout());
         if(id==='language')languageSection.querySelector<HTMLInputElement>('.language-search')?.focus();
         updateGate();
@@ -508,6 +544,9 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         }
         document.addEventListener('keydown', e => {
             if (e.defaultPrevented || e.repeat || !startup?.ready) return;
+            if(e.code==='F2'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){
+                e.preventDefault();if(scene&&!scene.captureFrame){scene.captureFrame=canvas=>{try{const image=captureGame(root,canvas);void downloadScreenshot(image).catch(()=>feedback('error.screenshot'));}catch{feedback('error.screenshot');}};scene.requestRender();}return;
+            }
             if (e.code === 'Escape') {
                 if (performance.now() - lastPointerEscape < 150) {e.preventDefault(); return;}
                 e.preventDefault(); e.stopImmediatePropagation();
@@ -686,7 +725,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             window.addEventListener('keydown',e=>{if(e.isTrusted&&scene?.input&&['KeyW','KeyA','KeyS','KeyD','Space'].includes(e.code))worldAudio?.activate();},{signal:appAbort.signal});
-            scene!.enableHands(art);
+            scene!.enableHands(art,rules);
+            if((session.view.envelope?.state.settings.username??'sireoh').toLowerCase()==='sireoh'&&!currentAppearance){const owner=appearanceOwner,initial=await defaultAppearance();if(owner===appearanceOwner&&!currentAppearance)currentAppearance=initial;}
+            if(disposed)return;
+            if(currentAppearance){scene!.setAppearance(currentAppearance);inventory.playerPreview?.setAppearance(currentAppearance);}
             worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), (id, options) => void worldAudio?.play(id, options));
             updateGate();
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
@@ -736,7 +778,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         confirmSection.hidden = true;
         clearText(preferenceFeedback);
         if (event.persisted) return;
-        disposed = true;
+        disposed = true;clearTimeout(profileTimer);profileQuery++;appearanceOwner++;
         appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); homeButtonObserver?.disconnect(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();

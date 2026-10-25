@@ -272,5 +272,10 @@
   "advancements.oddCake.title": "Something... seems off?",
   "advancements.oddCake.description": "Accidentally messed up the cake.",
   "chat.oddCakeCrafted": "hmmm, are you sure? (ﾉ∀)`",
-  "chat.oddCakeTable": "Come on (｡•ˇ_ˇ•｡)"
+  "chat.oddCakeTable": "Come on (｡•ˇ_ˇ•｡)",
+  "profile.lookup": "Looking up player…",
+  "profile.invalid": "Enter a Java username (3–16 characters).",
+  "profile.missing": "No matching Java player.",
+  "profile.unavailable": "Player lookup unavailable. Try again.",
+  "error.screenshot": "Could not download the screenshot. Please try again."
 }

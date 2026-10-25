@@ -23,6 +23,17 @@ import type {CatalogueArt} from './icons.ts';
 
 /** One preview owns bounded material/texture caches; temporary model instances own only their geometry. */
 export class PlayerItems {
+    /** Profile atlases are private to this renderer and never overwrite audited vanilla resources. */
+    profileImages = new Map<string, HTMLCanvasElement>();
+    /** Replace one dynamic atlas and release its previous GPU allocation.
+     * @param {string} kind Skin or cape.
+     * @param {HTMLCanvasElement|undefined} image Validated pixels, or no current texture.
+     */
+    setProfileTexture(kind:string,image?:HTMLCanvasElement):void{
+        const id='profile:'+kind,key=id+'null';
+        this.materials.get(key)?.dispose();this.materials.delete(key);this.textures.get(key)?.dispose();this.textures.delete(key);
+        if(image)this.profileImages.set(id,image);else this.profileImages.delete(id);
+    }
     animations = new Map<string, {
         raw: HTMLCanvasElement;
         frames: AnimationFrame[];
@@ -46,7 +57,7 @@ export class PlayerItems {
     material(id: string, tint?: any): MeshLambertMaterial {
         const key = id + JSON.stringify(tint ?? null);
         if (this.materials.has(key)) return this.materials.get(key)!;
-        const raw = this.art.images.get('assets/minecraft/textures/' + id.split(':').at(-1) + '.png');
+        const raw = this.profileImages.get(id)??this.art.images.get('assets/minecraft/textures/' + id.split(':').at(-1) + '.png');
         if (!raw) throw Error('missing-player-texture:' + id);
         const canvas = document.createElement('canvas');
         canvas.width = raw.width;

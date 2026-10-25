@@ -272,5 +272,10 @@
   "advancements.oddCake.title": "好像...不太对劲？",
   "advancements.oddCake.description": "不小心把蛋糕搞砸了。",
   "chat.oddCakeCrafted": "hmmm,你确定吗 (ﾉ∀)`",
-  "chat.oddCakeTable": "拜托 (｡•ˇ_ˇ•｡)"
+  "chat.oddCakeTable": "拜托 (｡•ˇ_ˇ•｡)",
+  "profile.lookup": "正在查找玩家…",
+  "profile.invalid": "请输入 3–16 位 Java 玩家名。",
+  "profile.missing": "未找到匹配的 Java 玩家。",
+  "profile.unavailable": "暂时无法查询玩家，请重试。",
+  "error.screenshot": "无法下载截图，请重试。"
 }

@@ -2,12 +2,18 @@
 import {Scene,Group,PerspectiveCamera,AmbientLight,DirectionalLight,Matrix4,Vector2} from 'three';
 import type {WebGLRenderer} from 'three';
 import {PlayerItems} from '../ui/player-items.ts';
-import {PLAYER_PARTS,playerCube} from '../ui/player-model.ts';
+import {playerParts,playerCube} from '../ui/player-model.ts';
+import type {PlayerAppearance} from '../ui/player-profile.ts';
 import type {CatalogueArt} from '../ui/icons.ts';
 import {attackCharge,attackProfile} from '../domain/attack.ts';
 
 /** Own native hand geometry and transient animation; no animation state is persisted. */
 export class FirstPersonHand {
+    appearance:PlayerAppearance|null=null;
+    /** Synchronize native model width and hand pixels with the committed player identity.
+     * @param {PlayerAppearance|null} appearance Validated profile or fallback.
+     */
+    setAppearance(appearance:PlayerAppearance|null):void{if(this.appearance===appearance)return;this.appearance=appearance;this.items.setProfileTexture('skin',appearance?.skin);this.replace();}
     scene=new Scene();camera=new PerspectiveCamera(70,1,.01,10);root=new Group();items:PlayerItems;
     item:string|null=null;pending:string|null=null;model:Group|null=null;height=1;clock=0;attackAt=-100;swapAt=-100;swingAt=-100;swingDuration=6;stab=false;
     /** Construct an arm from the same original Steve atlas as the inventory preview.
@@ -18,7 +24,7 @@ export class FirstPersonHand {
     replace():void{
         if(this.model)this.items.release(this.model);this.item=this.pending;
         if(this.item)this.model=this.items.held(this.item,false,true);
-        else {const p=PLAYER_PARTS.find(p=>p.name==='rightArm')!,g=new Group();g.position.set(...p.pivot.map(n=>n/16) as [number,number,number]);g.rotation.z=.1;g.add(this.items.mesh(playerCube(p.box,'minecraft:entity/player/wide/steve')),this.items.mesh(playerCube(p.overlay,'minecraft:entity/player/wide/steve',64,p.inflate)));this.model=g;}
+        else {const p=playerParts(this.appearance?.profile.slim).find(p=>p.name==='rightArm')!,texture=this.appearance?'profile:skin':'minecraft:entity/player/wide/steve',g=new Group();g.position.set(...p.pivot.map(n=>n/16) as [number,number,number]);g.rotation.z=.1;g.add(this.items.mesh(playerCube(p.box,texture)),this.items.mesh(playerCube(p.overlay,texture,64,p.inflate)));this.model=g;}
         this.root.add(this.model);
     }
     /** Select a committed carrier without treating count-only changes as a new equipped item.
