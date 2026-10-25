@@ -96,7 +96,7 @@ export class SaveSession {
         });
     }
 
-    /** Re-read under the coordinator; initialize missing storage and atomically persist the additive advancement synchronization without replaying events.
+    /** Re-read under the coordinator; initialize storage and atomically persist additive advancement and recipe synchronization without replaying events.
      * @return {Promise<void>} Snapshot refresh completion.
      */
     async refresh(): Promise<void> {
@@ -117,7 +117,7 @@ export class SaveSession {
             } else {
                 const decoded=await decode(raw);
                 value={envelope:decoded.envelope,migrated:decoded.migrated};
-                if(decoded.advancementMigration&&this.locks){
+                if((decoded.advancementMigration||decoded.recipeMigration)&&this.locks){
                     const envelope=await seal(decoded.envelope.state,decoded.envelope.generation,decoded.envelope.revision+1);
                     if(serial!==this.serial||this.disposed||this.suspended)return;
                     this.storage.setItem(SAVE_KEY,JSON.stringify(envelope));

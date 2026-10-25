@@ -68,7 +68,7 @@ function criterionMet(criterion: any, unlocked: Set<string>, known: Set<string>)
     return c.items.every((p: any) => alternatives(p.items, source.tags).some(id => unlocked.has(id)));
 }
 
-/** Derive monotonic native discovery from permanent facts and successfully acquired recipe provenance.
+/** Derive monotonic discovery; the authored cake shares the native cake's egg-based discovery.
  * @param {RecipeBook} book Mutable transaction-local discovery state.
  * @param {string[]} unlocked Permanent acquisitions.
  * @param {string[]} acquiredRecipes Successful actual recipe IDs.
@@ -82,12 +82,22 @@ export function discover(book: RecipeBook, unlocked: string[], acquiredRecipes: 
     for (let pass = 0; pass <= eligible.size; pass++) {
         const size = known.size;
         for (const a of Object.values(source.advances) as any[]) if (a.requirements.every((group: string[]) => group.some(key => criterionMet(a.criteria[key], items, known)))) for (const id of a.rewards.recipes) if (eligible.has(id)) known.add(id);
+        if(known.has('minecraft:cake'))known.add(ODD_RECIPE.id);
         if (known.size === size) break;
     }
     const added = [...known].filter(id => !before.has(id));
     book.data.known = [...known];
     if (!silent) book.data.unseen.push(...added);
     return added;
+}
+
+/** Silently add the companion recipe to an existing cake recipe book without granting items or criteria.
+ * @param {RecipeBook} book Valid saved recipe discovery.
+ * @return {boolean} Whether the upgrade requires a locked save.
+ */
+export function syncOddCakeRecipe(book:RecipeBook):boolean{
+    if(!book.data.known.includes('minecraft:cake')||book.data.known.includes(ODD_RECIPE.id))return false;
+    book.data.known.push(ODD_RECIPE.id);return true;
 }
 
 /** Filter only the matching native processing context and input dimensions.

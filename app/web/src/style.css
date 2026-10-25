@@ -14,6 +14,8 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 .home>header .mc-button,.home .copy>.mc-button{--button-scale:var(--home-gui-scale,2);height:calc(20px * var(--button-scale));min-height:0;min-width:0;padding:0}
 .home>header .mc-button{width:calc(100px * var(--button-scale))}.home .copy>.invite{width:min(calc(200px * var(--button-scale)),100%)}
 .home>header .mc-button>canvas:not(.button-sprite),.home .copy>.mc-button>canvas:not(.button-sprite){position:absolute;left:0;top:calc(6px * var(--button-scale));max-width:none;pointer-events:none}
+/* Keep homepage layout measurable while only the completed native interface can be displayed. */
+.home:not([data-home-ui=ready])>header,.home:not([data-home-ui=ready]) .copy{visibility:hidden}
 .game-layout .copy{width:min(520px,calc(100% - 48px));margin:20px 24px 0;gap:12px}
 
 #retry-save{margin:0 32px 20px;max-width:420px}

@@ -1,6 +1,19 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "jerrys_farm:block/upside_down_cake"
+    "model": "minecraft:item/cake",
+    "transformation": {
+      "translation": [
+        1,
+        1,
+        0
+      ],
+      "left_rotation": [
+        0,
+        0,
+        1,
+        0
+      ]
+    }
   }
 }

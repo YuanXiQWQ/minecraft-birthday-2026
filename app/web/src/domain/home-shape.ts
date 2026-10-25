@@ -1,4 +1,4 @@
-/** Walkable home architecture and furnishings share saved-object clearance with domain occupancy. */
+/** Walkable home architecture and furnishings share saved-object occupancy with the domain. */
 import type {Cell, Progress} from './types.ts';
 import type {Bounds} from './player-motion.ts';
 
@@ -44,7 +44,7 @@ export function homeFloor(x:number,z:number):string {
     return 'oak_planks';
 }
 
-/** Assemble the complete room, glass windows and furniture, preserving space around saved construction.
+/** Assemble the complete room, glass windows and furniture without overlapping saved construction.
  * @param {Cell[]} occupied Existing player devices and blocks.
  * @return {HomeBlock[]} Nonoverlapping fixed cells with original native axis states.
  */
@@ -63,13 +63,13 @@ export function homeStructure(occupied:Cell[]=[]):HomeBlock[] {
         blocks.push({block,cell:[x,y,z],state});
     }
     const cells=new Map(blocks.map(b=>[b.cell.join(','),b]));
-    /** Place one new architectural cell without covering a saved object or its immediate working space.
+    /** Keep fixed architecture unless a saved object actually occupies the same cell.
      * @param {string} block Native block name.
      * @param {Cell} cell Logical position.
      * @param {string} state Native model state.
      */
     const put=(block:string,cell:Cell,state=''):void=>{
-        if(occupied.some(c=>Math.abs(c[0]-cell[0])<=1&&Math.abs(c[2]-cell[2])<=1&&cell[1]>=c[1]-1&&cell[1]<=c[1]+2))return;
+        if(occupied.some(c=>c.every((n,i)=>n===cell[i])))return;
         cells.set(cell.join(','),{block,cell,state});
     };
     for(let x=-11;x<=11;x++)for(let y=0;y<=6;y++){
@@ -88,7 +88,6 @@ export function homeStructure(occupied:Cell[]=[]):HomeBlock[] {
     for(let z=4;z<=7;z++){
         put('oak_stairs',[-8,0,z],'facing=west,half=bottom,shape=straight');
         put('spruce_planks',[-9,0,z]);put('spruce_planks',[-9,1,z]);
-        if(z===4)put('spruce_planks',[-11,2,z]);
     }
     for(const z of [5,6])put('oak_slab',[-6,0,z],'type=top');
     for(let x=7;x<=9;x++)for(const z of [4,5]){

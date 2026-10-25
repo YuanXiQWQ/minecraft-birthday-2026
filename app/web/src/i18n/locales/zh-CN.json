@@ -1,5 +1,5 @@
 {
-  "loading.terrain": "正在加载地形…（其实是固定地形 :>）",
+  "loading.terrain": "正在加载地形…（骗你的，其实是固定地形 :>）",
   "html.homeTitle": "Jerry 的农场",
   "html.gameTitle": "Jerry 的农场",
   "html.noScript": "请启用 JavaScript，来这个小世界逛逛。",
@@ -131,7 +131,6 @@
   "game.invalidPosition": "请选择建造区域中空闲且有支撑的位置。",
   "game.actionFailed": "无法保存此次操作，请检查手持物品后重试。",
   "inventory.player": "玩家物品栏",
-  "game.cakePlaced": "你的生日蛋糕已经摆上桌啦！",
   "game.tableNeedsCake": "请选中你的生日蛋糕，再对桌子使用。",
   "celebration.label": "生日庆典",
   "celebration.replay": "重播生日庆典",
@@ -277,5 +276,7 @@
   "profile.invalid": "请输入 3–16 位 Java 玩家名。",
   "profile.missing": "未找到匹配的 Java 玩家。",
   "profile.unavailable": "暂时无法查询玩家，请重试。",
-  "error.screenshot": "无法下载截图，请重试。"
+  "error.screenshot": "无法下载截图，请重试。",
+  "chat.cakeTableOnly": "别着急，我们把它放到桌子上吧！",
+  "screenshot.success": "已将截图保存为%s"
 }

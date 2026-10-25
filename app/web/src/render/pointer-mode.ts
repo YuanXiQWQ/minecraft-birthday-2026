@@ -17,7 +17,7 @@ export class PointerMode {
     /** Escape must be released before a UI return can request native ownership. */
     escapeDown = false;
     abort = new AbortController();
-    /** Bind actual browser notifications to one world input canvas.
+    /** Bind browser ownership and track Escape at the window before screen handlers consume its document event.
      * @param {HTMLCanvasElement} canvas Lock owner.
      * @param {Function} change Cancel gestures and refresh selection.
      * @param {Function} escaped Open exactly one menu on browser Escape.
@@ -41,8 +41,8 @@ export class PointerMode {
         }, {signal: this.abort.signal});
         window.addEventListener('blur', () => this.suspend(true), {signal: this.abort.signal});
         window.addEventListener('pagehide', () => this.suspend(true), {signal: this.abort.signal});
-        document.addEventListener('keydown', e => {if (e.code === 'Escape') this.escapeDown = true;}, {capture: true, signal: this.abort.signal});
-        document.addEventListener('keyup', e => {if (e.code === 'Escape') {this.escapeDown = false; this.resumeIfReady();}}, {capture: true, signal: this.abort.signal});
+        window.addEventListener('keydown', e => {if (e.code === 'Escape') this.escapeDown = true;}, {capture: true, signal: this.abort.signal});
+        window.addEventListener('keyup', e => {if (e.code === 'Escape') {this.escapeDown = false; this.resumeIfReady();}}, {capture: true, signal: this.abort.signal});
         document.addEventListener('visibilitychange', () => {if (document.hidden) this.suspend(true);}, {signal: this.abort.signal});
         this.publish();
     }

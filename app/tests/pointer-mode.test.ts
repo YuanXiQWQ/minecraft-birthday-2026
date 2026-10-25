@@ -83,10 +83,10 @@ for(const reopen of [false,true])test(`UI return waits for asynchronous native u
 test('closing a UI with Escape requests hidden ownership after keyup, not while Escape remains held',async()=>{
     const f=fixture();try{
         f.mode.pause(true);
-        f.d.dispatchEvent(Object.assign(new Event('keydown'),{code:'Escape'}));
+        f.w.dispatchEvent(Object.assign(new Event('keydown'),{code:'Escape'}));
         f.mode.pause(false);assert.equal(f.calls(),0);assert.equal(f.mode.resumeQueued,true);
-        f.d.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
+        f.w.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
         f.grant();await new Promise(resolve=>setImmediate(resolve));assert.equal(f.mode.actual,true);
-        f.d.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
+        f.w.dispatchEvent(Object.assign(new Event('keyup'),{code:'Escape'}));assert.equal(f.calls(),1);
     }finally{f.close();}
 });

@@ -51,9 +51,35 @@ test('home preserves saved devices and blocks inside new furnishings, windows an
     for(const saved of [...p.scenes.home.stations,...p.scenes.home.blocks]){
         assert.equal(cells.has(saved.cell.join(',')),false);
         assert.equal(blockAt(p,saved.cell)?.id,saved.id);
-        assert.equal(cells.has([saved.cell[0],saved.cell[1]+1,saved.cell[2]].join(',')),false);
     }
     assert.deepEqual(p,before);
+});
+
+test('placing beside either home window keeps every adjacent glass cell and its domain occupancy',()=>{
+    const p=initialState().progress;p.scene='home';
+    const windows=homeStructure().filter(b=>b.block==='glass');
+    p.scenes.home.blocks=[
+        ...Array.from({length:7},(_,i)=>({id:'sill-'+i,block:'oak_planks',cell:[i-3,1,-8] as Cell,state:{}})),
+        {id:'rear-neighbor',block:'oak_planks',cell:[3,2,9],state:{}}
+    ];
+    p.scenes.home.stations=[{id:'window-bench',kind:'crafting_table',cell:[-3,1,9],facing:'south',contents:{version:1,data:{grid:Array(9).fill(null)}}}];
+    const before=structuredClone(p);
+    for(const {cell} of windows){assert.equal(currentHome(p).get(cell.join(','))?.block,'glass');assert.equal(blockAt(p,cell)?.block,'glass');assert.ok(sourceOccupied(p,cell));}
+    assert.deepEqual(p,before);
+    p.scenes.home.blocks.push({id:'legacy-window-block',block:'oak_planks',cell:[0,2,-9],state:{}});
+    assert.equal(currentHome(p).has('0,2,-9'),false);
+    assert.equal(blockAt(p,[0,2,-9])?.id,'legacy-window-block');
+    for(const {cell} of windows.filter(b=>b.cell.join(',')!=='0,2,-9'))assert.equal(currentHome(p).get(cell.join(','))?.block,'glass');
+    p.scenes.home.blocks=[];p.scenes.home.stations=[];
+    for(const {cell} of windows)assert.equal(currentHome(p).get(cell.join(','))?.block,'glass');
+});
+
+test('neighboring construction never removes rear walls, beams or furniture',()=>{
+    const baseline=homeStructure();
+    for(const neighbor of [[2,0,9],[10,1,7],[-7,0,5],[0,4,0],[3,6,-2]] as Cell[]){
+        const actual=new Map(homeStructure([neighbor]).map(b=>[b.cell.join(','),b]));
+        for(const b of baseline)if(b.cell.join(',')!==neighbor.join(','))assert.deepEqual(actual.get(b.cell.join(',')),b);
+    }
 });
 
 test('all home native states compile through the ordinary manifest including glass sprite descriptors',()=>{

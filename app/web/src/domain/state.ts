@@ -636,7 +636,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 ensure(held?.id === 'minecraft:cake' && held.count > 0, 'cake-not-held');
                 p.player.data.hotbar[p.player.data.selected] = held.count > 1 ? {...held, count: held.count - 1} : null;
                 p.cakePlacement = {scene: 'home', table: 'birthday-table'};
-                if(firstPlacement)events.push({type: 'cake-placed'});
+                events.push({type:firstPlacement?'cake-placed':'cake-replaced'});
             }
             break;
         default:

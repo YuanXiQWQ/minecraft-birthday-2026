@@ -7,12 +7,13 @@ import {wrap} from './pixels.ts';
 import {nativeField} from './native-field.ts';
 import {alignRaster,rasterSize} from './raster.ts';
 import type {TextRun} from './item-style.ts';
+import {nativeChatRuns} from './advancement-chat.ts';
 export type ChatKind = 'system' | 'player' | 'author';
 export interface ChatMessage {runs: TextRun[]; time: number; kind: ChatKind; identity?: string}
 /** A wrapped line retains its message and component offset for native styling and hover text. */
 interface ChatRow {text:string;message:ChatMessage;start:number;indent:boolean}
 /** A physical-resolution text row retains native glyph hit areas independently of its scroll position. */
-interface ChatRaster {canvas:HTMLCanvasElement;density:number;width:number;font:BitmapFont;hits:{left:number;right:number;hover:TextRun['hover']}[]}
+interface ChatRaster {canvas:HTMLCanvasElement;density:number;width:number;font:BitmapFont;hits:{left:number;right:number;hover:TextRun['hover'];screenshot?:string}[]}
 /** Split native chat components without collapsing spaces or losing source offsets; soft wraps receive one display-only space.
  * @param {string} raw Joined component text.
  * @param {number} width Native wrapping width before continuation indentation.
@@ -107,6 +108,7 @@ export class GameChat {
     timerState = '';
     tagHover: [number, number] | null = null;
     abort = new AbortController();
+    screenshotUrls = new Set<string>();
     /** Bind the native ChatScreen editor and ChatComponent projection to one viewport.
      * @param {HTMLElement} viewport Game view.
      * @param {PixelUI} pixels Native font owner.
@@ -126,6 +128,11 @@ export class GameChat {
         this.root.addEventListener('wheel',e=>{if(this.open){e.preventDefault();e.stopPropagation();if(e.deltaY)this.scroll(-Math.sign(e.deltaY)*(e.shiftKey?1:7));}},{signal:this.abort.signal,passive:false});
         this.root.addEventListener('pointermove',e=>{const r=viewport.getBoundingClientRect();this.tagHover=[e.clientX-r.left,e.clientY-r.top];this.requestPaint();},{signal:this.abort.signal});
         this.root.addEventListener('pointerleave',()=>{this.tagHover=null;this.requestPaint();},{signal:this.abort.signal});
+        this.root.addEventListener('click',event=>{
+            if(event.button!==0||!this.open||(event.target as Element).closest('a,input'))return;
+            const rect=this.viewport.getBoundingClientRect(),url=this.screenshotAt(event.clientX-rect.left,event.clientY-rect.top);
+            if(url){event.preventDefault();window.open(url,'_blank','noopener,noreferrer');}
+        },{signal:this.abort.signal});
         for(const type of ['pointerdown','pointerup','contextmenu'])this.root.addEventListener(type,e=>{e.stopPropagation();if(type==='contextmenu'&&e.target!==this.input)e.preventDefault();},{signal:this.abort.signal});
         window.addEventListener('resize',()=>this.paint(),{signal:this.abort.signal});
         this.timer=window.setInterval(()=>this.tickPaint(),50);
@@ -188,7 +195,7 @@ export class GameChat {
         for(const ch of row.text){
             let at=0,style:TextRun={text:''};for(const run of row.message.runs){if(consumed<at+run.text.length){style=run;break;}at+=run.text.length;}
             const advance=font.width(ch);chatGlyph(c,font,ch,x,1,style);
-            if(style.hover)hits.push({left:x,right:x+advance,hover:style.hover});
+            if(style.hover||style.screenshot)hits.push({left:x,right:x+advance,hover:style.hover,...(style.screenshot?{screenshot:style.screenshot}:{})});
             x+=advance;consumed+=ch.length;
         }
         const raster={canvas,density,width,font,hits};this.rowRasters.set(row,raster);return raster;
@@ -216,7 +223,7 @@ export class GameChat {
         if(this.rowRasters){const retained=new Set(rows);for(const row of this.rowRasters.keys())if(!retained.has(row))this.rowRasters.delete(row);}
         this.rowLayout={width,messages:[...this.messages],rows};return rows;
     }
-    /** Append an event with explicit source identity, freezing the username at send time.
+    /** Append an event with explicit source identity and release screenshot previews when their bounded history expires.
      * @param {TextRun[]} runs Safe text segments.
      * @param {ChatKind} kind Actual local message source.
      * @param {string} identity Snapshot of an actual sender.
@@ -226,9 +233,32 @@ export class GameChat {
         const body=sender?[{text:'<'+sender+'> '},...runs]:runs;
         const m: ChatMessage={runs:structuredClone(body),time:performance.now(),kind,identity:sender};
         if(this.open&&this.offset>0){const s=nativeScale(this.viewport);this.offset+=this.messageRows(m,Math.min(320,Math.ceil(this.viewport.clientWidth/s)-8)).length;this.newWhileScrolled=true;}
-        this.messages.push(m);if(this.messages.length>100)this.messages.shift();
+        this.messages.push(m);if(this.messages.length>100)for(const run of this.messages.shift()!.runs)if(run.screenshot&&this.screenshotUrls?.delete(run.screenshot))URL.revokeObjectURL(run.screenshot);
         const line=document.createElement('p');line.textContent=body.map(r=>r.text).join('');this.accessible.append(line);if(this.accessible.children.length>100)this.accessible.firstElementChild?.remove();
+        if(body.some(run=>run.screenshot)){
+            line.textContent='';for(const run of body){const part=document.createElement(run.screenshot?'a':'span');part.textContent=run.text;if(run.screenshot){const link=part as HTMLAnchorElement;link.href=run.screenshot;link.target='_blank';link.rel='noopener noreferrer';}line.append(part);}
+        }
         this.root.dataset.messages=JSON.stringify(this.messages);this.paint();
+    }
+    /** Publish the native screenshot success component after PNG encoding and download dispatch succeed.
+     * @param {{name:string;url:string}} screenshot Download receipt with an owned PNG preview URL.
+     */
+    screenshotSaved(screenshot:{name:string;url:string}):void {
+        this.screenshotUrls.add(screenshot.url);
+        this.append(nativeChatRuns(this.text('screenshot.success'),[[{text:screenshot.name,underline:true,screenshot:screenshot.url}]]));
+    }
+    /** Resolve an owned screenshot link using the same wrapped, scrolled rows as the visible chat.
+     * @param {number} x Viewport-relative CSS horizontal position.
+     * @param {number} y Viewport-relative CSS vertical position.
+     * @return {string|null} Live local screenshot URL, available only while chat is open.
+     */
+    screenshotAt(x:number,y:number):string|null {
+        if(!this.open)return null;
+        const scale=nativeScale(this.viewport),width=Math.min(320,Math.ceil(this.viewport.clientWidth/scale)-8),base=Math.ceil(this.viewport.clientHeight/scale)-40;
+        const rows=this.layoutRows(width),index=Math.ceil((base-y/scale)/9)-1,row=rows[rows.length-this.offset-1-index];
+        if(index<0||index>=20||!row)return null;
+        const url=this.rasterRow(row,width,scale*Math.min(globalThis.devicePixelRatio??1,4)).hits.find(hit=>x/scale>=hit.left&&x/scale<hit.right)?.screenshot;
+        return url&&this.screenshotUrls.has(url)?url:null;
     }
     /** Begin an unbordered ChatScreen edit lifetime without blurring the world. @param {string} initial Native initial input, including slash-command entry. */
     show(initial=''): void {this.open=true;this.completion=null;this.input.hidden=false;this.input.value=initial;this.historyDraft='';this.historyIndex=this.history.length;this.gate(true);this.input.focus();this.paint();}
@@ -309,9 +339,10 @@ export class GameChat {
             lines.forEach((line,i)=>this.pixels.font.draw(c,line.text,tx+12,ty+12+i*12,line.color,true));
         }
         this.root.dataset.hover=JSON.stringify(hover??null);
+        this.root.style.cursor=this.tagHover&&this.screenshotAt(...this.tagHover)?'pointer':'';
         this.root.dataset.open=String(this.open);this.root.dataset.layout=JSON.stringify({scale,width,base,height,input:[4,h-12,w-4,12],lines:bounded.map(r=>r.text),offset:this.offset});
         this.onPaint?.();
     }
-    /** Cancel pending paint, the update timer and all owned listeners. */
-    dispose(): void {this.lifetime++;this.command=null;clearInterval(this.timer);cancelAnimationFrame(this.paintFrame);this.paintFrame=0;this.rowLayout=null;this.rowRasters.clear();this.wrapping=new WeakMap();this.abort.abort();this.root.remove();}
+    /** Cancel pending work and release listeners, cached text and owned screenshot previews. */
+    dispose(): void {this.lifetime++;this.command=null;clearInterval(this.timer);cancelAnimationFrame(this.paintFrame);this.paintFrame=0;this.rowLayout=null;this.rowRasters.clear();this.wrapping=new WeakMap();for(const url of this.screenshotUrls)URL.revokeObjectURL(url);this.screenshotUrls.clear();this.abort.abort();this.root.remove();}
 }

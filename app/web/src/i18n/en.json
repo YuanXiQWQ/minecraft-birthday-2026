@@ -1,5 +1,5 @@
 {
-  "loading.terrain": "Loading terrain... (Actually, it's fixed terrain :>)",
+  "loading.terrain": "Loading terrain... (Just kidding, it's actually fixed terrain :>)",
   "html.homeTitle": "Jerry's Farm",
   "html.gameTitle": "Jerry's Farm",
   "html.noScript": "Please enable JavaScript to visit this little world.",
@@ -131,7 +131,6 @@
   "game.invalidPosition": "Choose a free, supported cell in the building area.",
   "game.actionFailed": "That action could not be saved. Check your held item and try again.",
   "inventory.player": "Player inventory",
-  "game.cakePlaced": "Your birthday cake is on the table!",
   "game.tableNeedsCake": "Select your birthday cake, then use the table.",
   "celebration.label": "Birthday celebration",
   "celebration.replay": "Replay birthday celebration",
@@ -277,5 +276,7 @@
   "profile.invalid": "Enter a Java username (3–16 characters).",
   "profile.missing": "No matching Java player.",
   "profile.unavailable": "Player lookup unavailable. Try again.",
-  "error.screenshot": "Could not download the screenshot. Please try again."
+  "error.screenshot": "Could not download the screenshot. Please try again.",
+  "chat.cakeTableOnly": "Not so fast, let's put it on the table!",
+  "screenshot.success": "Saved screenshot as %s"
 }

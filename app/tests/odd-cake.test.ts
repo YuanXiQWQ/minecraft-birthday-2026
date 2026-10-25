@@ -12,7 +12,11 @@ import {blockSounds} from '../web/src/domain/block-sounds.ts';
 import {nativeShapes} from '../web/src/domain/block-shapes.ts';
 import {findCrafting} from '../web/src/rules/matcher.ts';
 import {compileModel,resolveModel} from '../web/src/render/model-format.ts';
-import {iconGeometry,iconModel} from '../web/src/ui/icon-model.ts';
+import {iconGeometry,iconModel,iconParts} from '../web/src/ui/icon-model.ts';
+import {definitionTransform} from '../web/src/ui/player-items.ts';
+import {Vector3} from 'three';
+import {initialBook,discover,bookApplicable} from '../web/src/domain/recipe-book.ts';
+import {ODD_RECIPE} from '../web/src/domain/easter-egg.ts';
 import {assetPath} from '../web/src/render/asset-path.ts';
 import {resources} from '../tools/resources.ts';
 import {seal,decode} from '../web/src/persistence/codec.ts';
@@ -29,6 +33,33 @@ import type {State,Command} from '../web/src/domain/types.ts';
 const originals=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8')) as Rules,rules=withEasterEgg(originals);
 /** Complete, finite ingredients in the authored orientation. */
 const grid=['wheat','wheat','wheat','sugar','egg','sugar','milk_bucket','milk_bucket','milk_bucket'].map(id=>({id:'minecraft:'+id,count:1}));
+
+test('cake item and advancement artwork use the inverted original generated sprite in every item context',()=>{
+    const files=resources(),docs=new Map([...files].filter(([p])=>p.endsWith('.json')).map(([p,b])=>[p,JSON.parse(Buffer.from(b).toString())]));
+    const definition=docs.get(assetPath('items',ODD_CAKE));
+    for(const context of ['gui','firstperson_righthand','thirdperson_righthand']){
+        const [part]=iconParts(definition.model,'10-24',[],context),model=iconModel(part.model,id=>docs.get(assetPath('models',id)));
+        assert.equal(part.model,'minecraft:item/cake');assert.equal(model.builtin,'minecraft:builtin/generated');assert.equal(model.textures.layer0,'minecraft:item/cake');
+        const matrix=definitionTransform(part.transforms);
+        assert.deepEqual(new Vector3(-.5,.5,0).applyMatrix4(matrix).toArray(),[.5,-.5,0]);
+        assert.equal(ADVANCEMENTS[ODD_ADVANCEMENT].display.icon.id,ODD_CAKE);
+    }
+});
+
+test('egg discovery exposes the companion crafting recipe in Misc before crafting and upgrades saved cake books silently',async()=>{
+    const book=initialBook();assert.ok(!book.data.known.includes(ODD_CAKE));
+    const added=discover(book,['minecraft:egg']);assert.ok(added.includes('minecraft:cake'));assert.ok(added.includes(ODD_CAKE));
+    assert.equal(ODD_RECIPE.category,'misc');assert.ok(bookApplicable(ODD_RECIPE,'crafting',3));assert.equal(bookApplicable(ODD_RECIPE,'crafting',2),false);
+    assert.deepEqual(discover(book,['minecraft:egg']),[]);
+    const old=initialState();old.progress.recipeBook.data.known.push('minecraft:cake');
+    let raw=JSON.stringify(await seal(old,'old-cake-book',4)),writes=0;const events:any[]=[];
+    const session=new SaveSession({getItem:()=>raw,setItem:(_key,value)=>{raw=value;writes++;}},{exclusive:async work=>work()},WORLD_REGION);
+    session.eventListeners.add(es=>events.push(...es));await session.refresh();
+    const updated=session.view.envelope!.state;
+    assert.ok(updated.progress.recipeBook.data.known.includes(ODD_CAKE));assert.equal(updated.progress.recipeBook.data.unseen.includes(ODD_CAKE),false);
+    assert.deepEqual(updated.progress.player,old.progress.player);assert.deepEqual(updated.progress.advancements,old.progress.advancements);assert.equal(events.length,0);assert.equal(writes,1);
+    await session.refresh();assert.equal(writes,1);
+});
 /** Build a valid fixture with actual workbench inputs.
  * @return {State} Independent durable facts.
  */

@@ -3,7 +3,7 @@ import {FarmAnimal,itemMotion,pushAnimals} from '../domain/farm-life.ts';
 import type {Bounds,PlayerMotion} from '../domain/player-motion.ts';
 import type {SoundOptions} from './world-audio.ts';
 import {soils,cropStage} from '../domain/agriculture.ts';
-import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
+import {Box3, Sphere, Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
 import type {SceneId, Progress, Cell} from '../domain/types.ts';
 import {caveLayout, caveFixed} from '../domain/cave-shape.ts';
 import {WORLD_SCENES, caveExcavated, caveCleared} from '../domain/world-config.ts';
@@ -21,6 +21,8 @@ import {patchSoils} from './soil-world.ts';
 import type {Soil} from '../domain/soil-state.ts';
 import {homeFloor, homeStructure, homeGardenHeight, currentHome, type HomeBlock} from '../domain/home-shape.ts';
 import {nativeShapes} from '../domain/block-shapes.ts';
+import {glassCells,glassFaces} from './glass-faces.ts';
+import type {Face} from './model-format.ts';
 
 /** Build bounded authored geometry; scenery is never implicitly registered as a harvest source. */
 export class AuthoredWorld {
@@ -34,6 +36,7 @@ export class AuthoredWorld {
     staticVersion = 0;
     homeRoot: Group | null = null;
     homeCells: Map<string,HomeBlock> | null = null;
+    homeGlassSignature = '';
     farmRoot: Group | null = null;
     farmSignature = '';
     farmLights: Cell[] = [];
@@ -70,6 +73,10 @@ export class AuthoredWorld {
         root.updateMatrixWorld(true);
         root.traverse(source => {
             if (!(source instanceof Mesh)) return;
+            if(block==='glass'){
+                source.geometry.boundingBox=new Box3(new Vector3(0,0,0),new Vector3(1,1,1));
+                source.geometry.boundingSphere=new Sphere(new Vector3(.5,.5,.5),Math.sqrt(3)/2);
+            }
             const mesh = new InstancedMesh(source.geometry, source.material, cells.length);
             cells.forEach((c, i) => mesh.setMatrixAt(i, new Matrix4().makeTranslation(...c).multiply(source.matrixWorld)));
             mesh.userData.id = id;
@@ -190,11 +197,12 @@ export class AuthoredWorld {
 
     /** Rebuild effective home geometry with the same occupancy used by placement and saved-object clearance.
      * @param {HomeBlock[]} cells Effective room and furniture cells.
+     * @param {ReadonlySet<string>} glass All authored and player glass coordinates.
      */
-    homeInterior(cells:HomeBlock[]):void {
+    homeInterior(cells:HomeBlock[],glass:ReadonlySet<string>=new Set(cells.filter(b=>b.block==='glass').map(b=>b.cell.join(',')))):void {
         if(!this.homeRoot)return;
         this.clear(this.homeRoot);this.staticVersion++;
-        const groups = new Map<string, {block:string; state:string; cells:Cell[]}>();
+        const groups = new Map<string, {block:string; state:string; cells:Cell[]; faces?:Face[]}>();
         for (const {block,state,cell} of cells) {
             if(cell[2]>this.homeBack&&cell[1]<7)continue;
             if(block==='oak_stairs'){
@@ -203,11 +211,15 @@ export class AuthoredWorld {
                 Object.assign(object.userData,{id:'scenery',block,state:properties,cells:[cell],collisionShapes:nativeShapes(block,properties)});
                 this.homeRoot.add(object);continue;
             }
-            const key=block+state;
-            if(!groups.has(key))groups.set(key,{block,state,cells:[]});
+            const faces=block==='glass'?glassFaces(cell,glass):undefined,key=block+state+(faces?.join(',')??'');
+            if(!groups.has(key))groups.set(key,{block,state,cells:[],faces});
             groups.get(key)!.cells.push(cell);
         }
-        for(const group of groups.values())this.batch(group.block,group.cells,this.homeRoot,'scenery',group.state);
+        for(const group of groups.values()){
+            const source=group.faces?this.resources.samples.find(s=>s.block===group.block&&s.state.includes(group.state)):undefined;
+            const sample=source?{...source,compiled:exposedModel(source.compiled,group.faces!)}:undefined;
+            this.batch(group.block,group.cells,this.homeRoot,'scenery',group.state,sample);
+        }
     }
 
     /** Build the complete home and its distant garden while leaving the birthday table independent. */
@@ -288,8 +300,8 @@ export class AuthoredWorld {
     sync(p: Progress): void {
         if(p.scene!=='farm'){const key=JSON.stringify(soils(p));if(key!==this.soilSignature){if(patchSoils(this,this.staticRoot,p,this.renderedSoils))this.staticVersion++;this.soilSignature=key;this.renderedSoils=structuredClone(soils(p));}}
         if(p.scene==='home'){
-            const cells=currentHome(p);
-            if(cells!==this.homeCells){this.homeCells=cells;this.homeInterior([...cells.values()]);}
+            const cells=currentHome(p),glass=glassCells(p),signature=JSON.stringify([...glass]);
+            if(cells!==this.homeCells||signature!==this.homeGlassSignature){this.homeCells=cells;this.homeGlassSignature=signature;this.homeInterior([...cells.values()],glass);}
         }
         const id = p.scene, spec = WORLD_SCENES[id], removed = p.world.visits[id].removed, crops = p.scenes[id].crops,
             stations = p.scenes[id].stations,

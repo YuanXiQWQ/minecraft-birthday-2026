@@ -6,7 +6,7 @@ import type {Rules,Recipe,ItemRule} from '../rules/types.ts';
 /** Stable authored item, recipe and challenge identities. */
 export const ODD_CAKE='jerrys_farm:upside_down_cake', ODD_BLOCK='upside_down_cake', ODD_ADVANCEMENT='jerrys_farm:wrong_cake';
 /** A complete cake batch uses the vanilla ingredients with its outer rows exchanged. */
-export const ODD_RECIPE:Recipe={id:ODD_CAKE,type:'minecraft:crafting_shaped',category:'food',pattern:['WWW','SES','MMM'],key:{W:'minecraft:wheat',S:'minecraft:sugar',E:'minecraft:egg',M:'minecraft:milk_bucket'},result:{id:ODD_CAKE,count:1}};
+export const ODD_RECIPE:Recipe={id:ODD_CAKE,type:'minecraft:crafting_shaped',category:'misc',pattern:['WWW','SES','MMM'],key:{W:'minecraft:wheat',S:'minecraft:sugar',E:'minecraft:egg',M:'minecraft:milk_bucket'},result:{id:ODD_CAKE,count:1}};
 /** Cake-sized finite stack, independent of permanent catalogue eligibility. */
 export const ODD_ITEM:ItemRule={id:ODD_CAKE,maxStack:1,components:[],evidence:'authored upside-down cake'};
 /** Carrier and device adapters include the authored item without changing original exports. */

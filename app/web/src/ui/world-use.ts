@@ -53,8 +53,8 @@ export class WorldUse {
     above = false;
     abort = new AbortController();
 
-    /** Connect actual ray actions and a scoped rotation shortcut. @param {SceneView} scene True camera view. @param {GameInventory} inventory GUI/carrier authority. @param {SaveSession} session Shared transaction owner. @param {Function} notify Localized feedback consumer. @param {Function} sound Native interaction audio. */
-    constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string, options?: SoundOptions) => void) {
+    /** Connect actual ray actions and a scoped rotation shortcut. @param {SceneView} scene True camera view. @param {GameInventory} inventory GUI/carrier authority. @param {SaveSession} session Shared transaction owner. @param {Function} notify Localized feedback consumer. @param {Function} sound Native interaction audio. @param {Function} author Localized author guidance. */
+    constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string, options?: SoundOptions) => void, public author:(key:string)=>void=()=>{}) {
         scene.onPlayerTick=()=>this.walkInteractions();
         if(scene.motion)this.poseTimer=window.setInterval(()=>this.savePose(),500);
         this.scope = session.view.envelope?.generation + ':' + session.view.envelope?.state.progress.scene;
@@ -349,7 +349,7 @@ export class WorldUse {
                 scene: 'home',
                 table: 'birthday-table',
                 expected: layout(this.inventory.value)
-            }, 'game.cakePlaced'); else this.notify('game.tableNeedsCake');
+            }, null); else this.notify('game.tableNeedsCake');
             return;
         }
         const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
@@ -393,10 +393,11 @@ export class WorldUse {
         this.inventory.autoEquip();
     }
 
-    /** Place against a visible face with finite authored support, without consuming permanent eligibility. @param {Pick} hit Real face. */
+    /** Place finite blocks against valid faces; ordinary cakes retain their stack and request the birthday table. @param {Pick} hit Real face. */
     place(hit: Pick): void {
         const p = this.session.view.envelope?.state.progress, kind = this.heldKind(),block=this.heldBlock();
         if (!p || !block) return;
+        if(block==='cake'){this.author('chat.cakeTableOnly');return;}
         if(!kind){const material=blockSounds(block),context=this.blockHit(hit);try{placementBlocks(p,block,context,'preview');}catch{return;}void this.run({type:'place-block',scene:p.scene,item:block,hit:context,id:crypto.randomUUID(),expected:layout(this.inventory.value)},null,material.place,undefined,{volume:(material.volume+1)/2,pitch:material.pitch*.8}).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         this.facing=kind==='hopper'?(hit.normal[1]?'down':hit.normal[0]>0?'west':hit.normal[0]<0?'east':hit.normal[2]>0?'north':'south' as Facing):opposite(lookFacing(this.scene.camera.rotation.y)) as Facing;
         const candidate = placement(hit, this.session, kind, this.facing === 'down' && kind !== 'hopper' ? 'south' : this.facing);

@@ -1,6 +1,8 @@
 /** Original blockstate variants and multipart models project persisted player construction. */
 import {assetPath,blockStatePath} from './asset-path.ts';
 import {nativeShapes} from '../domain/block-shapes.ts';
+import {glassFaces} from './glass-faces.ts';
+import {exposedModel} from './plains-terrain.ts';
 import {Group,Box3,Vector3} from 'three';
 import {entityCube} from '../ui/icons.ts';
 import {resolveModel,compileModel} from './model-format.ts';
@@ -21,9 +23,10 @@ function matches(when:any,state:Record<string,string>):boolean{return !when||Obj
  * @param {PlacedBlock} block Persistent native state.
  * @param {Resources} pack Verified ordinary-build assets.
  * @param {VanillaModels} models Shared native material owner.
+ * @param {ReadonlySet<string>} glass Adjacent authored and player glass coordinates.
  * @return {Group} World block geometry.
  */
-export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModels):Group{
+export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModels,glass:ReadonlySet<string>=new Set()):Group{
     const doc=pack.documents.get(blockStatePath(block.block)),root=new Group(),shapes:Bounds[]=[];
     if(!doc)throw Error('world-model:'+block.block);
     let variants:Variant[]=[];
@@ -35,8 +38,9 @@ export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModel
     }
     for(const variant of variants){const source=resolveModel(variant.model,id=>{const m=pack.documents.get(assetPath('models',id));if(!m)throw Error('missing-placement-model:'+id);return m;});
         if(!source.elements?.length)continue;
-        root.add(models.sample({id:block.id,block:block.block,state:JSON.stringify(block.state),variant,compiled:compileModel(source,variant)}));
+        const compiled=compileModel(source,variant);
+        root.add(models.sample({id:block.id,block:block.block,state:JSON.stringify(block.state),variant,compiled:block.block==='glass'?exposedModel(compiled,glassFaces(block.cell,glass)):compiled}));
         for(const element of source.elements??[]){const c=compileModel({...source,elements:[element]},variant),box=new Box3();for(let i=0;i<c.positions.length;i+=3)box.expandByPoint(new Vector3(...c.positions.slice(i,i+3) as [number,number,number]));if(!box.isEmpty())shapes.push([...box.min.toArray(),...box.max.toArray()] as Bounds);}
     }
-    root.position.set(...block.cell);root.userData={id:block.id,cell:block.cell,block:block.block,state:block.state,shapes:nativeShapes(block.block,block.state)??shapes,collisionShapes:nativeShapes(block.block,block.state,true)??shapes,collision:BLOCK_PROPERTIES[block.block]?.collision??false};return root;
+    root.position.set(...block.cell);root.userData={id:block.id,cell:block.cell,block:block.block,state:block.state,shapes:nativeShapes(block.block,block.state)??shapes,collisionShapes:nativeShapes(block.block,block.state,true)??shapes,collision:block.block==='glass'||(BLOCK_PROPERTIES[block.block]?.collision??false)};return root;
 }

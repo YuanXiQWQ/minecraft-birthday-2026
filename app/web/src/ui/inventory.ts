@@ -1010,7 +1010,7 @@ export class GameInventory {
         this.showTooltipText(lines, x, y);
     }
 
-    /** Paint a native tooltip with sufficient backing pixels for Unicode strokes and no hit surface.
+    /** Paint a native tooltip with cake-family name colors, sufficient Unicode backing pixels and no hit surface.
      * @param {string[]} lines Localized text lines.
      * @param {number} x Client X.
      * @param {number} y Client Y.
@@ -1030,7 +1030,8 @@ export class GameInventory {
             if (!image) throw Error('missing-native-tooltip');
             drawSprite(ctx, image, this.art.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, width, height);
         }
-        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : lines[0] === this.name('minecraft:cake') ? itemColor('minecraft:cake') : '#FFF', true));
+        const cakeId = ['minecraft:cake', 'jerrys_farm:upside_down_cake'].find(id => lines[0] === this.name(id));
+        lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : itemColor(cakeId ?? ''), true));
         const accessible = document.createElement('span');
         accessible.className = 'sr-only';
         accessible.textContent = lines.join(' ');

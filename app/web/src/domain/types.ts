@@ -173,7 +173,7 @@ export type Command =
 };
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-eaten' | 'odd-cake-table-tried' | 'recipes-discovered' | 'advancements-completed';
+    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-replaced' | 'cake-eaten' | 'odd-cake-table-tried' | 'recipes-discovered' | 'advancements-completed';
     advancements?: string[];
     /** Effective native drops, independent of bag capacity. */
     stacks?: Stack[];

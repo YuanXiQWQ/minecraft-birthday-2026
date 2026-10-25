@@ -52,11 +52,11 @@ export function captureGame(root:HTMLElement,world:HTMLCanvasElement):HTMLCanvas
 }
 /** Encode an owned frame and trigger the browser's normal PNG download behavior.
  * @param {HTMLCanvasElement} canvas Completed screenshot pixels.
- * @return {Promise<string>} Requested download filename.
+ * @return {Promise<{name:string;url:string}>} Requested filename and preview URL, owned by the receiving chat until disposal.
  */
-export async function downloadScreenshot(canvas:HTMLCanvasElement):Promise<string>{
+export async function downloadScreenshot(canvas:HTMLCanvasElement):Promise<{name:string;url:string}>{
     const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(Error('screenshot-encode')),'image/png'));
     const url=URL.createObjectURL(blob),link=document.createElement('a'),name=screenshotName();link.href=url;link.download=name;link.hidden=true;document.body.append(link);
-    try{link.click();}finally{link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);}
-    return name;
+    try{link.click();}catch(error){URL.revokeObjectURL(url);throw error;}finally{link.remove();}
+    return {name,url};
 }

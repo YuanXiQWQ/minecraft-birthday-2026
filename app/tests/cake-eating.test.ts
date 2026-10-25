@@ -7,6 +7,9 @@ import {WORLD_REGION} from '../web/src/domain/world-config.ts';
 import {nativeShapes} from '../web/src/domain/block-shapes.ts';
 import {seal,decode} from '../web/src/persistence/codec.ts';
 import {WorldUse} from '../web/src/ui/world-use.ts';
+import {placementBlocks} from '../web/src/domain/placed-blocks.ts';
+import {SaveSession} from '../web/src/persistence/session.ts';
+import {BIRTHDAY_ADVANCEMENT} from '../web/src/domain/advancements.ts';
 import type {Rules} from '../web/src/rules/types.ts';
 import type {Command} from '../web/src/domain/types.ts';
 
@@ -34,7 +37,30 @@ test('seven bites persist across reloads, retain held tools and completion, and 
     const refill=transition(state,{type:'record-cake-placement',scene:'home',table:'birthday-table'},WORLD_REGION,rules);
     assert.equal(refill.state.progress.player.data.hotbar[0],null);assert.equal(refill.state.progress.cakePlacement?.bites??0,0);
     assert.ok(!refill.events.some(e=>e.type==='cake-placed'));
+    assert.ok(refill.events.some(e=>e.type==='cake-replaced'));
     assert.deepEqual(transition(refill.state,{type:'record-cake-placement',scene:'home',table:'birthday-table'},WORLD_REGION,rules).state.progress.player,refill.state.progress.player);
+});
+
+test('ordinary ground placement gives author guidance without consuming a cake or submitting a placement',()=>{
+    const state=completed();state.progress.player.data.hotbar[0]={id:'minecraft:cake',count:1};
+    const use=Object.create(WorldUse.prototype) as WorldUse,messages:string[]=[];
+    Object.assign(use,{session:{view:{envelope:{state}}},heldKind:()=>null,heldBlock:()=> 'cake',author:(key:string)=>messages.push(key),run:()=>assert.fail('cake placement must not be dispatched')});
+    const before=structuredClone(state);use.place({id:'ground',point:[3,0,2],normal:[0,1,0]});
+    assert.deepEqual(messages,['chat.cakeTableOnly']);assert.deepEqual(state,before);
+    assert.throws(()=>placementBlocks(state.progress,'cake',{cell:[4,-1,2],normal:[0,1,0],point:[4.5,0,2.5],eye:[4.5,1.62,4.5],yaw:0},'ground-cake'),/birthday-table-required/);
+});
+
+test('replacement replays only after a successful saved refill and never repeats birthday advancement or refresh events',async()=>{
+    const state=completed();state.progress.cakePlacement!.bites=7;state.progress.player.data.hotbar[0]={id:'minecraft:cake',count:1};
+    state.progress.advancements!.criteria[BIRTHDAY_ADVANCEMENT]=['cake_on_table'];
+    let raw=JSON.stringify(await seal(state,'refill',0)),fail=true;const events:any[]=[];
+    const session=new SaveSession({getItem:()=>raw,setItem:(_key,value)=>{if(fail)throw Error('write-failed');raw=value;}},{exclusive:async work=>work()},WORLD_REGION);
+    session.rules=rules;await session.refresh();session.eventListeners.add(es=>events.push(...es));
+    const command:Command={type:'record-cake-placement',scene:'home',table:'birthday-table',expected:state.progress.player.data};
+    await assert.rejects(()=>session.dispatch(command),/write-failed/);assert.equal(events.length,0);assert.equal(session.view.envelope!.state.progress.cakePlacement!.bites,7);
+    fail=false;await session.refresh();await session.dispatch(command);assert.equal(events.filter(e=>e.type==='cake-replaced').length,1);
+    assert.ok(!events.some(e=>e.type==='cake-placed'||e.type==='advancements-completed'));assert.equal(session.view.envelope!.state.progress.player.data.hotbar[0],null);
+    await session.refresh();await session.dispatch({type:'record-cake-placement',scene:'home',table:'birthday-table'});assert.equal(events.filter(e=>e.type==='cake-replaced').length,1);
 });
 
 test('placed cakes shrink along native X and disappear only after their seventh portion',()=>{

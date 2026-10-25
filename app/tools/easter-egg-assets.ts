@@ -32,5 +32,11 @@ for(let bites=0;bites<7;bites++){
     emit('assets/jerrys_farm/models/'+id.split(':')[1]+'.json',model);variants['bites='+bites]={model:id};
 }
 emit('assets/jerrys_farm/blockstates/upside_down_cake.json',{variants});
-emit('assets/jerrys_farm/items/upside_down_cake.json',{model:{type:'minecraft:model',model:'jerrys_farm:block/upside_down_cake'}});
+/** Inventory, advancement and held items use the original generated item sprite, rotated around its center. */
+const item=source('assets/minecraft/items/cake.json');
+source('assets/minecraft/models/item/cake.json');
+source('assets/minecraft/models/item/generated.json');
+inputs['assets/minecraft/textures/item/cake.png']=hash(readFileSync(resolve(root,'assets/minecraft/textures/item/cake.png')));
+item.model.transformation={translation:[1,1,0],left_rotation:[0,0,1,0]};
+emit('assets/jerrys_farm/items/upside_down_cake.json',item);
 writeFileSync(resolve(root,'easter-egg-manifest.json'),JSON.stringify({version:'26.3',clientSha1:'e877b6a07acd633fb3bb475002175cec036e7b87',source:'authored upside-down cake; original textures and all seven models rotated 180 degrees around [8,4,8]',exporterSha256:hash(readFileSync(import.meta.filename,'utf8').replaceAll('\r\n','\n')),inputs,entries,items:['jerrys_farm:upside_down_cake']},null,2)+'\n');

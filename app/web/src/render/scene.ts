@@ -6,6 +6,7 @@ import {blockAt} from '../domain/placed-blocks.ts';
 import {attackProfile} from '../domain/attack.ts';
 import {nativeShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
 import {placedModel} from './placed-world.ts';
+import {glassCells} from './glass-faces.ts';
 import {PlayerPerspective,nextPerspective} from './player-perspective.ts';
 import type {PlayerAppearance} from '../ui/player-profile.ts';
 import type {Rules} from '../rules/types.ts';
@@ -494,8 +495,8 @@ export class SceneView {
         this.authored.sync(p);
         this.setCake(p.scene === 'home' && p.cakePlacement !== null,p.cakePlacement?.bites??0);
         this.sync(p.scenes[p.scene]);
-        const placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks]);
-        if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models));}
+        const glass=glassCells(p),placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks,[...glass]]);
+        if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of p.scenes[p.scene].blocks??[])this.placed.add(placedModel(b,this.models.pack as Resources,this.models,glass));}
         this.rebuildCollision();
         const footCell:Cell=[Math.floor(this.motion.feet[0]),Math.floor(this.motion.feet[1]-.2),Math.floor(this.motion.feet[2])],soil=soilAt(p,footCell);
         if(soil?.moisture===null&&this.motion.feet[1]<footCell[1]+1&&this.motion.feet[1]>=footCell[1]+15/16-.001){this.motion.feet[1]=footCell[1]+1;this.previousFeet=[...this.motion.feet];}

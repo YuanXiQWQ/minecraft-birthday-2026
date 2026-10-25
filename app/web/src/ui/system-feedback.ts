@@ -2,7 +2,7 @@
 /** Java ChatFormatting.RED is the native failure-message color. */
 export const FAILURE_COLOR = '#FF5555';
 /** Localized nonfailure status keys; native advancement components have their own committed-event projection. */
-const INFORMATION = new Set(['game.worldHint', 'chat.tutorial', 'game.cakePlaced', 'status.migrated']);
+const INFORMATION = new Set(['game.worldHint', 'chat.tutorial', 'status.migrated']);
 /** Project action failures that do not use the general error namespace. */
 const ACTION_FAILURES = new Set(['game.inventoryFull', 'game.invalidPosition', 'game.pointerFailed', 'game.tableNeedsCake', 'game.harvestOverflow', 'status.unknown', 'inventory.locked', 'inventory.conflict', 'inventory.returnFull', 'inventory.outputFailed', 'inventory.craftFailed', 'book.failed', 'settings.saveFailed', 'settings.resetFailed']);
 /** Classify only automatic chat; other presentation channels do not pass this policy.

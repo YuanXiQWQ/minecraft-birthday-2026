@@ -46,7 +46,7 @@ import {GameInventory} from './ui/inventory.ts';
 import {loadCatalogueArt} from './ui/icons.ts';
 import {loadRules} from './rules/load.ts';
 
-/** Mount one formal entry; language overrides are ordinary localization inputs, not gameplay or completion hooks.
+/** Mount one formal entry, exposing homepage controls only after native text and widgets are painted.
  * @param {'home'|'game'} page Independent entry identity.
  * @param {Dictionary} locale Optional loaded locale catalogue.
  * @param {LoadingPort} loading Optional independent native loading presentation.
@@ -545,21 +545,44 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         document.addEventListener('keydown', e => {
             if (e.defaultPrevented || e.repeat || !startup?.ready) return;
             if(e.code==='F2'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){
-                e.preventDefault();if(scene&&!scene.captureFrame){scene.captureFrame=canvas=>{try{const image=captureGame(root,canvas);void downloadScreenshot(image).catch(()=>feedback('error.screenshot'));}catch{feedback('error.screenshot');}};scene.requestRender();}return;
+                e.preventDefault();if(scene&&!scene.captureFrame){scene.captureFrame=canvas=>{void saveScreenshot(canvas);};scene.requestRender();}return;
             }
-            if (e.code === 'Escape') {
-                if (performance.now() - lastPointerEscape < 150) {e.preventDefault(); return;}
-                e.preventDefault(); e.stopImmediatePropagation();
-                if (chat?.open) chat.hide();
-                else if (advancements?.modal.open) advancements.close();
-                else if (inventory?.modal.open) void inventory.close();
-                else if (dialog.open) {if (optionsPage !== 'options') showOptions('options'); else {dialog.close(); openMenu();}}
-                else if (menu!.open) {menu!.close(); updateGate();}
-                else openMenu();
-            } else if(e.code==='KeyL'&&!(e.target instanceof HTMLInputElement)&&!dialog.open&&!menu?.open&&!chat?.open&&!inventory?.modal.open){
+            if(e.code==='KeyL'&&!(e.target instanceof HTMLInputElement)&&!dialog.open&&!menu?.open&&!chat?.open&&!inventory?.modal.open){
                 e.preventDefault();if(advancements?.modal.open)advancements.close();else advancements?.open();
             } else if ((e.code === 'KeyT'||(e.key==='/'||e.code==='Slash'&&!e.shiftKey)&&!e.ctrlKey&&!e.altKey&&!e.metaKey) && !inputBlocked() && !inventory?.modal.open && !(e.target instanceof HTMLInputElement)) {e.preventDefault(); chat?.show(e.code==='KeyT'?'':'/');}
         }, {signal: appAbort.signal});
+    }
+    // Capture Escape before focused editors and container handlers can consume it or close a second screen.
+    document.addEventListener('keydown',event=>{
+        if(event.code!=='Escape'||disposed||(page==='game'?!startup?.ready:!dialog.open))return;
+        event.preventDefault();event.stopImmediatePropagation();
+        if(event.repeat||performance.now()-lastPointerEscape<150)return;
+        closeCurrentScreen();
+    },{capture:true,signal:appAbort.signal});
+    /** Close one active screen, preserving container-return transactions and each settings page's parent navigation. */
+    function closeCurrentScreen():void {
+        if(chat?.open)chat.hide();
+        else if(advancements?.modal.open)advancements.close();
+        else if(inventory?.modal.open)void inventory.close();
+        else if(dialog.open){
+            if(!confirmSection.hidden)cancelReset.click();
+            else if(optionsPage!=='options')showOptions('options');
+            else{dialog.close();if(page==='game')openMenu();}
+        }
+        else if(menu?.open){menu.close();updateGate();}
+        else openMenu();
+    }
+    /** Capture before appending feedback, and discard asynchronous replies belonging to an abandoned game lifetime.
+     * @param {HTMLCanvasElement} canvas Just-rendered world framebuffer.
+     * @return {Promise<void>} Download dispatch and native chat notification.
+     */
+    async function saveScreenshot(canvas:HTMLCanvasElement):Promise<void>{
+        const owner=chat,generation=session.view.envelope?.generation;
+        try{
+            const screenshot=await downloadScreenshot(captureGame(root,canvas));
+            if(disposed||!owner||owner.abort.signal.aborted||session.view.envelope?.generation!==generation){URL.revokeObjectURL(screenshot.url);return;}
+            owner.screenshotSaved(screenshot);
+        }catch{if(!disposed&&!owner?.abort.signal.aborted&&session.view.envelope?.generation===generation)feedback('error.screenshot');}
     }
     /** Open the local pause interface without pausing the approved active simulation. */
     function openMenu(): void {if (page !== 'game' || !startup?.ready || menu?.open || inventory?.modal.open || dialog.open || chat?.open) return; menu!.show(); updateGate();}
@@ -643,6 +666,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         nativeScreens.push(new NativeScreens(dialog, page === 'game' ? host : document.documentElement, pixels, () => optionsPage, {title: dialogTitle, navigation: optionNavigation, sections: optionSections, volume, volumeLabel, languageLabel, language, username, usernameLabel, warning, reset, confirmation: confirmSection, feedback: [preferenceFeedback,resetFeedback], done: close}));
         if (menu) nativeScreens.push(new NativeScreens(menu, host, pixels, () => 'pause', null));
         showOptions('options');
+        if (page === 'home') root.dataset.homeUi = 'ready';
         scene = new SceneView(host, resources, t(page === 'home' ? 'home.tableLabel' : 'game.sceneLabel'), page === 'game');
         scene.onEscape = () => {lastPointerEscape = performance.now(); openMenu();};
         scene.setInputEnabled(page === 'home' && !dialog.open);
@@ -729,14 +753,14 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             if((session.view.envelope?.state.settings.username??'sireoh').toLowerCase()==='sireoh'&&!currentAppearance){const owner=appearanceOwner,initial=await defaultAppearance();if(owner===appearanceOwner&&!currentAppearance)currentAppearance=initial;}
             if(disposed)return;
             if(currentAppearance){scene!.setAppearance(currentAppearance);inventory.playerPreview?.setAppearance(currentAppearance);}
-            worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), (id, options) => void worldAudio?.play(id, options));
+            worldUse = new WorldUse(scene!, inventory, session, key => feedback(key), (id, options) => void worldAudio?.play(id, options),key=>chat?.append([{text:t(key)}],'author'));
             updateGate();
             celebration = new BirthdayCelebration(root, scene!, pixels, art, key => t(key), () => session.view.envelope ? {
                 state: session.view.envelope.state,
                 generation: session.view.envelope.generation
             } : null, () => edits.view());
             session.eventListeners.add(events => {
-                if (events.some(e => e.type === 'cake-placed')) void celebration?.start();
+                if (events.some(e => e.type === 'cake-placed'||e.type==='cake-replaced')) void celebration?.start();
             });
             stopProcessing = processingClock(session,message=>chat?.commandMessage(message));
             const value = session.view;

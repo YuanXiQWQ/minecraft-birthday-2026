@@ -2,7 +2,7 @@
   "version": "26.3",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
   "source": "authored upside-down cake; original textures and all seven models rotated 180 degrees around [8,4,8]",
-  "exporterSha256": "61c206f662aeca9f7372b6249705c9273c3ca16d3b944dcf4d5f32e6e1e16a0b",
+  "exporterSha256": "4583b65e0f2f523272910daa1db10610e35469c7d9c31ff507b8edc502e15719",
   "inputs": {
     "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
     "assets/minecraft/textures/block/cake_top.png": "2d2866b25e4b3b32d9f36cd703a8a0f0e3a5d9559789db4a14fd3e7365e519ee",
@@ -24,7 +24,11 @@
     "assets/minecraft/models/block/cake_slice6.json": "3fe39e6f1b8d603e96fbbc750e1d716b96c8120a771ef1ca935a69cc5004d0e2",
     "assets/jerrys_farm/models/block/upside_down_cake_slice6.json": "4393e380643a41baf9872dc1119eb749a2dcc86c1323cf66203469c571edf353",
     "assets/jerrys_farm/blockstates/upside_down_cake.json": "212ef0bceb05c8880ebbb2ab4b20c6bc995beab694cf22bcb4469bd332a14024",
-    "assets/jerrys_farm/items/upside_down_cake.json": "1c8e3e8bb28db9a7834ffe84700c4a4cd1d07c4f8a83fe8e6f5020538cd9663b"
+    "assets/minecraft/items/cake.json": "ef5ebdc8aee554cb2d9e808a4923e441aafebf0c43a45c29374cc35eac5725b8",
+    "assets/minecraft/models/item/cake.json": "5cbb815b5ebf519fe2972c9a98f423809883f3172772b09b1ee949a191df0d13",
+    "assets/minecraft/models/item/generated.json": "63190611202e75ad7b812bc9a4b31bd53f3e186895d7b53e5e280b0d1e30a67a",
+    "assets/minecraft/textures/item/cake.png": "a6330e4fb63215726033e21d3ccb739d1148c24a53317182472a8b13a5a65554",
+    "assets/jerrys_farm/items/upside_down_cake.json": "b88d9e8b1bed3e8deeb4b4938bfd6a3d0a4b88445d8f2790c52ef297330f4534"
   },
   "entries": [
     {
@@ -69,8 +73,8 @@
     },
     {
       "entry": "assets/jerrys_farm/items/upside_down_cake.json",
-      "size": 102,
-      "sha256": "1c8e3e8bb28db9a7834ffe84700c4a4cd1d07c4f8a83fe8e6f5020538cd9663b"
+      "size": 258,
+      "sha256": "b88d9e8b1bed3e8deeb4b4938bfd6a3d0a4b88445d8f2790c52ef297330f4534"
     }
   ],
   "items": [

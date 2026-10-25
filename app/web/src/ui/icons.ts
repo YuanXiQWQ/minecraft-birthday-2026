@@ -20,8 +20,7 @@ import {
 import {NativeCompass, compassModel} from './compass.ts';
 import type {CompassView} from './compass.ts';
 import {guiLights} from './icon-light.ts';
-import {RESOURCE_BASE} from '../render/resources.ts';
-import {fetchManifest} from '../render/resource-fetch.ts';
+import {fetchAsset,fetchManifest} from '../render/resource-fetch.ts';
 import {resourceId, resolveTexture} from '../render/model-format.ts';
 import {iconParts, iconModel, iconGeometry} from './icon-model.ts';
 import type {IconPart} from './icon-model.ts';
@@ -103,7 +102,7 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     let completed = 0;
     progress?.(0, total);
     await Promise.all(dependencies.map(async ([p, hash]) => {
-        const r = await fetch(RESOURCE_BASE + p);
+        const r = await fetchAsset(p);
         if (!r.ok) throw Error('catalogue-resource-missing:' + p);
         const b = await r.arrayBuffer(),
             actual = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', b)), n => n.toString(16).padStart(2, '0')).join('');

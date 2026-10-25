@@ -5,7 +5,7 @@ import {emptyWorld} from '../domain/world-state.ts';
 import {ensure, freeze, validateState} from '../domain/state.ts';
 import type {State} from '../domain/types.ts';
 import {emptyHopper} from '../domain/hopper.ts';
-import {initialBook} from '../domain/recipe-book.ts';
+import {initialBook,syncOddCakeRecipe} from '../domain/recipe-book.ts';
 import {emptyFurnace} from '../domain/furnace.ts';
 import {emptyInventory, layout} from '../domain/inventory.ts';
 
@@ -23,6 +23,7 @@ export interface Decoded {
     envelope: Envelope;
     migrated: boolean;
     advancementMigration?: boolean;
+    recipeMigration?: boolean;
 }
 
 /** Canonical encoding includes every own field in a stable order; arrays keep semantic acquisition order.
@@ -135,8 +136,9 @@ export async function decode(raw: string): Promise<Decoded> {
         }
         validateState(value.state);
         const husbandryMigration=syncHusbandryRoot(value.state.progress.advancements);
+        const recipeMigration=syncOddCakeRecipe(value.state.progress.recipeBook);
         const envelope = await seal(value.state, value.generation, value.revision);
-        return {envelope, migrated:migrated||husbandryMigration, advancementMigration:missingAdvancements||husbandryMigration};
+        return {envelope, migrated:migrated||husbandryMigration||recipeMigration, advancementMigration:missingAdvancements||husbandryMigration,recipeMigration};
     } catch (error) {
         throw new Error(migrated ? 'migration-failed' : error instanceof Error ? error.message : 'invalid-save');
     }

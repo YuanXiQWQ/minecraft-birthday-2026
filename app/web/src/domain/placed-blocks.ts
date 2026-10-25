@@ -78,7 +78,7 @@ export function direction(face:string):Cell{return ({north:[0,0,-1],south:[0,0,1
  * @return {boolean} Air or replaceable vegetation.
  */
 export function replaceable(block:string|undefined):boolean{return !block||['short_grass','tall_grass','water'].includes(block);}
-/** Compute native state and multipart footprint before consuming any inventory.
+/** Compute native state and multipart footprint before consuming inventory; ordinary cake requires the birthday-table transaction.
  * @param {Progress} p Latest world facts.
  * @param {string} item Held BlockItem short name.
  * @param {BlockHit} hit In-range ray and actual player pose.
@@ -86,6 +86,7 @@ export function replaceable(block:string|undefined):boolean{return !block||['sho
  * @return {PlacedBlock[]} Atomic block footprint.
  */
 export function placementBlocks(p:Progress,item:string,hit:BlockHit,id:string):PlacedBlock[]{
+    if(item==='cake')throw Error('birthday-table-required');
     if(!PLACEABLE.has(item)||!hit.eye.every(Number.isFinite)||Math.hypot(...hit.point.map((v,i)=>v-hit.eye[i]))>4.50001)throw Error('invalid-block-placement');
     const target=blockAt(p,hit.cell),face=hit.normal[1]>0?'up':hit.normal[1]<0?'down':hit.normal[0]>0?'east':hit.normal[0]<0?'west':hit.normal[2]>0?'south':'north';
     let cell=(replaceable(target?.block)?hit.cell:hit.cell.map((n,i)=>n+hit.normal[i])) as Cell,block=item;
