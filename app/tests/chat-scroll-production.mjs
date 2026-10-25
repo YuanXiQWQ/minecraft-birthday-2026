@@ -8,7 +8,7 @@ import {initialState} from '../web/src/domain/state.ts';
 import {seal} from '../web/src/persistence/codec.ts';
 
 /** Explicit browser runtime and an isolated save namespace never reuse the user's actual profile. */
-const root=resolve(import.meta.dirname,'..'),out=resolve(root,process.argv[4]??'../docs/p9/chat-scroll/evidence'),key='minecraft-birthday-2026:formal:save',pw=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[];
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,process.argv[4]??'../.test-results/chat-scroll/evidence'),key='minecraft-birthday-2026:formal:save',pw=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[];
 /** Serve the ordinary audited outputs without application instrumentation or special build modes. */
 const server=createServer(async(req,res)=>{try{
  const path=new URL(req.url,'http://localhost').pathname,base=path.startsWith('/minecraft-birthday-2026/')?'/minecraft-birthday-2026/':'/';

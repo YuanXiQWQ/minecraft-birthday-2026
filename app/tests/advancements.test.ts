@@ -145,7 +145,7 @@ test('locked refresh durably synchronizes old Inventory once, with no toast even
     const readOnly=new SaveSession({getItem:()=>original,setItem:()=>{throw Error('no-write');}},null);await readOnly.refresh();assert.equal(readOnly.view.writable,false);assert.equal(readOnly.view.envelope!.revision,7);
 });
 test('original data, translated Suit Up title, no rewards, root flags and shared five-row toast allocation',()=>{
-    const evidence=JSON.parse(readFileSync(new URL('../../docs/p9/advancements/native-evidence.json',import.meta.url),'utf8'));
+    const evidence=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/advancement-sources.json',import.meta.url),'utf8'));
     for(const entry of evidence.derived)assert.equal(createHash('sha256').update(readFileSync(new URL('../../'+entry.entry,import.meta.url))).digest('hex'),entry.sha256);
     const files=resources();for(const [id,definition] of Object.entries(ADVANCEMENTS).filter(([id])=>id.startsWith('minecraft:'))){const path='data/minecraft/advancement/'+id.split(':')[1]+'.json';assert.deepEqual(JSON.parse(Buffer.from(files.get(path)!).toString()),definition);assert.equal('rewards' in definition,false);}
     assert.equal(ADVANCEMENTS['minecraft:story/root'].display.show_toast,false);assert.equal(ADVANCEMENTS['minecraft:story/mine_stone'].display.icon.id,stack('wooden_pickaxe').id);

@@ -1,2 +1,10 @@
-
 .idea/
+node_modules/
+dist/
+dist-pages/
+dist-subpath/
+临时文件/
+.farm-release/
+.farm-validation/
+.test-results/
+*.log

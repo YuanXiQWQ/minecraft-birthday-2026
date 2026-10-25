@@ -8,7 +8,7 @@ import {initialState} from '../web/src/domain/state.ts';
 import {seal} from '../web/src/persistence/codec.ts';
 import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
 /** Test-only inventory and origins never touch the user's browser or saved progress. */
-const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../docs/p9/movement-followup/evidence'),key='minecraft-birthday-2026:formal:save',pw=createRequire(resolve(process.argv[2],'package.json'))('playwright'),requests=[],report={cache:[],movement:[],harvest:[],lighting:[]};
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../.test-results/movement-followup/evidence'),key='minecraft-birthday-2026:formal:save',pw=createRequire(resolve(process.argv[2],'package.json'))('playwright'),requests=[],report={cache:[],movement:[],harvest:[],lighting:[]};
 const old=new Map(await Promise.all([['controls-manifest.json','controls-manifest-before-footsteps.json'],['assets/minecraft/controls-sounds.json','controls-sounds-before-footsteps.json']].map(async([path,file])=>[path,await readFile(resolve(root,'tests/fixtures',file))])));
 let legacy=false;
 /** Serve exact root/Pages artifacts with explicitly primed historical cache responses. */

@@ -18,7 +18,7 @@ def fetch(url,sha1):
 
 def main():
     """Reproduce only the registered event definitions and their actual weighted audio samples."""
-    lock=json.loads((ROOT/'docs/p1/evidence-lock.json').read_text(encoding='utf-8'))['officialSources']['assetIndex']
+    lock=json.loads((ROOT/'data/minecraft/26.3/source-lock.json').read_text(encoding='utf-8'))['officialSources']['assetIndex']
     index=json.loads(fetch(lock['url'],lock['sha1']))['objects']
     def asset(name):
         """Load one asset-index object by its immutable official identifier."""

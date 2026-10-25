@@ -2058,6 +2058,6 @@
     }
   ],
   "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "654fe06e468a2d51d88ccbf98d0f82f0f6092e198d2d230158d7647c72589b91",
+  "exporterSha256": "c3be26b030b109d863236f2750e9de6890fbe57e364f8ecd4f55bdc093fb7ca7",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; bounded native ambient sounds, ground items and farmland states"
 }

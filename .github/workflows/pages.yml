@@ -33,20 +33,13 @@ jobs:
         with:
           node-version: 25.2.1
           cache: npm
-          cache-dependency-path: |
-            app/package-lock.json
-            experiments/scene3d/package-lock.json
+          cache-dependency-path: app/package-lock.json
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
       - name: Run formal regression tests
         run: npm test
       - name: Verify Minecraft data
         run: npm run data:verify
-      - name: Run retained P2 technical regressions
-        working-directory: experiments/scene3d
-        run: |
-          npm ci --no-audit --no-fund
-          npm test
       - name: Build and audit root deployment
         run: npm run build
       - name: Build and audit GitHub Pages deployment

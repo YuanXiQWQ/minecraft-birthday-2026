@@ -1,7 +1,0 @@
-{
-  "before": "[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}},{\"id\":\"371a7007-e1fa-4557-9098-617de1f3cb28\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-4,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":5}}}]",
-  "firstRecovered": "{\"tick\":55758,\"scene\":\"farm\",\"crops\":[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}},{\"id\":\"371a7007-e1fa-4557-9098-617de1f3cb28\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-4,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":5}}}]}",
-  "homeWaitMs": 6000,
-  "otherSameOriginTab": "home throughout",
-  "ordinaryNavigation": true
-}

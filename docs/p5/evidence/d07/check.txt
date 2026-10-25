@@ -1,3 +1,0 @@
-
-> minecraft-birthday-2026@0.1.0 check
-> tsc --noEmit

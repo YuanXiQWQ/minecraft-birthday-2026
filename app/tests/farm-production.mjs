@@ -11,7 +11,7 @@ import {FARM_PLOTS} from '../web/src/domain/farm-shape.ts';
 import {emptyFurnace,inputChanged} from '../web/src/domain/furnace.ts';
 
 /** Isolated origins and profiles never read the user's game or browser data. */
-const root=resolve(process.env.FARM_BUILD_ROOT??resolve(import.meta.dirname,'..')),out=resolve(import.meta.dirname,'../../docs/p9/farm/evidence'),
+const root=resolve(process.env.FARM_BUILD_ROOT??resolve(import.meta.dirname,'..')),out=resolve(import.meta.dirname,'../../.test-results/farm/evidence'),
     pw=createRequire(resolve(process.argv[2],'package.json'))('playwright'),old=await readFile(resolve(root,'tests/fixtures/world-manifest-before-farm.json')),rules=JSON.parse(await readFile(resolve(root,'../data/minecraft/26.3/rules.json'),'utf8'));
 let legacy=false;
 const requests=[];

@@ -1,7 +1,0 @@
-{
-  "edgeHidden": true,
-  "expanded": "true",
-  "height": 720,
-  "width": 1280,
-  "world": "{\"dayTicks\":1592.0919999992848,\"sunAngle\":306.1550291318797,\"moonAngle\":486.1550291318797,\"moonPhase\":\"full_moon\",\"rain\":0,\"thunder\":0,\"skyLightFactor\":1,\"skyLightColor\":[1,1,1,1],\"cloudHeight\":192.33,\"cloudQuads\":34865,\"cloudInstances\":9,\"cloudReady\":true,\"cloudRange\":128,\"starQuads\":780}"
-}

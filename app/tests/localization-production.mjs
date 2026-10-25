@@ -9,7 +9,7 @@ import {initialBook} from '../web/src/domain/recipe-book.ts';
 import {seal} from '../web/src/persistence/codec.ts';
 
 /** Isolated origin and browser profile keep the user's actual save untouched. */
-const root = resolve(import.meta.dirname, '..'), out = resolve(root, process.argv[4] ?? '../docs/p9/localization/evidence'),
+const root = resolve(import.meta.dirname, '..'), out = resolve(root, process.argv[4] ?? '../.test-results/localization/evidence'),
     key = 'minecraft-birthday-2026:formal:save',
     pw = createRequire(resolve(process.argv[2], 'package.json'))('./index.js'),
     oldStartup = await readFile(resolve(root, 'tests/fixtures/startup-manifest-before-localization.json')),

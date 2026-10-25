@@ -1,8 +1,0 @@
-{
-  "testOnlyFailure": true,
-  "syntheticDOMInputs": true,
-  "unchanged": true,
-  "volume": "0.8",
-  "disabled": true,
-  "feedback": "This setting could not be saved. The last committed value is shown. Check the storage message and retry."
-}

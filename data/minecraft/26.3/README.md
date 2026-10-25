@@ -20,3 +20,6 @@ The exporter rejects a client whose SHA-1 is not `e877b6a07acd633fb3bb475002175c
 Only P4-relevant defaults are interpreted: stack size, durability identity, equipment slot, crafting remainder, fuel and tool/drop tags, plus component identities. This is not a complete runtime registry/component simulator. Unsupported default component values and out-of-profile custom repair variants fail explicitly. Recipes and discovery facts are kept separate from project behavior candidates D04–D07. Source additions require regeneration and save compatibility review.
 
 `.gitattributes` preserves generated JSON bytes across checkout. Development use of original data/resources is authorized by the project owner; public-release conditions remain a separate matter, without requiring a wholesale custom-asset replacement.
+
+- `source-lock.json`: pinned official metadata, client/server downloads and asset-index identities used by resource exporters.
+- `advancement-sources.json`: original advancement/class identities and generated-data hashes used by the advancement exporter and regression tests.

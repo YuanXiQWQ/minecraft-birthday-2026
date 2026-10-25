@@ -1,5 +1,0 @@
-{
-  "display": "none",
-  "player": "{\"skin\":\"minecraft:entity/player/wide/steve\",\"window\":{\"x\":26,\"y\":8,\"width\":49,\"height\":70,\"scale\":30},\"framebuffer\":[147,210],\"look\":{\"body\":0.2628993923680636,\"head\":0.2628993923680636,\"pitch\":-0.31888862933609385,\"tilt\":0.31888862933609385},\"layout\":\"[{\\\"head\\\":null,\\\"chest\\\":null,\\\"legs\\\":null,\\\"feet\\\":null,\\\"offhand\\\":null},null]\",\"parts\":[\"head\",\"body\",\"rightArm\",\"leftArm\",\"rightLeg\",\"leftLeg\"],\"outerLayers\":6,\"hands\":0,\"armorParts\":0,\"renders\":691,\"geometries\":12,\"textures\":1,\"calls\":72}",
-  "previewCount": 1
-}

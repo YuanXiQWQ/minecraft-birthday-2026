@@ -20,7 +20,7 @@ def fetch(url, digest):
 
 def main():
     """Extract six panorama faces and retain audited ASCII and Unicode loading-screen font inputs."""
-    lock = json.loads((ROOT / 'docs/p1/evidence-lock.json').read_text(encoding='utf-8'))['officialSources']['assetIndex']
+    lock = json.loads((ROOT / 'data/minecraft/26.3/source-lock.json').read_text(encoding='utf-8'))['officialSources']['assetIndex']
     index = json.loads(fetch(lock['url'], lock['sha1']))['objects']
     names = [f'minecraft/textures/gui/title/background/panorama_{i}.png' for i in range(6)] + ['minecraft/textures/gui/title/background/panorama_overlay.png']
 

@@ -25,7 +25,7 @@ for(const id of ['crosshair_attack_indicator_background','crosshair_attack_indic
 for(const id of ['mineable/axe','mineable/pickaxe','mineable/shovel','mineable/hoe'])take('data/minecraft/tags/block/'+id+'.json');
 /** Fetch one locked official asset object. @param {string} url Source URL. @param {string} sha1 Expected SHA1. @return {Promise<Buffer>} Verified bytes. */
 async function official(url:string,sha1:string):Promise<Buffer>{const r=await fetch(url);if(!r.ok)throw Error('native-asset:'+r.status);const b=Buffer.from(await r.arrayBuffer());if(createHash('sha1').update(b).digest('hex')!==sha1)throw Error('native-asset-integrity');return b;}
-const lock=JSON.parse(readFileSync(resolve(root,'docs/p1/evidence-lock.json'),'utf8')).officialSources.assetIndex,index=JSON.parse((await official(lock.url,lock.sha1)).toString());
+const lock=JSON.parse(readFileSync(resolve(root,'data/minecraft/26.3/source-lock.json'),'utf8')).officialSources.assetIndex,index=JSON.parse((await official(lock.url,lock.sha1)).toString());
 /** Fetch an exact asset-index entry. @param {string} key Logical key. @return {Promise<Buffer>} Original bytes. */
 async function object(key:string):Promise<Buffer>{const o=index.objects[key];if(!o)throw Error('native-asset-key:'+key);return official('https://resources.download.minecraft.net/'+o.hash.slice(0,2)+'/'+o.hash,o.hash);}
 const soundSource=await object('minecraft/sounds.json'),sounds=JSON.parse(soundSource.toString()),soundEvents:Record<string,any>={},soundPaths=new Set<string>(),properties=JSON.parse(readFileSync(resolve(root,'app/web/src/data/block-properties.json'),'utf8'));

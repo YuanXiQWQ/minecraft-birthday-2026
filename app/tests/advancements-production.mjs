@@ -11,7 +11,7 @@ import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
 import {PerspectiveCamera,Vector3} from 'three';
 
 /** Production files and controlled preconditions are never exposed through a debug route. */
-const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../docs/p9/advancements/evidence'),key='minecraft-birthday-2026:formal:save',playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[],requests=[];
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../.test-results/advancements/evidence'),key='minecraft-birthday-2026:formal:save',playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[],requests=[];
 let oldCache=false;
 const oldWorld=await readFile(resolve(root,'tests/fixtures/world-manifest-before-cave.json'));
 /** Serve audited files while allowing real old-manifest cache priming on the same origin. */

@@ -4,7 +4,7 @@ import {resolve} from 'node:path';
 import {mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 /** Caller-selected test runtime and dedicated verification server. */
-const pw=createRequire(resolve(process.argv[2],'package.json'))('playwright'),browser=await pw.chromium.launch({executablePath:process.argv[3],headless:true}),out=resolve(import.meta.dirname,'../../docs/p9/farm/evidence');
+const pw=createRequire(resolve(process.argv[2],'package.json'))('playwright'),browser=await pw.chromium.launch({executablePath:process.argv[3],headless:true}),out=resolve(import.meta.dirname,'../../.test-results/farm/evidence');
 await mkdir(out,{recursive:true});
 try{
     for(const [width,height] of [[1440,900],[1280,720],[390,844]]){

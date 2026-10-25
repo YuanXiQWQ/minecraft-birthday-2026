@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "gameVersion": "26.3",
+  "officialSources": {
+    "manifest": "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
+    "metadata": "https://piston-meta.mojang.com/v1/packages/61fff1316bd50312624a858bbb5eb18fa45208ed/26.3.json",
+    "downloads": {
+      "client": {
+        "sha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+        "size": 41483720,
+        "url": "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar"
+      },
+      "server": {
+        "sha1": "33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c",
+        "size": 62294556,
+        "url": "https://piston-data.mojang.com/v1/objects/33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c/server.jar"
+      }
+    },
+    "assetIndex": {
+      "id": "34",
+      "sha1": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
+      "size": 597035,
+      "totalSize": 484894038,
+      "url": "https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json"
+    }
+  }
+}

@@ -1,5 +1,0 @@
-
-> minecraft-birthday-2026@0.1.0 check
-> tsc --noEmit
-
-tests/book-queue.test.ts(33,1436): error TS2339: Property 'fillStyle' does not exist on type '{}'.

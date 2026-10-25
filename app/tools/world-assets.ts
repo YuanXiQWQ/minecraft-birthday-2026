@@ -124,7 +124,7 @@ async function official(url: string, sha1: string): Promise<Buffer> {
     return b;
 }
 
-const lock = JSON.parse(readFileSync(resolve(root, 'docs/p1/evidence-lock.json'), 'utf8')).officialSources.assetIndex,
+const lock = JSON.parse(readFileSync(resolve(root, 'data/minecraft/26.3/source-lock.json'), 'utf8')).officialSources.assetIndex,
     index = JSON.parse((await official(lock.url, lock.sha1)).toString());
 
 /** Fetch a named object from the fixed asset index. @param {string} p Logical object. @return {Promise<Buffer>} Verified exact object. */

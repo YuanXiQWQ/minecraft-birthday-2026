@@ -1,6 +1,0 @@
-{
-  "scope": "Actual git checkout-index into an empty temporary directory with core.autocrlf=true and version resource -text attributes",
-  "files": 96,
-  "failures": [],
-  "passed": true
-}

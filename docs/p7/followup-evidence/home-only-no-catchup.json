@@ -1,7 +1,0 @@
-{
-  "before": "[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}},{\"id\":\"3118246a-5274-41d0-a83b-8a7e3e369e09\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-4,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":5}}}]",
-  "after": "[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}},{\"id\":\"3118246a-5274-41d0-a83b-8a7e3e369e09\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-4,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":228}}}]",
-  "homeWaitMs": 6000,
-  "realNavigation": true,
-  "readinessWait": "tool reported timeout despite visible Items; separate follow-up read"
-}

@@ -13,7 +13,7 @@ import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
 import {emptyFurnace,inputChanged} from '../web/src/domain/furnace.ts';
 
 /** Test-only origins never read or reset the user's browser profile. */
-const root=resolve(import.meta.dirname,'..'), out=resolve(root,process.argv[4]??'../docs/p9/cave/evidence'),
+const root=resolve(import.meta.dirname,'..'), out=resolve(root,process.argv[4]??'../.test-results/cave/evidence'),
     playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),
     old=await readFile(resolve(root,'tests/fixtures/world-manifest-before-cave.json')),
     oldSounds=await readFile(resolve(root,'tests/fixtures/world-sounds-before-cave.json')),

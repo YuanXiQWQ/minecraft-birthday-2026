@@ -1,4 +1,0 @@
-{
-  "harvest": "{\"command\":{\"type\":\"harvest-node\",\"scene\":\"plains\",\"node\":\"short_grass:12\",\"visit\":0,\"expected\":{\"backpack\":[{\"id\":\"minecraft:oak_log\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,null,null,null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"events\":[],\"selected\":0,\"backpack\":[{\"id\":\"minecraft:oak_log\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"unlocked\":[\"minecraft:oak_log\"]}",
-  "natural": "{\"epoch\":0,\"removed\":[\"oak_log:1\",\"short_grass:12\"],\"roll\":1}"
-}

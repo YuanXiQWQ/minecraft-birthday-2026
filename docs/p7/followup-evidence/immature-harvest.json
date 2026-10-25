@@ -1,5 +1,0 @@
-{
-  "before": "[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}},{\"id\":\"b3c9ad61-e398-430c-afd9-31f373c60672\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-4,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":0}}}]",
-  "after": "[{\"id\":\"552bfdac-4c9e-40d3-9cdb-9d57642ce1f3\",\"item\":\"minecraft:wheat_seeds\",\"cell\":[-5,0,-2],\"growth\":{\"version\":1,\"data\":{\"ticks\":240}}}]",
-  "feedback": "Resource harvested. New items appear in your catalogue (E)."
-}

@@ -1,0 +1,4007 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "url": "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar",
+  "method": "Read-only javap -c -p -constants; line numbers refer to reproducible javap output, not Java source",
+  "inputs": [
+    {
+      "entry": "data/minecraft/advancement/story/root.json",
+      "size": 681,
+      "sha256": "edc34899c2f765403251c355f126dbb82c27887c45cfd39e8478c48f5fae5d53",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/mine_stone.json",
+      "size": 607,
+      "sha256": "9c3221f3338c992148c619be0cfbb16f1202afb175f3daa39afa7cc3f85160c8",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/upgrade_tools.json",
+      "size": 618,
+      "sha256": "8673d89f6ca515a26bcb17fa09bd4d81628774b8529a6cf05183edf5e200fe05",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/smelt_iron.json",
+      "size": 591,
+      "sha256": "261363ffa631275b6cb54f2d73d42e28a7a4727dd0153fc2bcce09393d539b83",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/obtain_armor.json",
+      "size": 1302,
+      "sha256": "c20f8740a62b683b75c4f79a32d500283b12f792a28ab4057bede5a2b66db283",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/story/iron_tools.json",
+      "size": 608,
+      "sha256": "4e66c7e7d78cfc3ffb579d9690b0de96e07c2579d621937fd3306b0b66aa91a2",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/husbandry/root.json",
+      "size": 552,
+      "sha256": "423e9ac3d0521e7d79ed42729a93d112dca0df83b4d0171ee8f2edfff7183660",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/advancement/husbandry/plant_seed.json",
+      "size": 2048,
+      "sha256": "7385e875d749b8a406f681b8aa4f37cce792d23d83281c176ea41148d43bdee4",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "data/minecraft/tags/item/stone_tool_materials.json",
+      "size": 112,
+      "sha256": "a487c80a5e1e83e4bf8bf6ae0f0ea05acd91b6ee28066648f27df1808b56fa6b",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "assets/minecraft/lang/en_us.json",
+      "size": 546577,
+      "sha256": "b0dff75d40225a2e1351e45422ad7d7d62cfbb98314ada51d3d24f90a234696b",
+      "source": "official client.jar"
+    },
+    {
+      "entry": "assets/minecraft/lang/zh_cn.json",
+      "size": 562116,
+      "sha256": "1533a83d5341f7484da695e530dc739688e6b79325561e0f92d0509d54acd245",
+      "source": "Official asset index 34; interaction-manifest language SHA-1"
+    }
+  ],
+  "classes": [
+    {
+      "entry": "net/minecraft/server/level/ServerPlayer.class",
+      "size": 112647,
+      "sha256": "ab14a0f62bf6be68f7502ea7f11336f9ab665a4e978a562d6625520fabe592ed",
+      "locations": [
+        {
+          "line": 149,
+          "method": "public net.minecraft.server.level.ServerPlayer(net.minecraft.server.MinecraftServer, net.minecraft.server.level.ServerLevel, com.mojang.authlib.GameProfile, net.minecraft.server.level.ClientInformation);"
+        },
+        {
+          "line": 315,
+          "method": "public net.minecraft.core.BlockPos adjustSpawnLocation(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 335,
+          "method": "protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput);"
+        },
+        {
+          "line": 452,
+          "method": "protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput);"
+        },
+        {
+          "line": 550,
+          "method": "private void saveParentVehicle(net.minecraft.world.level.storage.ValueOutput);"
+        },
+        {
+          "line": 584,
+          "method": "public void loadAndSpawnParentVehicle(net.minecraft.world.level.storage.ValueInput);"
+        },
+        {
+          "line": 681,
+          "method": "private void saveEnderPearls(net.minecraft.world.level.storage.ValueOutput);"
+        },
+        {
+          "line": 726,
+          "method": "public void loadAndSpawnEnderPearls(net.minecraft.world.level.storage.ValueInput);"
+        },
+        {
+          "line": 736,
+          "method": "private void loadAndSpawnEnderPearl(net.minecraft.world.level.storage.ValueInput);"
+        },
+        {
+          "line": 785,
+          "method": "public void setExperiencePoints(int);"
+        },
+        {
+          "line": 819,
+          "method": "public void setExperienceLevels(int);"
+        },
+        {
+          "line": 834,
+          "method": "public void giveExperienceLevels(int);"
+        },
+        {
+          "line": 847,
+          "method": "public void onEnchantmentPerformed(net.minecraft.world.item.ItemStack, int);"
+        },
+        {
+          "line": 858,
+          "method": "private void initMenu(net.minecraft.world.inventory.AbstractContainerMenu);"
+        },
+        {
+          "line": 870,
+          "method": "public void initInventoryMenu();"
+        },
+        {
+          "line": 878,
+          "method": "public void onEnterCombat();"
+        },
+        {
+          "line": 888,
+          "method": "public void onLeaveCombat();"
+        },
+        {
+          "line": 902,
+          "method": "public void onInsideBlock(net.minecraft.world.level.block.state.BlockState);"
+        },
+        {
+          "line": 910,
+          "method": "protected net.minecraft.world.item.ItemCooldowns createItemCooldowns();"
+        },
+        {
+          "line": 918,
+          "method": "public void tick();"
+        },
+        {
+          "line": 1022,
+          "method": "private void updatePlayerAttributes();"
+        },
+        {
+          "line": 1074,
+          "method": "public void doTick();"
+        },
+        {
+          "line": 1357,
+          "method": "private void synchronizeSpecialItemUpdates(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1384,
+          "method": "protected void tickRegeneration();"
+        },
+        {
+          "line": 1446,
+          "method": "public void handleShoulderEntities();"
+        },
+        {
+          "line": 1478,
+          "method": "private void playShoulderEntityAmbientSound(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 1533,
+          "method": "public boolean setEntityOnShoulder(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 1580,
+          "method": "protected void removeEntitiesOnShoulder();"
+        },
+        {
+          "line": 1611,
+          "method": "private void respawnEntityOnShoulder(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 1663,
+          "method": "public void resetFallDistance();"
+        },
+        {
+          "line": 1685,
+          "method": "public void trackStartFallingPosition();"
+        },
+        {
+          "line": 1725,
+          "method": "public void trackEnteredOrExitedLavaOnVehicle();"
+        },
+        {
+          "line": 1762,
+          "method": "private void updateScoreForCriteria(net.minecraft.world.scores.criteria.ObjectiveCriteria, int);"
+        },
+        {
+          "line": 1774,
+          "method": "public void die(net.minecraft.world.damagesource.DamageSource);"
+        },
+        {
+          "line": 1941,
+          "method": "private void tellNeutralMobsThatIDied();"
+        },
+        {
+          "line": 1967,
+          "method": "public void awardKillScore(net.minecraft.world.entity.Entity, net.minecraft.world.damagesource.DamageSource);"
+        },
+        {
+          "line": 2018,
+          "method": "private void handleTeamKill(net.minecraft.world.scores.ScoreHolder, net.minecraft.world.scores.ScoreHolder, java.util.Map<net.minecraft.world.scores.TeamColor, net.minecraft.world.scores.criteria.ObjectiveCriteria>);"
+        },
+        {
+          "line": 2051,
+          "method": "public boolean hurtServer(net.minecraft.server.level.ServerLevel, net.minecraft.world.damagesource.DamageSource, float);"
+        },
+        {
+          "line": 2103,
+          "method": "public boolean canHarmPlayer(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 2115,
+          "method": "private boolean isPvpAllowed();"
+        },
+        {
+          "line": 2122,
+          "method": "public net.minecraft.world.level.portal.TeleportTransition findRespawnPositionAndUseSpawnBlock(boolean, net.minecraft.world.level.portal.TeleportTransition$PostTeleportTransition);"
+        },
+        {
+          "line": 2171,
+          "method": "public boolean isReceivingWaypoints();"
+        },
+        {
+          "line": 2184,
+          "method": "protected void onAttributeUpdated(net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute>);"
+        },
+        {
+          "line": 2213,
+          "method": "public void sendPostEffects();"
+        },
+        {
+          "line": 2228,
+          "method": "public boolean addPostEffect(net.minecraft.resources.Identifier);"
+        },
+        {
+          "line": 2248,
+          "method": "public boolean clearPostEffects();"
+        },
+        {
+          "line": 2265,
+          "method": "public java.util.List<net.minecraft.resources.Identifier> getPostEffects();"
+        },
+        {
+          "line": 2271,
+          "method": "public boolean removePostEffect(net.minecraft.resources.Identifier);"
+        },
+        {
+          "line": 2286,
+          "method": "private static java.util.Optional<net.minecraft.server.level.ServerPlayer$RespawnPosAngle> findRespawnAndUseSpawnBlock(net.minecraft.server.level.ServerLevel, net.minecraft.server.level.ServerPlayer$RespawnConfig, boolean);"
+        },
+        {
+          "line": 2434,
+          "method": "public void showEndCredits();"
+        },
+        {
+          "line": 2462,
+          "method": "public net.minecraft.server.level.ServerPlayer teleport(net.minecraft.world.level.portal.TeleportTransition);"
+        },
+        {
+          "line": 2637,
+          "method": "public void forceSetRotation(float, boolean, float, boolean);"
+        },
+        {
+          "line": 2657,
+          "method": "private void triggerDimensionChangeTriggers(net.minecraft.server.level.ServerLevel);"
+        },
+        {
+          "line": 2693,
+          "method": "public boolean broadcastToPlayer(net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 2716,
+          "method": "public void take(net.minecraft.world.entity.Entity, int);"
+        },
+        {
+          "line": 2727,
+          "method": "public com.mojang.datafixers.util.Either<net.minecraft.world.entity.player.Player$BedSleepingProblem, net.minecraft.util.Unit> startSleepInBed(net.minecraft.world.level.block.AbstractBedBlock, net.minecraft.world.level.block.state.BlockState, net.minecraft.world.attribute.BedRule, net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 2869,
+          "method": "public boolean startSleeping(net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 2901,
+          "method": "private boolean bedInRange(net.minecraft.core.BlockPos, net.minecraft.core.Direction);"
+        },
+        {
+          "line": 2919,
+          "method": "private boolean isReachableBedBlock(net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 2956,
+          "method": "private boolean bedBlocked(net.minecraft.core.BlockPos, net.minecraft.core.Direction);"
+        },
+        {
+          "line": 2977,
+          "method": "public void stopSleepInBed(boolean, boolean);"
+        },
+        {
+          "line": 3014,
+          "method": "public boolean isInvulnerableTo(net.minecraft.server.level.ServerLevel, net.minecraft.world.damagesource.DamageSource);"
+        },
+        {
+          "line": 3037,
+          "method": "protected void onChangedBlock(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 3048,
+          "method": "protected void checkFallDamage(double, boolean, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 3107,
+          "method": "public void onExplosionHit(net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 3134,
+          "method": "protected void pushEntities();"
+        },
+        {
+          "line": 3145,
+          "method": "public void openTextEdit(net.minecraft.world.level.block.entity.SignBlockEntity, net.minecraft.world.level.block.entity.SignTextSlot);"
+        },
+        {
+          "line": 3168,
+          "method": "public void openDialog(net.minecraft.core.Holder<net.minecraft.server.dialog.Dialog>);"
+        },
+        {
+          "line": 3179,
+          "method": "private void nextContainerCounter();"
+        },
+        {
+          "line": 3191,
+          "method": "public java.util.OptionalInt openMenu(net.minecraft.world.MenuProvider);"
+        },
+        {
+          "line": 3250,
+          "method": "public void sendMerchantOffers(int, net.minecraft.world.item.trading.MerchantOffers, int, int, boolean, boolean);"
+        },
+        {
+          "line": 3266,
+          "method": "public void openHorseInventory(net.minecraft.world.entity.animal.equine.AbstractHorse, net.minecraft.world.Container);"
+        },
+        {
+          "line": 3309,
+          "method": "public void openNautilusInventory(net.minecraft.world.entity.animal.nautilus.AbstractNautilus, net.minecraft.world.Container);"
+        },
+        {
+          "line": 3352,
+          "method": "public void openItemGui(net.minecraft.world.item.ItemStack, net.minecraft.world.InteractionHand);"
+        },
+        {
+          "line": 3378,
+          "method": "public void openCommandBlock(net.minecraft.world.level.block.entity.CommandBlockEntity);"
+        },
+        {
+          "line": 3388,
+          "method": "public void closeContainer();"
+        },
+        {
+          "line": 3403,
+          "method": "public void doCloseContainer();"
+        },
+        {
+          "line": 3420,
+          "method": "public void rideTick();"
+        },
+        {
+          "line": 3449,
+          "method": "public void checkMovementStatistics(double, double, double);"
+        },
+        {
+          "line": 3688,
+          "method": "private void checkRidingStatistics(double, double, double);"
+        },
+        {
+          "line": 3776,
+          "method": "private static boolean didNotMove(double, double, double);"
+        },
+        {
+          "line": 3795,
+          "method": "public void awardStat(net.minecraft.stats.Stat<?>, int);"
+        },
+        {
+          "line": 3813,
+          "method": "public void resetStat(net.minecraft.stats.Stat<?>);"
+        },
+        {
+          "line": 3830,
+          "method": "public int awardRecipes(java.util.Collection<net.minecraft.world.item.crafting.RecipeHolder<?>>);"
+        },
+        {
+          "line": 3839,
+          "method": "public void triggerRecipeCrafted(net.minecraft.world.item.crafting.RecipeHolder<?>, java.util.List<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 3849,
+          "method": "public void awardRecipesByKey(java.util.List<net.minecraft.resources.ResourceKey<net.minecraft.world.item.crafting.Recipe<?>>>);"
+        },
+        {
+          "line": 3866,
+          "method": "public int resetRecipes(java.util.Collection<net.minecraft.world.item.crafting.RecipeHolder<?>>);"
+        },
+        {
+          "line": 3875,
+          "method": "public void jumpFromGround();"
+        },
+        {
+          "line": 3894,
+          "method": "public void giveExperiencePoints(int);"
+        },
+        {
+          "line": 3907,
+          "method": "public void disconnect();"
+        },
+        {
+          "line": 3923,
+          "method": "public boolean hasDisconnected();"
+        },
+        {
+          "line": 3929,
+          "method": "public void resetSentInfo();"
+        },
+        {
+          "line": 3936,
+          "method": "protected void completeUsingItem();"
+        },
+        {
+          "line": 3957,
+          "method": "public void lookAt(net.minecraft.commands.arguments.EntityAnchorArgument$Anchor, net.minecraft.world.phys.Vec3);"
+        },
+        {
+          "line": 3978,
+          "method": "public void lookAt(net.minecraft.commands.arguments.EntityAnchorArgument$Anchor, net.minecraft.world.entity.Entity, net.minecraft.commands.arguments.EntityAnchorArgument$Anchor);"
+        },
+        {
+          "line": 3999,
+          "method": "public void restoreFrom(net.minecraft.server.level.ServerPlayer, boolean);"
+        },
+        {
+          "line": 4159,
+          "method": "private void transferInventoryXpAndScore(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 4184,
+          "method": "protected void onEffectAdded(net.minecraft.world.effect.MobEffectInstance, net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 4218,
+          "method": "protected void onEffectUpdated(net.minecraft.world.effect.MobEffectInstance, boolean, net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 4241,
+          "method": "protected void onEffectsRemoved(java.util.Collection<net.minecraft.world.effect.MobEffectInstance>);"
+        },
+        {
+          "line": 4280,
+          "method": "public void teleportTo(double, double, double);"
+        },
+        {
+          "line": 4310,
+          "method": "public void teleportRelative(double, double, double);"
+        },
+        {
+          "line": 4330,
+          "method": "public boolean teleportTo(net.minecraft.server.level.ServerLevel, double, double, double, java.util.Set<net.minecraft.world.entity.Relative>, float, float, boolean);"
+        },
+        {
+          "line": 4375,
+          "method": "public void snapTo(double, double, double);"
+        },
+        {
+          "line": 4387,
+          "method": "public void crit(net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 4401,
+          "method": "public void magicCrit(net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 4415,
+          "method": "public void onUpdateAbilities();"
+        },
+        {
+          "line": 4433,
+          "method": "public net.minecraft.server.level.ServerLevel level();"
+        },
+        {
+          "line": 4440,
+          "method": "public boolean setGameMode(net.minecraft.world.level.GameType);"
+        },
+        {
+          "line": 4490,
+          "method": "public net.minecraft.world.level.GameType gameMode();"
+        },
+        {
+          "line": 4497,
+          "method": "public net.minecraft.commands.CommandSource commandSource();"
+        },
+        {
+          "line": 4503,
+          "method": "public net.minecraft.commands.CommandSourceStack createCommandSourceStack();"
+        },
+        {
+          "line": 4523,
+          "method": "public void sendSystemMessage(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 4531,
+          "method": "public void sendOverlayMessage(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 4539,
+          "method": "public void sendBuildLimitMessage(boolean, int);"
+        },
+        {
+          "line": 4560,
+          "method": "public void sendSpawnProtectionMessage(net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 4577,
+          "method": "public void sendSystemMessage(net.minecraft.network.chat.Component, boolean);"
+        },
+        {
+          "line": 4598,
+          "method": "public void sendChatMessage(net.minecraft.network.chat.OutgoingChatMessage, boolean, net.minecraft.network.chat.ChatType$Bound);"
+        },
+        {
+          "line": 4610,
+          "method": "public java.lang.String getIpAddress();"
+        },
+        {
+          "line": 4629,
+          "method": "public void updateOptions(net.minecraft.server.level.ClientInformation);"
+        },
+        {
+          "line": 4675,
+          "method": "public net.minecraft.server.level.ClientInformation clientInformation();"
+        },
+        {
+          "line": 4706,
+          "method": "public boolean canChatInColor();"
+        },
+        {
+          "line": 4712,
+          "method": "public net.minecraft.world.entity.player.ChatVisiblity getChatVisibility();"
+        },
+        {
+          "line": 4718,
+          "method": "private boolean acceptsSystemMessages(boolean);"
+        },
+        {
+          "line": 4729,
+          "method": "private boolean acceptsChatMessages();"
+        },
+        {
+          "line": 4740,
+          "method": "public int requestedViewDistance();"
+        },
+        {
+          "line": 4746,
+          "method": "public void sendServerStatus(net.minecraft.network.protocol.status.ServerStatus);"
+        },
+        {
+          "line": 4762,
+          "method": "public net.minecraft.server.permissions.PermissionSet permissions();"
+        },
+        {
+          "line": 4771,
+          "method": "public void resetLastActionTime();"
+        },
+        {
+          "line": 4778,
+          "method": "public net.minecraft.stats.ServerStatsCounter getStats();"
+        },
+        {
+          "line": 4784,
+          "method": "public net.minecraft.stats.ServerRecipeBook getRecipeBook();"
+        },
+        {
+          "line": 4790,
+          "method": "protected void updateInvisibilityStatus();"
+        },
+        {
+          "line": 4805,
+          "method": "public net.minecraft.world.entity.Entity getCamera();"
+        },
+        {
+          "line": 4816,
+          "method": "public void setCamera(net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 4881,
+          "method": "protected void processPortalCooldown();"
+        },
+        {
+          "line": 4890,
+          "method": "public long getLastActionTime();"
+        },
+        {
+          "line": 4896,
+          "method": "public net.minecraft.network.chat.Component getTabListDisplayName();"
+        },
+        {
+          "line": 4901,
+          "method": "public int getTabListOrder();"
+        },
+        {
+          "line": 4906,
+          "method": "public boolean isChangingDimension();"
+        },
+        {
+          "line": 4912,
+          "method": "public void hasChangedDimension();"
+        },
+        {
+          "line": 4919,
+          "method": "public net.minecraft.server.PlayerAdvancements getAdvancements();"
+        },
+        {
+          "line": 4925,
+          "method": "public net.minecraft.server.level.ServerPlayer$RespawnConfig getRespawnConfig();"
+        },
+        {
+          "line": 4931,
+          "method": "public void copyRespawnPosition(net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 4940,
+          "method": "public void setRespawnPosition(net.minecraft.server.level.ServerPlayer$RespawnConfig, boolean);"
+        },
+        {
+          "line": 4959,
+          "method": "public net.minecraft.core.SectionPos getLastSectionPos();"
+        },
+        {
+          "line": 4965,
+          "method": "public void setLastSectionPos(net.minecraft.core.SectionPos);"
+        },
+        {
+          "line": 4972,
+          "method": "public net.minecraft.server.level.ChunkTrackingView getChunkTrackingView();"
+        },
+        {
+          "line": 4978,
+          "method": "public void setChunkTrackingView(net.minecraft.server.level.ChunkTrackingView);"
+        },
+        {
+          "line": 4985,
+          "method": "public net.minecraft.world.entity.item.ItemEntity drop(net.minecraft.world.item.ItemStack, boolean, net.minecraft.util.Prediction);"
+        },
+        {
+          "line": 5019,
+          "method": "public net.minecraft.server.network.TextFilter getTextFilter();"
+        },
+        {
+          "line": 5025,
+          "method": "public void setServerLevel(net.minecraft.server.level.ServerLevel);"
+        },
+        {
+          "line": 5036,
+          "method": "private static net.minecraft.world.level.GameType readPlayerMode(net.minecraft.world.level.storage.ValueInput, java.lang.String);"
+        },
+        {
+          "line": 5047,
+          "method": "private net.minecraft.world.level.GameType calculateGameModeForNewPlayer(net.minecraft.world.level.GameType);"
+        },
+        {
+          "line": 5078,
+          "method": "private void storeGameTypes(net.minecraft.world.level.storage.ValueOutput);"
+        },
+        {
+          "line": 5098,
+          "method": "public boolean isTextFilteringEnabled();"
+        },
+        {
+          "line": 5104,
+          "method": "public boolean shouldFilterMessageTo(net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 5122,
+          "method": "public boolean mayInteract(net.minecraft.server.level.ServerLevel, net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 5139,
+          "method": "protected void updateUsingItem(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 5150,
+          "method": "public void drop(boolean);"
+        },
+        {
+          "line": 5185,
+          "method": "public void handleExtraItemsCreatedOnUse(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 5200,
+          "method": "public boolean allowsListing();"
+        },
+        {
+          "line": 5206,
+          "method": "public net.minecraft.world.entity.monster.warden.WardenSpawnTracker getWardenSpawnTracker();"
+        },
+        {
+          "line": 5212,
+          "method": "public void setSpawnExtraParticlesOnFall(boolean);"
+        },
+        {
+          "line": 5219,
+          "method": "public void onItemPickup(net.minecraft.world.entity.item.ItemEntity);"
+        },
+        {
+          "line": 5237,
+          "method": "public void setChatSession(net.minecraft.network.chat.RemoteChatSession);"
+        },
+        {
+          "line": 5244,
+          "method": "public net.minecraft.network.chat.RemoteChatSession getChatSession();"
+        },
+        {
+          "line": 5259,
+          "method": "public void indicateDamage(double, double);"
+        },
+        {
+          "line": 5282,
+          "method": "public boolean startRiding(net.minecraft.world.entity.Entity, boolean, boolean);"
+        },
+        {
+          "line": 5330,
+          "method": "public void removeVehicle();"
+        },
+        {
+          "line": 5376,
+          "method": "public net.minecraft.network.protocol.game.CommonPlayerSpawnInfo createCommonSpawnInfo(net.minecraft.server.level.ServerLevel);"
+        },
+        {
+          "line": 5407,
+          "method": "public void setRaidOmenPosition(net.minecraft.core.BlockPos);"
+        },
+        {
+          "line": 5414,
+          "method": "public void clearRaidOmenPosition();"
+        },
+        {
+          "line": 5421,
+          "method": "public net.minecraft.core.BlockPos getRaidOmenPosition();"
+        },
+        {
+          "line": 5427,
+          "method": "public net.minecraft.world.phys.Vec3 getKnownMovement();"
+        },
+        {
+          "line": 5445,
+          "method": "public net.minecraft.world.phys.Vec3 getKnownSpeed();"
+        },
+        {
+          "line": 5463,
+          "method": "public void setKnownMovement(net.minecraft.world.phys.Vec3);"
+        },
+        {
+          "line": 5470,
+          "method": "protected float getEnchantedDamage(net.minecraft.world.entity.Entity, float, net.minecraft.world.damagesource.DamageSource);"
+        },
+        {
+          "line": 5482,
+          "method": "public void onEquippedItemBroken(net.minecraft.world.item.ItemStack, net.minecraft.world.entity.EquipmentSlot);"
+        },
+        {
+          "line": 5496,
+          "method": "public net.minecraft.world.entity.player.Input getLastClientInput();"
+        },
+        {
+          "line": 5502,
+          "method": "public void setLastClientInput(net.minecraft.world.entity.player.Input);"
+        },
+        {
+          "line": 5509,
+          "method": "public net.minecraft.world.phys.Vec3 getLastClientMoveIntent();"
+        },
+        {
+          "line": 5559,
+          "method": "public void registerEnderPearl(net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl);"
+        },
+        {
+          "line": 5568,
+          "method": "public void deregisterEnderPearl(net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl);"
+        },
+        {
+          "line": 5577,
+          "method": "public java.util.Set<net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl> getEnderPearls();"
+        },
+        {
+          "line": 5583,
+          "method": "public net.minecraft.nbt.CompoundTag getShoulderEntityLeft();"
+        },
+        {
+          "line": 5589,
+          "method": "protected void setShoulderEntityLeft(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 5600,
+          "method": "public net.minecraft.nbt.CompoundTag getShoulderEntityRight();"
+        },
+        {
+          "line": 5606,
+          "method": "protected void setShoulderEntityRight(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 5617,
+          "method": "public long registerAndUpdateEnderPearlTicket(net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl);"
+        },
+        {
+          "line": 5645,
+          "method": "public static long placeEnderPearlTicket(net.minecraft.server.level.ServerLevel, net.minecraft.world.level.ChunkPos);"
+        },
+        {
+          "line": 5657,
+          "method": "public void requestDebugSubscriptions(java.util.Set<net.minecraft.util.debug.DebugSubscription<?>>);"
+        },
+        {
+          "line": 5665,
+          "method": "public java.util.Set<net.minecraft.util.debug.DebugSubscription<?>> debugSubscriptions();"
+        },
+        {
+          "line": 5679,
+          "method": "public void swingAndResetAttackStrength(net.minecraft.world.InteractionHand, net.minecraft.world.item.component.SwingAnimation, boolean);"
+        },
+        {
+          "line": 5691,
+          "method": "public net.minecraft.world.level.Level level();"
+        },
+        {
+          "line": 5697,
+          "method": "public net.minecraft.world.entity.Entity teleport(net.minecraft.world.level.portal.TeleportTransition);"
+        },
+        {
+          "line": 5704,
+          "method": "private void lambda$drop$0(net.minecraft.world.entity.player.Inventory, int);"
+        },
+        {
+          "line": 5714,
+          "method": "private net.minecraft.network.protocol.Packet lambda$sendSystemMessage$0(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 5749,
+          "method": "private java.util.stream.Stream lambda$awardRecipesByKey$0(net.minecraft.resources.ResourceKey);"
+        },
+        {
+          "line": 5759,
+          "method": "private static void lambda$awardStat$0(int, net.minecraft.world.scores.ScoreAccess);"
+        },
+        {
+          "line": 5767,
+          "method": "private void lambda$startSleepInBed$1(net.minecraft.world.level.block.AbstractBedBlock, boolean, net.minecraft.util.Unit);"
+        },
+        {
+          "line": 5780,
+          "method": "private boolean lambda$startSleepInBed$0(net.minecraft.world.entity.monster.Monster);"
+        },
+        {
+          "line": 5789,
+          "method": "private static net.minecraft.server.level.ServerPlayer$RespawnPosAngle lambda$findRespawnAndUseSpawnBlock$1(net.minecraft.core.BlockPos, net.minecraft.world.phys.Vec3);"
+        },
+        {
+          "line": 5797,
+          "method": "private static net.minecraft.server.level.ServerPlayer$RespawnPosAngle lambda$findRespawnAndUseSpawnBlock$0(net.minecraft.core.BlockPos, net.minecraft.world.phys.Vec3);"
+        },
+        {
+          "line": 5805,
+          "method": "private void lambda$tellNeutralMobsThatIDied$1(net.minecraft.world.entity.Mob);"
+        },
+        {
+          "line": 5815,
+          "method": "private static boolean lambda$tellNeutralMobsThatIDied$0(net.minecraft.world.entity.Mob);"
+        },
+        {
+          "line": 5821,
+          "method": "private net.minecraft.network.protocol.Packet lambda$die$0(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 5862,
+          "method": "private static net.minecraft.network.chat.Style lambda$die$1(net.minecraft.network.chat.Component, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 5872,
+          "method": "private static void lambda$updateScoreForCriteria$0(int, net.minecraft.world.scores.ScoreAccess);"
+        },
+        {
+          "line": 5879,
+          "method": "private void lambda$respawnEntityOnShoulder$1(net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 5906,
+          "method": "private static java.lang.String lambda$respawnEntityOnShoulder$0();"
+        },
+        {
+          "line": 5911,
+          "method": "private static net.minecraft.world.entity.Entity lambda$loadAndSpawnEnderPearl$0(net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 5922,
+          "method": "private static net.minecraft.world.entity.Entity lambda$loadAndSpawnParentVehicle$0(net.minecraft.server.level.ServerLevel, net.minecraft.world.entity.Entity);"
+        },
+        {
+          "line": 5933,
+          "method": "private void lambda$readAdditionalSaveData$0(net.minecraft.stats.ServerRecipeBook$Packed);"
+        },
+        {
+          "line": 5943,
+          "method": "private boolean lambda$readAdditionalSaveData$1(net.minecraft.resources.ResourceKey);"
+        },
+        {
+          "line": 5953,
+          "method": "private static void lambda$new$0(net.minecraft.server.MinecraftServer, net.minecraft.resources.ResourceKey, java.util.function.Consumer);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/server/level/ServerPlayer$2.class",
+      "size": 2146,
+      "sha256": "850b616b38ac7ba847a57093301b51d8569d812ca86b0d60731b29f3b18183c3",
+      "locations": [
+        {
+          "line": 17,
+          "method": "public void slotChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 43,
+          "method": "public void dataChanged(net.minecraft.world.inventory.AbstractContainerMenu, int, int);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/world/inventory/InventoryMenu.class",
+      "size": 8883,
+      "sha256": "02e89607f947e0987373dd8f665e3b68fc96f24187e5ff75f3f02f3c519f1931",
+      "locations": [
+        {
+          "line": 51,
+          "method": "public net.minecraft.world.inventory.InventoryMenu(net.minecraft.world.entity.player.Inventory, boolean, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 129,
+          "method": "public static boolean isHotbarSlot(int);"
+        },
+        {
+          "line": 145,
+          "method": "public void slotsChanged(net.minecraft.world.Container);"
+        },
+        {
+          "line": 169,
+          "method": "public void removed(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 189,
+          "method": "public boolean stillValid(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 194,
+          "method": "public net.minecraft.world.item.ItemStack quickMoveStack(net.minecraft.world.entity.player.Player, int);"
+        },
+        {
+          "line": 384,
+          "method": "public boolean canTakeItemForPickAll(net.minecraft.world.item.ItemStack, net.minecraft.world.inventory.Slot);"
+        },
+        {
+          "line": 401,
+          "method": "public net.minecraft.world.inventory.Slot getResultSlot();"
+        },
+        {
+          "line": 410,
+          "method": "public java.util.List<net.minecraft.world.inventory.Slot> getInputGridSlots();"
+        },
+        {
+          "line": 419,
+          "method": "public net.minecraft.world.inventory.CraftingContainer getCraftSlots();"
+        },
+        {
+          "line": 425,
+          "method": "public net.minecraft.world.inventory.RecipeBookType getRecipeBookType();"
+        },
+        {
+          "line": 430,
+          "method": "protected net.minecraft.world.entity.player.Player owner();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/world/inventory/AbstractContainerMenu.class",
+      "size": 35703,
+      "sha256": "4dcc15a5c6cb65973f18a3e330ad4416233b88b468fb2709ea431c7aebb01c02",
+      "locations": [
+        {
+          "line": 61,
+          "method": "protected net.minecraft.world.inventory.AbstractContainerMenu(net.minecraft.world.inventory.MenuType<?>, int);"
+        },
+        {
+          "line": 105,
+          "method": "protected void addInventoryHotbarSlots(net.minecraft.world.Container, int, int);"
+        },
+        {
+          "line": 130,
+          "method": "protected void addInventoryExtendedSlots(net.minecraft.world.Container, int, int);"
+        },
+        {
+          "line": 172,
+          "method": "protected void addStandardInventorySlots(net.minecraft.world.Container, int, int);"
+        },
+        {
+          "line": 192,
+          "method": "protected static boolean stillValid(net.minecraft.world.inventory.ContainerLevelAccess, net.minecraft.world.entity.player.Player, net.minecraft.world.level.block.Block);"
+        },
+        {
+          "line": 205,
+          "method": "public net.minecraft.world.inventory.MenuType<?> getType();"
+        },
+        {
+          "line": 219,
+          "method": "protected static void checkContainerSize(net.minecraft.world.Container, int);"
+        },
+        {
+          "line": 236,
+          "method": "protected static void checkContainerDataCount(net.minecraft.world.inventory.ContainerData, int);"
+        },
+        {
+          "line": 253,
+          "method": "public boolean isValidSlotIndex(int);"
+        },
+        {
+          "line": 271,
+          "method": "protected net.minecraft.world.inventory.Slot addSlot(net.minecraft.world.inventory.Slot);"
+        },
+        {
+          "line": 303,
+          "method": "protected net.minecraft.world.inventory.DataSlot addDataSlot(net.minecraft.world.inventory.DataSlot);"
+        },
+        {
+          "line": 318,
+          "method": "protected void addDataSlots(net.minecraft.world.inventory.ContainerData);"
+        },
+        {
+          "line": 336,
+          "method": "public void addSlotListener(net.minecraft.world.inventory.ContainerListener);"
+        },
+        {
+          "line": 353,
+          "method": "public void setSynchronizer(net.minecraft.world.inventory.ContainerSynchronizer);"
+        },
+        {
+          "line": 371,
+          "method": "public void sendAllDataToRemote();"
+        },
+        {
+          "line": 454,
+          "method": "public void removeSlotListener(net.minecraft.world.inventory.ContainerListener);"
+        },
+        {
+          "line": 463,
+          "method": "public net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack> getItems();"
+        },
+        {
+          "line": 487,
+          "method": "public void broadcastChanges();"
+        },
+        {
+          "line": 555,
+          "method": "public void broadcastFullState();"
+        },
+        {
+          "line": 609,
+          "method": "private void updateDataSlotListeners(int, int);"
+        },
+        {
+          "line": 630,
+          "method": "private void triggerSlotListeners(int, net.minecraft.world.item.ItemStack, java.util.function.Supplier<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 671,
+          "method": "private void synchronizeSlotToRemote(int, net.minecraft.world.item.ItemStack, java.util.function.Supplier<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 703,
+          "method": "private void synchronizeDataSlotToRemote(int, int);"
+        },
+        {
+          "line": 734,
+          "method": "private void synchronizeCarriedToRemote();"
+        },
+        {
+          "line": 763,
+          "method": "public void setRemoteSlot(int, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 774,
+          "method": "public void setRemoteSlotUnsafe(int, net.minecraft.network.HashedStack);"
+        },
+        {
+          "line": 802,
+          "method": "public void setRemoteCarried(net.minecraft.network.HashedStack);"
+        },
+        {
+          "line": 810,
+          "method": "public boolean clickMenuButton(net.minecraft.world.entity.player.Player, int);"
+        },
+        {
+          "line": 815,
+          "method": "public net.minecraft.world.inventory.Slot getSlot(int);"
+        },
+        {
+          "line": 824,
+          "method": "public abstract net.minecraft.world.item.ItemStack quickMoveStack(net.minecraft.world.entity.player.Player, int);"
+        },
+        {
+          "line": 826,
+          "method": "public void setSelectedBundleItemIndex(int, int);"
+        },
+        {
+          "line": 847,
+          "method": "public void clicked(int, int, net.minecraft.world.inventory.ContainerInput, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 912,
+          "method": "private void doClick(int, int, net.minecraft.world.inventory.ContainerInput, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 1725,
+          "method": "private static boolean isContainerClickButton(int);"
+        },
+        {
+          "line": 1737,
+          "method": "private static net.minecraft.world.inventory.ClickAction getClickAction(int);"
+        },
+        {
+          "line": 1757,
+          "method": "private boolean tryItemClickBehaviourOverride(net.minecraft.world.entity.player.Player, net.minecraft.world.inventory.ClickAction, net.minecraft.world.inventory.Slot, net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1793,
+          "method": "private net.minecraft.world.entity.SlotAccess createCarriedSlotAccess();"
+        },
+        {
+          "line": 1801,
+          "method": "public boolean canTakeItemForPickAll(net.minecraft.world.item.ItemStack, net.minecraft.world.inventory.Slot);"
+        },
+        {
+          "line": 1806,
+          "method": "public void removed(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 1826,
+          "method": "private static void dropOrPlaceInInventory(net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1866,
+          "method": "protected void clearContainer(net.minecraft.world.entity.player.Player, net.minecraft.world.Container);"
+        },
+        {
+          "line": 1883,
+          "method": "public void slotsChanged(net.minecraft.world.Container);"
+        },
+        {
+          "line": 1889,
+          "method": "public void setItem(int, int, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1901,
+          "method": "public void initializeContents(int, java.util.List<net.minecraft.world.item.ItemStack>, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1927,
+          "method": "public void setData(int, int);"
+        },
+        {
+          "line": 1938,
+          "method": "public abstract boolean stillValid(net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 1940,
+          "method": "protected boolean moveItemStackTo(net.minecraft.world.item.ItemStack, int, int, boolean);"
+        },
+        {
+          "line": 2093,
+          "method": "public static int getQuickcraftType(int);"
+        },
+        {
+          "line": 2102,
+          "method": "public static int getQuickcraftHeader(int);"
+        },
+        {
+          "line": 2109,
+          "method": "public static int getQuickcraftMask(int, int);"
+        },
+        {
+          "line": 2122,
+          "method": "public static boolean isValidQuickcraftType(int, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 2144,
+          "method": "protected void resetQuickCraft();"
+        },
+        {
+          "line": 2154,
+          "method": "public static boolean canItemQuickReplace(net.minecraft.world.inventory.Slot, net.minecraft.world.item.ItemStack, boolean);"
+        },
+        {
+          "line": 2192,
+          "method": "public static int getQuickCraftPlaceCount(int, int, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2218,
+          "method": "public boolean canDragTo(net.minecraft.world.inventory.Slot);"
+        },
+        {
+          "line": 2223,
+          "method": "public static int getRedstoneSignalFromBlockEntity(net.minecraft.world.level.block.entity.BlockEntity);"
+        },
+        {
+          "line": 2237,
+          "method": "public static int getRedstoneSignalFromContainer(net.minecraft.world.Container);"
+        },
+        {
+          "line": 2283,
+          "method": "public void setCarried(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2290,
+          "method": "public net.minecraft.world.item.ItemStack getCarried();"
+        },
+        {
+          "line": 2296,
+          "method": "public void suppressRemoteUpdates();"
+        },
+        {
+          "line": 2303,
+          "method": "public void resumeRemoteUpdates();"
+        },
+        {
+          "line": 2310,
+          "method": "public void transferState(net.minecraft.world.inventory.AbstractContainerMenu);"
+        },
+        {
+          "line": 2406,
+          "method": "public java.util.OptionalInt findSlot(net.minecraft.world.Container, int);"
+        },
+        {
+          "line": 2437,
+          "method": "public int getStateId();"
+        },
+        {
+          "line": 2443,
+          "method": "public int incrementStateId();"
+        },
+        {
+          "line": 2457,
+          "method": "private static void lambda$doClick$1(net.minecraft.world.item.ItemStack, net.minecraft.world.inventory.Slot, net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2469,
+          "method": "private void lambda$doClick$0(net.minecraft.world.inventory.Slot, net.minecraft.world.entity.player.Player, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2480,
+          "method": "private java.lang.String lambda$clicked$1() throws java.lang.Exception;"
+        },
+        {
+          "line": 2487,
+          "method": "private java.lang.String lambda$clicked$0() throws java.lang.Exception;"
+        },
+        {
+          "line": 2501,
+          "method": "private static net.minecraft.world.inventory.RemoteSlot lambda$setSynchronizer$0(net.minecraft.world.inventory.ContainerSynchronizer, net.minecraft.world.inventory.RemoteSlot);"
+        },
+        {
+          "line": 2507,
+          "method": "private static java.lang.Boolean lambda$stillValid$0(net.minecraft.world.level.block.Block, net.minecraft.world.entity.player.Player, net.minecraft.world.level.Level, net.minecraft.core.BlockPos);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/world/item/ItemStack.class",
+      "size": 71747,
+      "sha256": "c6d650ae8248b529b5db7f0d27376ecb8cf48dfce8eb89bf3280902dcc9ece32",
+      "locations": [
+        {
+          "line": 37,
+          "method": "public static com.mojang.serialization.DataResult<net.minecraft.world.item.ItemStack> validateStrict(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 64,
+          "method": "private static net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.world.item.ItemStack> createOptionalStreamCodec(net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.core.component.DataComponentPatch>);"
+        },
+        {
+          "line": 72,
+          "method": "public static net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.world.item.ItemStack> validatedStreamCodec(net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 80,
+          "method": "public java.util.Optional<net.minecraft.world.inventory.tooltip.TooltipComponent> getTooltipImage();"
+        },
+        {
+          "line": 88,
+          "method": "public net.minecraft.core.component.DataComponentMap getComponents();"
+        },
+        {
+          "line": 99,
+          "method": "public net.minecraft.core.component.DataComponentMap getPrototype();"
+        },
+        {
+          "line": 111,
+          "method": "public net.minecraft.core.component.DataComponentPatch getComponentsPatch();"
+        },
+        {
+          "line": 123,
+          "method": "public net.minecraft.core.component.DataComponentMap immutableComponents();"
+        },
+        {
+          "line": 135,
+          "method": "public boolean hasNonDefault(net.minecraft.core.component.DataComponentType<?>);"
+        },
+        {
+          "line": 150,
+          "method": "public net.minecraft.world.item.ItemStack(net.minecraft.world.level.ItemLike, int);"
+        },
+        {
+          "line": 160,
+          "method": "public net.minecraft.world.item.ItemStack(net.minecraft.world.level.ItemLike);"
+        },
+        {
+          "line": 170,
+          "method": "public net.minecraft.world.item.ItemStack(net.minecraft.core.Holder<net.minecraft.world.item.Item>, int);"
+        },
+        {
+          "line": 183,
+          "method": "public net.minecraft.world.item.ItemStack(net.minecraft.core.Holder<net.minecraft.world.item.Item>);"
+        },
+        {
+          "line": 191,
+          "method": "public net.minecraft.world.item.ItemStack(net.minecraft.core.Holder<net.minecraft.world.item.Item>, int, net.minecraft.core.component.DataComponentPatch);"
+        },
+        {
+          "line": 203,
+          "method": "private net.minecraft.world.item.ItemStack(net.minecraft.core.Holder<net.minecraft.world.item.Item>, int, net.minecraft.core.component.PatchedDataComponentMap);"
+        },
+        {
+          "line": 218,
+          "method": "private net.minecraft.world.item.ItemStack(java.lang.Void);"
+        },
+        {
+          "line": 233,
+          "method": "private static com.mojang.serialization.DataResult<?> validateComponents(net.minecraft.core.component.DataComponentMap);"
+        },
+        {
+          "line": 311,
+          "method": "private static com.mojang.serialization.DataResult<?> validateContainedItemSizes(java.lang.Iterable<? extends net.minecraft.world.item.ItemInstance>);"
+        },
+        {
+          "line": 342,
+          "method": "public boolean isEmpty();"
+        },
+        {
+          "line": 360,
+          "method": "public boolean isItemEnabled(net.minecraft.world.flag.FeatureFlagSet);"
+        },
+        {
+          "line": 375,
+          "method": "public net.minecraft.world.item.ItemStack split(int);"
+        },
+        {
+          "line": 392,
+          "method": "public net.minecraft.world.item.ItemStack copyAndClear();"
+        },
+        {
+          "line": 408,
+          "method": "public net.minecraft.world.item.Item getItem();"
+        },
+        {
+          "line": 416,
+          "method": "public net.minecraft.core.Holder<net.minecraft.world.item.Item> typeHolder();"
+        },
+        {
+          "line": 428,
+          "method": "public boolean is(java.util.function.Predicate<net.minecraft.core.Holder<net.minecraft.world.item.Item>>);"
+        },
+        {
+          "line": 436,
+          "method": "public net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext);"
+        },
+        {
+          "line": 508,
+          "method": "public float getDestroySpeed(net.minecraft.world.level.block.state.BlockState);"
+        },
+        {
+          "line": 517,
+          "method": "public net.minecraft.world.InteractionResult use(net.minecraft.world.level.Level, net.minecraft.world.entity.player.Player, net.minecraft.world.InteractionHand);"
+        },
+        {
+          "line": 565,
+          "method": "public net.minecraft.world.item.ItemStack finishUsingItem(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 583,
+          "method": "private net.minecraft.world.item.ItemStack applyAfterUseComponentSideEffects(net.minecraft.world.entity.LivingEntity, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 623,
+          "method": "public boolean isStackable();"
+        },
+        {
+          "line": 640,
+          "method": "public boolean isDamageableItem();"
+        },
+        {
+          "line": 659,
+          "method": "public boolean isDamaged();"
+        },
+        {
+          "line": 672,
+          "method": "public int getDamageValue();"
+        },
+        {
+          "line": 687,
+          "method": "public void setDamageValue(int);"
+        },
+        {
+          "line": 701,
+          "method": "public int getMaxDamage();"
+        },
+        {
+          "line": 712,
+          "method": "public boolean isBroken();"
+        },
+        {
+          "line": 727,
+          "method": "public boolean nextDamageWillBreak();"
+        },
+        {
+          "line": 744,
+          "method": "public void hurtAndBreak(int, net.minecraft.server.level.ServerLevel, net.minecraft.server.level.ServerPlayer, java.util.function.Consumer<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 764,
+          "method": "private int processDurabilityChange(int, net.minecraft.server.level.ServerLevel, net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 788,
+          "method": "private void applyDamage(int, net.minecraft.server.level.ServerPlayer, java.util.function.Consumer<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 814,
+          "method": "public void hurtWithoutBreaking(int, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 849,
+          "method": "public void hurtAndBreak(int, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand);"
+        },
+        {
+          "line": 859,
+          "method": "public void hurtAndBreak(int, net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.EquipmentSlot);"
+        },
+        {
+          "line": 888,
+          "method": "public net.minecraft.world.item.ItemStack hurtAndConvertOnBreak(int, net.minecraft.world.level.ItemLike, net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.EquipmentSlot);"
+        },
+        {
+          "line": 914,
+          "method": "public boolean isBarVisible();"
+        },
+        {
+          "line": 922,
+          "method": "public int getBarWidth();"
+        },
+        {
+          "line": 930,
+          "method": "public int getBarColor();"
+        },
+        {
+          "line": 938,
+          "method": "public boolean overrideStackedOnOther(net.minecraft.world.inventory.Slot, net.minecraft.world.inventory.ClickAction, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 949,
+          "method": "public boolean overrideOtherStackedOnMe(net.minecraft.world.item.ItemStack, net.minecraft.world.inventory.Slot, net.minecraft.world.inventory.ClickAction, net.minecraft.world.entity.player.Player, net.minecraft.world.entity.SlotAccess);"
+        },
+        {
+          "line": 962,
+          "method": "public boolean hurtEnemy(net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 992,
+          "method": "public void postHurtEnemy(net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 1015,
+          "method": "public void mineBlock(net.minecraft.world.level.Level, net.minecraft.world.level.block.state.BlockState, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 1035,
+          "method": "public boolean isCorrectToolForDrops(net.minecraft.world.level.block.state.BlockState);"
+        },
+        {
+          "line": 1044,
+          "method": "public net.minecraft.world.InteractionResult interactLivingEntity(net.minecraft.world.entity.player.Player, net.minecraft.world.entity.LivingEntity, net.minecraft.world.InteractionHand);"
+        },
+        {
+          "line": 1076,
+          "method": "public net.minecraft.world.item.ItemStack copy();"
+        },
+        {
+          "line": 1101,
+          "method": "public net.minecraft.world.item.ItemStack copyWithCount(int);"
+        },
+        {
+          "line": 1117,
+          "method": "public net.minecraft.world.item.ItemStack transmuteCopy(net.minecraft.world.level.ItemLike);"
+        },
+        {
+          "line": 1126,
+          "method": "public net.minecraft.world.item.ItemStack transmuteCopy(net.minecraft.world.level.ItemLike, int);"
+        },
+        {
+          "line": 1139,
+          "method": "private net.minecraft.world.item.ItemStack transmuteCopyIgnoreEmpty(net.minecraft.world.level.ItemLike, int);"
+        },
+        {
+          "line": 1153,
+          "method": "public static boolean matches(net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1172,
+          "method": "public static boolean listMatches(java.util.List<net.minecraft.world.item.ItemStack>, java.util.List<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 1204,
+          "method": "public static boolean isSameItem(net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1212,
+          "method": "public static boolean isSameItemSameComponents(net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1236,
+          "method": "public static boolean matchesIgnoringComponents(net.minecraft.world.item.ItemStack, net.minecraft.world.item.ItemStack, java.util.function.Predicate<net.minecraft.core.component.DataComponentType<?>>);"
+        },
+        {
+          "line": 1316,
+          "method": "public static com.mojang.serialization.MapCodec<net.minecraft.world.item.ItemStack> lenientOptionalFieldOf(java.lang.String);"
+        },
+        {
+          "line": 1326,
+          "method": "public static int hashItemAndComponents(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 1347,
+          "method": "public static int hashStackList(java.util.List<net.minecraft.world.item.ItemStack>);"
+        },
+        {
+          "line": 1372,
+          "method": "public java.lang.String toString();"
+        },
+        {
+          "line": 1382,
+          "method": "public void inventoryTick(net.minecraft.world.level.Level, net.minecraft.world.entity.Entity, net.minecraft.world.entity.EquipmentSlot);"
+        },
+        {
+          "line": 1408,
+          "method": "public void onCraftedBy(net.minecraft.world.entity.player.Player, int);"
+        },
+        {
+          "line": 1424,
+          "method": "public void onCraftedBySystem(net.minecraft.world.level.Level);"
+        },
+        {
+          "line": 1433,
+          "method": "public int getUseDuration(net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 1442,
+          "method": "public net.minecraft.world.item.ItemUseAnimation getUseAnimation();"
+        },
+        {
+          "line": 1450,
+          "method": "public void releaseUsing(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, int);"
+        },
+        {
+          "line": 1478,
+          "method": "public void causeUseVibration(net.minecraft.world.entity.Entity, net.minecraft.core.Holder$Reference<net.minecraft.world.level.gameevent.GameEvent>);"
+        },
+        {
+          "line": 1495,
+          "method": "public boolean useOnRelease();"
+        },
+        {
+          "line": 1503,
+          "method": "public <T> T set(net.minecraft.core.component.DataComponentType<T>, T);"
+        },
+        {
+          "line": 1512,
+          "method": "public <T> T set(net.minecraft.core.component.TypedDataComponent<T>);"
+        },
+        {
+          "line": 1520,
+          "method": "public <T> void copyFrom(net.minecraft.core.component.DataComponentType<T>, net.minecraft.core.component.DataComponentGetter);"
+        },
+        {
+          "line": 1531,
+          "method": "public <T, U> T update(net.minecraft.core.component.DataComponentType<T>, T, U, java.util.function.BiFunction<T, U, T>);"
+        },
+        {
+          "line": 1545,
+          "method": "public <T> T update(net.minecraft.core.component.DataComponentType<T>, T, java.util.function.UnaryOperator<T>);"
+        },
+        {
+          "line": 1560,
+          "method": "public <T> T remove(net.minecraft.core.component.DataComponentType<? extends T>);"
+        },
+        {
+          "line": 1568,
+          "method": "public void applyComponentsAndValidate(net.minecraft.core.component.DataComponentPatch);"
+        },
+        {
+          "line": 1599,
+          "method": "public void applyComponents(net.minecraft.core.component.DataComponentPatch);"
+        },
+        {
+          "line": 1607,
+          "method": "public void applyComponents(net.minecraft.core.component.DataComponentMap);"
+        },
+        {
+          "line": 1615,
+          "method": "public net.minecraft.network.chat.Component getHoverName();"
+        },
+        {
+          "line": 1628,
+          "method": "public net.minecraft.network.chat.Component getCustomName();"
+        },
+        {
+          "line": 1660,
+          "method": "public net.minecraft.network.chat.Component getItemName();"
+        },
+        {
+          "line": 1668,
+          "method": "public net.minecraft.network.chat.Component getStyledHoverName();"
+        },
+        {
+          "line": 1690,
+          "method": "public <T> void addToTooltip(net.minecraft.core.component.DataComponentType<T>, net.minecraft.world.item.component.TooltipProvider$Getter<T>, net.minecraft.world.item.Item$TooltipContext, net.minecraft.world.item.component.TooltipDisplay, java.util.function.Consumer<net.minecraft.network.chat.Component>, net.minecraft.world.item.TooltipFlag);"
+        },
+        {
+          "line": 1713,
+          "method": "public <T extends net.minecraft.world.item.component.TooltipProvider> void addToTooltip(net.minecraft.core.component.DataComponentType<T>, net.minecraft.world.item.Item$TooltipContext, net.minecraft.world.item.component.TooltipDisplay, java.util.function.Consumer<net.minecraft.network.chat.Component>, net.minecraft.world.item.TooltipFlag);"
+        },
+        {
+          "line": 1725,
+          "method": "public java.util.List<net.minecraft.network.chat.Component> getTooltipLines(net.minecraft.world.item.Item$TooltipContext, net.minecraft.world.entity.player.Player, net.minecraft.world.item.TooltipFlag);"
+        },
+        {
+          "line": 1772,
+          "method": "public void addDetailsToTooltip(net.minecraft.world.item.Item$TooltipContext, net.minecraft.world.item.component.TooltipDisplay, net.minecraft.world.entity.player.Player, net.minecraft.world.item.TooltipFlag, java.util.function.Consumer<net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 2136,
+          "method": "private void addUnitComponentToTooltip(net.minecraft.core.component.DataComponentType<?>, net.minecraft.network.chat.Component, net.minecraft.world.item.component.TooltipDisplay, java.util.function.Consumer<net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 2151,
+          "method": "private void addAttributeTooltips(java.util.function.Consumer<net.minecraft.network.chat.Component>, net.minecraft.world.item.component.TooltipDisplay, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 2189,
+          "method": "public boolean hasFoil();"
+        },
+        {
+          "line": 2207,
+          "method": "public net.minecraft.world.item.Rarity getRarity();"
+        },
+        {
+          "line": 2237,
+          "method": "public boolean isEnchantable();"
+        },
+        {
+          "line": 2260,
+          "method": "public void enchant(net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment>, int);"
+        },
+        {
+          "line": 2270,
+          "method": "public boolean isEnchanted();"
+        },
+        {
+          "line": 2284,
+          "method": "public net.minecraft.world.item.enchantment.ItemEnchantments getEnchantments();"
+        },
+        {
+          "line": 2293,
+          "method": "public void forEachModifier(net.minecraft.world.entity.EquipmentSlotGroup, org.apache.commons.lang3.function.TriConsumer<net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute>, net.minecraft.world.entity.ai.attributes.AttributeModifier, net.minecraft.world.item.component.ItemAttributeModifiers$Display>);"
+        },
+        {
+          "line": 2312,
+          "method": "public void forEachModifier(net.minecraft.world.entity.EquipmentSlot, java.util.function.BiConsumer<net.minecraft.core.Holder<net.minecraft.world.entity.ai.attributes.Attribute>, net.minecraft.world.entity.ai.attributes.AttributeModifier>);"
+        },
+        {
+          "line": 2330,
+          "method": "public net.minecraft.network.chat.Component getDisplayName();"
+        },
+        {
+          "line": 2363,
+          "method": "public net.minecraft.world.item.component.SwingAnimation getAttackAnimation();"
+        },
+        {
+          "line": 2372,
+          "method": "public net.minecraft.world.item.component.SwingAnimation getInteractAnimation();"
+        },
+        {
+          "line": 2381,
+          "method": "public boolean canPlaceOnBlockInAdventureMode(net.minecraft.world.level.block.state.pattern.BlockInWorld);"
+        },
+        {
+          "line": 2399,
+          "method": "public boolean canBreakBlockInAdventureMode(net.minecraft.world.level.block.state.pattern.BlockInWorld);"
+        },
+        {
+          "line": 2417,
+          "method": "public int getPopTime();"
+        },
+        {
+          "line": 2423,
+          "method": "public void setPopTime(int);"
+        },
+        {
+          "line": 2430,
+          "method": "public int getCount();"
+        },
+        {
+          "line": 2441,
+          "method": "public int count();"
+        },
+        {
+          "line": 2447,
+          "method": "public void setCount(int);"
+        },
+        {
+          "line": 2454,
+          "method": "public void limitSize(int);"
+        },
+        {
+          "line": 2468,
+          "method": "public void grow(int);"
+        },
+        {
+          "line": 2478,
+          "method": "public void shrink(int);"
+        },
+        {
+          "line": 2486,
+          "method": "public void consume(int, net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 2498,
+          "method": "public net.minecraft.world.item.ItemStack consumeAndReturn(int, net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 2511,
+          "method": "public void onUseTick(net.minecraft.world.level.Level, net.minecraft.world.entity.LivingEntity, int);"
+        },
+        {
+          "line": 2559,
+          "method": "public void onDestroyed(net.minecraft.world.entity.item.ItemEntity);"
+        },
+        {
+          "line": 2567,
+          "method": "public boolean canBeHurtBy(net.minecraft.world.damagesource.DamageSource);"
+        },
+        {
+          "line": 2585,
+          "method": "public boolean isValidRepairItem(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2603,
+          "method": "public boolean canDestroyBlock(net.minecraft.world.level.block.state.BlockState, net.minecraft.world.level.Level, net.minecraft.core.BlockPos, net.minecraft.world.entity.player.Player);"
+        },
+        {
+          "line": 2615,
+          "method": "public net.minecraft.world.damagesource.DamageSource getDamageSource(net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 2638,
+          "method": "private java.util.Optional lambda$getDamageSource$1(net.minecraft.world.entity.LivingEntity);"
+        },
+        {
+          "line": 2647,
+          "method": "private static net.minecraft.world.damagesource.DamageSource lambda$getDamageSource$0(net.minecraft.world.entity.LivingEntity, net.minecraft.core.Holder);"
+        },
+        {
+          "line": 2656,
+          "method": "private net.minecraft.network.chat.Style lambda$getDisplayName$0(net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 2667,
+          "method": "private static void lambda$forEachModifier$0(org.apache.commons.lang3.function.TriConsumer, net.minecraft.core.Holder, net.minecraft.world.entity.ai.attributes.AttributeModifier);"
+        },
+        {
+          "line": 2676,
+          "method": "private static void lambda$enchant$0(net.minecraft.core.Holder, int, net.minecraft.world.item.enchantment.ItemEnchantments$Mutable);"
+        },
+        {
+          "line": 2684,
+          "method": "private static void lambda$addAttributeTooltips$0(org.apache.commons.lang3.mutable.MutableBoolean, java.util.function.Consumer, net.minecraft.world.entity.EquipmentSlotGroup, net.minecraft.world.entity.player.Player, net.minecraft.core.Holder, net.minecraft.world.entity.ai.attributes.AttributeModifier, net.minecraft.world.item.component.ItemAttributeModifiers$Display);"
+        },
+        {
+          "line": 2714,
+          "method": "private static net.minecraft.world.item.component.TooltipProvider lambda$addToTooltip$0(net.minecraft.world.item.component.TooltipProvider);"
+        },
+        {
+          "line": 2719,
+          "method": "private static java.util.Optional lambda$lenientOptionalFieldOf$1(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2730,
+          "method": "private static net.minecraft.world.item.ItemStack lambda$lenientOptionalFieldOf$0(java.util.Optional);"
+        },
+        {
+          "line": 2738,
+          "method": "private static void lambda$hurtAndBreak$0(net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.EquipmentSlot, net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2746,
+          "method": "private static void lambda$hurtWithoutBreaking$0(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2750,
+          "method": "private static java.lang.String lambda$validateContainedItemSizes$0(int, int);"
+        },
+        {
+          "line": 2757,
+          "method": "private static java.lang.String lambda$validateComponents$0();"
+        },
+        {
+          "line": 2762,
+          "method": "private static java.util.Optional lambda$static$4(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2773,
+          "method": "private static net.minecraft.world.item.ItemStack lambda$static$3(java.util.Optional);"
+        },
+        {
+          "line": 2781,
+          "method": "private static java.lang.String lambda$validateStrict$1(net.minecraft.world.item.ItemStack);"
+        },
+        {
+          "line": 2790,
+          "method": "private static net.minecraft.world.item.ItemStack lambda$validateStrict$0(net.minecraft.world.item.ItemStack, java.lang.Object);"
+        },
+        {
+          "line": 2795,
+          "method": "private static com.mojang.serialization.MapCodec lambda$static$0(com.mojang.serialization.Codec);"
+        },
+        {
+          "line": 2801,
+          "method": "private static com.mojang.datafixers.kinds.App lambda$static$1(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);"
+        },
+        {
+          "line": 2830,
+          "method": "private static net.minecraft.core.component.DataComponentPatch lambda$static$2(net.minecraft.world.item.ItemStack);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/triggers/InventoryChangeTrigger$TriggerInstance.class",
+      "size": 11699,
+      "sha256": "24d23220d82a4bb0a1326ff5abb516db8bbd8fa308fa2a4e0846c0d9f24a1279",
+      "locations": [
+        {
+          "line": 11,
+          "method": "public net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance(java.util.Optional<net.minecraft.core.Holder<net.minecraft.world.level.storage.loot.predicates.LootItemCondition>>, net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance$Slots, java.util.List<net.minecraft.advancements.predicates.ItemPredicate>);"
+        },
+        {
+          "line": 26,
+          "method": "public static net.minecraft.advancements.triggers.Criterion<net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance> hasItems(net.minecraft.advancements.predicates.ItemPredicate$Builder...);"
+        },
+        {
+          "line": 38,
+          "method": "public static net.minecraft.advancements.triggers.Criterion<net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance> hasItems(net.minecraft.advancements.predicates.ItemPredicate...);"
+        },
+        {
+          "line": 51,
+          "method": "public static net.minecraft.advancements.triggers.Criterion<net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance> hasItems(net.minecraft.world.level.ItemLike...);"
+        },
+        {
+          "line": 89,
+          "method": "public boolean matches(net.minecraft.world.entity.player.Inventory, net.minecraft.world.item.ItemStack, int, int, int);"
+        },
+        {
+          "line": 163,
+          "method": "public final java.lang.String toString();"
+        },
+        {
+          "line": 169,
+          "method": "public final int hashCode();"
+        },
+        {
+          "line": 175,
+          "method": "public final boolean equals(java.lang.Object);"
+        },
+        {
+          "line": 182,
+          "method": "public java.util.Optional<net.minecraft.core.Holder<net.minecraft.world.level.storage.loot.predicates.LootItemCondition>> player();"
+        },
+        {
+          "line": 188,
+          "method": "public net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance$Slots slots();"
+        },
+        {
+          "line": 194,
+          "method": "public java.util.List<net.minecraft.advancements.predicates.ItemPredicate> items();"
+        },
+        {
+          "line": 200,
+          "method": "private static boolean lambda$matches$0(net.minecraft.world.item.ItemStack, net.minecraft.advancements.predicates.ItemPredicate);"
+        },
+        {
+          "line": 207,
+          "method": "private static net.minecraft.advancements.predicates.ItemPredicate[] lambda$hasItems$0(int);"
+        },
+        {
+          "line": 213,
+          "method": "private static com.mojang.datafixers.kinds.App lambda$static$0(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/AdvancementProgress.class",
+      "size": 14022,
+      "sha256": "5c4a32ac0c2dedf6ef114ff6c656f225bf173bd097832f34c24431279bff948e",
+      "locations": [
+        {
+          "line": 17,
+          "method": "private net.minecraft.advancements.AdvancementProgress(java.util.Map<java.lang.String, net.minecraft.advancements.CriterionProgress>);"
+        },
+        {
+          "line": 29,
+          "method": "public net.minecraft.advancements.AdvancementProgress();"
+        },
+        {
+          "line": 41,
+          "method": "public void update(net.minecraft.advancements.AdvancementRequirements);"
+        },
+        {
+          "line": 77,
+          "method": "public boolean isDone();"
+        },
+        {
+          "line": 86,
+          "method": "public boolean hasProgress();"
+        },
+        {
+          "line": 109,
+          "method": "public boolean grantProgress(java.lang.String);"
+        },
+        {
+          "line": 129,
+          "method": "public boolean revokeProgress(java.lang.String);"
+        },
+        {
+          "line": 149,
+          "method": "public java.lang.String toString();"
+        },
+        {
+          "line": 160,
+          "method": "public net.minecraft.advancements.CriterionProgress getCriterion(java.lang.String);"
+        },
+        {
+          "line": 169,
+          "method": "private boolean isCriterionDone(java.lang.String);"
+        },
+        {
+          "line": 185,
+          "method": "public float getPercent();"
+        },
+        {
+          "line": 207,
+          "method": "public net.minecraft.network.chat.Component getProgressText();"
+        },
+        {
+          "line": 243,
+          "method": "private int countCompletedRequirements();"
+        },
+        {
+          "line": 252,
+          "method": "public java.lang.Iterable<java.lang.String> getRemainingCriteria();"
+        },
+        {
+          "line": 283,
+          "method": "public java.lang.Iterable<java.lang.String> getCompletedCriteria();"
+        },
+        {
+          "line": 314,
+          "method": "public java.time.Instant getFirstProgressDate();"
+        },
+        {
+          "line": 331,
+          "method": "public int compareTo(net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 362,
+          "method": "public int compareTo(java.lang.Object);"
+        },
+        {
+          "line": 370,
+          "method": "private static boolean lambda$update$0(java.util.Set, java.util.Map$Entry);"
+        },
+        {
+          "line": 382,
+          "method": "private static java.util.Map lambda$static$8(net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 388,
+          "method": "private static com.mojang.datafixers.kinds.App lambda$static$5(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);"
+        },
+        {
+          "line": 410,
+          "method": "private static net.minecraft.advancements.AdvancementProgress lambda$static$7(java.util.Map, java.lang.Boolean);"
+        },
+        {
+          "line": 421,
+          "method": "private static java.util.Map lambda$static$6(net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 427,
+          "method": "private static java.util.Map lambda$static$2(java.util.Map);"
+        },
+        {
+          "line": 441,
+          "method": "private static java.time.Instant lambda$static$4(java.util.Map$Entry);"
+        },
+        {
+          "line": 451,
+          "method": "private static boolean lambda$static$3(java.util.Map$Entry);"
+        },
+        {
+          "line": 459,
+          "method": "private static java.util.Map lambda$static$1(java.util.Map);"
+        },
+        {
+          "line": 466,
+          "method": "private static java.time.temporal.TemporalAccessor lambda$static$0(java.time.Instant);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/AdvancementRequirements.class",
+      "size": 8701,
+      "sha256": "8de1a3dcfc18f03d9d7f1106f1fc171fee4c37f4e79ba62361056a97d5d110c9",
+      "locations": [
+        {
+          "line": 11,
+          "method": "public net.minecraft.advancements.AdvancementRequirements(java.util.List<java.util.List<java.lang.String>>);"
+        },
+        {
+          "line": 20,
+          "method": "public static net.minecraft.advancements.AdvancementRequirements allOf(java.util.Collection<java.lang.String>);"
+        },
+        {
+          "line": 32,
+          "method": "public static net.minecraft.advancements.AdvancementRequirements anyOf(java.util.Collection<java.lang.String>);"
+        },
+        {
+          "line": 42,
+          "method": "public int size();"
+        },
+        {
+          "line": 49,
+          "method": "public boolean test(java.util.function.Predicate<java.lang.String>);"
+        },
+        {
+          "line": 78,
+          "method": "public int count(java.util.function.Predicate<java.lang.String>);"
+        },
+        {
+          "line": 102,
+          "method": "private static boolean anyMatch(java.util.List<java.lang.String>, java.util.function.Predicate<java.lang.String>);"
+        },
+        {
+          "line": 124,
+          "method": "public com.mojang.serialization.DataResult<net.minecraft.advancements.AdvancementRequirements> validate(java.util.Set<java.lang.String>);"
+        },
+        {
+          "line": 176,
+          "method": "public boolean isEmpty();"
+        },
+        {
+          "line": 183,
+          "method": "public java.lang.String toString();"
+        },
+        {
+          "line": 190,
+          "method": "public java.util.Set<java.lang.String> names();"
+        },
+        {
+          "line": 215,
+          "method": "public final int hashCode();"
+        },
+        {
+          "line": 221,
+          "method": "public final boolean equals(java.lang.Object);"
+        },
+        {
+          "line": 228,
+          "method": "public java.util.List<java.util.List<java.lang.String>> requirements();"
+        },
+        {
+          "line": 234,
+          "method": "private static java.lang.String lambda$validate$1(java.util.Set, java.util.Set);"
+        },
+        {
+          "line": 243,
+          "method": "private static java.lang.String lambda$validate$0();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/server/PlayerAdvancements.class",
+      "size": 22117,
+      "sha256": "15d2a4066a3c16a0d17db96a22ce5b76201ab619c6b7b964ffb9fa6f117407aa",
+      "locations": [
+        {
+          "line": 31,
+          "method": "public net.minecraft.server.PlayerAdvancements(com.mojang.datafixers.DataFixer, net.minecraft.server.players.PlayerList, net.minecraft.server.ServerAdvancementManager, java.nio.file.Path, net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 90,
+          "method": "public void setPlayer(net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 97,
+          "method": "public void clearTriggers();"
+        },
+        {
+          "line": 104,
+          "method": "public void reload(net.minecraft.server.ServerAdvancementManager);"
+        },
+        {
+          "line": 135,
+          "method": "private void registerListeners(net.minecraft.server.ServerAdvancementManager);"
+        },
+        {
+          "line": 154,
+          "method": "private void checkForAutomaticTriggers(net.minecraft.server.ServerAdvancementManager);"
+        },
+        {
+          "line": 187,
+          "method": "private void load(net.minecraft.server.ServerAdvancementManager);"
+        },
+        {
+          "line": 264,
+          "method": "public void save();"
+        },
+        {
+          "line": 325,
+          "method": "private void applyFrom(net.minecraft.server.ServerAdvancementManager, net.minecraft.server.PlayerAdvancements$Data);"
+        },
+        {
+          "line": 334,
+          "method": "private net.minecraft.server.PlayerAdvancements$Data asData();"
+        },
+        {
+          "line": 351,
+          "method": "public boolean award(net.minecraft.advancements.AdvancementHolder, java.lang.String);"
+        },
+        {
+          "line": 405,
+          "method": "public boolean revoke(net.minecraft.advancements.AdvancementHolder, java.lang.String);"
+        },
+        {
+          "line": 441,
+          "method": "private void markForVisibilityUpdate(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 458,
+          "method": "private void registerListeners(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 508,
+          "method": "private void unregisterListeners(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 558,
+          "method": "public void flushDirty(net.minecraft.server.level.ServerPlayer, boolean);"
+        },
+        {
+          "line": 665,
+          "method": "public void setSelectedTab(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 709,
+          "method": "public net.minecraft.advancements.AdvancementProgress getOrStartProgress(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 730,
+          "method": "private void startProgress(net.minecraft.advancements.AdvancementHolder, net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 745,
+          "method": "private void updateTreeVisibility(net.minecraft.advancements.AdvancementNode, java.util.Set<net.minecraft.advancements.AdvancementNode>, java.util.Set<net.minecraft.resources.Identifier>);"
+        },
+        {
+          "line": 757,
+          "method": "private <T extends net.minecraft.advancements.CriterionTriggerInstance> java.util.Map<net.minecraft.server.PlayerAdvancements$TriggerInstanceKey, T> getOrCreateTriggerMapForType(net.minecraft.advancements.triggers.CriterionTrigger<T>);"
+        },
+        {
+          "line": 767,
+          "method": "private <T extends net.minecraft.advancements.CriterionTriggerInstance> void addListener(net.minecraft.advancements.triggers.Criterion<T>, net.minecraft.server.PlayerAdvancements$TriggerInstanceKey);"
+        },
+        {
+          "line": 780,
+          "method": "public <T extends net.minecraft.advancements.CriterionTriggerInstance> java.util.Map<net.minecraft.server.PlayerAdvancements$TriggerInstanceKey, T> getTriggerMapForType(net.minecraft.advancements.triggers.CriterionTrigger<T>);"
+        },
+        {
+          "line": 789,
+          "method": "private <T extends net.minecraft.advancements.CriterionTriggerInstance> void removeListener(net.minecraft.advancements.triggers.CriterionTrigger<T>, net.minecraft.server.PlayerAdvancements$TriggerInstanceKey);"
+        },
+        {
+          "line": 811,
+          "method": "private static java.util.Map lambda$getOrCreateTriggerMapForType$0(net.minecraft.advancements.triggers.CriterionTrigger);"
+        },
+        {
+          "line": 818,
+          "method": "private void lambda$updateTreeVisibility$1(java.util.Set, java.util.Set, net.minecraft.advancements.AdvancementNode, boolean);"
+        },
+        {
+          "line": 857,
+          "method": "private boolean lambda$updateTreeVisibility$0(net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 866,
+          "method": "private void lambda$award$0(net.minecraft.advancements.AdvancementHolder, net.minecraft.advancements.DisplayInfo);"
+        },
+        {
+          "line": 892,
+          "method": "private static void lambda$asData$0(java.util.Map, net.minecraft.advancements.AdvancementHolder, net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 905,
+          "method": "private void lambda$applyFrom$0(net.minecraft.server.ServerAdvancementManager, net.minecraft.resources.Identifier, net.minecraft.advancements.AdvancementProgress);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/server/advancements/AdvancementVisibilityEvaluator.class",
+      "size": 4821,
+      "sha256": "4b8d58b72eb86ccb778071e721bfaf7536171d34f7f0c37c668f3d256d8ae59d",
+      "locations": [
+        {
+          "line": 5,
+          "method": "public net.minecraft.server.advancements.AdvancementVisibilityEvaluator();"
+        },
+        {
+          "line": 11,
+          "method": "private static net.minecraft.server.advancements.AdvancementVisibilityEvaluator$VisibilityRule evaluateVisibilityRule(net.minecraft.advancements.Advancement, boolean);"
+        },
+        {
+          "line": 35,
+          "method": "private static boolean evaluateVisiblityForUnfinishedNode(it.unimi.dsi.fastutil.Stack<net.minecraft.server.advancements.AdvancementVisibilityEvaluator$VisibilityRule>);"
+        },
+        {
+          "line": 62,
+          "method": "private static boolean evaluateVisibility(net.minecraft.advancements.AdvancementNode, it.unimi.dsi.fastutil.Stack<net.minecraft.server.advancements.AdvancementVisibilityEvaluator$VisibilityRule>, java.util.function.Predicate<net.minecraft.advancements.AdvancementNode>, net.minecraft.server.advancements.AdvancementVisibilityEvaluator$Output);"
+        },
+        {
+          "line": 117,
+          "method": "public static void evaluateVisibility(net.minecraft.advancements.AdvancementNode, java.util.function.Predicate<net.minecraft.advancements.AdvancementNode>, net.minecraft.server.advancements.AdvancementVisibilityEvaluator$Output);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/multiplayer/ClientAdvancements.class",
+      "size": 8266,
+      "sha256": "8db787613cbe01deef47befd6a6827cd76e0459841199eabc4c9811af3c7a431",
+      "locations": [
+        {
+          "line": 17,
+          "method": "public net.minecraft.client.multiplayer.ClientAdvancements(net.minecraft.client.Minecraft, net.minecraft.client.telemetry.WorldSessionTelemetryManager);"
+        },
+        {
+          "line": 39,
+          "method": "public void update(net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket);"
+        },
+        {
+          "line": 189,
+          "method": "public java.util.Map<net.minecraft.advancements.AdvancementHolder, net.minecraft.advancements.AdvancementProgress> progress();"
+        },
+        {
+          "line": 195,
+          "method": "public net.minecraft.advancements.AdvancementTree tree();"
+        },
+        {
+          "line": 201,
+          "method": "public void setSelectedTab(net.minecraft.advancements.AdvancementHolder, boolean);"
+        },
+        {
+          "line": 233,
+          "method": "public void setListener(net.minecraft.client.multiplayer.ClientAdvancements$Listener);"
+        },
+        {
+          "line": 248,
+          "method": "public net.minecraft.advancements.AdvancementHolder get(net.minecraft.resources.Identifier);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/advancements/AdvancementsScreen.class",
+      "size": 17280,
+      "sha256": "113467dfb34f150c4e4afee79cc86ebcf6774c418169c18f078b63b669627bce",
+      "locations": [
+        {
+          "line": 57,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementsScreen(net.minecraft.client.multiplayer.ClientAdvancements);"
+        },
+        {
+          "line": 65,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementsScreen(net.minecraft.client.multiplayer.ClientAdvancements, net.minecraft.client.gui.screens.Screen);"
+        },
+        {
+          "line": 87,
+          "method": "protected void init();"
+        },
+        {
+          "line": 160,
+          "method": "protected void repositionElements();"
+        },
+        {
+          "line": 183,
+          "method": "public void onClose();"
+        },
+        {
+          "line": 193,
+          "method": "public void removed();"
+        },
+        {
+          "line": 210,
+          "method": "public void tick();"
+        },
+        {
+          "line": 252,
+          "method": "public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent, boolean);"
+        },
+        {
+          "line": 307,
+          "method": "public boolean keyPressed(net.minecraft.client.input.KeyEvent);"
+        },
+        {
+          "line": 337,
+          "method": "public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float);"
+        },
+        {
+          "line": 397,
+          "method": "public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent, double, double);"
+        },
+        {
+          "line": 426,
+          "method": "public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent);"
+        },
+        {
+          "line": 436,
+          "method": "public boolean mouseScrolled(double, double, double, double);"
+        },
+        {
+          "line": 455,
+          "method": "private void extractInside(net.minecraft.client.gui.GuiGraphicsExtractor);"
+        },
+        {
+          "line": 546,
+          "method": "public void extractWindow(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 640,
+          "method": "private void extractTooltips(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 716,
+          "method": "public void onAdvancementsUpdated();"
+        },
+        {
+          "line": 840,
+          "method": "public void onSelectedTabChanged(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 851,
+          "method": "public void onAdvancementsCleared();"
+        },
+        {
+          "line": 861,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementWidget getAdvancementWidget(net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 877,
+          "method": "private net.minecraft.client.gui.screens.advancements.AdvancementTab getTab(net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 890,
+          "method": "private void lambda$onAdvancementsUpdated$0(net.minecraft.advancements.AdvancementTree, net.minecraft.advancements.AdvancementHolder, net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 909,
+          "method": "private static void lambda$init$1(net.minecraft.client.gui.screens.advancements.AdvancementsScreen, net.minecraft.client.gui.components.AbstractWidget);"
+        },
+        {
+          "line": 917,
+          "method": "private void lambda$init$0(net.minecraft.client.gui.components.Button);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/advancements/AdvancementWidget.class",
+      "size": 16178,
+      "sha256": "4229e1769a02289d12064f839edb4e59800d9222f5bf0ec389a94cb483c7ee64",
+      "locations": [
+        {
+          "line": 59,
+          "method": "private net.minecraft.client.gui.screens.advancements.AdvancementWidget(net.minecraft.client.Minecraft, net.minecraft.advancements.AdvancementNode, net.minecraft.advancements.DisplayInfo);"
+        },
+        {
+          "line": 170,
+          "method": "public static net.minecraft.client.gui.screens.advancements.AdvancementWidget createWidget(net.minecraft.client.Minecraft, net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 191,
+          "method": "private int getMaxProgressWidth();"
+        },
+        {
+          "line": 230,
+          "method": "private static float getMaxWidth(net.minecraft.client.StringSplitter, java.util.List<net.minecraft.network.chat.FormattedText>);"
+        },
+        {
+          "line": 246,
+          "method": "private java.util.List<net.minecraft.network.chat.FormattedText> findOptimalLines(net.minecraft.network.chat.Component, int);"
+        },
+        {
+          "line": 306,
+          "method": "private static net.minecraft.advancements.AdvancementHolder findFirstVisibleParent(net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 331,
+          "method": "public void extractConnectivity(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, boolean);"
+        },
+        {
+          "line": 491,
+          "method": "public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 577,
+          "method": "public int getWidth();"
+        },
+        {
+          "line": 583,
+          "method": "public void setProgress(net.minecraft.advancements.AdvancementProgress);"
+        },
+        {
+          "line": 590,
+          "method": "public void addChild(net.minecraft.client.gui.screens.advancements.AdvancementWidget);"
+        },
+        {
+          "line": 599,
+          "method": "public void extractHover(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, float, int, int, int);"
+        },
+        {
+          "line": 990,
+          "method": "private void extractMultilineText(net.minecraft.client.gui.GuiGraphicsExtractor, java.util.List<net.minecraft.util.FormattedCharSequence>, int, int, int);"
+        },
+        {
+          "line": 1023,
+          "method": "public boolean isMouseOver(int, int, int, int);"
+        },
+        {
+          "line": 1073,
+          "method": "public void attachToParent(net.minecraft.client.gui.screens.advancements.AdvancementTab);"
+        },
+        {
+          "line": 1098,
+          "method": "public int getY();"
+        },
+        {
+          "line": 1104,
+          "method": "public int getX();"
+        },
+        {
+          "line": 1110,
+          "method": "public net.minecraft.advancements.AdvancementHolder getAdvancement();"
+        },
+        {
+          "line": 1117,
+          "method": "public net.minecraft.advancements.DisplayInfo getDisplay();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/gui/screens/advancements/AdvancementTab.class",
+      "size": 10662,
+      "sha256": "c8e7fb8d33428aed69fad79327e12e2f9ac04a154edef6f6a3a19e6c65093e92",
+      "locations": [
+        {
+          "line": 39,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementTab(net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.advancements.AdvancementsScreen, net.minecraft.client.gui.screens.advancements.AdvancementTabType, int, net.minecraft.client.gui.screens.advancements.AdvancementWidget, net.minecraft.world.item.ItemStackTemplate, net.minecraft.network.chat.Component, net.minecraft.resources.Identifier);"
+        },
+        {
+          "line": 88,
+          "method": "public void copyPosition(net.minecraft.client.gui.screens.advancements.AdvancementTab);"
+        },
+        {
+          "line": 120,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementTabType getType();"
+        },
+        {
+          "line": 126,
+          "method": "public int getIndex();"
+        },
+        {
+          "line": 132,
+          "method": "public net.minecraft.advancements.AdvancementHolder getRootAdvancement();"
+        },
+        {
+          "line": 139,
+          "method": "public net.minecraft.network.chat.Component getTitle();"
+        },
+        {
+          "line": 145,
+          "method": "public void tick(int, int);"
+        },
+        {
+          "line": 222,
+          "method": "public void extractTab(net.minecraft.client.gui.GuiGraphicsExtractor, int, int, int, int, boolean);"
+        },
+        {
+          "line": 276,
+          "method": "public void extractIcon(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 290,
+          "method": "public void extractContents(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 423,
+          "method": "public void extractTooltips(net.minecraft.client.gui.GuiGraphicsExtractor, int, int);"
+        },
+        {
+          "line": 464,
+          "method": "public boolean isMouseOver(int, int, double, double);"
+        },
+        {
+          "line": 477,
+          "method": "public static net.minecraft.client.gui.screens.advancements.AdvancementTab create(net.minecraft.client.Minecraft, net.minecraft.client.gui.screens.advancements.AdvancementsScreen, int, net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 545,
+          "method": "public void scroll(double, double);"
+        },
+        {
+          "line": 583,
+          "method": "public boolean canScrollHorizontally();"
+        },
+        {
+          "line": 597,
+          "method": "public boolean canScrollVertically();"
+        },
+        {
+          "line": 611,
+          "method": "public void addAdvancement(net.minecraft.advancements.AdvancementNode);"
+        },
+        {
+          "line": 625,
+          "method": "private void addWidget(net.minecraft.client.gui.screens.advancements.AdvancementWidget);"
+        },
+        {
+          "line": 690,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementWidget getWidget(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 699,
+          "method": "public net.minecraft.client.gui.screens.advancements.AdvancementsScreen getScreen();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/toasts/AdvancementToast.class",
+      "size": 6679,
+      "sha256": "96ec4612338b3413227ecd1eadb59e5b03a9f7a396a52e3a2afde3e10e91f3d4",
+      "locations": [
+        {
+          "line": 13,
+          "method": "public net.minecraft.client.gui.components.toasts.AdvancementToast(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 35,
+          "method": "public net.minecraft.client.gui.components.toasts.Toast$Visibility getWantedVisibility();"
+        },
+        {
+          "line": 41,
+          "method": "public void update(net.minecraft.client.gui.components.toasts.ToastManager, long);"
+        },
+        {
+          "line": 72,
+          "method": "public net.minecraft.sounds.SoundEvent getSoundEvent();"
+        },
+        {
+          "line": 82,
+          "method": "private boolean isChallengeAdvancement();"
+        },
+        {
+          "line": 104,
+          "method": "public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, net.minecraft.client.gui.Font, long);"
+        },
+        {
+          "line": 264,
+          "method": "private static net.minecraft.world.item.ItemStack lambda$new$0(net.minecraft.advancements.DisplayInfo);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/gui/components/toasts/ToastManager$ToastInstance.class",
+      "size": 4243,
+      "sha256": "51d753d59c6fa8399ba68d5d3b8674af27af3fea84ee173cda99013206c68e48",
+      "locations": [
+        {
+          "line": 25,
+          "method": "private net.minecraft.client.gui.components.toasts.ToastManager$ToastInstance(T, int, int);"
+        },
+        {
+          "line": 48,
+          "method": "public T getToast();"
+        },
+        {
+          "line": 54,
+          "method": "public void resetToast();"
+        },
+        {
+          "line": 76,
+          "method": "public boolean hasFinishedRendering();"
+        },
+        {
+          "line": 82,
+          "method": "private void calculateVisiblePortion(long);"
+        },
+        {
+          "line": 114,
+          "method": "public void update();"
+        },
+        {
+          "line": 211,
+          "method": "public void extractRenderState(net.minecraft.client.gui.GuiGraphicsExtractor, int);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/client/Options.class",
+      "size": 96797,
+      "sha256": "4cf1c5dd3ef42b2cd9fea835cc0be18c3dfb4691ee7315cd7993ebb6a1504629",
+      "locations": [
+        {
+          "line": 493,
+          "method": "public static boolean isSoundDeviceDefault(java.lang.String);"
+        },
+        {
+          "line": 500,
+          "method": "private static void operateOnLevelExtractor(java.util.function.Consumer<net.minecraft.client.renderer.extract.LevelExtractor>);"
+        },
+        {
+          "line": 512,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> darkMojangStudiosBackground();"
+        },
+        {
+          "line": 518,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> hideLightningFlash();"
+        },
+        {
+          "line": 524,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> hideSplashTexts();"
+        },
+        {
+          "line": 530,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> sensitivity();"
+        },
+        {
+          "line": 536,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> renderDistance();"
+        },
+        {
+          "line": 542,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> simulationDistance();"
+        },
+        {
+          "line": 548,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> entityDistanceScaling();"
+        },
+        {
+          "line": 554,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> framerateLimit();"
+        },
+        {
+          "line": 560,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.PreferredGraphicsApi> preferredGraphicsBackend();"
+        },
+        {
+          "line": 566,
+          "method": "public boolean isRestartRequiredToApplyVideoSettings();"
+        },
+        {
+          "line": 579,
+          "method": "public void applyGraphicsPreset(net.minecraft.client.GraphicsPreset);"
+        },
+        {
+          "line": 593,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.GraphicsPreset> graphicsPreset();"
+        },
+        {
+          "line": 599,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.InactivityFpsLimit> inactivityFpsLimit();"
+        },
+        {
+          "line": 605,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.CloudStatus> cloudStatus();"
+        },
+        {
+          "line": 611,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> cloudRange();"
+        },
+        {
+          "line": 617,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> weatherRadius();"
+        },
+        {
+          "line": 623,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> cutoutLeaves();"
+        },
+        {
+          "line": 629,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> vignette();"
+        },
+        {
+          "line": 635,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> improvedTransparency();"
+        },
+        {
+          "line": 641,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> ambientOcclusion();"
+        },
+        {
+          "line": 647,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chunkSectionFadeInTime();"
+        },
+        {
+          "line": 653,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.PrioritizeChunkUpdates> prioritizeChunkUpdates();"
+        },
+        {
+          "line": 659,
+          "method": "public void updateResourcePacks(net.minecraft.server.packs.repository.PackRepository);"
+        },
+        {
+          "line": 718,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.world.entity.player.ChatVisiblity> chatVisibility();"
+        },
+        {
+          "line": 724,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatOpacity();"
+        },
+        {
+          "line": 730,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatLineSpacing();"
+        },
+        {
+          "line": 736,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> menuBackgroundBlurriness();"
+        },
+        {
+          "line": 742,
+          "method": "public int getMenuBackgroundBlurriness();"
+        },
+        {
+          "line": 751,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> textBackgroundOpacity();"
+        },
+        {
+          "line": 757,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> panoramaSpeed();"
+        },
+        {
+          "line": 763,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> highContrast();"
+        },
+        {
+          "line": 769,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> highContrastBlockOutline();"
+        },
+        {
+          "line": 775,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> narratorHotkey();"
+        },
+        {
+          "line": 781,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.world.entity.HumanoidArm> mainHand();"
+        },
+        {
+          "line": 787,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatScale();"
+        },
+        {
+          "line": 793,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatWidth();"
+        },
+        {
+          "line": 799,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatHeightUnfocused();"
+        },
+        {
+          "line": 805,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatHeightFocused();"
+        },
+        {
+          "line": 811,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> chatDelay();"
+        },
+        {
+          "line": 817,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> notificationDisplayTime();"
+        },
+        {
+          "line": 823,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> mipmapLevels();"
+        },
+        {
+          "line": 829,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> maxAnisotropyBit();"
+        },
+        {
+          "line": 835,
+          "method": "public int maxAnisotropyValue();"
+        },
+        {
+          "line": 851,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.TextureFilteringMethod> textureFiltering();"
+        },
+        {
+          "line": 857,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.AttackIndicatorStatus> attackIndicator();"
+        },
+        {
+          "line": 863,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> biomeBlendRadius();"
+        },
+        {
+          "line": 869,
+          "method": "private static double logMouse(int);"
+        },
+        {
+          "line": 879,
+          "method": "private static int unlogMouse(double);"
+        },
+        {
+          "line": 888,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> mouseWheelSensitivity();"
+        },
+        {
+          "line": 894,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> allowCursorChanges();"
+        },
+        {
+          "line": 900,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> quitShortcuts();"
+        },
+        {
+          "line": 906,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> ctrlClickEmulatesRightClick();"
+        },
+        {
+          "line": 912,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> autoJump();"
+        },
+        {
+          "line": 918,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> rotateWithMinecart();"
+        },
+        {
+          "line": 924,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> operatorItemsTab();"
+        },
+        {
+          "line": 930,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> autoSuggestions();"
+        },
+        {
+          "line": 936,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> chatColors();"
+        },
+        {
+          "line": 942,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> chatLinks();"
+        },
+        {
+          "line": 948,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> chatLinksPrompt();"
+        },
+        {
+          "line": 954,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> enableVsync();"
+        },
+        {
+          "line": 960,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> entityShadows();"
+        },
+        {
+          "line": 966,
+          "method": "private static void updateFontOptions();"
+        },
+        {
+          "line": 979,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> forceUnicodeFont();"
+        },
+        {
+          "line": 985,
+          "method": "private static boolean japaneseGlyphVariantsDefault();"
+        },
+        {
+          "line": 993,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> japaneseGlyphVariants();"
+        },
+        {
+          "line": 999,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> invertMouseX();"
+        },
+        {
+          "line": 1005,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> invertMouseY();"
+        },
+        {
+          "line": 1011,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> discreteMouseScroll();"
+        },
+        {
+          "line": 1017,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> realmsNotifications();"
+        },
+        {
+          "line": 1023,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> allowServerListing();"
+        },
+        {
+          "line": 1029,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> reducedDebugInfo();"
+        },
+        {
+          "line": 1035,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> inGameNotification();"
+        },
+        {
+          "line": 1041,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.PresenceSharing> sharePresence();"
+        },
+        {
+          "line": 1047,
+          "method": "public final float getFinalSoundSourceVolume(net.minecraft.sounds.SoundSource);"
+        },
+        {
+          "line": 1065,
+          "method": "public final float getSoundSourceVolume(net.minecraft.sounds.SoundSource);"
+        },
+        {
+          "line": 1075,
+          "method": "public final net.minecraft.client.OptionInstance<java.lang.Double> getSoundSourceOptionInstance(net.minecraft.sounds.SoundSource);"
+        },
+        {
+          "line": 1086,
+          "method": "private net.minecraft.client.OptionInstance<java.lang.Double> createSoundSliderOptionInstance(java.lang.String, net.minecraft.sounds.SoundSource);"
+        },
+        {
+          "line": 1102,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> showSubtitles();"
+        },
+        {
+          "line": 1108,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> directionalAudio();"
+        },
+        {
+          "line": 1114,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> backgroundForChatOnly();"
+        },
+        {
+          "line": 1120,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> fullscreen();"
+        },
+        {
+          "line": 1126,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> exclusiveFullscreen();"
+        },
+        {
+          "line": 1132,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> macFullscreenMenuVisibility();"
+        },
+        {
+          "line": 1138,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> bobView();"
+        },
+        {
+          "line": 1144,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> toggleCrouch();"
+        },
+        {
+          "line": 1150,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> toggleSprint();"
+        },
+        {
+          "line": 1156,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> toggleAttack();"
+        },
+        {
+          "line": 1162,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> toggleUse();"
+        },
+        {
+          "line": 1168,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> sprintWindow();"
+        },
+        {
+          "line": 1174,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> hideMatchedNames();"
+        },
+        {
+          "line": 1180,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> showAutosaveIndicator();"
+        },
+        {
+          "line": 1186,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> onlyShowSecureChat();"
+        },
+        {
+          "line": 1192,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> saveChatDrafts();"
+        },
+        {
+          "line": 1198,
+          "method": "private void setGraphicsPresetToCustom();"
+        },
+        {
+          "line": 1225,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> fov();"
+        },
+        {
+          "line": 1231,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Boolean> telemetryOptInExtra();"
+        },
+        {
+          "line": 1237,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> screenEffectScale();"
+        },
+        {
+          "line": 1243,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> fovEffectScale();"
+        },
+        {
+          "line": 1249,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> darknessEffectScale();"
+        },
+        {
+          "line": 1255,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> glintSpeed();"
+        },
+        {
+          "line": 1261,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> glintStrength();"
+        },
+        {
+          "line": 1267,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> damageTiltStrength();"
+        },
+        {
+          "line": 1273,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Double> gamma();"
+        },
+        {
+          "line": 1279,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> guiScale();"
+        },
+        {
+          "line": 1285,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.Integer> debugGuiScale();"
+        },
+        {
+          "line": 1291,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.server.level.ParticleStatus> particles();"
+        },
+        {
+          "line": 1297,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.NarratorStatus> narrator();"
+        },
+        {
+          "line": 1303,
+          "method": "public net.minecraft.client.OptionInstance<java.lang.String> soundDevice();"
+        },
+        {
+          "line": 1309,
+          "method": "public void onboardingAccessibilityFinished();"
+        },
+        {
+          "line": 1318,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.sounds.MusicManager$MusicFrequency> musicFrequency();"
+        },
+        {
+          "line": 1324,
+          "method": "public net.minecraft.client.OptionInstance<net.minecraft.client.MusicToastDisplayState> musicToast();"
+        },
+        {
+          "line": 1330,
+          "method": "public net.minecraft.client.Options(net.minecraft.client.Minecraft, java.io.File);"
+        },
+        {
+          "line": 3472,
+          "method": "public float getBackgroundOpacity(float);"
+        },
+        {
+          "line": 3489,
+          "method": "public int getBackgroundColor(float);"
+        },
+        {
+          "line": 3500,
+          "method": "public int getBackgroundColor(int);"
+        },
+        {
+          "line": 3521,
+          "method": "private void processDumpedOptions(net.minecraft.client.Options$OptionAccess);"
+        },
+        {
+          "line": 3725,
+          "method": "private void processOptions(net.minecraft.client.Options$FieldAccess);"
+        },
+        {
+          "line": 4270,
+          "method": "public void load();"
+        },
+        {
+          "line": 4346,
+          "method": "private static boolean isTrue(java.lang.String);"
+        },
+        {
+          "line": 4353,
+          "method": "private static boolean isFalse(java.lang.String);"
+        },
+        {
+          "line": 4360,
+          "method": "private net.minecraft.nbt.CompoundTag dataFix(net.minecraft.nbt.CompoundTag);"
+        },
+        {
+          "line": 4389,
+          "method": "public void save();"
+        },
+        {
+          "line": 4454,
+          "method": "private java.lang.String getFullscreenVideoModeString();"
+        },
+        {
+          "line": 4478,
+          "method": "public net.minecraft.server.level.ClientInformation buildPlayerInformation();"
+        },
+        {
+          "line": 4537,
+          "method": "public void broadcastOptions();"
+        },
+        {
+          "line": 4552,
+          "method": "public void setModelPart(net.minecraft.world.entity.player.PlayerModelPart, boolean);"
+        },
+        {
+          "line": 4569,
+          "method": "public boolean isModelPartEnabled(net.minecraft.world.entity.player.PlayerModelPart);"
+        },
+        {
+          "line": 4577,
+          "method": "public net.minecraft.client.CloudStatus getCloudStatus();"
+        },
+        {
+          "line": 4585,
+          "method": "public boolean useNativeTransport();"
+        },
+        {
+          "line": 4591,
+          "method": "public void loadSelectedResourcePacks(net.minecraft.server.packs.repository.PackRepository);"
+        },
+        {
+          "line": 4676,
+          "method": "public net.minecraft.client.CameraType getCameraType();"
+        },
+        {
+          "line": 4682,
+          "method": "public void setCameraType(net.minecraft.client.CameraType);"
+        },
+        {
+          "line": 4689,
+          "method": "private static java.util.List<java.lang.String> readListOfStrings(java.lang.String);"
+        },
+        {
+          "line": 4704,
+          "method": "public java.io.File getFile();"
+        },
+        {
+          "line": 4710,
+          "method": "public java.lang.String dumpOptionsForReport();"
+        },
+        {
+          "line": 4791,
+          "method": "public void setServerRenderDistance(int);"
+        },
+        {
+          "line": 4798,
+          "method": "public int getEffectiveRenderDistance();"
+        },
+        {
+          "line": 4819,
+          "method": "private static net.minecraft.network.chat.Component pixelValueLabel(net.minecraft.network.chat.Component, int);"
+        },
+        {
+          "line": 4836,
+          "method": "private static net.minecraft.network.chat.Component percentValueLabel(net.minecraft.network.chat.Component, double);"
+        },
+        {
+          "line": 4856,
+          "method": "public static net.minecraft.network.chat.Component genericValueLabel(net.minecraft.network.chat.Component, net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 4872,
+          "method": "public static net.minecraft.network.chat.Component genericValueLabel(net.minecraft.network.chat.Component, int);"
+        },
+        {
+          "line": 4881,
+          "method": "public static net.minecraft.network.chat.Component genericValueOrOffLabel(net.minecraft.network.chat.Component, int);"
+        },
+        {
+          "line": 4894,
+          "method": "private static net.minecraft.network.chat.Component percentValueOrOffLabel(net.minecraft.network.chat.Component, double);"
+        },
+        {
+          "line": 4909,
+          "method": "private static java.lang.String lambda$dumpOptionsForReport$0(com.mojang.datafixers.util.Pair);"
+        },
+        {
+          "line": 4920,
+          "method": "private void lambda$load$1(java.lang.String);"
+        },
+        {
+          "line": 4927,
+          "method": "private static void lambda$load$0(net.minecraft.nbt.CompoundTag, java.lang.String);"
+        },
+        {
+          "line": 4953,
+          "method": "private void lambda$new$112(java.lang.Integer);"
+        },
+        {
+          "line": 4959,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$111(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 4973,
+          "method": "private void lambda$new$110(java.lang.Integer);"
+        },
+        {
+          "line": 4979,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$109(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 4993,
+          "method": "private void lambda$new$108(net.minecraft.client.MusicToastDisplayState);"
+        },
+        {
+          "line": 5003,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$107(net.minecraft.network.chat.Component, net.minecraft.client.MusicToastDisplayState);"
+        },
+        {
+          "line": 5009,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$106(net.minecraft.client.MusicToastDisplayState);"
+        },
+        {
+          "line": 5016,
+          "method": "private static void lambda$new$105(net.minecraft.client.sounds.MusicManager$MusicFrequency);"
+        },
+        {
+          "line": 5024,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$104(net.minecraft.network.chat.Component, net.minecraft.client.sounds.MusicManager$MusicFrequency);"
+        },
+        {
+          "line": 5030,
+          "method": "private static void lambda$new$103(java.lang.String);"
+        },
+        {
+          "line": 5045,
+          "method": "private static java.util.Optional lambda$new$102(java.lang.String);"
+        },
+        {
+          "line": 5065,
+          "method": "private static java.util.List lambda$new$101();"
+        },
+        {
+          "line": 5077,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$100(net.minecraft.network.chat.Component, java.lang.String);"
+        },
+        {
+          "line": 5099,
+          "method": "private void lambda$new$99(net.minecraft.client.NarratorStatus);"
+        },
+        {
+          "line": 5108,
+          "method": "private net.minecraft.network.chat.Component lambda$new$98(net.minecraft.network.chat.Component, net.minecraft.client.NarratorStatus);"
+        },
+        {
+          "line": 5122,
+          "method": "private void lambda$new$97(net.minecraft.server.level.ParticleStatus);"
+        },
+        {
+          "line": 5128,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$96(net.minecraft.network.chat.Component, net.minecraft.server.level.ParticleStatus);"
+        },
+        {
+          "line": 5134,
+          "method": "private static void lambda$new$95(java.lang.Integer);"
+        },
+        {
+          "line": 5138,
+          "method": "private static int lambda$new$94();"
+        },
+        {
+          "line": 5155,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$93(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5176,
+          "method": "private void lambda$new$92(java.lang.Integer);"
+        },
+        {
+          "line": 5183,
+          "method": "private static int lambda$new$91();"
+        },
+        {
+          "line": 5200,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$90(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5214,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$89(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5250,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$88(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5273,
+          "method": "private static java.lang.Double lambda$new$87(java.lang.Integer);"
+        },
+        {
+          "line": 5285,
+          "method": "private static java.lang.Integer lambda$new$86(java.lang.Double);"
+        },
+        {
+          "line": 5297,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$85(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5322,
+          "method": "private static net.minecraft.client.KeyMapping[] lambda$keyMappings$0(int);"
+        },
+        {
+          "line": 5328,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$84(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5350,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$83(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5360,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$82(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5370,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$81(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5380,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$80(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5390,
+          "method": "private static void lambda$new$79(java.lang.Boolean);"
+        },
+        {
+          "line": 5399,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$78(java.lang.Boolean);"
+        },
+        {
+          "line": 5410,
+          "method": "private static void lambda$new$77(java.lang.Boolean);"
+        },
+        {
+          "line": 5423,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$76(net.minecraft.network.chat.Component, java.lang.Boolean);"
+        },
+        {
+          "line": 5435,
+          "method": "private static void lambda$new$75(java.lang.Boolean);"
+        },
+        {
+          "line": 5450,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$74(java.lang.Boolean);"
+        },
+        {
+          "line": 5462,
+          "method": "private void lambda$createSoundSliderOptionInstance$0(net.minecraft.sounds.SoundSource, java.lang.Double);"
+        },
+        {
+          "line": 5497,
+          "method": "private net.minecraft.client.OptionInstance lambda$new$73(net.minecraft.sounds.SoundSource);"
+        },
+        {
+          "line": 5507,
+          "method": "private static void lambda$new$72(net.minecraft.client.PresenceSharing);"
+        },
+        {
+          "line": 5511,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$71(net.minecraft.network.chat.Component, net.minecraft.client.PresenceSharing);"
+        },
+        {
+          "line": 5517,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$70(net.minecraft.client.PresenceSharing);"
+        },
+        {
+          "line": 5524,
+          "method": "private static void lambda$new$69(java.lang.Boolean);"
+        },
+        {
+          "line": 5531,
+          "method": "private static void lambda$new$68(java.lang.Boolean);"
+        },
+        {
+          "line": 5536,
+          "method": "private static void lambda$new$67(java.lang.Boolean);"
+        },
+        {
+          "line": 5541,
+          "method": "private void lambda$new$66(java.lang.Boolean);"
+        },
+        {
+          "line": 5547,
+          "method": "private static void lambda$new$65(java.lang.Boolean);"
+        },
+        {
+          "line": 5553,
+          "method": "private static void lambda$new$64(java.lang.Boolean);"
+        },
+        {
+          "line": 5566,
+          "method": "private static void lambda$new$63(java.lang.Boolean);"
+        },
+        {
+          "line": 5579,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$62(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5595,
+          "method": "private void lambda$new$61(java.lang.Integer);"
+        },
+        {
+          "line": 5603,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$60(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5619,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$59(net.minecraft.network.chat.Component, net.minecraft.client.AttackIndicatorStatus);"
+        },
+        {
+          "line": 5625,
+          "method": "private void lambda$new$58(net.minecraft.client.TextureFilteringMethod);"
+        },
+        {
+          "line": 5633,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$57(net.minecraft.network.chat.Component, net.minecraft.client.TextureFilteringMethod);"
+        },
+        {
+          "line": 5639,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$56(net.minecraft.client.TextureFilteringMethod);"
+        },
+        {
+          "line": 5667,
+          "method": "private void lambda$new$55(java.lang.Integer);"
+        },
+        {
+          "line": 5675,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$54(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5700,
+          "method": "private void lambda$new$53(java.lang.Integer);"
+        },
+        {
+          "line": 5706,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$52(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 5721,
+          "method": "private static int lambda$new$51(java.lang.Double);"
+        },
+        {
+          "line": 5730,
+          "method": "private static java.lang.Double lambda$new$50(int);"
+        },
+        {
+          "line": 5739,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$49(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5753,
+          "method": "private static void lambda$new$48(java.lang.Double);"
+        },
+        {
+          "line": 5763,
+          "method": "private static int lambda$new$47(java.lang.Double);"
+        },
+        {
+          "line": 5772,
+          "method": "private static java.lang.Double lambda$new$46(int);"
+        },
+        {
+          "line": 5781,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$45(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5809,
+          "method": "private static void lambda$new$44(java.lang.Double);"
+        },
+        {
+          "line": 5818,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$43(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5827,
+          "method": "private static void lambda$new$42(java.lang.Double);"
+        },
+        {
+          "line": 5836,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$41(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5845,
+          "method": "private static void lambda$new$40(java.lang.Double);"
+        },
+        {
+          "line": 5854,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$39(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5863,
+          "method": "private static void lambda$new$38(java.lang.Double);"
+        },
+        {
+          "line": 5872,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$37(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5889,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$36(net.minecraft.network.chat.Component, net.minecraft.world.entity.HumanoidArm);"
+        },
+        {
+          "line": 5895,
+          "method": "private void lambda$new$35(java.lang.Boolean);"
+        },
+        {
+          "line": 5932,
+          "method": "private static void lambda$new$34(java.lang.Double);"
+        },
+        {
+          "line": 5941,
+          "method": "private void lambda$new$33(java.lang.Integer);"
+        },
+        {
+          "line": 5947,
+          "method": "private static void lambda$new$32(java.lang.Double);"
+        },
+        {
+          "line": 5956,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$31(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 5968,
+          "method": "private static void lambda$new$30(net.minecraft.world.entity.player.ChatVisiblity);"
+        },
+        {
+          "line": 5979,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$29(net.minecraft.network.chat.Component, net.minecraft.world.entity.player.ChatVisiblity);"
+        },
+        {
+          "line": 5985,
+          "method": "private void lambda$new$28(net.minecraft.client.PrioritizeChunkUpdates);"
+        },
+        {
+          "line": 5991,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$27(net.minecraft.network.chat.Component, net.minecraft.client.PrioritizeChunkUpdates);"
+        },
+        {
+          "line": 5997,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$26(net.minecraft.client.PrioritizeChunkUpdates);"
+        },
+        {
+          "line": 6025,
+          "method": "private static int lambda$new$25(java.lang.Double);"
+        },
+        {
+          "line": 6034,
+          "method": "private static java.lang.Double lambda$new$24(int);"
+        },
+        {
+          "line": 6043,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$23(net.minecraft.network.chat.Component, java.lang.Double);"
+        },
+        {
+          "line": 6071,
+          "method": "private void lambda$new$22(java.lang.Boolean);"
+        },
+        {
+          "line": 6079,
+          "method": "private void lambda$new$21(java.lang.Boolean);"
+        },
+        {
+          "line": 6087,
+          "method": "private void lambda$new$20(java.lang.Boolean);"
+        },
+        {
+          "line": 6095,
+          "method": "private void lambda$new$19(java.lang.Integer);"
+        },
+        {
+          "line": 6101,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$18(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 6115,
+          "method": "private void lambda$new$17(java.lang.Integer);"
+        },
+        {
+          "line": 6123,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$16(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 6137,
+          "method": "private void lambda$new$15(net.minecraft.client.CloudStatus);"
+        },
+        {
+          "line": 6143,
+          "method": "private static net.minecraft.client.CloudStatus lambda$new$14(java.lang.Boolean);"
+        },
+        {
+          "line": 6153,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$13(net.minecraft.network.chat.Component, net.minecraft.client.CloudStatus);"
+        },
+        {
+          "line": 6159,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$12(net.minecraft.network.chat.Component, net.minecraft.client.InactivityFpsLimit);"
+        },
+        {
+          "line": 6165,
+          "method": "private static net.minecraft.client.gui.components.Tooltip lambda$new$11(net.minecraft.client.InactivityFpsLimit);"
+        },
+        {
+          "line": 6189,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$10(net.minecraft.network.chat.Component, net.minecraft.client.GraphicsPreset);"
+        },
+        {
+          "line": 6198,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$9(net.minecraft.network.chat.Component, net.minecraft.client.PreferredGraphicsApi);"
+        },
+        {
+          "line": 6204,
+          "method": "private net.minecraft.client.gui.components.Tooltip lambda$new$8(net.minecraft.client.PreferredGraphicsApi);"
+        },
+        {
+          "line": 6242,
+          "method": "private static void lambda$new$7(java.lang.Integer);"
+        },
+        {
+          "line": 6251,
+          "method": "private static int lambda$new$6(java.lang.Integer);"
+        },
+        {
+          "line": 6259,
+          "method": "private static java.lang.Integer lambda$new$5(int);"
+        },
+        {
+          "line": 6267,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$4(net.minecraft.network.chat.Component, java.lang.Integer);"
+        },
+        {
+          "line": 6290,
+          "method": "private void lambda$new$3(java.lang.Double);"
+        },
+        {
+          "line": 6296,
+          "method": "private static int lambda$new$2(java.lang.Double);"
+        },
+        {
+          "line": 6305,
+          "method": "private static java.lang.Double lambda$new$1(int);"
+        },
+        {
+          "line": 6314,
+          "method": "private static net.minecraft.network.chat.Component lambda$new$0(net.minecraft.network.chat.Component, java.lang.Double);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/AdvancementType.class",
+      "size": 5538,
+      "sha256": "93d1b11db82a4d2634b2ea7e7f829726e3e6f6efdf63b81b4e29643f40d87688",
+      "locations": [
+        {
+          "line": 25,
+          "method": "public static net.minecraft.advancements.AdvancementType[] values();"
+        },
+        {
+          "line": 32,
+          "method": "public static net.minecraft.advancements.AdvancementType valueOf(java.lang.String);"
+        },
+        {
+          "line": 40,
+          "method": "private net.minecraft.advancements.AdvancementType(int, java.lang.String, net.minecraft.ChatFormatting);"
+        },
+        {
+          "line": 62,
+          "method": "public net.minecraft.ChatFormatting getChatColor();"
+        },
+        {
+          "line": 68,
+          "method": "public net.minecraft.network.chat.Component getDisplayName();"
+        },
+        {
+          "line": 74,
+          "method": "public java.lang.String getSerializedName();"
+        },
+        {
+          "line": 80,
+          "method": "public net.minecraft.network.chat.MutableComponent createAnnouncement(net.minecraft.advancements.AdvancementHolder, net.minecraft.server.level.ServerPlayer);"
+        },
+        {
+          "line": 100,
+          "method": "private static net.minecraft.advancements.AdvancementType[] $values();"
+        },
+        {
+          "line": 118,
+          "method": "private static int lambda$static$1(net.minecraft.advancements.AdvancementType);"
+        },
+        {
+          "line": 124,
+          "method": "private static int lambda$static$0(net.minecraft.advancements.AdvancementType);"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/advancements/Advancement.class",
+      "size": 18640,
+      "sha256": "0719712bd26b1a318f13522d4270fb3434651f9c15c3fcf2399eb437379847de",
+      "locations": [
+        {
+          "line": 23,
+          "method": "public net.minecraft.advancements.Advancement(java.util.Optional<net.minecraft.resources.Identifier>, java.util.Optional<net.minecraft.advancements.DisplayInfo>, net.minecraft.advancements.AdvancementRewards, java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>>, net.minecraft.advancements.AdvancementRequirements, boolean);"
+        },
+        {
+          "line": 39,
+          "method": "public net.minecraft.advancements.Advancement(java.util.Optional<net.minecraft.resources.Identifier>, java.util.Optional<net.minecraft.advancements.DisplayInfo>, net.minecraft.advancements.AdvancementRewards, java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>>, net.minecraft.advancements.AdvancementRequirements, boolean, java.util.Optional<net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 66,
+          "method": "private static com.mojang.serialization.DataResult<net.minecraft.advancements.Advancement> validate(net.minecraft.advancements.Advancement);"
+        },
+        {
+          "line": 124,
+          "method": "private static net.minecraft.network.chat.Component decorateName(net.minecraft.advancements.DisplayInfo);"
+        },
+        {
+          "line": 157,
+          "method": "public static net.minecraft.network.chat.Component name(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 168,
+          "method": "public boolean isRoot();"
+        },
+        {
+          "line": 175,
+          "method": "public void validate(net.minecraft.util.ProblemReporter, net.minecraft.core.HolderGetter$Provider);"
+        },
+        {
+          "line": 185,
+          "method": "public final java.lang.String toString();"
+        },
+        {
+          "line": 191,
+          "method": "public final int hashCode();"
+        },
+        {
+          "line": 197,
+          "method": "public final boolean equals(java.lang.Object);"
+        },
+        {
+          "line": 204,
+          "method": "public java.util.Optional<net.minecraft.resources.Identifier> parent();"
+        },
+        {
+          "line": 210,
+          "method": "public java.util.Optional<net.minecraft.advancements.DisplayInfo> display();"
+        },
+        {
+          "line": 216,
+          "method": "public net.minecraft.advancements.AdvancementRewards rewards();"
+        },
+        {
+          "line": 222,
+          "method": "public java.util.Map<java.lang.String, net.minecraft.advancements.triggers.Criterion<?>> criteria();"
+        },
+        {
+          "line": 228,
+          "method": "public net.minecraft.advancements.AdvancementRequirements requirements();"
+        },
+        {
+          "line": 234,
+          "method": "public boolean sendsTelemetryEvent();"
+        },
+        {
+          "line": 240,
+          "method": "public java.util.Optional<net.minecraft.network.chat.Component> name();"
+        },
+        {
+          "line": 246,
+          "method": "private static void lambda$validate$3(net.minecraft.util.ProblemReporter, net.minecraft.core.HolderGetter$Provider, java.lang.String, net.minecraft.advancements.triggers.Criterion);"
+        },
+        {
+          "line": 265,
+          "method": "private static net.minecraft.network.chat.Component lambda$name$0(net.minecraft.advancements.AdvancementHolder);"
+        },
+        {
+          "line": 273,
+          "method": "private static net.minecraft.network.chat.Style lambda$decorateName$0(net.minecraft.network.chat.Component, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 283,
+          "method": "private static net.minecraft.advancements.Advancement lambda$validate$2(net.minecraft.advancements.Advancement, net.minecraft.advancements.AdvancementRequirements);"
+        },
+        {
+          "line": 288,
+          "method": "private static java.lang.String lambda$validate$1();"
+        },
+        {
+          "line": 293,
+          "method": "private static java.lang.String lambda$validate$0();"
+        },
+        {
+          "line": 298,
+          "method": "private static net.minecraft.advancements.Advancement lambda$static$6(java.util.Optional, java.util.Optional, net.minecraft.advancements.AdvancementRequirements, java.lang.Boolean);"
+        },
+        {
+          "line": 312,
+          "method": "private static com.mojang.datafixers.kinds.App lambda$static$2(com.mojang.serialization.codecs.RecordCodecBuilder$Instance);"
+        },
+        {
+          "line": 354,
+          "method": "private static net.minecraft.advancements.Advancement lambda$static$4(java.util.Optional, java.util.Optional, net.minecraft.advancements.AdvancementRewards, java.util.Map, java.util.Optional, java.lang.Boolean);"
+        },
+        {
+          "line": 374,
+          "method": "private static net.minecraft.advancements.AdvancementRequirements lambda$static$5(java.util.Map);"
+        },
+        {
+          "line": 381,
+          "method": "private static java.util.Optional lambda$static$3(net.minecraft.advancements.Advancement);"
+        },
+        {
+          "line": 388,
+          "method": "private static com.mojang.serialization.DataResult lambda$static$0(java.util.Map);"
+        },
+        {
+          "line": 400,
+          "method": "private static java.lang.String lambda$static$1();"
+        }
+      ]
+    },
+    {
+      "entry": "net/minecraft/network/chat/ComponentUtils.class",
+      "size": 12842,
+      "sha256": "61fd3a4aa0e3174fa86b2c76db6141611bdfe5105099b34d4d17bc2827fca21d",
+      "locations": [
+        {
+          "line": 9,
+          "method": "public net.minecraft.network.chat.ComponentUtils();"
+        },
+        {
+          "line": 15,
+          "method": "public static net.minecraft.network.chat.MutableComponent mergeStyles(net.minecraft.network.chat.MutableComponent, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 45,
+          "method": "public static net.minecraft.network.chat.Component mergeStyles(net.minecraft.network.chat.Component, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 77,
+          "method": "public static java.util.Optional<net.minecraft.network.chat.MutableComponent> resolve(net.minecraft.network.chat.ResolutionContext, java.util.Optional<net.minecraft.network.chat.Component>, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 93,
+          "method": "public static net.minecraft.network.chat.MutableComponent resolve(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Component) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 101,
+          "method": "public static net.minecraft.network.chat.MutableComponent resolve(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Component, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 167,
+          "method": "private static net.minecraft.network.chat.Style resolveStyle(net.minecraft.network.chat.ResolutionContext, net.minecraft.network.chat.Style, int) throws com.mojang.brigadier.exceptions.CommandSyntaxException;"
+        },
+        {
+          "line": 211,
+          "method": "public static net.minecraft.network.chat.Component formatList(java.util.Collection<java.lang.String>);"
+        },
+        {
+          "line": 218,
+          "method": "public static <T extends java.lang.Comparable<T>> net.minecraft.network.chat.Component formatAndSortList(java.util.Collection<T>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 248,
+          "method": "public static <T> net.minecraft.network.chat.Component formatList(java.util.Collection<? extends T>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 256,
+          "method": "public static <T> net.minecraft.network.chat.MutableComponent formatList(java.util.Collection<? extends T>, java.util.Optional<? extends net.minecraft.network.chat.Component>, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 267,
+          "method": "public static net.minecraft.network.chat.Component formatList(java.util.Collection<? extends net.minecraft.network.chat.Component>, net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 275,
+          "method": "public static <T> net.minecraft.network.chat.MutableComponent formatList(java.util.Collection<? extends T>, net.minecraft.network.chat.Component, java.util.function.Function<T, net.minecraft.network.chat.Component>);"
+        },
+        {
+          "line": 326,
+          "method": "public static net.minecraft.network.chat.MutableComponent wrapInSquareBrackets(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 338,
+          "method": "public static net.minecraft.network.chat.Component fromMessage(com.mojang.brigadier.Message);"
+        },
+        {
+          "line": 353,
+          "method": "public static boolean isTranslationResolvable(net.minecraft.network.chat.Component);"
+        },
+        {
+          "line": 385,
+          "method": "public static net.minecraft.network.chat.MutableComponent copyOnClickText(java.lang.String);"
+        },
+        {
+          "line": 395,
+          "method": "private static net.minecraft.network.chat.Style lambda$copyOnClickText$0(java.lang.String, net.minecraft.network.chat.Style);"
+        },
+        {
+          "line": 415,
+          "method": "private static net.minecraft.network.chat.Component lambda$formatList$0(java.lang.String);"
+        }
+      ]
+    }
+  ],
+  "exporterSha256": "62353164c3fde9e83fd612d94e22c612abfa17a77c1eaa5fd8434d099f81a34a",
+  "derived": [
+    {
+      "entry": "app/web/src/data/advancements.json",
+      "sha256": "73360e52cdd7f4834848ad736786b2a07a108e7715252fa06579d0044000c131"
+    },
+    {
+      "entry": "app/web/src/i18n/advancements.en_us.json",
+      "sha256": "d55c9fbb208b08ce5513a0b0813426cef881f38681a090b6deba1a101da7d3a1"
+    },
+    {
+      "entry": "app/web/src/i18n/advancements.zh_cn.json",
+      "sha256": "84e9d3e17e84d9000151eadc84670c9ef1f33c6656f04c123e369b8baa294119"
+    }
+  ]
+}

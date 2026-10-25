@@ -10,7 +10,7 @@ import {seal} from '../web/src/persistence/codec.ts';
 import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
 
 /** Only explicit prior material qualifications are seeded; log and workbench acquisition use real gameplay. */
-const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../docs/p9/advancement-chat/evidence'),key='minecraft-birthday-2026:formal:save',before=process.argv.includes('--before'),playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[];
+const root=resolve(import.meta.dirname,'..'),out=resolve(root,'../.test-results/advancement-chat/evidence'),key='minecraft-birthday-2026:formal:save',before=process.argv.includes('--before'),playwright=createRequire(resolve(process.argv[2],'package.json'))('./index.js'),records=[];
 /** Serve exact ordinary build bytes without an application debug or grant route. */
 const server=createServer(async(req,res)=>{try{const u=new URL(req.url,'http://localhost'),base=u.pathname.startsWith('/minecraft-birthday-2026/')?'/minecraft-birthday-2026/':'/';let path=u.pathname.slice(base.length);if(path==='seed'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><title>TEST initial conditions</title>');return;}if(!path||path.endsWith('/'))path+='index.html';const body=await readFile(resolve(root,base==='/'?'dist':'dist-pages',path));res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.ogg':'audio/ogg'})[extname(path)]??'application/octet-stream');res.end(body);}catch{res.statusCode=404;res.end('not found');}});
 await mkdir(out,{recursive:true});await new Promise(r=>server.listen(0,'127.0.0.1',r));

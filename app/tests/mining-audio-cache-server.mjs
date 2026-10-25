@@ -6,8 +6,8 @@ import {resolve,extname,sep} from 'node:path';
 
 /** The prior released document lacks hit events; only this isolated server may retain it. */
 const root=resolve(import.meta.dirname,'..'),old=execFileSync('git',['show','6f9ce8143e99f708e42273c511c9b463d272abc6:resources/minecraft/26.3/assets/minecraft/world-sounds.json'],{cwd:root}),
-    log=resolve(root,'../docs/p9/mining-audio/evidence/cache-requests.jsonl'),legacy=new Set(['/','/minecraft-birthday-2026/']);
-await mkdir(resolve(root,'../docs/p9/mining-audio/evidence'),{recursive:true});
+    log=resolve(root,'../.test-results/mining-audio/evidence/cache-requests.jsonl'),legacy=new Set(['/','/minecraft-birthday-2026/']);
+await mkdir(resolve(root,'../.test-results/mining-audio/evidence'),{recursive:true});
 /** Serve exact static output and prime the previous sound document with a fresh one-year HTTP cache. */
 const server=createServer(async(req,res)=>{
  try{

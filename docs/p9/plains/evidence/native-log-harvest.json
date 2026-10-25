@@ -1,6 +1,0 @@
-{
-  "harvest": "{\"command\":{\"type\":\"harvest-node\",\"scene\":\"plains\",\"node\":\"oak_log:1\",\"visit\":0,\"expected\":{\"backpack\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"selected\":0,\"hotbar\":[null,null,null,null,null,null,null,null,null],\"equipment\":{\"head\":null,\"chest\":null,\"legs\":null,\"feet\":null,\"offhand\":null},\"presets\":[null,null,null,null,null,null,null,null,null]}},\"events\":[{\"type\":\"item-unlocked\",\"item\":\"minecraft:oak_log\"},{\"type\":\"items-acquired\",\"stacks\":[{\"id\":\"minecraft:oak_log\",\"count\":1}],\"deposited\":[{\"id\":\"minecraft:oak_log\",\"count\":1}],\"overflow\":[]},{\"type\":\"recipes-discovered\",\"recipes\":[\"minecraft:oak_planks\",\"minecraft:oak_wood\",\"minecraft:charcoal\"]}],\"selected\":0,\"backpack\":[{\"id\":\"minecraft:oak_log\",\"count\":1},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"unlocked\":[\"minecraft:oak_log\"]}",
-  "hover": "null",
-  "natural": "{\"epoch\":0,\"removed\":[\"oak_log:1\"],\"roll\":0}",
-  "pointer": "{\"desired\":\"visible\",\"actual\":false,\"pending\":false,\"paused\":false,\"epoch\":3}"
-}
