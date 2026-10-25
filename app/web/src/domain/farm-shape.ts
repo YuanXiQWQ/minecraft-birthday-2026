@@ -16,6 +16,8 @@ export interface FarmLayout {cells: Map<string, FarmBlock>; water: Cell[]; light
 export const FARM_RADIUS = 64;
 /** Only geometry-changing saved coordinates participate in the small layout cache. */
 let cached: {key: string; value: FarmLayout} | undefined;
+/** Construction changes own the expensive terrain cache; soil edits only overlay its cells. */
+let baseCache: {key: string; value: FarmLayout} | undefined;
 
 /** Preserve the level working meadow while placing shallow, broken terraces at the sides and rear.
  * @param {number} x World column.
@@ -37,12 +39,11 @@ function oldBarn([x, y, z]: Cell): boolean {
 
 /** Derive a deterministic farm with local air around saved devices, unchanged ground support and explicit native states.
  * @param {Cell[]} occupied Existing device and placed-block coordinates; never mutated.
- * @param {Soil[]} edits Saved farmland moisture and dirt conversions.
  * @return {FarmLayout} Shared effective cells after compatibility carving.
  */
-export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts').Soil[] = []): FarmLayout {
-    const key = JSON.stringify([occupied,edits]);
-    if (cached?.key === key) return cached.value;
+function farmBase(occupied: Cell[]): FarmLayout {
+    const key = JSON.stringify(occupied);
+    if (baseCache?.key === key) return baseCache.value;
     const cells = new Map<string, FarmBlock>(), water: Cell[] = [], lights: Cell[] = [];
     /** Insert one authoritative cell, with its exact support and precipitation surface.
      * @param {string} block Native short name.
@@ -65,7 +66,6 @@ export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts
         if (block === 'water') {water.push([x, -1, z]); put('dirt', [x, -2, z]);}
         for (let y = -1; y < h - 1; y++) put('dirt', [x, y, z]);
     }
-    for(const soil of edits)put(soil.moisture===null?'dirt':'farmland',soil.cell,soil.moisture===null?{}:{moisture:String(soil.moisture)});
     for (const x of [-11, -6]) for (const z of [-12, -8]) for (let y = 0; y < 3; y++) put('oak_log', [x, y, z], {axis: 'y'});
     for (let x = -10; x <= -7; x++) for (let y = 0; y < 2; y++) put('oak_planks', [x, y, -12]);
     for (const x of [-11, -6]) for (let z = -11; z <= -10; z++) put('oak_planks', [x, 0, z]);
@@ -108,7 +108,23 @@ export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts
         if (!cells.has([b.cell[0], b.cell[1] - 1, b.cell[2]].join(','))) cells.delete(id);
         else lights.push(b.cell);
     }
-    const value = {cells, water, lights}; cached = {key, value}; return value;
+    const value = {cells, water, lights}; baseCache = {key, value}; return value;
+}
+
+/** Overlay durable soil without regenerating hills, structures or unchanged cell objects.
+ * @param {Cell[]} occupied Saved construction coordinates.
+ * @param {Soil[]} edits Effective soil overrides.
+ * @return {FarmLayout} Immutable effective layout for this snapshot.
+ */
+export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts').Soil[] = []): FarmLayout {
+    const key=JSON.stringify([occupied,edits]);
+    if(cached?.key===key)return cached.value;
+    const base=farmBase(occupied),cells=new Map(base.cells);
+    for(const soil of edits){
+        const block=soil.grass?'grass_block':soil.moisture===null?'dirt':'farmland';
+        cells.set(soil.cell.join(','),{cell:soil.cell,block,state:soil.grass?{snowy:'false'}:soil.moisture===null?{}:{moisture:String(soil.moisture)},support:true,rainTop:soil.cell[1]+(block==='farmland'?15/16:1)});
+    }
+    const value={cells,water:base.water,lights:base.lights};cached={key,value};return value;
 }
 
 /** Resolve construction support while preserving natural ground and adjacent water around cane.

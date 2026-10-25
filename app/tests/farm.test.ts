@@ -11,6 +11,7 @@ import {seal,decode} from '../web/src/persistence/codec.ts';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import type {Cell} from '../web/src/domain/types.ts';
+import {agriculture} from '../web/src/domain/soil-state.ts';
 /** Locked recipe facts establish valid retained furnace inputs. */
 const rules=JSON.parse(readFileSync(new URL('../../data/minecraft/26.3/rules.json',import.meta.url),'utf8'));
 
@@ -47,6 +48,15 @@ test('farm water never supports devices; growth and unrelated inventory snapshot
     assert.equal(blockAt(p,[8,-1,-3])?.block,'water');assert.equal(supported(p,[8,0,-3]),false);assert.equal(supported(p,[-6,0,-4]),false);
     assert.equal(supported(p,[-5,0,-4]),true);
     for(const ticks of [0,80,160,240]){p.scenes.farm.crops=[{id:'growth',item:'minecraft:wheat_seeds',cell:FARM_PLOTS[0],growth:{version:1,data:{ticks}}}];assert.equal(currentFarm(p),l);}
+});
+
+test('soil edits share immutable farm base cells and restore original farmland after reset',()=>{
+    const p=initialState().progress;p.scene='farm';const before=currentFarm(p);
+    agriculture(p).soils[0].moisture=null;const after=currentFarm(p);
+    assert.notEqual(after,before);assert.equal(before.cells.get('-5,-1,-2')!.block,'farmland');assert.equal(after.cells.get('-5,-1,-2')!.block,'dirt');
+    for(const key of ['-11,2,-8','10,-1,0','-16,0,-18'])assert.equal(after.cells.get(key),before.cells.get(key));
+    assert.equal(after.water,before.water);assert.equal(after.lights,before.lights);
+    delete p.scenes.farm.agriculture;assert.equal(currentFarm(p).cells.get('-5,-1,-2')!.block,'farmland');
 });
 test('farm original model states and exporter bytes remain declared and hash locked',()=>{
     const manifest=JSON.parse(readFileSync(new URL('../../resources/minecraft/26.3/world-manifest.json',import.meta.url),'utf8'));

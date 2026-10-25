@@ -1,6 +1,6 @@
 /** Authored native block scenery and Java-derived animal cuboids, independent from persistent simulation. */
-import {FarmAnimal,itemMotion} from '../domain/farm-life.ts';
-import type {Bounds} from '../domain/player-motion.ts';
+import {FarmAnimal,itemMotion,pushAnimals} from '../domain/farm-life.ts';
+import type {Bounds,PlayerMotion} from '../domain/player-motion.ts';
 import type {SoundOptions} from './world-audio.ts';
 import {soils,cropStage} from '../domain/agriculture.ts';
 import {Group, InstancedMesh, Matrix4, Mesh, Vector3} from 'three';
@@ -17,6 +17,8 @@ import {DISTANT_OAKS, PLAINS_OAKS, oakCrown, plainsHeight, plainsPlants, retaine
 import {plainsTerrain, exposedModel} from './plains-terrain.ts';
 import type {Sample} from './resources.ts';
 import {buildFarm} from './farm-world.ts';
+import {patchSoils} from './soil-world.ts';
+import type {Soil} from '../domain/soil-state.ts';
 import {homeFloor, homeStructure, homeGardenHeight, currentHome, type HomeBlock} from '../domain/home-shape.ts';
 import {nativeShapes} from '../domain/block-shapes.ts';
 
@@ -36,6 +38,7 @@ export class AuthoredWorld {
     farmSignature = '';
     farmLights: Cell[] = [];
     soilSignature = '[]';
+    renderedSoils: Soil[] = [];
     plainsSignature = '';
     caveRoot: Group | null = null;
     caveSignature = '[]';
@@ -241,7 +244,7 @@ export class AuthoredWorld {
         this.signature = '';
         this.plainsDecor = null;
         this.homeRoot=null;this.homeCells=null;
-        this.farmRoot = null; this.farmSignature = ''; this.soilSignature='[]'; this.farmLights = [];
+        this.farmRoot = null; this.farmSignature = ''; this.soilSignature='[]'; this.renderedSoils=[]; this.farmLights = [];
         this.caveRoot = null; this.caveSignature = '[]';
         const spec = WORLD_SCENES[id], floor: Cell[] = [], pad: Cell[] = [];
         for (let x = -18; x <= 18; x++) for (let z = -22; z <= 10; z++) {
@@ -279,11 +282,11 @@ export class AuthoredWorld {
         }
     }
 
-    /** Retain source and crop objects whose identity and growth stage are unchanged across committed edits.
+    /** Patch committed soil locally and retain sources, crops and scenery whose effective state is unchanged.
      * @param {Progress} p Current durable facts.
      */
     sync(p: Progress): void {
-        if(p.scene==='plains'){const key=JSON.stringify(p.scenes.plains.agriculture?.soils??[]);if(key!==this.soilSignature){this.soilSignature=key;this.clear(this.staticRoot);this.staticVersion++;this.plainsGround(p);this.plainsSignature='';}}
+        if(p.scene!=='farm'){const key=JSON.stringify(soils(p));if(key!==this.soilSignature){if(patchSoils(this,this.staticRoot,p,this.renderedSoils))this.staticVersion++;this.soilSignature=key;this.renderedSoils=structuredClone(soils(p));}}
         if(p.scene==='home'){
             const cells=currentHome(p);
             if(cells!==this.homeCells){this.homeCells=cells;this.homeInterior([...cells.values()]);}
@@ -296,10 +299,14 @@ export class AuthoredWorld {
             if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
         }
         if (id === 'farm' && this.farmRoot) {
-            const layout = JSON.stringify([stations.map(s => s.cell), p.scenes.farm.blocks?.filter(b=>b.block!=='sugar_cane').map(b => b.cell),soils(p)]);
+            const layout = JSON.stringify([stations.map(s => s.cell), p.scenes.farm.blocks?.filter(b=>b.block!=='sugar_cane').map(b => b.cell)]),soilKey=JSON.stringify(soils(p));
             if (layout !== this.farmSignature) {
                 this.farmSignature = layout; this.staticVersion++; this.clear(this.farmRoot);
                 this.farmLights = buildFarm(this, this.farmRoot, p);
+                this.soilSignature=soilKey;this.renderedSoils=structuredClone(soils(p));
+            }else if(soilKey!==this.soilSignature){
+                if(patchSoils(this,this.farmRoot,p,this.renderedSoils))this.staticVersion++;
+                this.soilSignature=soilKey;this.renderedSoils=structuredClone(soils(p));
             }
         }
         if (signature === this.signature) return;
@@ -342,19 +349,25 @@ export class AuthoredWorld {
         }
     }
 
-    /** Advance visible adult ambient/navigation state at the native tick rate.
+    /** Advance visible adult pushing, home navigation and ambient state at the native tick rate.
      * @param {Progress} p Current world.
      * @param {Bounds[]} solids Collision geometry.
      * @param {Cell[]} water Water cells.
      * @param {Function|null} sound Spatial native sound consumer.
+     * @param {PlayerMotion} player Local player participating in reciprocal entity pushes.
      */
-    tickLife(p:Progress,solids:Bounds[],water:Cell[],sound:((id:string,options:SoundOptions)=>void)|null):void {
+    tickLife(p:Progress,solids:Bounds[],water:Cell[],sound:((id:string,options:SoundOptions)=>void)|null,player?:PlayerMotion):void {
         this.lifeTicks++;
         if(p.scene!=='farm')return;
+        const active:FarmAnimal[]=[];
         for(const root of this.natural.children){const kind=root.userData.block;if(kind!=='cow'&&kind!=='chicken')continue;
             const id=String(root.userData.id),cell=root.userData.cell as Cell;
             let animal=this.animals.get(id);if(!animal){animal=new FarmAnimal(kind,[cell[0]+.5,cell[1],cell[2]+.5],174761+this.animals.size*997);this.animals.set(id,animal);}
-            const near=solids.filter(b=>b[0]<animal!.origin[0]+3&&b[3]>animal!.origin[0]-3&&b[2]<animal!.origin[2]+3&&b[5]>animal!.origin[2]-3),feedback=animal.tick(near,water);
+            active.push(animal);
+        }
+        pushAnimals(active,player);
+        for(const animal of active){const kind=animal.kind,
+            near=solids.filter(b=>b[0]<Math.max(animal.origin[0],animal.feet[0])+3&&b[3]>Math.min(animal.origin[0],animal.feet[0])-3&&b[2]<Math.max(animal.origin[2],animal.feet[2])+3&&b[5]>Math.min(animal.origin[2],animal.feet[2])-3),feedback=animal.tick(near,water);
             if(feedback.ambient)sound?.('entity.'+kind+'.ambient',{volume:kind==='cow'?.4:1,pitch:feedback.pitch,position:[...animal.feet],category:'neutralVolume'});
             if(feedback.step)sound?.('entity.'+kind+'.step',{volume:.15,pitch:1,position:[...animal.feet],category:'neutralVolume'});
         }

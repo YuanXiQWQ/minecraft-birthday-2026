@@ -14,6 +14,7 @@ import {WorldUse, placement} from '../web/src/ui/world-use.ts';
 import {SaveSession} from '../web/src/persistence/session.ts';
 import {seal, token} from '../web/src/persistence/codec.ts';
 import {initialState} from '../web/src/domain/state.ts';
+import {agriculture, trample, till} from '../web/src/domain/agriculture.ts';
 import {WORLD_REGION} from '../web/src/domain/world-config.ts';
 import type {Rules} from '../web/src/rules/types.ts';
 import type {GameInventory} from '../web/src/ui/inventory.ts';
@@ -280,4 +281,27 @@ test('completed device mining keeps break effects and finite pickup without a re
         assert.equal(h.s.view.envelope!.state.progress.scenes.farm.stations.length,0);assert.ok(h.s.view.envelope!.state.progress.player.data.hotbar.some(s=>s?.id==='minecraft:crafting_table'&&s.count===1));
         await h.use.run({type:'remove-station',scene:'farm',id:station.id},null);assert.deepEqual(h.messages,['game.actionFailed']);
     }finally{h.dispose();if(previous)Object.defineProperty(globalThis,'document',previous);else Reflect.deleteProperty(globalThis,'document');}
+});
+
+test('trampling patches local geometry while retaining farm structures, water and distant GPU buffers',()=>{
+    const h=nativeRay(),world=h.v.authored!,p=initialState().progress;p.scene='farm';
+    p.world.visits.farm.removed=['sugar_cane:0','sugar_cane:1','sugar_cane:2','cow:0','chicken-egg:0','chicken-egg:1'];
+    agriculture(p);
+    try{
+        world.sync(p);
+        const root=world.farmRoot!,retained=root.children.filter(o=>['water','oak_stairs','oak_log','lantern'].includes(o.userData.block)||o.userData.id==='decoration'),initialVersion=world.staticVersion;
+        let disposed=0;for(const o of retained)o.traverse(part=>{if('geometry' in part)(part.geometry as any).addEventListener('dispose',()=>disposed++);});
+        const before=world.models.created;
+        trample(p,[-4.5,-.0625,-1.5],2);world.sync(p);
+        assert.equal(world.staticVersion,initialVersion+1);assert.equal(disposed,0);assert.ok(retained.every(o=>o.parent===root));
+        assert.ok(world.models.created-before<40,'one soil edit must not recompile the farm');
+        h.v.camera.lookAt(-4.5,0,-1.5);const hit=h.v.pick(300,300)!;
+        assert.equal(hit.block,'dirt');assert.deepEqual(hit.cell,[-5,-1,-2]);assert.ok(Math.abs(hit.point[1])<1e-6);
+        const count=root.children.length;
+        for(let i=0;i<3;i++){till(p,[-5,-1,-2],[0,1,0],{id:'minecraft:wooden_hoe',count:1});world.sync(p);trample(p,[-4.5,-.0625,-1.5],2);world.sync(p);}
+        assert.equal(root.children.length,count);assert.equal(disposed,0);
+        const soil=agriculture(p).soils[0];soil.grass=true;const version=world.staticVersion;world.sync(p);
+        assert.equal(world.staticVersion,version,'dirt-to-grass keeps collision height');
+        h.v.camera.lookAt(-4.5,0,-1.5);assert.equal(h.v.pick(300,300)!.block,'grass_block');
+    }finally{h.dispose();}
 });

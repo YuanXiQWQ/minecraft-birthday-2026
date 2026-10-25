@@ -45,7 +45,7 @@ export function placedDrops(block:PlacedBlock,tool:Stack|null,rules:Rules,requir
  * @return {{block:string,state:Record<string,string>,id?:string}|null} Native state or air.
  */
 export function blockAt(p:Progress,cell:Cell):{block:string;state:Record<string,string>;id?:string}|null{
-    const soil=soilAt(p,cell);if(soil)return {block:soil.moisture===null?'dirt':'farmland',state:soil.moisture===null?{}:{moisture:String(soil.moisture)}};
+    const soil=soilAt(p,cell);if(soil)return {block:soil.grass?'grass_block':soil.moisture===null?'dirt':'farmland',state:soil.grass?{snowy:'false'}:soil.moisture===null?{}:{moisture:String(soil.moisture)}};
     const scene=p.scenes[p.scene],placed=scene.blocks?.find(b=>sameCell(b.cell,cell));if(placed)return placed;
     const device=scene.stations.find(s=>sameCell(s.cell,cell));if(device)return {block:device.kind,state:{facing:device.facing},id:device.id};
     const crop=scene.crops.find(c=>sameCell(c.cell,cell));if(crop)return {block:'wheat',state:{},id:crop.id};

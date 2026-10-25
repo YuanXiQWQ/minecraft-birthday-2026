@@ -10,6 +10,7 @@ import {blockAt, BLOCK_PROPERTIES} from './placed-blocks.ts';
 import {sameCell} from './world-config.ts';
 import {playerBounds, overlaps} from './player-motion.ts';
 import {tickCane} from './sugar-cane.ts';
+import {tickGrass} from './grass.ts';
 
 /** Retain legacy approved stages while supporting every native age for newly growing crops.
  * @param {Crop} crop Saved crop.
@@ -35,7 +36,7 @@ export function canTill(p: Progress, cell: Cell, normal: Cell, held: Stack|null)
 export function till(p: Progress, cell: Cell, normal: Cell, held: Stack|null): void {
     if(!canTill(p,cell,normal,held))throw Error('invalid-till');
     const a=agriculture(p),old=a.soils.find(s=>sameCell(s.cell,cell));
-    if(old)old.moisture=0;else a.soils.push({cell:[...cell],moisture:0});
+    if(old){old.moisture=0;delete old.grass;}else a.soils.push({cell:[...cell],moisture:0});
 }
 /** Test the exact 9×2×9 water volume, including waterlogged blocks, plus uncovered rain.
  * @param {Progress} p Scene view of current facts.
@@ -68,7 +69,7 @@ export function growthSpeed(p: Progress, cell: Cell): number {
  * @return {Crop|undefined} Unsupported crop lifetime.
  */
 export function dryToDirt(p: Progress, soil: Soil): Crop|undefined {
-    soil.moisture=null;const scene=p.scenes[p.scene],crop=scene.crops.find(c=>sameCell(c.cell,[soil.cell[0],soil.cell[1]+1,soil.cell[2]]));
+    soil.moisture=null;delete soil.grass;const scene=p.scenes[p.scene],crop=scene.crops.find(c=>sameCell(c.cell,[soil.cell[0],soil.cell[1]+1,soil.cell[2]]));
     if(crop)scene.crops=scene.crops.filter(c=>c!==crop);return crop;
 }
 /** Advance native random section samples and retain the approved wet-soil 240-tick maturity.
@@ -96,7 +97,7 @@ export function tickAgriculture(p: Progress): {scene:SceneId,crop:Crop}[] {
             const pos=base.map(v=>v+rng.integer(0,15)).join(','),value=entries.get(pos);if(!value)continue;
             if('moisture' in value){if(value.moisture===null)continue;if(hydrated(view,value.cell))value.moisture=7;else if(value.moisture>0)value.moisture--;else {const above=blockAt(view,[value.cell[0],value.cell[1]+1,value.cell[2]])?.block;if(above!=='wheat'&&!above?.endsWith('_fence_gate'))dryToDirt(view,value);}}
             else if(value.growth.version===1&&rng.integer(0,Math.floor(25/growthSpeed(view,value.cell)))===0){const data=value.growth.data;data.age=Math.min(7,cropStage(value)+1);data.ticks=Math.max(data.ticks,Math.ceil(data.age*240/7));}
-        }}a.random=Number(rng.state);
+        }}a.random=Number(rng.state);tickGrass(view);
     }return removed;
 }
 /** Apply native fallDistance−0.5 trampling probability once for an observed player landing.

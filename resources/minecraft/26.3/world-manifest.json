@@ -267,7 +267,9 @@
     "net/minecraft/client/renderer/entity/ItemEntityRenderer.class": "debad4a3142a8b491c3e3b0d756df7091cf9acc85c2362968c2f18b3b99cb750",
     "net/minecraft/client/model/animal/cow/CowModel.class": "2bc0ed7732daff146b275f49ad5360bb9cd03ea8853f663c3a458ce5a04ec334",
     "net/minecraft/client/model/animal/chicken/AdultChickenModel.class": "b82673d40f01b9621eef2a415769cd4e6c12752717ce14a15103fa0428c6275f",
-    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2"
+    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2",
+    "net/minecraft/world/entity/Entity.class": "7ac5f6a929abbf4fa00f0a87ad530669f7d96c8ee2bb86a5076ab1fab352fb3c",
+    "net/minecraft/client/model/geom/ModelPart$Polygon.class": "45f353941998a01193e7c708c47ba793482581b26998d5ea7b5d4c39fc15cda5"
   },
   "states": [
     {
@@ -2056,6 +2058,6 @@
     }
   ],
   "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "7558a6c6e4b4f18709eb3fd9d7adcde846bf24198d53c54acdbfda4ff57b24d7",
+  "exporterSha256": "654fe06e468a2d51d88ccbf98d0f82f0f6092e198d2d230158d7647c72589b91",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; bounded native ambient sounds, ground items and farmland states"
 }

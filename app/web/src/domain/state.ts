@@ -237,11 +237,12 @@ export function validateState(value: unknown): asserts value is State {
         ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
         if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
         if(scene.agriculture){
-            const a=scene.agriculture;fields(a,['version','random','soils','drops','serial',...(a.caneAges===undefined?[]:['caneAges'])]);
+            const a=scene.agriculture;fields(a,['version','random','soils','drops','serial',...(a.caneAges===undefined?[]:['caneAges']),...(a.grassRandom===undefined?[]:['grassRandom'])]);
+            if(a.grassRandom!==undefined)ensure(Number.isSafeInteger(a.grassRandom)&&a.grassRandom>=0&&a.grassRandom<281474976710656);
             if(a.caneAges!==undefined)ensure(a.caneAges!==null&&typeof a.caneAges==='object'&&!Array.isArray(a.caneAges)&&Object.entries(a.caneAges).every(([key,age])=>WORLD_SCENES[id].nodes.some(n=>n.id===key&&n.block==='sugar_cane')&&typeof age==='number'&&Number.isInteger(age)&&age>=0&&age<=15));
             ensure(a.version===1&&Number.isSafeInteger(a.random)&&a.random>=0&&a.random<281474976710656&&Number.isSafeInteger(a.serial)&&a.serial>=0);
             ensure(Array.isArray(a.soils)&&a.soils.length<=16384&&new Set(a.soils.map(s=>s.cell.join(','))).size===a.soils.length&&Array.isArray(a.drops)&&a.drops.length<=4096);
-            for(const soil of a.soils){fields(soil,['cell','moisture']);cell(soil.cell);ensure(soil.cell[0]>=-18&&soil.cell[0]<=18&&soil.cell[2]>=-22&&soil.cell[2]<=10&&soil.cell[1]>=-4&&soil.cell[1]<=6&&(soil.moisture===null||Number.isInteger(soil.moisture)&&soil.moisture>=0&&soil.moisture<=7));}
+            for(const soil of a.soils){fields(soil,['cell','moisture',...(soil.grass===undefined?[]:['grass'])]);cell(soil.cell);ensure(soil.cell[0]>=-18&&soil.cell[0]<=18&&soil.cell[2]>=-22&&soil.cell[2]<=10&&soil.cell[1]>=-4&&soil.cell[1]<=6&&(soil.moisture===null||Number.isInteger(soil.moisture)&&soil.moisture>=0&&soil.moisture<=7)&&(soil.grass===undefined||typeof soil.grass==='boolean'&&soil.moisture===null));}
             for(const drop of a.drops){fields(drop,['id','cell','stack']);cell(drop.cell);ensure(typeof drop.id==='string'&&!ids.has(drop.id));ids.add(drop.id);ensure(KNOWN_ITEMS.has(drop.stack.id)&&Number.isInteger(drop.stack.count)&&drop.stack.count>0&&drop.stack.count<=64);}
         }
         const blockCells=new Set<string>();
