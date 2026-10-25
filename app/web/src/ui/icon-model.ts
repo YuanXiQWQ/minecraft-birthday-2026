@@ -62,7 +62,7 @@ export function iconModel(id: string, load: (id: string) => any, chain: string[]
     };
 }
 
-/** Compile native element rotations only in the item-icon adapter; scene blockstate support remains explicitly bounded.
+/** Compile native element rotations and the authored cake half-turn for GUI and held models.
  * @param {ModelSource} model Inherited model.
  * @return {CompiledModel} Original quads with transformed positions/normals.
  */
@@ -77,7 +77,7 @@ export function iconGeometry(model: ModelSource): CompiledModel {
             rescale?: boolean
         } | undefined, one = compileModel({...model, elements: [{...element, rotation: undefined}]});
         if (r) {
-            if (!['x', 'y', 'z'].includes(r.axis) || ![-45, -22.5, 0, 22.5, 45].includes(r.angle) || r.origin.length !== 3) throw Error('unsupported-icon-rotation');
+            if (!['x', 'y', 'z'].includes(r.axis) || ![-45, -22.5, 0, 22.5, 45, 180].includes(r.angle) || r.origin.length !== 3) throw Error('unsupported-icon-rotation');
             const axis = new Vector3(r.axis === 'x' ? 1 : 0, r.axis === 'y' ? 1 : 0, r.axis === 'z' ? 1 : 0),
                 matrix = new Matrix4().makeRotationAxis(axis, r.angle * Math.PI / 180),
                 origin = new Vector3(...r.origin).multiplyScalar(1 / 16),

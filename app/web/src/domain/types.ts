@@ -79,6 +79,7 @@ export interface Player {
 
 export interface Progress {
     advancements?: AdvancementFacts;
+    oddCakeTableTried?: boolean;
     environment?: EnvironmentState;
     world: WorldState;
     unlocked: string[];
@@ -109,6 +110,7 @@ export type Command =
     | {type:'place-block';scene:SceneId;item:string;hit:BlockHit;id:string;expected:PlayerLayout}
     | {type:'break-block';scene:SceneId;id:string;expected:PlayerLayout}
     | {type:'use-block';scene:SceneId;id:string}
+    | {type:'try-odd-cake-table';scene:SceneId;expected:PlayerLayout}
     | {type:'eat-cake';scene:SceneId;id:string;expectedBites:number}
     | { type: 'harvest-node'; scene: SceneId; node: string; visit: number; expected: PlayerLayout }
     | {
@@ -171,7 +173,7 @@ export type Command =
 };
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-eaten' | 'recipes-discovered' | 'advancements-completed';
+    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-eaten' | 'odd-cake-table-tried' | 'recipes-discovered' | 'advancements-completed';
     advancements?: string[];
     /** Effective native drops, independent of bag capacity. */
     stacks?: Stack[];

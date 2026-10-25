@@ -1,4 +1,5 @@
 /** Original blockstate variants and multipart models project persisted player construction. */
+import {assetPath,blockStatePath} from './asset-path.ts';
 import {nativeShapes} from '../domain/block-shapes.ts';
 import {Group,Box3,Vector3} from 'three';
 import {entityCube} from '../ui/icons.ts';
@@ -23,7 +24,7 @@ function matches(when:any,state:Record<string,string>):boolean{return !when||Obj
  * @return {Group} World block geometry.
  */
 export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModels):Group{
-    const doc=pack.documents.get('assets/minecraft/blockstates/'+block.block+'.json'),root=new Group(),shapes:Bounds[]=[];
+    const doc=pack.documents.get(blockStatePath(block.block)),root=new Group(),shapes:Bounds[]=[];
     if(!doc)throw Error('world-model:'+block.block);
     let variants:Variant[]=[];
     if(doc.multipart)variants=doc.multipart.filter((p:any)=>matches(p.when,block.state)).map((p:any)=>Array.isArray(p.apply)?p.apply[0]:p.apply);
@@ -32,7 +33,7 @@ export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModel
         const body=new Group();body.position.set(.5,0,.5);body.rotation.y=-['south','west','north','east'].indexOf(block.state.facing)*Math.PI/2;
         for(const box of [[1,0,1,14,10,14,0,19],[1,9,1,14,5,14,0,0],[7,7,15,2,4,1,0,0]]){const part=models.sample({id:block.id,block:block.block,state:'',variant:{model:'chest'},compiled:entityCube(box,'minecraft:entity/chest/'+(block.block==='chest'?'normal':'trapped'))});part.position.set(-.5,0,-.5);body.add(part);}root.add(body);shapes.push([1/16,0,1/16,15/16,14/16,15/16]);
     }
-    for(const variant of variants){const source=resolveModel(variant.model,id=>{const m=pack.documents.get('assets/minecraft/models/'+id.split(':')[1]+'.json');if(!m)throw Error('missing-placement-model:'+id);return m;});
+    for(const variant of variants){const source=resolveModel(variant.model,id=>{const m=pack.documents.get(assetPath('models',id));if(!m)throw Error('missing-placement-model:'+id);return m;});
         if(!source.elements?.length)continue;
         root.add(models.sample({id:block.id,block:block.block,state:JSON.stringify(block.state),variant,compiled:compileModel(source,variant)}));
         for(const element of source.elements??[]){const c=compileModel({...source,elements:[element]},variant),box=new Box3();for(let i=0;i<c.positions.length;i+=3)box.expandByPoint(new Vector3(...c.positions.slice(i,i+3) as [number,number,number]));if(!box.isEmpty())shapes.push([...box.min.toArray(),...box.max.toArray()] as Bounds);}

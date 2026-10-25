@@ -1,4 +1,5 @@
 /** Approved D06 native discovery predicates and finite recipe placement have no DOM or rendering dependency. */
+import {ODD_RECIPE} from './easter-egg.ts';
 import source from '../data/recipe-book.json' with {type: 'json'};
 import type {Recipe, Rules, Stack, Ingredient} from '../rules/types.ts';
 import {alternatives, matchCrafting} from '../rules/matcher.ts';
@@ -17,7 +18,7 @@ export interface RecipeBook {
 }
 
 /** Audited ordinary native recipes exclude dynamic special repair displays. */
-export const BOOK_RECIPES = source.recipes as Recipe[];
+export const BOOK_RECIPES = [...source.recipes,ODD_RECIPE] as Recipe[];
 
 /** Define a new book; native tick discovery is evaluated once during initialization.
  * @param {string[]} unlocked Existing acquired facts for silent migration.

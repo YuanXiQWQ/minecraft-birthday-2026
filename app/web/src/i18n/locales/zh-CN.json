@@ -268,5 +268,9 @@
   "advancements.birthday.description": "做好一个赛博蛋糕",
   "advancements.toast.challenge": "挑战已完成！",
   "chat.type.advancement.challenge": "%s完成了挑战%s",
-  "chat.cakeReady": "一旦你做好了蛋糕，就把它放到家里的桌子上吧！"
+  "chat.cakeReady": "一旦你做好了蛋糕，就把它放到家里的桌子上吧！",
+  "advancements.oddCake.title": "好像...不太对劲？",
+  "advancements.oddCake.description": "不小心把蛋糕搞砸了。",
+  "chat.oddCakeCrafted": "hmmm,你确定吗 (ﾉ∀)`",
+  "chat.oddCakeTable": "拜托 (｡•ˇ_ˇ•｡)"
 }

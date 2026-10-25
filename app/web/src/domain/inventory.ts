@@ -1,5 +1,5 @@
 /** Infinite catalogue and shared finite 27+9 player carriers; no recipes, processing or world drops are created here. */
-import native from '../data/inventory-rules.json' with {type: 'json'};
+import {INVENTORY_RULES as native} from './easter-egg.ts';
 import type {Stack} from '../rules/types.ts';
 import {capacity, pickup, distribute, quickMove, collect, sameStack, identity} from './slots.ts';
 import type {ItemRules, SlotValue} from './slots.ts';

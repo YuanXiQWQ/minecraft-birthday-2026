@@ -358,8 +358,9 @@ test('D06 ten distinct acquisitions map native occupied slots; water event is no
 
 test('every one of 111 reachable ordinary recipes has exact original discovery evidence and a legal bounded full fill', () => {
     const unlocked = Object.keys(rules.items);
-    assert.equal(BOOK_RECIPES.length, 111);
-    for (const recipe of BOOK_RECIPES) {
+    const originalRecipes=BOOK_RECIPES.filter(r=>r.id.startsWith('minecraft:'));
+    assert.equal(originalRecipes.length, 111);
+    for (const recipe of originalRecipes) {
         const mode = recipe.type === 'minecraft:smelting' ? 'furnace' : recipe.type === 'minecraft:blasting' ? 'blast_furnace' : 'crafting',
             width = mode === 'crafting' ? 3 : 1,
             grid = fillRecipe(recipe, mode, width, Array(width * width).fill(null), unlocked, rules, true);

@@ -9,6 +9,7 @@ import {NavigationPanel} from './ui/navigation-panel.ts';
 import {NativeScreens} from './ui/native-screens.ts';
 import {GameChat, nativeScale} from './ui/chat.ts';
 import {AuthorWelcome} from './ui/author-welcome.ts';
+import {bindOddCakeRemarks} from './ui/odd-cake-chat.ts';
 import {GameKeyboard} from './ui/game-keyboard.ts';
 import {pickupSoundOptions} from './ui/pickup-feedback.ts';
 import {AdvancementView} from './ui/advancements.ts';
@@ -638,6 +639,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
             authorWelcome = new AuthorWelcome(chat, t, appAbort.signal);
+            bindOddCakeRemarks(host,chat,t,appAbort.signal,()=>runtimeGeneration??'');
             /** Run native commands against locked facts and exclude replies from discarded game lifetimes.
              * @param {string} source Slash-prefixed player input.
              * @return {Promise<import('./domain/console.ts').CommandFeedback[]>} Committed native feedback or a current-lifetime failure.
@@ -664,6 +666,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                         const saved=session.view.envelope?.state;
                         if(saved)for(const line of advancementChat(event,saved))chat?.append(line);
                     }
+                    if(event.type==='odd-cake-table-tried')chat?.append([{text:t('chat.oddCakeTable')}],'author');
                     if (event.type === 'cake-crafted') chat?.append([{text:t('chat.cakeReady')}], 'author');
                     if (event.type === 'recipes-discovered') inventory?.book?.notify(event.recipes ?? []);
                     else if (event.type === 'items-acquired') {

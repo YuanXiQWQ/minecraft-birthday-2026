@@ -1,4 +1,5 @@
 /** Hash-verified original item definitions become cached transparent GUI icons, without importing experimental entry points. */
+import {assetPath} from '../render/asset-path.ts';
 import {
     BufferGeometry,
     Float32BufferAttribute,
@@ -85,6 +86,10 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     const extra = await extraResponse.json();
     const experience = await (await fetchManifest('experience-manifest.json')).json();
     if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
+    const authored=await (await fetchManifest('easter-egg-manifest.json')).json();
+    if(authored.version!=='26.3'||authored.clientSha1!==manifest.clientSha1)throw Error('authored-resource-version');
+    manifest.items.push(...authored.items);
+    Object.assign(manifest.inputs,authored.inputs);
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();
     const advancementResponse=await fetchManifest('advancement-manifest.json');
     if(!advancementResponse.ok)throw Error('advancement-resource-unavailable');
@@ -193,7 +198,7 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
      * @return {Group} Transformed model.
      */
     function partGroup(part: IconPart): Group {
-        const model = iconModel(part.model, id => documents.get('assets/minecraft/models/' + id.split(':')[1] + '.json')),
+        const model = iconModel(part.model, id => documents.get(assetPath('models',id))),
             root = new Group(), body = new Group();
         root.add(body);
         if (part.special?.type === 'minecraft:chest') {
@@ -240,7 +245,7 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     try {
         const now = new Date(),
             date = String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
-        const tasks = [...manifest.items, ...Object.keys(book.uiDefinitions)].map((id: string) => ({id, node: book.uiDefinitions[id] ?? documents.get('assets/minecraft/items/' + id.split(':')[1] + '.json').model}));
+        const tasks = [...manifest.items, ...Object.keys(book.uiDefinitions)].map((id: string) => ({id, node: book.uiDefinitions[id] ?? documents.get(assetPath('items',id)).model}));
         for (const model of book.compassModels) tasks.push({id: model, node: {type: 'minecraft:model', model}});
         for (const {id, node} of tasks) {
             const parts = iconParts(node, date), group = new Group();
@@ -287,12 +292,12 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
                     }
                     animations.set(id, {frames, sequence, last: 0});
                 }
-                kinds.set(id, parts.every(p => !p.special && !!iconModel(p.model, n => documents.get('assets/minecraft/models/' + n.split(':')[1] + '.json')).builtin) ? 'sprite' : 'model');
+                kinds.set(id, parts.every(p => !p.special && !!iconModel(p.model, n => documents.get(assetPath('models',n))).builtin) ? 'sprite' : 'model');
                 coverage.push({
                     id,
                     parts: parts.map(p => p.model),
                     pixels: count,
-                    route: parts.some(p => p.special) ? 'native-special' : parts.length > 1 ? 'native-composite' : iconModel(parts[0].model, n => documents.get('assets/minecraft/models/' + n.split(':')[1] + '.json')).builtin ? 'native-generated' : 'native-elements'
+                    route: parts.some(p => p.special) ? 'native-special' : parts.length > 1 ? 'native-composite' : iconModel(parts[0].model, n => documents.get(assetPath('models',n))).builtin ? 'native-generated' : 'native-elements'
                 });
             } finally {
                 progress?.(++completed, total);

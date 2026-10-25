@@ -1,4 +1,5 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {isCake,ODD_CAKE} from '../domain/easter-egg.ts';
 import {canTill,canPickup,soilAt,cropStage} from '../domain/agriculture.ts';
 import {PLACEABLE,placementBlocks,lookFacing,opposite} from '../domain/placed-blocks.ts';
 import type {BlockHit} from '../domain/placed-blocks.ts';
@@ -341,6 +342,8 @@ export class WorldUse {
             return;
         }
         if (hit.id === 'birthday-table') {
+            if(p.player.data.hotbar[p.player.data.selected]?.id===ODD_CAKE){void this.run({type:'try-odd-cake-table',scene:p.scene,expected:layout(this.inventory.value)},null);return;}
+
             if (p.scene === 'home' && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:cake') this.run({
                 type: 'record-cake-placement',
                 scene: 'home',
@@ -350,7 +353,7 @@ export class WorldUse {
             return;
         }
         const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
-        if(placed?.block==='cake'&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
+        if(placed&&isCake(placed.block)&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
         if(placed&&!shift&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);
         if (found && attach && this.heldKind()) {

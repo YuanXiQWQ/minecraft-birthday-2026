@@ -1,4 +1,5 @@
 /** Native held item geometry shares model inheritance and item-definition selection with the catalogue, without reusing GUI screenshots. */
+import {assetPath} from '../render/asset-path.ts';
 import {textureFrames, animationAt} from '../render/vanilla-models.ts';
 import type {AnimationFrame} from '../render/vanilla-models.ts';
 import {
@@ -146,9 +147,9 @@ export class PlayerItems {
         const out = new Group(), date = new Date(),
             stamp = String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0'),
             context = (first ? 'firstperson_' : 'thirdperson_') + (left ? 'lefthand' : 'righthand'),
-            definition = this.art.documents.get('assets/minecraft/items/' + id.split(':')[1] + '.json');
+            definition = this.art.documents.get(assetPath('items',id));
         for (const part of iconParts(definition.model, stamp, [], context)) {
-            const model = iconModel(part.model, id => this.art.documents.get('assets/minecraft/models/' + id.split(':')[1] + '.json')),
+            const model = iconModel(part.model, id => this.art.documents.get(assetPath('models',id))),
                 root = new Group(), body = new Group();
             root.add(body);
             if (part.special?.type === 'minecraft:shield') {

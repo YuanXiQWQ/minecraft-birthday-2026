@@ -45,11 +45,12 @@ test('missing language keys fall back to English; missing English and missing in
     assert.throws(() => translate('common.settings', {}, {}, {}), /missing-english/);
     assert.throws(() => translate('home.title'), /missing-locale-argument/);
 });
-test('every statically declared page key exists in external English and all English glyphs fit the ASCII profile', () => {
+test('every statically declared page key exists in external English and English glyphs fit the ASCII and native Unihex profiles', () => {
     const source = readFileSync(resolve('web/src/ui/inventory.ts'), 'utf8') + readFileSync(resolve('web/src/ui/inventory-input.ts'), 'utf8') + readFileSync(resolve('web/src/app.ts'), 'utf8') + readFileSync(resolve('web/index.html'), 'utf8') + readFileSync(resolve('web/game/index.html'), 'utf8');
     for (const key of Object.keys(ENGLISH)) assert.equal(typeof ENGLISH[key as keyof typeof ENGLISH], 'string');
     for (const match of source.matchAll(/['"]((?:home|game|settings|common|error|status|html|a11y|inventory)\.[A-Za-z0-9_-]+)['"]/g)) assert.ok(Object.hasOwn(ENGLISH, match[1]), match[1]);
-    for (const value of Object.values(ENGLISH)) assert.match(value, /^[\x20-\x7e\n]*$/);
+    const unicode=JSON.parse(readFileSync(resolve(RESOURCE_ROOT,'assets/minecraft/font/project_unifont.json'),'utf8'));
+    for(const char of new Set(Object.values(ENGLISH).join('')))if(char.charCodeAt(0)>126)assert.ok(unicode[char.codePointAt(0)!.toString(16).toUpperCase().padStart(4,'0')],char);
     assert.equal(readdirSync(resolve('web/src')).includes('labels.ts'), false);
 });
 test('long text wraps at words and within long tokens without deleting copy or exceeding the measured line width', () => {

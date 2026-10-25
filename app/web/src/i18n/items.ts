@@ -1,4 +1,6 @@
 /** Original item names follow the saved display language and share bilingual search aliases. */
+import {ODD_CAKE} from '../domain/easter-egg.ts';
+import authored from './authored-items.json' with {type:'json'};
 import aliases from './items.zh_cn.json' with {type: 'json'};
 import english from './items.en.json' with {type: 'json'};
 import {displayLocale} from './index.ts';
@@ -9,10 +11,10 @@ import {displayLocale} from './index.ts';
  * @return {string} Translated name or authoritative English fallback.
  */
 export function itemName(id: string, translation: string | Record<string, string> = 'en'): string {
-    const base = (english as Record<string, string>)[id];
+    const base = id===ODD_CAKE?authored[ODD_CAKE].en:(english as Record<string, string>)[id];
     if (!base) throw Error('missing-english-item:' + id);
     const names = typeof translation === 'string' ? displayLocale(translation) === 'zh-CN' ? aliases : {} : translation;
-    return (names as Record<string, string>)[id] ?? base;
+    return id===ODD_CAKE&&typeof translation==='string'&&displayLocale(translation)==='zh-CN'?authored[ODD_CAKE]['zh-CN']:(names as Record<string, string>)[id] ?? base;
 }
 
 /** Search original supported-language aliases without changing display language or permanent order.
@@ -21,5 +23,5 @@ export function itemName(id: string, translation: string | Record<string, string
  * @return {boolean} Whether any indexed name or ID matches.
  */
 export function matchesItem(id: string, query: string): boolean {
-    return (id + ' ' + itemName(id) + ' ' + ((aliases as Record<string, string>)[id] ?? '')).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
+    return (id + ' ' + itemName(id) + ' ' + (id===ODD_CAKE?authored[ODD_CAKE]['zh-CN']:(aliases as Record<string, string>)[id] ?? '')).toLocaleLowerCase().includes(query.trim().toLocaleLowerCase());
 }

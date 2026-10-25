@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "criteria": {"cake_crafted": {"trigger": "jerrys_farm:upside_down_cake_crafted"}},
+  "requirements": [["cake_crafted"]],
+  "display": {
+    "title": {"translate": "advancements.oddCake.title"},
+    "description": {"translate": "advancements.oddCake.description"},
+    "icon": {"id": "jerrys_farm:upside_down_cake"},
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  }
+}

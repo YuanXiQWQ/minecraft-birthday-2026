@@ -1,0 +1,79 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "authored upside-down cake; original textures and all seven models rotated 180 degrees around [8,4,8]",
+  "exporterSha256": "61c206f662aeca9f7372b6249705c9273c3ca16d3b944dcf4d5f32e6e1e16a0b",
+  "inputs": {
+    "assets/minecraft/models/block/block.json": "212df16c5aa3e6aef3f4d3e080532d28a86cf9b2071618e4ca587ee9ef3c6d09",
+    "assets/minecraft/textures/block/cake_top.png": "2d2866b25e4b3b32d9f36cd703a8a0f0e3a5d9559789db4a14fd3e7365e519ee",
+    "assets/minecraft/textures/block/cake_bottom.png": "39fdb08fa21fa2583498ff3ebfe310d4c7fd1e4313b78429ed885c4bf77d47cc",
+    "assets/minecraft/textures/block/cake_side.png": "33010b11cde4d784153cbc0c1092d4a68857f80a4ca5bb01783f888f5aba5ea2",
+    "assets/minecraft/textures/block/cake_inner.png": "7d72db3cd690ae4525f22e95ec255c3e85e55279ba3d1c6a3377576e6e85f9d1",
+    "assets/minecraft/models/block/cake.json": "58d8c1cb2450f8a0c3d218dcdb68c64a24321e01a11da6e670e34f8892221698",
+    "assets/jerrys_farm/models/block/upside_down_cake.json": "1a6fac5edc75e027cf24a19f0ebd59edda091442b22a35d5fb3303a0aa3659f2",
+    "assets/minecraft/models/block/cake_slice1.json": "cfb0a40cb2e3d9cc1af4a1b2e17dc6008610028c34248e264593b0bc6acd1ef6",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice1.json": "1e4a81a21e6e147fa66c185e8efebc104d46d4bc1a08e0827fc05dfaa4880667",
+    "assets/minecraft/models/block/cake_slice2.json": "84993f7cdb3acc72c2a2d15f9f904f39c1d51740f1ee0a0f836d5b0337ba4c70",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice2.json": "2ab8bd174ba92199a77cc5c077dbf937844d111a90ae49e6ce0b479dc892413e",
+    "assets/minecraft/models/block/cake_slice3.json": "42febcd3b719d3518de9d4bbb289e4bf2c48fae7aba307e627cdaf5d67b92a53",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice3.json": "e19597eaa095043693dbb048cdc8b88aedd4b534176606ed28a217392207d3e9",
+    "assets/minecraft/models/block/cake_slice4.json": "0d2f1c718d3b55a8dcfb8dadba23b3aecc6d5f32307984ceb382bf371d51c361",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice4.json": "8ceee1cb872ebd8f45874bc863149b3dede734f4737b713cebf1e319bdd2a8ec",
+    "assets/minecraft/models/block/cake_slice5.json": "75e5a6d0ad9b60f0d7f852728f9d03e5e9f1475370268d15a37ff4209042c25e",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice5.json": "6f97a12f43ddbb70bb0eecc335eb6829584cc3cadc10d938bce66c34c5efce5c",
+    "assets/minecraft/models/block/cake_slice6.json": "3fe39e6f1b8d603e96fbbc750e1d716b96c8120a771ef1ca935a69cc5004d0e2",
+    "assets/jerrys_farm/models/block/upside_down_cake_slice6.json": "4393e380643a41baf9872dc1119eb749a2dcc86c1323cf66203469c571edf353",
+    "assets/jerrys_farm/blockstates/upside_down_cake.json": "212ef0bceb05c8880ebbb2ab4b20c6bc995beab694cf22bcb4469bd332a14024",
+    "assets/jerrys_farm/items/upside_down_cake.json": "1c8e3e8bb28db9a7834ffe84700c4a4cd1d07c4f8a83fe8e6f5020538cd9663b"
+  },
+  "entries": [
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake.json",
+      "size": 850,
+      "sha256": "1a6fac5edc75e027cf24a19f0ebd59edda091442b22a35d5fb3303a0aa3659f2"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice1.json",
+      "size": 886,
+      "sha256": "1e4a81a21e6e147fa66c185e8efebc104d46d4bc1a08e0827fc05dfaa4880667"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice2.json",
+      "size": 886,
+      "sha256": "2ab8bd174ba92199a77cc5c077dbf937844d111a90ae49e6ce0b479dc892413e"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice3.json",
+      "size": 886,
+      "sha256": "e19597eaa095043693dbb048cdc8b88aedd4b534176606ed28a217392207d3e9"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice4.json",
+      "size": 886,
+      "sha256": "8ceee1cb872ebd8f45874bc863149b3dede734f4737b713cebf1e319bdd2a8ec"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice5.json",
+      "size": 887,
+      "sha256": "6f97a12f43ddbb70bb0eecc335eb6829584cc3cadc10d938bce66c34c5efce5c"
+    },
+    {
+      "entry": "assets/jerrys_farm/models/block/upside_down_cake_slice6.json",
+      "size": 887,
+      "sha256": "4393e380643a41baf9872dc1119eb749a2dcc86c1323cf66203469c571edf353"
+    },
+    {
+      "entry": "assets/jerrys_farm/blockstates/upside_down_cake.json",
+      "size": 597,
+      "sha256": "212ef0bceb05c8880ebbb2ab4b20c6bc995beab694cf22bcb4469bd332a14024"
+    },
+    {
+      "entry": "assets/jerrys_farm/items/upside_down_cake.json",
+      "size": 102,
+      "sha256": "1c8e3e8bb28db9a7834ffe84700c4a4cd1d07c4f8a83fe8e6f5020538cd9663b"
+    }
+  ],
+  "items": [
+    "jerrys_farm:upside_down_cake"
+  ]
+}

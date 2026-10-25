@@ -1,4 +1,5 @@
 /** Original terrain sprites, volume particles and SheetedDecalTextureGenerator crack projection for Java 26.3. */
+import {assetPath,blockStatePath} from './asset-path.ts';
 import {AddEquation,BufferGeometry,Color,CustomBlending,DstColorFactor,Euler,Float32BufferAttribute,Group,Mesh,MeshBasicMaterial,OneFactor,Quaternion,RepeatWrapping,SrcColorFactor,Vector3,ZeroFactor} from 'three';
 import type {Object3D,PerspectiveCamera,Scene} from 'three';
 import {NativeRandom} from '../domain/environment.ts';
@@ -38,11 +39,11 @@ export function crackUv(position:Vector3,normal:Vector3):number[] {
  * @return {object} Original particle texture and whether its model material is biome tinted.
  */
 export function particleSprite(pack:Resources,block:string,state:Record<string,string>={}) {
-    const doc=pack.documents.get('assets/minecraft/blockstates/'+block+'.json');
+    const doc=pack.documents.get(blockStatePath(block));
     const raw=doc?.variants?Object.entries(doc.variants).find(([key])=>!key||key.split(',').every(term=>{const[k,v]=term.split('=');return state[k]===v;}))?.[1]??Object.values(doc.variants)[0]:doc?.multipart?.[0]?.apply;
     const variant=Array.isArray(raw)?raw[0]:raw;
     if(!variant?.model)throw Error('world-particle-model:'+block);
-    const model=resolveModel(variant.model,id=>{const source=pack.documents.get('assets/minecraft/models/'+id.split(':')[1]+'.json');if(!source)throw Error('missing-particle-model:'+id);return source;});
+    const model=resolveModel(variant.model,id=>{const source=pack.documents.get(assetPath('models',id));if(!source)throw Error('missing-particle-model:'+id);return source;});
     const texture=resolveTexture('#particle',model.textures??{});
     const tinted=model.elements?.some(element=>Object.values(element.faces).some(face=>face?.tintindex!==undefined&&resolveTexture(face.texture,model.textures??{})===texture))??false;
     return {texture,tinted};

@@ -268,5 +268,9 @@
   "advancements.birthday.description": "Make a cyber cake",
   "advancements.toast.challenge": "Challenge Complete!",
   "chat.type.advancement.challenge": "%s has completed the challenge %s",
-  "chat.cakeReady": "Once you've made the cake, place it on the table at home!"
+  "chat.cakeReady": "Once you've made the cake, place it on the table at home!",
+  "advancements.oddCake.title": "Something... seems off?",
+  "advancements.oddCake.description": "Accidentally messed up the cake.",
+  "chat.oddCakeCrafted": "hmmm, are you sure? (ﾉ∀)`",
+  "chat.oddCakeTable": "Come on (｡•ˇ_ˇ•｡)"
 }

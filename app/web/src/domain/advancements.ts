@@ -1,7 +1,8 @@
 /** Bounded Java 26.3 criteria facts, player-slot triggers and native tree visibility; no UI or acquisition shortcuts. */
 import birthday from '../data/birthday-advancement.json' with {type:'json'};
 import profile from '../data/advancements.json' with {type:'json'};
-import inventoryRules from '../data/inventory-rules.json' with {type:'json'};
+import {INVENTORY_RULES as inventoryRules,ODD_ADVANCEMENT} from './easter-egg.ts';
+import oddCake from '../data/odd-cake-advancement.json' with {type:'json'};
 import {sameStack} from './slots.ts';
 import type {PlayerLayout} from './inventory.ts';
 import type {Stack} from '../rules/types.ts';
@@ -16,7 +17,7 @@ export interface AdvancementFacts {version:1;criteria:Record<string,string[]>}
 /** Stable authored challenge identity, independent of the original Minecraft namespace. */
 export const BIRTHDAY_ADVANCEMENT = 'jerrys_farm:happy_birthday';
 /** Original nodes and the authored birthday challenge share saved criteria and display rules. */
-export const ADVANCEMENTS:Record<string,AdvancementDefinition> = {...profile.definitions,[BIRTHDAY_ADVANCEMENT]:birthday};
+export const ADVANCEMENTS:Record<string,AdvancementDefinition> = {...profile.definitions,[BIRTHDAY_ADVANCEMENT]:birthday,[ODD_ADVANCEMENT]:oddCake};
 /** Create criteria independent of catalogue unlocks and recipes. @return {AdvancementFacts} Empty facts. */
 export function emptyAdvancements(): AdvancementFacts {return {version:1,criteria:{}};}
 /** Apply native outer-AND / inner-OR requirements without consulting ancestors.
@@ -48,14 +49,15 @@ export function advancementSlots(player:PlayerLayout):(Stack|null)[] {
  * @param {boolean} planted Whether the domain successfully placed wheat.
  * @param {boolean} birthdayComplete Whether the birthday table placement committed.
  * @param {boolean} cakeCrafted Whether the local player actually crafted a cake.
+ * @param {boolean} oddCakeCrafted Whether the authored upside-down recipe completed.
  * @return {string[]} Newly completed IDs, published only after durable success.
  */
-export function updateAdvancements(facts:AdvancementFacts,before:PlayerLayout|null,after:PlayerLayout,planted=false,birthdayComplete=false,cakeCrafted=false):string[] {
+export function updateAdvancements(facts:AdvancementFacts,before:PlayerLayout|null,after:PlayerLayout,planted=false,birthdayComplete=false,cakeCrafted=false,oddCakeCrafted=false):string[] {
     const previous=before?advancementSlots(before):[], changed=advancementSlots(after).filter((stack,i)=>stack&&(!previous[i]||stack.count!==previous[i]!.count||!sameStack(stack,previous[i]!,inventoryRules))) as Stack[], completed:string[]=[];
     for(const [id,node] of Object.entries(ADVANCEMENTS)) {
         const wasDone=advancementDone(facts,id);
         for(const [criterion,condition] of Object.entries(node.criteria)) {
-            const matches=condition.trigger==='jerrys_farm:cake_crafted'?cakeCrafted:condition.trigger==='jerrys_farm:cake_on_table'?birthdayComplete:condition.trigger==='minecraft:placed_block'?planted&&condition.conditions?.location?.blocks==='minecraft:wheat':condition.trigger==='minecraft:inventory_changed'&&condition.conditions?.items?.length===1&&changed.some(stack=>{
+            const matches=condition.trigger==='jerrys_farm:upside_down_cake_crafted'?oddCakeCrafted:condition.trigger==='jerrys_farm:cake_crafted'?cakeCrafted:condition.trigger==='jerrys_farm:cake_on_table'?birthdayComplete:condition.trigger==='minecraft:placed_block'?planted&&condition.conditions?.location?.blocks==='minecraft:wheat':condition.trigger==='minecraft:inventory_changed'&&condition.conditions?.items?.length===1&&changed.some(stack=>{
                 const predicate=condition.conditions!.items![0].items;
                 return predicate.startsWith('#')?(profile.tags as Record<string,string[]>)[predicate.slice(1)]?.includes(stack.id):predicate===stack.id;
             });

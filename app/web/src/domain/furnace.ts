@@ -1,5 +1,5 @@
 /** Deterministic native cooking state, finite output acquisition and sided container policies. */
-import native from '../data/processing-rules.json' with {type: 'json'};
+import {PROCESSING_RULES as native} from './easter-egg.ts';
 import type {Rules, Stack, Recipe} from '../rules/types.ts';
 import {matchCooking} from '../rules/matcher.ts';
 import {cooking} from '../rules/process.ts';

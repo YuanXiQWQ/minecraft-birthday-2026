@@ -2,7 +2,7 @@
   "version": "26.3",
   "exporter": "p5-catalogue-1",
   "adapterSources": {
-    "ui/icon-model.ts": "4db43bc9b48cdcbe0dbf78592045a27f7a90205c325be2fead7e89006291351a",
+    "ui/icon-model.ts": "ed7273a9ac6bfa02ffd83efb751244e4f9c86c17de5eb1c4516fa75ede3faf01",
     "render/model-format.ts": "4d08a70fc70cc64a9bd20c28343f61f8a28db78474f4e04088c921dc822e7dcb"
   },
   "exporterSha256": "0e5ca5405b97366fb9ac7c65f91799d5a28ff415b5f8a445cbfbe87b7fbea3ad",

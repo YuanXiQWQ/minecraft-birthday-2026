@@ -1,4 +1,5 @@
 /** Native voxel shape primitives for player collision and block targeting. */
+import {isCake} from './easter-egg.ts';
 import type {Bounds} from './player-motion.ts';
 /** Whole native block cube. */
 export const FULL_BLOCK:Bounds=[0,0,0,1,1,1];
@@ -27,7 +28,7 @@ export function nativeShapes(block:string,state:Record<string,string>,collision=
     }
     if(block==='cauldron')return [[0,0,0,1,4/16,1],[0,4/16,0,2/16,1,1],[14/16,4/16,0,1,1,1],[2/16,4/16,0,14/16,1,2/16],[2/16,4/16,14/16,14/16,1,1]];
     if(block==='composter')return [[0,0,0,1,2/16,1],[0,2/16,0,2/16,1,1],[14/16,2/16,0,1,1,1],[2/16,2/16,0,14/16,1,2/16],[2/16,2/16,14/16,14/16,1,1]];
-    if(block==='cake')return [[(1+2*Number(state.bites??0))/16,0,1/16,15/16,.5,15/16]];
+    if(isCake(block))return [[(1+2*Number(state.bites??0))/16,0,1/16,15/16,.5,15/16]];
     if(block==='farmland'||block==='dirt_path')return [[0,0,0,1,15/16,1]];
     if(block==='rail')return collision?[]:[[0,0,0,1,2/16,1]];
     if(block==='short_grass')return collision?[]:[[2/16,0,2/16,14/16,13/16,14/16]];

@@ -43,7 +43,7 @@ export interface Resources extends VanillaPack {
  */
 export async function loadResources(world = false, progress?: (done: number, total: number) => void): Promise<Resources> {
     const start = performance.now(),
-        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json', 'controls-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
+        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json', 'controls-manifest.json', 'easter-egg-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
             const r = await fetchManifest(name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
@@ -64,11 +64,12 @@ export async function loadResources(world = false, progress?: (done: number, tot
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native advancements'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native controls'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const path of Object.keys(manifests.find(m=>m.source?.includes('bounded native controls'))?.inputs??{}))wanted.add(path);
+    if(world)for(const path of Object.keys(manifests.find(m=>m.source?.startsWith('authored upside-down cake'))?.inputs??{}))wanted.add(path);
     const entries = all.filter(e => /\.(json|png|mcmeta)$/.test(e.entry) && wanted.has(e.entry) && !e.entry.endsWith('.ogg') && (e.entry.startsWith('assets/minecraft/models/block/') || e.entry.startsWith('assets/minecraft/blockstates/') || e.entry.startsWith('assets/minecraft/textures/block/') || e.entry.startsWith('assets/minecraft/font/') || e.entry.startsWith('assets/minecraft/textures/font/') || /textures\/gui\/sprites\/widget\/(?:button(?:_highlighted|_disabled)?|slider(?:_handle)?(?:_highlighted)?)\.png(?:\.mcmeta)?$/.test(e.entry) || e.entry.startsWith('assets/minecraft/textures/gui/') || e.entry === 'assets/minecraft/ambience-sounds.json' || world && wanted.has(e.entry)));
     let completed = 0;
     progress?.(0, entries.length);
     await Promise.all(entries.map(async e => {
-        if (e.entry.includes('..') || !/^(?:assets|data)\/minecraft\/[a-z0-9_/.\/-]+$/.test(e.entry)) throw new Error('resource-path');
+        if (e.entry.includes('..') || !/^(?:assets|data)\/(?:minecraft|jerrys_farm)\/[a-z0-9_/.\/-]+$/.test(e.entry)) throw new Error('resource-path');
         const response = await fetchAsset(e.entry);
         if (!response.ok) throw new Error('resource-unavailable');
         const bytes = await response.arrayBuffer(),

@@ -1,4 +1,5 @@
 /** Finite, persistent native block placement uses actual held groups and adjacent world faces. */
+import {ODD_BLOCK,isCake} from './easter-egg.ts';
 import {soilAt} from './soil-state.ts';
 import names from '../data/placeable-blocks.json' with {type:'json'};
 import facts from '../data/block-properties.json' with {type:'json'};
@@ -17,9 +18,9 @@ import {nativeShapes,FULL_BLOCK} from './block-shapes.ts';
 export interface PlacedBlock {id:string;block:string;cell:Cell;state:Record<string,string>;pair?:string}
 export interface BlockHit {cell:Cell;normal:Cell;point:Cell;eye:Cell;yaw:number;crouch?:boolean}
 /** Original reachable BlockItem identities; ordinary wheat is an item, not a placeable block. */
-export const PLACEABLE=new Set(names);
+export const PLACEABLE=new Set([...names,ODD_BLOCK]);
 /** Native registered strength and collision facts. */
-export const BLOCK_PROPERTIES:Record<string,{hardness:number;requires:boolean;collision:boolean;source:string}>=facts;
+export const BLOCK_PROPERTIES:Record<string,{hardness:number;requires:boolean;collision:boolean;source:string}>= {...facts,[ODD_BLOCK]:facts.cake};
 /** Evaluate the original block loot for an unenchanted finite placed block.
  * @param {PlacedBlock} block Broken primary state.
  * @param {Stack|null} tool Actual held stack.
@@ -28,6 +29,7 @@ export const BLOCK_PROPERTIES:Record<string,{hardness:number;requires:boolean;co
  * @return {Stack[]} Actual native drops, including empty cake drops.
  */
 export function placedDrops(block:PlacedBlock,tool:Stack|null,rules:Rules,requireTool=true):Stack[]{
+    if(block.block===ODD_BLOCK)return [];
     const name=block.block==='wall_torch'?'torch':block.block==='oak_wall_sign'?'oak_sign':block.block;
     if(requireTool&&BLOCK_PROPERTIES[name].requires&&(!tool||!correctTool(tool.id,'minecraft:'+name,rules)))return [];
     const table=(loot as Record<string,any>)[name],out:Stack[]=[];
@@ -112,7 +114,7 @@ export function placementBlocks(p:Progress,item:string,hit:BlockHit,id:string):P
     if(['chest','trapped_chest'].includes(item))Object.assign(state,{facing:opposite(facing),type:'single'});
     if(['smoker','stonecutter','chiseled_bookshelf','anvil','barrel','campfire'].includes(item))state.facing=item==='anvil'?(['north','south'].includes(facing)?'east':'north'):opposite(facing);
     if(item==='barrel')state.open='false';if(['campfire','smoker'].includes(item))state.lit=String(item==='campfire');if(item==='campfire')state.signal_fire='false';
-    if(item==='cake')state.bites='0';if(item==='composter')state.level='0';if(item==='sugar_cane')state.age='0';
+    if(isCake(item))state.bites='0';if(item==='composter')state.level='0';if(item==='sugar_cane')state.age='0';
     if(item==='chiseled_bookshelf')for(let i=0;i<6;i++)state['slot_'+i+'_occupied']='false';
     if(item==='oak_sign'){if(face==='down')throw Error('unsupported-placement');if(face==='up')state.rotation=String((Math.floor((180-hit.yaw*180/Math.PI)*16/360+.5)&15));else {block='oak_wall_sign';state.facing=face;}}
     if(item==='straw_bed')Object.assign(state,{facing,part:'foot',occupied:'false'});
@@ -147,7 +149,7 @@ export function survives(p:Progress,b:PlacedBlock):boolean{
     if(b.pair)return true;
     if(block==='short_grass')return ['grass_block','dirt','farmland'].includes(base?.block??'');
     if(block==='sugar_cane')return base?.block==='sugar_cane'||caneSupport.ground.includes(base?.block??'')&&['north','south','east','west'].some(d=>{const n=direction(d),adjacent=blockAt(p,[cell[0]+n[0],cell[1]-1,cell[2]+n[2]]);return !!adjacent&&(caneSupport.blocks.includes(adjacent.block)||caneSupport.fluids.includes(adjacent.block)||adjacent.state.waterlogged==='true');});
-    if(block==='cake')return !!base&&!replaceable(base.block);
+    if(isCake(block))return !!base&&!replaceable(base.block)&&!(block===ODD_BLOCK&&p.scene==='home'&&cell[0]>=-2&&cell[0]<=1&&cell[2]>=-4&&cell[2]<=-2&&cell[1]===2);
     let toward:string|undefined,center=false;
     if(block==='torch'||block==='oak_sign'||/_door$|pressure_plate|^rail$/.test(block)){toward='down';center=block==='torch'||block.includes('pressure_plate');}
     if(['wall_torch','ladder','tripwire_hook','oak_wall_sign'].includes(block))toward=opposite(state.facing);

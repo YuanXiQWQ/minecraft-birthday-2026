@@ -29,7 +29,7 @@ import {initialBook, validateBook, discover, BOOK_RECIPES, bookApplicable, fillO
 import type {BookMode} from './recipe-book.ts';
 import {emptyHopper, validateHopper, reduceHopperInventory} from './hopper.ts';
 import {transferDevices} from './device-transfer.ts';
-import processing from '../data/processing-rules.json' with {type: 'json'};
+import {PROCESSING_RULES as processing} from './easter-egg.ts';
 import {
     validateFurnace,
     emptyFurnace,
@@ -40,7 +40,7 @@ import {
 } from './furnace.ts';
 import type {FurnaceKind} from './furnace.ts';
 import reachable from '../data/registry.json' with {type: 'json'};
-import nativeInventory from '../data/inventory-rules.json' with {type: 'json'};
+import {INVENTORY_RULES as nativeInventory,ODD_CAKE,ODD_BLOCK,blockItem,isCake} from './easter-egg.ts';
 import {emptyInventory, layout, reduceInventory, validateStack, validateCarriers, playerTargets, storeAcquired} from './inventory.ts';
 import {takeCraft} from './crafting.ts';
 import type {CraftReceipt} from './crafting.ts';
@@ -53,7 +53,7 @@ export const SCENES: SceneId[] = ['plains', 'cave', 'farm', 'home'];
 /** Presentation ordering follows the proposed main path without constraining acquisition order or recipe reachability. */
 export const MAINLINE = ['oak_log', 'oak_planks', 'stick', 'crafting_table', 'wooden_pickaxe', 'cobblestone', 'stone_pickaxe', 'furnace', 'raw_iron', 'iron_ingot', 'bucket', 'milk_bucket', 'wheat_seeds', 'wheat', 'sugar_cane', 'sugar', 'egg', 'cake'].map(id => 'minecraft:' + id);
 /** Generated P4 fixed-point identities expand validation without changing unlock, discovery or temporary-stack semantics. */
-export const KNOWN_ITEMS = new Set(reachable);
+export const KNOWN_ITEMS = new Set([...reachable,ODD_CAKE]);
 
 
 /** Publish one effective acquisition separately from its physical delivery and uncarried remainder.
@@ -207,8 +207,9 @@ function station(value: unknown, unlocked: string[]): void {
 export function validateState(value: unknown): asserts value is State {
     fields(value, ['progress', 'settings']);
     const p = value.progress, s = value.settings;
-    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'environment')?['environment']:[]), ...(Object.hasOwn(p,'advancements')?['advancements']:[])]);
+    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'oddCakeTableTried')?['oddCakeTableTried']:[]), ...(Object.hasOwn(p,'environment')?['environment']:[]), ...(Object.hasOwn(p,'advancements')?['advancements']:[])]);
     if(p.advancements!==undefined)validateAdvancements(p.advancements);
+    if(p.oddCakeTableTried!==undefined)ensure(p.oddCakeTableTried===true);
     if(p.environment!==undefined)validateEnvironment(p.environment);
     validateWorld(p.world);
     fields(s, ['locale', 'volume', 'muted', ...(Object.hasOwn(s, 'username') ? ['username'] : []), ...(Object.hasOwn(s,'sky')?['sky']:[]),...(Object.hasOwn(s,'audioVersion')?['audioVersion']:[]),...SOUND_CHANNELS.map(([k])=>k).filter(k=>Object.hasOwn(s,k))]);
@@ -244,6 +245,7 @@ export function validateState(value: unknown): asserts value is State {
             for(const drop of a.drops){fields(drop,['id','cell','stack']);cell(drop.cell);ensure(typeof drop.id==='string'&&!ids.has(drop.id));ids.add(drop.id);ensure(KNOWN_ITEMS.has(drop.stack.id)&&Number.isInteger(drop.stack.count)&&drop.stack.count>0&&drop.stack.count<=64);}
         }
         const blockCells=new Set<string>();
+        for(const b of scene.blocks??[])if(b.block===ODD_BLOCK)ensure(/^[0-6]$/.test(b.state.bites),'invalid-cake-bites');
         for(const b of scene.blocks??[])if(b.block==='sugar_cane')ensure(b.state.age===undefined||/^(?:[0-9]|1[0-5])$/.test(b.state.age),'invalid-cane-age');
         for(const b of scene.blocks??[]){fields(b,['id','block','cell','state',...(b.pair?['pair']:[])]);ensure(typeof b.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(b.id)&&!ids.has(b.id)&&!blockCells.has(b.cell.join(','))&&(PLACEABLE.has(b.block)||['wall_torch','oak_wall_sign'].includes(b.block)));cell(b.cell);ensure(b.state&&Object.values(b.state).every(v=>typeof v==='string')&&(!b.pair||typeof b.pair==='string'));ids.add(b.id);blockCells.add(b.cell.join(','));}
         ensure(scene.layoutVersion === 1 && Array.isArray(scene.stations) && scene.stations.length <= 512 && Array.isArray(scene.crops) && scene.crops.length <= 512);
@@ -324,10 +326,16 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'save-pose':ensure(command.scene===p.scene,'wrong-scene');p.scenes[p.scene].pose=structuredClone(command.pose);break;
         case 'place-block': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
-            const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id==='minecraft:'+command.item,'inventory-conflict');
+            const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id===blockItem(command.item),'inventory-conflict');
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
             for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);}
             p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
+        }
+        case 'try-odd-cake-table': {
+            ensure(command.scene==='home'&&p.scene==='home'&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            ensure(p.player.data.hotbar[p.player.data.selected]?.id===ODD_CAKE,'cake-not-held');
+            if(!p.oddCakeTableTried){p.oddCakeTableTried=true;events.push({type:'odd-cake-table-tried'});}
+            break;
         }
         case 'eat-cake': {
             ensure(command.scene===p.scene,'wrong-scene');
@@ -337,7 +345,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if(p.scene!=='home'||!cake||(cake.bites??0)!==command.expectedBites)break;
                 cake.bites=command.expectedBites+1;
             }else{
-                const scene=p.scenes[p.scene],cake=scene.blocks?.find(b=>b.id===command.id&&b.block==='cake');
+                const scene=p.scenes[p.scene],cake=scene.blocks?.find(b=>b.id===command.id&&isCake(b.block));
                 if(!cake||Number(cake.state.bites??0)!==command.expectedBites)break;
                 if(command.expectedBites===6)scene.blocks=scene.blocks!.filter(b=>b.id!==cake.id);
                 else cake.state.bites=String(command.expectedBites+1);
@@ -634,7 +642,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             throw new Error('unknown-command');
     }
     p.advancements??=emptyAdvancements();
-    const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop',events.some(e=>e.type==='cake-placed'),events.some(e=>e.type==='cake-crafted'));
+    const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop',events.some(e=>e.type==='cake-placed'),events.some(e=>e.type==='cake-crafted'),acquiredRecipes.includes(ODD_CAKE));
     if(completed.length)events.push({type:'advancements-completed',advancements:completed});
     if (!['processing-tick','settings','save-pose'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
