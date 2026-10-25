@@ -118,7 +118,7 @@ export class WorldUse {
     }
 
     /** Persist settled movement through the shared save lock, including gravity while non-pausing screens are open. */
-    savePose():void{const p=this.session.view.envelope?.state.progress;if(!p||this.scene.simulationPaused||document.hidden||this.posePending||!this.session.view.writable)return;const pose={feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look.yaw,pitch:this.scene.look.pitch},signature=JSON.stringify([p.scene,pose]);if(signature===this.poseSignature)return;this.posePending=true;void this.session.dispatch({type:'save-pose',scene:p.scene,pose}).then(()=>{this.poseSignature=signature;}).catch(()=>this.notify('game.actionFailed')).finally(()=>{this.posePending=false;});}
+    savePose():void{const p=this.session.view.envelope?.state.progress;if(!p||p.sleep||this.scene.simulationPaused||document.hidden||this.posePending||!this.session.view.writable)return;const pose={feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look.yaw,pitch:this.scene.look.pitch},signature=JSON.stringify([p.scene,pose]);if(signature===this.poseSignature)return;this.posePending=true;void this.session.dispatch({type:'save-pose',scene:p.scene,pose}).then(()=>{this.poseSignature=signature;}).catch(()=>this.notify('game.actionFailed')).finally(()=>{this.posePending=false;});}
 
     /** Read the selected native BlockItem without treating arbitrary inventory items as blocks.
      * @return {string|null} Placeable block identity.
@@ -184,7 +184,7 @@ export class WorldUse {
             }
             this.preview();
             return true;
-        }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'); return false;});
+        }).catch(error => {if (this.current(scope, serial)) this.notify(error instanceof Error && error.message.startsWith('bed.') ? error.message : error instanceof Error && error.message === 'inventory-full' ? 'game.inventoryFull' : 'game.actionFailed'); return false;});
     }
 
     /** Fence both successful and failed acknowledgements to their live scene and save owner.
@@ -338,7 +338,12 @@ export class WorldUse {
     /** Short right Use eats cake, opens stations, plants, milks or places against actual faces. @param {Pick} hit Real ray. @param {boolean} shift Suppress block use. @param {boolean} attach Place against an existing device face. @param {boolean} above Explicit upper neighbor of the visible device. */
     use(hit: Pick, shift: boolean, attach = false, above = false): void {
         const p = this.session.view.envelope?.state.progress;
-        if (!p) return;
+        if (!p || p.sleep) return;
+        if(hit.block==='straw_bed'||p.scenes[p.scene].blocks?.some(b=>b.id===hit.id&&b.block==='straw_bed')){
+            if(!shift||!p.player.data.hotbar[p.player.data.selected])void this.run({type:'use-bed',scene:p.scene,id:hit.id,feet:[...this.scene.motion.feet] as Cell},null);
+            else if(this.heldBlock())this.place(hit);
+            return;
+        }
         if(hit.id==='birthday-cake'){
             if(!shift&&p.scene==='home'&&p.cakePlacement&&(p.cakePlacement.bites??0)<7)void this.run({type:'eat-cake',scene:p.scene,id:hit.id,expectedBites:p.cakePlacement.bites??0},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});
             return;
@@ -395,13 +400,14 @@ export class WorldUse {
         this.inventory.autoEquip();
     }
 
-    /** Place finite blocks against valid faces; ordinary cakes retain their stack and request the birthday table. @param {Pick} hit Real face. */
+    /** Place finite blocks against valid faces, orienting device outlets with cardinal face normals; ordinary cakes request the birthday table. @param {Pick} hit Real face. */
     place(hit: Pick): void {
         const p = this.session.view.envelope?.state.progress, kind = this.heldKind(),block=this.heldBlock();
         if (!p || !block) return;
         if(block==='cake'){this.author('chat.cakeTableOnly');return;}
         if(!kind){const material=blockSounds(block),context=this.blockHit(hit);try{placementBlocks(p,block,context,'preview');}catch{return;}void this.run({type:'place-block',scene:p.scene,item:block,hit:context,id:crypto.randomUUID(),expected:layout(this.inventory.value)},null,material.place,undefined,{volume:(material.volume+1)/2,pitch:material.pitch*.8}).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
-        this.facing=kind==='hopper'?(hit.normal[1]?'down':hit.normal[0]>0?'west':hit.normal[0]<0?'east':hit.normal[2]>0?'north':'south' as Facing):opposite(lookFacing(this.scene.camera.rotation.y)) as Facing;
+        const normal=this.blockHit(hit).normal;
+        this.facing=kind==='hopper'?(normal[1]?'down':normal[0]>0?'west':normal[0]<0?'east':normal[2]>0?'north':'south' as Facing):opposite(lookFacing(this.scene.camera.rotation.y)) as Facing;
         const candidate = placement(hit, this.session, kind, this.facing === 'down' && kind !== 'hopper' ? 'south' : this.facing);
         if (candidate.valid && !this.scene.playerIntersects(candidate.cell)) {
             const {valid, ...station} = candidate;

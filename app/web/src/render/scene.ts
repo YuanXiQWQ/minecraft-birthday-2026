@@ -5,7 +5,7 @@ import {currentFarm} from '../domain/farm-shape.ts';
 import {BlockFeedback} from './block-feedback.ts';
 import {blockAt} from '../domain/placed-blocks.ts';
 import {attackProfile} from '../domain/attack.ts';
-import {nativeShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
+import {nativeShapes,interactionShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
 import {placedModel} from './placed-world.ts';
 import {glassCells} from './glass-faces.ts';
 import {PlayerPerspective,nextPerspective} from './player-perspective.ts';
@@ -31,6 +31,7 @@ import {NativeMenuBlur, menuLayers} from './native-menu-blur.ts';
 import {NativeCrosshair} from './native-crosshair.ts';
 import {timing, gpuTiming} from '../performance.ts';
 import {
+    Box3,
     Color,
     Fog,
     Group,
@@ -464,7 +465,7 @@ export class SceneView {
         for (const station of value.stations) {
             const mesh = this.models.device(station.kind, station.facing, station.contents.version === 2 && station.contents.data.burn > 0);
             mesh.position.set(...station.cell);
-            mesh.userData.id = station.id;mesh.userData.cell=station.cell;mesh.userData.block=station.kind;mesh.userData.shapes=nativeShapes(station.kind,{facing:station.facing});mesh.userData.collisionShapes=mesh.userData.shapes;
+            mesh.userData.id = station.id;mesh.userData.cell=station.cell;mesh.userData.block=station.kind;mesh.userData.state={facing:station.facing};mesh.userData.shapes=nativeShapes(station.kind,mesh.userData.state);mesh.userData.collisionShapes=mesh.userData.shapes;
             this.persistent.add(mesh);
         }
         this.requestRender();
@@ -474,6 +475,7 @@ export class SceneView {
     syncWorld(p: Progress): void {
         if (!this.authored) return;
         if(this.presentationOnly)p={...p,scene:'home'};
+        const wasSleeping=!!this.environmentProgress?.sleep;
         this.sky?.sync(p.environment??emptyEnvironment(),this.skySettings,p.world.tick);this.environmentProgress=p;
         if (this.worldId === null) this.renderer.domElement.dataset.recoveredWorld = JSON.stringify({
             tick: p.world.tick,
@@ -521,6 +523,12 @@ export class SceneView {
             this.blockLight.rebuild(emitters,this.collision);this.renderer.domElement.dataset.blockLight=JSON.stringify({emitters,maximum:Math.max(...this.blockLight.values)});
         }
         if(entering&&!this.presentationOnly&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
+        const bed=p.sleep&&p.scenes[p.scene].blocks?.find(b=>b.id===p.sleep!.id);
+        if(bed&&!this.presentationOnly){
+            const d=({north:[0,0,-1],south:[0,0,1],east:[1,0,0],west:[-1,0,0]} as Record<string,number[]>)[bed.state.facing];
+            this.camera.position.set(bed.cell[0]+.5,bed.cell[1]+.65,bed.cell[2]+.5);
+            this.camera.lookAt(bed.cell[0]+.5-d[0],bed.cell[1]+.8,bed.cell[2]+.5-d[2]);this.camera.updateMatrixWorld(true);
+        }else if(wasSleeping&&!this.presentationOnly){this.camera.rotation.set(this.look.pitch,this.look.yaw,0,'YXZ');this.requestRender();}
         this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);this.playerView?.sync(p.player.data);
         this.refreshHover();
         this.requestRender();
@@ -632,7 +640,7 @@ export class SceneView {
      */
     advancePlayer(now:number):void{
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
-        if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
+        if(this.presentationOnly||!this.authored||this.simulationPaused||this.environmentProgress?.sleep||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
         while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump});
             if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.onPlayerTick?.();this.playMovement();
@@ -751,7 +759,7 @@ export class SceneView {
         return hit && (!/cow|chicken/.test(this.hit(hit).id)||hit.distance<=PLAYER_PHYSICS.entityReach) ? this.hit(hit) : null;
     }
 
-    /** Resolve an original mesh's domain identity and world-space face.
+    /** Resolve a mesh's domain identity and apply closer native interaction volumes to its face direction while retaining the visible hit point.
      * @param {Intersection<Object3D>} hit Actual ray intersection.
      * @return {Pick} Metadata independent of view pixels.
      */
@@ -759,11 +767,23 @@ export class SceneView {
         let root: Object3D | null = hit.object;
         while (root && !root.userData.id) root = root.parent;
         const normal = hit.face?.normal.clone().transformDirection(hit.object.matrixWorld) ?? new Vector3();
+        const cell = root?.userData.cells?.[hit.instanceId ?? -1] ?? root?.userData.cell;
+        if (cell) {
+            let distance = this.ray.ray.origin.distanceToSquared(hit.point);
+            for (const bounds of interactionShapes(root?.userData.block, root?.userData.state ?? {})) {
+                const box = new Box3(new Vector3(...bounds.slice(0, 3)).add(new Vector3(...cell)), new Vector3(...bounds.slice(3)).add(new Vector3(...cell))),
+                    point = this.ray.ray.intersectBox(box, new Vector3());
+                if (!point || this.ray.ray.origin.distanceToSquared(point) >= distance - 1e-8) continue;
+                distance = this.ray.ray.origin.distanceToSquared(point);
+                const axis = [0, 1, 2].find(i => Math.abs(point.getComponent(i) - box.min.getComponent(i)) < 1e-7 || Math.abs(point.getComponent(i) - box.max.getComponent(i)) < 1e-7);
+                if (axis !== undefined) normal.set(0, 0, 0).setComponent(axis, Math.abs(point.getComponent(axis) - box.min.getComponent(axis)) < 1e-7 ? -1 : 1);
+            }
+        }
         return {
             id: String(root?.userData.id ?? 'scenery'),
             point: hit.point.toArray() as [number, number, number],
             normal: normal.toArray() as [number, number, number],
-            cell: root?.userData.cells?.[hit.instanceId ?? -1] ?? root?.userData.cell,
+            cell,
             block: root?.userData.block,
             support: root?.userData.support
         };

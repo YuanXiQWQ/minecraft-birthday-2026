@@ -5,6 +5,7 @@ import {furnacePortAllows} from './furnace.ts';
 import {transferDevices} from './device-transfer.ts';
 import type {TransferPlan} from './device-transfer.ts';
 import {sameCell} from './world-config.ts';
+import {poweredCells} from './redstone.ts';
 
 /** Native destination displacement; hopper has no upward output. */
 export const PORT_VECTOR: Record<Facing, Cell> = {
@@ -21,14 +22,15 @@ export function adjacentTransfer(p: Progress, plan: TransferPlan): boolean {
     const list = p.scenes[plan.source.context.scene].stations, a = list.find(s => s.id === plan.source.context.id),
         b = list.find(s => s.id === plan.target.context.id);
     if (!a || !b) return false;
-    if (a.kind === 'hopper') {
+    const powered=poweredCells(p,plan.source.context.scene);
+    if (a.kind === 'hopper'&&!powered.has(a.cell.join(','))) {
         const d = PORT_VECTOR[a.facing];
         if (sameCell(a.cell.map((n, i) => n + d[i]) as Cell, b.cell) && plan.target.face === (d[1] === -1 ? 'up' : 'side')) return true;
     }
-    return b.kind === 'hopper' && sameCell([b.cell[0], b.cell[1] + 1, b.cell[2]], a.cell) && plan.source.face === 'down' && plan.target.face === 'up';
+    return b.kind === 'hopper' && !powered.has(b.cell.join(',')) && sameCell([b.cell[0], b.cell[1] + 1, b.cell[2]], a.cell) && plan.source.face === 'down' && plan.target.face === 'up';
 }
 
-/** Advance each hopper once in persisted scene order, pushing before pulling and coordinating the native 8/7 tick receive delay.
+/** Advance hopper cooldowns in scene order; powered hoppers skip their own push/pull but remain accessible to other hoppers.
  * @param {Progress} p Transaction-local state.
  * @param {Rules} rules Native capacities/ports.
  * @param {Function} acquired Successful producer receipt recorder.
@@ -38,7 +40,7 @@ export function tickHoppers(p: Progress, rules: Rules, acquired: (ids: string[],
         live = new Set(Object.values(p.scenes).flatMap(s => s.stations.filter(d => d.kind === 'hopper').map(d => d.id)));
     for (const id of Object.keys(world.hoppers)) if (!live.has(id)) delete world.hoppers[id];
     for (const [scene, value] of Object.entries(p.scenes) as [SceneId, Progress['scenes'][SceneId]][]) {
-        const list = value.stations, active = new Set(list.filter(s => s.kind === 'hopper').map(s => s.id));
+        const list = value.stations, active = new Set(list.filter(s => s.kind === 'hopper').map(s => s.id)),powered=poweredCells(p,scene);
 
         /** Try the first accessible finite source slot and record only a successful movement. @param {Station} a Actual source. @param {Station} b Actual target. @param {'up'|'side'|'down'} sourceFace Access face. @param {'up'|'side'|'down'} targetFace Access face. @return {boolean} One item moved. */
         function move(a: Station, b: Station, sourceFace: 'up' | 'side' | 'down', targetFace: 'up' | 'side' | 'down'): boolean {
@@ -73,7 +75,7 @@ export function tickHoppers(p: Progress, rules: Rules, acquired: (ids: string[],
             const meta = world.hoppers[h.id] ??= {cooldown: 0, lastTick: -1};
             meta.cooldown = Math.max(0, meta.cooldown - 1);
             meta.lastTick = world.tick;
-            if (meta.cooldown) continue;
+            if (meta.cooldown||powered.has(h.cell.join(','))) continue;
             const d = PORT_VECTOR[h.facing], cell = h.cell.map((n, i) => n + d[i]) as Cell,
                 target = list.find(s => sameCell(s.cell, cell));
             let changed = false;

@@ -65,6 +65,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         bindings = new Map<HTMLElement, { key: string; values: Record<string, string | number> }>();
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
     let authorWelcome: AuthorWelcome | null = null;
+    let sleepOverlay:HTMLDivElement|null=null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options';
     const languageChoices = new Map<string, HTMLButtonElement>();
@@ -76,7 +77,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     let lastSaveStatus = '', lastFeedbackGeneration = '', taught = false;
     const pendingMessages: {key: string; values: Record<string,string|number>}[] = [];
     const feedbackStates = new Map<string,string>();
-    const inputBlocked = () => page === 'game' && !startup?.ready || dialog.open || !!menu?.open || !!chat?.open || !!advancements?.modal.open;
+    const inputBlocked = () => page === 'game' && (!startup?.ready || !!session.view.envelope?.state.progress.sleep) || dialog.open || !!menu?.open || !!chat?.open || !!advancements?.modal.open;
     /** Update compositor and input ownership only across actual UI transitions, independently of autosave. */
     const updateGate = (inventoryOpen = !!inventory?.modal.open) => {
         const open = inputBlocked() || inventoryOpen, effect = dialog.open || menu?.open || advancements?.modal.open ? 'menu' : inventoryOpen ? 'container' : 'none';
@@ -442,6 +443,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             if(chat)chat.inputControls=controlSettings(s.settings.controls);
             paintSettings(); worldAudio?.sync();
             if (page === 'game' && scene) {
+                if(sleepOverlay){sleepOverlay.hidden=!s.progress.sleep;sleepOverlay.style.setProperty('--sleep-shade',String(Math.min(.85,(s.progress.sleep?.ticks??0)/100*.85)));}
+                updateGate();
                 scene.skySettings=s.settings.sky??{time:'game',weather:'game'};
                 scene.syncWorld(s.progress);
                 scene.refreshHover();
@@ -573,7 +576,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     });
     /** Close one active screen without opening pause, preserving container transactions and settings subpage navigation. */
     function closeCurrentScreen():void {
-        if(chat?.open)chat.hide();
+        if(session.view.envelope?.state.progress.sleep)void session.dispatch({type:'leave-bed'}).catch(()=>feedback('game.actionFailed'));
+        else if(chat?.open)chat.hide();
         else if(advancements?.modal.open)advancements.close(false);
         else if(inventory?.modal.open)void inventory.close();
         else if(dialog.open){
@@ -602,6 +606,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     const navigation = document.createElement('nav');
     navigation.className = 'world-navigation'; navigation.id='world-navigation';
     if (page === 'game') {
+        sleepOverlay=document.createElement('div');sleepOverlay.className='sleep-overlay';sleepOverlay.hidden=true;
+        sleepOverlay.append(button('bed.leave',()=>{void session.dispatch({type:'leave-bed'}).catch(()=>feedback('game.actionFailed'));}));host.append(sleepOverlay);
         for (const id of Object.keys(WORLD_SCENES) as SceneId[]) {
             const b = button('scene.' + id, () => {
                 void navigateScene(id);
@@ -705,6 +711,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             }, inputBlocked, (intent, cursor, expected, crafting, workbench) => session.editInventory(intent, cursor, expected, crafting, workbench), (take, cursor, crafting, expected, workbench) => session.takeCraft(take, cursor, crafting, expected, workbench));
             inventory.input.controls=controlSettings(session.view.envelope?.state.settings.controls);
             inventory.feedback = key => feedback(key);
+            inventory.sound = (id, options) => {void worldAudio?.play(id, options);};
             host.append(inventory.hud, inventory.modal);
             inventory.onHudPaint = () => scene?.backgroundChanged();
             inventory.compassView = () => scene && session.view.envelope ? scene.compassView(session.view.envelope.generation) : null;
@@ -739,6 +746,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             host.dataset.chatReady = 'true';
             session.eventListeners.add(events => {
                 for (const event of events) {
+                    if(event.type==='world-sound'&&event.scene===session.view.envelope?.state.progress.scene){
+                        const owner=runtimeGeneration,serial=session.serial,sceneId=event.scene;
+                        void worldAudio?.play(event.sound!,{volume:event.volume,pitch:event.pitch,position:event.position,valid:()=>!disposed&&!session.suspended&&runtimeGeneration===owner&&session.serial===serial&&session.view.envelope?.state.progress.scene===sceneId});
+                    }
                     if(event.type==='advancements-completed'){
                         advancements?.notify(event.advancements??[],runtimeGeneration??'');
                         const saved=session.view.envelope?.state;

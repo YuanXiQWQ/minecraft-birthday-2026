@@ -282,5 +282,11 @@
   "menu.controls": "Controls...",
   "menu.mouse": "Mouse Settings",
   "menu.keybinds": "Key Binds",
-  "menu.controlsTitle": "Controls"
+  "menu.controlsTitle": "Controls",
+  "bed.noSleep": "You can sleep only at night or during thunderstorms",
+  "bed.occupied": "This bed is occupied",
+  "bed.tooFar": "You may not rest now; the bed is too far away",
+  "bed.obstructed": "This bed is obstructed",
+  "bed.incomplete": "Both halves of the bed must be present",
+  "bed.leave": "Leave Bed"
 }

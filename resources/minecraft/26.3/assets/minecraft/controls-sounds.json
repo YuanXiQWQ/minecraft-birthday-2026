@@ -771,5 +771,68 @@
       "random/eat3"
     ],
     "subtitle": "subtitles.entity.generic.eat"
+  },
+  "item.armor.equip_iron": {
+    "sounds": [
+      "item/armor/equip_iron1",
+      "item/armor/equip_iron2",
+      "item/armor/equip_iron3",
+      "item/armor/equip_iron4",
+      "item/armor/equip_iron5",
+      "item/armor/equip_iron6"
+    ],
+    "subtitle": "subtitles.item.armor.equip_iron"
+  },
+  "block.lever.click": {
+    "sounds": [
+      "random/click"
+    ],
+    "subtitle": "subtitles.block.lever.click"
+  },
+  "block.wooden_button.click_on": {
+    "sounds": [
+      {
+        "name": "random/wood_click",
+        "pitch": 0.6,
+        "volume": 0.3
+      }
+    ],
+    "subtitle": "subtitles.block.button.click"
+  },
+  "block.wooden_button.click_off": {
+    "sounds": [
+      {
+        "name": "random/wood_click",
+        "pitch": 0.5,
+        "volume": 0.3
+      }
+    ],
+    "subtitle": "subtitles.block.button.click"
+  },
+  "block.stone_button.click_on": {
+    "sounds": [
+      {
+        "name": "random/click",
+        "pitch": 0.6,
+        "volume": 0.3
+      }
+    ],
+    "subtitle": "subtitles.block.button.click"
+  },
+  "block.stone_button.click_off": {
+    "sounds": [
+      {
+        "name": "random/click",
+        "pitch": 0.5,
+        "volume": 0.3
+      }
+    ],
+    "subtitle": "subtitles.block.button.click"
+  },
+  "block.straw_bed.break_leave": {
+    "sounds": [
+      "block/straw_bed/break_leave"
+    ],
+    "subtitle": "subtitles.block.straw_bed.break_leave"
   }
 }

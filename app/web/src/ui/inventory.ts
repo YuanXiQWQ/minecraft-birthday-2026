@@ -28,6 +28,7 @@ import {layout} from '../domain/inventory.ts';
 import {reduceInventory} from '../domain/inventory.ts';
 import {PersonalCursor} from '../domain/personal-menu.ts';
 import type {PlayerLayout, SlotRef} from '../domain/inventory.ts';
+import type {SoundOptions} from '../render/world-audio.ts';
 
 /** One logical slot description has no dependency on screen scaling or scene coordinates. */
 export interface Slot {
@@ -85,6 +86,8 @@ export class GameInventory {
     tooltip: HTMLDivElement;
     cursor: HTMLCanvasElement;
     feedback: ((key: string) => void) | null = null;
+    /** Committed local equipment feedback shares the native player sound channel. */
+    sound: ((id: string, options: SoundOptions) => void) | null = null;
     input: InventoryInput;
     queue: Promise<void> = Promise.resolve();
     queueEpoch = 0;
@@ -378,14 +381,15 @@ export class GameInventory {
      */
     name(id: string): string {return itemName(id, this.permanent?.settings.locale);}
 
-    /** Reject unresolved-receipt mutations before capturing carriers; otherwise stage and serialize the semantic intent under the shared lock.
+    /** Reject unresolved-receipt mutations, serialize the intent under the shared lock and play native iron armor feedback only for committed equipment changes.
      * @param {InventoryCommand} intent Bounded input intent.
      */
     command(intent: InventoryCommand): void {
         if (this.carrierBusy() || !this.permanent || !this.writable || this.disposed) return;
         const expected = layout(this.value), cursor = structuredClone(this.value.cursor),
             crafting = structuredClone(this.value.crafting), generation = this.generation, epoch = this.queueEpoch,
-            cursorEpoch = this.personal.epoch, workbench = this.station ? structuredClone(this.station) : undefined;
+            cursorEpoch = this.personal.epoch, workbench = this.station ? structuredClone(this.station) : undefined,
+            scene = this.permanent.progress.scene;
         try {
             this.value = this.station?.expected.version === 3 ? reduceHopperInventory(this.value, intent, this.permanent.progress.unlocked, this.rules) : this.station?.expected.version === 2 ? reduceFurnaceInventory(this.value, intent, this.permanent.progress.unlocked, this.rules, this.machineKind()) : inventoryCommand(this.value, intent, this.permanent, this.rules);
             if (this.station?.expected.version === 3) this.station.expected.data.slots = structuredClone(this.value.hopper!); else if (this.station?.expected.version === 2) {
@@ -406,6 +410,10 @@ export class GameInventory {
             if (this.disposed || epoch !== this.queueEpoch || generation !== this.generation) return;
             const result = await this.commit(intent, cursor, expected, crafting, workbench);
             if (epoch === this.queueEpoch && generation === this.generation) this.personal.commit(cursorEpoch, result.cursor, result.crafting);
+            if (intent.type === 'equip' && JSON.stringify(expected.equipment) !== JSON.stringify(result.equipment)) {
+                const valid = () => !this.disposed && epoch === this.queueEpoch && generation === this.generation && scene === this.permanent?.progress.scene;
+                if (valid()) this.sound?.('item.armor.equip_iron', {volume: 1, pitch: 1, valid});
+            }
         }).catch(error => {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.queueEpoch++;

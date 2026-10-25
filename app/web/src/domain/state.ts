@@ -26,6 +26,8 @@ import type {
 import {emptyWorld, validateWorld, harvestNode, plantCrop, harvestCrop} from './world-state.ts';
 import {WORLD_SCENES, sameCell, nodeAtCell, sourceOccupied} from './world-config.ts';
 import {tickHoppers, adjacentTransfer} from './hopper-network.ts';
+import {switchSound,tickButtons} from './redstone.ts';
+import {useBed,leaveBed,tickBed} from './bed.ts';
 import {initialBook, validateBook, discover, BOOK_RECIPES, bookApplicable, fillOwnedRecipe} from './recipe-book.ts';
 import type {BookMode} from './recipe-book.ts';
 import {emptyHopper, validateHopper, reduceHopperInventory} from './hopper.ts';
@@ -208,7 +210,8 @@ function station(value: unknown, unlocked: string[]): void {
 export function validateState(value: unknown): asserts value is State {
     fields(value, ['progress', 'settings']);
     const p = value.progress, s = value.settings;
-    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'oddCakeTableTried')?['oddCakeTableTried']:[]), ...(Object.hasOwn(p,'environment')?['environment']:[]), ...(Object.hasOwn(p,'advancements')?['advancements']:[])]);
+    fields(p, ['world', 'unlocked', 'scene', 'scenes', 'player', 'recipeBook', 'cakePlacement', ...(Object.hasOwn(p,'sleep')?['sleep']:[]), ...(Object.hasOwn(p,'oddCakeTableTried')?['oddCakeTableTried']:[]), ...(Object.hasOwn(p,'environment')?['environment']:[]), ...(Object.hasOwn(p,'advancements')?['advancements']:[])]);
+    if(p.sleep!==undefined){fields(p.sleep,['scene','id','ticks']);ensure(SCENES.includes(p.sleep.scene)&&p.sleep.scene===p.scene&&typeof p.sleep.id==='string'&&Number.isInteger(p.sleep.ticks)&&p.sleep.ticks>=0&&p.sleep.ticks<100);ensure(p.scenes[p.sleep.scene]?.blocks?.some((b:import('./placed-blocks.ts').PlacedBlock)=>b.id===p.sleep.id&&b.block==='straw_bed'&&b.state.part==='head'&&b.state.occupied==='true'));}
     if(p.advancements!==undefined)validateAdvancements(p.advancements);
     if(p.oddCakeTableTried!==undefined)ensure(p.oddCakeTableTried===true);
     if(p.environment!==undefined)validateEnvironment(p.environment);
@@ -305,6 +308,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
+        case 'use-bed': ensure(command.scene===p.scene,'wrong-scene');useBed(p,command.id,command.feet);break;
+        case 'leave-bed': leaveBed(p,events);break;
         case 'till-soil': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
             till(p,command.cell,command.normal,p.player.data.hotbar[p.player.data.selected]);break;
@@ -359,8 +364,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'use-block': {
             ensure(command.scene===p.scene,'wrong-scene');const blocks=p.scenes[p.scene].blocks??[],b=blocks.find(b=>b.id===command.id);ensure(b,'block-unavailable');
             if(['oak_door','oak_trapdoor','oak_fence_gate'].includes(b!.block)){const root=b!.pair??b!.id,value=String(b!.state.open!=='true');for(const part of blocks.filter(v=>v.id===root||v.pair===root))part.state.open=value;}
-            else if(b!.block==='lever')b!.state.powered=String(b!.state.powered!=='true');
-            else if(b!.block.endsWith('_button')){b!.state.powered='true';b!.state.releaseTick=String(p.world.tick+(b!.block==='oak_button'?30:20));}
+            else if(b!.block==='lever'){b!.state.powered=String(b!.state.powered!=='true');events.push(switchSound(p.scene,b!));}
+            else if(b!.block.endsWith('_button')&&b!.state.powered!=='true'){b!.state.powered='true';b!.state.releaseTick=String(p.world.tick+(b!.block==='oak_button'?30:20));events.push(switchSound(p.scene,b!));}
             break;
         }
         case 'break-block': {
@@ -462,7 +467,9 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if(control.sprintTicks){if(--control.sprintTicks===0)control.frozen=control.sprintRestore;}
                 if(control.stepTicks)control.stepTicks--;
                 p.world.tick++;
+                tickButtons(p,events);
                 p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
+                tickBed(p,events);
                 for(const {scene,crop} of tickAgriculture(p))dropCrop({...p,scene},crop,rules);
                 for (const scene of Object.values(p.scenes)) {
                     for (const device of scene.stations) if (device.kind === 'furnace' || device.kind === 'blast_furnace') {
@@ -649,10 +656,10 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     p.advancements??=emptyAdvancements();
     const completed=updateAdvancements(p.advancements,state.progress.player.data,p.player.data,command.type==='plant-crop',events.some(e=>e.type==='cake-placed'),events.some(e=>e.type==='cake-crafted'),acquiredRecipes.includes(ODD_CAKE));
     if(completed.length)events.push({type:'advancements-completed',advancements:completed});
+    if(p.sleep&&(p.sleep.scene!==p.scene||!p.scenes[p.sleep.scene].blocks?.some(b=>b.id===p.sleep!.id)))leaveBed(p,events);
     if (!['processing-tick','settings','save-pose'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});
-    for(const scene of Object.values(p.scenes))for(const b of scene.blocks??[])if(b.state.releaseTick&&p.world.tick>=Number(b.state.releaseTick)){b.state.powered='false';delete b.state.releaseTick;}
     if(['place-block','break-block','harvest-node','remove-station','put-station'].includes(command.type)){
         let removed=true;while(removed){removed=false;for(const b of [...(p.scenes[p.scene].blocks??[])])if(!b.pair&&!survives(p,b)){
             if(rules)depositHarvest(p,placedDrops(b,null,rules,false),rules,events);

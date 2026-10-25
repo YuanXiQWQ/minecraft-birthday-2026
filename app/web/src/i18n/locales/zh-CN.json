@@ -282,5 +282,11 @@
   "menu.controls": "按键控制…",
   "menu.mouse": "鼠标设置",
   "menu.keybinds": "按键绑定",
-  "menu.controlsTitle": "按键控制"
+  "menu.controlsTitle": "按键控制",
+  "bed.noSleep": "你只能在夜晚或雷暴时睡觉",
+  "bed.occupied": "这张床已被占用",
+  "bed.tooFar": "你现在不能休息，床太远了",
+  "bed.obstructed": "这张床被阻挡了",
+  "bed.incomplete": "床头和床尾必须完整",
+  "bed.leave": "起床"
 }

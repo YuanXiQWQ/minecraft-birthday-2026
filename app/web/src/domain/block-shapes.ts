@@ -3,6 +3,17 @@ import {isCake} from './easter-egg.ts';
 import type {Bounds} from './player-motion.ts';
 /** Whole native block cube. */
 export const FULL_BLOCK:Bounds=[0,0,0,1,1,1];
+/** Native HopperBlock interaction volumes supply face directions through the empty basin and horizontal outlet.
+ * @param {string} block Native short block name.
+ * @param {Record<string,string>} state Native properties.
+ * @return {Bounds[]} Direction override volumes, independent of collision and outline geometry.
+ */
+export function interactionShapes(block:string,state:Record<string,string>):Bounds[]{
+    if(block!=='hopper')return [];
+    const basin:Bounds=[2/16,11/16,2/16,14/16,1,14/16];
+    const outlet:Record<string,Bounds>={north:[6/16,8/16,0,10/16,10/16,4/16],south:[6/16,8/16,12/16,10/16,10/16,1],west:[0,8/16,6/16,4/16,10/16,10/16],east:[12/16,8/16,6/16,1,10/16,10/16]};
+    return outlet[state.facing]?[basin,outlet[state.facing]]:[basin];
+}
 /** Obtain explicit native shape overrides; null delegates to original model element cuboids.
  * @param {string} block Native short block name.
  * @param {Record<string,string>} state Native properties.
@@ -19,7 +30,11 @@ export function nativeShapes(block:string,state:Record<string,string>,collision=
     }
     if(block==='ladder')return [state.facing==='north'?[0,0,13/16,1,1,1]:state.facing==='south'?[0,0,0,1,1,3/16]:state.facing==='west'?[13/16,0,0,1,1,1]:[0,0,0,3/16,1,1]];
     if(block==='torch')return collision?[]:[[6/16,0,6/16,10/16,10/16,10/16]];
-    if(block==='straw_bed')return [[0,0,0,1,9/16,1]];
+    if(block==='straw_bed'){
+        const boxes:Bounds[]=[[0,0,0,1,4/16,1]];
+        if(state.part==='head')boxes.push(state.facing==='north'?[0,0,0,1,5/16,.5]:state.facing==='south'?[0,0,.5,1,5/16,1]:state.facing==='west'?[0,0,0,.5,5/16,1]:[.5,0,0,1,5/16,1]);
+        return boxes;
+    }
     if(block==='chest'||block==='trapped_chest')return [[1/16,0,1/16,15/16,14/16,15/16]];
     if(block.endsWith('_slab'))return [state.type==='double'?FULL_BLOCK:state.type==='top'?[0,.5,0,1,1,1]:[0,0,0,1,.5,1]];
     if(block==='hopper'){

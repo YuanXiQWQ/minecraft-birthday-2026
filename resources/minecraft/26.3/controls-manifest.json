@@ -685,10 +685,19 @@
     "assets/minecraft/sounds/block/lantern/break4.ogg": "f39cfc1f22af32e5629e43ad6923d46e63922efe9526628196c335695ef8eb84",
     "assets/minecraft/sounds/step/gravel2.ogg": "5576cefacc6789d6e3c1911a1e28f09a03f254fb73e605f32e29daa4074856d7",
     "assets/minecraft/sounds/dig/wood2.ogg": "76685444e4e4bb0f62cc8347866ed3eab5e1fe6a55fbd217edc2e7a66b50a6e7",
-    "assets/minecraft/controls-sounds.json": "a8450437f10f94d49a9b8d8715b64655276d600457a192f0158ef48a225bbe4a",
+    "assets/minecraft/controls-sounds.json": "9dc897b60bcb3b99931963c723424a1464def6fd0cd3520852f2cbbf4f0a7e06",
     "assets/minecraft/sounds/random/eat1.ogg": "b96b9b3586acc8e35fad92395648e03d612534a05f332eb59bfb3ed2ace4e87a",
     "assets/minecraft/sounds/random/eat3.ogg": "1198a64c34a8a30a7d288321915b39a79fb54813f85352e2184108fbeaa5f8e4",
-    "assets/minecraft/sounds/random/eat2.ogg": "9bf29af6b0ce04a60ed44b8a0dfc4703cad58ae9fa28a27326890828b615578d"
+    "assets/minecraft/sounds/random/eat2.ogg": "9bf29af6b0ce04a60ed44b8a0dfc4703cad58ae9fa28a27326890828b615578d",
+    "assets/minecraft/sounds/item/armor/equip_iron5.ogg": "b4d1337af1022f555b1fdb4d40d027e4d8002ca0a2f03d4f707fb76bd8f9c85a",
+    "assets/minecraft/sounds/item/armor/equip_iron1.ogg": "d4762588fa3cce8bc20986ca5f732318835c1df1cbe6014fd3a44bdb22637542",
+    "assets/minecraft/sounds/item/armor/equip_iron3.ogg": "a73f65d65708e1bec5c313da804b26efa26565d309f27b3140f6d7f1b3ca4ca1",
+    "assets/minecraft/sounds/item/armor/equip_iron6.ogg": "e5108f27e2185f1d93e89233b089a04c325b963c4e175ce14eaef96080949b5c",
+    "assets/minecraft/sounds/item/armor/equip_iron2.ogg": "71bf52aff2cb55113a52ea79ad3922a8062394ef600f7a729b127732c65e68df",
+    "assets/minecraft/sounds/item/armor/equip_iron4.ogg": "41c9ddd684b8f21969d7d0f507f75bc70951349d75a161486c675bdb427f0e6d",
+    "assets/minecraft/sounds/random/wood_click.ogg": "c4d63b337c158bcc26e38182089bc5b0f6c2370c6be69639aafb69971e49460b",
+    "assets/minecraft/sounds/random/click.ogg": "9c5cecb187a4128f5d7a9f492854d2c1ba60413d413b3d5df36b9720d53a3b15",
+    "assets/minecraft/sounds/block/straw_bed/break_leave.ogg": "c9f789413f87d6593190fda2feebe123e1e8743f5a074ef430caa39df2177a2d"
   },
   "entries": [
     {
@@ -973,8 +982,8 @@
     },
     {
       "entry": "assets/minecraft/controls-sounds.json",
-      "size": 16975,
-      "sha256": "a8450437f10f94d49a9b8d8715b64655276d600457a192f0158ef48a225bbe4a"
+      "size": 18370,
+      "sha256": "9dc897b60bcb3b99931963c723424a1464def6fd0cd3520852f2cbbf4f0a7e06"
     },
     {
       "entry": "assets/minecraft/models/block/barrel_open.json",
@@ -2007,6 +2016,11 @@
       "sha256": "f0b5cef234ab071dc0c6c2dbeaca422442b6a21ed705bf4817943d9550b3ab3d"
     },
     {
+      "entry": "assets/minecraft/sounds/block/straw_bed/break_leave.ogg",
+      "size": 10020,
+      "sha256": "c9f789413f87d6593190fda2feebe123e1e8743f5a074ef430caa39df2177a2d"
+    },
+    {
       "entry": "assets/minecraft/sounds/block/straw_bed/break1.ogg",
       "size": 8909,
       "sha256": "6115d2a8f69fbf5b426c1303a59e2c03e1336835ab3999a6befe26ce259d9701"
@@ -2147,9 +2161,44 @@
       "sha256": "1df2c1a0c74720de6a929ef076579de752a61eacf59280b7f2900d586814ae8f"
     },
     {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron1.ogg",
+      "size": 7831,
+      "sha256": "d4762588fa3cce8bc20986ca5f732318835c1df1cbe6014fd3a44bdb22637542"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron2.ogg",
+      "size": 8012,
+      "sha256": "71bf52aff2cb55113a52ea79ad3922a8062394ef600f7a729b127732c65e68df"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron3.ogg",
+      "size": 8663,
+      "sha256": "a73f65d65708e1bec5c313da804b26efa26565d309f27b3140f6d7f1b3ca4ca1"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron4.ogg",
+      "size": 8180,
+      "sha256": "41c9ddd684b8f21969d7d0f507f75bc70951349d75a161486c675bdb427f0e6d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron5.ogg",
+      "size": 7444,
+      "sha256": "b4d1337af1022f555b1fdb4d40d027e4d8002ca0a2f03d4f707fb76bd8f9c85a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/armor/equip_iron6.ogg",
+      "size": 7410,
+      "sha256": "e5108f27e2185f1d93e89233b089a04c325b963c4e175ce14eaef96080949b5c"
+    },
+    {
       "entry": "assets/minecraft/sounds/random/anvil_land.ogg",
       "size": 11646,
       "sha256": "7696f2375d33a721531415338b593540cea50e694e89aff837b704f7acb93d1f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/click.ogg",
+      "size": 5468,
+      "sha256": "9c5cecb187a4128f5d7a9f492854d2c1ba60413d413b3d5df36b9720d53a3b15"
     },
     {
       "entry": "assets/minecraft/sounds/random/eat1.ogg",
@@ -2165,6 +2214,11 @@
       "entry": "assets/minecraft/sounds/random/eat3.ogg",
       "size": 6339,
       "sha256": "1198a64c34a8a30a7d288321915b39a79fb54813f85352e2184108fbeaa5f8e4"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/wood_click.ogg",
+      "size": 5084,
+      "sha256": "c4d63b337c158bcc26e38182089bc5b0f6c2370c6be69639aafb69971e49460b"
     },
     {
       "entry": "assets/minecraft/sounds/step/cloth1.ogg",
@@ -2746,6 +2800,20 @@
     "net/minecraft/world/level/block/DoorBlock.class": "76f5b3ff71c45ee80330a91332f72dfce3abaa07ca3594bb2132723e73ebeb77",
     "net/minecraft/world/level/block/TrapDoorBlock.class": "fba614cb7e8dacc55321a14a20fdd05886d247c85e1e20072b74178e8766b408",
     "net/minecraft/world/level/block/AbstractBedBlock.class": "b862f4bd533b2b06e44ecfbca4ef8bc0094c97ee3203776871aab8d8e0fd5f86",
+    "net/minecraft/world/level/block/StrawBedBlock.class": "6a118ff08f8af06bc2e39fe06d9a6de32dcdc9720d58aedda0fda2e0ca87949a",
+    "net/minecraft/world/attribute/BedRule.class": "965e3dc99bc9e18bc537ccba28a3e0b181aebbe78a885b4a5436d9b03145c6bf",
+    "net/minecraft/world/attribute/BedRule$Rule.class": "f770998ce2d768366ab37273ade0864ef92422db0fac72fdb375986d7a61f481",
+    "net/minecraft/world/attribute/WeatherAttributes.class": "ff64c153c7afc6a174941dda89f6e6d46e528b30cd69041b1c47a7352f1e20c6",
+    "net/minecraft/server/level/ServerPlayer.class": "ab14a0f62bf6be68f7502ea7f11336f9ab665a4e978a562d6625520fabe592ed",
+    "net/minecraft/server/level/ServerLevel.class": "bd703a5b7085fd0caad8f4ed23603197c2f2d8010176ad971d7572064397d5f8",
+    "net/minecraft/world/level/Level.class": "68abf43ce4638614ca5d8e7ae185d7e06295ac636c4d4fbc21ee7c3d5e05c4a7",
+    "net/minecraft/world/level/SignalGetter.class": "56dada242b7136380a786851e9994eaf7a99fe67e7afc247050d5e685614d356",
+    "net/minecraft/world/level/block/LeverBlock.class": "37ee422de9760cc9d2d948075ff16af1fceac6740f697f28a54500a1ac0d7566",
+    "net/minecraft/world/level/block/ButtonBlock.class": "89b904f2ec78b58fec9b94e32af44c01fc2ad8745ffca009bb3812992e774bdb",
+    "net/minecraft/world/level/block/state/properties/BlockSetType.class": "7790c4e51043babc4a596cc2cf46ec57cec4895d6c3f99a56f447c556522b00d",
+    "net/minecraft/world/level/block/FaceAttachedHorizontalDirectionalBlock.class": "d82565d9aa937e02e4484f99cc49ea7e9c32ebc7396e2beb1cfd58d13bff0720",
+    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2",
+    "net/minecraft/world/level/block/state/BlockBehaviour$Properties.class": "13dabc96104c48806a2e54cfa848ad247330588afbf4014ef9a795388b6a9162",
     "net/minecraft/world/level/block/LadderBlock.class": "8962532d10742a23761b62aa398c1da164bb83fa6301a0995441a1c81cb5c9bd",
     "net/minecraft/world/level/block/LanternBlock.class": "018ff209177b7942dfd863d996f5f794e4443c990f0f35cf1c7531b52c1537ad",
     "net/minecraft/world/level/block/HopperBlock.class": "f13ffbd946b38604fd4a38ce4097e4d69a81627cac8c73cce8ab9608890c30d9",
@@ -2753,5 +2821,5 @@
     "net/minecraft/client/gui/Hud.class": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716",
     "net/minecraft/client/renderer/LevelRenderer.class": "4468dbf0dcd446d08701859a9f3a7043c8df78a8ce30fa4d1305d41cf33da020"
   },
-  "exporterSha256": "22d25d43360be46e9a693d484a2cded0b38b7e1e94a536fa212c3e6d56859e1f"
+  "exporterSha256": "44bf52db14cf0ca0a3bcc2e9b22232806955461440f53695d5f83d13a66956c8"
 }
