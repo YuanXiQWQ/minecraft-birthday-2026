@@ -1,4 +1,4 @@
-/** Bounded Java 26.3 criteria facts, player-slot triggers and native tree visibility; no UI or acquisition shortcuts. */
+/** Bounded Java 26.3 criteria facts, player-slot triggers and the complete supported progression guide. */
 import birthday from '../data/birthday-advancement.json' with {type:'json'};
 import profile from '../data/advancements.json' with {type:'json'};
 import {INVENTORY_RULES as inventoryRules,ODD_ADVANCEMENT} from './easter-egg.ts';
@@ -18,6 +18,8 @@ export interface AdvancementFacts {version:1;criteria:Record<string,string[]>}
 export const BIRTHDAY_ADVANCEMENT = 'jerrys_farm:happy_birthday';
 /** Original nodes and the authored birthday challenge share saved criteria and display rules. */
 export const ADVANCEMENTS:Record<string,AdvancementDefinition> = {...profile.definitions,[BIRTHDAY_ADVANCEMENT]:birthday,[ODD_ADVANCEMENT]:oddCake};
+/** Native farming root completed by any supported completed descendant. */
+export const HUSBANDRY_ROOT = 'minecraft:husbandry/root';
 /** Create criteria independent of catalogue unlocks and recipes. @return {AdvancementFacts} Empty facts. */
 export function emptyAdvancements(): AdvancementFacts {return {version:1,criteria:{}};}
 /** Apply native outer-AND / inner-OR requirements without consulting ancestors.
@@ -28,6 +30,22 @@ export function emptyAdvancements(): AdvancementFacts {return {version:1,criteri
 export function advancementDone(facts:AdvancementFacts|undefined,id:string):boolean {
     const granted=facts?.criteria[id]??[];
     return ADVANCEMENTS[id].requirements.every(group=>group.some(criterion=>granted.includes(criterion)));
+}
+/** Complete the farming root once a saved descendant is done, preserving every other criterion.
+ * @param {AdvancementFacts} facts Transaction-local or validated migration facts.
+ * @return {boolean} Whether the root criterion was added.
+ */
+export function syncHusbandryRoot(facts:AdvancementFacts):boolean {
+    if(advancementDone(facts,HUSBANDRY_ROOT))return false;
+    for(const id of Object.keys(ADVANCEMENTS)){
+        if(id===HUSBANDRY_ROOT||!advancementDone(facts,id))continue;
+        let parent=ADVANCEMENTS[id].parent;
+        while(parent){
+            if(parent===HUSBANDRY_ROOT){facts.criteria[HUSBANDRY_ROOT]=Object.keys(ADVANCEMENTS[HUSBANDRY_ROOT].criteria);return true;}
+            parent=ADVANCEMENTS[parent].parent;
+        }
+    }
+    return false;
 }
 /** Validate registered criterion IDs and the supported fact schema. @param {unknown} value Candidate field. */
 export function validateAdvancements(value:unknown):asserts value is AdvancementFacts {
@@ -42,7 +60,7 @@ export function validateAdvancements(value:unknown):asserts value is Advancement
 export function advancementSlots(player:PlayerLayout):(Stack|null)[] {
     return [...player.backpack,...player.hotbar,player.equipment.feet,player.equipment.legs,player.equipment.chest,player.equipment.head,player.equipment.offhand];
 }
-/** Evaluate changed inventory slots and successful world/crafting events before the enclosing save.
+/** Evaluate changed slots and successful events, then complete the farming root from its descendants before saving.
  * @param {AdvancementFacts} facts Transaction-local criteria.
  * @param {PlayerLayout|null} before Previous slots; null is explicit old-save inventory synchronization.
  * @param {PlayerLayout} after Resulting slots.
@@ -65,22 +83,12 @@ export function updateAdvancements(facts:AdvancementFacts,before:PlayerLayout|nu
         }
         if(!wasDone&&advancementDone(facts,id))completed.push(id);
     }
+    if(syncHusbandryRoot(facts))completed.push(HUSBANDRY_ROOT);
     return completed;
 }
-/** Evaluate native subtree completion and two-ancestor visibility.
- * @param {AdvancementFacts|undefined} facts Saved criteria.
- * @return {Set<string>} Visible nodes, including incomplete ancestors of completed children.
+/** Show every supported advancement and its tree ancestors without granting any criteria.
+ * @return {Set<string>} Stable guide nodes, independent of saved completion.
  */
-export function visibleAdvancements(facts:AdvancementFacts|undefined):Set<string> {
-    const visible=new Set<string>();
-    /** Visit a subtree. @param {string} id Node. @param {('show'|'hide'|'none')[]} ancestors Ancestor rules. @return {boolean} Any completion below. */
-    function visit(id:string,ancestors:('show'|'hide'|'none')[]):boolean {
-        const node=ADVANCEMENTS[id],done=advancementDone(facts,id),rule=done?'show':node.display.hidden?'hide':'none',stack=[rule,...ancestors] as ('show'|'hide'|'none')[];
-        let subtree=done;
-        for(const [child,d] of Object.entries(ADVANCEMENTS))if(d.parent===id)subtree=visit(child,stack)||subtree;
-        if(subtree||stack.slice(0,3).find(r=>r!=='none')==='show')visible.add(id);
-        return subtree;
-    }
-    for(const [id,node] of Object.entries(ADVANCEMENTS))if(!node.parent)visit(id,[]);
-    return visible;
+export function visibleAdvancements():Set<string> {
+    return new Set(Object.keys(ADVANCEMENTS));
 }

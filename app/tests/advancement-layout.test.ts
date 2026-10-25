@@ -3,7 +3,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {advancementPositions,advancementTooltipLayout} from '../web/src/ui/advancement-layout.ts';
 import {AdvancementView} from '../web/src/ui/advancements.ts';
-import {ADVANCEMENTS} from '../web/src/domain/advancements.ts';
+import {ADVANCEMENTS,BIRTHDAY_ADVANCEMENT,advancementDone,emptyAdvancements,visibleAdvancements} from '../web/src/domain/advancements.ts';
+import {ODD_ADVANCEMENT} from '../web/src/domain/easter-egg.ts';
+
+test('new and reset saves show every supported node without granting completion; cake goals belong to the story tree',()=>{
+    const facts=emptyAdvancements(),before=structuredClone(facts),visible=visibleAdvancements();
+    assert.deepEqual([...visible],Object.keys(ADVANCEMENTS));
+    for(const id of visible)assert.equal(advancementDone(facts,id),false);
+    const story=advancementPositions('minecraft:story/root'),husbandry=advancementPositions('minecraft:husbandry/root');
+    for(const id of [BIRTHDAY_ADVANCEMENT,ODD_ADVANCEMENT]){assert.ok(story.has(id));assert.ok(!husbandry.has(id));assert.equal(ADVANCEMENTS[id].parent,'minecraft:story/smelt_iron');assert.equal(ADVANCEMENTS[id].display.hidden,false);}
+    assert.deepEqual(facts,before);
+});
 
 test('native tree walk apportions an uneven branch instead of allocating every leaf a separate global row',()=>{
     const base=ADVANCEMENTS['minecraft:story/root'],tree=Object.fromEntries([['root',undefined],['a','root'],['a1','a'],['a2','a'],['b','root']].map(([id,parent])=>[id!,{...base,parent}]));

@@ -1,6 +1,6 @@
 /** Versioned, checksum-protected durable values; failed reads retain their original bytes. */
 import {emptyEnvironment,migrateEnvironment} from '../domain/environment.ts';
-import {emptyAdvancements,updateAdvancements} from '../domain/advancements.ts';
+import {emptyAdvancements,updateAdvancements,syncHusbandryRoot} from '../domain/advancements.ts';
 import {emptyWorld} from '../domain/world-state.ts';
 import {ensure, freeze, validateState} from '../domain/state.ts';
 import type {State} from '../domain/types.ts';
@@ -134,8 +134,9 @@ export async function decode(raw: string): Promise<Decoded> {
             updateAdvancements(value.state.progress.advancements,null,value.state.progress.player.data);
         }
         validateState(value.state);
+        const husbandryMigration=syncHusbandryRoot(value.state.progress.advancements);
         const envelope = await seal(value.state, value.generation, value.revision);
-        return {envelope, migrated, advancementMigration:missingAdvancements};
+        return {envelope, migrated:migrated||husbandryMigration, advancementMigration:missingAdvancements||husbandryMigration};
     } catch (error) {
         throw new Error(migrated ? 'migration-failed' : error instanceof Error ? error.message : 'invalid-save');
     }

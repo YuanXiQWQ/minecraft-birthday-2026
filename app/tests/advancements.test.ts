@@ -96,14 +96,14 @@ test('full-bag real stone harvest unlocks cobblestone but grants only when a lat
     const {a}=await harness(s);await a.dispatch({type:'harvest-node',scene:'cave',node:'stone:0',visit:0,expected:a.view.envelope!.state.progress.player.data});assert.ok(a.view.envelope!.state.progress.unlocked.includes(stack('cobblestone').id));assert.equal(done(a,'story/mine_stone'),false);
     await edit(a,{type:'source',item:stack('cobblestone').id,mode:'number',index:1});assert.equal(done(a,'story/mine_stone'),true);
 });
-test('successful planting consumes a seed and immediately completes child with incomplete husbandry root; failures and harvesting do not',async()=>{
+test('successful planting consumes a seed and immediately completes child and its husbandry root; failures and harvesting do not',async()=>{
     const {a}=await harness();for(const id of ['wheat_seeds','wooden_hoe','wheat'])await a.dispatch({type:'unlock',item:stack(id).id});
     await a.dispatch({type:'select-scene',scene:'farm'});await edit(a,{type:'source',item:stack('wooden_hoe').id,mode:'number',index:0});
     const plant=()=>a.dispatch({type:'plant-crop',id:'crop',cell:WORLD_SCENES.farm.plots[0],expected:a.view.envelope!.state.progress.player.data});
     await assert.rejects(plant,/invalid-plant/);assert.equal(done(a,'husbandry/plant_seed'),false);
     await edit(a,{type:'source',item:stack('wheat_seeds').id,mode:'number',index:0});const n=a.view.envelope!.state.progress.player.data.hotbar[0]!.count;
     await plant();assert.equal(a.view.envelope!.state.progress.player.data.hotbar[0]!.count,n-1);assert.equal(a.view.envelope!.state.progress.scenes.farm.crops[0].growth.version,1);
-    assert.equal(done(a,'husbandry/plant_seed'),true);assert.equal(done(a,'husbandry/root'),false);assert.ok(visibleAdvancements(a.view.envelope!.state.progress.advancements).has('minecraft:husbandry/root'));
+    assert.equal(done(a,'husbandry/plant_seed'),true);assert.equal(done(a,'husbandry/root'),true);assert.ok(visibleAdvancements().has('minecraft:husbandry/root'));
     await assert.rejects(plant,/invalid-plant/);
 });
 test('harvesting an existing mature crop and acquiring a seed or hoe cannot invent a placed-wheat event',async()=>{

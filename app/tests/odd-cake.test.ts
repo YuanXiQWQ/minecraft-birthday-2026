@@ -39,11 +39,11 @@ function ready():State{const s=initialState();s.progress.unlocked=[...new Set(['
  */
 function craft(s:State):Command{return {type:'craft-take',expected:s.progress.player.data,cursor:null,crafting:Array(4).fill(null),take:{mode:'shift'},workbench:{scene:'plains',id:'odd-bench',expected:structuredClone(s.progress.scenes.plains.stations.find(s=>s.id==='odd-bench')!.contents)}};}
 
-test('outer recipe rows exchange exactly, three buckets remain and only successful crafting grants the hidden challenge',async()=>{
+test('outer recipe rows exchange exactly, three buckets remain and only successful crafting completes the visible challenge',async()=>{
     assert.equal(findCrafting(grid,3,rules)?.result.id,ODD_CAKE);
     assert.equal(findCrafting([...grid.slice(6),...grid.slice(3,6),...grid.slice(0,3)],3,rules)?.result.id,'minecraft:cake');
     assert.equal(findCrafting(grid.slice(0,4),2,rules),null);
-    const s=ready();validateState(s);assert.ok(!visibleAdvancements(s.progress.advancements).has(ODD_ADVANCEMENT));
+    const s=ready();validateState(s);assert.ok(visibleAdvancements().has(ODD_ADVANCEMENT));assert.equal(advancementDone(s.progress.advancements,ODD_ADVANCEMENT),false);
     const result=transition(s,craft(s),WORLD_REGION,rules),p=result.state.progress;
     assert.deepEqual(p.player.data.hotbar.find(s=>s?.id===ODD_CAKE),{id:ODD_CAKE,count:1});
     const bench=p.scenes.plains.stations.find(s=>s.id==='odd-bench')!.contents as any;

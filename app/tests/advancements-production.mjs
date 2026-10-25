@@ -4,6 +4,7 @@ import {createServer} from 'node:http';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {resolve,extname} from 'node:path';
 import assert from 'node:assert/strict';
+import {ADVANCEMENTS} from '../web/src/domain/advancements.ts';
 import {initialState} from '../web/src/domain/state.ts';
 import {seal} from '../web/src/persistence/codec.ts';
 import {WORLD_SCENES} from '../web/src/domain/world-config.ts';
@@ -56,7 +57,7 @@ try{
         }
         const raw=JSON.stringify(await seal(state,'adv-browser-'+label,0));await page.evaluate(({key,raw})=>localStorage.setItem(key,raw),{key,raw});
         await page.goto(origin+base+'game/');await ready(page);assert.deepEqual((await progress(page)).advancements.criteria,{});
-        await page.keyboard.press('l');await page.locator('#advancements').waitFor({state:'visible'});assert.deepEqual(JSON.parse(await page.locator('#advancements').getAttribute('data-visible')),[]);
+        await page.keyboard.press('l');await page.locator('#advancements').waitFor({state:'visible'});assert.deepEqual(JSON.parse(await page.locator('#advancements').getAttribute('data-visible')).sort(),Object.keys(ADVANCEMENTS).sort());
         await page.screenshot({path:resolve(out,label+'-empty.png')});await page.keyboard.press('Escape');
         await page.evaluate(()=>{window.__advSamples=[];window.__advObserved=[];new MutationObserver(()=>{for(const n of document.querySelectorAll('.advancement-toast'))if(!window.__advObserved.includes(n.dataset.advancement))window.__advObserved.push(n.dataset.advancement);}).observe(document.body,{childList:true,subtree:true});setInterval(()=>{const items=[...document.querySelectorAll('.advancement-toast,.recipe-toast')].filter(n=>!n.hidden).map(n=>({id:n.dataset.advancement??'recipes',top:n.style.top,phase:n.dataset.timeline,rect:n.getBoundingClientRect().toJSON()}));if(items.length)window.__advSamples.push({time:performance.now(),items});},100);});
         await page.keyboard.press('e');await page.locator('#inventory').waitFor({state:'visible'});
@@ -82,7 +83,7 @@ try{
             if(hit?.id?.startsWith('plot:')){await page.mouse.click(x,y,{button:'right'});await completed(page,'husbandry/plant_seed');planted=true;break;}
         }
         assert.ok(planted,'native ray must reach a real authored plot: '+JSON.stringify(hits));
-        const after=await progress(page);assert.equal(after.advancements.criteria['minecraft:husbandry/root'],undefined);assert.equal(after.scenes.farm.crops.length,1);assert.equal(after.player.data.hotbar[8],null);
+        const after=await progress(page);assert.deepEqual(after.advancements.criteria['minecraft:husbandry/root'],['consumed_item']);assert.equal(after.scenes.farm.crops.length,1);assert.equal(after.player.data.hotbar[8],null);
         await page.waitForFunction(()=>new Set(window.__advSamples.flatMap(s=>s.items.filter(i=>i.id!=='recipes'&&JSON.parse(i.phase).visible>.9).map(i=>i.id))).size===6,{},{timeout:16000});
         await page.waitForFunction(()=>document.querySelectorAll('.advancement-toast').length===0,{},{timeout:16000});
         await page.keyboard.press('l');await page.locator('#advancements').waitFor({state:'visible'});await page.mouse.move(20,650);await page.screenshot({path:resolve(out,label+'-story.png')});

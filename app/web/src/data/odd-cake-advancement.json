@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:husbandry/root",
+  "parent": "minecraft:story/smelt_iron",
   "criteria": {"cake_crafted": {"trigger": "jerrys_farm:upside_down_cake_crafted"}},
   "requirements": [["cake_crafted"]],
   "display": {
@@ -9,6 +9,6 @@
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,
-    "hidden": true
+    "hidden": false
   }
 }

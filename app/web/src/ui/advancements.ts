@@ -100,7 +100,7 @@ export class AdvancementView {
     }
     /** Restrict scrolling to the same native graph bounds. @param {{x:number;y:number}} scroll Current native offset. */
     clampScroll(scroll:{x:number;y:number}):void {
-        const visible=visibleAdvancements(this.facts),positions=[...this.positions(this.selected)].filter(([id])=>visible.has(id)).map(([,p])=>p),maxX=Math.max(...positions.map(p=>p.x))+28,maxY=Math.max(...positions.map(p=>p.y))+27,minX=Math.min(...positions.map(p=>p.x)),minY=Math.min(...positions.map(p=>p.y));
+        const visible=visibleAdvancements(),positions=[...this.positions(this.selected)].filter(([id])=>visible.has(id)).map(([,p])=>p),maxX=Math.max(...positions.map(p=>p.x))+28,maxY=Math.max(...positions.map(p=>p.y))+27,minX=Math.min(...positions.map(p=>p.x)),minY=Math.min(...positions.map(p=>p.y));
         if(maxX-minX>234)scroll.x=Math.min(0,Math.max(234-maxX,scroll.x));
         if(maxY-minY>113)scroll.y=Math.min(0,Math.max(113-maxY,scroll.y));
     }
@@ -134,7 +134,7 @@ export class AdvancementView {
      */
     paint(rebuild=true):void {
         if(!this.modal.open||this.disposed)return;
-        const visible=visibleAdvancements(this.facts),roots=Object.keys(ADVANCEMENTS).filter(id=>!ADVANCEMENTS[id].parent&&visible.has(id)),font=this.ui.pixels.font;
+        const visible=visibleAdvancements(),roots=Object.keys(ADVANCEMENTS).filter(id=>!ADVANCEMENTS[id].parent&&visible.has(id)),font=this.ui.pixels.font;
         if(!roots.includes(this.selected))this.selected=roots[0]??'';
         this.scale=Math.max(1,Math.min(this.ui.scale,Math.floor(this.host.clientWidth/252),Math.floor(this.host.clientHeight/196)));
         const width=Math.ceil(this.host.clientWidth/this.scale),height=Math.ceil(this.host.clientHeight/this.scale),wx=this.windowX=Math.floor((width-252)/2),wy=this.windowY=Math.floor((height-140)/2);
@@ -162,7 +162,6 @@ export class AdvancementView {
                     else{horizontal(split,X,Y);horizontal(x,split,y);vertical(split,y,Y);}}}
             for(const [id,p] of positions)if(visible.has(id)){
                 const x=9+Math.floor(offset.x+p.x),y=18+Math.floor(offset.y+p.y),done=advancementDone(this.facts,id);
-                if(ADVANCEMENTS[id].display.hidden&&!done)continue;
                 this.sprite(c,'sprites/advancements/'+(ADVANCEMENTS[id].display.frame??'task')+'_frame_'+(done?'obtained':'unobtained'),x+3,y,26,26);this.ui.stack(c,{id:ADVANCEMENTS[id].display.icon.id,count:1},x+8,y+5);
                 if(rebuild)this.hit(id,x+wx,y+wy);
             }
