@@ -24,7 +24,7 @@ export function overlaps(a:Bounds,b:Bounds):boolean{return [0,1,2].every(i=>a[i]
  * @param {number} amount Desired displacement.
  * @return {number} Displacement stopping at the first face.
  */
-function clip(box:Bounds,solids:Bounds[],axis:number,amount:number):number{
+export function clip(box:Bounds,solids:Bounds[],axis:number,amount:number):number{
     for(const b of solids){if(![0,1,2].filter(i=>i!==axis).every(i=>box[i+3]>b[i]+1e-7&&box[i]<b[i+3]-1e-7))continue;
         if(amount>0&&box[axis+3]<=b[axis]+1e-7)amount=Math.min(amount,b[axis]-box[axis+3]);
         else if(amount<0&&box[axis]>=b[axis+3]-1e-7)amount=Math.max(amount,b[axis+3]-box[axis]);}

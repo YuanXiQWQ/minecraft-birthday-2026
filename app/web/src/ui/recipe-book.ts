@@ -4,6 +4,7 @@ import type {ToastSlots} from './toast-slots.ts';
 import {nativeField} from './native-field.ts';
 import {alignRaster} from './raster.ts';
 import {scaledCanvas} from './inventory.ts';
+import {drawIcon} from './icons.ts';
 import type {GameInventory} from './inventory.ts';
 import type {Recipe} from '../rules/types.ts';
 import {
@@ -501,7 +502,7 @@ export class RecipeBookView {
         recipeGhost(recipe, this.mode(), this.width(), u.permanent!.progress.unlocked, u.rules, frame).grid.forEach((s, n) => {
           if (!s) return;
           const icon = u.art.icons.get(s.id);
-          if (icon) c.drawImage(icon, x + 3 + n % this.width() * 7, y + 3 + Math.floor(n / this.width()) * 7, 6, 6);
+          if (icon) drawIcon(c,icon,x+3+n%this.width()*7,y+3+Math.floor(n/this.width())*7,6);
         });
       });
     }
@@ -519,23 +520,26 @@ export class RecipeBookView {
     ctx.drawImage(this.image('sprites/recipe_book/' + name), x, y, w, h);
   }
 
-  /** Select an actual native recipe; missing ingredients produce only a display projection.
+  /** Select a recipe through the durable input-return transaction before displaying missing ingredients.
    * @param {Recipe} recipe Applicable discovered recipe.
    * @param {boolean} max Shift bounded fill intent.
    */
   choose(recipe: Recipe, max: boolean): void {
     if (this.disposed || this.identity !== this.scope() || !this.validRecipe(recipe) || this.ui.carrierBusy() || this.ui.pending || !this.ui.writable) return;
     this.popup = null;
-    if (!this.craftable(recipe)) {
-      this.ghost = recipe;
-      this.ghostInputs = this.inputsSignature();
-      this.ui.notice = '';
-      this.ui.draw();
-    } else {
-      this.ghost = null;
-      this.ui.fillInputs(recipe.id, max);
-    }
+    const current=this.ui.value.workbench??this.ui.value.machine?.slice(0,1)??this.ui.value.crafting??[];
+    if(!this.craftable(recipe)&&current.every(s=>!s)){this.showGhost(recipe.id);this.ui.notice='';this.ui.draw();}
+    else{this.ghost = null;this.ui.fillInputs(recipe.id, max);}
     if (this.body.classList.contains('book-only')) this.change({open: false});
+  }
+
+  /** Display a ghost only after its input-return receipt has committed in this open menu.
+   * @param {string} id Native recipe identity.
+   */
+  showGhost(id:string):void{
+    const recipe=BOOK_RECIPES.find(r=>r.id===id);
+    if(!recipe||this.disposed||this.identity!==this.scope()||!this.validRecipe(recipe)||!this.ui.modal.open)return;
+    this.ghost=recipe;this.ghostInputs=this.inputsSignature();
   }
 
   /** Overlay genuine missing-material ghosts in the existing native inputs, never in carriers or persistence.

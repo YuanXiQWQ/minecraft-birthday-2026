@@ -15,6 +15,9 @@ import {WORLD_REGION, WORLD_SCENES, sameCell, sourceOccupied} from '../domain/wo
 import {emptyFurnace} from '../domain/furnace.ts';
 import {emptyHopper} from '../domain/hopper.ts';
 import {layout} from '../domain/inventory.ts';
+import {plateContacts} from '../domain/pressure-plates.ts';
+import type {PlateEntity} from '../domain/pressure-plates.ts';
+import {playerBounds} from '../domain/player-motion.ts';
 
 /** Calculate a real face-adjacent cell from logical support identity and the actual hit face and enforce occupancy, authored volume and vertical support. @param {Pick} hit Visible face. @param {SaveSession} session Latest state. @param {Kind} kind Held device. @param {Facing} facing Requested orientation. @return {Station & {valid:boolean}} Preview candidate. */
 export function placement(hit: Pick, session: SaveSession, kind: Kind, facing: Facing): Station & { valid: boolean } {
@@ -41,6 +44,7 @@ export class WorldUse {
     mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; nextSound: number } | null = null;
     miningTimer = 0;
     pickupPending=false;pickupAfter=0;pickupSignature='';
+    platePending=false;
     poseTimer=0; poseSignature=''; posePending=false;
     holding = false;
     miningEpoch = 0;
@@ -108,6 +112,8 @@ export class WorldUse {
     walkInteractions():void {
         const p=this.session.view.envelope?.state.progress;if(!p||!this.session.view.writable||this.scene.simulationPaused||document.hidden)return;
         const feet=[...this.scene.motion.feet] as Cell;
+        this.samplePlates();
+        if(p.sleep)return;
         if(this.scene.motion.landedDistance>.5&&soilAt(p,[Math.floor(feet[0]),Math.floor(feet[1]-.2),Math.floor(feet[2])]))void this.run({type:'land-on-soil',scene:p.scene,feet,distance:this.scene.motion.landedDistance},null);
         if(this.pickupPending||performance.now()<this.pickupAfter)return;
         const cells=[...(p.scenes[p.scene].agriculture?.drops??[]).map(d=>d.cell),...WORLD_SCENES[p.scene].nodes.filter(n=>n.kind==='egg'&&!p.world.visits[p.scene].removed.includes(n.id)).map(n=>n.cell)];
@@ -115,6 +121,18 @@ export class WorldUse {
         const signature=JSON.stringify([this.scope,p.world.visits[p.scene].epoch,nearby,p.player.data]);if(signature===this.pickupSignature)return;
         this.pickupPending=true;this.pickupAfter=performance.now()+500;
         void this.run({type:'pickup-ground',scene:p.scene,feet,visit:p.world.visits[p.scene].epoch},null).then(ok=>{if(ok)this.pickupSignature=signature;}).finally(()=>{this.pickupPending=false;});
+    }
+
+    /** Send current player, animal and item contacts to native scheduled pressure-plate checks. */
+    samplePlates():void{
+        const p=this.session.view.envelope?.state.progress;if(!p||this.platePending)return;
+        const entities:PlateEntity[]=p.sleep?[]:[{id:'player',living:true,bounds:playerBounds(this.scene.motion.feet,this.scene.motion.crouching)}];
+        for(const [id,animal] of this.scene.authored?.animals??[])entities.push({id:'animal:'+id,living:true,bounds:animal.bounds()});
+        const drops=[...(p.scenes[p.scene].agriculture?.drops??[]),...WORLD_SCENES[p.scene].nodes.filter(n=>n.kind==='egg'&&!p.world.visits[p.scene].removed.includes(n.id))];
+        for(const d of drops)entities.push({id:'item:'+d.id,living:false,bounds:[d.cell[0]+.375,d.cell[1],d.cell[2]+.375,d.cell[0]+.625,d.cell[1]+.25,d.cell[2]+.625]});
+        const blocks=p.scenes[p.scene].blocks??[],contacts=plateContacts(blocks,entities);
+        if(!contacts.length||contacts.every(c=>Number(blocks.find(b=>b.id===c.id)!.state.contacts??0)===c.count))return;
+        this.platePending=true;void this.run({type:'pressure-contacts',scene:p.scene,contacts},null).finally(()=>{this.platePending=false;});
     }
 
     /** Persist settled movement through the shared save lock, including gravity while non-pausing screens are open. */
@@ -340,8 +358,9 @@ export class WorldUse {
         const p = this.session.view.envelope?.state.progress;
         if (!p || p.sleep) return;
         if(hit.block==='straw_bed'||p.scenes[p.scene].blocks?.some(b=>b.id===hit.id&&b.block==='straw_bed')){
-            if(!shift||!p.player.data.hotbar[p.player.data.selected])void this.run({type:'use-bed',scene:p.scene,id:hit.id,feet:[...this.scene.motion.feet] as Cell},null);
+            if(!shift||!p.player.data.hotbar[p.player.data.selected])void this.run({type:'use-bed',scene:p.scene,id:hit.id,feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look?.yaw},null);
             else if(this.heldBlock())this.place(hit);
+            else this.inventory.autoEquip();
             return;
         }
         if(hit.id==='birthday-cake'){
@@ -361,7 +380,7 @@ export class WorldUse {
         }
         const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
         if(placed&&isCake(placed.block)&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
-        if(placed&&!shift&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
+        if(placed&&(!shift||!p.player.data.hotbar[p.player.data.selected])&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
         const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);
         if (found && attach && this.heldKind()) {
             this.place(this.attachHit(hit, above));

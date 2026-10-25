@@ -24,6 +24,7 @@ import {drawSprite} from './vanilla.ts';
 import {personalPreview} from './crafting-preview.ts';
 import type {CraftingPreview} from './crafting-preview.ts';
 import {InventoryInput} from './inventory-input.ts';
+import {drawIcon} from './icons.ts';
 import {layout} from '../domain/inventory.ts';
 import {reduceInventory} from '../domain/inventory.ts';
 import {PersonalCursor} from '../domain/personal-menu.ts';
@@ -140,7 +141,7 @@ export class GameInventory {
             ctx.imageSmoothingEnabled = false;
             const bg = art.images.get('assets/minecraft/textures/gui/sprites/container/creative_inventory/tab_top_unselected_1.png');
             if (bg) ctx.drawImage(bg, 0, 0, 28, 32);
-            ctx.drawImage(art.icons.get(item)!, 6, 9, 16, 16);
+            drawIcon(ctx,art.icons.get(item)!,6,9);
             button.append(icon);
             button.addEventListener('click', () => {
                 if (this.station) return;
@@ -545,7 +546,7 @@ export class GameInventory {
         if (!icon) throw Error('missing-native-icon:' + stack.id);
         context.imageSmoothingEnabled = this.art.kinds?.get(stack.id) === 'model';
         context.imageSmoothingQuality = 'high';
-        context.drawImage(locked ? this.masks.get(icon) : icon, x, y, 16, 16);
+        drawIcon(context,icon,x,y,16,locked?this.masks.get(icon):icon);
         context.imageSmoothingEnabled = false;
         if (stack.count > 1) {
             const text = String(stack.count);
@@ -1185,6 +1186,7 @@ export class GameInventory {
             crafting = structuredClone(this.value.crafting ?? Array(4).fill(null)),
             station = this.station ? structuredClone(this.station) : undefined, generation = this.generation,
             epoch = this.queueEpoch, personalEpoch = this.personal.epoch, ticket = {};
+        let showGhost=false;
         this.acquisition = ticket;
         this.modal.dataset.acquiring = 'true';
         this.pending++;
@@ -1194,7 +1196,7 @@ export class GameInventory {
         this.queue = this.queue.then(async () => {
             if (this.disposed || epoch !== this.queueEpoch || generation !== this.generation || personalEpoch !== this.personal.epoch) return;
             const result = await this.fill!(recipe, max, cursor, crafting, expected, station);
-            if (epoch === this.queueEpoch && generation === this.generation && !this.disposed) this.personal.commit(personalEpoch, result.cursor, result.crafting);
+            if (epoch === this.queueEpoch && generation === this.generation && !this.disposed){this.personal.commit(personalEpoch, result.cursor, result.crafting);showGhost=(result.workbench??result.machine?.slice(0,1)??result.crafting??[]).every(s=>!s);}
         }).catch(error => {
             if (epoch !== this.queueEpoch || generation !== this.generation || this.disposed) return;
             this.modal.dataset.fillError = error instanceof Error ? error.message : 'recipe-fill-failed';
@@ -1212,6 +1214,7 @@ export class GameInventory {
                     crafting: structuredClone(this.personal.crafting)
                 };
                 this.syncWorkbench();
+                if(showGhost&&epoch===this.queueEpoch&&generation===this.generation&&personalEpoch===this.personal.epoch)this.book?.showGhost(recipe);
                 this.draw();
             }
         });

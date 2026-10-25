@@ -26,7 +26,8 @@ import type {
 import {emptyWorld, validateWorld, harvestNode, plantCrop, harvestCrop} from './world-state.ts';
 import {WORLD_SCENES, sameCell, nodeAtCell, sourceOccupied} from './world-config.ts';
 import {tickHoppers, adjacentTransfer} from './hopper-network.ts';
-import {switchSound,tickButtons} from './redstone.ts';
+import {switchSound,tickButtons,openableSound,syncPoweredOpenables} from './redstone.ts';
+import {updatePlateContacts,tickPlates} from './pressure-plates.ts';
 import {useBed,leaveBed,tickBed} from './bed.ts';
 import {initialBook, validateBook, discover, BOOK_RECIPES, bookApplicable, fillOwnedRecipe} from './recipe-book.ts';
 import type {BookMode} from './recipe-book.ts';
@@ -308,8 +309,9 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
-        case 'use-bed': ensure(command.scene===p.scene,'wrong-scene');useBed(p,command.id,command.feet);break;
+        case 'use-bed': ensure(command.scene===p.scene,'wrong-scene');useBed(p,command.id,command.feet,command.yaw);break;
         case 'leave-bed': leaveBed(p,events);break;
+        case 'pressure-contacts': updatePlateContacts(p,command.scene,command.contacts,events);break;
         case 'till-soil': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
             till(p,command.cell,command.normal,p.player.data.hotbar[p.player.data.selected]);break;
@@ -363,7 +365,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         }
         case 'use-block': {
             ensure(command.scene===p.scene,'wrong-scene');const blocks=p.scenes[p.scene].blocks??[],b=blocks.find(b=>b.id===command.id);ensure(b,'block-unavailable');
-            if(['oak_door','oak_trapdoor','oak_fence_gate'].includes(b!.block)){const root=b!.pair??b!.id,value=String(b!.state.open!=='true');for(const part of blocks.filter(v=>v.id===root||v.pair===root))part.state.open=value;}
+            if(['oak_door','oak_trapdoor','oak_fence_gate'].includes(b!.block)){const root=b!.pair??b!.id,value=String(b!.state.open!=='true');for(const part of blocks.filter(v=>v.id===root||v.pair===root))part.state.open=value;events.push(openableSound(p.scene,b!));}
             else if(b!.block==='lever'){b!.state.powered=String(b!.state.powered!=='true');events.push(switchSound(p.scene,b!));}
             else if(b!.block.endsWith('_button')&&b!.state.powered!=='true'){b!.state.powered='true';b!.state.releaseTick=String(p.world.tick+(b!.block==='oak_button'?30:20));events.push(switchSound(p.scene,b!));}
             break;
@@ -468,6 +470,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if(control.stepTicks)control.stepTicks--;
                 p.world.tick++;
                 tickButtons(p,events);
+                tickPlates(p,events);syncPoweredOpenables(p,events);
                 p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
                 tickBed(p,events);
                 for(const {scene,crop} of tickAgriculture(p))dropCrop({...p,scene},crop,rules);
@@ -667,6 +670,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         }}
     }
     connectBlocks(p);
+    if(state.progress.scene!==p.scene)updatePlateContacts({...p,scene:state.progress.scene},state.progress.scene,[],events);
+    syncPoweredOpenables(p,events,command.type==='place-block'?command.id:'');
     validateState(next);
     return {state: freeze(next), events, inventory, receipt, transferred, console};
 }

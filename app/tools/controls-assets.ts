@@ -3,7 +3,8 @@ import {readClient} from './vanilla/zip.ts';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
-import {resourceId,resolveModel,resolveTexture} from '../web/src/render/model-format.ts';
+import {resourceId,resolveModel,resolveTexture,compileModel} from '../web/src/render/model-format.ts';
+import {nativeShapes} from '../web/src/domain/block-shapes.ts';
 /** Exact official source, ordinary tracked output, and reachable finite catalogue. */
 const root=resolve(import.meta.dirname,'../..'),out=resolve(root,'resources/minecraft/26.3'),jar=readClient(process.argv[2]),files=new Map<string,Buffer>(),ids:string[]=JSON.parse(readFileSync(resolve(root,'app/web/src/data/registry.json'),'utf8'));
 /** Digest exact bytes. @param {Uint8Array|string} bytes Source data. @return {string} SHA256. */
@@ -21,6 +22,7 @@ for(const block of [...blocks,'wall_torch','oak_wall_sign']){
     const loot='data/minecraft/loot_table/blocks/'+block+'.json';if(jar.has(loot))take(loot);
 }
 for(const id of ['entity/chest/normal','entity/chest/trapped'])texture(id);
+for(const id of ['campfire_cosy_smoke','campfire_signal_smoke']){const d=JSON.parse(take('assets/minecraft/particles/'+id+'.json').toString());for(const name of d.textures)texture('particle/'+name.replace('minecraft:',''));}
 for(const id of ['crosshair_attack_indicator_background','crosshair_attack_indicator_progress','crosshair_attack_indicator_full'])texture('gui/sprites/hud/'+id);
 for(const id of ['mineable/axe','mineable/pickaxe','mineable/shovel','mineable/hoe'])take('data/minecraft/tags/block/'+id+'.json');
 /** Fetch one locked official asset object. @param {string} url Source URL. @param {string} sha1 Expected SHA1. @return {Promise<Buffer>} Verified bytes. */
@@ -29,12 +31,30 @@ const lock=JSON.parse(readFileSync(resolve(root,'data/minecraft/26.3/source-lock
 /** Fetch an exact asset-index entry. @param {string} key Logical key. @return {Promise<Buffer>} Original bytes. */
 async function object(key:string):Promise<Buffer>{const o=index.objects[key];if(!o)throw Error('native-asset-key:'+key);return official('https://resources.download.minecraft.net/'+o.hash.slice(0,2)+'/'+o.hash,o.hash);}
 const soundSource=await object('minecraft/sounds.json'),sounds=JSON.parse(soundSource.toString()),soundEvents:Record<string,any>={},soundPaths=new Set<string>(),properties=JSON.parse(readFileSync(resolve(root,'app/web/src/data/block-properties.json'),'utf8'));
+/** Model-derived boxes match the renderer for colliding states without a native shape override. */
+const modelShapes:Record<string,unknown>={};
+for(const block of blocks){
+    if(!properties[block]?.collision||nativeShapes(block,{},true)!==null)continue;
+    const doc=JSON.parse(jar.get('assets/minecraft/blockstates/'+block+'.json')!.toString());
+    const parts=doc.multipart??Object.entries(doc.variants).map(([key,apply])=>({when:Object.fromEntries(key.split(',').filter(Boolean).map(term=>term.split('='))),apply}));
+    const rows=parts.map((part:any)=>{
+        const variant=Array.isArray(part.apply)?part.apply[0]:part.apply,source=resolveModel(variant.model,model);
+        const boxes=(source.elements??[]).map(element=>{
+            const positions=compileModel({...source,elements:[element]},variant).positions;
+            return [0,1,2].map(axis=>Math.min(...positions.filter((_,i)=>i%3===axis))).concat([0,1,2].map(axis=>Math.max(...positions.filter((_,i)=>i%3===axis)))).map(n=>Math.round(n*1e8)/1e8);
+        });return {when:part.when??{},boxes};
+    });
+    if(rows.some((r:any)=>r.boxes.length!==1||r.boxes[0].join(',')!=='0,0,0,1,1,1'))modelShapes[block]=rows;
+}
+writeFileSync(resolve(root,'app/web/src/data/block-model-shapes.json'),JSON.stringify(modelShapes)+'\n');
 /** Preserve original event references recursively. @param {string} id Sound event. */
 function event(id:string):void{if(soundEvents[id])return;const def=sounds[id];if(!def)throw Error('native-event:'+id);soundEvents[id]=def;for(const raw of def.sounds){if(typeof raw==='object'&&raw.type==='event')event(raw.name.replace('minecraft:',''));else soundPaths.add('minecraft/sounds/'+(typeof raw==='string'?raw:raw.name).replace('minecraft:','')+'.ogg');}}
 for(const family of new Set([...Object.values(properties).map((p:any)=>p.sound),'gravel']))for(const action of ['hit','break','place','step','fall'])event('block.'+family+'.'+action);
 event('entity.generic.eat');
 event('item.armor.equip_iron');
 for(const id of ['block.lever.click','block.wooden_button.click_on','block.wooden_button.click_off','block.stone_button.click_on','block.stone_button.click_off','block.straw_bed.break_leave'])event(id);
+for(const family of ['wooden_pressure_plate','stone_pressure_plate','metal_pressure_plate'])for(const action of ['click_on','click_off'])event('block.'+family+'.'+action);
+for(const family of ['wooden_door','iron_door','wooden_trapdoor','iron_trapdoor','fence_gate'])for(const action of ['open','close'])event('block.'+family+'.'+action);
 await Promise.all([...soundPaths].map(async p=>files.set('assets/'+p,await object(p))));files.set('assets/minecraft/controls-sounds.json',Buffer.from(JSON.stringify(soundEvents,null,2)+'\n'));
 const loots=Object.fromEntries(blocks.map(b=>[b,JSON.parse(jar.get('data/minecraft/loot_table/blocks/'+b+'.json')!.toString())]));writeFileSync(resolve(root,'app/web/src/data/placed-loot.json'),JSON.stringify(loots,null,2)+'\n');
 /** Expand native mineable tags. @param {string} id Block tag. @return {string[]} Native members. */
@@ -42,7 +62,7 @@ function tag(id:string):string[]{return JSON.parse(jar.get('data/minecraft/tags/
 writeFileSync(resolve(root,'app/web/src/data/mining-tags.json'),JSON.stringify(Object.fromEntries(['axe','pickaxe','shovel','hoe'].map(role=>[role,tag('mineable/'+role)])),null,2)+'\n');
 const existing=new Set<string>();for(const name of ['manifest','presentation-manifest','catalogue-manifest','player-manifest','book-manifest','experience-manifest','world-manifest','interaction-manifest','interface-manifest','environment-manifest','ambience-manifest','startup-manifest','advancement-manifest'])for(const e of JSON.parse(readFileSync(resolve(out,name+'.json'),'utf8')).entries)existing.add(e.entry);
 const entries=[...files].filter(([p])=>!existing.has(p)).sort(([a],[b])=>a.localeCompare(b)).map(([entry,b])=>{mkdirSync(dirname(resolve(out,entry)),{recursive:true});writeFileSync(resolve(out,entry),b);return {entry,size:b.length,sha256:hash(b)};});
-const classes=['client/player/FirstPersonHandsAndItems','client/renderer/FirstPersonHandsAndItemsRenderer','client/model/effects/SpearAnimations','client/multiplayer/ClientLevel','world/entity/player/Player','world/entity/LivingEntity','world/entity/ai/attributes/Attributes','world/item/Items','world/item/Item$Properties','world/item/BlockItem','world/level/block/CakeBlock','world/level/block/Blocks','world/level/block/BarrierBlock','world/level/block/SlabBlock','world/level/block/StairBlock','world/level/block/DoorBlock','world/level/block/TrapDoorBlock','world/level/block/AbstractBedBlock','world/level/block/StrawBedBlock','world/attribute/BedRule','world/attribute/BedRule$Rule','world/attribute/WeatherAttributes','server/level/ServerPlayer','server/level/ServerLevel','world/level/Level','world/level/SignalGetter','world/level/block/LeverBlock','world/level/block/ButtonBlock','world/level/block/state/properties/BlockSetType','world/level/block/FaceAttachedHorizontalDirectionalBlock','world/level/block/entity/HopperBlockEntity','world/level/block/state/BlockBehaviour$Properties','world/level/block/LadderBlock','world/level/block/LanternBlock','world/level/block/HopperBlock','world/level/block/SoundType','client/gui/Hud','client/renderer/LevelRenderer'];
-writeFileSync(resolve(out,'controls-manifest.json'),JSON.stringify({version:'26.3',clientSha1:'e877b6a07acd633fb3bb475002175cec036e7b87',source:'bounded native controls and reachable block placement',blocks,assetIndex:lock,soundsSha256:hash(soundSource),propertiesSha256:hash(readFileSync(resolve(root,'app/web/src/data/block-properties.json'),'utf8').replaceAll('\r\n','\n')),inputs:Object.fromEntries([...files].map(([p,b])=>[p,hash(b)])),entries,classes:Object.fromEntries(classes.map(p=>['net/minecraft/'+p+'.class',hash(jar.get('net/minecraft/'+p+'.class')!)])),exporterSha256:hash(readFileSync(import.meta.filename,'utf8').replaceAll('\r\n','\n'))},null,2)+'\n');
+const classes=['recipebook/ServerPlaceRecipe','world/level/block/BasePressurePlateBlock','world/level/block/PressurePlateBlock','world/level/block/WeightedPressurePlateBlock','world/level/block/FenceGateBlock','world/level/block/CampfireBlock','world/level/block/entity/CampfireBlockEntity','client/particle/CampfireSmokeParticle','client/particle/CampfireSmokeParticle$CosyProvider','client/particle/CampfireSmokeParticle$SignalProvider','client/particle/SingleQuadParticle','client/model/object/equipment/ShieldModel','client/model/geom/ModelPart$Cube','client/renderer/special/ShieldSpecialRenderer','client/player/FirstPersonHandsAndItems','client/renderer/FirstPersonHandsAndItemsRenderer','client/model/effects/SpearAnimations','client/multiplayer/ClientLevel','world/entity/player/Player','world/entity/LivingEntity','world/entity/ai/attributes/Attributes','world/item/Items','world/item/Item$Properties','world/item/BlockItem','world/level/block/CakeBlock','world/level/block/Blocks','world/level/block/BarrierBlock','world/level/block/SlabBlock','world/level/block/StairBlock','world/level/block/DoorBlock','world/level/block/TrapDoorBlock','world/level/block/AbstractBedBlock','world/level/block/StrawBedBlock','world/attribute/BedRule','world/attribute/BedRule$Rule','world/attribute/WeatherAttributes','server/level/ServerPlayer','server/level/ServerLevel','world/level/Level','world/level/BlockGetter','world/entity/vehicle/DismountHelper','world/level/SignalGetter','world/level/block/LeverBlock','world/level/block/ButtonBlock','world/level/block/state/properties/BlockSetType','world/level/block/FaceAttachedHorizontalDirectionalBlock','world/level/block/entity/HopperBlockEntity','world/level/block/state/BlockBehaviour$Properties','world/level/block/LadderBlock','world/level/block/LanternBlock','world/level/block/HopperBlock','world/level/block/SoundType','client/gui/Hud','client/renderer/LevelRenderer'];
+writeFileSync(resolve(out,'controls-manifest.json'),JSON.stringify({version:'26.3',clientSha1:'e877b6a07acd633fb3bb475002175cec036e7b87',source:'bounded native controls and reachable block placement',blocks,assetIndex:lock,soundsSha256:hash(soundSource),modelShapesSha256:hash(readFileSync(resolve(root,'app/web/src/data/block-model-shapes.json'),'utf8').replaceAll('\r\n','\n')),propertiesSha256:hash(readFileSync(resolve(root,'app/web/src/data/block-properties.json'),'utf8').replaceAll('\r\n','\n')),inputs:Object.fromEntries([...files].map(([p,b])=>[p,hash(b)])),entries,classes:Object.fromEntries(classes.map(p=>['net/minecraft/'+p+'.class',hash(jar.get('net/minecraft/'+p+'.class')!)])),exporterSha256:hash(readFileSync(import.meta.filename,'utf8').replaceAll('\r\n','\n'))},null,2)+'\n');
 writeFileSync(resolve(root,'app/web/src/data/placeable-blocks.json'),JSON.stringify(blocks,null,2)+'\n');
 console.log({blocks:blocks.length,entries:entries.length});

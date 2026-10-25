@@ -63,6 +63,18 @@ export function entityCube(box: number[], texture: string): CompiledModel {
     return out;
 }
 
+/** Draw a native icon with its original GUI scale, including special-model overhang outside a slot.
+ * @param {CanvasRenderingContext2D} context Target canvas.
+ * @param {HTMLCanvasElement} icon Cached icon and its logical transparent margin.
+ * @param {number} x Slot's icon origin.
+ * @param {number} y Slot's icon origin.
+ * @param {number} size Logical icon size.
+ * @param {HTMLCanvasElement} source Optional alpha-preserving tinted copy.
+ */
+export function drawIcon(context:CanvasRenderingContext2D,icon:HTMLCanvasElement,x:number,y:number,size=16,source=icon):void{
+    const padding=Number(icon.dataset?.nativePadding??0)*size/16;context.drawImage(source,x-padding,y-padding,size+padding*2,size+padding*2);
+}
+
 /** Load audited GUI/player dependencies and cache default-stack icons; failed resources remain explicit errors.
  * @param {Function} progress Optional actual dependency and rendered-model completion observer.
  * @return {Promise<CatalogueArt>} CPU caches with bounded GPU resources already released.
@@ -249,15 +261,18 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
         for (const {id, node} of tasks) {
             const parts = iconParts(node, date), group = new Group();
             try {
+                const padding=parts.some(p=>p.special?.type==='minecraft:shield')?4:0,extent=.5+padding/16,resolution=(16+padding*2)*16;
+                camera.left=camera.bottom=-extent;camera.right=camera.top=extent;camera.updateProjectionMatrix();renderer.setSize(resolution,resolution,false);
                 for (const p of parts) group.add(partGroup(p));
                 scene.add(group);
                 renderer.clear();
                 renderer.render(scene, camera);
                 const canvas = document.createElement('canvas');
-                canvas.width = canvas.height = 256;
+                canvas.width = canvas.height = resolution;
+                if(padding)canvas.dataset.nativePadding=String(padding);
                 const context = canvas.getContext('2d', {willReadFrequently: true})!;
                 context.drawImage(renderer.domElement, 0, 0);
-                const count = context.getImageData(0, 0, 256, 256).data.filter((v, i) => i % 4 === 3 && v > 0).length;
+                const count = context.getImageData(0, 0, resolution, resolution).data.filter((v, i) => i % 4 === 3 && v > 0).length;
                 if (!count) throw Error('empty-native-icon:' + id);
                 if (book.compassModels.includes(id)) {compassFrames.set(id, canvas); continue;}
                 icons.set(id, canvas);

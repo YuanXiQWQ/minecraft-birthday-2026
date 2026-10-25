@@ -21,6 +21,14 @@ export function interactionShapes(block:string,state:Record<string,string>):Boun
  * @return {Bounds[]|null} Unit-space voxel boxes.
  */
 export function nativeShapes(block:string,state:Record<string,string>,collision=false):Bounds[]|null{
+    if(block==='campfire')return [[0,0,0,1,7/16,1]];
+    if(block.endsWith('_door')||block.endsWith('_trapdoor')){
+        const trap=block.endsWith('_trapdoor');
+        if(trap&&state.open!=='true')return [state.half==='top'?[0,13/16,0,1,1,1]:[0,0,0,1,3/16,1]];
+        let facing=state.facing;
+        if(!trap&&state.open==='true'){const order=['north','east','south','west'];facing=order[(order.indexOf(facing)+(state.hinge==='right'?3:1))%4];}
+        return [facing==='north'?[0,0,13/16,1,1,1]:facing==='south'?[0,0,0,1,1,3/16]:facing==='west'?[13/16,0,0,1,1,1]:[0,0,0,3/16,1,1]];
+    }
     if(block==='wheat')return collision?[]:[[0,0,0,1,(2+Math.max(0,Math.min(7,Number(state.age)||0))*2)/16,1]];
     if(block.endsWith('_stairs')){
         const top=state.half==='top',boxes:Bounds[]=[top?[0,.5,0,1,1,1]:[0,0,0,1,.5,1]],f=state.facing,left=({north:'west',west:'south',south:'east',east:'north'} as Record<string,string>)[f],corner=state.shape?.endsWith('left')?left:({north:'east',east:'south',south:'west',west:'north'} as Record<string,string>)[f];

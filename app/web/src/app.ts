@@ -22,6 +22,7 @@ import {feedbackTransition, FAILURE_COLOR} from './ui/system-feedback.ts';
 import {harvestFeedback} from './ui/harvest-feedback.ts';
 import {BirthdayCelebration} from './celebration/birthday.ts';
 import {WorldUse} from './ui/world-use.ts';
+import {ActionBar,actionBarMessage} from './ui/action-bar.ts';
 import {SOUND_CHANNELS,type SoundKey} from './domain/audio-settings.ts';
 import {GameMusic} from './render/game-music.ts';
 import {NativeButtonSounds} from './ui/native-button-sounds.ts';
@@ -66,6 +67,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     let celebration: BirthdayCelebration | null = null, chat: GameChat | null = null, advancements:AdvancementView|null=null;
     let authorWelcome: AuthorWelcome | null = null;
     let sleepOverlay:HTMLDivElement|null=null;
+    let actionBar:ActionBar|null=null;
     const soundSliders=new Map<SoundKey,HTMLInputElement>();
     let menu: HTMLDialogElement | null = null, optionsPage = 'options';
     const languageChoices = new Map<string, HTMLButtonElement>();
@@ -123,12 +125,13 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         if (pixels) pixels.text(target, t(key, values), target.tagName === 'H1' ? 3 : 2, target.classList.contains('startup-error') ? FAILURE_COLOR : '#FFFFFF'); else target.textContent = t(key, values);
     }
 
-    /** Route actual feedback transitions to chat, buffering approved messages until the native chat is ready.
+    /** Route native bed notifications to the action bar and approved system messages to chat.
      * @param {string} key Localized event message.
      * @param {Record<string,string|number>} values Message parameters.
      * @param {string} boundary Optional state-transition deduplication boundary.
      */
     function feedback(key: string, values: Record<string,string|number> = {}, boundary = ''): void {
+        if(actionBarMessage(key)){actionBar?.show(key);return;}
         const disposition = feedbackTransition(feedbackStates, key, values, boundary);
         if (disposition === 'omit') return;
         if (chat) chat.append([{text: t(key,values), ...(disposition === 'failure' ? {color: FAILURE_COLOR} : {})}], 'system');
@@ -371,6 +374,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
      * @param {Snapshot} value Latest coordinated facts.
      */
     function reflect(value: Snapshot): void {
+        actionBar?.sync((value.envelope?.generation??'')+':'+(value.envelope?.state.progress.scene??''));
         if (inventory) inventory.writable = value.writable;
         if (value.envelope && runtimeGeneration !== value.envelope.generation) {
             runtimeGeneration = value.envelope.generation;
@@ -722,6 +726,8 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
             advancements=new AdvancementView(inventory,host,()=>updateGate(),id=>inventory?.book?.sound?.(id));
             inventory.bookCommand = command => session.dispatch(command);
             chat = new GameChat(host, pixels, t, () => session.view.envelope?.state.settings.username ?? 'sireoh', () => updateGate());
+            actionBar=new ActionBar(host,pixels,t);
+            actionBar.sync((session.view.envelope?.generation??'')+':'+(session.view.envelope?.state.progress.scene??''));
             chat.inputControls=controlSettings(session.view.envelope?.state.settings.controls);
             authorWelcome = new AuthorWelcome(chat, t, appAbort.signal);
             bindOddCakeRemarks(host,chat,t,appAbort.signal,()=>runtimeGeneration??'');
@@ -832,7 +838,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         appAbort.abort(); loading?.dispose(); startup?.dispose(); navigationPanel?.dispose(); homeButtonObserver?.disconnect(); localWeather?.dispose();
         window.removeEventListener('blur', cancelSettingsGesture);
         stopProcessing?.();
-        chat?.dispose();gameKeyboard?.dispose();
+        chat?.dispose();actionBar?.dispose();gameKeyboard?.dispose();
         advancements?.dispose();
         celebration?.dispose();
         worldUse?.dispose();

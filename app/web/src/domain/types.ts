@@ -113,8 +113,9 @@ export type Command =
     | {type:'place-block';scene:SceneId;item:string;hit:BlockHit;id:string;expected:PlayerLayout}
     | {type:'break-block';scene:SceneId;id:string;expected:PlayerLayout}
     | {type:'use-block';scene:SceneId;id:string}
-    | {type:'use-bed';scene:SceneId;id:string;feet:Cell}
+    | {type:'use-bed';scene:SceneId;id:string;feet:Cell;yaw?:number}
     | {type:'leave-bed'}
+    | {type:'pressure-contacts';scene:SceneId;contacts:{id:string;count:number}[]}
     | {type:'try-odd-cake-table';scene:SceneId;expected:PlayerLayout}
     | {type:'eat-cake';scene:SceneId;id:string;expectedBites:number}
     | { type: 'harvest-node'; scene: SceneId; node: string; visit: number; expected: PlayerLayout }

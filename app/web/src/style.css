@@ -172,3 +172,7 @@ html[data-cursor-changes=false] *,html[data-cursor-changes=false] *::before,html
 .sleep-overlay{position:absolute;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12%;background:rgb(20 20 40 / var(--sleep-shade,0));}
 .sleep-overlay[hidden]{display:none;}
 .sleep-overlay .mc-button{min-width:200px;}
+/* Native overlay text is centered above the hotbar and never captures world input. */
+.action-bar{position:absolute;left:50%;transform:translateX(-50%);z-index:5;pointer-events:none;}
+.action-bar[hidden]{display:none;}
+.action-bar canvas{display:block;}

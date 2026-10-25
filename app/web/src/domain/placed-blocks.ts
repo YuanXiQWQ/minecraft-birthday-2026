@@ -172,6 +172,7 @@ export function connectBlocks(p:Progress):void{
     for(const b of p.scenes[p.scene].blocks??[]){
         /** Query a cardinal neighbor. @param {string} d Direction. @return {ReturnType<typeof blockAt>} Neighbor state. */
         const neighbor=(d:string)=>{const v=direction(d);return blockAt(p,b.cell.map((n,i)=>n+v[i]) as Cell);};
+        if(b.block==='campfire'){b.state.signal_fire=String(neighbor('down')?.block==='hay_block');if(b.state.waterlogged==='true')b.state.lit='false';}
         if(/_wall$|_fence$|^iron_bars$/.test(b.block)){
             for(const d of ['north','east','south','west']){const n=neighbor(d),connected=!!n&&(fullBlock(n.block,n.state)||b.block.endsWith('_wall')&&n.block.endsWith('_wall')||b.block==='iron_bars'&&n.block==='iron_bars'||b.block.endsWith('_fence')&&n.block.endsWith('_fence')||n.block==='oak_fence_gate'&&(['north','south'].includes(n.state.facing)!==['north','south'].includes(d)));b.state[d]=b.block.endsWith('_wall')?(connected?'low':'none'):String(connected);}
             if(b.block.endsWith('_wall')){const n=b.state.north!=='none',s=b.state.south!=='none',e=b.state.east!=='none',w=b.state.west!=='none';b.state.up=String(!(n&&s&&!e&&!w||e&&w&&!n&&!s));}

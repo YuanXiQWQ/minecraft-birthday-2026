@@ -316,7 +316,7 @@ export function ownedRecipeGhost(recipe: Recipe, mode: BookMode, width: number, 
     return analysis;
 }
 
-/** Clear finite inputs and arrange one recipe atomically; repeated clicks add a batch and Shift fills the maximum.
+/** Return finite inputs before arranging a recipe; missing materials leave an empty grid for the ghost recipe.
  * @param {Recipe} recipe Native recipe.
  * @param {BookMode} mode Menu capability.
  * @param {number} width Input dimension.
@@ -324,13 +324,14 @@ export function ownedRecipeGhost(recipe: Recipe, mode: BookMode, width: number, 
  * @param {(Stack|null)[]} owned Mutable transaction-local 27+9 inventory.
  * @param {Rules} rules Native capacities and tags.
  * @param {boolean} max Fill the greatest bounded set supported by quantities.
- * @return {(Stack|null)[]} Finite filled inputs.
+ * @return {(Stack|null)[]} Finite filled inputs, or empty inputs when materials are missing.
  */
 export function fillOwnedRecipe(recipe: Recipe, mode: BookMode, width: number, current: (Stack | null)[], owned: (Stack | null)[], rules: Rules, max = false): (Stack | null)[] {
     const matches = mode === 'crafting' ? !!matchCrafting(recipe, current, width, width, rules)
         : !!current[0] && alternatives(recipe.ingredient!, rules.itemTags).includes(current[0].id);
     const amount = !max && matches ? Math.min(64, Math.min(...current.filter((s): s is Stack => !!s).map(s => s.count)) + 1) : 1;
-    if (!returnInputs(current, owned, rules)) throw Error('inventory-full');
+    const returned=returnInputs(current, owned, rules);
+    if (!returned) throw Error('inventory-full');
     let best: OwnedRecipeAnalysis | null = null;
     for (let level = amount; level <= 64; level++) {
         const result = analyzeOwnedRecipe(recipe, mode, width, current, owned, rules, level, false);
@@ -341,7 +342,8 @@ export function fillOwnedRecipe(recipe: Recipe, mode: BookMode, width: number, c
     }
     if (!best) {
         if (matches && !max) return structuredClone(current);
-        throw Error('recipe-materials-missing');
+        owned.splice(0,owned.length,...returned);
+        return current.map(()=>null);
     }
     owned.splice(0, owned.length, ...best.pool);
     return best.grid;

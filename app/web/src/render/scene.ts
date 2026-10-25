@@ -3,6 +3,7 @@ import {ActionKeys,KEY_BINDINGS,boundKey,controlSettings,lookSensitivity,type Co
 import {cropStage,soilAt} from '../domain/agriculture.ts';
 import {currentFarm} from '../domain/farm-shape.ts';
 import {BlockFeedback} from './block-feedback.ts';
+import {CampfireSmoke} from './campfire-smoke.ts';
 import {blockAt} from '../domain/placed-blocks.ts';
 import {attackProfile} from '../domain/attack.ts';
 import {nativeShapes,interactionShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
@@ -108,6 +109,7 @@ export class SceneView {
     weather:NativeWeather|null=null;
     onEnvironmentFrame:((now:number)=>void)|null=null;
     environmentProgress: Progress | null = null;
+    campfireSmoke:CampfireSmoke|null=null;
     skyBaseColors = new WeakMap<object, Color>();
     skySettings: SkySettings = {time:'game',weather:'game'};
     ray = new Raycaster();
@@ -197,6 +199,7 @@ export class SceneView {
         canvas.dataset.resourceVersion = '26.3';
         host.append(canvas);
         this.models = new VanillaModels(pack);
+        if(game){this.campfireSmoke=new CampfireSmoke(pack);this.scene.add(this.campfireSmoke.root);}
         this.blockLight=new BlockLight();for(const material of this.models.materials.values())this.blockLight.bind(material);
         if (game) this.feedbackEffects = new BlockFeedback(pack, this.models, this.scene, this.camera, this.blockLight);
         this.scene.background = new Color(game ? '#617C7B' : '#9BAFA0');
@@ -528,7 +531,11 @@ export class SceneView {
             const d=({north:[0,0,-1],south:[0,0,1],east:[1,0,0],west:[-1,0,0]} as Record<string,number[]>)[bed.state.facing];
             this.camera.position.set(bed.cell[0]+.5,bed.cell[1]+.65,bed.cell[2]+.5);
             this.camera.lookAt(bed.cell[0]+.5-d[0],bed.cell[1]+.8,bed.cell[2]+.5-d[2]);this.camera.updateMatrixWorld(true);
-        }else if(wasSleeping&&!this.presentationOnly){this.camera.rotation.set(this.look.pitch,this.look.yaw,0,'YXZ');this.requestRender();}
+        }else if(wasSleeping&&!this.presentationOnly){
+            const pose=p.scenes[p.scene].pose;
+            if(pose){this.motion.reset([pose.feet[0],pose.feet[1]+PLAYER_PHYSICS.eye,pose.feet[2]]);this.previousFeet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.position.set(pose.feet[0],pose.feet[1]+PLAYER_PHYSICS.eye,pose.feet[2]);}
+            this.camera.rotation.set(this.look.pitch,this.look.yaw,0,'YXZ');this.requestRender();
+        }
         this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);this.playerView?.sync(p.player.data);
         this.refreshHover();
         this.requestRender();
@@ -640,7 +647,8 @@ export class SceneView {
      */
     advancePlayer(now:number):void{
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
-        if(this.presentationOnly||!this.authored||this.simulationPaused||this.environmentProgress?.sleep||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
+        if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
+        if(this.environmentProgress?.sleep){this.onPlayerTick?.();this.motionRemainder=0;return;}
         this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
         while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump});
             if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.onPlayerTick?.();this.playMovement();
@@ -826,6 +834,7 @@ export class SceneView {
                 this.weather?.update(ticks,p.scene,camera.position.toArray(),this.precipitation.heights,weather);this.sky.flash=!!this.weather&&this.weather.flashUntil>=Math.floor(ticks);this.onEnvironmentFrame?.(start);weatherEnd();
             }
             this.updateDebris(start);
+            if(this.environmentProgress&&this.campfireSmoke){this.campfireSmoke.update(start,this.environmentProgress,this.collision,this.simulationPaused||document.hidden);this.renderer.domElement.dataset.campfireSmoke=JSON.stringify({count:this.campfireSmoke.particles.length,signal:this.environmentProgress.scenes[this.environmentProgress.scene].blocks?.filter(b=>b.block==='campfire'&&b.state.signal_fire==='true').length??0});}
             const end = timing('cpu-render-submit'),
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
             const resetInfo = this.renderer.info.autoReset;
@@ -889,6 +898,7 @@ export class SceneView {
         if (this.disposed) return;
         this.controlsAbort.abort();this.hand?.dispose();this.playerView?.dispose();this.showOutline(null);
         this.blockLight?.dispose();this.movementSound=null;
+        this.campfireSmoke?.dispose();
         this.mode?.dispose();
         this.sky?.dispose(); this.precipitation?.dispose();this.weather?.dispose();this.onEnvironmentFrame=null;
         this.disposed = true;
