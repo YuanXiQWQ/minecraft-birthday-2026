@@ -92,6 +92,15 @@ test('PixelUI refresh paints both existing label and existing sprite without cre
  const ui=Object.create(PixelUI.prototype),b={} as HTMLElement,calls:string[]=[];Object.assign(ui,{updates:new Map([[b,()=>calls.push('label')]]),buttonPaints:new Map([[b,()=>calls.push('sprite')]])});ui.refreshButton(b);assert.deepEqual(calls,['label','sprite']);
 });
 
+test('pause menu has a full-width return row, advancements/options pair and full-width quit row',()=>{
+ Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '1'})});
+ const h=screenHarness();h.screen.page=()=> 'pause';h.screen.plane.querySelector=()=>({style:{}});h.screen.plane.querySelectorAll=(selector:string)=>selector==='button'?h.buttons:[];h.screen.layout();
+ assert.match(h.buttons[0].style.cssText,/left:98px;top:80px;width:204px/);
+ assert.match(h.buttons[1].style.cssText,/left:98px;top:104px;width:98px/);
+ assert.match(h.buttons[2].style.cssText,/left:204px;top:104px;width:98px/);
+ assert.match(h.buttons[3].style.cssText,/left:98px;top:128px;width:204px/);
+});
+
 for(const page of ['language','sound','player','weather'])test('formal '+page+' settings paint native list background and both separators',()=>{
  Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '1'})});
  Object.defineProperty(globalThis,'DOMMatrix',{configurable:true,value:class{scale(){return this;}}});

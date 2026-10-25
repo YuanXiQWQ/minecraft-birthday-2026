@@ -159,6 +159,7 @@
   "chat.welcome.scenes": "如果你需要切换场景，只需要打开背包或暂停唤出鼠标，然后点击页面顶部的场景按钮就好了！当然，你也可以用 /tp 指令！ 打开 F11 全屏会更好，不然键位可能会与浏览器快捷键冲突 :>",
   "menu.title": "游戏菜单",
   "menu.back": "回到游戏",
+  "menu.advancements": "进度",
   "menu.options": "选项…",
   "menu.quit": "保存并退回到标题屏幕",
   "menu.language": "语言…",

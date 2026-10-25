@@ -71,9 +71,9 @@ export class NativeScreens {
         if(page==='pause'){
             const title=this.plane.querySelector('h2')!,buttons=[...this.plane.querySelectorAll('button')];this.place(title,0,40,w,9);
             const groupWidth=Math.min(204,w-16),left=(w-groupWidth)/2,columnWidth=(groupWidth-8)/2,
-                gridHeight=50+44,
+                gridHeight=50+68,
                 top=Math.max(layout.titleY+14,Math.floor((h-gridHeight)*.25)+50);
-            buttons.forEach((b,i)=>{this.place(b,left+(i===1?columnWidth+8:0),top+(i<2?0:(i-1)*24),i<2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
+            buttons.forEach((b,i)=>{this.place(b,left+(i===2?columnWidth+8:0),top+(i===0?0:i<3?24:48),i===1||i===2?columnWidth:groupWidth);this.pixels.refreshButton(b);});return;
         }
         if (['language','sound','player','weather'].includes(page)) {
             const image=this.pixels.resources.guiImages.get('assets/minecraft/textures/gui/inworld_menu_list_background.png');

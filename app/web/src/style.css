@@ -110,11 +110,12 @@ header{position:absolute;top:0;right:0;z-index:2;display:flex;justify-content:fl
 .scene-panel .recipe-toast{position:absolute;top:0;right:0;image-rendering:pixelated}
 /* Native advancement coordinates and shared toast rows stay inside the game viewport. */
 .advancements-screen{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;box-shadow:none;background:#0008;overflow:hidden;z-index:28}
-.advancements-screen>canvas,.advancement-controls{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);image-rendering:pixelated}
+.advancements-screen>canvas,.advancement-controls{position:absolute;left:0;top:0;image-rendering:pixelated}
 .advancement-controls{pointer-events:none;overflow:visible}.advancement-controls>button{position:absolute;margin:0;padding:0;border:0;background:transparent;min-width:0;min-height:0;pointer-events:auto}
 .advancement-controls>button:focus-visible{outline:1px solid white;outline-offset:-2px}
 .scene-panel .advancement-toast{position:absolute;right:0;z-index:30;pointer-events:none;image-rendering:pixelated}
-.advancement-screen-title,.advancement-done{position:absolute;left:50%;transform:translateX(-50%)}.advancements-screen .advancement-screen-title{image-rendering:pixelated}
+.advancement-screen-title,.advancement-done{position:absolute}.advancements-screen .advancement-screen-title{image-rendering:pixelated;pointer-events:none}
+.game:has(.advancements-screen[open])>.world-navigation{visibility:hidden;pointer-events:none}
 .advancement-done{margin:0;padding:0;border:0;background:transparent;min-width:0;min-height:0}.advancement-done>canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
 .native-screen .native-text-field>input,.native-screen .native-slider>input{height:100%}.native-screen-plane>section>p[role=status]{position:absolute;left:10px;top:156px;width:600px}
 .native-screen .mc-button:disabled{opacity:1}

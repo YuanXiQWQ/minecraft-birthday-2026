@@ -498,7 +498,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
         dialog.replaceChildren(dialogTitle, optionNavigation, languageSection, soundSection, playerSection, weatherSection, preferenceFeedback, warning, reset, confirmSection, resetFeedback, close);
 
         menu = document.createElement('dialog'); menu.className = 'game-menu'; menu.id = 'game-menu';
-        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
+        menu.append(node('h2', 'menu.title'), button('menu.back', () => {menu!.close(); updateGate();}), button('menu.advancements', () => {advancements?.open(()=>openMenu());menu!.close();}), button('menu.options', () => {menu!.close(); settings.click();}), button('menu.quit', () => {void quitToTitle();}));
         host.append(menu);
         menu.addEventListener('close', () => updateGate());
         for (const view of [menu, dialog]) {
@@ -549,7 +549,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
 
     /** Return visible carriers before teleporting to a scene and announcing the committed destination. @param {SceneId} id Target scene. */
     async function navigateScene(id: SceneId): Promise<void> {
-        advancements?.close();
+        advancements?.close(false);
         const owner = session.view.envelope?.generation, from = session.view.envelope?.state.progress.scene;
         if (inventory && !await inventory.close()) return;
         if (inventory) await inventory.queue;
@@ -724,7 +724,7 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
     };
     window.addEventListener('pageshow', show);
     window.addEventListener('pagehide', event => {
-        advancements?.close();advancements?.clearToasts();
+        advancements?.close(false);advancements?.clearToasts();
         edits.cancel();
         music?.cancel();
         scene?.cancel();

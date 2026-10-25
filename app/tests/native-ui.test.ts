@@ -144,11 +144,11 @@ test('actual RecipeBookView.paint transforms button and icon together, tab verti
 });
 
 
-test('full-height pause screen pairs Back and Options, with full-span quit and retained title clearance',()=>{
+test('full-height pause screen has full-span Back and Quit around the Advancements/Options row',()=>{
     const savedStyle=Object.getOwnPropertyDescriptor(globalThis,'getComputedStyle');
     Object.defineProperty(globalThis,'getComputedStyle',{configurable:true,value:()=>({getPropertyValue:()=> '4'})});
     try {
-        const title={style:{cssText:''}},buttons=Array.from({length:3},()=>({style:{cssText:''}}));
+        const title={style:{cssText:''}},buttons=Array.from({length:4},()=>({style:{cssText:''}}));
         const screen=Object.create(NativeScreens.prototype);
         Object.assign(screen,{viewport:{clientWidth:1440,clientHeight:900},page:()=> 'pause',controls:null,
             dialog:{dataset:{}},pixels:{texts:new Map(),resources:{guiImages:new Map()},refreshButton(){}},
@@ -156,11 +156,10 @@ test('full-height pause screen pairs Back and Options, with full-span quit and r
             background:{getContext:()=>({setTransform(){},imageSmoothingEnabled:false})}});
         screen.layout();
         assert.match(title.style.cssText,/top:160px/);
-        assert.match(buttons[0].style.cssText,/top:328px/);
-        assert.match(buttons[1].style.cssText,/left:736px;top:328px;width:392px/);
-        assert.match(buttons[2].style.cssText,/top:424px/);
-        assert.match(buttons[0].style.cssText,/left:312px;.*width:392px/);
-        assert.match(buttons[2].style.cssText,/left:312px;.*width:816px/);
+        assert.match(buttons[0].style.cssText,/left:312px;top:304px;width:816px/);
+        assert.match(buttons[1].style.cssText,/left:312px;top:400px;width:392px/);
+        assert.match(buttons[2].style.cssText,/left:736px;top:400px;width:392px/);
+        assert.match(buttons[3].style.cssText,/left:312px;top:496px;width:816px/);
         assert.doesNotMatch(screen.plane.style.cssText,/transform:scale|zoom:/);
         assert.equal(screen.dialog.dataset.nativePage,'pause');
     } finally {if(savedStyle)Object.defineProperty(globalThis,'getComputedStyle',savedStyle);else Reflect.deleteProperty(globalThis,'getComputedStyle');}

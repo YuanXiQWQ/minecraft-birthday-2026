@@ -159,6 +159,7 @@
   "chat.welcome.scenes": "If you need to switch scenes, open your inventory or pause to release the cursor, then click a scene button at the top of the page! Of course, you can also use the /tp command! Press F11 for fullscreen for a better experience; otherwise, the controls may conflict with browser shortcuts :>",
   "menu.title": "Game Menu",
   "menu.back": "Back to Game",
+  "menu.advancements": "Advancements",
   "menu.options": "Options...",
   "menu.quit": "Save and Quit to Title",
   "menu.language": "Language...",
