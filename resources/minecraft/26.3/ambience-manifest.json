@@ -16,13 +16,14 @@
     "entity.lightning_bolt.thunder",
     "entity.lightning_bolt.impact",
     "music.game",
-    "ui.button.click"
+    "ui.button.click",
+    "block.campfire.crackle"
   ],
   "entries": [
     {
       "entry": "assets/minecraft/ambience-sounds.json",
-      "size": 4259,
-      "sha256": "f884e4aaa4eb54541249737c00c4acb8b85f5f15901c420323a3f9a7ae4a95cd"
+      "size": 4565,
+      "sha256": "50ae0be46d5d4fee619db4ec13514ce496909fef1de9d40fd5512287a267a033"
     },
     {
       "entry": "assets/minecraft/sounds/ambient/weather/rain1.ogg",
@@ -89,6 +90,42 @@
       "size": 45050,
       "sha256": "65acefae26577d5aad581bc6659021c0b5f7228fd897d4f996bb47bb9fad6253",
       "assetSha1": "7b96a88619a2228cf4c7d3a2b81ecfd1b3b56673"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle1.ogg",
+      "size": 33524,
+      "sha256": "0ce156803fd6045ac16f2b3a3bc3691d8531c5dd12ed05fe60282eeb6d410d3a",
+      "assetSha1": "5edb78c26e7c33f3b063ac681edd7b61dd3381a0"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle2.ogg",
+      "size": 30073,
+      "sha256": "a298a34170cbeef53bf0c383b02c85490a077e95236c1e6b86012aa9d6d704a3",
+      "assetSha1": "2af9e14d4d56044ab96b5fed96a4af261eb230d2"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle3.ogg",
+      "size": 34248,
+      "sha256": "35cf02a2fa7984ec6c5a2ac07e4b87475c20513a24ee670229c78c7dcf4c09df",
+      "assetSha1": "cb437915751e333e7054a2deb4e449612ae353dd"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle4.ogg",
+      "size": 21046,
+      "sha256": "22e83984be5741c50d1f0433d38795c69966bd20bfd1daaa0e1bbe5410633a3d",
+      "assetSha1": "f6824f8bedd23384944188bf00f9bcb91c6ca759"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle5.ogg",
+      "size": 24027,
+      "sha256": "366a9f2b48a061a5b3acaa9f5984ffb77f1fdfb7c56a45b6557694f839219760",
+      "assetSha1": "40a50a72c02cd6b80815c5e9fe7c225cfab2f48b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/block/campfire/crackle6.ogg",
+      "size": 22977,
+      "sha256": "53d589bca5917c21bf1186f1e737b0a5c9228a3c6797ce0c40126c6fdd43d1fe",
+      "assetSha1": "46169daee2ece0a3d3018578c80e8d175d48d49e"
     },
     {
       "entry": "assets/minecraft/sounds/music/game/a_familiar_room.ogg",

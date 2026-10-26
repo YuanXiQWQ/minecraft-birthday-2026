@@ -1,4 +1,4 @@
-"""Extract the bounded original game-music and weather audio dependencies from the locked official asset index."""
+"""Extract bounded original music, weather and campfire audio from the locked official asset index."""
 import hashlib,json,urllib.request
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
@@ -7,8 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT=Path(__file__).resolve().parents[2]
 # Ordinary runtime resources are kept inside the versioned repository directory.
 OUT=ROOT/'resources/minecraft/26.3'
-# Only actually implemented native music, weather and button events are extracted.
-EVENTS=['weather.rain','weather.rain.above','entity.lightning_bolt.thunder','entity.lightning_bolt.impact','music.game','ui.button.click']
+# Only actually implemented native music, weather, campfire and button events are extracted.
+EVENTS=['weather.rain','weather.rain.above','entity.lightning_bolt.thunder','entity.lightning_bolt.impact','music.game','ui.button.click','block.campfire.crackle']
 
 def fetch(url,sha1):
     """Read original bytes and reject an object that does not match the official digest."""

@@ -27,6 +27,7 @@ import {SOUND_CHANNELS,type SoundKey} from './domain/audio-settings.ts';
 import {GameMusic} from './render/game-music.ts';
 import {NativeButtonSounds} from './ui/native-button-sounds.ts';
 import {WorldAudio} from './render/world-audio.ts';
+import {CampfireAudio} from './render/campfire-audio.ts';
 import {WORLD_REGION, WORLD_SCENES} from './domain/world-config.ts';
 import type {SceneId} from './domain/types.ts';
 import {ControlSettingsUI} from './ui/control-settings.ts';
@@ -775,9 +776,10 @@ export async function mount(page: 'home' | 'game', locale: Dictionary = {}, load
                 }
             });
             music=new GameMusic(worldAudio);
+            const campfireAudio=new CampfireAudio(worldAudio,()=>!disposed&&!session.suspended&&scene&&!scene.disposed&&!scene.lost&&!scene.simulationPaused&&!document.hidden?scene.environmentProgress:null);
             scene.movementSound=(id,options)=>{void worldAudio?.play(id,options);};
             if(scene.weather)scene.weather.sound=(id,options)=>{void worldAudio?.play(id,options);};
-            scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.audioLoad=JSON.stringify({voices:worldAudio?.voices.size,decoding:worldAudio?.loading.size});host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
+            scene.onEnvironmentFrame=now=>{worldAudio?.listener(scene!.camera.position.toArray(),scene!.camera.getWorldDirection(listenerDirection).toArray());music?.update(now);campfireAudio.update(now,scene!.camera.position.toArray());if(now-lastAudioReport>250){lastAudioReport=now;host.dataset.environmentAudio=JSON.stringify(worldAudio?.records);host.dataset.audioLoad=JSON.stringify({voices:worldAudio?.voices.size,decoding:worldAudio?.loading.size});host.dataset.music=JSON.stringify({pending:music?.pending,playing:!!music?.media&&!music.media.paused,time:music?.media?.currentTime??0,delay:music?.delay,track:music?.track,gain:music?.gain?.gain.value??0,context:worldAudio?.context?.state});}};
             inventory.book!.sound = id => {const owner = runtimeGeneration; void worldAudio?.play(id).then(status => {if (disposed || owner !== runtimeGeneration) return; host.dataset.uiAudio = JSON.stringify(worldAudio?.records); if (!['scheduled','suppressed','cancelled'].includes(status)) feedback(status === 'blocked' ? 'audio.uiBlocked' : 'audio.uiFailed', {}, 'ui-audio');});};
             host.addEventListener('pointerdown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
             host.addEventListener('keydown', () => worldAudio?.activate(), {capture: true, signal: appAbort.signal});
