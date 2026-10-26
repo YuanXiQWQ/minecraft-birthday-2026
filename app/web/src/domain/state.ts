@@ -1,4 +1,7 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {handStack,setHandStack} from './hands.ts';
+import {hurtAnimal} from './spear-combat.ts';
+import {spearProfile} from './item-use.ts';
 import {containerDevice,isStorage,validateStorage,reduceStorageInventory,pairChest,reconcileChests,canOpenStorage} from './storage.ts';
 import type {ContainerDevice} from './storage.ts';
 import {agriculture,soilAt,till,trample,tickAgriculture,cropStage,canPickup} from './agriculture.ts';
@@ -241,7 +244,9 @@ export function validateState(value: unknown): asserts value is State {
     const ids = new Set<string>();
     for (const id of SCENES) {
         const scene = p.scenes[id];
-        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[]),...(Object.hasOwn(scene,'agriculture')?['agriculture']:[])]);
+        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'animalVitals')?['animalVitals']:[]),...(Object.hasOwn(scene,'chickens')?['chickens']:[]),...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[]),...(Object.hasOwn(scene,'agriculture')?['agriculture']:[])]);
+        if(scene.animalVitals){ensure(typeof scene.animalVitals==='object'&&!Array.isArray(scene.animalVitals)&&Object.keys(scene.animalVitals).length<=515);for(const [key,v] of Object.entries(scene.animalVitals)){fields(v,['health','lastDamage','hurtAt']);ensure((id==='farm'&&['node:cow:0','animal:chicken:0','animal:chicken:1'].includes(key)||scene.chickens?.some((c:{id:string})=>'hatched:'+c.id===key))&&Number.isFinite(v.health)&&v.health>=0&&v.health<=(key==='node:cow:0'?10:4)&&Number.isFinite(v.lastDamage)&&v.lastDamage>=0&&Number.isSafeInteger(v.hurtAt)&&v.hurtAt>=0&&v.hurtAt<=p.world.tick);}}
+        if(scene.chickens){ensure(Array.isArray(scene.chickens)&&scene.chickens.length<=512);const chickenIds=new Set<string>();for(const c of scene.chickens){fields(c,['id','feet','born']);ensure(typeof c.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(c.id)&&!chickenIds.has(c.id)&&Array.isArray(c.feet)&&c.feet.length===3&&c.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isSafeInteger(c.born)&&c.born>=0&&c.born<=p.world.tick);chickenIds.add(c.id);}}
         ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
         if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
         if(scene.agriculture){
@@ -311,12 +316,36 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     let console:CommandFeedback[]|undefined;
     const acquiredRecipes: string[] = [];
     switch (command.type) {
+        case 'wear-shield': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data)&&Number.isSafeInteger(command.amount)&&command.amount>=0&&command.amount<=10000,'invalid-shield-wear');
+            const held=handStack(p.player.data,command.hand);ensure(held?.id==='minecraft:shield','shield-not-held');if(!command.amount)break;
+            const damage=Number(held.components?.['minecraft:damage']??0)+command.amount;setHandStack(p.player.data,command.hand,damage>=336?null:{...held,components:{...held.components,'minecraft:damage':damage}});break;
+        }
+        case 'animal-hit': {
+            ensure(command.scene===p.scene&&Number.isFinite(command.damage)&&command.damage>=0&&command.damage<=10000,'invalid-animal-hit');
+            const scene=p.scenes[p.scene],id=command.id;ensure(p.scene==='farm'&&['node:cow:0','animal:chicken:0','animal:chicken:1'].includes(id)||scene.chickens?.some(c=>'hatched:'+c.id===id),'unknown-animal');
+            const held=handStack(p.player.data,command.hand);if(command.weapon)ensure(held?.id===command.weapon&&spearProfile(command.weapon),'weapon-changed');else ensure(command.damage===0,'invalid-egg-damage');
+            const vitals=scene.animalVitals??={},prior=vitals[id]??{health:id==='node:cow:0'?10:4,lastDamage:0,hurtAt:-20},result=hurtAnimal(prior,command.damage,p.world.tick);
+            if(result.accepted){vitals[id]=result.vitals;events.push({type:'animal-hurt',entity:id,fullHurt:result.full});}
+            if(command.weapon&&held&&rules){const max=rules.items[held.id].maxDamage!,damage=Number(held.components?.['minecraft:damage']??0)+1;setHandStack(p.player.data,command.hand,damage>=max?null:{...held,components:{...held.components,'minecraft:damage':damage}});}
+            break;
+        }
+        case 'throw-egg': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            const held=handStack(p.player.data,command.hand);ensure(held?.id==='minecraft:egg','egg-not-held');
+            setHandStack(p.player.data,command.hand,held.count>1?{...held,count:held.count-1}:null);break;
+        }
+        case 'hatch-eggs': {
+            ensure(command.scene===p.scene&&[1,4].includes(command.count),'invalid-hatch');
+            const chickens=p.scenes[p.scene].chickens??=[];
+            for(let i=0;i<command.count;i++)chickens.push({id:command.id+'_'+i,feet:[...command.feet],born:p.world.tick});break;
+        }
         case 'use-bed': ensure(command.scene===p.scene,'wrong-scene');useBed(p,command.id,command.feet,command.yaw);break;
         case 'leave-bed': leaveBed(p,events);break;
         case 'pressure-contacts': updatePlateContacts(p,command.scene,command.contacts,events);break;
         case 'till-soil': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
-            till(p,command.cell,command.normal,p.player.data.hotbar[p.player.data.selected]);break;
+            till(p,command.cell,command.normal,handStack(p.player.data,command.hand));break;
         }
         case 'land-on-soil': {
             ensure(command.scene===p.scene&&rules,'wrong-scene');
@@ -338,14 +367,14 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'save-pose':ensure(command.scene===p.scene,'wrong-scene');p.scenes[p.scene].pose=structuredClone(command.pose);break;
         case 'place-block': {
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
-            const stack=p.player.data.hotbar[p.player.data.selected];ensure(stack?.id===blockItem(command.item),'inventory-conflict');
+            const stack=handStack(p.player.data,command.hand);ensure(stack?.id===blockItem(command.item),'inventory-conflict');
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
             for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);pairChest(p,block,command.hit);}
-            p.player.data.hotbar[p.player.data.selected]=stack!.count>1?{...stack!,count:stack!.count-1}:null;break;
+            setHandStack(p.player.data,command.hand,stack!.count>1?{...stack!,count:stack!.count-1}:null);break;
         }
         case 'try-odd-cake-table': {
             ensure(command.scene==='home'&&p.scene==='home'&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
-            ensure(p.player.data.hotbar[p.player.data.selected]?.id===ODD_CAKE,'cake-not-held');
+            ensure(handStack(p.player.data,command.hand)?.id===ODD_CAKE,'cake-not-held');
             if(!p.oddCakeTableTried){p.oddCakeTableTried=true;events.push({type:'odd-cake-table-tried'});}
             break;
         }
@@ -508,16 +537,16 @@ export function transition(state: State, command: Command, policy?: PlacementPol
         case 'harvest-crop': {
             ensure(rules, 'native-rules-unavailable');
             ensure(identity(command.expected) === identity(p.player.data), 'inventory-conflict');
-            const held = p.player.data.hotbar[p.player.data.selected];
+            const held = handStack(p.player.data,command.type==='plant-crop'||command.type==='harvest-node'&&command.node==='cow:0'?command.hand:undefined);
             let drops: Stack[] = [];
             if (command.type === 'harvest-node') drops = harvestNode(p, command.scene, command.node, command.visit, held, rules);
-            else if (command.type === 'plant-crop') plantCrop(p, command.cell, command.id, held);
+            else if (command.type === 'plant-crop') plantCrop(p, command.cell, command.id, held,command.hand);
             else drops = harvestCrop(p, command.id, rules);
             if (command.type === 'harvest-node' && command.node === 'cow:0') {
                 const converted = structuredClone(drops);
                 ensure(held?.id === rules.interactions.milk.input, 'milk-requires-bucket');
-                if (held.count === 1) {p.player.data.hotbar[p.player.data.selected] = structuredClone(drops[0]); drops = [];}
-                else p.player.data.hotbar[p.player.data.selected] = {...held, count: held.count - 1};
+                if (held.count === 1) {setHandStack(p.player.data,command.hand,structuredClone(drops[0])); drops = [];}
+                else setHandStack(p.player.data,command.hand,{...held, count: held.count - 1});
                 const carriers = {...p.player.data, cursor: null};
                 for (const drop of drops) {
                     const source = {stack: structuredClone(drop) as Stack | null, policy: {take: true, place: false}};
@@ -597,7 +626,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             teleportScene(p, command.scene);
             break;
         case 'put-station':
-            if (command.expected) ensure(command.scene === p.scene && identity(command.expected) === identity(p.player.data) && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:' + command.station.kind, 'inventory-conflict');
+            if (command.expected) ensure(command.scene === p.scene && identity(command.expected) === identity(p.player.data) && handStack(p.player.data,command.hand)?.id === 'minecraft:' + command.station.kind, 'inventory-conflict');
             ensure(SCENES.includes(command.scene));
             station(command.station, p.unlocked);
             ensure(policy?.allows(command.scene, command.station), 'placement-policy-pending');
@@ -612,8 +641,8 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                     ensure(!sourceOccupied({...p, scene: command.scene}, command.station.cell), 'occupied-resource');
                 }
                 if (command.expected) {
-                    const stack = p.player.data.hotbar[p.player.data.selected]!;
-                    p.player.data.hotbar[p.player.data.selected] = stack.count > 1 ? {...stack, count: stack.count - 1} : null;
+                    const stack = handStack(p.player.data,command.hand)!;
+                    setHandStack(p.player.data,command.hand,stack.count > 1 ? {...stack, count: stack.count - 1} : null);
                 }
                 list.push(structuredClone(command.station));
             } else {
@@ -652,9 +681,9 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(command.scene === 'home' && command.table === 'birthday-table' && p.scene === 'home' && p.unlocked.includes('minecraft:cake'), 'invalid-cake-placement');
             if (!p.cakePlacement || p.cakePlacement.bites===7) {
                 const firstPlacement=!p.cakePlacement;
-                const held = p.player.data.hotbar[p.player.data.selected];
+                const held = handStack(p.player.data,command.hand);
                 ensure(held?.id === 'minecraft:cake' && held.count > 0, 'cake-not-held');
-                p.player.data.hotbar[p.player.data.selected] = held.count > 1 ? {...held, count: held.count - 1} : null;
+                setHandStack(p.player.data,command.hand,held.count > 1 ? {...held, count: held.count - 1} : null);
                 p.cakePlacement = {scene: 'home', table: 'birthday-table'};
                 events.push({type:firstPlacement?'cake-placed':'cake-replaced'});
             }

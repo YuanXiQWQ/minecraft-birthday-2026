@@ -7,9 +7,15 @@ import type {CatalogueArt} from './icons.ts';
 import type {PlayerLayout} from '../domain/inventory.ts';
 import type {Rules} from '../rules/types.ts';
 import type {PlayerAppearance} from './player-profile.ts';
+import type {InteractionHand} from '../domain/hands.ts';
 /** Own geometry and materials while keeping all appearance changes atomic. */
 export class PlayerAvatar {
     native=new Group();parts=new Map<PartName,Group>();armor=new Group();hands:Group[]=[];items:PlayerItems;signature='';appearance:PlayerAppearance|null=null;cape:Group|null=null;layout:PlayerLayout|null=null;
+    usingHand:InteractionHand|null=null;
+    /** Select the active hand's native using-item model without modifying saved equipment.
+     * @param {InteractionHand|null} hand Active hand or no use action.
+     */
+    setUsingHand(hand:InteractionHand|null):void{if(this.usingHand===hand)return;this.usingHand=hand;if(this.layout)this.sync(this.layout);}
     /** Create the fallback avatar. @param {CatalogueArt} art Audited assets. @param {Rules} rules Equipment rules. */
     constructor(public art:CatalogueArt,public rules:Rules){this.items=new PlayerItems(art);this.rebuild();}
     /** Rebuild only skin geometry, retaining equipment and independently owned textures. */
@@ -36,7 +42,7 @@ export class PlayerAvatar {
      */
     sync(layout: PlayerLayout): void {
         this.layout=layout;this.poseCape();
-        const signature = JSON.stringify([layout.equipment, layout.hotbar[layout.selected]]);
+        const signature = JSON.stringify([layout.equipment, layout.hotbar[layout.selected],this.usingHand]);
         if (this.signature === signature) return;
         this.signature = signature;
         for (const h of this.hands) this.items.release(h);
@@ -71,7 +77,8 @@ export class PlayerAvatar {
             hand.rotation.set(-Math.PI / 2, Math.PI, 0);
             offset.position.set((left ? -1 : 1) / 16, 2 / 16, -10 / 16);
             hand.add(offset);
-            offset.add(this.items.held(stack.id, left));
+            offset.add(this.items.held(stack.id, left,false,this.usingHand===(left?'offhand':'mainhand')));
+            hand.userData.hand=left?'offhand':'mainhand';
             part.add(hand);
             this.hands.push(hand);
         }

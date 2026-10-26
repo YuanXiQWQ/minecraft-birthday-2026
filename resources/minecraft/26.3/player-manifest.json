@@ -2,7 +2,7 @@
   "version": "26.3",
   "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
   "profile": "steve-wide-reachable-iron-held-v1",
-  "exporterSha256": "b5d0a93c01be632ce0b2e86f0ba9609c5a38e73df0501f3ab7fead62ce82b569",
+  "exporterSha256": "0f88389b2163335b121c5758574737b7db4a7aae26e4fa4a04dacb9c00055271",
   "inputs": {
     "assets/minecraft/textures/entity/player/wide/steve.png": "06628f9cef88520da742ab280a01677ce17c99717f964ed89ed791673121094c",
     "assets/minecraft/equipment/iron.json": "5cfe7fde94c594374838416af22d06600d6c195d1eb94411b4690a74f456fd01",
@@ -273,6 +273,7 @@
     "assets/minecraft/items/shield.json": "99fd1dca75c690742fd1394db0864564aa657513398f2af7d2e58b0a731bc371",
     "assets/minecraft/models/item/shield.json": "50b52fd37bff3b588f5add0d5cca159288375b646682597cb6f6ed6d0aac07fa",
     "assets/minecraft/textures/entity/shield/shield_base_nopattern.png": "08aa1d4f2eebb31f657f34dfa969c801990500800eb4956ee3eb6dce73e54787",
+    "assets/minecraft/models/item/shield_blocking.json": "da817583c8ad4dac5f931d570ef677cc04dd300838068251c337c43e92dd80df",
     "assets/minecraft/items/short_grass.json": "f2a60517d40a9f9fa6cd3380dbdec83649c2f0fb3e7cc53faefd109dbfbb89fc",
     "assets/minecraft/models/item/short_grass.json": "aaf1d1b8b694ec35e8a9b4025b83c60ba95ccf0c1e4b73b01456c713bb0811d6",
     "assets/minecraft/textures/block/short_grass.png": "40e2ad5d034d0ffc58b4c496c0badfa2104e0fc1888fc92c5f9bd79dcd84cb20",
@@ -412,6 +413,11 @@
       "sha256": "b6ad3eaece88a4cc9ae6da9bef294ebfac41a734ec255669ada0dd616a2625a2"
     },
     {
+      "entry": "assets/minecraft/models/item/shield_blocking.json",
+      "size": 945,
+      "sha256": "da817583c8ad4dac5f931d570ef677cc04dd300838068251c337c43e92dd80df"
+    },
+    {
       "entry": "assets/minecraft/models/item/spear_in_hand.json",
       "size": 656,
       "sha256": "8cdd1011e3a8c936094dc3e32e92060ec07f1592e4c0b5083230e07984858f87"
@@ -463,5 +469,5 @@
     "minecraft:iron_leggings": "minecraft:iron",
     "minecraft:iron_boots": "minecraft:iron"
   },
-  "scope": "Default Steve wide skin; current reachable untrimmed iron armor; idle held contexts; no online skin service"
+  "scope": "Default Steve wide skin; current reachable untrimmed iron armor; idle and active-use held contexts; no online skin service"
 }

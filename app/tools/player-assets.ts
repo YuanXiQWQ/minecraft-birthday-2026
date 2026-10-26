@@ -51,7 +51,7 @@ texture('entity/equipment/humanoid_leggings/iron');
 const ids = JSON.parse(readFileSync(resolve(import.meta.dirname, '../web/src/data/registry.json'), 'utf8')) as string[];
 for (const id of ids) {
     const def = JSON.parse(take('assets/minecraft/items/' + id.split(':')[1] + '.json').toString());
-    for (const context of ['thirdperson_righthand', 'thirdperson_lefthand', 'firstperson_righthand', 'firstperson_lefthand']) for (const date of ['10-21', '12-25']) for (const p of iconParts(def.model, date, [], context)) {
+    for (const context of ['thirdperson_righthand', 'thirdperson_lefthand', 'firstperson_righthand', 'firstperson_lefthand']) for (const date of ['10-21', '12-25']) for (const using of [false, true]) for (const p of iconParts(def.model, date, [], context, using)) {
         const m = iconModel(p.model, model);
         for (const ref of Object.values(m.textures) as string[]) texture(resolveTexture(ref, m.textures));
         if (p.special?.type === 'minecraft:chest') texture('entity/chest/' + p.special.texture!.split(':')[1]);
@@ -79,6 +79,6 @@ writeFileSync(resolve(root, 'player-manifest.json'), JSON.stringify({
     inputs,
     entries,
     equipment: Object.fromEntries(['helmet', 'chestplate', 'leggings', 'boots'].map(s => ['minecraft:iron_' + s, 'minecraft:iron'])),
-    scope: 'Default Steve wide skin; current reachable untrimmed iron armor; idle held contexts; no online skin service'
+    scope: 'Default Steve wide skin; current reachable untrimmed iron armor; idle and active-use held contexts; no online skin service'
 }, null, 2) + '\n');
 console.log(JSON.stringify({newFiles: entries.length, dependencies: files.size, sourceClasses: 13}));

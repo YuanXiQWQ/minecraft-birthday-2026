@@ -64,7 +64,8 @@ test('mouse feedback uses same-version bounded atan and independent body/head tr
 test('Steve and iron original bytes plus every reachable third-person model dependency ship in ordinary resource profile', () => {
     const files = resources(), decode = (p: string) => JSON.parse(new TextDecoder().decode(files.get(p))),
         profile = decode('player-manifest.json');
-    assert.equal(profile.entries.length, 11);
+    assert.equal(profile.entries.length, 12);
+    assert.ok(files.has('assets/minecraft/models/item/shield_blocking.json'));
     assert.equal(profile.exporterSha256, createHash('sha256').update(readFileSync(resolve('tools/player-assets.ts'), 'utf8').replaceAll('\r\n', '\n')).digest('hex'));
     for (const [path, hash] of Object.entries(profile.inputs)) if (files.has(path)) assert.equal(createHash('sha256').update(files.get(path)!).digest('hex'), hash);
     assert.equal(profile.clientSha1, 'e877b6a07acd633fb3bb475002175cec036e7b87');

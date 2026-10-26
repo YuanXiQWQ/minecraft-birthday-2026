@@ -1,4 +1,6 @@
 /** Screen-space native catalogue and hotbar share one temporary command model and never send inventory gestures to Three.js. */
+import {handStack} from '../domain/hands.ts';
+import type {InteractionHand} from '../domain/hands.ts';
 import type {CompassView} from './compass.ts';
 import {nativeField} from './native-field.ts';
 import {itemColor} from './item-style.ts';
@@ -68,6 +70,7 @@ export class GameInventory {
     permanent: State | null = null;
     writable = false;
     onHudPaint: (() => void) | null = null;
+    itemCooldown:((id:string)=>number)|null=null;
     compassView: () => CompassView | null = () => null;
     generation = '';
     factSignature = '';
@@ -440,12 +443,13 @@ export class GameInventory {
     }
 
     /** Equip the held native equippable item after world right-click/drag arbitration has selected Use.
+     * @param {InteractionHand} hand Used carrier.
      * @return {boolean} Whether equipment owns this Use action.
      */
-    autoEquip(): boolean {
-        const s = this.value.hotbar[this.value.selected], gear = s && this.rules.items[s.id].equipment;
+    autoEquip(hand:InteractionHand='mainhand'): boolean {
+        const s = handStack(this.value,hand), gear = s && this.rules.items[s.id].equipment;
         if (!this.modal.open && !this.blocked() && this.writable && gear && ['head', 'chest', 'legs', 'feet'].includes(gear)) {
-            this.command({type: 'equip'});
+            this.command({type: 'equip',hand});
             return true;
         }
         return false;
@@ -551,7 +555,7 @@ export class GameInventory {
         return image;
     }
 
-    /** Draw transparent item art and its native-font quantity at logical slot scale.
+    /** Draw transparent item art, native durability bar and native-font quantity at logical slot scale.
      * @param {CanvasRenderingContext2D} context Target logical canvas.
      * @param {Stack|null} stack Temporary content.
      * @param {number} x Icon left.
@@ -566,6 +570,9 @@ export class GameInventory {
         context.imageSmoothingQuality = 'high';
         drawIcon(context,icon,x,y,16,locked?this.masks.get(icon):icon);
         context.imageSmoothingEnabled = false;
+        const damage=Number(stack.components?.['minecraft:damage']??0),max=this.rules?.items[stack.id]?.maxDamage;
+        if(damage>0&&max){const remaining=Math.max(0,Math.min(1,(max-damage)/max)),width=Math.max(0,Math.min(13,Math.round(13-damage*13/max))),red=Math.floor(Math.min(1,2-remaining*2)*255),green=Math.floor(Math.min(1,remaining*2)*255);context.fillStyle='#000';context.fillRect(x+2,y+13,13,2);context.fillStyle='rgb('+red+' '+green+' 0)';context.fillRect(x+2,y+13,width,1);}
+        const cooldown=this.itemCooldown?.(stack.id)??0;if(cooldown>0){context.fillStyle='rgb(255 255 255 / '+(127/255)+')';context.fillRect(x,y+Math.floor(16*(1-cooldown)),16,Math.ceil(16*cooldown));}
         if (stack.count > 1) {
             const text = String(stack.count);
             this.pixels.font.draw(context, text, x + 17 - this.pixels.font.width(text), y + 9, '#FFF', true);

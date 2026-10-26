@@ -152,28 +152,31 @@ export class PlayerItems {
      * @param {string} id Held stack item identity.
      * @param {boolean} left Left-hand context and mirroring.
      * @param {boolean} first First-person display transforms.
+     * @param {boolean} using Whether this hand is actively using the item.
      * @return {Group} Held model centered for ItemInHandLayer attachment.
      */
-    held(id: string, left = false, first = false): Group {
-        return this.model(id,(first?'firstperson_':'thirdperson_')+(left?'lefthand':'righthand'));
+    held(id: string, left = false, first = false, using = false): Group {
+        return this.model(id,(first?'firstperson_':'thirdperson_')+(left?'lefthand':'righthand'),using);
     }
 
     /** Build an item using its declared display context, including native ground transforms.
      * @param {string} id Namespaced item identity.
      * @param {string} context Native display context.
+     * @param {boolean} using Whether the item is actively being used.
      * @return {Group} Independent geometry with shared material ownership.
      */
-    model(id: string, context: string): Group {
+    model(id: string, context: string, using = false): Group {
         const out = new Group(), date = new Date(),
             stamp = String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0'),
             left=context.endsWith('lefthand'),first=context.startsWith('firstperson_'),
             definition = this.art.documents.get(assetPath('items',id));
-        for (const part of iconParts(definition.model, stamp, [], context)) {
+        for (const part of iconParts(definition.model, stamp, [], context, using)) {
             const model = iconModel(part.model, id => this.art.documents.get(assetPath('models',id))),
                 root = new Group(), body = new Group();
             root.add(body);
             if (part.special?.type === 'minecraft:shield') {
                 for (const b of [[-6, -11, -2, 12, 22, 1, 0, 0], [-1, -3, -1, 2, 6, 6, 26, 0]]) body.add(this.mesh(entityCube(b, 'minecraft:entity/shield/shield_base_nopattern')));
+                body.position.set(-.5, -.5, -.5);
             } else if (part.special?.type === 'minecraft:chest') {
                 for (const b of [[1, 0, 1, 14, 10, 14, 0, 19], [1, 9, 1, 14, 5, 14, 0, 0], [7, 7, 15, 2, 4, 1, 0, 0]]) body.add(this.mesh(entityCube(b, 'minecraft:entity/chest/' + part.special.texture!.split(':')[1])));
                 body.position.set(-.5, -.5, -.5);
@@ -193,7 +196,7 @@ export class PlayerItems {
             root.rotation.set(rotation[0] * Math.PI / 180, rotation[1] * sign * Math.PI / 180, rotation[2] * sign * Math.PI / 180);
             root.scale.set(...(t.scale ?? [1, 1, 1]) as [number, number, number]);
             root.position.set(translation[0] * sign / 16, translation[1] / 16, translation[2] / 16);
-            body.applyMatrix4(definitionTransform(part.transforms, part.special?.type !== 'minecraft:shield'));
+            body.applyMatrix4(definitionTransform(part.transforms));
             out.add(root);
         }
         return out;

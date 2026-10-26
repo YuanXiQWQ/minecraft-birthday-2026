@@ -1,0 +1,78 @@
+{
+  "version": "26.3",
+  "client": {
+    "url": "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar",
+    "sha1": "e877b6a07acd633fb3bb475002175cec036e7b87"
+  },
+  "inspection": "Original class bytecode inspected with JDK javap and CFR 0.152; no resource texture or display transform is synthesized.",
+  "classes": {
+    "net/minecraft/client/resources/model/cuboid/ItemTransform.class": "5753c00a8eab6d9ca2f284e2ba59aab1fecfe1e0d4ae89c2694ea81ab41273ae",
+    "net/minecraft/client/renderer/special/ShieldSpecialRenderer.class": "bde70d066a58664144b62075aac15140e2712817a27192e5304863189f80c388",
+    "net/minecraft/client/renderer/entity/layers/ItemInHandLayer.class": "313dca7407a757a377db4e2c9ebaf7c340df37c0b042f351fe6b3821aefa7c60",
+    "net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer.class": "998eb2f49842fd7b3444381c88a19e102e70fd25947a4ab710ea365890a7eccc",
+    "net/minecraft/client/model/effects/SpearAnimations.class": "c63f462ac8bd3d96efef151941790d355fa18ec1bf34f7636f8fafd457408c90",
+    "net/minecraft/client/model/effects/SpearAnimations$UseParams.class": "7511d26fb25fb30a32da20408ee22a7725a1fb1b89449532ed7001e6362d1e73",
+    "net/minecraft/world/item/component/BlocksAttacks.class": "0274d04a6e7224dcbbdbf10d86f3ce395431c45bfd3d60b093ca677225acd6cc",
+    "net/minecraft/world/item/component/BlocksAttacks$ItemDamageFunction.class": "9d546de13b950a1134d000b46b6afde6fecb8830a948ef44208d03a2b75ec9bd",
+    "net/minecraft/world/item/component/BlocksAttacks$DamageReduction.class": "c89b43d5a80b405a90a0e2d15ba85ede2e1027be522d6890cc1e64e3378b88ba",
+    "net/minecraft/world/item/Item$Properties.class": "da3706f036ed1d53ebf16c3dc1bb926092c57d68c6a1a6cf5565db58804dab8d",
+    "net/minecraft/world/item/Item.class": "867aecf8c2f0ba85c51ca7100835b6a980dff24c176a2dd6ab3780605c24b9e6",
+    "net/minecraft/client/gui/GuiGraphicsExtractor.class": "4b49c34ba52d81b14376cc10876759a52a86ce21d40b7528cad4439626b28819",
+    "net/minecraft/world/item/Items.class": "cf7c261ee18d6bb55af7da16adc51fbbb7994fa09f9f8f13bec2d159bb9c9a37",
+    "net/minecraft/world/item/component/KineticWeapon.class": "9be20f2f6e49547f1c120ca4ab8973142517bf571ccd0aa91a0765740fcff83f",
+    "net/minecraft/world/item/component/KineticWeapon$Condition.class": "e73f61e84adecc5e5ef340e66a86300f555d516b39139360b07cd24b7b50b2b2",
+    "net/minecraft/world/item/component/PiercingWeapon.class": "2623f58fc665704eb52c27b066b3428f0b44fd9bf48e21f86846439801b65d79",
+    "net/minecraft/world/item/component/AttackRange.class": "7db7808e542efddea549fc9398cbe6595ef84a9ff8535ffb4d8c1ae6080a198d",
+    "net/minecraft/world/entity/projectile/ProjectileUtil.class": "93416b1ee5d58989da8e379e4716f05d78470042623bec71b0f91ba2f27c06e3",
+    "net/minecraft/world/item/EggItem.class": "e5cec3c7f237e350b116d7d2880c48ff63cee9271b583d661553f6bb230e894b",
+    "net/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEgg.class": "ef41a0a1936f9ef0090cd13b9ff7fd2e908e02e8193e650a2bc2ac83d49688c1",
+    "net/minecraft/world/entity/projectile/ThrowableProjectile.class": "2c36ba37046b9efce674901bbcef36125952114750d7f590e303a3997bbb0b45",
+    "net/minecraft/world/entity/projectile/Projectile.class": "0ba84a4a41ff797d3fc46088141998d850f9da578a80e7aa8a1de2f895a02dd1",
+    "net/minecraft/client/particle/Particle.class": "8a81cda4aad5f54ea153fc35edb287166819b2d2809501359902c00fccf71798",
+    "net/minecraft/client/particle/BreakingItemParticle.class": "ce124a9d993e5b5193797f7c4d10b6af7c45b31ddec07aba826a95e8af9e34db",
+    "net/minecraft/client/model/animal/chicken/BabyChickenModel.class": "f508404d85073e53784674cb88ae6a3df15fa87c7b15be4f3b89f2071441dc87",
+    "net/minecraft/world/entity/animal/cow/AbstractCow.class": "efebc08e8645cb5b8d8eca3c12522939401fbce5685486b46f9cffe8730ae870",
+    "net/minecraft/world/entity/animal/chicken/Chicken.class": "842ad2586f4813811e6ae02790355ad7dd1a6d8719b99a9f8beb30f2fe40d18d",
+    "net/minecraft/world/entity/LivingEntity.class": "6eaecd529ba26174652f3bb71e7c86262e54ac6f5e1e70944fb0e629b3b9948a",
+    "net/minecraft/world/entity/Entity.class": "7ac5f6a929abbf4fa00f0a87ad530669f7d96c8ee2bb86a5076ab1fab352fb3c",
+    "net/minecraft/world/inventory/CraftingMenu.class": "e1dffdfc60e3b2fb645a69caf100a6c4884609d9d4acd179054fc5e80fe28191",
+    "net/minecraft/client/Camera.class": "0e775d8e4358692db9395a4993b99ba675edb5f5e989b9aa3faf1d540b0c6e70",
+    "net/minecraft/client/gui/Hud.class": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716",
+    "net/minecraft/world/entity/player/Player.class": "28ad0c7756a5cbdfde6c22772f585da9177d6f9eb418ea5ff2dd85657d81dfb2",
+    "net/minecraft/world/level/block/StrawBedBlock.class": "6a118ff08f8af06bc2e39fe06d9a6de32dcdc9720d58aedda0fda2e0ca87949a"
+  },
+  "contracts": {
+    "shield": [
+      "ItemTransform.apply: final translation (-0.5,-0.5,-0.5), also for special models",
+      "Original items/shield.json using_item condition selects shield_blocking",
+      "BlocksAttacks: 5-tick delay, forward hemisphere, floor(1+damage) wear for damage >= 3, weapon-driven disable duration",
+      "No parry or perfect-block bonus in these vanilla components"
+    ],
+    "hands": [
+      "Minecraft per-hand interaction order: main hand first, offhand on PASS",
+      "Only one hand uses an item at a time; release and menu/input cancellation stop use"
+    ],
+    "spear": [
+      "Items and Item.Properties.spear: reachable wooden, stone and iron default components",
+      "SpearAnimations: ordered first/third-person rotations around original pivots",
+      "ProjectileUtil.getHitEntitiesAlong: minimum reach 2, normal maximum 4.5, positive projected movement extension, 0.125 margin and block occlusion",
+      "KineticWeapon: native delay, relative velocity damage, independent duration conditions, per-target contact cooldown 10 ticks"
+    ],
+    "egg": [
+      "EggItem.use and Projectile.shootFromRotation: speed 1.5, inaccuracy 1, inherited player movement",
+      "ThrowableProjectile.tick: gravity 0.03 before drag 0.99 or water 0.8",
+      "ThrownEgg: zero-damage entity hit, eight item fragments, 1/8 hatch, independent 1/32 quadruplets, baby age -24000",
+      "Entity.fudgePositionAfterSizeChange: fit baby dimensions around impact before spawning"
+    ],
+    "workbench": [
+      "CraftingMenu.quickMoveStack: try slots 1..9 first; backpack/hotbar fallback only if no item moved"
+    ],
+    "sleep": [
+      "Camera.tick: half-distance eye-height interpolation; sleeping eye height 0.2",
+      "Camera setup: bed direction minus 180 degrees, zero pitch, upward offset 0.15",
+      "StrawBedBlock.getSleepHeight: use foot outline height; LivingEntity adds 0.125",
+      "Hud: RGB 0x101020, alpha floor(220*counter/100); Player wake counter 100..110"
+    ]
+  },
+  "runtimeScope": "Bounded existing scenes and default supported item components; this evidence does not certify a complete vanilla hostile-mob, enchantment or animal-loot implementation."
+}

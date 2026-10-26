@@ -5,6 +5,10 @@ import {currentFarm} from '../domain/farm-shape.ts';
 import {BlockFeedback} from './block-feedback.ts';
 import {CampfireSmoke} from './campfire-smoke.ts';
 import {blockAt} from '../domain/placed-blocks.ts';
+import {SleepView} from './sleep-view.ts';
+import type {InteractionHand} from '../domain/hands.ts';
+import {ItemUse} from '../domain/item-use.ts';
+import {EggProjectiles} from './egg-projectiles.ts';
 import {attackProfile} from '../domain/attack.ts';
 import {nativeShapes,interactionShapes,shapeEdges,FULL_BLOCK} from '../domain/block-shapes.ts';
 import {placedModel} from './placed-world.ts';
@@ -79,6 +83,7 @@ export class SceneView {
     compassView(scope: string): CompassView {
         return {position: this.camera.position.toArray(), yaw: 180 - this.camera.rotation.y * 180 / Math.PI, target: WORLD_COMPASS_TARGET, scope};
     }
+    onShieldWear:((hand:InteractionHand,amount:number)=>void)|null=null;
     onPlayerTick: (()=>void)|null=null;
     motion=new PlayerMotion();
     movementSound:((id:string,options:SoundOptions)=>void)|null=null;
@@ -96,6 +101,10 @@ export class SceneView {
     staticCollisionVersion = -1;
     staticCollisions: Bounds[] = [];
     hand:FirstPersonHand|null=null;
+    itemUse=new ItemUse();
+    sleepView=new SleepView();
+    eggs:EggProjectiles|null=null;
+    onEggImpact:((point:Cell,count:number,entity?:string,spawn?:Cell|null)=>void)|null=null;
     playerView:PlayerPerspective|null=null;
     /** One F2 capture is consumed immediately after the next complete render. */
     captureFrame:((canvas:HTMLCanvasElement)=>void)|null=null;
@@ -277,7 +286,7 @@ export class SceneView {
         if (this.presentationOnly || !this.input || this.lost || this.disposed) return;
         if ((e.button === 0 || e.button === 2) && this.mode?.enter(true)) {e.preventDefault(); return;}
         this.pointerPosition = [e.clientX, e.clientY];
-        if(this.actionKeys&&(this.mode?.actual||this.controls.toggleAttack||this.controls.toggleUse||KEY_BINDINGS.some(([id,def])=>boundKey(this.controls,id)==='Mouse'+e.button&&boundKey(this.controls,id)!==def)||boundKey(this.controls,'attack')!=='Mouse0'||boundKey(this.controls,'use')!=='Mouse2')){e.preventDefault();this.capturePointer(e.pointerId);this.controlEdge('Mouse'+e.button,true,e);return;}
+        if(this.actionKeys&&(this.mode?.actual||e.button===2&&[this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id,this.environmentProgress?.player.data.equipment.offhand?.id].some(id=>id==='minecraft:shield'||id?.endsWith('_spear')||id==='minecraft:egg')||this.controls.toggleAttack||this.controls.toggleUse||KEY_BINDINGS.some(([id,def])=>boundKey(this.controls,id)==='Mouse'+e.button&&boundKey(this.controls,id)!==def)||boundKey(this.controls,'attack')!=='Mouse0'||boundKey(this.controls,'use')!=='Mouse2')){e.preventDefault();this.capturePointer(e.pointerId);this.controlEdge('Mouse'+e.button,true,e);return;}
         if (e.button === 2) {
             e.preventDefault();
             this.cancelPointerGesture();
@@ -323,7 +332,7 @@ export class SceneView {
      * @param {boolean} preserveScreenToggles Whether a requested GUI unlock may retain its toggle receipt.
      */
     cancelInput(preserveScreenToggles=false): void {
-        this.movementEpoch++;this.motion.sprinting=false;this.motion.forwardDown=false;this.motion.sprintWindow=0;
+        this.itemUse?.stop();if(this.itemUse)this.hand?.setUse(this.itemUse);this.movementEpoch++;this.motion.sprinting=false;this.motion.forwardDown=false;this.motion.sprintWindow=0;
         this.keys.clear();
         this.actionKeys?.clear();this.useDelay=0;this.motion.autoJumpTime=0;
         if(!preserveScreenToggles)this.screenToggles?.clear();
@@ -346,6 +355,22 @@ export class SceneView {
         this.onHover?.(null);
         if (left !== null && this.renderer.domElement.hasPointerCapture(left)) this.renderer.domElement.releasePointerCapture(left);
         if (id !== undefined && this.renderer.domElement.hasPointerCapture(id)) this.renderer.domElement.releasePointerCapture(id);
+    }
+
+    /** Resolve an incoming directional hit against the actively held shield before delivering remaining damage.
+     * @param {number} damage Raw incoming damage.
+     * @param {Cell} source Damage-source position.
+     * @param {boolean} bypass Native bypass-shield damage type or piercing projectile.
+     * @param {number} disableSeconds Weapon's disable-blocking component.
+     * @return {number} Unblocked damage remaining for the caller.
+     */
+    receiveHit(damage:number,source:Cell,bypass=false,disableSeconds=0):number{
+        const hand=this.itemUse.hand,dx=source[0]-this.motion.feet[0],dz=source[2]-this.motion.feet[2],length=Math.hypot(dx,dz),dot=length?(-Math.sin(this.look.yaw)*dx-Math.cos(this.look.yaw)*dz)/length:-1;
+        const result=this.itemUse.block(damage,dot,bypass,disableSeconds);
+        if(hand&&result.durability)this.onShieldWear?.(hand,result.durability);
+        if(result.blocked)this.movementSound?.('item.shield.block',{volume:1,pitch:.8+Math.random()*.4,category:'playersVolume'});
+        if(result.disabled)this.movementSound?.('item.shield.break',{volume:.8,pitch:.8+Math.random()*.4,category:'playersVolume'});
+        this.hand?.setUse(this.itemUse);this.requestRender();return damage-result.blocked;
     }
 
     /** Consume the Pointer Lock MouseEvent stream once, independently of visible-pointer coordinates.
@@ -492,7 +517,7 @@ export class SceneView {
             this.mode?.suspend();
             this.updateDebris(Infinity);
             this.worldId = p.scene;
-            this.authored.build(p.scene);
+            this.eggs?.clear();this.authored.build(p.scene);
             this.scene.fog = p.scene === 'plains' || p.scene === 'farm' ? new Fog('#c0d8ff', 44, 68) : null;
             const spec = WORLD_SCENES[p.scene];
             this.scene.background = this.sky ? null : new Color(spec.sky);
@@ -530,16 +555,15 @@ export class SceneView {
         }
         if(entering&&!this.presentationOnly&&this.collision.some(b=>overlaps(playerBounds(this.motion.feet),b))){this.motion.reset(WORLD_SCENES[p.scene].eye);this.previousFeet=[...this.motion.feet];}
         const bed=p.sleep&&p.scenes[p.scene].blocks?.find(b=>b.id===p.sleep!.id);
+        this.sleepView?.sync(!!bed,p.sleep?.ticks??0);
         if(bed&&!this.presentationOnly){
-            const d=({north:[0,0,-1],south:[0,0,1],east:[1,0,0],west:[-1,0,0]} as Record<string,number[]>)[bed.state.facing];
-            this.camera.position.set(bed.cell[0]+.5,bed.cell[1]+.65,bed.cell[2]+.5);
-            this.camera.lookAt(bed.cell[0]+.5-d[0],bed.cell[1]+.8,bed.cell[2]+.5-d[2]);this.camera.updateMatrixWorld(true);
+            this.updateSleepCamera();
         }else if(wasSleeping&&!this.presentationOnly){
             const pose=p.scenes[p.scene].pose;
             if(pose){this.motion.reset([pose.feet[0],pose.feet[1]+PLAYER_PHYSICS.eye,pose.feet[2]]);this.previousFeet=[...pose.feet];this.look.yaw=pose.yaw;this.look.pitch=pose.pitch;this.camera.position.set(pose.feet[0],pose.feet[1]+PLAYER_PHYSICS.eye,pose.feet[2]);}
             this.camera.rotation.set(this.look.pitch,this.look.yaw,0,'YXZ');this.requestRender();
         }
-        this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null);this.playerView?.sync(p.player.data);
+        this.itemUse?.update(p.player.data,0);this.hand?.select(p.player.data.hotbar[p.player.data.selected]?.id??null,p.player.data.equipment.offhand?.id??null);if(this.itemUse)this.hand?.setUse(this.itemUse);this.playerView?.sync(p.player.data);
         this.refreshHover();
         this.requestRender();
         end();
@@ -554,7 +578,7 @@ export class SceneView {
      * @param {CatalogueArt} art Shared catalogue artwork.
      * @param {Rules} rules Native equipment slots.
      */
-    enableHands(art:CatalogueArt,rules:Rules):void{this.playerView=new PlayerPerspective(art,rules);this.scene.add(this.playerView.root);if(this.environmentProgress)this.playerView.sync(this.environmentProgress.player.data);this.hand=new FirstPersonHand(art);this.hand.select(this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id??null);}
+    enableHands(art:CatalogueArt,rules:Rules):void{this.playerView=new PlayerPerspective(art,rules);this.scene.add(this.playerView.root);if(this.environmentProgress)this.playerView.sync(this.environmentProgress.player.data);this.hand=new FirstPersonHand(art);this.eggs=new EggProjectiles(art);this.scene.add(this.eggs.root);this.hand.select(this.environmentProgress?.player.data.hotbar[this.environmentProgress.player.data.selected]?.id??null,this.environmentProgress?.player.data.equipment.offhand?.id??null);}
 
     /** Build nearby block collision boxes from authored native geometry, excluding non-solid vegetation and entities. */
     rebuildCollision():void{
@@ -611,6 +635,17 @@ export class SceneView {
         this.requestRender();
     }
 
+    /** Apply Camera's horizontal sleeping orientation and interpolated eye height. */
+    updateSleepCamera():void{const p=this.environmentProgress,bed=p?.sleep&&p.scenes[p.scene].blocks?.find(b=>b.id===p.sleep!.id);if(!bed||!this.sleepView)return;const pose=this.sleepView.pose(bed.cell,bed.state.facing as Facing,.25);this.camera.position.set(...pose.eye);this.camera.rotation.set(pose.pitch,pose.yaw,0,'YXZ');this.camera.updateMatrixWorld(true);this.renderer.domElement.dataset.sleepView=JSON.stringify({...pose,opacity:this.sleepView.opacity(),timer:this.sleepView.timer});}
+
+    /** Launch one committed egg from the native eye offset and inherited player motion.
+     * @param {Cell} eye Eye at successful input.
+     * @param {Cell} direction Unit look vector.
+     * @param {Cell} velocity Player movement per tick.
+     * @param {boolean} grounded Whether vertical movement is inherited.
+     */
+    throwEgg(eye:Cell,direction:Cell,velocity:Cell,grounded:boolean):void{this.eggs?.launch(eye,direction,velocity,grounded);this.requestRender();}
+
     /** Apply committed control preferences without resetting input for unrelated save snapshots.
      * @param {ControlSettings} settings Complete committed preferences.
      */
@@ -630,8 +665,9 @@ export class SceneView {
         if(fresh.includes('jump'))this.jumpQueued=true;
         if(fresh.includes('sprint')&&this.controls.toggleSprint&&!active.has('sprint'))this.motion.sprinting=false;
         if(fresh.includes('togglePerspective')&&this.playerView){this.playerView.mode=nextPerspective(this.playerView.mode);this.cancelPointerGesture();}
-        if(!attack&&active.has('attack'))this.onMineStart?.(this.refreshHover());else if(attack&&!active.has('attack'))this.onMineCancel?.();
-        if(fresh.includes('use')&&active.has('use')){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:active.has('sneak'),alt:!!event.altKey,ctrl:!!event.ctrlKey});}
+        if(!attack&&active.has('attack')&&!this.itemUse?.hand)this.onMineStart?.(this.refreshHover());else if(attack&&!active.has('attack'))this.onMineCancel?.();
+        if(!active.has('use')){this.itemUse?.stop();if(this.itemUse)this.hand?.setUse(this.itemUse);}
+        if(fresh.includes('use')&&active.has('use')&&!this.itemUse?.hand){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:active.has('sneak'),alt:!!event.altKey,ctrl:!!event.ctrlKey});}
         this.requestRender();return [...Object.keys(movement),'attack','use','togglePerspective'].some(id=>boundKey(this.controls,id)===code);
     }
 
@@ -651,13 +687,14 @@ export class SceneView {
     advancePlayer(now:number):void{
         const dt=this.motionClock?Math.min(100,now-this.motionClock):0;this.motionClock=now;
         if(this.presentationOnly||!this.authored||this.simulationPaused||document.hidden||this.lost||this.disposed){this.motionRemainder=0;return;}
-        if(this.environmentProgress?.sleep){this.onPlayerTick?.();this.motionRemainder=0;return;}
-        this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
-        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump});
-            if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.onPlayerTick?.();this.playMovement();
+        this.sleepView?.update(dt,this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye);
+        if(this.environmentProgress?.sleep){this.updateSleepCamera();this.onPlayerTick?.();this.motionRemainder=0;return;}
+        if(this.environmentProgress){this.itemUse?.update(this.environmentProgress.player.data,dt/50);if(this.itemUse)this.hand?.setUse(this.itemUse);}this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
+        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump,useSpeed:this.itemUse?.id==='minecraft:shield'?.2:1,canSprint:this.itemUse?.id!=='minecraft:shield'});
+            if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay&&!this.itemUse?.hand){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.eggs?.tick(this.collision,[...(this.authored?.animals.values()??[])].map(a=>a.bounds()),p.scene==='farm'?currentFarm(p).water:[],(point,count,index,spawn)=>this.onEggImpact?.(point,count,[...(this.authored?.animals.keys()??[])][index],spawn));this.onPlayerTick?.();this.playMovement();
             const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}),this.motion);changed=true;}
-        this.authored.animateLife(this.motionRemainder/50);
-        const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
+        this.authored.animateLife(this.motionRemainder/50);this.eggs?.animate(this.motionRemainder/50,this.camera);
+        const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.sleepView?.height()??(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye)),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
         this.renderer.domElement.dataset.player=JSON.stringify({feet:this.motion.feet,velocity:this.motion.velocity,grounded:this.motion.grounded,crouching:this.motion.crouching,sprinting:this.motion.sprinting,bob:this.motion.bob,walk:this.motion.walk,eye:this.camera.position.toArray(),yaw:this.look.yaw});
     }
 
@@ -826,7 +863,7 @@ export class SceneView {
             this.models.animate(start);
             const storageAnimating=this.animateStorage(start);
             const swing=this.hand?(this.hand.clock-this.hand.swingAt)/this.hand.swingDuration:0;
-            this.playerView?.animate(this.camera,this.motion,this.hand?.clock?this.hand.clock*50:0,swing);
+            this.playerView?.animate(this.camera,this.motion,this.hand?.clock?this.hand.clock*50:0,swing,this.itemUse,this.hand?.stab??false);
             this.scene.updateMatrixWorld(true);
             const camera=this.playerView?.view(this.camera,[this.world,this.persistent,this.placed,...(this.authored?[this.authored.staticRoot,this.authored.natural,this.authored.crops]:[])],hit=>{const target=this.hit(hit);return !/cow|chicken|egg|water/.test(target.id)&&target.block!=='water'&&this.models.accepts(hit);})??this.camera;
             this.renderer.domElement.dataset.perspective=String(this.playerView?.mode??0);
@@ -843,7 +880,7 @@ export class SceneView {
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
             const resetInfo = this.renderer.info.autoReset;
             this.renderer.info.autoReset = false; this.renderer.info.reset();
-            const projection=camera.projectionMatrix.clone(),bob=this.authored&&!this.presentationOnly&&!this.playerView?.mode?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
+            const projection=camera.projectionMatrix.clone(),bob=this.authored&&!this.presentationOnly&&!this.environmentProgress?.sleep&&!this.playerView?.mode?viewBob(this.motion,this.motionRemainder/50):new Matrix4();
             camera.projectionMatrix.multiply(bob);
             try {
                 const host = this.renderer.domElement.parentElement;
@@ -930,7 +967,7 @@ export class SceneView {
     /** Remove renderer callbacks, resize observation, input listeners and all owned GPU resources. */
     dispose(): void {
         if (this.disposed) return;
-        this.controlsAbort.abort();this.hand?.dispose();this.playerView?.dispose();this.showOutline(null);
+        this.controlsAbort.abort();this.eggs?.dispose();this.hand?.dispose();this.playerView?.dispose();this.showOutline(null);
         this.blockLight?.dispose();this.movementSound=null;
         this.campfireSmoke?.dispose();
         this.mode?.dispose();

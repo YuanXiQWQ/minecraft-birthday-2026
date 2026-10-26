@@ -79,9 +79,10 @@ export function playerLook(dx: number, dy: number) {
  * @param {number} height Atlas height (skin64, armor32).
  * @param {number} inflate Native cube deformation in model pixels.
  * @param {boolean} mirror Native animal or left armor mirroring, including reversed polygon winding.
+ * @param {number} width Atlas width, including the native sixteen-pixel baby chicken texture.
  * @return {CompiledModel} Six independent textured faces.
  */
-export function playerCube(box: number[], texture: string, height = 64, inflate = 0, mirror = false): CompiledModel {
+export function playerCube(box: number[], texture: string, height = 64, inflate = 0, mirror = false, width = 64): CompiledModel {
     const [x, y, z, w, h, d, u, v] = box;
     let a = x - inflate, A = x + w + inflate;
     if (mirror) [a, A] = [A, a];
@@ -97,7 +98,7 @@ export function playerCube(box: number[], texture: string, height = 64, inflate 
         for (let i = 0; i < 4; i++) {
             out.positions.push(...ps[i].toArray());
             out.normals.push(...n.toArray());
-            out.uvs.push(uv[i][0] / 64, 1 - uv[i][1] / height);
+            out.uvs.push(uv[i][0] / width, 1 - uv[i][1] / height);
         }
         const start = f * 4;
         if (mirror) out.indices.push(start, start + 2, start + 1, start, start + 3, start + 2);

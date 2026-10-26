@@ -1,6 +1,8 @@
 /** Source acquisition and approved crop stages operate only on transaction-local persistent facts. */
 import {blockAt} from './placed-blocks.ts';
 import {cropStage} from './agriculture.ts';
+import {setHandStack} from './hands.ts';
+import type {InteractionHand} from './hands.ts';
 import type {Progress, SceneId, Cell} from './types.ts';
 import type {Rules, Stack} from '../rules/types.ts';
 import {rolledDrops} from '../rules/harvest.ts';
@@ -60,6 +62,7 @@ export function harvestNode(p: Progress, scene: SceneId, node: string, visit: nu
     if (n?.kind === 'egg') throw Error('walk-over-pickup-required');
     if (!n || v.removed.includes(node) || scene === 'cave' && (p.scenes.cave.stations.some(s=>sameCell(s.cell,n.cell)) || caveCleared(p).has(n.cell.join(',')))) throw Error('resource-unavailable');
     if (n.kind === 'cow') {
+        if(p.scenes[scene].animalVitals?.['node:'+node]?.health===0)throw Error('resource-unavailable');
         if (held?.id !== rules.interactions.milk.input) throw Error('milk-requires-bucket');
         return [{id: rules.interactions.milk.output, count: 1}];
     }
@@ -70,11 +73,10 @@ export function harvestNode(p: Progress, scene: SceneId, node: string, visit: nu
     return rolledDrops('minecraft:' + n.block, held, rules, () => random(p.world, scene));
 }
 
-/** Create one crop on empty effective farmland, including dry and player-created soil. @param {Progress} p Current progress. @param {Cell} cell Crop position above farmland. @param {string} id Unique crop lifetime. @param {Stack|null} held Actual selected reference. */
-export function plantCrop(p: Progress, cell: Cell, id: string, held: Stack | null): void {
+/** Create one crop on empty effective farmland, including dry and player-created soil. @param {Progress} p Current progress. @param {Cell} cell Crop position above farmland. @param {string} id Unique crop lifetime. @param {Stack|null} held Actual used reference. @param {InteractionHand} hand Consuming carrier. */
+export function plantCrop(p: Progress, cell: Cell, id: string, held: Stack | null, hand:InteractionHand='mainhand'): void {
     if (held?.id !== 'minecraft:wheat_seeds' || blockAt(p,[cell[0],cell[1]-1,cell[2]])?.block!=='farmland'||!!blockAt(p,cell) || p.scenes[p.scene].crops.some(c => sameCell(c.cell, cell)) || p.scenes[p.scene].stations.some(s => sameCell(s.cell, cell)) || !/^[a-zA-Z0-9_-]{1,80}$/.test(id)) throw Error('invalid-plant');
-    const selected = p.player.data.selected, seed = p.player.data.hotbar[selected]!;
-    p.player.data.hotbar[selected] = seed.count > 1 ? {...seed, count: seed.count - 1} : null;
+    setHandStack(p.player.data,hand,held.count > 1 ? {...held,count:held.count-1}:null);
     p.scenes[p.scene].crops.push({id, item: 'minecraft:wheat_seeds', cell, growth: {version: 1, data: {ticks: 0, age: 0}}});
 }
 

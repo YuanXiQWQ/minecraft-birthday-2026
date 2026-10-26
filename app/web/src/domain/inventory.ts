@@ -3,6 +3,8 @@ import {INVENTORY_RULES as native} from './easter-egg.ts';
 import type {Stack} from '../rules/types.ts';
 import {capacity, pickup, distribute, quickMove, collect, sameStack, identity} from './slots.ts';
 import type {ItemRules, SlotValue} from './slots.ts';
+import {handSlot} from './hands.ts';
+import type {InteractionHand} from './hands.ts';
 
 export type EquipmentSlot = 'head' | 'chest' | 'legs' | 'feet' | 'offhand';
 export type SlotRef =
@@ -59,7 +61,7 @@ export type InventoryCommand = {type:'storage-slot';index:number;button:0|2} | {
     type: 'swap';
     slot: SlotRef;
     target: SlotRef
-} | { type: 'drop'; slot?: SlotRef; all: boolean; cursor?: boolean } | { type: 'equip' } | {
+} | { type: 'drop'; slot?: SlotRef; all: boolean; cursor?: boolean } | { type: 'equip'; hand?:InteractionHand } | {
     type: 'preset';
     index: number;
     mode: 'save' | 'load'
@@ -214,7 +216,7 @@ export function finiteSlots(personal = false, workbench = false, machine = false
     return [...Array.from({length:storage},(_,i)=>`storage:${i}` as SlotRef), ...Array.from({length: 27}, (_, i) => `backpack:${i}` as SlotRef), ...(hopper ? Array.from({length: 5}, (_, i) => `hopper:${i}` as SlotRef) : []), ...(machine ? ['machine:0', 'machine:1'] as SlotRef[] : []), ...(workbench ? Array.from({length: 9}, (_, i) => `workbench:${i}` as SlotRef) : []), ...(personal ? Array.from({length: 4}, (_, i) => `crafting:${i}` as SlotRef) : []), ...Array.from({length: 9}, (_, i) => `hotbar:${i}` as SlotRef), ...(['head', 'chest', 'legs', 'feet', 'offhand'] as const).map(k => `equipment:${k}` as SlotRef)];
 }
 
-/** Route hotbar armor to empty equipment, and equipment/personal inputs to hotbar; other container routes stay unavailable.
+/** Route CraftingMenu inputs before backpack/hotbar fallback, and inventory armor to empty equipment.
  * @param {InventoryState} v Mutable transaction.
  * @param {SlotRef} ref Source identity.
  * @param {ItemRules} rules Native equipment components.
@@ -223,6 +225,7 @@ export function finiteSlots(personal = false, workbench = false, machine = false
 function targets(v: InventoryState, ref: SlotRef, rules: ItemRules): SlotValue[] {
     const s = cell(v, ref).stack, gear = s && rules.items[s.id].equipment,
         player = ref.startsWith('backpack:') || ref.startsWith('hotbar:');
+    if(player&&v.workbench&&s){const grid=v.workbench.map((_,i)=>cell(v,`workbench:${i}`));if(grid.some(d=>capacity(d,s,rules)>(d.stack?.count??0)&&(!d.stack||sameStack(d.stack,s,rules))))return grid;}
     if (player && !v.workbench && !v.machine && !v.hopper && !v.storage && gear && ['head', 'chest', 'legs', 'feet'].includes(gear) && !v.equipment[gear as EquipmentSlot]) return [cell(v, `equipment:${gear}` as SlotRef)];
     return player ? ref.startsWith('hotbar:') ? Array.from({length: 27}, (_, i) => cell(v, `backpack:${i}`)) : Array.from({length: 9}, (_, i) => cell(v, `hotbar:${i}`)) : [...Array.from({length: 27}, (_, i) => cell(v, `backpack:${i}`)), ...Array.from({length: 9}, (_, i) => cell(v, `hotbar:${i}`))];
 }
@@ -386,7 +389,7 @@ export function reduceInventory(current: InventoryState, command: InventoryComma
             break;
         }
         case'equip': {
-            const hand = cell(v, `hotbar:${v.selected}`), s = hand.stack, gear = s && rules.items[s.id].equipment;
+            const hand = cell(v, handSlot(v,command.hand)), s = hand.stack, gear = s && rules.items[s.id].equipment;
             if (gear && ['head', 'chest', 'legs', 'feet'].includes(gear)) {
                 const target = cell(v, `equipment:${gear}` as SlotRef), old = target.stack;
                 if (s && s.count <= capacity(target, s, rules) && (!old || !sameStack(old, s, rules))) {

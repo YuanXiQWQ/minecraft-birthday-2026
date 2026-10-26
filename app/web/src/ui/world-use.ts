@@ -1,4 +1,8 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {handStack} from '../domain/hands.ts';
+import type {InteractionHand} from '../domain/hands.ts';
+import {spearTargets} from '../domain/spear-combat.ts';
+import {spearProfile,kineticContact} from '../domain/item-use.ts';
 import {isStorage} from '../domain/storage.ts';
 import {KEY_BINDINGS,boundKey} from '../domain/control-settings.ts';
 import {isCake,ODD_CAKE} from '../domain/easter-egg.ts';
@@ -48,6 +52,8 @@ export class WorldUse {
     platePending=false;
     poseTimer=0; poseSignature=''; posePending=false;
     holding = false;
+    itemPending=false;cooldownPixels=0;
+    combatPending=new Set<string>();kineticHits=new Map<string,number>();
     miningEpoch = 0;
     miningTicket: object | null = null;
     miningAfter = 0;
@@ -61,7 +67,10 @@ export class WorldUse {
 
     /** Connect actual ray actions and a scoped rotation shortcut. @param {SceneView} scene True camera view. @param {GameInventory} inventory GUI/carrier authority. @param {SaveSession} session Shared transaction owner. @param {Function} notify Localized feedback consumer. @param {Function} sound Native interaction audio. @param {Function} author Localized author guidance. */
     constructor(public scene: SceneView, public inventory: GameInventory, public session: SaveSession, public notify: (key: string) => void, public sound: (id: string, options?: SoundOptions) => void, public author:(key:string)=>void=()=>{}) {
+        inventory.itemCooldown=id=>id==='minecraft:shield'&&scene.itemUse?.shieldCooldownLength?scene.itemUse.shieldCooldown/scene.itemUse.shieldCooldownLength:0;
+        scene.onShieldWear=(hand,amount)=>{const p=session.view.envelope?.state.progress;if(p)void this.run({type:'wear-shield',scene:p.scene,hand,amount,expected:layout(inventory.value)},null);};
         scene.onPlayerTick=()=>this.walkInteractions();
+        scene.onEggImpact=(feet,count,entity,spawn)=>{if(entity)void this.damageAnimal(entity,0,false,undefined,'mainhand',feet);const p=session.view.envelope?.state.progress;if(p&&count&&spawn)void this.run({type:'hatch-eggs',scene:p.scene,feet:spawn,count,id:crypto.randomUUID()},null);};
         if(scene.motion)this.poseTimer=window.setInterval(()=>this.savePose(),500);
         this.scope = session.view.envelope?.generation + ':' + session.view.envelope?.state.progress.scene;
         scene.onHover = hit => {
@@ -72,14 +81,16 @@ export class WorldUse {
         };
         scene.canUse = hit => {
             const p = session.view.envelope?.state.progress, held = p?.player.data.hotbar[p.player.data.selected], equip = held && inventory.rules.items[held.id]?.equipment;
-            if (!hit) return !!equip;
-            return !!p && (!!equip || (canTill(p,this.blockHit(hit).cell,this.blockHit(hit).normal,held??null) || hit.block==='farmland' || hit.id === 'birthday-table' || hit.id === 'birthday-cake' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
+            const usable=(['mainhand','offhand'] as const).some(hand=>{const id=p&&handStack(p.player.data,hand)?.id;return id==='minecraft:egg'||id==='minecraft:shield'||!!spearProfile(id??null)||!!(id&&inventory.rules.items[id]?.equipment)||!!this.heldBlock(hand);});
+            if (!hit) return usable;
+            return !!p && (usable || !!equip || (canTill(p,this.blockHit(hit).cell,this.blockHit(hit).normal,held??null) || hit.block==='farmland' || hit.id === 'birthday-table' || hit.id === 'birthday-cake' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
         };
         scene.onMineStart = hit => this.beginMining(hit);
         scene.onMineCancel = () => this.cancelMining();
         scene.onPick = null;
         scene.onUse = (hit, modifiers) => {
-            if (hit) this.use(hit, !!modifiers?.shift, !!modifiers?.alt, !!modifiers?.ctrl); else inventory.autoEquip();
+            if(this.holding||this.scene.itemUse?.hand)return;
+            for(const hand of ['mainhand','offhand'] as const)if(hit?this.use(hit,!!modifiers?.shift,!!modifiers?.alt,!!modifiers?.ctrl,hand):this.useItem(hand))break;
         };
         window.addEventListener('keyup', e => {
             this.above = e.ctrlKey && e.altKey;
@@ -112,9 +123,11 @@ export class WorldUse {
     /** Settle landings and nearby ground items from physical movement, with no ray-click pickup. */
     walkInteractions():void {
         const p=this.session.view.envelope?.state.progress;if(!p||!this.session.view.writable||this.scene.simulationPaused||document.hidden)return;
+        const cooldown=Math.ceil((this.inventory.itemCooldown?.('minecraft:shield')??0)*16);if(cooldown!==this.cooldownPixels){this.cooldownPixels=cooldown;this.inventory.draw(false);}
         const feet=[...this.scene.motion.feet] as Cell;
         this.samplePlates();
         if(p.sleep)return;
+        this.attackSpear(true);
         if(this.scene.motion.landedDistance>.5&&soilAt(p,[Math.floor(feet[0]),Math.floor(feet[1]-.2),Math.floor(feet[2])]))void this.run({type:'land-on-soil',scene:p.scene,feet,distance:this.scene.motion.landedDistance},null);
         if(this.pickupPending||performance.now()<this.pickupAfter)return;
         const cells=[...(p.scenes[p.scene].agriculture?.drops??[]).map(d=>d.cell),...WORLD_SCENES[p.scene].nodes.filter(n=>n.kind==='egg'&&!p.world.visits[p.scene].removed.includes(n.id)).map(n=>n.cell)];
@@ -140,19 +153,20 @@ export class WorldUse {
     savePose():void{const p=this.session.view.envelope?.state.progress;if(!p||p.sleep||this.scene.simulationPaused||document.hidden||this.posePending||!this.session.view.writable)return;const pose={feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look.yaw,pitch:this.scene.look.pitch},signature=JSON.stringify([p.scene,pose]);if(signature===this.poseSignature)return;this.posePending=true;void this.session.dispatch({type:'save-pose',scene:p.scene,pose}).then(()=>{this.poseSignature=signature;}).catch(()=>this.notify('game.actionFailed')).finally(()=>{this.posePending=false;});}
 
     /** Read the selected native BlockItem without treating arbitrary inventory items as blocks.
+     * @param {InteractionHand} hand Used carrier.
      * @return {string|null} Placeable block identity.
      */
-    heldBlock():string|null{const p=this.session.view.envelope?.state.progress,id=p?.player.data.hotbar[p.player.data.selected]?.id.split(':')[1];return id&&PLACEABLE.has(id)?id:null;}
+    heldBlock(hand:InteractionHand='mainhand'):string|null{const p=this.session.view.envelope?.state.progress,id=p&&handStack(p.player.data,hand)?.id.split(':')[1];return id&&PLACEABLE.has(id)?id:null;}
     /** Capture a current block ray and actual player pose for transactional placement.
      * @param {Pick} hit In-range target.
      * @return {BlockHit} Native placement context.
      */
     blockHit(hit:Pick):BlockHit{return {cell:hit.cell??hit.point.map((n,i)=>Math.floor(n-hit.normal[i]*.001)) as Cell,normal:hit.normal.map(Math.round) as Cell,point:hit.point,eye:this.scene.camera.position.toArray(),yaw:this.scene.camera.rotation.y,pitch:this.scene.camera.rotation.x,crouch:this.scene.motion.crouching};}
 
-    /** Read only the selected actual temporary group. @return {Kind|null} Placeable selected device, if any. */
-    heldKind(): Kind | null {
+    /** Read the used hand's actual temporary group. @param {InteractionHand} hand Used carrier. @return {Kind|null} Placeable selected device, if any. */
+    heldKind(hand:InteractionHand='mainhand'): Kind | null {
         const p = this.session.view.envelope?.state.progress,
-            id = p?.player.data.hotbar[p.player.data.selected]?.id.replace('minecraft:', '');
+            id = p&&handStack(p.player.data,hand)?.id.replace('minecraft:', '');
         return ['crafting_table', 'furnace', 'blast_furnace', 'hopper'].includes(id ?? '') ? id as Kind : null;
     }
 
@@ -194,7 +208,7 @@ export class WorldUse {
         return this.session.dispatch(command).then(events => {
             if (!this.current(scope, serial)) return false;
             if (command.type === 'harvest-node' || command.type === 'harvest-crop') this.scene.renderer.domElement.dataset.harvestResult = JSON.stringify({command, events, selected: this.session.view.envelope!.state.progress.player.data.selected, backpack: this.session.view.envelope!.state.progress.player.data.backpack, unlocked: this.session.view.envelope!.state.progress.unlocked});
-            if(command.type==='put-station'||command.type==='plant-crop'||command.type==='record-cake-placement'||command.type==='eat-cake'&&events.some(e=>e.type==='cake-eaten'))this.scene.hand?.swing();
+            if(command.type==='put-station'||command.type==='plant-crop'||command.type==='record-cake-placement'||command.type==='eat-cake'&&events.some(e=>e.type==='cake-eaten'))this.swing(command.hand);
             if (effect) this.scene.breakEffect(effect.block, effect.point, effect.cell, effect.state);
             if (message && !['harvest-node', 'harvest-crop'].includes(command.type) && !events.some(e => e.type === 'item-unlocked')) this.notify(message);
             if (sound && (command.type!=='eat-cake'||events.some(e=>e.type==='cake-eaten'))) {
@@ -215,14 +229,16 @@ export class WorldUse {
         return !this.abort.signal.aborted && !this.scene.disposed && !this.session.disposed && !this.session.suspended && serial === this.session.serial && scope === this.session.view.envelope?.generation + ':' + this.session.view.envelope?.state.progress.scene;
     }
 
-    /** Begin a cancellable held attack; target progress can change without requiring another press.
+    /** Begin a native spear jab or a cancellable block-mining gesture whose target can change while held.
      * @param {Pick|null} hit Current nearest ray target, including a press that starts over empty space.
      * @param {number} now Injectable monotonic start time.
      */
     beginMining(hit: Pick | null, now = performance.now()): void {
+        if(this.scene.itemUse?.hand)return;
         this.cancelMining();
         const e = this.session.view.envelope;
         if (!e || !this.scene.input || !this.session.view.writable) return;
+        if(spearProfile(e.state.progress.player.data.hotbar[e.state.progress.player.data.selected]?.id??null)){this.attackSpear(false);return;}
         this.scene.hand?.swing(!hit||/cow|chicken/.test(hit.id));
         this.holding = true;
         this.holdScope = e.generation + ':' + e.state.progress.scene;
@@ -354,79 +370,111 @@ export class WorldUse {
         return Promise.resolve(false);
     }
 
-    /** Short right Use eats cake, opens stations, plants, milks or places against actual faces. @param {Pick} hit Real ray. @param {boolean} shift Suppress block use. @param {boolean} attach Place against an existing device face. @param {boolean} above Explicit upper neighbor of the visible device. */
-    use(hit: Pick, shift: boolean, attach = false, above = false): void {
-        const p = this.session.view.envelope?.state.progress;
-        if (!p || p.sleep) return;
-        if(hit.block==='straw_bed'||p.scenes[p.scene].blocks?.some(b=>b.id===hit.id&&b.block==='straw_bed')){
-            if(!shift||!p.player.data.hotbar[p.player.data.selected])void this.run({type:'use-bed',scene:p.scene,id:hit.id,feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look?.yaw},null);
-            else if(this.heldBlock())this.place(hit);
-            else this.inventory.autoEquip();
-            return;
+    /** Resolve native spear jabs or continuous kinetic contacts against all visible living collision boxes.
+     * @param {boolean} kinetic Whether this is an active-use simulation tick.
+     */
+    attackSpear(kinetic:boolean):void{
+        const p=this.session.view.envelope?.state.progress,scene=this.scene,use=scene.itemUse,hand=kinetic?use?.hand:'mainhand';if(!p||!hand)return;
+        const item=handStack(p.player.data,hand)?.id,profile=spearProfile(item??null);if(!profile||!item||!scene.hand||!scene.authored)return;
+        if(!kinetic&&scene.hand.charge()<1||kinetic&&use.ticks<profile.delay)return;
+        const eye=scene.camera.position.toArray() as Cell,look=scene.camera.getWorldDirection(scene.ray.ray.direction.clone()).toArray() as Cell,movement=scene.motion.feet.map((v,i)=>v-scene.previousFeet[i]) as Cell;
+        const targets=spearTargets(eye,look,movement,scene.collision,[...scene.authored.animals].map(([id,a])=>({id,bounds:a.bounds()})));
+        if(!kinetic){scene.hand.swing(true);this.sound(item==='minecraft:wooden_spear'?'item.spear_wood.attack':'item.spear.attack',{category:'playersVolume'});}
+        for(const id of targets){
+            if(this.combatPending.has(id))continue;
+            const animal=scene.authored.animals.get(id)!;
+            let damage=profile.jabDamage as number,knockback=true;
+            if(kinetic){if(use.ticks-(this.kineticHits.get(id)??-Infinity)<10)continue;this.kineticHits.set(id,use.ticks);const result=kineticContact(profile,use.ticks,movement.reduce((s,v,i)=>s+v*look[i]*20,0),animal.feet.reduce((s,v,i)=>s+(v-animal.previous[i])*look[i]*20,0));damage=result.damage;knockback=result.knockback;if(!damage&&!knockback)continue;}
+            void this.damageAnimal(id,damage,knockback,item,hand,eye,kinetic);
         }
-        if(hit.id==='birthday-cake'){
-            if(!shift&&p.scene==='home'&&p.cakePlacement&&(p.cakePlacement.bites??0)<7)void this.run({type:'eat-cake',scene:p.scene,id:hit.id,expectedBites:p.cakePlacement.bites??0},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});
-            return;
-        }
-        if (hit.id === 'birthday-table') {
-            if(p.player.data.hotbar[p.player.data.selected]?.id===ODD_CAKE){void this.run({type:'try-odd-cake-table',scene:p.scene,expected:layout(this.inventory.value)},null);return;}
-
-            if (p.scene === 'home' && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:cake') this.run({
-                type: 'record-cake-placement',
-                scene: 'home',
-                table: 'birthday-table',
-                expected: layout(this.inventory.value)
-            }, null); else this.notify('game.tableNeedsCake');
-            return;
-        }
-        const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id);
-        if(placed&&isStorage(placed.block)&&(!shift||!p.player.data.hotbar[p.player.data.selected])){this.inventory.openWorkbench(placed.id);return;}
-        if(placed&&isCake(placed.block)&&!shift){void this.run({type:'eat-cake',scene:p.scene,id:placed.id,expectedBites:Number(placed.state.bites??0)},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return;}
-        if(placed&&(!shift||!p.player.data.hotbar[p.player.data.selected])&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
-        const found = p.scenes[p.scene].stations.find(s => s.id === hit.id);
-        if (found && attach && this.heldKind()) {
-            this.place(this.attachHit(hit, above));
-            return;
-        }
-        if (found && !shift) {
-            this.inventory.openWorkbench(found.id);
-            return;
-        }
-        if (found && shift && this.heldBlock()) {this.place(hit);return;}
-        if (hit.id === 'node:cow:0') {
-            this.run({
-                type: 'harvest-node',
-                scene: p.scene,
-                node: 'cow:0',
-                visit: p.world.visits[p.scene].epoch,
-                expected: layout(this.inventory.value)
-            }, 'game.harvested', 'entity.cow.milk');
-            return;
-        }
-        const context=this.blockHit(hit),held=p.player.data.hotbar[p.player.data.selected];
-        if(canTill(p,context.cell,context.normal,held)) {void this.run({type:'till-soil',scene:p.scene,cell:context.cell,normal:context.normal,expected:layout(this.inventory.value)},null,'item.hoe.till').then(ok=>{if(ok)this.scene.hand?.swing();});return;}
-        if ((hit.block==='farmland'||hit.id.startsWith('plot:')) && context.normal[1]===1 && p.player.data.hotbar[p.player.data.selected]?.id === 'minecraft:wheat_seeds') {
-            this.run({
-                type: 'plant-crop',
-                cell: [context.cell[0],context.cell[1]+1,context.cell[2]],
-                id: crypto.randomUUID(),
-                expected: layout(this.inventory.value)
-            }, 'game.planted', 'item.crop.plant');
-            return;
-        }
-        if (this.heldBlock()) {
-            this.place(hit);
-            return;
-        }
-        this.inventory.autoEquip();
     }
 
-    /** Place finite blocks against valid faces, orienting device outlets with cardinal face normals; ordinary cakes request the birthday table. @param {Pick} hit Real face. */
-    place(hit: Pick): void {
-        const p = this.session.view.envelope?.state.progress, kind = this.heldKind(),block=this.heldBlock();
-        if (!p || !block) return;
-        if(block==='cake'){this.author('chat.cakeTableOnly');return;}
-        if(!kind){const material=blockSounds(block),context=this.blockHit(hit);try{placementBlocks(p,block,context,'preview');}catch{return;}void this.run({type:'place-block',scene:p.scene,item:block,hit:context,id:crypto.randomUUID(),expected:layout(this.inventory.value)},null,material.place,undefined,{volume:(material.volume+1)/2,pitch:material.pitch*.8}).then(ok=>{if(ok)this.scene.hand?.swing();});return;}
+    /** Commit a live target's health and weapon wear before playing hurt feedback or applying impulses.
+     * @param {string} id Current animal identity.
+     * @param {number} damage Native computed damage, including zero for eggs.
+     * @param {boolean} knockback Additional piercing-weapon knockback.
+     * @param {string|undefined} weapon Attacking spear, or an already-thrown egg.
+     * @param {InteractionHand} hand Weapon carrier.
+     * @param {Cell} source Damage-source position.
+     * @param {boolean} kinetic Whether a successful hit triggers the use recoil animation.
+     */
+    async damageAnimal(id:string,damage:number,knockback:boolean,weapon:string|undefined,hand:InteractionHand,source:Cell,kinetic=false):Promise<void>{
+        const e=this.session.view.envelope,animal=this.scene.authored?.animals.get(id);if(!e||!animal||this.combatPending.has(id))return;
+        this.combatPending.add(id);const scope=this.scope,serial=this.session.serial,yaw=this.scene.look.yaw;
+        try{
+            const events=await this.session.dispatch({type:'animal-hit',scene:e.state.progress.scene,id,damage,weapon,hand});if(!this.current(scope,serial))return;
+            const result=events.find(e=>e.type==='animal-hurt'),hurt=!!result;
+            if(result?.fullHurt){const dead=this.session.view.envelope!.state.progress.scenes[e.state.progress.scene].animalVitals?.[id]?.health===0;this.sound('entity.'+animal.kind+(dead?'.death':'.hurt'),{volume:animal.kind==='cow'?.4:1,pitch:(animal.baby?1.5:1)+(Math.random()-Math.random())*.2,position:animal.feet,category:'neutralVolume'});}
+            if(result?.fullHurt)animal.knockback(source,.4);
+            if(knockback){animal.knockback([animal.feet[0]+Math.sin(yaw),animal.feet[1],animal.feet[2]+Math.cos(yaw)],.4);this.scene.motion.velocity[0]*=.6;this.scene.motion.velocity[2]*=.6;}
+            if(weapon&&(hurt||knockback)){this.sound(weapon==='minecraft:wooden_spear'?'item.spear_wood.hit':'item.spear.hit',{category:'playersVolume'});if(kinetic)this.scene.itemUse.hitFeedback=0;}
+        }catch{if(this.current(scope,serial))this.notify('game.actionFailed');}finally{this.combatPending.delete(id);}
+    }
+
+    /** Swing the hand that actually performed a successful interaction.
+     * @param {InteractionHand} hand Used carrier.
+     */
+    swing(hand:InteractionHand='mainhand'):void{(hand==='offhand'?this.scene.hand?.offhand:this.scene.hand)?.swing();}
+
+    /** Use a held item after its block/entity interaction passes.
+     * @param {InteractionHand} hand Main hand before offhand.
+     * @return {boolean} Whether this hand consumed the input.
+     */
+    useItem(hand:InteractionHand):boolean{
+        const p=this.session.view.envelope?.state.progress;if(!p||p.sleep)return false;
+        const held=handStack(p.player.data,hand);if(!held)return false;
+        if(this.scene?.itemUse?.start(p.player.data,hand)){this.cancelMining();this.kineticHits.clear();this.scene.hand?.setUse(this.scene.itemUse);if(spearProfile(held.id))this.sound(held.id==='minecraft:wooden_spear'?'item.spear_wood.use':'item.spear.use',{category:'playersVolume'});return true;}
+        if(held.id==='minecraft:egg'){
+            if(this.itemPending)return true;
+            this.itemPending=true;
+            const eye=this.scene.motion.feet.map((v,i)=>v+(i===1?(this.scene.motion.crouching?1.27:1.62):0)) as Cell,direction=this.scene.camera.getWorldDirection(this.scene.ray.ray.direction.clone()).toArray() as Cell,velocity=this.scene.motion.feet.map((v,i)=>v-this.scene.previousFeet[i]) as Cell,grounded=this.scene.motion.grounded;
+            void this.run({type:'throw-egg',scene:p.scene,hand,expected:layout(this.inventory.value)},null).then(ok=>{if(ok){this.swing(hand);this.scene.throwEgg(eye,direction,velocity,grounded);this.sound('entity.egg.throw',{volume:.5,pitch:.4/(Math.random()*.4+.8),category:'playersVolume'});}}).finally(()=>{this.itemPending=false;});return true;
+        }
+        return this.inventory?.autoEquip(hand)??false;
+    }
+
+    /** Follow Java's per-hand entity/block/item priority; only PASS allows the offhand attempt.
+     * @param {Pick} hit Fresh ray target.
+     * @param {boolean} shift Secondary-use modifier.
+     * @param {boolean} attach Explicit device attachment.
+     * @param {boolean} above Explicit upper face.
+     * @param {InteractionHand} hand Carrier being tried.
+     * @return {boolean} Whether an interaction consumed the input.
+     */
+    use(hit:Pick,shift:boolean,attach=false,above=false,hand:InteractionHand='mainhand'):boolean{
+        const p=this.session.view.envelope?.state.progress;if(!p||p.sleep)return false;
+        const held=handStack(p.player.data,hand),occupied=!!(handStack(p.player.data)||handStack(p.player.data,'offhand')),secondary=shift&&occupied;
+        const placed=p.scenes[p.scene].blocks?.find(b=>b.id===hit.id),found=p.scenes[p.scene].stations.find(s=>s.id===hit.id);
+        if(hand==='mainhand'&&!secondary){
+            if(hit.block==='straw_bed'||placed?.block==='straw_bed'){void this.run({type:'use-bed',scene:p.scene,id:hit.id,feet:[...this.scene.motion.feet] as Cell,yaw:this.scene.look?.yaw},null);return true;}
+            if(hit.id==='birthday-cake'||placed&&isCake(placed.block)){void this.run({type:'eat-cake',scene:p.scene,id:hit.id,expectedBites:placed?Number(placed.state.bites??0):p.cakePlacement?.bites??0},null,'entity.generic.eat',undefined,{volume:.5,pitch:1,category:'playersVolume'});return true;}
+            if(placed&&isStorage(placed.block)){this.inventory.openWorkbench(placed.id);return true;}
+            if(placed&&['oak_door','oak_trapdoor','oak_fence_gate','lever','oak_button','stone_button'].includes(placed.block)){void this.run({type:'use-block',scene:p.scene,id:placed.id},null).then(ok=>{if(ok)this.swing(hand);});return true;}
+            if(found&&!(attach&&this.heldKind(hand))){this.inventory.openWorkbench(found.id);return true;}
+        }
+        if(hit.id==='birthday-table'){
+            if(held?.id===ODD_CAKE){void this.run({type:'try-odd-cake-table',scene:p.scene,hand,expected:layout(this.inventory.value)},null);return true;}
+            if(p.scene==='home'&&held?.id==='minecraft:cake'){void this.run({type:'record-cake-placement',scene:'home',table:'birthday-table',hand,expected:layout(this.inventory.value)},null);return true;}
+        }
+        if(hit.id==='node:cow:0'&&held?.id==='minecraft:bucket'){void this.run({type:'harvest-node',scene:p.scene,node:'cow:0',visit:p.world.visits[p.scene].epoch,hand,expected:layout(this.inventory.value)},'game.harvested','entity.cow.milk').then(ok=>{if(ok)this.swing(hand);});return true;}
+        if((secondary&&(hit.block==='straw_bed'||placed?.block==='straw_bed')||hit.id==='birthday-cake')&&this.heldBlock(hand))return this.place(hit,hand);
+        if(hit.id==='birthday-cake')return this.useItem(hand);
+        const context=this.blockHit(hit);
+        const shieldFirst=hand==='mainhand'&&!!held&&/_(hoe|shovel)$/.test(held.id)&&handStack(p.player.data,'offhand')?.id==='minecraft:shield'&&!this.scene.itemUse?.shieldCooldown;
+        if(!shieldFirst&&canTill(p,context.cell,context.normal,held)){void this.run({type:'till-soil',scene:p.scene,cell:context.cell,normal:context.normal,hand,expected:layout(this.inventory.value)},null,'item.hoe.till').then(ok=>{if(ok)this.swing(hand);});return true;}
+        if((hit.block==='farmland'||hit.id.startsWith('plot:'))&&context.normal[1]===1&&held?.id==='minecraft:wheat_seeds'){
+            void this.run({type:'plant-crop',cell:[context.cell[0],context.cell[1]+1,context.cell[2]],id:crypto.randomUUID(),hand,expected:layout(this.inventory.value)},'game.planted','item.crop.plant');return true;
+        }
+        if(this.heldBlock(hand)&&!hit.id.includes('cow:')&&!hit.id.includes('chicken:'))return this.place(found&&attach?this.attachHit(hit,above):hit,hand);
+        return this.useItem(hand);
+    }
+
+    /** Place finite blocks against valid faces, orienting device outlets with cardinal face normals; ordinary cakes request the birthday table. @param {Pick} hit Real face. @param {InteractionHand} hand Consuming carrier. @return {boolean} Whether placement consumed the input. */
+    place(hit: Pick,hand:InteractionHand='mainhand'): boolean {
+        const p = this.session.view.envelope?.state.progress, kind = this.heldKind(hand),block=this.heldBlock(hand);
+        if (!p || !block) return false;
+        if(block==='cake'){this.author('chat.cakeTableOnly');return true;}
+        if(!kind){const material=blockSounds(block),context=this.blockHit(hit);try{placementBlocks(p,block,context,'preview');}catch{return false;}void this.run({type:'place-block',hand,scene:p.scene,item:block,hit:context,id:crypto.randomUUID(),expected:layout(this.inventory.value)},null,material.place,undefined,{volume:(material.volume+1)/2,pitch:material.pitch*.8}).then(ok=>{if(ok)this.swing(hand);});return true;}
         const normal=this.blockHit(hit).normal;
         this.facing=kind==='hopper'?(normal[1]?'down':normal[0]>0?'west':normal[0]<0?'east':normal[2]>0?'north':'south' as Facing):opposite(lookFacing(this.scene.camera.rotation.y)) as Facing;
         const candidate = placement(hit, this.session, kind, this.facing === 'down' && kind !== 'hopper' ? 'south' : this.facing);
@@ -434,12 +482,13 @@ export class WorldUse {
             const {valid, ...station} = candidate;
             station.id = crypto.randomUUID();
             this.run({
-                type: 'put-station',
+                type: 'put-station',hand,
                 scene: p.scene,
                 station,
                 expected: layout(this.inventory.value)
             }, 'game.workbenchPlaced', blockSounds(kind).place,undefined,{volume:(blockSounds(kind).volume+1)/2,pitch:blockSounds(kind).pitch*.8});
-        } else this.notify('game.invalidPosition');
+        } else return false;
+        return true;
     }
 
     /** Disconnect input and transient preview, leaving all durable simulation untouched. */
@@ -453,5 +502,6 @@ export class WorldUse {
         this.scene.onHover = null;
         this.scene.onPick = null;
         this.scene.onUse = null;
+        this.scene.onEggImpact=null;this.scene.onShieldWear=null;this.inventory.itemCooldown=null;
     }
 }

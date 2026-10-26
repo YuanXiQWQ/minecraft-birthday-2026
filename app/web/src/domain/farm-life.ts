@@ -1,7 +1,7 @@
 /** Bounded animal navigation and native ground-item presentation use active 20 Hz time. */
 import type {Cell} from './types.ts';
 import type {Bounds,PlayerMotion} from './player-motion.ts';
-import {overlaps,playerBounds} from './player-motion.ts';
+import {overlaps,playerBounds,clip} from './player-motion.ts';
 import {NativeRandom} from './environment.ts';
 
 /** Native ItemEntity spin and ItemEntityRenderer hover, with a ground-model minimum at zero.
@@ -26,10 +26,11 @@ export class AnimalWalk {
     leg(alpha:number,opposite:boolean):number {const speed=Math.min(this.oldSpeed+(this.speed-this.oldSpeed)*alpha,1),position=this.position-this.speed*(1-alpha);return Math.cos(position*.6662+(opposite?Math.PI:0))*1.4*speed;}
 }
 
-/** One adult ambient mob with bounded wandering and persistent return after external displacement. */
+/** One adult or baby mob with bounded wandering, gravity and return after external displacement. */
 export class FarmAnimal {
     feet:Cell; previous:Cell; yaw=0; previousYaw=0; walk=0; previousWalk=0; ambientTime=0; age=0; path:Cell[]=[];
     random:NativeRandom;
+    baby=false;grounded=true;
     animation=new AnimalWalk();
     velocity:Cell=[0,0,0];returning=false;returnRetry=0;
     /** Initialize an independent lifetime at its authored center.
@@ -38,11 +39,16 @@ export class FarmAnimal {
      * @param {number} seed Independent deterministic stream.
      */
     constructor(public kind:'cow'|'chicken',public origin:Cell,seed:number){this.feet=[...origin];this.previous=[...origin];this.random=new NativeRandom(seed);}
-    /** Get the native adult collision volume at its current feet.
+    /** Get the native adult or baby collision volume at its current feet.
      * @return {Bounds} Cow or chicken body bounds.
      */
-    bounds():Bounds{const half=this.kind==='cow'?.45:.2;return [this.feet[0]-half,this.feet[1],this.feet[2]-half,this.feet[0]+half,this.feet[1]+(this.kind==='cow'?1.4:.7),this.feet[2]+half];}
-    /** Find supported air that fits the full native adult body and avoids water/fences.
+    bounds():Bounds{const scale=this.baby?.5:1,half=(this.kind==='cow'?.45:.2)*scale;return [this.feet[0]-half,this.feet[1],this.feet[2]-half,this.feet[0]+half,this.feet[1]+(this.kind==='cow'?1.4:.7)*scale,this.feet[2]+half];}
+    /** Apply unarmored LivingEntity knockback away from the damage source.
+     * @param {Cell} source Source position.
+     * @param {number} power Native impulse strength.
+     */
+    knockback(source:Cell,power:number):void{let dx=this.feet[0]-source[0],dz=this.feet[2]-source[2];while(dx*dx+dz*dz<1e-5){dx=(Math.random()-Math.random())*.01;dz=(Math.random()-Math.random())*.01;}const length=Math.hypot(dx,dz);this.velocity=[this.velocity[0]/2+dx/length*power,this.grounded?Math.min(.4,this.velocity[1]/2+power):this.velocity[1],this.velocity[2]/2+dz/length*power];this.path=[];}
+    /** Find supported air that fits the current body dimensions and avoids water/fences.
      * @param {number} x Desired center X.
      * @param {number} z Desired center Z.
      * @param {Bounds[]} solids Current collision boxes.
@@ -52,7 +58,7 @@ export class FarmAnimal {
      * @return {Cell|null} Supported feet, or a blocked route.
      */
     floor(x:number,z:number,solids:Bounds[],water:Cell[],homeOnly=true,fromY=this.feet[1]):Cell|null{
-        const half=this.kind==='cow'?.45:.2,height=this.kind==='cow'?1.4:.7;
+        const scale=this.baby?.5:1,half=(this.kind==='cow'?.45:.2)*scale,height=(this.kind==='cow'?1.4:.7)*scale;
         if(homeOnly&&Math.hypot(x-this.origin[0],z-this.origin[2])>2+1e-8||water.some(c=>x+half>c[0]&&x-half<c[0]+1&&z+half>c[2]&&z-half<c[2]+1))return null;
         const candidates=solids.filter(b=>x>=b[0]&&x<=b[3]&&z>=b[2]&&z<=b[5]&&b[4]<=fromY+.6&&b[4]>=fromY-1).map(b=>b[4]).sort((a,b)=>b-a);
         for(const y of candidates){const body:Bounds=[x-half,y,z-half,x+half,y+height,z+half];if(!solids.some(b=>overlaps(body,b)))return [x,y,z];}return null;
@@ -93,11 +99,20 @@ export class FarmAnimal {
             }
         }
     }
-    /** Resolve external horizontal momentum in small supported steps without applying the home boundary.
+    /** Resolve knockback and gravity against block shapes, using supported ground steps outside the home boundary.
      * @param {Bounds[]} solids Current terrain and construction.
      * @param {Cell[]} water Water to avoid.
      */
     travelPush(solids:Bounds[],water:Cell[]):void{
+        if(!this.velocity[1]&&clip(this.bounds(),solids,1,-.001)===-.001){this.grounded=false;this.velocity[1]=-.08*.98;}
+        if(this.velocity[1]){
+            const dy=clip(this.bounds(),solids,1,this.velocity[1]);this.feet[1]+=dy;
+            for(const axis of [0,2]){const delta=clip(this.bounds(),solids,axis,this.velocity[axis]);this.feet[axis]+=delta;this.velocity[axis]*=.91;}
+            if(dy!==this.velocity[1]&&this.velocity[1]<0){this.velocity[1]=0;this.grounded=true;}
+            else {this.velocity[1]=(this.velocity[1]-.08)*.98;this.grounded=false;}
+            if(this.kind==='chicken'&&this.velocity[1]<0)this.velocity[1]*=.6;
+            this.path=[];return;
+        }
         for(const axis of [0,2]){
             const amount=this.velocity[axis],count=Math.max(1,Math.ceil(Math.abs(amount)/.05));
             if(!amount)continue;
@@ -123,7 +138,7 @@ export class FarmAnimal {
         const ambient=this.random.integer(0,999)<this.ambientTime++;if(ambient)this.ambientTime=-80;
         if(this.returning){if(!this.path.length&&!this.returnRetry)this.returnPath(solids,water);}
         else if(!this.path.length&&this.random.integer(0,119)===0)this.choosePath(solids,water);
-        const target=this.path[0];if(target){const dx=target[0]-this.feet[0],dz=target[2]-this.feet[2],distance=Math.hypot(dx,dz),step=Math.min(distance,this.kind==='cow'?.2:.25),next=this.floor(this.feet[0]+dx/(distance||1)*step,this.feet[2]+dz/(distance||1)*step,solids,water,!this.returning);
+        const target=this.path[0];if(target&&!this.velocity[1]){const dx=target[0]-this.feet[0],dz=target[2]-this.feet[2],distance=Math.hypot(dx,dz),step=Math.min(distance,this.kind==='cow'?.2:.25),next=this.floor(this.feet[0]+dx/(distance||1)*step,this.feet[2]+dz/(distance||1)*step,solids,water,!this.returning);
             if(!next){this.path=[];this.returnRetry=0;}else{this.feet=next;const desired=Math.atan2(-dx,-dz),turn=Math.atan2(Math.sin(desired-this.yaw),Math.cos(desired-this.yaw));this.yaw+=Math.max(-Math.PI/2,Math.min(Math.PI/2,turn));if(distance<=step+.001)this.path.shift();}
         }
         this.walk+=Math.hypot(this.feet[0]-this.previous[0],this.feet[2]-this.previous[2]);

@@ -167,8 +167,8 @@ export class AuthoredWorld {
         for (const group of groups.values()) this.batch(group.block, group.cells, this.plainsDecor, 'decoration', group.state);
     }
 
-    /** Assemble the native animal hierarchy with downward-Y Java model coordinates. @param {'cow'|'chicken'} kind Adult entity. @return {Group} Native UV-mapped cuboids. */
-    animal(kind: 'cow' | 'chicken'): Group {
+    /** Assemble the native animal hierarchy with downward-Y Java model coordinates. @param {'cow'|'chicken'|'chick'} kind Native adult or baby entity. @return {Group} Native UV-mapped cuboids. */
+    animal(kind: 'cow' | 'chicken' | 'chick'): Group {
         const data = animals[kind], root = new Group();
         root.scale.set(1, -1, 1);
         root.position.set(.5, 1.5, .5);
@@ -178,7 +178,7 @@ export class AuthoredWorld {
             pivot.position.set(...part.pivot.map(n => n / 16) as Cell);
             if ('rotation' in part) pivot.rotation.set(...part.rotation as Cell);
             for (const box of part.boxes) {
-                const compiled = playerCube(box, data.texture, data.height, 0, 'mirror' in part && !!part.mirror);
+                const compiled = playerCube(box, data.texture, data.height, 0, 'mirror' in part && !!part.mirror,'width' in data?data.width:64);
                 pivot.add(this.models.sample({id: kind, block: kind, state: '', variant: {model: kind}, compiled}));
             }
             root.add(pivot);
@@ -318,7 +318,7 @@ export class AuthoredWorld {
         }
         const id = p.scene, spec = WORLD_SCENES[id], removed = p.world.visits[id].removed, crops = p.scenes[id].crops,
             stations = p.scenes[id].stations,
-            signature = JSON.stringify([removed, stations.map(s => s.cell),p.scenes[id].blocks, soils(p),p.scenes[id].agriculture?.drops, crops.map(c => [c.id, cropStage(c)])]);
+            signature = JSON.stringify([removed,p.scenes[id].chickens?.map(c=>[c.id,p.world.tick-c.born>=24000]),p.scenes[id].animalVitals, stations.map(s => s.cell),p.scenes[id].blocks, soils(p),p.scenes[id].agriculture?.drops, crops.map(c => [c.id, cropStage(c)])]);
         if (id === 'cave' && this.caveRoot) {
             const layout = JSON.stringify([stations.map(s=>s.cell), removed]);
             if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
@@ -340,7 +340,7 @@ export class AuthoredWorld {
         const caveVisible = id === 'cave' ? new Set(caveLayout(stations.map(s=>s.cell), spec.eye, caveExcavated(p)).stone.map(c=>c.join(','))) : null;
         const carved = id === 'cave' ? caveCleared(p) : null;
         const visible = spec.nodes.filter(n=>!p.scenes[id].blocks?.some(b=>b.cell.every((v,i)=>v===n.cell[i])) && !removed.includes(n.id) && !stations.some(s=>s.cell.every((v,i)=>v===n.cell[i])) && !carved?.has(n.cell.join(',')) && (!n.id.startsWith('rock:') || caveVisible?.has(n.cell.join(','))));
-        const wanted = new Set([...visible.map(n=>'node:'+n.id),...(id==='farm'?['animal:chicken:0','animal:chicken:1']:[]),...(p.scenes[id].agriculture?.drops??[]).map(d=>'drop:'+d.id)]);
+        const wanted = new Set([...(p.scenes[id].chickens??[]).map(c=>'hatched:'+c.id),...visible.map(n=>'node:'+n.id),...(id==='farm'?['animal:chicken:0','animal:chicken:1']:[]),...(p.scenes[id].agriculture?.drops??[]).map(d=>'drop:'+d.id)]);
         const retained = this.natural.children.filter(o=>wanted.has(o.userData.id));
         for (const root of retained) root.removeFromParent();
         this.clear(this.natural);
@@ -363,6 +363,8 @@ export class AuthoredWorld {
         if(id==='farm')for(const [index,cell] of ([[4,0,-4],[6,0,-5]] as Cell[]).entries())if(!this.natural.children.some(o=>o.userData.id==='animal:chicken:'+index)){
             const root=this.animal('chicken');root.position.x+=cell[0];root.position.z+=cell[2];root.userData={id:'animal:chicken:'+index,block:'chicken',cell};this.natural.add(root);
         }
+        for(const c of p.scenes[id].chickens??[]){const baby=p.world.tick-c.born<24000,old=this.natural.children.find(o=>o.userData.id==='hatched:'+c.id);if(old&&old.userData.baby===baby)continue;if(old){old.removeFromParent();old.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}const root=this.animal(baby?'chick':'chicken');root.position.set(c.feet[0],c.feet[1]+1.5,c.feet[2]);root.userData={id:'hatched:'+c.id,block:'chicken',cell:[c.feet[0]-.5,c.feet[1],c.feet[2]-.5],baby};this.natural.add(root);}
+        for(const root of [...this.natural.children])if(p.scenes[id].animalVitals?.[String(root.userData.id)]?.health===0){this.animals.delete(String(root.userData.id));root.removeFromParent();root.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}
         for(const drop of p.scenes[id].agriculture?.drops??[])if(!this.natural.children.some(o=>o.userData.id==='drop:'+drop.id)){const root=this.groundItem(drop.stack.id);root.position.add(new Vector3(...drop.cell));root.userData={...root.userData,id:'drop:'+drop.id,block:'item',cell:drop.cell};this.natural.add(root);}
         for (const c of crops) {
             if (retainedCrops.some(o => o.userData.id === 'crop:' + c.id)) continue;
@@ -383,12 +385,12 @@ export class AuthoredWorld {
      */
     tickLife(p:Progress,solids:Bounds[],water:Cell[],sound:((id:string,options:SoundOptions)=>void)|null,player?:PlayerMotion):void {
         this.lifeTicks++;
-        if(p.scene!=='farm')return;
+        if(p.scene!=='farm'&&!p.scenes[p.scene].chickens?.length)return;
         const active:FarmAnimal[]=[];
         for(const root of this.natural.children){const kind=root.userData.block;if(kind!=='cow'&&kind!=='chicken')continue;
             const id=String(root.userData.id),cell=root.userData.cell as Cell;
             let animal=this.animals.get(id);if(!animal){animal=new FarmAnimal(kind,[cell[0]+.5,cell[1],cell[2]+.5],174761+this.animals.size*997);this.animals.set(id,animal);}
-            active.push(animal);
+            animal.baby=!!root.userData.baby;active.push(animal);
         }
         pushAnimals(active,player);
         for(const animal of active){const kind=animal.kind,

@@ -12,6 +12,8 @@ import type {HopperContents} from './hopper.ts';
 import type {FurnaceContents, FurnaceTake} from './furnace.ts';
 import type {InventoryCommand, PlayerLayout} from './inventory.ts';
 import type {CraftTake} from './crafting.ts';
+import type {AnimalVitals} from './spear-combat.ts';
+import type {InteractionHand} from './hands.ts';
 import type {Stack} from '../rules/types.ts';
 
 export type Cell = [number, number, number];
@@ -51,6 +53,8 @@ export interface Crop {
 }
 
 export interface SceneState {
+    animalVitals?: Record<string,AnimalVitals>;
+    chickens?: {id:string;feet:Cell;born:number}[];
     agriculture?: Agriculture;
     pose?: {feet:Cell;yaw:number;pitch:number};
     blocks?: PlacedBlock[];
@@ -105,8 +109,12 @@ export interface RuntimeState {
     natural: Partial<Record<SceneId, { visit: number; removed: string[] }>>;
 }
 
-export type Command =
-    {type:'till-soil';scene:SceneId;cell:Cell;normal:Cell;expected:PlayerLayout}
+export type Command = {hand?:InteractionHand} & (
+    {type:'wear-shield';scene:SceneId;hand:InteractionHand;amount:number;expected:PlayerLayout}
+    | {type:'animal-hit';scene:SceneId;id:string;damage:number;weapon?:string;hand?:InteractionHand}
+    | {type:'throw-egg';scene:SceneId;expected:PlayerLayout}
+    | {type:'hatch-eggs';scene:SceneId;feet:Cell;count:number;id:string}
+    | {type:'till-soil';scene:SceneId;cell:Cell;normal:Cell;expected:PlayerLayout}
     | {type:'land-on-soil';scene:SceneId;feet:Cell;distance:number}
     | {type:'pickup-ground';scene:SceneId;feet:Cell;visit:number}
     |
@@ -178,10 +186,11 @@ export type Command =
     crafting?: (Stack | null)[];
     expected: PlayerLayout;
     workbench?: WorkbenchContext
-};
+});
 
 export interface DomainEvent {
-    type: 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-replaced' | 'cake-eaten' | 'odd-cake-table-tried' | 'recipes-discovered' | 'advancements-completed' | 'world-sound';
+    entity?:string;fullHurt?:boolean;
+    type: 'animal-hurt' | 'item-unlocked' | 'items-acquired' | 'cake-crafted' | 'cake-placed' | 'cake-replaced' | 'cake-eaten' | 'odd-cake-table-tried' | 'recipes-discovered' | 'advancements-completed' | 'world-sound';
     scene?:SceneId;
     sound?:string;
     position?:Cell;

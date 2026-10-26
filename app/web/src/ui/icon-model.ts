@@ -10,14 +10,15 @@ export interface IconPart {
     transforms: any[];
 }
 
-/** Select the original default untrimmed, unused GUI branch, including date-dependent chest variants.
+/** Select original item branches for a display context and the actual using hand.
  * @param {any} node Native item-definition node.
  * @param {string} date Local MM-dd date, injectable for Christmas tests.
  * @param {any[]} transforms Ancestor transforms.
  * @param {string} context Native item display context.
+ * @param {boolean} using Whether this exact stack is actively used.
  * @return {IconPart[]} Native selected leaves.
  */
-export function iconParts(node: any, date: string, transforms: any[] = [], context = 'gui'): IconPart[] {
+export function iconParts(node: any, date: string, transforms: any[] = [], context = 'gui', using = false): IconPart[] {
     const chain = node.transformation ? [...transforms, node.transformation] : transforms;
     switch (node.type) {
         case'minecraft:model':
@@ -26,15 +27,15 @@ export function iconParts(node: any, date: string, transforms: any[] = [], conte
             if (!['minecraft:chest', 'minecraft:shield'].includes(node.model.type)) throw Error('unsupported-special-icon');
             return [{model: resourceId(node.base), special: node.model, transforms: chain}];
         case'minecraft:composite':
-            return node.models.flatMap((n: any) => iconParts(n, date, chain, context));
+            return node.models.flatMap((n: any) => iconParts(n, date, chain, context, using));
         case'minecraft:condition':
             if (node.property !== 'minecraft:using_item') throw Error('unsupported-icon-condition');
-            return iconParts(node.on_false, date, chain, context);
+            return iconParts(using ? node.on_true : node.on_false, date, chain, context, using);
         case'minecraft:select': {
             if (!['minecraft:display_context', 'minecraft:trim_material', 'minecraft:local_time'].includes(node.property) || node.property === 'minecraft:local_time' && node.pattern !== 'MM-dd') throw Error('unsupported-icon-select');
             const value = node.property === 'minecraft:display_context' ? context : node.property === 'minecraft:local_time' ? date : null,
                 selected = node.cases.find((c: any) => (Array.isArray(c.when) ? c.when : [c.when]).includes(value));
-            return iconParts(selected?.model ?? node.fallback, date, chain, context);
+            return iconParts(selected?.model ?? node.fallback, date, chain, context, using);
         }
         default:
             throw Error('unsupported-icon-definition:' + node.type);

@@ -224,6 +224,7 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
             body.position.set(-.5, -.5, -.5);
         } else if (part.special?.type === 'minecraft:shield') {
             for (const box of [[-6, -11, -2, 12, 22, 1, 0, 0], [-1, -3, -1, 2, 6, 6, 26, 0]]) body.add(mesh(entityCube(box, 'minecraft:entity/shield/shield_base_nopattern'), true));
+            body.position.set(-.5, -.5, -.5);
         } else if (model.builtin === 'minecraft:builtin/generated') {
             const layers = Object.keys(model.textures).filter(k => /^layer\d+$/.test(k)).sort();
             for (const [index, key] of layers.entries()) {
@@ -253,7 +254,7 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
                 right = new Matrix4().makeRotationFromQuaternion(new Quaternion(...(transform.right_rotation ?? [0, 0, 0, 1]) as [number, number, number, number]));
             transforms.multiply(new Matrix4().makeTranslation(...(transform.translation ?? [0, 0, 0]) as [number, number, number]).multiply(left).multiply(new Matrix4().makeScale(...(transform.scale ?? [1, 1, 1]) as [number, number, number])).multiply(right));
         }
-        if (part.special?.type === 'minecraft:shield') body.applyMatrix4(transforms); else body.applyMatrix4(new Matrix4().makeTranslation(-.5, -.5, -.5).multiply(transforms).multiply(new Matrix4().makeTranslation(.5, .5, .5)));
+        body.applyMatrix4(new Matrix4().makeTranslation(-.5, -.5, -.5).multiply(transforms).multiply(new Matrix4().makeTranslation(.5, .5, .5)));
         return root;
     }
 

@@ -53,19 +53,19 @@ export class PlayerMotion {
      * @param {Set<string>} keys Physical keyboard codes currently held.
      * @param {number} yaw Camera yaw in Three's right-handed coordinates.
      * @param {Bounds[]} solids Nearby authoritative collision shapes.
-     * @param {{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean}} environment Fluid occupancy and native movement preferences.
+     * @param {{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean,useSpeed?:number,canSprint?:boolean}} environment Fluid occupancy and native movement preferences.
      */
-    tick(keys:Set<string>,yaw:number,solids:Bounds[],environment:{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean}={}):void{
+    tick(keys:Set<string>,yaw:number,solids:Bounds[],environment:{water?:boolean,climb?:boolean,sprintWindow?:number,autoJump?:boolean,useSpeed?:number,canSprint?:boolean}={}):void{
         if(this.autoJumpTime>0){this.autoJumpTime--;if(environment.autoJump){keys=new Set(keys);keys.add('Space');}}
         this.walkOld=this.walk;this.bobOld=this.bob;this.bob+=((this.grounded&&!environment.water?Math.min(.1,Math.hypot(this.velocity[0],this.velocity[2])):0)-this.bob)*.4;this.step=false;this.landedDistance=0;
         const sneak=keys.has('ShiftLeft')||keys.has('ShiftRight');
         this.crouching=sneak||solids.some(b=>overlaps(playerBounds(this.feet),b));
         const forward=keys.has('KeyW')&&!keys.has('KeyS');if(this.sprintWindow>0)this.sprintWindow--;
         if(forward&&!this.forwardDown){if(this.sprintWindow>0)this.sprinting=true;this.sprintWindow=environment.sprintWindow??7;}
-        this.forwardDown=forward;if(!forward||this.crouching)this.sprinting=false;else if(keys.has('ControlLeft')||keys.has('ControlRight'))this.sprinting=true;
+        this.forwardDown=forward;if(!forward||this.crouching||environment.canSprint===false)this.sprinting=false;else if(keys.has('ControlLeft')||keys.has('ControlRight'))this.sprinting=true;
         const sprint=this.sprinting;
         let x=Number(keys.has('KeyD'))-Number(keys.has('KeyA')),z=Number(keys.has('KeyS'))-Number(keys.has('KeyW'));
-        const norm=Math.max(1,Math.hypot(x,z)),scale=.98*(this.crouching?.3:1)/norm;x*=scale;z*=scale;
+        const norm=Math.max(1,Math.hypot(x,z)),scale=.98*(this.crouching?.3:1)*(environment.useSpeed??1)/norm;x*=scale;z*=scale;
         const accel=environment.water?.02:this.grounded?(sprint?.13:.1):(sprint?.026:.02),cos=Math.cos(yaw),sin=Math.sin(yaw);
         this.velocity[0]+=(x*cos+z*sin)*accel;this.velocity[2]+=(z*cos-x*sin)*accel;
         if(this.jumpDelay>0)this.jumpDelay--;if(!keys.has('Space'))this.jumpDelay=0;

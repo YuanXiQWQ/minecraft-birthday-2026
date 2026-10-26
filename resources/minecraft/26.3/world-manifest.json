@@ -165,6 +165,7 @@
     "assets/minecraft/models/block/fence_side.json": "da3a9c2ea79551badf65c4d2da9f7bc26650534cda39a98c4ceda19b367c3f85",
     "assets/minecraft/textures/entity/cow/cow_temperate.png": "5106c2676c70d64b2af4bc0792cb4adfa75cf587d05cc370ee7c6ca01465efdc",
     "assets/minecraft/textures/entity/chicken/chicken_temperate.png": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b",
+    "assets/minecraft/textures/entity/chicken/chicken_temperate_baby.png": "2f894da0b092763cc80327dc1c437c304de183a537fbed14f3f3710af7382bf9",
     "assets/minecraft/textures/colormap/grass.png": "6a7da1db5e76cdd74ba5c837afffc1f4ffa32442d7d087f3e1b414e590eb7486",
     "assets/minecraft/textures/colormap/foliage.png": "e5b7f81b3fbebe6a94bc665dd9df01a14a3ce30430d66a2e84e201d87a2e62d1",
     "assets/minecraft/textures/block/water_still.png": "683df6ad9c23a50b7ce9323a5fe231aa79f94a63c6d750f3cf87a1fd44422551",
@@ -188,6 +189,32 @@
     "data/minecraft/tags/fluid/water.json": "dcfa69a748d03dbf788d8f7b0e5eb6c8de6355a527fcaf74b9210fe4be2a3004",
     "asset-index:https://piston-meta.mojang.com/v1/packages/0c8f43b28f837869c1e54a6aeb22c396a1548946/34.json": "0c8f43b28f837869c1e54a6aeb22c396a1548946",
     "minecraft/sounds.json": "fe9bcabb6be22ac2887082aa88a717ed7f48b079fde0039ca346dcf0d6ef4099",
+    "assets/minecraft/sounds/random/bow.ogg": "3d983f24930734d6d32428b3b722d688b99475d488ab963f0d61107381d04c4a",
+    "assets/minecraft/sounds/item/shield/block1.ogg": "e3365acaf40951f9e04334ea5122de786adaf24d357d095757096d75a70dc842",
+    "assets/minecraft/sounds/item/shield/block2.ogg": "c8dbf8adac1111d46ff6fd99ef5c7b23cff84e06da1a7a9d6aacfc01cf3f0765",
+    "assets/minecraft/sounds/item/shield/block3.ogg": "075d0c5e518e95c8d4d335e1f8ae2792f12413e9fdc95ec023024e88cd63a6df",
+    "assets/minecraft/sounds/item/shield/block4.ogg": "e509b3ba0bcb2b4326f51c9689313142c5a6198743da2127a3548442b557539c",
+    "assets/minecraft/sounds/item/shield/block5.ogg": "5368f2ac419ca62a3936d2a8150f15aaf399f2dfe050ab51d26f3ee8ad8e308a",
+    "assets/minecraft/sounds/random/break.ogg": "232f9beec1cb73323d61ab365770e5bb68384b2ed31cd589f85dbf4c3aac5775",
+    "assets/minecraft/sounds/item/spear/use.ogg": "dbb2f79bb8b93551c0af6ff00de21c5bcab7f70f9b858932f5fdc6deb5b1c8c6",
+    "assets/minecraft/sounds/item/spear/attack1.ogg": "ccdf7ad0894c9534e88cd5cc53ef8b674c8f14a4a41b27ea0dbc4cf63591680b",
+    "assets/minecraft/sounds/item/spear/attack2.ogg": "19fbfe758dec13dbb67c9b5350616d5c25b530dc87a71252b85166177c328af6",
+    "assets/minecraft/sounds/item/spear/attack3.ogg": "39b5adfda849e11c8bdb9488c51d8884ae46153150edd74ab6220043b4475c9d",
+    "assets/minecraft/sounds/item/spear/hit1.ogg": "508715f2fe2239cc5e70145b791e69ccd111ab4f794d87e483c0b378c6c899cc",
+    "assets/minecraft/sounds/item/spear/hit2.ogg": "e75cf0ab32cc60e89027eadbc7715295ddc018a2f13470a6f6d346f9b69c5613",
+    "assets/minecraft/sounds/item/spear/hit3.ogg": "f4a4cd6f2f62b4bc90b7ec52353531cd58394310c64cf07439197c008aded8ea",
+    "assets/minecraft/sounds/item/spear/wood/use.ogg": "81a2a1bcb3b574c90188a5e7c9912aabd530e0e1833a3d5adb681ba6f484bb15",
+    "assets/minecraft/sounds/item/spear/wood/attack1.ogg": "81368e5f120d1c4c8b642090793f98172ada7d466b583144430709168e9306ed",
+    "assets/minecraft/sounds/item/spear/wood/attack2.ogg": "d309c100b8074a9b1dccddb9fcfc515ee03a05ec453bcf3cbc75dc146f4eb430",
+    "assets/minecraft/sounds/item/spear/wood/attack3.ogg": "69c60b129f41c280333757df91e7362b150d8c54b2ebff50149f8f313e558f19",
+    "assets/minecraft/sounds/item/spear/wood/hit1.ogg": "555005d8c65b0d3e13ba1af989358e90891cdfde24628d1c5a0233351c9c35c2",
+    "assets/minecraft/sounds/item/spear/wood/hit2.ogg": "8d5ec42aa2092df24af15af39c63b35c61f0f23c723ae4c58cbca21200559000",
+    "assets/minecraft/sounds/item/spear/wood/hit3.ogg": "6f5ed4d2c83749fd99607a7ca1fa8b105bcfbd6a2bc42c2823b1e61cd9fd19e7",
+    "assets/minecraft/sounds/mob/cow/hurt1.ogg": "c0fc862d98361d01d03a8e0ead38087cea5af902d729225b8a0928660f7ca225",
+    "assets/minecraft/sounds/mob/cow/hurt2.ogg": "d1e298cfe4138648dc63b3e0f485ce9bc2783ad4ea8e4f66a92270c4004d0030",
+    "assets/minecraft/sounds/mob/cow/hurt3.ogg": "aa9e851c5be9b45419b98711b635e5acfda457b8c2a2fc5f1e28fcdaaba9efe8",
+    "assets/minecraft/sounds/mob/chicken/hurt1.ogg": "62036467fa9803d6aaa5812f0ca91f460fa1fa894585ed46a77700647e5eb482",
+    "assets/minecraft/sounds/mob/chicken/hurt2.ogg": "d2411119f592dd801eecba92b1975a97cc5d34ab45ef01d8bed6d8d8eb3d9804",
     "assets/minecraft/sounds/dig/stone1.ogg": "0f066e00a6bc068038713c66075b24fd033816b5c2f5162ef6d747b87e324a14",
     "assets/minecraft/sounds/dig/stone2.ogg": "d1ade709625f308bbc529aa3aa6995fea009b05b2c83193855def208ad15e0b5",
     "assets/minecraft/sounds/dig/stone3.ogg": "00f983f95a68eefa04d5d51bb20c80b69247467a0f446496c349b03b0b849536",
@@ -253,6 +280,22 @@
     "assets/minecraft/sounds/mob/chicken/step2.ogg": "79554f12c0da554555d28825fed2a9bb9e472478c50a366743a8372aafe917d0"
   },
   "classes": {
+    "net/minecraft/client/model/animal/chicken/BabyChickenModel.class": "f508404d85073e53784674cb88ae6a3df15fa87c7b15be4f3b89f2071441dc87",
+    "net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer.class": "998eb2f49842fd7b3444381c88a19e102e70fd25947a4ab710ea365890a7eccc",
+    "net/minecraft/client/player/FirstPersonHandsAndItems.class": "eefcd4b95373619529da048b309155e6db2deb813892ea14c273e7bc69b2cfaf",
+    "net/minecraft/client/model/effects/SpearAnimations.class": "c63f462ac8bd3d96efef151941790d355fa18ec1bf34f7636f8fafd457408c90",
+    "net/minecraft/world/item/Items.class": "cf7c261ee18d6bb55af7da16adc51fbbb7994fa09f9f8f13bec2d159bb9c9a37",
+    "net/minecraft/world/item/Item$Properties.class": "da3706f036ed1d53ebf16c3dc1bb926092c57d68c6a1a6cf5565db58804dab8d",
+    "net/minecraft/world/item/component/BlocksAttacks.class": "0274d04a6e7224dcbbdbf10d86f3ce395431c45bfd3d60b093ca677225acd6cc",
+    "net/minecraft/world/item/component/KineticWeapon.class": "9be20f2f6e49547f1c120ca4ab8973142517bf571ccd0aa91a0765740fcff83f",
+    "net/minecraft/world/item/EggItem.class": "e5cec3c7f237e350b116d7d2880c48ff63cee9271b583d661553f6bb230e894b",
+    "net/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEgg.class": "ef41a0a1936f9ef0090cd13b9ff7fd2e908e02e8193e650a2bc2ac83d49688c1",
+    "net/minecraft/world/entity/projectile/ThrowableProjectile.class": "2c36ba37046b9efce674901bbcef36125952114750d7f590e303a3997bbb0b45",
+    "net/minecraft/world/inventory/CraftingMenu.class": "e1dffdfc60e3b2fb645a69caf100a6c4884609d9d4acd179054fc5e80fe28191",
+    "net/minecraft/client/Camera.class": "0e775d8e4358692db9395a4993b99ba675edb5f5e989b9aa3faf1d540b0c6e70",
+    "net/minecraft/client/gui/Hud.class": "a654ed10125c6cca52c889ce0af340c6810882bff0398871c73a2e393b1d3716",
+    "net/minecraft/world/entity/Entity.class": "7ac5f6a929abbf4fa00f0a87ad530669f7d96c8ee2bb86a5076ab1fab352fb3c",
+    "net/minecraft/client/model/geom/ModelPart$Polygon.class": "45f353941998a01193e7c708c47ba793482581b26998d5ea7b5d4c39fc15cda5",
     "net/minecraft/world/entity/WalkAnimationState.class": "427726d3ddac62043d17e688a1eac23b1dc07b4ddd5894f0b1de52e98e3646ac",
     "net/minecraft/world/entity/LivingEntity.class": "6eaecd529ba26174652f3bb71e7c86262e54ac6f5e1e70944fb0e629b3b9948a",
     "net/minecraft/client/model/QuadrupedModel.class": "aa6b4a254e79ebca2bd2b5e334c26cbdf1770abcf8d50fc761b055a421b8fc48",
@@ -267,9 +310,7 @@
     "net/minecraft/client/renderer/entity/ItemEntityRenderer.class": "debad4a3142a8b491c3e3b0d756df7091cf9acc85c2362968c2f18b3b99cb750",
     "net/minecraft/client/model/animal/cow/CowModel.class": "2bc0ed7732daff146b275f49ad5360bb9cd03ea8853f663c3a458ce5a04ec334",
     "net/minecraft/client/model/animal/chicken/AdultChickenModel.class": "b82673d40f01b9621eef2a415769cd4e6c12752717ce14a15103fa0428c6275f",
-    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2",
-    "net/minecraft/world/entity/Entity.class": "7ac5f6a929abbf4fa00f0a87ad530669f7d96c8ee2bb86a5076ab1fab352fb3c",
-    "net/minecraft/client/model/geom/ModelPart$Polygon.class": "45f353941998a01193e7c708c47ba793482581b26998d5ea7b5d4c39fc15cda5"
+    "net/minecraft/world/level/block/entity/HopperBlockEntity.class": "db01c95f3b1c91a7a70e330cb079bbaea4a8efd7a0a949297c7eb81ce503f8a2"
   },
   "states": [
     {
@@ -1587,6 +1628,111 @@
       "sha256": "f7b2aba3853426deb3b8cd98c523081c6bfd9deee428b409aa29271140b3989b"
     },
     {
+      "entry": "assets/minecraft/sounds/item/shield/block1.ogg",
+      "size": 6388,
+      "sha256": "e3365acaf40951f9e04334ea5122de786adaf24d357d095757096d75a70dc842"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/shield/block2.ogg",
+      "size": 5958,
+      "sha256": "c8dbf8adac1111d46ff6fd99ef5c7b23cff84e06da1a7a9d6aacfc01cf3f0765"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/shield/block3.ogg",
+      "size": 6312,
+      "sha256": "075d0c5e518e95c8d4d335e1f8ae2792f12413e9fdc95ec023024e88cd63a6df"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/shield/block4.ogg",
+      "size": 6018,
+      "sha256": "e509b3ba0bcb2b4326f51c9689313142c5a6198743da2127a3548442b557539c"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/shield/block5.ogg",
+      "size": 6279,
+      "sha256": "5368f2ac419ca62a3936d2a8150f15aaf399f2dfe050ab51d26f3ee8ad8e308a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/attack1.ogg",
+      "size": 11696,
+      "sha256": "ccdf7ad0894c9534e88cd5cc53ef8b674c8f14a4a41b27ea0dbc4cf63591680b"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/attack2.ogg",
+      "size": 8733,
+      "sha256": "19fbfe758dec13dbb67c9b5350616d5c25b530dc87a71252b85166177c328af6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/attack3.ogg",
+      "size": 9892,
+      "sha256": "39b5adfda849e11c8bdb9488c51d8884ae46153150edd74ab6220043b4475c9d"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/hit1.ogg",
+      "size": 10036,
+      "sha256": "508715f2fe2239cc5e70145b791e69ccd111ab4f794d87e483c0b378c6c899cc"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/hit2.ogg",
+      "size": 8974,
+      "sha256": "e75cf0ab32cc60e89027eadbc7715295ddc018a2f13470a6f6d346f9b69c5613"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/hit3.ogg",
+      "size": 8782,
+      "sha256": "f4a4cd6f2f62b4bc90b7ec52353531cd58394310c64cf07439197c008aded8ea"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/use.ogg",
+      "size": 12217,
+      "sha256": "dbb2f79bb8b93551c0af6ff00de21c5bcab7f70f9b858932f5fdc6deb5b1c8c6"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/attack1.ogg",
+      "size": 11211,
+      "sha256": "81368e5f120d1c4c8b642090793f98172ada7d466b583144430709168e9306ed"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/attack2.ogg",
+      "size": 8636,
+      "sha256": "d309c100b8074a9b1dccddb9fcfc515ee03a05ec453bcf3cbc75dc146f4eb430"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/attack3.ogg",
+      "size": 8961,
+      "sha256": "69c60b129f41c280333757df91e7362b150d8c54b2ebff50149f8f313e558f19"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/hit1.ogg",
+      "size": 10000,
+      "sha256": "555005d8c65b0d3e13ba1af989358e90891cdfde24628d1c5a0233351c9c35c2"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/hit2.ogg",
+      "size": 8394,
+      "sha256": "8d5ec42aa2092df24af15af39c63b35c61f0f23c723ae4c58cbca21200559000"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/hit3.ogg",
+      "size": 8434,
+      "sha256": "6f5ed4d2c83749fd99607a7ca1fa8b105bcfbd6a2bc42c2823b1e61cd9fd19e7"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/spear/wood/use.ogg",
+      "size": 12791,
+      "sha256": "81a2a1bcb3b574c90188a5e7c9912aabd530e0e1833a3d5adb681ba6f484bb15"
+    },
+    {
+      "entry": "assets/minecraft/sounds/mob/chicken/hurt1.ogg",
+      "size": 8992,
+      "sha256": "62036467fa9803d6aaa5812f0ca91f460fa1fa894585ed46a77700647e5eb482"
+    },
+    {
+      "entry": "assets/minecraft/sounds/mob/chicken/hurt2.ogg",
+      "size": 7093,
+      "sha256": "d2411119f592dd801eecba92b1975a97cc5d34ab45ef01d8bed6d8d8eb3d9804"
+    },
+    {
       "entry": "assets/minecraft/sounds/mob/chicken/say1.ogg",
       "size": 8526,
       "sha256": "531e5529a46a363bd7bd2de2105d35f2bb63cbce8a1ecdc604f0da5a97f890f1"
@@ -1610,6 +1756,21 @@
       "entry": "assets/minecraft/sounds/mob/chicken/step2.ogg",
       "size": 4364,
       "sha256": "79554f12c0da554555d28825fed2a9bb9e472478c50a366743a8372aafe917d0"
+    },
+    {
+      "entry": "assets/minecraft/sounds/mob/cow/hurt1.ogg",
+      "size": 7835,
+      "sha256": "c0fc862d98361d01d03a8e0ead38087cea5af902d729225b8a0928660f7ca225"
+    },
+    {
+      "entry": "assets/minecraft/sounds/mob/cow/hurt2.ogg",
+      "size": 8736,
+      "sha256": "d1e298cfe4138648dc63b3e0f485ce9bc2783ad4ea8e4f66a92270c4004d0030"
+    },
+    {
+      "entry": "assets/minecraft/sounds/mob/cow/hurt3.ogg",
+      "size": 9283,
+      "sha256": "aa9e851c5be9b45419b98711b635e5acfda457b8c2a2fc5f1e28fcdaaba9efe8"
     },
     {
       "entry": "assets/minecraft/sounds/mob/cow/say1.ogg",
@@ -1650,6 +1811,16 @@
       "entry": "assets/minecraft/sounds/mob/cow/step4.ogg",
       "size": 8166,
       "sha256": "d3b9bbf503e6abcc9ed8ff233e37ebc754383462ec7f5999f1686682fbd8f51f"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/bow.ogg",
+      "size": 7282,
+      "sha256": "3d983f24930734d6d32428b3b722d688b99475d488ab963f0d61107381d04c4a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/break.ogg",
+      "size": 7010,
+      "sha256": "232f9beec1cb73323d61ab365770e5bb68384b2ed31cd589f85dbf4c3aac5775"
     },
     {
       "entry": "assets/minecraft/sounds/random/pop.ogg",
@@ -1972,6 +2143,11 @@
       "sha256": "e5b7f81b3fbebe6a94bc665dd9df01a14a3ce30430d66a2e84e201d87a2e62d1"
     },
     {
+      "entry": "assets/minecraft/textures/entity/chicken/chicken_temperate_baby.png",
+      "size": 184,
+      "sha256": "2f894da0b092763cc80327dc1c437c304de183a537fbed14f3f3710af7382bf9"
+    },
+    {
       "entry": "assets/minecraft/textures/entity/chicken/chicken_temperate.png",
       "size": 366,
       "sha256": "80340dc8559bbeaa994728c23ea7df655d8f8e6b462257c7570dd5a8cf57b36b"
@@ -1983,8 +2159,8 @@
     },
     {
       "entry": "assets/minecraft/world-sounds.json",
-      "size": 4807,
-      "sha256": "c9b56c6f70794dd640c115511b4c2e0c7f9ca9ee801a8a5c1c4314c3d16e0b25"
+      "size": 6918,
+      "sha256": "fa68f45ba0a354f2d5b579c71b677a2f1f084157c4c982fa7d765341c7d52155"
     },
     {
       "entry": "data/minecraft/block_transformer/hoe.json",
@@ -2057,7 +2233,7 @@
       "sha256": "ffb37ab6fdc123b30a2bb5439d30745f2e707e88e61cc7bcc0bb9d54c44f494d"
     }
   ],
-  "animalModelSha256": "85974b8c305314bdf323dad9b5550882d8e60f61e8d2308880eb37f5ce91d826",
-  "exporterSha256": "c3be26b030b109d863236f2750e9de6890fbe57e364f8ecd4f55bdc093fb7ca7",
+  "animalModelSha256": "0a607b3b8521728dea210962c1d934bb8da3f32d0dbc11e3574bdf2b1125f231",
+  "exporterSha256": "49aa3f48f4b91f784b85c8199918e23d60688abd56e927b5276671ecc8876aa2",
   "scope": "Authored oak/temperate adult sources; original model variants, textures, colormaps and interaction sounds; bounded native ambient sounds, ground items and farmland states"
 }

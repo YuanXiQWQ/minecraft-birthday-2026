@@ -58,10 +58,20 @@ for(const part of fence.multipart) {
     for(const t of Object.values(m.textures??{}))texture(resolveTexture(t,m.textures??{}));
     states.push({block:'oak_fence',state,variant});
 }
-for (const t of ['entity/cow/cow_temperate', 'entity/chicken/chicken_temperate', 'colormap/grass', 'colormap/foliage', 'block/water_still', 'item/egg', 'item/wheat', 'item/wheat_seeds']) texture(t);
+for (const t of ['entity/cow/cow_temperate', 'entity/chicken/chicken_temperate', 'entity/chicken/chicken_temperate_baby', 'colormap/grass', 'colormap/foliage', 'block/water_still', 'item/egg', 'item/wheat', 'item/wheat_seeds']) texture(t);
 /** Native adult static geometry transcribed from the hash-locked createBase*Model methods; model space has downward Y. */
 const animals = {
     version: '26.3',
+    chick: {
+        texture:'minecraft:entity/chicken/chicken_temperate_baby',height:16,width:16,
+        parts:[
+            {name:'body',pivot:[0,20.25,-1.25],boxes:[[-2,-2.25,-.75,4,4,4,0,0],[-1,-.25,-1.75,2,1,1,10,8]]},
+            {name:'left_leg',pivot:[1,22,.5],boxes:[[-.5,0,0,1,2,0,2,2],[-.5,2,-1,1,0,1,0,1]]},
+            {name:'right_leg',pivot:[-1,22,.5],boxes:[[-.5,0,0,1,2,0,0,2],[-.5,2,-1,1,0,1,0,0]]},
+            {name:'right_wing',pivot:[2,20,0],boxes:[[0,0,-1,1,0,2,6,8]]},
+            {name:'left_wing',pivot:[-2,20,0],boxes:[[-1,0,-1,1,0,2,4,8]]}
+        ]
+    },
     cow: {
         texture: 'minecraft:entity/cow/cow_temperate',
         height: 64,
@@ -112,7 +122,7 @@ for(const path of ['data/minecraft/block_transformer/hoe.json','data/minecraft/t
  */
 function tag(kind:string,name:string):string[]{const [namespace,path]=name.split(':'),doc=JSON.parse(take('data/'+namespace+'/tags/'+kind+'/'+path+'.json').toString());return [...new Set<string>(doc.values.flatMap((id:string)=>id.startsWith('#')?tag(kind,id.slice(1)):[id.split(':')[1]]))];}
 writeFileSync(resolve(root,'app/web/src/data/cane-support.json'),JSON.stringify({ground:tag('block','minecraft:supports_sugar_cane'),blocks:tag('block','minecraft:supports_sugar_cane_adjacently'),fluids:tag('fluid','minecraft:supports_sugar_cane_adjacently')},null,2)+'\n');
-const classes = Object.fromEntries(['net/minecraft/world/entity/Entity.class','net/minecraft/client/model/geom/ModelPart$Polygon.class','net/minecraft/world/entity/WalkAnimationState.class','net/minecraft/world/entity/LivingEntity.class','net/minecraft/client/model/QuadrupedModel.class','net/minecraft/world/level/block/SugarCaneBlock.class','net/minecraft/world/level/block/FarmlandBlock.class','net/minecraft/world/level/block/CropBlock.class','net/minecraft/world/entity/Mob.class','net/minecraft/world/entity/ai/goal/RandomStrollGoal.class','net/minecraft/world/entity/animal/cow/AbstractCow.class','net/minecraft/world/entity/animal/chicken/Chicken.class','net/minecraft/world/entity/item/ItemEntity.class','net/minecraft/client/renderer/entity/ItemEntityRenderer.class','net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
+const classes = Object.fromEntries(['net/minecraft/client/model/animal/chicken/BabyChickenModel.class','net/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer.class','net/minecraft/client/player/FirstPersonHandsAndItems.class','net/minecraft/client/model/effects/SpearAnimations.class','net/minecraft/world/item/Items.class','net/minecraft/world/item/Item$Properties.class','net/minecraft/world/item/component/BlocksAttacks.class','net/minecraft/world/item/component/KineticWeapon.class','net/minecraft/world/item/EggItem.class','net/minecraft/world/entity/projectile/throwableitemprojectile/ThrownEgg.class','net/minecraft/world/entity/projectile/ThrowableProjectile.class','net/minecraft/world/inventory/CraftingMenu.class','net/minecraft/client/Camera.class','net/minecraft/client/gui/Hud.class','net/minecraft/world/entity/Entity.class','net/minecraft/client/model/geom/ModelPart$Polygon.class','net/minecraft/world/entity/WalkAnimationState.class','net/minecraft/world/entity/LivingEntity.class','net/minecraft/client/model/QuadrupedModel.class','net/minecraft/world/level/block/SugarCaneBlock.class','net/minecraft/world/level/block/FarmlandBlock.class','net/minecraft/world/level/block/CropBlock.class','net/minecraft/world/entity/Mob.class','net/minecraft/world/entity/ai/goal/RandomStrollGoal.class','net/minecraft/world/entity/animal/cow/AbstractCow.class','net/minecraft/world/entity/animal/chicken/Chicken.class','net/minecraft/world/entity/item/ItemEntity.class','net/minecraft/client/renderer/entity/ItemEntityRenderer.class','net/minecraft/client/model/animal/cow/CowModel.class', 'net/minecraft/client/model/animal/chicken/AdultChickenModel.class', 'net/minecraft/world/level/block/entity/HopperBlockEntity.class'].map(p => [p, hash(jar.get(p)!)]));
 writeFileSync(resolve(root, 'app/web/src/data/animal-models.json'), JSON.stringify(animals, null, 2) + '\n');
 
 /** Fetch an official asset only after checking its locked SHA1. @param {string} url Official location. @param {string} sha1 Expected digest. @return {Promise<Buffer>} Verified bytes. */
@@ -138,7 +148,7 @@ const soundsRaw = await object('minecraft/sounds.json'), sounds = JSON.parse(sou
     events: Record<string, unknown> = {};
 inputs['asset-index:' + lock.url] = lock.sha1;
 inputs['minecraft/sounds.json'] = hash(soundsRaw);
-for (const name of ['block.stone.break', 'block.grass.break', 'block.wood.break', 'block.metal.break', 'block.stone.hit', 'block.wood.hit', 'block.metal.hit', 'block.grass.hit', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup', 'item.hoe.till', 'entity.cow.ambient', 'entity.chicken.ambient', 'entity.cow.step', 'entity.chicken.step']) {
+for (const name of ['entity.egg.throw','item.shield.block','item.shield.break','item.spear.use','item.spear.attack','item.spear.hit','item.spear_wood.use','item.spear_wood.attack','item.spear_wood.hit','entity.cow.hurt','entity.chicken.hurt','entity.cow.death','entity.chicken.death','block.stone.break', 'block.grass.break', 'block.wood.break', 'block.metal.break', 'block.stone.hit', 'block.wood.hit', 'block.metal.hit', 'block.grass.hit', 'item.crop.plant', 'block.crop.break', 'entity.cow.milk', 'entity.item.pickup', 'item.hoe.till', 'entity.cow.ambient', 'entity.chicken.ambient', 'entity.cow.step', 'entity.chicken.step']) {
     if (!sounds[name]) throw Error('missing-native-sound:' + name);
     events[name] = sounds[name];
     for (const raw of sounds[name].sounds) {
