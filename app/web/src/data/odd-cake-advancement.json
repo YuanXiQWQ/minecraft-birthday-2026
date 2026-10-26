@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:story/smelt_iron",
-  "criteria": {"cake_crafted": {"trigger": "jerrys_farm:upside_down_cake_crafted"}},
+  "criteria": {"cake_crafted": {"trigger": "jerrys_farm:ekac_crafted"}},
   "requirements": [["cake_crafted"]],
   "display": {
     "title": {"translate": "advancements.oddCake.title"},
     "description": {"translate": "advancements.oddCake.description"},
-    "icon": {"id": "jerrys_farm:upside_down_cake"},
+    "icon": {"id": "jerrys_farm:ekac"},
     "frame": "challenge",
     "show_toast": true,
     "announce_to_chat": true,

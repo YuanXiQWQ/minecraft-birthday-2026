@@ -291,5 +291,11 @@
   "bed.leave": "起床",
   "inventory.chest": "箱子",
   "inventory.largeChest": "大型箱子",
-  "inventory.barrel": "木桶"
+  "inventory.barrel": "木桶",
+  "commands.give.success.single": "已将{v0}个{v1}给予{v2}",
+  "commands.give.success.multiple": "已将{v0}个{v1}给予{v2}名玩家",
+  "commands.give.failed.toomanyitems": "最多只能给予{v0}个{v1}",
+  "argument.item.id.invalid": "未知的物品“{v0}”",
+  "argument.integer.low": "整型数据不能小于{v0}：实际为{v1}",
+  "parsing.int.invalid": "无效的整型数据“{v0}”"
 }

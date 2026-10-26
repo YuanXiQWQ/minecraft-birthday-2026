@@ -1,0 +1,31 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "url": "https://piston-data.mojang.com/v1/objects/e877b6a07acd633fb3bb475002175cec036e7b87/client.jar",
+  "method": "Read-only javap -c -p; no Minecraft classes executed",
+  "classes": [
+    {
+      "entry": "net/minecraft/server/commands/GiveCommand.class",
+      "sha256": "54a3b2e3dfd96ffc1bd1ea9a662c7e7a0e50d42bc7afe8b8085b4c1892c57055"
+    },
+    {
+      "entry": "net/minecraft/world/entity/player/Inventory.class",
+      "sha256": "de63accac4a95c52638d63b7611c6e6e985c9a800068007067893cfd49dfa8de"
+    }
+  ],
+  "behavior": {
+    "syntax": "give <targets> <item> [count]",
+    "defaultCount": 1,
+    "minimumCount": 1,
+    "maximumStacks": 100,
+    "insertionOrder": [
+      "merge selected hotbar slot",
+      "merge offhand",
+      "merge hotbar then backpack",
+      "fill hotbar then backpack"
+    ],
+    "overflow": "Create item entities with no pickup delay and the recipient as their target",
+    "excessCount": "Throw commands.give.failed.toomanyitems before changing inventory"
+  },
+  "scope": "Existing single-player registry, default item stacks, player name and @s/@p/@a/@r; no component overrides or selector filters"
+}

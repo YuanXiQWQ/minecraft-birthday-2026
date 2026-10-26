@@ -291,5 +291,11 @@
   "bed.leave": "Leave Bed",
   "inventory.chest": "Chest",
   "inventory.largeChest": "Large Chest",
-  "inventory.barrel": "Barrel"
+  "inventory.barrel": "Barrel",
+  "commands.give.success.single": "Gave {v0} {v1} to {v2}",
+  "commands.give.success.multiple": "Gave {v0} {v1} to {v2} players",
+  "commands.give.failed.toomanyitems": "Can't give more than {v0} of {v1}",
+  "argument.item.id.invalid": "Unknown item '{v0}'",
+  "argument.integer.low": "Integer must not be less than {v0}: found {v1}",
+  "parsing.int.invalid": "Invalid integer '{v0}'"
 }

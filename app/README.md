@@ -11,6 +11,14 @@ npm run dev
 
 Home: http://127.0.0.1:4183/; game: /game/.
 
+Chat supports `/give <targets> <item> [count]`, for example `/give @s minecraft:egg 17`.
+The single-player targets are the current username, `@s`, `@p`, `@a`, and `@r`.
+Tab completes every implemented item, including `jerrys_farm:ekac`; the `minecraft:` namespace and count (default 1) are optional.
+Java 26.3 limits each command to 100 stacks of the chosen item. Items merge into the selected slot, offhand, and remaining inventory before filling hotbar/backpack vacancies; overflow remains as collectible ground drops.
+This item-ID form does not implement item-component overrides or selector filters. Native behavior evidence is recorded in `../data/minecraft/26.3/give-sources.json`.
+
+The authored cake uses `jerrys_farm:ekac` (`/give @s jerrys_farm:ekac`). Loading a checksummed save migrates its former `jerrys_farm:upside_down_cake` item/recipe identities and `upside_down_cake` placed blocks before validation. Migration preserves stack components, quantities, placement/bite state, recipe visibility and completed challenges, and persists once under the save lock. The former ID is accepted only when reading saves.
+
 - Root deployment: `npm run build` and `npm run preview`.
 - GitHub Pages: `npm run build:pages` and `npm run preview:pages`, under /minecraft-birthday-2026/.
 - Validation: `npm run check`, `npm test`, `npm run data:verify`, both builds, then `npm run test:built`.

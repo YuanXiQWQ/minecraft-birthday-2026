@@ -25,7 +25,7 @@ async function owners(){let raw:string|null=null,tail=Promise.resolve<unknown>(n
 }
 
 for(const source of ['/tick query','/tick rate 10000','/tick freeze','/tick unfreeze','/tick step','/tick step 1s','/tick step stop','/tick sprint 3d','/tick sprint stop','/time set midnight','/time set 1.5d','/time add -1s','/time query gametime','/time query time','/time query minecraft:day repetition','/time query moon','/time of minecraft:overworld pause','/time resume','/time rate 0.00001','/weather clear','/weather rain 40t','/weather thunder 1s','/gamerule advance_time false','/gamerule minecraft:advance_weather true'])test('26.3 registered branch '+source,()=>assert.ok('op'in parseCommand(source)));
-for(const source of ['/give @s stone','/time query daytime','/weather snow','/tick rate 0','/tick rate 10001','/tick step 0t','/time set -1','/time rate 0','/gamerule advance_time nope','/weather clear 2minutes','/tick freeze extra'])test('native command rejection '+source,()=>{const result=parseCommand(source);assert.ok('key'in result);assert.equal(result.error,true);assert.equal(typeof result.cursor,'number');});
+for(const source of ['/give @s unknown_item','/time query daytime','/weather snow','/tick rate 0','/tick rate 10001','/tick step 0t','/time set -1','/time rate 0','/gamerule advance_time nope','/weather clear 2minutes','/tick freeze extra'])test('native command rejection '+source,()=>{const result=parseCommand(source);assert.ok('key'in result);assert.equal(result.error,true);assert.equal(typeof result.cursor,'number');});
 
 test('completion shares registration, understands argument position and preserves unavailable command boundaries',()=>{
  assert.equal((parseCommand('/tick rate 0') as {key:string}).key,'argument.float.low');
@@ -33,14 +33,14 @@ test('completion shares registration, understands argument position and preserve
  assert.equal((parseCommand('/weather rain 2minutes') as {key:string}).key,'argument.time.invalid_unit');
  assert.deepEqual(completeCommand('/we'),{start:1,values:['weather']});assert.deepEqual(completeCommand('/weather '),{start:9,values:['clear','rain','thunder']});
  assert.deepEqual(completeCommand('/gamerule advance_weather ' ).values,['false','true']);assert.deepEqual(completeCommand('/time set ni').values,['minecraft:night']);
- assert.deepEqual(completeCommand('/time of minecraft:overworld query ').values,['minecraft:day','minecraft:moon','time']);assert.deepEqual(completeCommand('/give ').values,[]);
+ assert.deepEqual(completeCommand('/time of minecraft:overworld query ').values,['minecraft:day','minecraft:moon','time']);assert.deepEqual(completeCommand('/give ').values,['@a','@p','@r','@s']);
  assert.ok(completeCommand('/tick step ').values.includes('stop'));assert.deepEqual(completeCommand('/tick sprint ').values,['1d','3d','60s','stop']);
 });
 
 test('real command receipts query without writing; unknown commands cannot alter save or grant materials',async()=>{
  const h=await owners(),before=h.raw;
  assert.equal((await h.a.transact({type:'console',source:'/time query time'})).console![0].values?.v1,'1000');assert.equal(h.raw,before);
- const invalid=await h.a.transact({type:'console',source:'/give @s diamond'});assert.equal(invalid.console![0].key,'command.unknown.command');assert.equal(h.raw,before);assert.deepEqual(h.a.view.envelope!.state.progress.unlocked,[]);
+ const invalid=await h.a.transact({type:'console',source:'/unknown @s diamond'});assert.equal(invalid.console![0].key,'command.unknown.command');assert.equal(h.raw,before);assert.deepEqual(h.a.view.envelope!.state.progress.unlocked,[]);
 });
 
 test('teleport parses both languages and native target forms, with destination and player TAB completion',()=>{

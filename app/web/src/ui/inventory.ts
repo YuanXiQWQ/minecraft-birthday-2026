@@ -1063,7 +1063,7 @@ export class GameInventory {
             if (!image) throw Error('missing-native-tooltip');
             drawSprite(ctx, image, this.art.documents.get(path + '.mcmeta')?.gui?.scaling, 0, 0, width, height);
         }
-        const cakeId = ['minecraft:cake', 'jerrys_farm:upside_down_cake'].find(id => lines[0] === this.name(id));
+        const cakeId = ['minecraft:cake', 'jerrys_farm:ekac'].find(id => lines[0] === this.name(id));
         lines.forEach((s, i) => this.pixels.font.draw(ctx, s, 12, 12 + i * 12, i ? '#AAA' : itemColor(cakeId ?? ''), true));
         const accessible = document.createElement('span');
         accessible.className = 'sr-only';

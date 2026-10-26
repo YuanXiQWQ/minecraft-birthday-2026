@@ -14,7 +14,7 @@ const TYPES: Record<string, string> = {
  * @return {{hit:string,break:string,place:string,step:string,volume:number,pitch:number}} Original event and material values.
  */
 export function blockSounds(block: string): {hit: string; break: string; place:string; step:string; volume: number; pitch: number} {
-    if(block==='upside_down_cake')return {...blockSounds('cake'),place:'block.slime_block.place'};
+    if(block==='ekac')return {...blockSounds('cake'),place:'block.slime_block.place'};
     block=block==='wall_torch'?'torch':block==='oak_wall_sign'?'oak_sign':block;
     const type = TYPES[block]??(properties as Record<string,{sound:string}>)[block]?.sound;
     if (!type) throw Error('unsupported-block-sound');

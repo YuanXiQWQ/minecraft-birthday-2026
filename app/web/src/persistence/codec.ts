@@ -8,6 +8,7 @@ import {emptyHopper} from '../domain/hopper.ts';
 import {initialBook,syncOddCakeRecipe} from '../domain/recipe-book.ts';
 import {emptyFurnace} from '../domain/furnace.ts';
 import {emptyInventory, layout} from '../domain/inventory.ts';
+import {migrateEkac} from './ekac-migration.ts';
 
 export interface Envelope {
     format: 1;
@@ -24,6 +25,7 @@ export interface Decoded {
     migrated: boolean;
     advancementMigration?: boolean;
     recipeMigration?: boolean;
+    itemMigration?: boolean;
 }
 
 /** Canonical encoding includes every own field in a stable order; arrays keep semantic acquisition order.
@@ -70,7 +72,7 @@ export async function seal(state: State, generation: string, revision: number): 
     return freeze({...body, checksum: await checksum(body)});
 }
 
-/** Decode checksummed versions; P3 player, native workbench/furnace contents, hopper reservations and D06 discovery migrate without rewriting storage.
+/** Decode checksummed versions and migrate carrier contracts, item identities and discovery without rewriting storage.
  * @param {string} raw Stored original bytes.
  * @return {Promise<Decoded>} Valid snapshot and explicit migration status.
  */
@@ -94,6 +96,7 @@ export async function decode(raw: string): Promise<Decoded> {
     const migrated = value.contentVersion !== 'p9-commands-1' || missingAdvancements,
         oldPlayer = !['p5-layout-1', 'p6-crafting-1', 'p6-processing-1', 'p6-book-1', 'p7-world-1', 'p8-inventory-1', 'p8-experience-2', 'p9-environment-1', 'p9-commands-1'].includes(value.contentVersion);
     try {
+        const itemMigration=migrateEkac(value.state);
         if (!oldPlayer && !['p8-inventory-1', 'p8-experience-2', 'p9-environment-1', 'p9-commands-1'].includes(value.contentVersion)) {
             ensure(value.state?.progress?.player?.data && !Object.hasOwn(value.state.progress.player.data, 'backpack'), 'invalid-player-migration');
             value.state.progress.player.data.backpack = Array(27).fill(null);
@@ -138,7 +141,7 @@ export async function decode(raw: string): Promise<Decoded> {
         const husbandryMigration=syncHusbandryRoot(value.state.progress.advancements);
         const recipeMigration=syncOddCakeRecipe(value.state.progress.recipeBook);
         const envelope = await seal(value.state, value.generation, value.revision);
-        return {envelope, migrated:migrated||husbandryMigration||recipeMigration, advancementMigration:missingAdvancements||husbandryMigration,recipeMigration};
+        return {envelope, migrated:migrated||husbandryMigration||recipeMigration||itemMigration, advancementMigration:missingAdvancements||husbandryMigration,recipeMigration,itemMigration};
     } catch (error) {
         throw new Error(migrated ? 'migration-failed' : error instanceof Error ? error.message : 'invalid-save');
     }

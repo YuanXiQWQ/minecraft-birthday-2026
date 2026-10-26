@@ -15,9 +15,9 @@ try{
     const result=await page.evaluate(async()=>{
         const {loadCatalogueArt}=await import('/src/ui/icons.ts'),art=await loadCatalogueArt();
         try{
-            const normal=art.icons.get('minecraft:cake'),odd=art.icons.get('jerrys_farm:upside_down_cake'),a=normal.getContext('2d').getImageData(0,0,256,256).data,b=odd.getContext('2d').getImageData(0,0,256,256).data;
+            const normal=art.icons.get('minecraft:cake'),odd=art.icons.get('jerrys_farm:ekac'),a=normal.getContext('2d').getImageData(0,0,256,256).data,b=odd.getContext('2d').getImageData(0,0,256,256).data;
             let mismatch=0,visible=0;for(let pixel=0;pixel<256*256;pixel++){if(b[pixel*4+3])visible++;for(let c=0;c<4;c++)if(Math.abs(a[(256*256-1-pixel)*4+c]-b[pixel*4+c])>2)mismatch++;}
-            return {kind:art.kinds.get('jerrys_farm:upside_down_cake'),route:art.coverage.find(c=>c.id==='jerrys_farm:upside_down_cake').route,mismatch,visible};
+            return {kind:art.kinds.get('jerrys_farm:ekac'),route:art.coverage.find(c=>c.id==='jerrys_farm:ekac').route,mismatch,visible};
         }finally{art.dispose();}
     });
     assert.equal(result.kind,'sprite');assert.equal(result.route,'native-generated');assert.ok(result.visible>0);assert.equal(result.mismatch,0);

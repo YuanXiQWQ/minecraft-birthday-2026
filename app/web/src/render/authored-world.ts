@@ -26,6 +26,8 @@ import type {Face} from './model-format.ts';
 
 /** Build bounded authored geometry; scenery is never implicitly registered as a harvest source. */
 export class AuthoredWorld {
+    /** Ground items share native model materials for the lifetime of this world view. */
+    groundItems?:PlayerItems;
     animals=new Map<string,FarmAnimal>();
     lifeTicks=0;
     staticRoot = new Group();
@@ -195,6 +197,17 @@ export class AuthoredWorld {
         return root;
     }
 
+    /** Resolve a dropped stack through its actual item definition and ground display transform.
+     * @param {string} id Namespaced item identity, including authored items.
+     * @return {Group} Native ground model centered on its bobbing rotation axis.
+     */
+    groundItem(id:string):Group {
+        this.groundItems??=new PlayerItems({images:this.resources.guiImages,documents:this.resources.documents} as CatalogueArt);
+        const root=this.groundItems.model(id,'ground');
+        root.position.set(.5,0,.5);root.userData.bobOffset=Math.random()*Math.PI*2;root.traverse(o=>o.layers.set(1));
+        return root;
+    }
+
     /** Rebuild effective home geometry with the same occupancy used by placement and saved-object clearance.
      * @param {HomeBlock[]} cells Effective room and furniture cells.
      * @param {ReadonlySet<string>} glass All authored and player glass coordinates.
@@ -350,7 +363,7 @@ export class AuthoredWorld {
         if(id==='farm')for(const [index,cell] of ([[4,0,-4],[6,0,-5]] as Cell[]).entries())if(!this.natural.children.some(o=>o.userData.id==='animal:chicken:'+index)){
             const root=this.animal('chicken');root.position.x+=cell[0];root.position.z+=cell[2];root.userData={id:'animal:chicken:'+index,block:'chicken',cell};this.natural.add(root);
         }
-        for(const drop of p.scenes[id].agriculture?.drops??[])if(!this.natural.children.some(o=>o.userData.id==='drop:'+drop.id)){const root=this.egg(drop.stack.id.split(':')[1]);root.position.add(new Vector3(...drop.cell));root.userData={...root.userData,id:'drop:'+drop.id,block:'item',cell:drop.cell};this.natural.add(root);}
+        for(const drop of p.scenes[id].agriculture?.drops??[])if(!this.natural.children.some(o=>o.userData.id==='drop:'+drop.id)){const root=this.groundItem(drop.stack.id);root.position.add(new Vector3(...drop.cell));root.userData={...root.userData,id:'drop:'+drop.id,block:'item',cell:drop.cell};this.natural.add(root);}
         for (const c of crops) {
             if (retainedCrops.some(o => o.userData.id === 'crop:' + c.id)) continue;
             const root = this.block('wheat', 'age=' + cropStage(c));
@@ -388,6 +401,7 @@ export class AuthoredWorld {
      * @param {number} alpha Fraction of the next native tick.
      */
     animateLife(alpha:number):void {
+        this.groundItems?.update((this.lifeTicks+alpha)*50);
         for(const root of this.natural.children){const animal=this.animals.get(String(root.userData.id));
             if(animal){const position=animal.feet.map((v,i)=>animal.previous[i]+(v-animal.previous[i])*alpha);root.position.set(position[0],position[1]+1.5,position[2]);root.rotation.y=animal.previousYaw+(animal.yaw-animal.previousYaw)*alpha;
                 const legs=root.children.filter(o=>o.name.includes('leg'));legs.forEach((leg,i)=>{leg.rotation.x=animal.animation.leg(alpha,animal.kind==='cow'?!![1,0,0,1][i]:i%2===1);});
@@ -406,8 +420,9 @@ export class AuthoredWorld {
         }
     }
 
-    /** Release all authored scene layers. */
+    /** Release authored scene geometry and ground-item material caches. */
     dispose(): void {
         for (const group of [this.staticRoot, this.natural, this.crops]) this.clear(group);
+        this.groundItems?.dispose();
     }
 }

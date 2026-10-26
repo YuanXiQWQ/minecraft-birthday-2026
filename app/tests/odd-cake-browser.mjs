@@ -46,7 +46,7 @@ try{
         await page.mouse.click(640,360,{button:'right'});await page.locator('#inventory').waitFor({state:'visible',timeout:15000});
         await page.locator('.recipe-book-toggle').click();await page.locator('.recipe-book-search').fill('糕蛋');
         await page.locator('[data-book-control="tab:misc"]').click();
-        await page.waitForFunction(()=>JSON.parse(document.querySelector('#inventory').dataset.book).recipes.includes('jerrys_farm:upside_down_cake'));
+        await page.waitForFunction(()=>JSON.parse(document.querySelector('#inventory').dataset.book).recipes.includes('jerrys_farm:ekac'));
         assert.equal((await saved(page)).progress.advancements.criteria[ODD_ADVANCEMENT],undefined);
         const result=page.locator('.inventory-slot[data-kind="preview"]');await result.waitFor();assert.equal(JSON.parse(await page.locator('#inventory').getAttribute('data-preview')).result?.id,ODD_CAKE);
         await result.click({modifiers:['Shift']});console.log('clicked',await page.locator('#inventory').getAttribute('data-craft-error'));

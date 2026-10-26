@@ -4,4 +4,4 @@ export interface TextRun {text: string; color?: string; underline?: boolean; ita
  * @param {string} id Native item ID.
  * @return {string} Name color only.
  */
-export function itemColor(id: string): string {return id === 'minecraft:cake' || id === 'jerrys_farm:upside_down_cake' ? '#FF55FF' : '#FFFFFF';}
+export function itemColor(id: string): string {return id === 'minecraft:cake' || id === 'jerrys_farm:ekac' ? '#FF55FF' : '#FFFFFF';}

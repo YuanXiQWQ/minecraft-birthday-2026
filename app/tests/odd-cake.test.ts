@@ -124,12 +124,12 @@ test('all seven models rotate entire textured faces including cut interiors and 
     /** Read a verified model document. @param {string} id Namespaced model. @return {any} Model JSON. */
     const load=(id:string)=>docs.get(assetPath('models',id));
     for(let bites=0;bites<7;bites++){
-        const suffix=bites?'_slice'+bites:'',native=compileModel(resolveModel('minecraft:block/cake'+suffix,load)),model=resolveModel('jerrys_farm:block/upside_down_cake'+suffix,load),odd=compileModel(model);
+        const suffix=bites?'_slice'+bites:'',native=compileModel(resolveModel('minecraft:block/cake'+suffix,load)),model=resolveModel('jerrys_farm:block/ekac'+suffix,load),odd=compileModel(model);
         assert.deepEqual(odd.uvs,native.uvs);assert.deepEqual(odd.indices,native.indices);
         for(let i=0;i<native.positions.length;i+=3){assert.ok(Math.abs(odd.positions[i]-native.positions[i])<1e-8);assert.ok(Math.abs(odd.positions[i+1]-(.5-native.positions[i+1]))<1e-8);assert.ok(Math.abs(odd.positions[i+2]-(1-native.positions[i+2]))<1e-8);}
         for(let i=0;i<native.normals.length;i+=3){assert.ok(Math.abs(odd.normals[i+1]+native.normals[i+1])<1e-8);assert.ok(Math.abs(odd.normals[i+2]+native.normals[i+2])<1e-8);}
         if(bites)assert.ok(odd.textures.includes('minecraft:block/cake_inner'));
-        const icon=iconGeometry(iconModel('jerrys_farm:block/upside_down_cake'+suffix,load));
+        const icon=iconGeometry(iconModel('jerrys_farm:block/ekac'+suffix,load));
         icon.positions.forEach((v,i)=>assert.ok(Math.abs(v-odd.positions[i])<1e-8));
     }
 });

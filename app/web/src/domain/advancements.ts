@@ -75,7 +75,7 @@ export function updateAdvancements(facts:AdvancementFacts,before:PlayerLayout|nu
     for(const [id,node] of Object.entries(ADVANCEMENTS)) {
         const wasDone=advancementDone(facts,id);
         for(const [criterion,condition] of Object.entries(node.criteria)) {
-            const matches=condition.trigger==='jerrys_farm:upside_down_cake_crafted'?oddCakeCrafted:condition.trigger==='jerrys_farm:cake_crafted'?cakeCrafted:condition.trigger==='jerrys_farm:cake_on_table'?birthdayComplete:condition.trigger==='minecraft:placed_block'?planted&&condition.conditions?.location?.blocks==='minecraft:wheat':condition.trigger==='minecraft:inventory_changed'&&condition.conditions?.items?.length===1&&changed.some(stack=>{
+            const matches=condition.trigger==='jerrys_farm:ekac_crafted'?oddCakeCrafted:condition.trigger==='jerrys_farm:cake_crafted'?cakeCrafted:condition.trigger==='jerrys_farm:cake_on_table'?birthdayComplete:condition.trigger==='minecraft:placed_block'?planted&&condition.conditions?.location?.blocks==='minecraft:wheat':condition.trigger==='minecraft:inventory_changed'&&condition.conditions?.items?.length===1&&changed.some(stack=>{
                 const predicate=condition.conditions!.items![0].items;
                 return predicate.startsWith('#')?(profile.tags as Record<string,string[]>)[predicate.slice(1)]?.includes(stack.id):predicate===stack.id;
             });

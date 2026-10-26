@@ -155,9 +155,18 @@ export class PlayerItems {
      * @return {Group} Held model centered for ItemInHandLayer attachment.
      */
     held(id: string, left = false, first = false): Group {
+        return this.model(id,(first?'firstperson_':'thirdperson_')+(left?'lefthand':'righthand'));
+    }
+
+    /** Build an item using its declared display context, including native ground transforms.
+     * @param {string} id Namespaced item identity.
+     * @param {string} context Native display context.
+     * @return {Group} Independent geometry with shared material ownership.
+     */
+    model(id: string, context: string): Group {
         const out = new Group(), date = new Date(),
             stamp = String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0'),
-            context = (first ? 'firstperson_' : 'thirdperson_') + (left ? 'lefthand' : 'righthand'),
+            left=context.endsWith('lefthand'),first=context.startsWith('firstperson_'),
             definition = this.art.documents.get(assetPath('items',id));
         for (const part of iconParts(definition.model, stamp, [], context)) {
             const model = iconModel(part.model, id => this.art.documents.get(assetPath('models',id))),

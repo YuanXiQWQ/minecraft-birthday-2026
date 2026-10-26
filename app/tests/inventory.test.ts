@@ -41,7 +41,7 @@ test('P5 directory keeps every mainline index and appends side items by first ac
     assert.equal(list[1].unlocked, false);
     assert.deepEqual(s, before);
     assert.equal([...KNOWN_ITEMS].filter(id=>id.startsWith('minecraft:')).length, 113);
-    assert.ok(KNOWN_ITEMS.has('jerrys_farm:upside_down_cake'));
+    assert.ok(KNOWN_ITEMS.has('jerrys_farm:ekac'));
 });
 test('P5 every source command rejects all locked registered identities, including numeric, middle, left and right paths', () => {
     const s = initialState(), v = emptyInventory();

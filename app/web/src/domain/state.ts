@@ -381,7 +381,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             scene.blocks=scene.blocks!.filter(b=>b.id!==primary.id&&b.pair!==primary.id);reconcileChests(scene.blocks);break;
         }
 
-        case 'console': console=executeCommand(next,command.source); break;
+        case 'console': console=executeCommand(next,command.source,events); break;
         case 'book-settings': {
             ensure(['crafting', 'furnace', 'blast_furnace'].includes(command.mode), 'invalid-recipe-book');
             ensure(Object.keys(command.patch).length > 0 && Object.entries(command.patch).every(([k, v]) => ['open', 'filter'].includes(k) && typeof v === 'boolean'), 'invalid-recipe-book');

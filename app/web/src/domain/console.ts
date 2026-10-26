@@ -3,6 +3,8 @@ import {sceneDestination,sceneDestinations,teleportScene} from './teleport.ts';
 import type {SceneId} from './types.ts';
 import type {State} from './types.ts';
 import {emptyEnvironment, NativeRandom, WEATHER_TIMERS} from './environment.ts';
+import {GIVE_ITEMS,giveItems} from './give.ts';
+import type {DomainEvent} from './types.ts';
 
 export interface CommandFeedback {key:string; values?:Record<string,string|number>; error?:boolean; cursor?:number; destination?:SceneId}
 export interface ParsedCommand {op:string; args:(string|number|boolean)[]}
@@ -10,6 +12,7 @@ export interface ParsedCommand {op:string; args:(string|number|boolean)[]}
 export const TIME_MARKERS:Record<string,number>={day:1000,noon:6000,night:13000,midnight:18000,roll_village_siege:18000,wake_up_from_sleep:0};
 /** Each executable branch is shared by parsing and completion; unrelated server commands are absent. */
 const BRANCHES:[string,string[]][]=[
+ ['give',['give','<players>','<item>']],['give',['give','<players>','<item>','<count>']],
  ...['tp','teleport'].flatMap(root=>[['teleport',[root,'<scene>']],['teleport',[root,'<target>','<scene>']]] as [string,string[]][]),
  ['tick.query',['tick','query']],['tick.rate',['tick','rate','<tickrate>']],['tick.freeze',['tick','freeze']],['tick.unfreeze',['tick','unfreeze']],
  ['tick.step',['tick','step']],['tick.step',['tick','step','<duration>']],['tick.step.stop',['tick','step','stop']],
@@ -23,13 +26,16 @@ const BRANCHES:[string,string[]][]=[
   ['time.query',`time ${prefix}query time`],['time.timeline',`time ${prefix}query <timeline>`],['time.repetition',`time ${prefix}query <timeline> repetition`]
  ].map(([op,path])=>[op,path.split(' ')] as [string,string[]]))
 ];
-/** Parse native float/time/resource arguments without evaluating command text.
+/** Parse native integer, float, time, resource and player arguments without evaluating command text.
  * @param {string} name Registered argument identity.
  * @param {string} raw One Brigadier-style word.
  * @return {string|number|boolean|null} Validated argument or null.
  */
 function argument(name:string,raw:string):string|number|boolean|null{
  const id=raw.replace(/^minecraft:/,'');
+ if(name==='<players>')return /^(@[spar]|[A-Za-z0-9_]{1,16})$/.test(raw)?raw:null;
+ if(name==='<item>'){const item=raw.includes(':')?raw:'minecraft:'+raw;return GIVE_ITEMS.has(item)?item:null;}
+ if(name==='<count>')return /^-?\d+$/.test(raw)&&Number(raw)>=1&&Number(raw)<=2147483647?Number(raw):null;
  if(name==='<scene>')return sceneDestination(raw);
  if(name==='<target>')return /^(@[spa]|[A-Za-z0-9_]{1,16})$/.test(raw)?raw:null;
  if(name==='<boolean>')return raw==='true'?true:raw==='false'?false:null;
@@ -52,6 +58,13 @@ function argument(name:string,raw:string):string|number|boolean|null{
  * @return {CommandFeedback|null} Native argument error, or a resource/literal fallback.
  */
 function argumentError(name:string,raw:string):CommandFeedback|null{
+ if(name==='<players>')return null;
+ if(name==='<item>')return{key:'argument.item.id.invalid',values:{v0:raw.includes(':')?raw:'minecraft:'+raw},error:true};
+ if(name==='<count>'){
+  const n=Number(raw);
+  if(/^-?\d+$/.test(raw)&&n>=-2147483648&&n<1)return{key:'argument.integer.low',values:{v0:1,v1:n},error:true};
+  return{key:'parsing.int.invalid',values:{v0:raw},error:true};
+ }
  if(name==='<boolean>')return{key:'parsing.bool.invalid',values:{v0:raw},error:true};
  if(['<clock>','<timeline>','<marker>','<scene>','<target>'].includes(name))return null;
  if(name==='<tickrate>'||name==='<clockrate>'){
@@ -87,7 +100,7 @@ export function parseCommand(source:string):ParsedCommand|CommandFeedback{
  if(messages.length&&messages.every(f=>f.message&&JSON.stringify(f.message)===JSON.stringify(messages[0].message)))return{...messages[0].message!,cursor};
  return{key:best===0||best===tokens.length?'command.unknown.command':'command.unknown.argument',error:true,cursor};
 }
-/** Produce native-prefix suggestions from the same executable tree, including Shift-Tab cycling.
+/** Produce native-prefix suggestions from the executable tree and full item registry, including Shift-Tab cycling.
  * @param {string} source Text before the caret.
  * @param {string} username Current local player name for target completion.
  * @return {{start:number,values:string[]}} Replacement range and sorted candidates.
@@ -96,7 +109,7 @@ export function completeCommand(source:string,username=''):{start:number;values:
  const start=Math.max(source.lastIndexOf(' ')+1,source.startsWith('/')?1:0),prefix=source.slice(start),before=source.slice(0,start).trim().replace(/^\//,'').split(/\s+/).filter(Boolean),out=new Set<string>();
  for(const [,path] of BRANCHES){if(before.length>=path.length)continue;
   if(!before.every((value,i)=>path[i].startsWith('<')?argument(path[i],value)!==null:value===path[i]||value==='minecraft:'+path[i]))continue;
-  const next=path[before.length],choices=next==='<scene>'?sceneDestinations():next==='<target>'?['@s','@p','@a',...(username?[username]:[])]:next==='<boolean>'?['true','false']:next==='<clock>'?['minecraft:overworld']:next==='<timeline>'?['minecraft:day','minecraft:moon']:next==='<marker>'?['minecraft:day','minecraft:noon','minecraft:night','minecraft:midnight']:next==='<duration>'?(before[1]==='sprint'?['60s','1d','3d']:['1t','1s']):next==='<tickrate>'?['20']:next==='<clockrate>'?['1']:next.startsWith('<')?[]:[next];
+  const next=path[before.length],choices=next==='<item>'?[...GIVE_ITEMS]:next==='<players>'?['@s','@p','@a','@r',...(username?[username]:[])]:next==='<scene>'?sceneDestinations():next==='<target>'?['@s','@p','@a',...(username?[username]:[])]:next==='<boolean>'?['true','false']:next==='<clock>'?['minecraft:overworld']:next==='<timeline>'?['minecraft:day','minecraft:moon']:next==='<marker>'?['minecraft:day','minecraft:noon','minecraft:night','minecraft:midnight']:next==='<duration>'?(before[1]==='sprint'?['60s','1d','3d']:['1t','1s']):next==='<tickrate>'?['20']:next==='<clockrate>'?['1']:next.startsWith('<')?[]:[next];
   for(const value of choices)if(value.startsWith(prefix)||value.replace(/^minecraft:/,'').startsWith(prefix))out.add(value);
  }
  return{start,values:[...out].sort()};
@@ -104,11 +117,13 @@ export function completeCommand(source:string,username=''):{start:number;values:
 /** Apply command semantics only to a transaction-local state; query and rejected commands do not mutate it.
  * @param {State} state Fresh locked state.
  * @param {string} source User console input.
+ * @param {DomainEvent[]} events Notifications published after the transaction commits.
  * @return {CommandFeedback[]} Native localized result messages.
  */
-export function executeCommand(state:State,source:string):CommandFeedback[]{
+export function executeCommand(state:State,source:string,events:DomainEvent[]=[]):CommandFeedback[]{
  const parsed=parseCommand(source);if('key'in parsed)return[parsed];
  const {op,args}=parsed;
+ if(op==='give')return giveItems(state,String(args[0]),String(args[1]),args[2]===undefined?1:Number(args[2]),events);
  if(op==='teleport'){
   const username=state.settings.username??'sireoh',target=args.length===2?args[0]:username;
   if(!['@s','@p','@a',username].includes(String(target)))return[{key:'argument.entity.notfound.player',error:true}];
