@@ -19,7 +19,7 @@ import {BLOCK_PROPERTIES} from '../domain/placed-blocks.ts';
  * @return {boolean} Whether to include this native part.
  */
 function matches(when:any,state:Record<string,string>):boolean{return !when||Object.entries(when).every(([k,v])=>k==='OR'?(v as any[]).some(w=>matches(w,state)):k==='AND'?(v as any[]).every(w=>matches(w,state)):String(v).split('|').includes(state[k]??'false'));}
-/** Compile precisely selected native block models and retain their local shape bounds.
+/** Compile native block states or fluid surfaces and retain their interaction metadata.
  * @param {PlacedBlock} block Persistent native state.
  * @param {Resources} pack Verified ordinary-build assets.
  * @param {VanillaModels} models Shared native material owner.
@@ -27,6 +27,11 @@ function matches(when:any,state:Record<string,string>):boolean{return !when||Obj
  * @return {Group} World block geometry.
  */
 export function placedModel(block:PlacedBlock,pack:Resources,models:VanillaModels,glass:ReadonlySet<string>=new Set()):Group{
+    if(block.block==='water'){
+        const level=Number(block.state.level??0),height=level>=8?16:(level===0?8:8-level)*16/9,root=new Group(),faces=Object.fromEntries(['up','down','north','south','east','west'].map(face=>[face,{texture:'#water',uv:[0,0,16,16]}]));
+        const compiled=compileModel({textures:{water:'minecraft:block/'+(level===0?'water_still':'water_flow')},elements:[{from:[0,0,0],to:[16,height,16],faces}]},{model:'fluid'});
+        root.add(models.sample({id:block.id,block:'water',state:'',variant:{model:'fluid'},compiled}));root.position.set(...block.cell);root.userData={id:block.id,cell:block.cell,block:'water',state:block.state,collision:false,support:false};return root;
+    }
     const doc=pack.documents.get(blockStatePath(block.block)),root=new Group(),shapes:Bounds[]=[];
     if(!doc)throw Error('world-model:'+block.block);
     let variants:Variant[]=[];

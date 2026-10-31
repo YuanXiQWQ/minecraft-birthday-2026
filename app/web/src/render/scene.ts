@@ -1,8 +1,10 @@
 /** Production-facing real 3D presentation and persistent-instance port, without P2 fixtures or gameplay simulation. */
 import {ActionKeys,KEY_BINDINGS,boundKey,controlSettings,lookSensitivity,type ControlSettings} from '../domain/control-settings.ts';
 import {cropStage,soilAt} from '../domain/agriculture.ts';
-import {currentFarm} from '../domain/farm-shape.ts';
 import {BlockFeedback} from './block-feedback.ts';
+import {waterCells} from '../domain/water.ts';
+import {handStack} from '../domain/hands.ts';
+import {AnimalHearts} from './animal-hearts.ts';
 import {CampfireSmoke} from './campfire-smoke.ts';
 import {blockAt} from '../domain/placed-blocks.ts';
 import {SleepView} from './sleep-view.ts';
@@ -118,7 +120,7 @@ export class SceneView {
     weather:NativeWeather|null=null;
     onEnvironmentFrame:((now:number)=>void)|null=null;
     environmentProgress: Progress | null = null;
-    campfireSmoke:CampfireSmoke|null=null;
+    campfireSmoke:CampfireSmoke|null=null;animalHearts:AnimalHearts|null=null;
     skyBaseColors = new WeakMap<object, Color>();
     skySettings: SkySettings = {time:'game',weather:'game'};
     ray = new Raycaster();
@@ -210,7 +212,7 @@ export class SceneView {
         canvas.dataset.resourceVersion = '26.3';
         host.append(canvas);
         this.models = new VanillaModels(pack);
-        if(game){this.campfireSmoke=new CampfireSmoke(pack);this.scene.add(this.campfireSmoke.root);}
+        if(game){this.animalHearts=new AnimalHearts(pack);this.scene.add(this.animalHearts.root);this.campfireSmoke=new CampfireSmoke(pack);this.scene.add(this.campfireSmoke.root);}
         this.blockLight=new BlockLight();for(const material of this.models.materials.values())this.blockLight.bind(material);
         if (game) this.feedbackEffects = new BlockFeedback(pack, this.models, this.scene, this.camera, this.blockLight);
         this.scene.background = new Color(game ? '#617C7B' : '#9BAFA0');
@@ -541,7 +543,7 @@ export class SceneView {
         this.authored.sync(p);
         this.setCake(p.scene === 'home' && p.cakePlacement !== null,p.cakePlacement?.bites??0);
         this.sync(p.scenes[p.scene]);
-        const glass=glassCells(p),visualBlocks=(p.scenes[p.scene].blocks??[]).map(({contents:_,...b})=>b.block==='barrel'?{...b,state:{...b.state,open:String(this.storageOpen.has(b.id))}}:b),placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks?visualBlocks:undefined,[...glass]]);
+        const glass=glassCells(p),visualBlocks=[...(p.scenes[p.scene].blocks??[]),...waterCells(p).map(f=>({id:'fluid:'+f.cell.join(','),block:'water',cell:f.cell,contents:undefined,state:{level:String(f.level)}}))].map(({contents:_,...b})=>b.block==='barrel'?{...b,state:{...b.state,open:String(this.storageOpen.has(b.id))}}:b),placedSignature=JSON.stringify([p.scene,p.scenes[p.scene].blocks||p.scenes[p.scene].fluids?.length||p.scene==='farm'?visualBlocks:undefined,[...glass]]);
         if(placedSignature!==this.placedSignature){this.placedSignature=placedSignature;for(const child of [...this.placed.children])this.release(child);for(const b of visualBlocks)this.placed.add(placedModel(b,this.models.pack as Resources,this.models,glass));}
         this.rebuildCollision();
         const footCell:Cell=[Math.floor(this.motion.feet[0]),Math.floor(this.motion.feet[1]-.2),Math.floor(this.motion.feet[2])],soil=soilAt(p,footCell);
@@ -690,9 +692,9 @@ export class SceneView {
         this.sleepView?.update(dt,this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye);
         if(this.environmentProgress?.sleep){this.updateSleepCamera();this.onPlayerTick?.();this.motionRemainder=0;return;}
         if(this.environmentProgress){this.itemUse?.update(this.environmentProgress.player.data,dt/50);if(this.itemUse)this.hand?.setUse(this.itemUse);}this.hand?.update(dt);this.motionRemainder+=dt;let changed=false;
-        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=p.scene==='farm'&&currentFarm(p).water.some(c=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]<c[1]+7/8),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump,useSpeed:this.itemUse?.id==='minecraft:shield'?.2:1,canSprint:this.itemUse?.id!=='minecraft:shield'});
-            if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay&&!this.itemUse?.hand){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.eggs?.tick(this.collision,[...(this.authored?.animals.values()??[])].map(a=>a.bounds()),p.scene==='farm'?currentFarm(p).water:[],(point,count,index,spawn)=>this.onEggImpact?.(point,count,[...(this.authored?.animals.keys()??[])][index],spawn));this.onPlayerTick?.();this.playMovement();
-            const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,p.scene==='farm'?currentFarm(p).water:[],(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}),this.motion);changed=true;}
+        while(this.motionRemainder>=50){this.motionRemainder-=50;const f=this.motion.feet,near=this.collision.filter(b=>b[0]<f[0]+2&&b[3]>f[0]-2&&b[1]<f[1]+3&&b[4]>f[1]-2&&b[2]<f[2]+2&&b[5]>f[2]-2);this.previousFeet=[...this.motion.feet];const p=this.environmentProgress!,fluid=waterCells(p).some(({cell:c,level})=>f[0]+.3>c[0]&&f[0]-.3<c[0]+1&&f[2]+.3>c[2]&&f[2]-.3<c[2]+1&&f[1]+(this.motion.crouching?1.5:1.8)>c[1]&&f[1]<c[1]+(level!==null&&level>=8?1:(8-(level??0))/9)),climb=blockAt(p,f.map(Math.floor) as Cell)?.block==='ladder';this.motion.tick(this.movementKeys(),this.look.yaw,near,{water:fluid,climb,sprintWindow:this.controls?.sprintWindow,autoJump:this.controls?.autoJump,useSpeed:this.itemUse?.id==='minecraft:shield'?.2:1,canSprint:this.itemUse?.id!=='minecraft:shield'});
+            if(this.useDelay>0)this.useDelay--;if(this.input&&this.actionKeys?.active.has('use')&&!this.useDelay&&!this.itemUse?.hand){this.useDelay=4;this.onUse?.(this.refreshHover(),{shift:this.actionKeys.active.has('sneak')});}this.eggs?.tick(this.collision,[...(this.authored?.animals.values()??[])].map(a=>a.bounds()),waterCells(p).map(f=>f.cell),(point,count,index,spawn)=>this.onEggImpact?.(point,count,[...(this.authored?.animals.keys()??[])][index],spawn));this.onPlayerTick?.();this.playMovement();
+            const epoch=this.movementEpoch,owner=this.worldId;this.authored.tickLife(p,this.collision,waterCells(p).map(f=>f.cell),(id,options)=>this.movementSound?.(id,{...options,valid:()=>this.worldId===owner&&this.movementEpoch===epoch&&!this.simulationPaused&&!this.disposed&&!this.lost&&!document.hidden}),this.motion);changed=true;}
         this.authored.animateLife(this.motionRemainder/50);this.eggs?.animate(this.motionRemainder/50,this.camera);
         const alpha=this.motionRemainder/50,eye=this.motion.feet.map((n,i)=>this.previousFeet[i]+(n-this.previousFeet[i])*alpha) as Cell;this.camera.position.set(eye[0],eye[1]+(this.sleepView?.height()??(this.motion.crouching?PLAYER_PHYSICS.crouchEye:PLAYER_PHYSICS.eye)),eye[2]);this.camera.updateMatrixWorld(true);if(this.input&&(changed||this.keys.size))this.refreshHover();
         this.renderer.domElement.dataset.player=JSON.stringify({feet:this.motion.feet,velocity:this.motion.velocity,grounded:this.motion.grounded,crouching:this.motion.crouching,sprinting:this.motion.sprinting,bob:this.motion.bob,walk:this.motion.walk,eye:this.camera.position.toArray(),yaw:this.look.yaw});
@@ -791,7 +793,7 @@ export class SceneView {
         this.requestRender();
     }
 
-    /** Ray-pick actual geometry, respecting depth, opaque scenery and original alpha cutouts.
+    /** Ray-pick native geometry and alpha cutouts; only empty buckets target source-fluid surfaces.
      * @param {number} x Pointer client X.
      * @param {number} y Pointer client Y.
      * @return {Pick|null} Nearest visible object and transformed face normal.
@@ -803,8 +805,8 @@ export class SceneView {
         this.camera.updateMatrixWorld(true);
         this.ray.far=this.authored?PLAYER_PHYSICS.blockReach:Infinity;
         this.ray.setFromCamera(new Vector2((x - r.left) / r.width * 2 - 1, 1 - (y - r.top) / r.height * 2), this.camera);
-        const hit = this.ray.intersectObjects([this.world, this.persistent,this.placed, ...(this.authored ? [this.authored.staticRoot, this.authored.natural, this.authored.crops] : [])], true).find(h => this.models.accepts(h));
-        return hit && (!/cow|chicken/.test(this.hit(hit).id)||hit.distance<=PLAYER_PHYSICS.entityReach) ? this.hit(hit) : null;
+        const hit = this.ray.intersectObjects([this.world, this.persistent,this.placed, ...(this.authored ? [this.authored.staticRoot, this.authored.natural, this.authored.crops] : [])], true).find(h => {if(!this.models.accepts(h))return false;const target=this.hit(h);if(target.block!=='water')return true;const p=this.environmentProgress;return !!p&&(['mainhand','offhand'] as const).some(hand=>handStack(p.player.data,hand)?.id==='minecraft:bucket')&&Number(h.object.parent?.userData.state?.level??0)===0;});
+        return hit && (!['cow','chicken'].includes(this.hit(hit).block??'')||hit.distance<=PLAYER_PHYSICS.entityReach) ? this.hit(hit) : null;
     }
 
     /** Resolve a mesh's domain identity and apply closer native interaction volumes to its face direction while retaining the visible hit point.
@@ -875,6 +877,7 @@ export class SceneView {
                 this.weather?.update(ticks,p.scene,camera.position.toArray(),this.precipitation.heights,weather);this.sky.flash=!!this.weather&&this.weather.flashUntil>=Math.floor(ticks);this.onEnvironmentFrame?.(start);weatherEnd();
             }
             this.updateDebris(start);
+            if(this.environmentProgress&&this.authored)this.animalHearts?.update(start,this.environmentProgress,this.authored.animals,this.simulationPaused||document.hidden);
             if(this.environmentProgress&&this.campfireSmoke){this.campfireSmoke.update(start,this.environmentProgress,this.collision,this.simulationPaused||document.hidden);this.renderer.domElement.dataset.campfireSmoke=JSON.stringify({count:this.campfireSmoke.particles.length,signal:this.environmentProgress.scenes[this.environmentProgress.scene].blocks?.filter(b=>b.block==='campfire'&&b.state.signal_fire==='true').length??0});}
             const end = timing('cpu-render-submit'),
                 gpuEnd = gpuTiming(this.renderer.getContext() as WebGL2RenderingContext);
@@ -969,7 +972,7 @@ export class SceneView {
         if (this.disposed) return;
         this.controlsAbort.abort();this.eggs?.dispose();this.hand?.dispose();this.playerView?.dispose();this.showOutline(null);
         this.blockLight?.dispose();this.movementSound=null;
-        this.campfireSmoke?.dispose();
+        this.campfireSmoke?.dispose();this.animalHearts?.dispose();
         this.mode?.dispose();
         this.sky?.dispose(); this.precipitation?.dispose();this.weather?.dispose();this.onEnvironmentFrame=null;
         this.disposed = true;

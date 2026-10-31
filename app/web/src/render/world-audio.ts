@@ -91,7 +91,7 @@ export class WorldAudio {
      * @param {string} id Native event identity.
      * @return {any} Original event definition when available.
      */
-    definition(id:string):any{return this.documents.get('assets/minecraft/controls-sounds.json')?.[id]??this.documents.get('assets/minecraft/ambience-sounds.json')?.[id]??this.documents.get('assets/minecraft/world-sounds.json')?.[id]??this.documents.get('$native-sounds')?.[id];}
+    definition(id:string):any{return this.documents.get('assets/minecraft/farm-interaction-sounds.json')?.[id]??this.documents.get('assets/minecraft/controls-sounds.json')?.[id]??this.documents.get('assets/minecraft/ambience-sounds.json')?.[id]??this.documents.get('assets/minecraft/world-sounds.json')?.[id]??this.documents.get('$native-sounds')?.[id];}
     /** Update the stationary listener from the real camera.
      * @param {number[]} position Current three-dimensional eye.
      * @param {number[]} forward Current camera forward direction.

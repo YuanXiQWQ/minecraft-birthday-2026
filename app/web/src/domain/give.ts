@@ -1,4 +1,5 @@
 /** Java 26.3 GiveCommand delivery over the existing single-player item registry and ground drops. */
+import {INTERACTION_ITEMS} from './native-interaction-items.ts';
 import registry from '../data/registry.json' with {type:'json'};
 import {INVENTORY_RULES,ODD_CAKE} from './easter-egg.ts';
 import {cell} from './inventory.ts';
@@ -11,7 +12,7 @@ import type {Stack} from '../rules/types.ts';
 import type {CommandFeedback} from './console.ts';
 
 /** All implemented vanilla items and the registered authored cake are available without prior acquisition. */
-export const GIVE_ITEMS=new Set([...registry,ODD_CAKE]);
+export const GIVE_ITEMS=new Set([...registry,...Object.keys(INTERACTION_ITEMS),ODD_CAKE]);
 
 /** Give at most 100 native stacks, merging selected/offhand groups before ordinary inventory slots.
  * @param {State} state Transaction-local state.

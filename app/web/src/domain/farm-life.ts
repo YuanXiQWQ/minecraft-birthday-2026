@@ -33,6 +33,7 @@ export class FarmAnimal {
     baby=false;grounded=true;
     animation=new AnimalWalk();
     velocity:Cell=[0,0,0];returning=false;returnRetry=0;
+    goal:Cell|null=null;goalStop=2.5;goalSpeed=1;courtship=0;partner='';tempted=false;temptCooldown=0;
     /** Initialize an independent lifetime at its authored center.
      * @param {'cow'|'chicken'} kind Native adult type.
      * @param {Cell} origin Home center.
@@ -124,7 +125,21 @@ export class FarmAnimal {
         }
         if(Math.hypot(this.feet[0]-this.previous[0],this.feet[2]-this.previous[2])>1e-8){this.path=[];this.returnRetry=0;}
     }
-    /** Advance native-rate push, bounded navigation, persistent home return and ambient sound.
+    /** Navigate toward food or a mate using supported routes, independently of the home disc.
+     * @param {Bounds[]} solids Nearby collision.
+     * @param {Cell[]} water Water to avoid.
+     */
+    pursue(solids:Bounds[],water:Cell[]):void{
+        const target=this.goal!;this.path=[];
+        if(Math.hypot(...this.feet.map((v,i)=>v-target[i]))<this.goalStop)return;
+        const queue=[{cell:[...this.feet] as Cell,path:[] as Cell[],cost:0}],seen=new Set<string>();
+        for(let count=0;queue.length&&count<1024;count++){
+            queue.sort((a,b)=>b.cost-a.cost);const {cell,path}=queue.pop()!,key=cell.map(v=>Math.round(v*4)).join(',');if(seen.has(key))continue;seen.add(key);
+            if(Math.hypot(cell[0]-target[0],cell[2]-target[2])<Math.max(.4,this.goalStop)){this.path=path;return;}
+            for(const [dx,dz] of [[.25,0],[-.25,0],[0,.25],[0,-.25]]){const next=this.floor(cell[0]+dx,cell[2]+dz,solids,water,false,cell[1]);if(!next||seen.has(next.map(v=>Math.round(v*4)).join(',')))continue;const route=[...path,next];queue.push({cell:next,path:route,cost:route.length*.25+Math.hypot(next[0]-target[0],next[2]-target[2])});}
+        }
+    }
+    /** Advance native-rate push, food/mate navigation, persistent home return and ambient sound.
      * @param {Bounds[]} solids Nearby authoritative collision.
      * @param {Cell[]} water Current water cells.
      * @return {{ambient:boolean,pitch:number,step:boolean}} Native ambient trigger and movement feedback.
@@ -132,13 +147,14 @@ export class FarmAnimal {
     tick(solids:Bounds[],water:Cell[]):{ambient:boolean;pitch:number;step:boolean}{
         this.age++;this.previous=[...this.feet];this.previousYaw=this.yaw;this.previousWalk=this.walk;
         this.travelPush(solids,water);
-        const outside=Math.hypot(this.feet[0]-this.origin[0],this.feet[2]-this.origin[2])>2+1e-8;
+        const outside=!this.goal&&Math.hypot(this.feet[0]-this.origin[0],this.feet[2]-this.origin[2])>2+1e-8;
         if(outside!==this.returning){this.path=[];this.returnRetry=0;}this.returning=outside;
         if(this.returnRetry>0)this.returnRetry--;
         const ambient=this.random.integer(0,999)<this.ambientTime++;if(ambient)this.ambientTime=-80;
-        if(this.returning){if(!this.path.length&&!this.returnRetry)this.returnPath(solids,water);}
+        if(this.goal){if(this.age%10===0||!this.path.length)this.pursue(solids,water);}
+        else if(this.returning){if(!this.path.length&&!this.returnRetry)this.returnPath(solids,water);}
         else if(!this.path.length&&this.random.integer(0,119)===0)this.choosePath(solids,water);
-        const target=this.path[0];if(target&&!this.velocity[1]){const dx=target[0]-this.feet[0],dz=target[2]-this.feet[2],distance=Math.hypot(dx,dz),step=Math.min(distance,this.kind==='cow'?.2:.25),next=this.floor(this.feet[0]+dx/(distance||1)*step,this.feet[2]+dz/(distance||1)*step,solids,water,!this.returning);
+        const target=this.path[0];if(target&&!this.velocity[1]){const dx=target[0]-this.feet[0],dz=target[2]-this.feet[2],distance=Math.hypot(dx,dz),step=Math.min(distance,(this.kind==='cow'?.2:.25)*(this.goal?this.goalSpeed:1)),next=this.floor(this.feet[0]+dx/(distance||1)*step,this.feet[2]+dz/(distance||1)*step,solids,water,!this.returning&&!this.goal);
             if(!next){this.path=[];this.returnRetry=0;}else{this.feet=next;const desired=Math.atan2(-dx,-dz),turn=Math.atan2(Math.sin(desired-this.yaw),Math.cos(desired-this.yaw));this.yaw+=Math.max(-Math.PI/2,Math.min(Math.PI/2,turn));if(distance<=step+.001)this.path.shift();}
         }
         this.walk+=Math.hypot(this.feet[0]-this.previous[0],this.feet[2]-this.previous[2]);

@@ -43,7 +43,7 @@ export interface Resources extends VanillaPack {
  */
 export async function loadResources(world = false, progress?: (done: number, total: number) => void): Promise<Resources> {
     const start = performance.now(),
-        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json', 'controls-manifest.json', 'easter-egg-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
+        manifests = await Promise.all((world ? ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'world-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'advancement-manifest.json', 'controls-manifest.json', 'farm-interaction-manifest.json', 'easter-egg-manifest.json'] : ['manifest.json', 'presentation-manifest.json', 'experience-manifest.json', 'interface-manifest.json', 'ambience-manifest.json']).map(async name => {
             const r = await fetchManifest(name);
             if (!r.ok) throw new Error('resource-unavailable');
             const m = await r.json();
@@ -62,6 +62,7 @@ export async function loadResources(world = false, progress?: (done: number, tot
     const wanted = new Set<string>([...base.entries, ...home.entries, ...(manifests.find(m => m.derivedFont)?.entries ?? []), ...(worldPack?.entries ?? []), ...(world ? manifests.find(m => m.language)?.entries ?? [] : []), ...(manifests.find(m => m.source?.includes('bounded native UI'))?.entries ?? []), ...(manifests.find(m => m.source?.includes('bounded native environment'))?.entries ?? []),...(manifests.find(m => m.source?.includes('bounded native ambience'))?.entries ?? [])].map(e => e.entry));
     for (const p of Object.keys(worldPack?.inputs ?? {})) if (p.startsWith('assets/')) wanted.add(p);
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native advancements'))?.entries??[])wanted.add(entry.entry);
+    if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native farm interactions'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const entry of manifests.find(m=>m.source?.includes('bounded native controls'))?.entries??[])wanted.add(entry.entry);
     if(world)for(const path of Object.keys(manifests.find(m=>m.source?.includes('bounded native controls'))?.inputs??{}))wanted.add(path);
     if(world)for(const path of Object.keys(manifests.find(m=>m.source?.startsWith('authored upside-down cake'))?.inputs??{}))wanted.add(path);

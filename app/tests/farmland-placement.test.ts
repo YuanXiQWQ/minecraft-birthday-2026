@@ -1,5 +1,7 @@
 /** Native indented terrain rays exercise formal placement, use routing and durable occupancy. */
 import test from 'node:test';
+import {waterCells} from '../web/src/domain/water.ts';
+import {placedModel} from '../web/src/render/placed-world.ts';
 import {buildFarm} from '../web/src/render/farm-world.ts';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -234,9 +236,11 @@ test('plot Use without seeds sends no planting command, and remote occupancy/res
     }
 });
 
-test('actual authored water geometry rejects placement even when its rendered top is hit', async () => {
+test('source water is ray-targeted by an empty bucket and never supports devices', async () => {
     const h = await harness();
     try {
+        const p=initialState().progress;p.scene='farm';p.player.data.hotbar[0]={id:'minecraft:bucket',count:1};h.v.environmentProgress=p;
+        for(const f of waterCells(p))h.v.placed.add(placedModel({id:'water',block:'water',cell:f.cell,state:{level:'0'}},h.v.models.pack as any,h.v.models));h.v.scene.add(h.v.placed);
         h.v.camera.position.set(8.5, 2, 0);
         h.v.camera.lookAt(8.5, -.35, -3.5);
         const hit = h.v.pick(300, 300)!;

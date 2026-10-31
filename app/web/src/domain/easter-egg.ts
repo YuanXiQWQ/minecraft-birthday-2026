@@ -1,4 +1,5 @@
-/** Authored upside-down cake content stays separate from the locked vanilla exports. */
+/** Runtime item adapters add native interaction results and the authored cake to the locked recipe exports. */
+import {INTERACTION_ITEMS} from './native-interaction-items.ts';
 import inventory from '../data/inventory-rules.json' with {type:'json'};
 import processing from '../data/processing-rules.json' with {type:'json'};
 import type {Rules,Recipe,ItemRule} from '../rules/types.ts';
@@ -10,15 +11,15 @@ export const ODD_RECIPE:Recipe={id:ODD_CAKE,type:'minecraft:crafting_shaped',cat
 /** Cake-sized finite stack, independent of permanent catalogue eligibility. */
 export const ODD_ITEM:ItemRule={id:ODD_CAKE,maxStack:1,components:[],evidence:'authored upside-down cake'};
 /** Carrier and device adapters include the authored item without changing original exports. */
-export const INVENTORY_RULES={...inventory,items:{...inventory.items,[ODD_CAKE]:ODD_ITEM}};
+export const INVENTORY_RULES={...inventory,items:{...inventory.items,...INTERACTION_ITEMS,[ODD_CAKE]:ODD_ITEM}};
 /** Furnace and hopper transfers accept the authored item without adding a cooking recipe. */
-export const PROCESSING_RULES={...processing,items:{...processing.items,[ODD_CAKE]:ODD_ITEM}};
+export const PROCESSING_RULES={...processing,items:{...processing.items,...INTERACTION_ITEMS,[ODD_CAKE]:ODD_ITEM}};
 
-/** Extend verified vanilla rules with the authored recipe and item.
+/** Extend verified rules with native interaction items and the authored cake recipe.
  * @param {Rules} rules Verified original rule set.
  * @return {Rules} Independent runtime registry with authored content.
  */
-export function withEasterEgg(rules:Rules):Rules{return {...rules,items:{...rules.items,[ODD_CAKE]:ODD_ITEM},recipes:[...rules.recipes.filter(r=>r.id!==ODD_CAKE),ODD_RECIPE]};}
+export function withEasterEgg(rules:Rules):Rules{return {...rules,items:{...rules.items,...INTERACTION_ITEMS,[ODD_CAKE]:ODD_ITEM},recipes:[...rules.recipes.filter(r=>r.id!==ODD_CAKE),ODD_RECIPE]};}
 
 /** Map a placeable short name to its actual item namespace.
  * @param {string} block Saved short block name.

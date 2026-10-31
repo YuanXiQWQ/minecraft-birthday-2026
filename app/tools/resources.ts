@@ -14,7 +14,7 @@ export const RESOURCE_PREFIX = 'minecraft/26.3/';
  */
 export function resources(): Map<string, Uint8Array> {
     const root = realpathSync(RESOURCE_ROOT), files = new Map<string, Uint8Array>();
-    for (const manifestName of ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'world-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'startup-manifest.json', 'advancement-manifest.json', 'controls-manifest.json', 'easter-egg-manifest.json', 'profile-manifest.json']) {
+    for (const manifestName of ['manifest.json', 'presentation-manifest.json', 'catalogue-manifest.json', 'player-manifest.json', 'book-manifest.json', 'experience-manifest.json', 'world-manifest.json', 'interaction-manifest.json', 'interface-manifest.json', 'environment-manifest.json', 'ambience-manifest.json', 'startup-manifest.json', 'advancement-manifest.json', 'controls-manifest.json', 'farm-interaction-manifest.json', 'easter-egg-manifest.json', 'profile-manifest.json']) {
         const raw = readFileSync(resolve(root, manifestName)), m = JSON.parse(raw.toString());
         if (m.version !== '26.3' || m.clientSha1 !== 'e877b6a07acd633fb3bb475002175cec036e7b87') throw new Error('wrong-resource-version');
         if (manifestName === 'catalogue-manifest.json' && createHash('sha256').update(readFileSync(resolve(import.meta.dirname, '../web/src/i18n/items.en.json'))).digest('hex') !== m.namesSha256) throw new Error('item-name-integrity');

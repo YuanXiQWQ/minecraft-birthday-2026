@@ -1,4 +1,6 @@
 /** Persistent facts and versioned carrier contracts have no DOM or renderer dependency. */
+import type {AnimalCare,Offspring} from './husbandry.ts';
+import type {FluidCell} from './water.ts';
 import type {Agriculture} from './agriculture.ts';
 import type {EnvironmentState,SkySettings} from './environment.ts';
 import type {ControlSettings,ControlPatch} from './control-settings.ts';
@@ -53,6 +55,9 @@ export interface Crop {
 }
 
 export interface SceneState {
+    fluids?:FluidCell[];
+    animalCare?:Record<string,AnimalCare>;
+    offspring?:Offspring[];
     animalVitals?: Record<string,AnimalVitals>;
     chickens?: {id:string;feet:Cell;born:number}[];
     agriculture?: Agriculture;
@@ -111,6 +116,10 @@ export interface RuntimeState {
 
 export type Command = {hand?:InteractionHand} & (
     {type:'wear-shield';scene:SceneId;hand:InteractionHand;amount:number;expected:PlayerLayout}
+    | {type:'feed-animal';scene:SceneId;id:string;expected:PlayerLayout}
+    | {type:'breed-animals';scene:SceneId;parents:[string,string];feet:[Cell,Cell];id:string}
+    | {type:'use-bucket';scene:SceneId;hit:BlockHit;expected:PlayerLayout}
+    | {type:'extinguish-campfire';scene:SceneId;id:string;expected:PlayerLayout}
     | {type:'animal-hit';scene:SceneId;id:string;damage:number;weapon?:string;hand?:InteractionHand}
     | {type:'throw-egg';scene:SceneId;expected:PlayerLayout}
     | {type:'hatch-eggs';scene:SceneId;feet:Cell;count:number;id:string}

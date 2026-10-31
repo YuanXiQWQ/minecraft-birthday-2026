@@ -1,0 +1,146 @@
+{
+  "version": "26.3",
+  "clientSha1": "e877b6a07acd633fb3bb475002175cec036e7b87",
+  "source": "bounded native farm interactions",
+  "classes": {
+    "net/minecraft/world/entity/animal/Animal.class": "ef8b4a3da52f794001e5af5c3abe7db37da7d354f8357639c79b6f5077c2d4f4",
+    "net/minecraft/world/entity/AgeableMob.class": "288d7502c8fadd0d226695fb46d594a9448317b2de9d84c25cf1ef0ddf48ab8a",
+    "net/minecraft/world/entity/animal/chicken/Chicken.class": "842ad2586f4813811e6ae02790355ad7dd1a6d8719b99a9f8beb30f2fe40d18d",
+    "net/minecraft/world/entity/animal/cow/AbstractCow.class": "efebc08e8645cb5b8d8eca3c12522939401fbce5685486b46f9cffe8730ae870",
+    "net/minecraft/world/entity/ai/goal/TemptGoal.class": "0d15cc8d583f661150bbf77a3d9105c4996285c925f941afda4aa49439fabdf8",
+    "net/minecraft/world/entity/ai/goal/BreedGoal.class": "875d365a3301c58f2d55eb52ee25917bd0b18eb3fb5c0d9c683d0887df5126ed",
+    "net/minecraft/world/item/BucketItem.class": "fa1abd6581e967b2e09d0e61adc46a6e4bbfbd99d11c89738f43bc9938e51116",
+    "net/minecraft/world/item/Items.class": "cf7c261ee18d6bb55af7da16adc51fbbb7994fa09f9f8f13bec2d159bb9c9a37",
+    "net/minecraft/world/level/block/CampfireBlock.class": "a4c35cfaeab456ed359f89cb8afb26e914ab5455e88710656c66b18a47da833a",
+    "net/minecraft/world/level/material/WaterFluid.class": "ab6d93e4d0df11cb2e54cc0e0de82734b4652a14258fb0eebcd1b9e99c9bc202",
+    "net/minecraft/world/level/material/FlowingFluid.class": "5dcca9741ddf5b40b5a04073ec1135e2eb405df981a595869ed44f83f9f7a36c"
+  },
+  "entries": [
+    {
+      "entry": "assets/minecraft/items/water_bucket.json",
+      "size": 94,
+      "sha256": "7bc9aa0af1bf7b1d5dab9bce7e2eb70592b9e0a9f4b6d3fca1b1878e51b450be"
+    },
+    {
+      "entry": "assets/minecraft/models/item/water_bucket.json",
+      "size": 107,
+      "sha256": "324fb08942aeee295ded08dca294481b7e484dd199bf8c8829639a3c088702c7"
+    },
+    {
+      "entry": "assets/minecraft/textures/item/water_bucket.png",
+      "size": 215,
+      "sha256": "7da2d23c69392bda3c9dd617b7942035bbd03ea348a0ff05ad461a51854f68af"
+    },
+    {
+      "entry": "assets/minecraft/particles/heart.json",
+      "size": 45,
+      "sha256": "9be3c5721ce354d0501d2b86c5f57c11fdcf1dedc438218e9213d9dd496f961b"
+    },
+    {
+      "entry": "assets/minecraft/textures/particle/heart.png",
+      "size": 121,
+      "sha256": "eb9c9376bd97b623aaba23fcd37fdfe921eb0890b563dec5fedb1df805ad9fcf"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/water_flow.png",
+      "size": 3162,
+      "sha256": "1d1f27fe65b12dea2ec8995f1955f0ac9c5efe60b9bc4322625217c205382981"
+    },
+    {
+      "entry": "assets/minecraft/textures/block/water_flow.png.mcmeta",
+      "size": 21,
+      "sha256": "802acdb8f55f30146d5ed18414b21ba35650d4e550f81825ea104131c12dc4fc"
+    },
+    {
+      "entry": "data/minecraft/tags/item/cow_food.json",
+      "size": 43,
+      "sha256": "738f6fea58ccc54211ea33b9482a19108fb26a930e475566be060f7b21d8e3c5"
+    },
+    {
+      "entry": "data/minecraft/tags/item/chicken_food.json",
+      "size": 205,
+      "sha256": "50489663e4790fe35119e611c7e1365f64bdd4c742dc4b765ca84d380904dd4b"
+    },
+    {
+      "entry": "data/minecraft/block_transformer/shovel.json",
+      "size": 823,
+      "sha256": "81bef73e0ccdfa23bf4d3c0cffaee5aa5050d03b3a5764f2fd8ebf5c295d8bd0"
+    },
+    {
+      "entry": "data/minecraft/tags/item/douses_campfires.json",
+      "size": 46,
+      "sha256": "179781e3f4a731de4d5cb5887a44b6c7fb400c6c908e1633eaef9ced01a06973"
+    },
+    {
+      "entry": "data/minecraft/tags/item/shovels.json",
+      "size": 238,
+      "sha256": "d851867b34b2ef75b403db804d9263bc72f71007f774e990acc3b1b0fabb4698"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/fill3.ogg",
+      "size": 9864,
+      "sha256": "197f0f7c8023a18fe3aade9dd76cbc1aef24663c0712fbf9d69669a6e9b8bb8e"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/empty2.ogg",
+      "size": 10547,
+      "sha256": "959d211d6c05090e2eaef527e5e47d2edb24a2289aa2d28668ea6b0c9dcbae61"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/empty3.ogg",
+      "size": 10217,
+      "sha256": "c16f63863039d2be13ce9f7ca3e232efdf25f973376114a77e0f56fd097c08d1"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/empty1.ogg",
+      "size": 10813,
+      "sha256": "1adb511e9399950265d3c3611e6e629c4cc2f03b8471878f8ca9c3af0d78c590"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/fill1.ogg",
+      "size": 10208,
+      "sha256": "5e09b108f1e382acb98e65376d19e7e603031d0037c7d1d81bae9a4ff40d03ed"
+    },
+    {
+      "entry": "assets/minecraft/sounds/random/fizz.ogg",
+      "size": 15222,
+      "sha256": "4114bc9a87d481f59f08137dcbcc1a2a493b081cfdfc218cd6dd9738986afb3a"
+    },
+    {
+      "entry": "assets/minecraft/sounds/item/bucket/fill2.ogg",
+      "size": 9574,
+      "sha256": "90518b0e1384ee3d90bc3594ac0286e1ae9020f038210dbe20c2e879d66ea3f6"
+    },
+    {
+      "entry": "assets/minecraft/farm-interaction-sounds.json",
+      "size": 728,
+      "sha256": "1109de8dfc9c00789127d6be53b75f80a551ed2ab13506722a3dd2763dc3a2a1"
+    }
+  ],
+  "inputs": {
+    "assets/minecraft/items/water_bucket.json": "7bc9aa0af1bf7b1d5dab9bce7e2eb70592b9e0a9f4b6d3fca1b1878e51b450be",
+    "assets/minecraft/models/item/water_bucket.json": "324fb08942aeee295ded08dca294481b7e484dd199bf8c8829639a3c088702c7",
+    "assets/minecraft/textures/item/water_bucket.png": "7da2d23c69392bda3c9dd617b7942035bbd03ea348a0ff05ad461a51854f68af",
+    "assets/minecraft/particles/heart.json": "9be3c5721ce354d0501d2b86c5f57c11fdcf1dedc438218e9213d9dd496f961b",
+    "assets/minecraft/textures/particle/heart.png": "eb9c9376bd97b623aaba23fcd37fdfe921eb0890b563dec5fedb1df805ad9fcf",
+    "assets/minecraft/textures/block/water_flow.png": "1d1f27fe65b12dea2ec8995f1955f0ac9c5efe60b9bc4322625217c205382981",
+    "assets/minecraft/textures/block/water_flow.png.mcmeta": "802acdb8f55f30146d5ed18414b21ba35650d4e550f81825ea104131c12dc4fc",
+    "data/minecraft/tags/item/cow_food.json": "738f6fea58ccc54211ea33b9482a19108fb26a930e475566be060f7b21d8e3c5",
+    "data/minecraft/tags/item/chicken_food.json": "50489663e4790fe35119e611c7e1365f64bdd4c742dc4b765ca84d380904dd4b",
+    "data/minecraft/block_transformer/shovel.json": "81bef73e0ccdfa23bf4d3c0cffaee5aa5050d03b3a5764f2fd8ebf5c295d8bd0",
+    "data/minecraft/tags/item/douses_campfires.json": "179781e3f4a731de4d5cb5887a44b6c7fb400c6c908e1633eaef9ced01a06973",
+    "data/minecraft/tags/item/shovels.json": "d851867b34b2ef75b403db804d9263bc72f71007f774e990acc3b1b0fabb4698",
+    "assets/minecraft/sounds/item/bucket/fill3.ogg": "197f0f7c8023a18fe3aade9dd76cbc1aef24663c0712fbf9d69669a6e9b8bb8e",
+    "assets/minecraft/sounds/item/bucket/empty2.ogg": "959d211d6c05090e2eaef527e5e47d2edb24a2289aa2d28668ea6b0c9dcbae61",
+    "assets/minecraft/sounds/item/bucket/empty3.ogg": "c16f63863039d2be13ce9f7ca3e232efdf25f973376114a77e0f56fd097c08d1",
+    "assets/minecraft/sounds/item/bucket/empty1.ogg": "1adb511e9399950265d3c3611e6e629c4cc2f03b8471878f8ca9c3af0d78c590",
+    "assets/minecraft/sounds/random/eat1.ogg": "b96b9b3586acc8e35fad92395648e03d612534a05f332eb59bfb3ed2ace4e87a",
+    "assets/minecraft/sounds/item/bucket/fill1.ogg": "5e09b108f1e382acb98e65376d19e7e603031d0037c7d1d81bae9a4ff40d03ed",
+    "assets/minecraft/sounds/random/fizz.ogg": "4114bc9a87d481f59f08137dcbcc1a2a493b081cfdfc218cd6dd9738986afb3a",
+    "assets/minecraft/sounds/random/eat3.ogg": "1198a64c34a8a30a7d288321915b39a79fb54813f85352e2184108fbeaa5f8e4",
+    "assets/minecraft/sounds/random/eat2.ogg": "9bf29af6b0ce04a60ed44b8a0dfc4703cad58ae9fa28a27326890828b615578d",
+    "assets/minecraft/sounds/item/bucket/fill2.ogg": "90518b0e1384ee3d90bc3594ac0286e1ae9020f038210dbe20c2e879d66ea3f6",
+    "assets/minecraft/farm-interaction-sounds.json": "1109de8dfc9c00789127d6be53b75f80a551ed2ab13506722a3dd2763dc3a2a1"
+  },
+  "exporterSha256": "0dadf2c73dbdccb2c98139c7fa39eb4339808b30a775ccb2428d77b26ae85eee"
+}

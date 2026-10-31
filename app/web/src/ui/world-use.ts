@@ -1,4 +1,6 @@
 /** Formal free-pointer world actions bind actual ray hits to current-generation semantic commands. */
+import {canFeed,animalKind,animalCare} from '../domain/husbandry.ts';
+import {waterLevel} from '../domain/water.ts';
 import {handStack} from '../domain/hands.ts';
 import type {InteractionHand} from '../domain/hands.ts';
 import {spearTargets} from '../domain/spear-combat.ts';
@@ -49,7 +51,7 @@ export class WorldUse {
     mining: { id: string; scope: string; tool: string; start: number; ticks: number; hit: Pick; block: string; nextSound: number } | null = null;
     miningTimer = 0;
     pickupPending=false;pickupAfter=0;pickupSignature='';
-    platePending=false;
+    platePending=false;breedPending=false;
     poseTimer=0; poseSignature=''; posePending=false;
     holding = false;
     itemPending=false;cooldownPixels=0;
@@ -81,7 +83,7 @@ export class WorldUse {
         };
         scene.canUse = hit => {
             const p = session.view.envelope?.state.progress, held = p?.player.data.hotbar[p.player.data.selected], equip = held && inventory.rules.items[held.id]?.equipment;
-            const usable=(['mainhand','offhand'] as const).some(hand=>{const id=p&&handStack(p.player.data,hand)?.id;return id==='minecraft:egg'||id==='minecraft:shield'||!!spearProfile(id??null)||!!(id&&inventory.rules.items[id]?.equipment)||!!this.heldBlock(hand);});
+            const usable=(['mainhand','offhand'] as const).some(hand=>{const id=p&&handStack(p.player.data,hand)?.id;return id==='minecraft:bucket'||id==='minecraft:water_bucket'||id==='minecraft:wheat'||id==='minecraft:wheat_seeds'||id==='minecraft:egg'||id==='minecraft:shield'||!!spearProfile(id??null)||!!(id&&inventory.rules.items[id]?.equipment)||!!this.heldBlock(hand);});
             if (!hit) return usable;
             return !!p && (usable || !!equip || (canTill(p,this.blockHit(hit).cell,this.blockHit(hit).normal,held??null) || hit.block==='farmland' || hit.id === 'birthday-table' || hit.id === 'birthday-cake' || hit.id.startsWith('plot:') || hit.id.includes('cow:') || !!this.heldBlock() || p.scenes[p.scene].blocks?.some(b=>b.id===hit.id) || p.scenes[p.scene].stations.some(s => s.id === hit.id)));
         };
@@ -128,6 +130,7 @@ export class WorldUse {
         this.samplePlates();
         if(p.sleep)return;
         this.attackSpear(true);
+        if(!this.breedPending)for(const [id,a] of this.scene.authored?.animals??[]){const b=this.scene.authored?.animals.get(a.partner);if(!b||animalCare(p,id).loveUntil<=p.world.tick||animalCare(p,a.partner).loveUntil<=p.world.tick||a.courtship<60||Math.hypot(...a.feet.map((v,i)=>v-b.feet[i]))>=3)continue;this.breedPending=true;void this.run({type:'breed-animals',scene:p.scene,parents:[id,a.partner],feet:[[...a.feet],[...b.feet]],id:crypto.randomUUID()},null).finally(()=>{this.breedPending=false;});break;}
         if(this.scene.motion.landedDistance>.5&&soilAt(p,[Math.floor(feet[0]),Math.floor(feet[1]-.2),Math.floor(feet[2])]))void this.run({type:'land-on-soil',scene:p.scene,feet,distance:this.scene.motion.landedDistance},null);
         if(this.pickupPending||performance.now()<this.pickupAfter)return;
         const cells=[...(p.scenes[p.scene].agriculture?.drops??[]).map(d=>d.cell),...WORLD_SCENES[p.scene].nodes.filter(n=>n.kind==='egg'&&!p.world.visits[p.scene].removed.includes(n.id)).map(n=>n.cell)];
@@ -456,16 +459,19 @@ export class WorldUse {
             if(held?.id===ODD_CAKE){void this.run({type:'try-odd-cake-table',scene:p.scene,hand,expected:layout(this.inventory.value)},null);return true;}
             if(p.scene==='home'&&held?.id==='minecraft:cake'){void this.run({type:'record-cake-placement',scene:'home',table:'birthday-table',hand,expected:layout(this.inventory.value)},null);return true;}
         }
+        if(canFeed(p,hit.id,held?.id)){void this.run({type:'feed-animal',scene:p.scene,id:hit.id,hand,expected:layout(this.inventory.value)},null).then(ok=>{if(ok)this.swing(hand);});return true;}
         if(hit.id==='node:cow:0'&&held?.id==='minecraft:bucket'){void this.run({type:'harvest-node',scene:p.scene,node:'cow:0',visit:p.world.visits[p.scene].epoch,hand,expected:layout(this.inventory.value)},'game.harvested','entity.cow.milk').then(ok=>{if(ok)this.swing(hand);});return true;}
         if((secondary&&(hit.block==='straw_bed'||placed?.block==='straw_bed')||hit.id==='birthday-cake')&&this.heldBlock(hand))return this.place(hit,hand);
         if(hit.id==='birthday-cake')return this.useItem(hand);
         const context=this.blockHit(hit);
+        if(placed?.block==='campfire'&&placed.state.lit!=='false'&&held?.id.endsWith('_shovel')){void this.run({type:'extinguish-campfire',scene:p.scene,id:placed.id,hand,expected:layout(this.inventory.value)},null).then(ok=>{if(ok)this.swing(hand);});return true;}
+        if(!animalKind(p,hit.id)&&(held?.id==='minecraft:water_bucket'||held?.id==='minecraft:bucket'&&waterLevel(p,context.cell)===0)){void this.run({type:'use-bucket',scene:p.scene,hit:context,hand,expected:layout(this.inventory.value)},null).then(ok=>{if(ok)this.swing(hand);});return true;}
         const shieldFirst=hand==='mainhand'&&!!held&&/_(hoe|shovel)$/.test(held.id)&&handStack(p.player.data,'offhand')?.id==='minecraft:shield'&&!this.scene.itemUse?.shieldCooldown;
         if(!shieldFirst&&canTill(p,context.cell,context.normal,held)){void this.run({type:'till-soil',scene:p.scene,cell:context.cell,normal:context.normal,hand,expected:layout(this.inventory.value)},null,'item.hoe.till').then(ok=>{if(ok)this.swing(hand);});return true;}
         if((hit.block==='farmland'||hit.id.startsWith('plot:'))&&context.normal[1]===1&&held?.id==='minecraft:wheat_seeds'){
             void this.run({type:'plant-crop',cell:[context.cell[0],context.cell[1]+1,context.cell[2]],id:crypto.randomUUID(),hand,expected:layout(this.inventory.value)},'game.planted','item.crop.plant');return true;
         }
-        if(this.heldBlock(hand)&&!hit.id.includes('cow:')&&!hit.id.includes('chicken:'))return this.place(found&&attach?this.attachHit(hit,above):hit,hand);
+        if(this.heldBlock(hand)&&!animalKind(p,hit.id))return this.place(found&&attach?this.attachHit(hit,above):hit,hand);
         return this.useItem(hand);
     }
 

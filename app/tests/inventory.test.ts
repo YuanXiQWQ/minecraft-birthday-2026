@@ -40,7 +40,8 @@ test('P5 directory keeps every mainline index and appends side items by first ac
     assert.deepEqual(list.slice(18).map(e => e.item), ['minecraft:shield', 'minecraft:charcoal', 'minecraft:anvil']);
     assert.equal(list[1].unlocked, false);
     assert.deepEqual(s, before);
-    assert.equal([...KNOWN_ITEMS].filter(id=>id.startsWith('minecraft:')).length, 113);
+    assert.equal([...KNOWN_ITEMS].filter(id=>id.startsWith('minecraft:')).length, 114);
+    assert.ok(KNOWN_ITEMS.has('minecraft:water_bucket'));
     assert.ok(KNOWN_ITEMS.has('jerrys_farm:ekac'));
 });
 test('P5 every source command rejects all locked registered identities, including numeric, middle, left and right paths', () => {

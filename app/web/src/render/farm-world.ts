@@ -1,10 +1,9 @@
-/** Render the shared farm layout with exact native states, unit fluid UVs and explicit roof metadata. */
+/** Render the shared farm layout with exact native states and explicit roof metadata; fluid meshes have independent ownership. */
 import {Group} from 'three';
 import type {AuthoredWorld} from './authored-world.ts';
 import {currentFarm} from '../domain/farm-shape.ts';
 import type {Cell, Progress} from '../domain/types.ts';
-import {compileModel} from './model-format.ts';
-import type {Face, ModelFace} from './model-format.ts';
+import type {Face} from './model-format.ts';
 import {exposedModel} from './plains-terrain.ts';
 import {placedModel} from './placed-world.ts';
 
@@ -53,20 +52,6 @@ export function buildFarm(world: AuthoredWorld, parent: Group, p: Progress): Cel
             mesh.userData.collision = reachable;
             mesh.userData.rainTops = cells.map(c => layout.cells.get(c.join(','))!.rainTop);
         }
-    }
-    const waterFaces = Object.fromEntries(['up', 'north', 'south', 'east', 'west'].map(face => [face, {texture: '#water', uv: [0, 0, 16, 16]}])) as Partial<Record<Face, ModelFace>>;
-    const water = {id: 'farm-fluid', block: 'water', state: '', variant: {model: 'fluid'}, compiled: compileModel({textures: {water: 'minecraft:block/water_still'}, elements: [{from: [0, 0, 0], to: [16, 14, 16], faces: waterFaces}]}, {model: 'fluid'})};
-    const fluids = new Map<string, {faces: Face[]; cells: Cell[]}>();
-    for (const c of layout.water) {
-        const faces: Face[] = ['up'];
-        for (const [face, dx, dz] of [['north', 0, -1], ['south', 0, 1], ['east', 1, 0], ['west', -1, 0]] as const)
-            if (layout.cells.get([c[0] + dx, c[1], c[2] + dz].join(','))?.block !== 'water') faces.push(face);
-        const key = faces.join(','); if (!fluids.has(key)) fluids.set(key, {faces, cells: []}); fluids.get(key)!.cells.push(c);
-    }
-    for (const {faces, cells} of fluids.values()) {
-        world.batch('water', cells, parent, 'water', '', {...water, compiled: exposedModel(water.compiled, faces)});
-        const fluid = parent.children.at(-1)!; fluid.userData.support = false; fluid.userData.collision = false;
-        fluid.userData.rainTops = cells.map(c => c[1] + 7 / 8);
     }
     return layout.lights;
 }

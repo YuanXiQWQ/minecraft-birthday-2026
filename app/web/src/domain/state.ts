@@ -1,4 +1,7 @@
 /** Pure commands, identity validation and projections; versioned player carriers remain separate from validated producer-owned output. */
+import {INTERACTION_ITEMS} from './native-interaction-items.ts';
+import {animalKind,feedAnimal,breedAnimals} from './husbandry.ts';
+import {useBucket,extinguish,tickWater,waterLevel,setWater} from './water.ts';
 import {handStack,setHandStack} from './hands.ts';
 import {hurtAnimal} from './spear-combat.ts';
 import {spearProfile} from './item-use.ts';
@@ -62,7 +65,7 @@ export const SCENES: SceneId[] = ['plains', 'cave', 'farm', 'home'];
 /** Presentation ordering follows the proposed main path without constraining acquisition order or recipe reachability. */
 export const MAINLINE = ['oak_log', 'oak_planks', 'stick', 'crafting_table', 'wooden_pickaxe', 'cobblestone', 'stone_pickaxe', 'furnace', 'raw_iron', 'iron_ingot', 'bucket', 'milk_bucket', 'wheat_seeds', 'wheat', 'sugar_cane', 'sugar', 'egg', 'cake'].map(id => 'minecraft:' + id);
 /** Generated P4 fixed-point identities expand validation without changing unlock, discovery or temporary-stack semantics. */
-export const KNOWN_ITEMS = new Set([...reachable,ODD_CAKE]);
+export const KNOWN_ITEMS = new Set([...reachable,...Object.keys(INTERACTION_ITEMS),ODD_CAKE]);
 
 
 /** Publish one effective acquisition separately from its physical delivery and uncarried remainder.
@@ -244,9 +247,12 @@ export function validateState(value: unknown): asserts value is State {
     const ids = new Set<string>();
     for (const id of SCENES) {
         const scene = p.scenes[id];
-        fields(scene, ['layoutVersion', 'stations', 'crops',...(Object.hasOwn(scene,'animalVitals')?['animalVitals']:[]),...(Object.hasOwn(scene,'chickens')?['chickens']:[]),...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[]),...(Object.hasOwn(scene,'agriculture')?['agriculture']:[])]);
-        if(scene.animalVitals){ensure(typeof scene.animalVitals==='object'&&!Array.isArray(scene.animalVitals)&&Object.keys(scene.animalVitals).length<=515);for(const [key,v] of Object.entries(scene.animalVitals)){fields(v,['health','lastDamage','hurtAt']);ensure((id==='farm'&&['node:cow:0','animal:chicken:0','animal:chicken:1'].includes(key)||scene.chickens?.some((c:{id:string})=>'hatched:'+c.id===key))&&Number.isFinite(v.health)&&v.health>=0&&v.health<=(key==='node:cow:0'?10:4)&&Number.isFinite(v.lastDamage)&&v.lastDamage>=0&&Number.isSafeInteger(v.hurtAt)&&v.hurtAt>=0&&v.hurtAt<=p.world.tick);}}
-        if(scene.chickens){ensure(Array.isArray(scene.chickens)&&scene.chickens.length<=512);const chickenIds=new Set<string>();for(const c of scene.chickens){fields(c,['id','feet','born']);ensure(typeof c.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(c.id)&&!chickenIds.has(c.id)&&Array.isArray(c.feet)&&c.feet.length===3&&c.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isSafeInteger(c.born)&&c.born>=0&&c.born<=p.world.tick);chickenIds.add(c.id);}}
+        fields(scene, ['layoutVersion', 'stations', 'crops',...(['fluids','animalCare','offspring'] as const).filter(k=>Object.hasOwn(scene,k)),...(Object.hasOwn(scene,'animalVitals')?['animalVitals']:[]),...(Object.hasOwn(scene,'chickens')?['chickens']:[]),...(Object.hasOwn(scene,'blocks')?['blocks']:[]),...(Object.hasOwn(scene,'pose')?['pose']:[]),...(Object.hasOwn(scene,'agriculture')?['agriculture']:[])]);
+        if(scene.fluids!==undefined){ensure(Array.isArray(scene.fluids)&&scene.fluids.length<=30000&&new Set(scene.fluids.map(f=>f.cell.join(','))).size===scene.fluids.length);for(const f of scene.fluids){fields(f,['cell','level']);cell(f.cell);ensure(f.cell[0]>=-18&&f.cell[0]<=18&&f.cell[2]>=-22&&f.cell[2]<=10&&f.cell[1]>=-4&&f.cell[1]<=15&&(f.level===null||Number.isInteger(f.level)&&f.level>=0&&f.level<=8));}}
+        if(scene.offspring!==undefined){ensure(Array.isArray(scene.offspring)&&scene.offspring.length<=512&&new Set(scene.offspring.map(c=>c.id)).size===scene.offspring.length);for(const c of scene.offspring){fields(c,['id','kind','feet','born']);ensure(typeof c.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(c.id)&&['cow','chicken'].includes(c.kind)&&c.feet.length===3&&c.feet.every((v:number)=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isSafeInteger(c.born)&&c.born>=0&&c.born<=p.world.tick);}}
+        if(scene.animalCare!==undefined){ensure(typeof scene.animalCare==='object'&&!Array.isArray(scene.animalCare)&&Object.keys(scene.animalCare).length<=1027);for(const [key,c] of Object.entries(scene.animalCare)){fields(c,['loveUntil','readyAt','grownAt','forcedAge']);ensure(!!animalKind({...p,scene:id,scenes:{...p.scenes,[id]:{...scene,animalVitals:undefined}}} as Progress,key)&&Object.values(c).every(v=>Number.isSafeInteger(v)&&v>=0));}}
+        if(scene.animalVitals){ensure(typeof scene.animalVitals==='object'&&!Array.isArray(scene.animalVitals)&&Object.keys(scene.animalVitals).length<=515);for(const [key,v] of Object.entries(scene.animalVitals)){fields(v,['health','lastDamage','hurtAt']);ensure((id==='farm'&&['node:cow:0','animal:chicken:0','animal:chicken:1'].includes(key)||scene.chickens?.some((c:{id:string})=>'hatched:'+c.id===key)||scene.offspring?.some((c:{id:string;kind:string})=>'bred:'+c.id===key))&&Number.isFinite(v.health)&&v.health>=0&&v.health<=(key==='node:cow:0'||scene.offspring?.some((c:{id:string;kind:string})=>'bred:'+c.id===key&&c.kind==='cow')?10:4)&&Number.isFinite(v.lastDamage)&&v.lastDamage>=0&&Number.isSafeInteger(v.hurtAt)&&v.hurtAt>=0&&v.hurtAt<=p.world.tick);}}
+        if(scene.chickens){ensure(Array.isArray(scene.chickens)&&scene.chickens.length<=512);const chickenIds=new Set<string>();for(const c of scene.chickens){fields(c,['id','feet','born']);ensure(typeof c.id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(c.id)&&!chickenIds.has(c.id)&&Array.isArray(c.feet)&&c.feet.length===3&&c.feet.every((v:number)=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isSafeInteger(c.born)&&c.born>=0&&c.born<=p.world.tick);chickenIds.add(c.id);}}
         ensure(scene.blocks===undefined||Array.isArray(scene.blocks)&&scene.blocks.length<=16384);
         if(scene.pose){fields(scene.pose,['feet','yaw','pitch']);ensure(Array.isArray(scene.pose.feet)&&scene.pose.feet.length===3&&scene.pose.feet.every(v=>Number.isFinite(v)&&Math.abs(v)<64)&&Number.isFinite(scene.pose.yaw)&&Number.isFinite(scene.pose.pitch)&&Math.abs(scene.pose.pitch)<=Math.PI/2);}
         if(scene.agriculture){
@@ -321,12 +327,26 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             const held=handStack(p.player.data,command.hand);ensure(held?.id==='minecraft:shield','shield-not-held');if(!command.amount)break;
             const damage=Number(held.components?.['minecraft:damage']??0)+command.amount;setHandStack(p.player.data,command.hand,damage>=336?null:{...held,components:{...held.components,'minecraft:damage':damage}});break;
         }
+        case 'feed-animal': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');feedAnimal(p,command.id,command.hand);break;
+        }
+        case 'breed-animals': ensure(command.scene===p.scene,'wrong-scene');breedAnimals(p,command.parents,command.feet,command.id);break;
+        case 'use-bucket': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');useBucket(p,command.hit,command.hand??'mainhand',events);break;
+        }
+        case 'extinguish-campfire': {
+            ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
+            const held=handStack(p.player.data,command.hand),b=p.scenes[p.scene].blocks?.find(b=>b.id===command.id);
+            ensure(held&&/^minecraft:(wooden|stone|iron|golden|diamond|netherite|copper)_shovel$/.test(held.id)&&b?.block==='campfire'&&b.state.lit!=='false'&&b.state.waterlogged!=='true','invalid-extinguish');
+            extinguish(p,b!.cell,events);const max=rules?.items[held!.id]?.maxDamage,damage=Number(held!.components?.['minecraft:damage']??0)+1;
+            setHandStack(p.player.data,command.hand,max&&damage>=max?null:{...held!,components:{...held!.components,'minecraft:damage':damage}});break;
+        }
         case 'animal-hit': {
             ensure(command.scene===p.scene&&Number.isFinite(command.damage)&&command.damage>=0&&command.damage<=10000,'invalid-animal-hit');
-            const scene=p.scenes[p.scene],id=command.id;ensure(p.scene==='farm'&&['node:cow:0','animal:chicken:0','animal:chicken:1'].includes(id)||scene.chickens?.some(c=>'hatched:'+c.id===id),'unknown-animal');
+            const scene=p.scenes[p.scene],id=command.id;ensure(!!animalKind(p,id),'unknown-animal');
             const held=handStack(p.player.data,command.hand);if(command.weapon)ensure(held?.id===command.weapon&&spearProfile(command.weapon),'weapon-changed');else ensure(command.damage===0,'invalid-egg-damage');
-            const vitals=scene.animalVitals??={},prior=vitals[id]??{health:id==='node:cow:0'?10:4,lastDamage:0,hurtAt:-20},result=hurtAnimal(prior,command.damage,p.world.tick);
-            if(result.accepted){vitals[id]=result.vitals;events.push({type:'animal-hurt',entity:id,fullHurt:result.full});}
+            const vitals=scene.animalVitals??={},prior=vitals[id]??{health:animalKind(p,id)==='cow'?10:4,lastDamage:0,hurtAt:-20},result=hurtAnimal(prior,command.damage,p.world.tick);
+            if(result.accepted){vitals[id]=result.vitals;if(scene.animalCare?.[id])scene.animalCare[id].loveUntil=0;events.push({type:'animal-hurt',entity:id,fullHurt:result.full});}
             if(command.weapon&&held&&rules){const max=rules.items[held.id].maxDamage!,damage=Number(held.components?.['minecraft:damage']??0)+1;setHandStack(p.player.data,command.hand,damage>=max?null:{...held,components:{...held.components,'minecraft:damage':damage}});}
             break;
         }
@@ -369,7 +389,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
             ensure(command.scene===p.scene&&identity(command.expected)===identity(p.player.data),'inventory-conflict');
             const stack=handStack(p.player.data,command.hand);ensure(stack?.id===blockItem(command.item),'inventory-conflict');
             const blocks=placementBlocks(p,command.item,command.hit,command.id),scene=p.scenes[p.scene];scene.blocks??=[];
-            for(const block of blocks){scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);pairChest(p,block,command.hit);}
+            for(const block of blocks){if(waterLevel(p,block.cell)!==null)setWater(p,block.cell,null);scene.blocks=scene.blocks.filter(b=>!sameCell(b.cell,block.cell));const node=WORLD_SCENES[p.scene].nodes.find(n=>nodeAtCell(n,block.cell));if(node&&!p.world.visits[p.scene].removed.includes(node.id))p.world.visits[p.scene].removed.push(node.id);scene.blocks.push(block);pairChest(p,block,command.hit);}
             setHandStack(p.player.data,command.hand,stack!.count>1?{...stack!,count:stack!.count-1}:null);break;
         }
         case 'try-odd-cake-table': {
@@ -501,6 +521,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
                 if(control.sprintTicks){if(--control.sprintTicks===0)control.frozen=control.sprintRestore;}
                 if(control.stepTicks)control.stepTicks--;
                 p.world.tick++;
+                tickWater(p,events);
                 tickButtons(p,events);
                 tickPlates(p,events);syncPoweredOpenables(p,events);
                 p.environment??=emptyEnvironment(); tickEnvironment(p.environment);
@@ -698,7 +719,7 @@ export function transition(state: State, command: Command, policy?: PlacementPol
     if (!['processing-tick','settings','save-pose','pressure-contacts'].includes(command.type) && JSON.stringify(p) !== JSON.stringify(state.progress)) p.world.manual++;
     const discovered = discover(p.recipeBook, p.unlocked, acquiredRecipes);
     if (discovered.length) events.push({type: 'recipes-discovered', recipes: discovered});
-    if(['place-block','break-block','harvest-node','remove-station','put-station'].includes(command.type)){
+    if(['place-block','break-block','harvest-node','remove-station','put-station','use-bucket'].includes(command.type)){
         let removed=true;while(removed){removed=false;for(const b of [...(p.scenes[p.scene].blocks??[])])if(!b.pair&&!survives(p,b)){
             if(rules)depositHarvest(p,placedDrops(b,null,rules,false),rules,events);
             p.scenes[p.scene].blocks=p.scenes[p.scene].blocks!.filter(v=>v.id!==b.id&&v.pair!==b.id);removed=true;

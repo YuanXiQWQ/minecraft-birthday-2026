@@ -18,6 +18,8 @@ export const FARM_RADIUS = 64;
 let cached: {key: string; value: FarmLayout} | undefined;
 /** Construction changes own the expensive terrain cache; soil edits only overlay its cells. */
 let baseCache: {key: string; value: FarmLayout} | undefined;
+/** Unmodified authored cells identify legacy intersections without evicting the active terrain cache. */
+let originalFarm:FarmLayout|undefined;
 
 /** Preserve the level working meadow while placing shallow, broken terraces at the sides and rear.
  * @param {number} x World column.
@@ -127,10 +129,14 @@ export function farmLayout(occupied: Cell[] = [], edits: import('./soil-state.ts
     const value={cells,water:base.water,lights:base.lights};cached={key,value};return value;
 }
 
-/** Resolve construction support while preserving natural ground and adjacent water around cane.
+/** Carve only saved construction intersecting authored scenery; ordinary placements preserve their supports.
  * @param {Progress} p Committed facts.
  * @return {FarmLayout} Cached shared layout; growth ticks do not rebuild it.
  */
 export function currentFarm(p: Progress): FarmLayout {
-    return farmLayout([...p.scenes.farm.stations, ...(p.scenes.farm.blocks ?? []).filter(b=>b.block!=='sugar_cane')].map(s => s.cell), soils(p,'farm'));
+    const original=originalFarm??=farmBase([]),legacy=[...p.scenes.farm.stations,...(p.scenes.farm.blocks??[])].filter(b=>{
+        const below:Cell=[b.cell[0],b.cell[1]-1,b.cell[2]];
+        return original.cells.has(b.cell.join(','))&&original.cells.get(b.cell.join(','))?.block!=='water'||'kind' in b&&(original.cells.get(below.join(','))?.block==='water'||oldBarn(below)&&!original.cells.get(below.join(','))?.support);
+    });
+    return farmLayout(legacy.map(b=>b.cell), soils(p,'farm'));
 }

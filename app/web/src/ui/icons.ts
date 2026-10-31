@@ -101,6 +101,9 @@ export async function loadCatalogueArt(progress?: (done: number, total: number) 
     if (experience.version !== '26.3' || experience.clientSha1 !== manifest.clientSha1) throw Error('experience-version');
     const authored=await (await fetchManifest('easter-egg-manifest.json')).json();
     if(authored.version!=='26.3'||authored.clientSha1!==manifest.clientSha1)throw Error('authored-resource-version');
+    const farm=await (await fetchManifest('farm-interaction-manifest.json')).json();
+    if(farm.version!=='26.3'||farm.clientSha1!==manifest.clientSha1)throw Error('farm-interaction-version');
+    manifest.items.push('minecraft:water_bucket');Object.assign(manifest.inputs,farm.inputs);
     manifest.items.push(...authored.items);
     Object.assign(manifest.inputs,authored.inputs);
     const images = new Map<string, HTMLCanvasElement>(), documents = new Map<string, any>();

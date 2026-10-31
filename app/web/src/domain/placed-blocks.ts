@@ -46,6 +46,8 @@ export function placedDrops(block:PlacedBlock,tool:Stack|null,rules:Rules,requir
  * @return {{block:string,state:Record<string,string>,id?:string}|null} Native state or air.
  */
 export function blockAt(p:Progress,cell:Cell):{block:string;state:Record<string,string>;id?:string}|null{
+    const fluid=p.scenes[p.scene].fluids?.find(f=>sameCell(f.cell,cell)),placedFluid=p.scenes[p.scene].blocks?.find(b=>sameCell(b.cell,cell));
+    if(fluid&&!placedFluid)return fluid.level===null?null:{block:'water',state:{level:String(fluid.level)}};
     const soil=soilAt(p,cell);if(soil)return {block:soil.grass?'grass_block':soil.moisture===null?'dirt':'farmland',state:soil.grass?{snowy:'false'}:soil.moisture===null?{}:{moisture:String(soil.moisture)}};
     const scene=p.scenes[p.scene],placed=scene.blocks?.find(b=>sameCell(b.cell,cell));if(placed)return placed;
     const device=scene.stations.find(s=>sameCell(s.cell,cell));if(device)return {block:device.kind,state:{facing:device.facing},id:device.id};
@@ -124,10 +126,11 @@ export function placementBlocks(p:Progress,item:string,hit:BlockHit,id:string):P
     if(item==='chiseled_bookshelf')for(let i=0;i<6;i++)state['slot_'+i+'_occupied']='false';
     if(item==='oak_sign'){if(face==='down')throw Error('unsupported-placement');if(face==='up')state.rotation=String((Math.floor((180-hit.yaw*180/Math.PI)*16/360+.5)&15));else {block='oak_wall_sign';state.facing=face;}}
     if(item==='straw_bed')Object.assign(state,{facing,part:'foot',occupied:'false'});
+    if(blockAt(p,cell)?.block==='water'&&state.type!=='double'&&/^(campfire|.*_stairs|.*_slab|.*_fence|.*_trapdoor|.*_sign|.*_wall_sign|.*_wall|lantern|ladder|chest|trapped_chest|iron_bars|iron_chain)$/.test(block)){state.waterlogged='true';if(block==='campfire')state.lit='false';}
     const result:PlacedBlock[]=[{id,block,cell:[...cell],state}];
     if(item.endsWith('_door'))result.push({id:id+'-upper',block,cell:[cell[0],cell[1]+1,cell[2]],state:{...state,half:'upper'},pair:id});
     if(item==='straw_bed'){const d=direction(facing);result.push({id:id+'-head',block,cell:cell.map((n,i)=>n+d[i]) as Cell,state:{...state,part:'head'},pair:id});}
-    for(const b of result){const at=blockAt(p,b.cell);if(b.cell[0]<-18||b.cell[0]>18||b.cell[2]<-22||b.cell[2]>10||b.cell[1]<0||b.cell[1]>15||!replaceable(at?.block)&&!(slab&&at?.block===item&&state.type==='double'&&at.state.type!=='double'))throw Error('occupied-placement');
+    for(const b of result){const at=blockAt(p,b.cell);if(b.cell[0]<-18||b.cell[0]>18||b.cell[2]<-22||b.cell[2]>10||b.cell[1]<-4||b.cell[1]>15||!replaceable(at?.block)&&!(slab&&at?.block===item&&state.type==='double'&&at.state.type!=='double'))throw Error('occupied-placement');
         if(BLOCK_PROPERTIES[item].collision&&(nativeShapes(b.block,b.state,true)??[FULL_BLOCK]).some(shape=>overlaps(playerBounds([hit.eye[0],hit.eye[1]-(hit.crouch?1.27:1.62),hit.eye[2]],hit.crouch),shape.map((n,i)=>n+b.cell[i%3]) as typeof FULL_BLOCK)))throw Error('player-collision');}
     if(!survives(p,result[0]))throw Error('unsupported-placement');
     return result;

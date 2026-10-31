@@ -1,4 +1,6 @@
 /** Authored native block scenery and Java-derived animal cuboids, independent from persistent simulation. */
+import {animalCare,animalFood} from '../domain/husbandry.ts';
+import {handStack} from '../domain/hands.ts';
 import {FarmAnimal,itemMotion,pushAnimals} from '../domain/farm-life.ts';
 import type {Bounds,PlayerMotion} from '../domain/player-motion.ts';
 import type {SoundOptions} from './world-audio.ts';
@@ -318,7 +320,7 @@ export class AuthoredWorld {
         }
         const id = p.scene, spec = WORLD_SCENES[id], removed = p.world.visits[id].removed, crops = p.scenes[id].crops,
             stations = p.scenes[id].stations,
-            signature = JSON.stringify([removed,p.scenes[id].chickens?.map(c=>[c.id,p.world.tick-c.born>=24000]),p.scenes[id].animalVitals, stations.map(s => s.cell),p.scenes[id].blocks, soils(p),p.scenes[id].agriculture?.drops, crops.map(c => [c.id, cropStage(c)])]);
+            signature = JSON.stringify([removed,p.scenes[id].chickens?.map(c=>[c.id,animalCare(p,'hatched:'+c.id).grownAt<=p.world.tick]),p.scenes[id].offspring?.map(c=>[c,animalCare(p,'bred:'+c.id).grownAt<=p.world.tick]),p.scenes[id].animalVitals, stations.map(s => s.cell),p.scenes[id].blocks, soils(p),p.scenes[id].agriculture?.drops, crops.map(c => [c.id, cropStage(c)])]);
         if (id === 'cave' && this.caveRoot) {
             const layout = JSON.stringify([stations.map(s=>s.cell), removed]);
             if (layout !== this.caveSignature) {this.caveSignature = layout; this.caveScenery(stations.map(s=>s.cell), caveExcavated(p));}
@@ -340,7 +342,7 @@ export class AuthoredWorld {
         const caveVisible = id === 'cave' ? new Set(caveLayout(stations.map(s=>s.cell), spec.eye, caveExcavated(p)).stone.map(c=>c.join(','))) : null;
         const carved = id === 'cave' ? caveCleared(p) : null;
         const visible = spec.nodes.filter(n=>!p.scenes[id].blocks?.some(b=>b.cell.every((v,i)=>v===n.cell[i])) && !removed.includes(n.id) && !stations.some(s=>s.cell.every((v,i)=>v===n.cell[i])) && !carved?.has(n.cell.join(',')) && (!n.id.startsWith('rock:') || caveVisible?.has(n.cell.join(','))));
-        const wanted = new Set([...(p.scenes[id].chickens??[]).map(c=>'hatched:'+c.id),...visible.map(n=>'node:'+n.id),...(id==='farm'?['animal:chicken:0','animal:chicken:1']:[]),...(p.scenes[id].agriculture?.drops??[]).map(d=>'drop:'+d.id)]);
+        const wanted = new Set([...(p.scenes[id].offspring??[]).map(c=>'bred:'+c.id),...(p.scenes[id].chickens??[]).map(c=>'hatched:'+c.id),...visible.map(n=>'node:'+n.id),...(id==='farm'?['animal:chicken:0','animal:chicken:1']:[]),...(p.scenes[id].agriculture?.drops??[]).map(d=>'drop:'+d.id)]);
         const retained = this.natural.children.filter(o=>wanted.has(o.userData.id));
         for (const root of retained) root.removeFromParent();
         this.clear(this.natural);
@@ -363,7 +365,8 @@ export class AuthoredWorld {
         if(id==='farm')for(const [index,cell] of ([[4,0,-4],[6,0,-5]] as Cell[]).entries())if(!this.natural.children.some(o=>o.userData.id==='animal:chicken:'+index)){
             const root=this.animal('chicken');root.position.x+=cell[0];root.position.z+=cell[2];root.userData={id:'animal:chicken:'+index,block:'chicken',cell};this.natural.add(root);
         }
-        for(const c of p.scenes[id].chickens??[]){const baby=p.world.tick-c.born<24000,old=this.natural.children.find(o=>o.userData.id==='hatched:'+c.id);if(old&&old.userData.baby===baby)continue;if(old){old.removeFromParent();old.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}const root=this.animal(baby?'chick':'chicken');root.position.set(c.feet[0],c.feet[1]+1.5,c.feet[2]);root.userData={id:'hatched:'+c.id,block:'chicken',cell:[c.feet[0]-.5,c.feet[1],c.feet[2]-.5],baby};this.natural.add(root);}
+        for(const c of p.scenes[id].chickens??[]){const baby=animalCare(p,'hatched:'+c.id).grownAt>p.world.tick,old=this.natural.children.find(o=>o.userData.id==='hatched:'+c.id);if(old&&old.userData.baby===baby)continue;if(old){old.removeFromParent();old.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}const root=this.animal(baby?'chick':'chicken');root.position.set(c.feet[0],c.feet[1]+1.5,c.feet[2]);root.userData={id:'hatched:'+c.id,block:'chicken',cell:[c.feet[0]-.5,c.feet[1],c.feet[2]-.5],baby};this.natural.add(root);}
+        for(const c of p.scenes[id].offspring??[]){const key='bred:'+c.id,baby=animalCare(p,key).grownAt>p.world.tick,old=this.natural.children.find(o=>o.userData.id===key);if(old&&old.userData.baby===baby)continue;if(old){old.removeFromParent();old.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}const root=this.animal(c.kind==='chicken'&&baby?'chick':c.kind);if(c.kind==='cow'&&baby)root.scale.set(.5,-.5,.5);root.position.set(c.feet[0],c.feet[1]+(c.kind==='cow'&&baby?.75:1.5),c.feet[2]);root.userData={id:key,block:c.kind,cell:[c.feet[0]-.5,c.feet[1],c.feet[2]-.5],baby};this.natural.add(root);}
         for(const root of [...this.natural.children])if(p.scenes[id].animalVitals?.[String(root.userData.id)]?.health===0){this.animals.delete(String(root.userData.id));root.removeFromParent();root.traverse(o=>{if(o instanceof Mesh)o.geometry.dispose();});}
         for(const drop of p.scenes[id].agriculture?.drops??[])if(!this.natural.children.some(o=>o.userData.id==='drop:'+drop.id)){const root=this.groundItem(drop.stack.id);root.position.add(new Vector3(...drop.cell));root.userData={...root.userData,id:'drop:'+drop.id,block:'item',cell:drop.cell};this.natural.add(root);}
         for (const c of crops) {
@@ -376,7 +379,7 @@ export class AuthoredWorld {
         }
     }
 
-    /** Advance visible adult pushing, home navigation and ambient state at the native tick rate.
+    /** Advance food temptation, courtship, pushing and ambient state at the native tick rate.
      * @param {Progress} p Current world.
      * @param {Bounds[]} solids Collision geometry.
      * @param {Cell[]} water Water cells.
@@ -385,16 +388,24 @@ export class AuthoredWorld {
      */
     tickLife(p:Progress,solids:Bounds[],water:Cell[],sound:((id:string,options:SoundOptions)=>void)|null,player?:PlayerMotion):void {
         this.lifeTicks++;
-        if(p.scene!=='farm'&&!p.scenes[p.scene].chickens?.length)return;
+        if(p.scene!=='farm'&&!p.scenes[p.scene].chickens?.length&&!p.scenes[p.scene].offspring?.length)return;
         const active:FarmAnimal[]=[];
         for(const root of this.natural.children){const kind=root.userData.block;if(kind!=='cow'&&kind!=='chicken')continue;
             const id=String(root.userData.id),cell=root.userData.cell as Cell;
             let animal=this.animals.get(id);if(!animal){animal=new FarmAnimal(kind,[cell[0]+.5,cell[1],cell[2]+.5],174761+this.animals.size*997);this.animals.set(id,animal);}
             animal.baby=!!root.userData.baby;active.push(animal);
         }
+        for(const [id,animal] of this.animals){
+            const care=animalCare(p,id),mate=care.loveUntil>p.world.tick?[...this.animals].filter(([key,a])=>key!==id&&a.kind===animal.kind&&animalCare(p,key).loveUntil>p.world.tick&&Math.hypot(...a.feet.map((v,i)=>v-animal.feet[i]))<8).sort((a,b)=>Math.hypot(...a[1].feet.map((v,i)=>v-animal.feet[i]))-Math.hypot(...b[1].feet.map((v,i)=>v-animal.feet[i])))[0]:undefined;
+            const attracted=!!player&&(['mainhand','offhand'] as const).some(hand=>animalFood(animal.kind,handStack(p.player.data,hand)?.id))&&Math.hypot(...animal.feet.map((v,i)=>v-player.feet[i]))<10;
+            if(animal.temptCooldown)animal.temptCooldown--;
+            if(animal.tempted&&!attracted){animal.temptCooldown=100;animal.origin=[...animal.feet];animal.path=[];}animal.tempted=attracted&&!animal.temptCooldown&&!mate;
+            if(animal.partner!==(mate?.[0]??''))animal.courtship=0;animal.partner=mate?.[0]??'';if(mate)animal.courtship++;else animal.courtship=0;
+            const goal=mate?.[1].feet??(animal.tempted?player!.feet:null);if(!goal&&animal.goal)animal.path=[];animal.goal=goal?[...goal]:null;animal.goalStop=mate?1:2.5;animal.goalSpeed=mate?1:animal.kind==='cow'?1.25:1;
+        }
         pushAnimals(active,player);
         for(const animal of active){const kind=animal.kind,
-            near=solids.filter(b=>b[0]<Math.max(animal.origin[0],animal.feet[0])+3&&b[3]>Math.min(animal.origin[0],animal.feet[0])-3&&b[2]<Math.max(animal.origin[2],animal.feet[2])+3&&b[5]>Math.min(animal.origin[2],animal.feet[2])-3),feedback=animal.tick(near,water);
+            near=solids.filter(b=>b[0]<Math.max(animal.goal?.[0]??animal.origin[0],animal.feet[0])+3&&b[3]>Math.min(animal.goal?.[0]??animal.origin[0],animal.feet[0])-3&&b[2]<Math.max(animal.goal?.[2]??animal.origin[2],animal.feet[2])+3&&b[5]>Math.min(animal.goal?.[2]??animal.origin[2],animal.feet[2])-3),feedback=animal.tick(near,water);
             if(feedback.ambient)sound?.('entity.'+kind+'.ambient',{volume:kind==='cow'?.4:1,pitch:feedback.pitch,position:[...animal.feet],category:'neutralVolume'});
             if(feedback.step)sound?.('entity.'+kind+'.step',{volume:.15,pitch:1,position:[...animal.feet],category:'neutralVolume'});
         }
@@ -405,7 +416,7 @@ export class AuthoredWorld {
     animateLife(alpha:number):void {
         this.groundItems?.update((this.lifeTicks+alpha)*50);
         for(const root of this.natural.children){const animal=this.animals.get(String(root.userData.id));
-            if(animal){const position=animal.feet.map((v,i)=>animal.previous[i]+(v-animal.previous[i])*alpha);root.position.set(position[0],position[1]+1.5,position[2]);root.rotation.y=animal.previousYaw+(animal.yaw-animal.previousYaw)*alpha;
+            if(animal){const position=animal.feet.map((v,i)=>animal.previous[i]+(v-animal.previous[i])*alpha);root.position.set(position[0],position[1]+(animal.kind==='cow'&&animal.baby?.75:1.5),position[2]);root.rotation.y=animal.previousYaw+(animal.yaw-animal.previousYaw)*alpha;
                 const legs=root.children.filter(o=>o.name.includes('leg'));legs.forEach((leg,i)=>{leg.rotation.x=animal.animation.leg(alpha,animal.kind==='cow'?!![1,0,0,1][i]:i%2===1);});
             }else if(root.userData.block==='egg'||root.userData.id?.startsWith('drop:')){const cell=root.userData.cell as Cell,motion=itemMotion(this.lifeTicks+alpha,root.userData.bobOffset??0);root.position.set(cell[0]+.5,cell[1]+motion.y,cell[2]+.5);root.rotation.y=motion.yaw;}
         }

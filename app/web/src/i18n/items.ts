@@ -11,6 +11,7 @@ import {displayLocale} from './index.ts';
  * @return {string} Translated name or authoritative English fallback.
  */
 export function itemName(id: string, translation: string | Record<string, string> = 'en'): string {
+    if(id==='minecraft:water_bucket')return typeof translation==='string'&&displayLocale(translation)==='zh-CN'?'姘存《':'Water Bucket';
     const base = id===ODD_CAKE?authored[ODD_CAKE].en:(english as Record<string, string>)[id];
     if (!base) throw Error('missing-english-item:' + id);
     const names = typeof translation === 'string' ? displayLocale(translation) === 'zh-CN' ? aliases : {} : translation;
